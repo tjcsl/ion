@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, include, url
-
+from .apps import *
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+#urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'intranet.views.home', name='home'),
     # url(r'^intranet/', include('intranet.foo.urls')),
@@ -14,4 +14,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+#)
+
+urlpatterns = patterns('intranet.apps',
+    url(r'^$', 'auth.views.show_landing_page'),
 )
