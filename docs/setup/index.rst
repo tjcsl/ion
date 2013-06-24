@@ -1,7 +1,6 @@
-=====
+*****
 Setup
-=====
-
+*****
 .. toctree::
     :hidden:
     :glob:

@@ -1,11 +1,6 @@
-.. TJ Intranet documentation master file, created by
-    sphinx-quickstart on Mon Jun 24 01:05:07 2013.
-    You can adapt this file completely to your liking, but it should at least
-    contain the root `toctree` directive.
-
-=========================
+*************************
 TJ Intranet Documentation
-=========================
+*************************
 
 Intro
 =====
@@ -31,8 +26,8 @@ Setup
 Say some stuff about setup
 
 
-Design
-------
+Architecture
+------------
 
 Say stuff about the architecture
 
