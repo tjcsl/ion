@@ -1,0 +1,9 @@
+=====
+Setup
+=====
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    *
