@@ -15,27 +15,45 @@ Contents
     :hidden:
 
     setup/index
-    design/index
+    architecture/index
     djangoprimer/index
+    developing/index
     apps/index
     administration/index
+
 
 Setup
 -----
 
-Say some stuff about setup
+- :doc:`Setting up Git<setup/git>`
+- :doc:`Setting up Virtualenv<setup/virtualenv>`
 
 
 Architecture
 ------------
 
-Say stuff about the architecture
+Say stuff about the architecture design
+
+- :doc:`Technologies<architecture/technologies>`
+- :doc:`Resources<architecture/resources>`
+
+See the :doc:`Architecture documentation<architecture/index>`.
 
 
 Django Primer
 -------------
 
 Overview django basics, provide links to tutorials, etc.
+
+- :doc:`Overview<djangoprimer/overview>`
+- More sections...
+
+
+Developing for Intranet
+-----------------------
+- :doc:`Workflow<developing/workflow>`
+- :doc:`Coding Standards<developing/standards>`
+
 
 Apps
 ----

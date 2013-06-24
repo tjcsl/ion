@@ -1,5 +1,5 @@
 **************
-Setting up git
+Setting up Git
 **************
 
 Instructions here

@@ -2,18 +2,31 @@
 Django Primer
 *************
 
-Lesson 1
+.. toctree::
+    :hidden:
+
+    overview
+
+
+Overview
 ========
 
-Lesson 1 info here
+Info here
 
 
-Lesson 2
+Topic 1
 ========
 
-Lesson 2 info here
+Topic 1 info here
 
-Lesson 3
+
+Topic 2
 ========
 
-Lesson 3 info here
+Topic 2 info here
+
+
+Topic 3
+========
+
+Topic 3 info here
