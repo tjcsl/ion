@@ -34,9 +34,6 @@ Architecture
 
 Say stuff about the architecture design
 
-- :doc:`Technologies<architecture/technologies>`
-- :doc:`Resources<architecture/resources>`
-
 See the :doc:`Architecture documentation<architecture/index>`.
 
 
@@ -45,14 +42,12 @@ Django Primer
 
 Overview django basics, provide links to tutorials, etc.
 
-- :doc:`Overview<djangoprimer/overview>`
-- More sections...
-
+Go to the :doc:`Django primer<djangoprimer/index>`.
 
 Developing for Intranet
 -----------------------
 - :doc:`Workflow<developing/workflow>`
-- :doc:`Coding Standards<developing/standards>`
+- :doc:`Coding Style Guide<developing/styleguide>`
 
 
 Apps

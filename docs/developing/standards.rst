@@ -1,5 +1,0 @@
-****************
-Coding Standards
-****************
-
-standards info

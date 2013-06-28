@@ -2,13 +2,6 @@
 Architecture
 ************
 
-.. toctree::
-    :hidden:
-
-    technologies
-    resources
-
-
 Talk about architectures
 
 Technologies

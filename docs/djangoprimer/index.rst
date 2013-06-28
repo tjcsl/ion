@@ -2,12 +2,6 @@
 Django Primer
 *************
 
-.. toctree::
-    :hidden:
-
-    overview
-
-
 Overview
 ========
 
