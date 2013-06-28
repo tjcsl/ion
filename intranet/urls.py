@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, include, url
 from .apps import *
+from django.views.generic import TemplateView
+
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -17,5 +19,5 @@ from .apps import *
 #)
 
 urlpatterns = patterns('intranet.apps',
-    url(r'^$', 'auth.views.show_landing_page'),
+    url(r'^$', TemplateView.as_view(template_name="landing.html")),
 )
