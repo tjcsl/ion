@@ -1,7 +1,30 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% block title %}
+    Ion - Login
+{% endblock %}
+
 {% block css %}
-@import url('{% static 'css/login.css' %}');
+    <style type='text/css'>
+        @import url('{% static 'css/login.css' %}');
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('input[name=username]').focus();
+            $('input').each(function() {
+                empty_text = 'This field is required.';
+                if($(this).attr('value') == empty_text) {
+                    $(this).addClass('empty');
+                    $(this).attr('value', '');
+                    $(this).attr('placeholder', empty_text);
+                }
+            })
+        });
+    </script>  
 {% endblock %}
 
 {% block content %}
