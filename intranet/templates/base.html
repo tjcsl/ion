@@ -1,21 +1,28 @@
+{% load staticfiles %}
 <!doctype html>
 <html lang='en'>
 <head>
     <title>Ion</title>
     <meta charset='UTF-8' />
     <style type='text/css'>
-    	@import url('http://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700');
-    	body {
-		    font-family: "Open Sans", Arial, Helvetica, Roboto, "Droid Sans", sans-serif;
-		    background-color: #F0F0F0;
-		}
-
-		h1 {
-			font-size: 24px;
-			font-weight: normal;
-		}
-
+        @import url('{% static 'css/reset.css' %}');
+        @import url('http://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700');
+        body {
+            font-family: "Open Sans", Arial, Helvetica, Roboto, "Droid Sans", sans-serif;
+            background-color: #F0F0F0;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: normal;
+        }
     </style>
+    <style type='text/css'>
+        {% block css %}
+
+        {% endblock %}
+    </style>
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
     {% block content %}

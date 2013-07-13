@@ -1,13 +1,15 @@
 # import the User object
-from django.contrib.auth.models import User
 import pexpect
 import uuid
 import os
+from intranet.apps.users.models import User
 
 
 # os.system("/usr/bin/kdestroy")
 
-class KerberosAuthenticationBackend:
+class KerberosAuthenticationBackend(object):
+    create_unknown_user = True
+
     @classmethod
     def kerberos_authenticate(self, username, password):
         ad_realm = "LOCAL.TJHSST.EDU"
@@ -36,14 +38,15 @@ class KerberosAuthenticationBackend:
         if(kinit.exitstatus == 0):
             return True
         else:
-
             return False
 
     def authenticate(self, username=None, password=None):
         # Try to find a user matching your username
         # user = User.objects.get(username=username)
 
-        user = User()
+        user = User(username=username)
+        # user.set_unusable_password()
+        user.save(commit=False)
 
         if KerberosAuthenticationBackend.kerberos_authenticate(username, password):
             # Populate user object here
@@ -56,6 +59,6 @@ class KerberosAuthenticationBackend:
     def get_user(self, username):
         try:
             # return User.objects.get(pk=username)
-            return User()
+            return User(username=username)
         except User.DoesNotExist:
             return None

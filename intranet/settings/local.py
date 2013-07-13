@@ -4,6 +4,15 @@ from fnmatch import fnmatch
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': os.path.join(os.path.dirname(PROJECT_ROOT), 'testing_database.db'),  # Or path to database file if using sqlite3.
+    }
+}
+
+
 class glob_list(list):
     def __contains__(self, key):
         for elt in self:
@@ -16,16 +25,9 @@ INTERNAL_IPS = glob_list([
     '198.38.22.*'
 ])
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_ROOT, 'testing_database.db'),  # Or path to database file if using sqlite3.
-    }
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
 }
-
-
-
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
