@@ -60,7 +60,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-
 )
 
 # # Add all apps with static directories to STATICFILES_DIRS
@@ -77,6 +76,8 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
+
+AUTH_USER_MODEL = "auth.User"
 
 AUTHENTICATION_BACKENDS = (
     'intranet.apps.users.auth.backends.KerberosAuthenticationBackend',
@@ -98,6 +99,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
 )
 
 ROOT_URLCONF = 'intranet.urls'
@@ -120,6 +122,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'intranet.apps.users',
     'intranet.apps.users.auth',
 )
 
