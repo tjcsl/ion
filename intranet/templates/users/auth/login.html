@@ -1,19 +1,23 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% block css %}
+@import url('{% static 'css/login.css' %}');
+{% endblock %}
 
 {% block content %}
-	<h1>Welcome to TJ Intranet</h1>
-	<p>Enter your username and password to log in:</p>
-	<div class='login'>
-	    {% if auth_form.errors %}
-	        <p class='error'>Invalid username or password</p>
-	    {% endif %}
+    <div class='login'>
+        <h1>Welcome to TJ Intranet</h1>
+        <p>Enter your username and password to log in:</p>
+        {% if auth_form.errors %}
+            <p class='error'>Invalid username or password</p>
+        {% endif %}
 
-	    <form action='/login' method='post'>
-	    	{% csrf_token %}
-	        {% for field in auth_form %}
-	            {{ field }}
-	        {% endfor %}
-	        <input type='submit' value='Login' />
-	    </form>
-	</div>
+        <form action='/login' method='post'>
+            {% csrf_token %}
+            {% for field in auth_form %}
+                {{ field }}
+            {% endfor %}
+            <input type='submit' value='Login' />
+        </form>
+    </div>
 {% endblock %}
