@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if auth_form.errors %}
+        <p class="error">Invalid username or password</p>
+    {% endif %}
+
+    <form action="/login" method="post">{% csrf_token %}
+        {% for field in auth_form %}
+            {{ field }}
+        {% endfor %}
+        <input type="submit" value="Log In">
+    </form>
+{% endblock %}

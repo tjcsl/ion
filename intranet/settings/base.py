@@ -63,9 +63,9 @@ STATICFILES_DIRS = (
 
 )
 
-# Add all apps with static directories to STATICFILES_DIRS
-apps_with_static_dir = ['home']
-STATICFILES_DIRS += tuple([os.path.join(PROJECT_ROOT, 'apps/' + app + '/static') for app in apps_with_static_dir])
+# # Add all apps with static directories to STATICFILES_DIRS
+# apps_with_static_dir = ['home']
+# STATICFILES_DIRS += tuple([os.path.join(PROJECT_ROOT, 'apps/' + app + '/static') for app in apps_with_static_dir])
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -77,6 +77,11 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
+
+AUTHENTICATION_BACKENDS = (
+    'intranet.apps.users.auth.backends.KerberosAuthenticationBackend',
+)
+
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -104,7 +109,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, 'templates')
+    os.path.join(PROJECT_ROOT, 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -115,6 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'intranet.apps.users.auth',
 )
 
 # A sample logging configuration. The only tangible logging
