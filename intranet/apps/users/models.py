@@ -1,15 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-# Add UserProfile model here
+from django.contrib.auth.models import User
 
 
-class User(AbstractBaseUser):
-    username = models.CharField(max_length=40, unique=True, db_index=True)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
 
-    USERNAME_FIELD = 'username'
-
-    def get_full_name():
-        return "Angela Smith"
-
-    def get_short_name():
-        return "Angela"
+    # def _get_full_name(self):
+    #     "Returns the person's full name."
+    #     return '%s %s' % (self.first_name, self.last_name)
+    # full_name = property(_get_full_name)

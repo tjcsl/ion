@@ -3,6 +3,10 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOGIN_URL = "/"
+
+ADD_SLASHES = True
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -78,10 +82,11 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
 
-AUTH_USER_MODEL = "auth.User"
+# AUTH_USER_MODEL = "auth.User"
 
 AUTHENTICATION_BACKENDS = (
     'intranet.apps.users.auth.backends.KerberosAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 
@@ -100,13 +105,17 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.auth.middleware.RemoteUserMiddleware',
 )
 
 ROOT_URLCONF = 'intranet.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'intranet.wsgi.application'
+
+SESSION_ENGINE = 'intranet.apps.users.sessions.redis_session_backend'
+SESSION_REDIS_HOST = '127.0.0.1'
+SESSION_REDIS_PORT = 6379
+REDIS_SOCKET_TIMEOUT = 0
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

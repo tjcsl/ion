@@ -2,13 +2,14 @@
 import pexpect
 import uuid
 import os
-from intranet.apps.users.models import User
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # os.system("/usr/bin/kdestroy")
 
 class KerberosAuthenticationBackend(object):
-    create_unknown_user = True
+    create_unknown_user = False
 
     @classmethod
     def kerberos_authenticate(self, username, password):
@@ -41,24 +42,19 @@ class KerberosAuthenticationBackend(object):
             return False
 
     def authenticate(self, username=None, password=None):
-        # Try to find a user matching your username
-        # user = User.objects.get(username=username)
-
-        user = User(username=username)
-        # user.set_unusable_password()
-        user.save(commit=False)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = User.objects.create(username=username)
+            user.set_unusable_password()
 
         if KerberosAuthenticationBackend.kerberos_authenticate(username, password):
-            # Populate user object here
             return user
         else:
-            # No? return None - triggers default login failed
             return None
 
-    # Required for your backend to work properly - unchanged in most scenarios
-    def get_user(self, username):
+    def get_user(self, user_id):
         try:
-            # return User.objects.get(pk=username)
-            return User(username=username)
+            return User.objects.get(id=user_id)
         except User.DoesNotExist:
             return None
