@@ -112,10 +112,11 @@ ROOT_URLCONF = 'intranet.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'intranet.wsgi.application'
 
-SESSION_ENGINE = 'intranet.apps.users.sessions.redis_session_backend'
-SESSION_REDIS_HOST = '127.0.0.1'
+SESSION_ENGINE = 'redis_sessions.session'
+
+SESSION_REDIS_HOST = 'localhost'
 SESSION_REDIS_PORT = 6379
-REDIS_SOCKET_TIMEOUT = 0
+SESSION_REDIS_DB = 0
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
