@@ -2,10 +2,14 @@
 <!doctype html>
 <html lang='en'>
 <head>
-    <title>Ion</title>
+    <title>
+        {% block title %}
+        Ion
+        {% endblock %}
+    </title>
     <meta charset='UTF-8' />
     <style type='text/css'>
-        @import url('{% static 'css/reset.css' %}');
+        @import url("{% static 'css/reset.css' %}");
         @import url('http://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700');
         body {
             font-family: "Open Sans", Arial, Helvetica, Roboto, "Droid Sans", sans-serif;
@@ -16,11 +20,14 @@
             font-weight: normal;
         }
     </style>
-    <style type='text/css'>
-        {% block css %}
+    {% block css %}
+    {% endblock %}
 
-        {% endblock %}
-    </style>
+    <script type='text/javascript' src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+    
+    {% block js %}
+    {% endblock %}
+
     {% block head %}
     {% endblock %}
 </head>
