@@ -9,22 +9,21 @@
     </title>
     <meta charset='UTF-8' />
     <style type='text/css'>
-        @import url("{% static 'css/reset.css' %}");
         @import url('http://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700');
-        body {
-            font-family: "Open Sans", Arial, Helvetica, Roboto, "Droid Sans", sans-serif;
-            background-color: #F0F0F0;
-        }
-        h1 {
-            font-size: 24px;
-            font-weight: normal;
-        }
+        @import url("{% static 'css/base.css' %}");
     </style>
     {% block css %}
     {% endblock %}
 
     <script type='text/javascript' src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
-    
+    <script type='text/javascript'>
+    data = {
+        {# TODO: This should be set to the value from docs/conf.py #}
+        'version': '3.0.0', 
+        'static': '{{ STATIC_URL }}'
+    }
+    </script>
+
     {% block js %}
     {% endblock %}
 
