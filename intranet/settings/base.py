@@ -33,7 +33,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
@@ -113,11 +113,21 @@ ROOT_URLCONF = 'intranet.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'intranet.wsgi.application'
 
+
+# Settings for django-redis-sessions
 SESSION_ENGINE = 'redis_sessions.session'
 
-SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_HOST = '127.0.0.1'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
+
+# LDAP configuration
+AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
+CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+HOST = "ion.tjhsst.edu"
+LDAP_REALM = "CSL.TJHSST.EDU"
+LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
+
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -154,7 +164,7 @@ LOGGING = {
         #     'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         # },
         'simple': {
-            'format': '%(levelname)s: %(message)s (Request ' + request_id + ': %(name)s, line %(lineno)d)'
+            'format': 'Request ' + request_id + '%(levelname)s: %(message)s (%(name)s, %(lineno)d)'
         },
     },
     'filters': {
