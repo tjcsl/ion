@@ -1,5 +1,7 @@
 import os
-
+import uuid
+import random
+import string
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -53,7 +55,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -64,7 +66,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, 'apps/static'),
+    os.path.join(PROJECT_ROOT, 'static'),
 )
 
 # # Add all apps with static directories to STATICFILES_DIRS
@@ -76,25 +78,24 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
-
-# AUTH_USER_MODEL = "auth.User"
 
 AUTHENTICATION_BACKENDS = (
     'intranet.apps.users.auth.backends.KerberosAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
+AUTH_USER_MODEL = "auth.User"
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -142,9 +143,20 @@ INSTALLED_APPS = (
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+LOG_LEVEL = 'DEBUG' if os.getenv("PRODUCTION", "FALSE") == "FALSE" else 'INFO'
+request_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(10))
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        # 'verbose': {
+        #     'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        # },
+        'simple': {
+            'format': '%(levelname)s: %(message)s (Request ' + request_id + ': %(name)s, line %(lineno)d)'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -155,12 +167,22 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'intranet': {
+            'handlers': ['console'],
+            'level': LOG_LEVEL,
             'propagate': True,
         },
     }

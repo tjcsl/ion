@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
-from .apps.users.auth.views import index, login_view, info, logout_view
-
+from django.views.generic import TemplateView
+from .apps.users.auth.views import index, login_view, logout_view
+from .apps.users.views import profile
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -20,6 +21,14 @@ from .apps.users.auth.views import index, login_view, info, logout_view
 urlpatterns = patterns('auth.views.',
     url(r'^$', index),
     url(r'^login$', login_view),
-    url(r'^info$', info),
     url(r'^logout$', logout_view),
+)
+
+urlpatterns += patterns('user.views',
+
+)
+
+
+urlpatterns += patterns('',
+    url(r'^\(productivity\)/cpuspam/botspam$', TemplateView.as_view(template_name="cpuspam.html")),
 )
