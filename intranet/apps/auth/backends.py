@@ -17,8 +17,8 @@ class KerberosAuthenticationBackend(object):
         csl_realm = "CSL.TJHSST.EDU"
         cache = "/tmp/ion-" + str(uuid.uuid4())
 
-        os.environ['KRB5CCNAME'] = cache
         logger.debug("Setting KRB5CCNAME to " + cache)
+        os.environ['KRB5CCNAME'] = cache
 
         kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, csl_realm))
         kinit.expect("{}@{}'s Password:".format(username, csl_realm))

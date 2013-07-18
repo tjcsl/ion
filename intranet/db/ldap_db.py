@@ -2,6 +2,9 @@ import logging
 import ldap
 import ldap.sasl
 from intranet import settings
+from django.core.signals import request_finished
+from django.dispatch import receiver
+
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +18,8 @@ class LDAPConnection(object):
             LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
+        else:
+            logger.debug("Connection to LDAP already established")
 
     def search(self, dn, filter, attributes):
         logger.debug("Searching ldap - dn: {}, filter: {}, attributes: {}".format(dn, filter, attributes))
@@ -52,3 +57,12 @@ class LDAPResult(object):
             return self.result[0][1]
         else:
             return []
+
+
+# Include this? check effects on performance
+# @classmethod
+# @receiver(request_finished)
+# def close_ldap_connection(sender, **kwargs):
+#     if LDAPConnection.conn:
+#         LDAPConnection.conn.unbind()
+#         LDAPConnection.conn = None

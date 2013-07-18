@@ -102,8 +102,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'intranet.middleware.environment.SetKerberosCache',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -120,6 +122,7 @@ SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_HOST = '127.0.0.1'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
+SESSION_REDIS_PREFIX = 'session'
 
 CACHES = {
     "default": {
@@ -131,7 +134,7 @@ CACHES = {
     }
 }
 
-KEY_PREFIX = os.path.basename(os.environ['VIRTUAL_ENV'])
+# KEY_PREFIX = os.path.basename(os.environ['VIRTUAL_ENV'])
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
@@ -163,6 +166,7 @@ INSTALLED_APPS = (
     'south',
     'intranet.apps.users',
     'intranet.apps.auth',
+    'intranet.middleware.environment'
 )
 
 # A sample logging configuration. The only tangible logging
