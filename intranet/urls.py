@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
-from .apps.users.auth.views import index, login_view, logout_view
+from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin

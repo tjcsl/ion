@@ -1,44 +1,54 @@
 import logging
 import ldap
 import ldap.sasl
-from django.core import signals
-from django.dispatch import receiver
 from intranet import settings
 
 logger = logging.getLogger(__name__)
 
-BASE_DN = "dc=tjhsst,dc=edu"
-USER_DN = "ou=people,dc=tjhsst,dc=edu"
-SCHEDULE_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
-
-class Connection():
+class LDAPConnection(object):
     conn = None
 
     def __init__(self):
-        if not Connection.conn:
+        if not LDAPConnection.conn:
             logger.debug("Connecting to LDAP")
-            Connection.conn = ldap.initialize(settings.LDAP_SERVER)
+            LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
-            Connection.conn.sasl_interactive_bind_s('', auth_tokens)
+            LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
 
     def search(self, dn, filter, attributes):
-        return Connection.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
+        logger.debug("Searching ldap - dn: {}, filter: {}, attributes: {}".format(dn, filter, attributes))
+        return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
 
-    def user_attribute(self, username, attribute):
-        dn = 'iodineUid={},{}'.format(username, USER_DN)
-        logger.debug(dn)
-        filter = '(objectclass=tjhsstStudent)'
+    def user_attributes(self, dn, attributes):
+        logger.debug("Fetching attributes '" + str(attributes) + "' of user " + dn)
+        filter = '(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))'
         try:
-            r = self.search(dn, filter, [attribute])
+            r = self.search(dn, filter, attributes)
         except ldap.NO_SUCH_OBJECT:
-            logger.error("No such object " + dn)
-            return ''
-        except ldap.NO_SUCH_ATTRIBUTE:
-            logger.error("No such attribute: " + attribute + " for dn: " + dn)
-            return ''
-        except ldap.NO_RESULTS_RETURNED:
-            logger.debug("No results found")
-            return ''
+            logger.error("No such user " + dn)
+            return LDAPResult([])
+        logger.debug("Query returned " + str(r))
+        return LDAPResult(r)
 
-        return r
+    def class_attributes(self, dn, attributes):
+        logger.debug("Fetching attributes '" + str(attributes) + "' of class " + dn)
+        filter = '(objectclass=tjhsstClass)'
+        try:
+            r = self.search(dn, filter, attributes)
+        except ldap.NO_SUCH_OBJECT:
+            logger.error("No such class " + dn)
+            return LDAPResult([])
+        logger.debug("Query returned " + str(r))
+        return LDAPResult(r)
+
+
+class LDAPResult(object):
+    def __init__(self, result):
+        self.result = result
+
+    def first_result(self):
+        if len(self.result) > 0:
+            return self.result[0][1]
+        else:
+            return []

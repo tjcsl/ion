@@ -1,4 +1,5 @@
 import logging
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -19,4 +20,5 @@ def profile(request):
     # courses = sorted(courses, key=lambda x: x[0])
     # for course in courses:
     #     print("Period {}: {}{}({})".format(course[0], course[1], " "*(25-len(course[1])), course[2]))
-    return render(request, 'users/profile.html', {'user': request.user, })
+    return render(request, 'users/profile.html',
+                  {'user': request.user})

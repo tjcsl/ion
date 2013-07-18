@@ -14,7 +14,7 @@ def index(request, auth_form=None, user_form=None):
     else:
         auth_form = auth_form or AuthenticateForm()
         return render(request,
-                      'users/auth/login.html',
+                      'auth/login.html',
                       {'auth_form': auth_form, })
 
 

@@ -1,4 +1,3 @@
-# import the User object
 import pexpect
 import uuid
 import os
@@ -61,7 +60,9 @@ class KerberosAuthenticationBackend(object):
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             logger.info("First login - creating new user in sql database")
-            user = User.objects.create(username=username)
+            user = User()
+            user.username = username
+            user.pk = user.ion_id
             user.set_unusable_password()
             user.save()
 

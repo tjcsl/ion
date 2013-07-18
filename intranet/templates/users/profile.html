@@ -1,9 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Stalkernet</h1>
-    Your Phone Number: {{ user.phone }}<br/>
-    Your Address: {{ user.street }}
-    <br/><br/>
+    <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
+    Full Name: {% if user.title %}{{ user.title }}{% endif %} {{ user.full_name }}<br>
+    Graduation Year: {{ user.graduation_year }} {% if user.graduation_year != now|date:"Y" %} (a.k.a never){% endif %}<br>
+    Student ID: {{ user.student_id }}<br>
+    Ion ID: {{ user.id }} <br>
+    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}<br>
+    {% if user.birthday|date:"M d, Y" == now|date:"M d, Y" and user.birthday %}
+    Happy Birthday!
+    {% else %}
+    Today is not your birthday :(
+    {% endif %}
+
+    <br>
+
+    <h3>Schedule</h3>
+    <table>
+        <thead>
+            <td>Period</td>
+            <td>Class</td>
+            <td>Teacher</td>
+            <td>Room Number</td>
+        </thead>
+        {% for class in user.classes %}
+        <tr>
+            <td>{{ class.period }} </td>
+            <td>{{ class.name }}</td>
+            <td>{{ class.teacher.last_name }}</td>
+            <td>{{ class.room_number }}</td>
+        <tr>
+        {% endfor %}
+    </table>
+    <br>
     <a href='/logout'>Logout</a>
 {% endblock %}

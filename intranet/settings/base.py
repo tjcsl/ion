@@ -85,7 +85,7 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
 
 AUTHENTICATION_BACKENDS = (
-    'intranet.apps.users.auth.backends.KerberosAuthenticationBackend',
+    'intranet.apps.auth.backends.KerberosAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -145,7 +145,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'intranet.apps.users',
-    'intranet.apps.users.auth',
+    'intranet.apps.auth',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,7 +154,6 @@ INSTALLED_APPS = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOG_LEVEL = 'DEBUG' if os.getenv("PRODUCTION", "FALSE") == "FALSE" else 'INFO'
-request_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(10))
 
 LOGGING = {
     'version': 1,
@@ -164,7 +163,7 @@ LOGGING = {
         #     'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         # },
         'simple': {
-            'format': 'Request ' + request_id + '%(levelname)s: %(message)s (%(name)s, %(lineno)d)'
+            'format': '%(levelname)s: %(message)s'  # (%(name)s, line %(lineno)d)'
         },
     },
     'filters': {
@@ -197,3 +196,9 @@ LOGGING = {
         },
     }
 }
+
+
+# Intranet-specific config
+BASE_DN = "dc=tjhsst,dc=edu"
+USER_DN = "ou=people,dc=tjhsst,dc=edu"
+CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
