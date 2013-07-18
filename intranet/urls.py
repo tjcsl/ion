@@ -24,11 +24,6 @@ urlpatterns = patterns('auth.views.',
     url(r'^logout$', logout_view),
 )
 
-urlpatterns += patterns('user.views',
-
-)
-
-
 urlpatterns += patterns('',
     url(r'^\(productivity\)/cpuspam/botspam$', TemplateView.as_view(template_name="cpuspam.html")),
 )

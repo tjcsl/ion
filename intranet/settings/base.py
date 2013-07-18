@@ -121,12 +121,29 @@ SESSION_REDIS_HOST = '127.0.0.1'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
 
+CACHES = {
+    "default": {
+        "BACKEND": "redis_cache.cache.RedisCache",
+        "LOCATION": "127.0.0.1:6379:0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "redis_cache.client.DefaultClient",
+        }
+    }
+}
+
+KEY_PREFIX = os.path.basename(os.environ['VIRTUAL_ENV'])
+
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
 LDAP_REALM = "CSL.TJHSST.EDU"
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
+
+# LDAP schema config
+BASE_DN = "dc=tjhsst,dc=edu"
+USER_DN = "ou=people,dc=tjhsst,dc=edu"
+CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
 
 TEMPLATE_DIRS = (
@@ -196,9 +213,3 @@ LOGGING = {
         },
     }
 }
-
-
-# Intranet-specific config
-BASE_DN = "dc=tjhsst,dc=edu"
-USER_DN = "ou=people,dc=tjhsst,dc=edu"
-CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"

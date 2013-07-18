@@ -1,6 +1,7 @@
 import logging
 import datetime
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
