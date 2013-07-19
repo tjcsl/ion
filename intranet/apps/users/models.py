@@ -103,6 +103,22 @@ class User(AbstractBaseUser):
     # gender
     # email
 
+    def get_address(self):
+        c = LDAPConnection()
+        try:
+            raw = c.user_attribues(self.dn, 
+                                   ['street', 'postalCode', 'st', 'l'])
+            result = raw.first_result()
+            street = result['street'][0]
+            postalCode = result['postalCode'][0]
+            st = result['st'][0]
+            l = result['l'][0]
+        except KeyError:
+            return None
+        address_object = Address(street, postalCode, st, l)
+        return address_object
+    address = property(get_address)
+
     def get_birthday(self):
         c = LDAPConnection()
         try:
@@ -196,3 +212,13 @@ class Class(object):
         else:
             # Default behaviour
             raise AttributeError
+
+class Address(object):
+    def __init__(self, street, l, st, postalCode):
+        self.street = street
+        self.l = l
+        self.st = st
+        self.postalCode = postalCode
+
+    def __unicode__(self):
+        return ', '.join(self.street, self.l, self.st, self.postalCode)
