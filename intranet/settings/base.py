@@ -123,6 +123,8 @@ SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
 SESSION_REDIS_PREFIX = VIRTUAL_ENV + ':session'
 
+SESSION_COOKIE_AGE = 60 * 60 * 2
+
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
