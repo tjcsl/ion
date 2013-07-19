@@ -81,9 +81,6 @@ STATICFILES_FINDERS = (
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
-
 AUTHENTICATION_BACKENDS = (
     'intranet.apps.auth.backends.KerberosAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
@@ -115,6 +112,8 @@ ROOT_URLCONF = 'intranet.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'intranet.wsgi.application'
 
+# Name of current virtualenv
+VIRTUAL_ENV = os.path.basename(os.environ['VIRTUAL_ENV'])
 
 # Settings for django-redis-sessions
 SESSION_ENGINE = 'redis_sessions.session'
@@ -122,19 +121,17 @@ SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_HOST = '127.0.0.1'
 SESSION_REDIS_PORT = 6379
 SESSION_REDIS_DB = 0
-SESSION_REDIS_PREFIX = 'session'
+SESSION_REDIS_PREFIX = VIRTUAL_ENV + ':session'
 
 CACHES = {
-    "default": {
-        "BACKEND": "redis_cache.cache.RedisCache",
-        "LOCATION": "127.0.0.1:6379:0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "redis_cache.client.DefaultClient",
-        }
-    }
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379',
+        'OPTIONS': {
+            'PARSER_CLASS': 'redis.connection.HiredisParser'
+        },
+    },
 }
-
-# KEY_PREFIX = os.path.basename(os.environ['VIRTUAL_ENV'])
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm

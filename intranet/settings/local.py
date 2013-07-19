@@ -12,6 +12,11 @@ DATABASES = {
     }
 }
 
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h'
+
+CACHES['default']['OPTIONS']['DB'] = 1
+
 
 class glob_list(list):
     def __contains__(self, key):
@@ -26,7 +31,7 @@ INTERNAL_IPS = glob_list([
 ])
 
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': True
+    'INTERCEPT_REDIRECTS': False
 }
 
 DEBUG_TOOLBAR_PANELS = (
@@ -34,11 +39,11 @@ DEBUG_TOOLBAR_PANELS = (
         'debug_toolbar.panels.timer.TimerDebugPanel',
         'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
         'debug_toolbar.panels.headers.HeaderDebugPanel',
-        'debug_toolbar.panels.profiling.ProfilingDebugPanel',
+        # 'debug_toolbar.panels.profiling.ProfilingDebugPanel',  # Views are called twice when this is enabled
         'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
         'debug_toolbar.panels.sql.SQLDebugPanel',
         'debug_toolbar.panels.template.TemplateDebugPanel',
-        'debug_toolbar.panels.cache.CacheDebugPanel',
+        # 'debug_toolbar.panels.cache.CacheDebugPanel',
         'debug_toolbar.panels.signals.SignalDebugPanel',
         'debug_toolbar.panels.logger.LoggingPanel',
 )

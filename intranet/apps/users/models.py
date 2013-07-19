@@ -35,8 +35,10 @@ class User(AbstractBaseUser):
 
     def get_dn(self):
         return "iodineUid=" + self.username + "," + settings.USER_DN
+
     def set_dn(self, dn):
         self.username = ldap.dn.str2dn(dn)[0][0][1]
+
     dn = property(get_dn, set_dn)
 
     # Return ordered schedule
@@ -48,8 +50,9 @@ class User(AbstractBaseUser):
             schedule = []
             for dn in classes:
                 class_object = Class(dn=dn)
-                schedule.append(class_object)
-            return sorted(schedule, key=lambda e: e.period)
+                schedule.append((class_object.period, class_object))  # Pack the class in a tuple so sorting doesn't make ldap queries
+            ordered_schedule = sorted(schedule, key=lambda e: e[0])
+            return list(zip(*ordered_schedule)[1])
         except KeyError:
             return None
     classes = property(get_classes)

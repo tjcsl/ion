@@ -18,15 +18,15 @@ class LDAPConnection(object):
             LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
-        else:
-            logger.debug("Connection to LDAP already established")
+        # else:
+        #     logger.debug("Connection to LDAP already established")
 
     def search(self, dn, filter, attributes):
         logger.debug("Searching ldap - dn: {}, filter: {}, attributes: {}".format(dn, filter, attributes))
         return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
 
     def user_attributes(self, dn, attributes):
-        logger.debug("Fetching attributes '" + str(attributes) + "' of user " + dn)
+        logger.debug("Fetching attributes '{}' of user {}".format(str(attributes), dn))
         filter = '(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))'
         try:
             r = self.search(dn, filter, attributes)
@@ -58,11 +58,14 @@ class LDAPResult(object):
         else:
             return []
 
+    def results_array(self):
+        return self.result
+
 
 # Include this? check effects on performance
-# @classmethod
-# @receiver(request_finished)
-# def close_ldap_connection(sender, **kwargs):
-#     if LDAPConnection.conn:
-#         LDAPConnection.conn.unbind()
-#         LDAPConnection.conn = None
+@classmethod
+@receiver(request_finished)
+def close_ldap_connection(sender, **kwargs):
+    if LDAPConnection.conn:
+        LDAPConnection.conn.unbind()
+        LDAPConnection.conn = None

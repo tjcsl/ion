@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 def index(request, auth_form=None, user_form=None):
     if request.user.is_authenticated():
-        return profile(request)
+        # return profile(request)
+        return redirect('/profile')
     else:
         auth_form = auth_form or AuthenticateForm()
         return render(request,
@@ -25,6 +26,7 @@ def login_view(request):
         if form.is_valid():
             login(request, form.get_user())
             request.session["KRB5CCNAME"] = os.environ['KRB5CCNAME']
+
             return redirect('/')
         else:
             logger.info("Login failed")

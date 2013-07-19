@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile
 # Uncomment the next two lines to enable the admin:
@@ -24,6 +24,11 @@ urlpatterns = patterns('auth.views.',
     url(r'^logout$', logout_view),
 )
 
+urlpatterns += patterns('users.views.',
+    url(r'^profile$', profile),
+)
+
 urlpatterns += patterns('',
+    url(r'^favicon\.png$', RedirectView.as_view(url='/static/img/favicon.png')),
     url(r'^\(productivity\)/cpuspam/botspam$', TemplateView.as_view(template_name="cpuspam.html")),
 )
