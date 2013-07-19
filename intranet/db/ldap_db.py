@@ -1,3 +1,7 @@
+"""
+.. module:: ldap_db
+
+"""
 import logging
 import ldap
 import ldap.sasl
@@ -13,6 +17,11 @@ class LDAPConnection(object):
     conn = None
 
     def __init__(self):
+        """Initialize and/or return a singleton LDAPConnection object
+
+        Connect to the LDAP
+
+        """
         if not LDAPConnection.conn:
             logger.debug("Connecting to LDAP")
             LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
@@ -22,10 +31,31 @@ class LDAPConnection(object):
         #     logger.debug("Connection to LDAP already established")
 
     def search(self, dn, filter, attributes):
+        """Search LDAP and return an LDAPResult.
+
+        Search LDAP with the given dn and filter and return the given
+        attributes in an LDAPResult object.
+
+        Args:
+            dn: The string representation of the distinguished name
+                (DN) of the entry at which to start the search.
+            filter: The string representation of the filter to apply to
+                the search.
+            attributes: A list of LDAP attributes (as strings)
+                to retrieve.
+
+        Returns:
+            An LDAPResult object.
+
+        Raises:
+             Should raise stuff but it doesn't yet
+
+        """
         logger.debug("Searching ldap - dn: {}, filter: {}, attributes: {}".format(dn, filter, attributes))
         return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
 
     def user_attributes(self, dn, attributes):
+
         logger.debug("Fetching attributes '{}' of user {}".format(str(attributes), dn))
         filter = '(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))'
         try:

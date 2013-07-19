@@ -10,47 +10,86 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(models.Manager):
+    """User model Manager for table-level LDAP queries.
+
+    Provides table-level LDAP abstraction for the User model. If a call
+    to a method fails for this Manager, the call is deferred to the
+    default User model manager.
+
+    """
     def return_something(self):
         return "something"
 
 
 class User(AbstractBaseUser):
+    """User model with properties that fetch data from LDAP
+
+    Extends AbstractBaseUser so the model will work with Django's
+    built-in authorization functionality.
+
+    """
+    # Django Model Fields
     username = models.CharField(max_length=50, unique=True, db_index=True)
     # first_name = models.CharField(max_length=50)
     # last_name = models.CharField(max_length=50)
 
+    """Required to replace the default User model."""
     USERNAME_FIELD = 'username'
+
+    """Override default Model Manager (objects) with
+    custom UserManager."""
     objects = UserManager()
 
     def get_full_name(self):
+        """Return full name, e.g. Guido van Rossum or Angela William,
+        depending on what information is available in LDAP.
+        """
         if self.display_name:
             return self.display_name
         else:
             return self.cn
+
     full_name = property(get_full_name)
 
     def get_short_name(self):
+        """Return short name (first name) of a user."""
         return self.first_name
+
     short_name = property(get_short_name)
 
     def get_dn(self):
+        """Return the full distinguished name for a user in LDAP."""
         return "iodineUid=" + self.username + "," + settings.USER_DN
 
     def set_dn(self, dn):
+        """Set DN for a user.
+        This should only be used for constructing ad-hoc User objects.
+
+            >>> User(dn="iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu")
+
+        """
         self.username = ldap.dn.str2dn(dn)[0][0][1]
 
     dn = property(get_dn, set_dn)
 
-    # Return ordered schedule
     def get_classes(self):
+        """Returns a list of Class objects for a user ordered by
+        period number.
+        """
         c = LDAPConnection()
         try:
             result = c.user_attributes(self.dn, ['enrolledclass'])
             classes = result.first_result()["enrolledclass"]
             schedule = []
+
             for dn in classes:
                 class_object = Class(dn=dn)
-                schedule.append((class_object.period, class_object))  # Pack the class in a tuple so sorting doesn't make ldap queries
+
+                # Temporarily pack the classes in tuples so we can
+                # sort on an integer key instead of the period property
+                # to avoid tons of needless LDAP queries
+                schedule.append((class_object.period, class_object))
+
             ordered_schedule = sorted(schedule, key=lambda e: e[0])
             return list(zip(*ordered_schedule)[1])
         except KeyError:
@@ -75,10 +114,26 @@ class User(AbstractBaseUser):
             return None
     birthday = property(get_birthday)
 
-    # Using __getattr__ instead of __getattribute__ so it is called after checking regular attributes
     def __getattr__(self, name):
-        # Maps simple attributes of User to ldap fields
-        # When more complex processing is required (such as when a date object is returned), a property is used instead
+        """Return simple attributes of User
+
+        This is used to retrieve ldap fields that don't require special
+        processing, e.g. email or graduation year. Fields names are
+        mapped to more user friendly names to increase readability of
+        templates. When more complex processing is required or a
+        complex return type is required, (such as a datetime object for
+        a birthday), properties should be used instead.
+
+        Note that __getattr__ is used instead of __getattribute__ so
+        the method is called after checking regular attributes instead
+        of before.
+
+        Returns:
+            Either a list of strings or a string, depending on
+            the input.
+
+
+        """
         attr_ldap_field_map = {"home_phone": "homePhone",
                                "email": "mail",
                                "ion_id": "iodineUidNumber",
@@ -119,10 +174,7 @@ class Class(object):
         return User(dn=result['sponsorDn'][0])
     teacher = property(get_sponsor)
 
-    # Using __getattr__ instead of __getattribute__ so it is called after checking regular attributes
     def __getattr__(self, name):
-        # Maps simple attributes of User to ldap fields
-        # When more complex processing is required (such as when a date object is returned), a property is used instead
         attr_ldap_field_map = {"name": "cn",
                                "period": "classPeriod",
                                "class_id": "tjhsstClassId",
