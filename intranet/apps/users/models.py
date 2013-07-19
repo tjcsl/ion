@@ -1,10 +1,13 @@
 import logging
 import datetime
 import ldap
+import hashlib
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from django.db import models
+from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser
+from django.core.signing import Signer
 
 logger = logging.getLogger(__name__)
 
@@ -78,8 +81,8 @@ class User(AbstractBaseUser):
         """
         c = LDAPConnection()
         try:
-            result = c.user_attributes(self.dn, ['enrolledclass'])
-            classes = result.first_result()["enrolledclass"]
+            results = c.user_attributes(self.dn, ['enrolledclass'])
+            classes = results.first_result()["enrolledclass"]
             schedule = []
 
             for dn in classes:
@@ -99,14 +102,13 @@ class User(AbstractBaseUser):
     # TODO:
     # counselor
     # homephone
-    # address
     # gender
     # email
 
     def get_address(self):
         c = LDAPConnection()
         try:
-            raw = c.user_attribues(self.dn, 
+            raw = c.user_attribues(self.dn,
                                    ['street', 'postalCode', 'st', 'l'])
             result = raw.first_result()
             street = result['street'][0]
@@ -150,32 +152,46 @@ class User(AbstractBaseUser):
 
 
         """
-        attr_ldap_field_map = {"home_phone": "homePhone",
-                               "email": "mail",
-                               "ion_id": "iodineUidNumber",
-                               "student_id": "tjhsstStudentId",
-                               "first_name": "givenName",
-                               "middle_name": "middlename",
-                               "last_name": "sn",
-                               "locker": "locker",
-                               "graduation_year": "graduationYear",
-                               "display_name": "displayName",
-                               "cn": "cn",
-                               "title": "title",
-                               }
+        identifier = ".".join([self.dn, name])
+        signer = Signer()
+        signed = signer.sign(identifier)
+        hash = hashlib.sha1()
+        hash.update(signed)
+        key = hash.hexdigest()
 
-        if name in attr_ldap_field_map:
-            c = LDAPConnection()
-            field_name = attr_ldap_field_map[name]
-            try:
-                result = c.user_attributes(self.dn, [field_name])
-                fields = result.first_result()
-                return fields[field_name][0]
-            except KeyError:
-                return None
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Attribute '{}' of {} loaded from cache.".format(name, self.dn))
+            return cached
         else:
-            # Default behaviour
-            raise AttributeError
+            attr_ldap_field_map = {"home_phone": "homePhone",
+                                   "ion_id": "iodineUidNumber",
+                                   "student_id": "tjhsstStudentId",
+                                   "first_name": "givenName",
+                                   "middle_name": "middlename",
+                                   "last_name": "sn",
+                                   "locker": "locker",
+                                   "graduation_year": "graduationYear",
+                                   "display_name": "displayName",
+                                   "cn": "cn",
+                                   "title": "title",
+                                   }
+
+            if name in attr_ldap_field_map:
+                c = LDAPConnection()
+                field_name = attr_ldap_field_map[name]
+                try:
+                    result = c.user_attributes(self.dn, [field_name])
+                    fields = result.first_result()
+                    value = fields[field_name][0]
+                    cache.set(key, value, 60 * 60 * 24 * 30)
+                    return value
+                except KeyError:
+                    return None
+            else:
+                # Default behaviour
+                raise AttributeError
 
 
 class Class(object):
@@ -186,7 +202,8 @@ class Class(object):
 
     def get_sponsor(self):
         c = LDAPConnection()
-        result = c.class_attributes(self.dn, ['sponsorDn']).first_result()
+        results = c.class_attributes(self.dn, ['sponsorDn'])
+        result = results.first_result()
         return User(dn=result['sponsorDn'][0])
     teacher = property(get_sponsor)
 
@@ -213,12 +230,14 @@ class Class(object):
             # Default behaviour
             raise AttributeError
 
+
 class Address(object):
-    def __init__(self, street, l, st, postalCode):
+    def __init__(self, street, city, state, postal_code):
         self.street = street
-        self.l = l
-        self.st = st
-        self.postalCode = postalCode
+        self.city = city
+        self.state = state
+        self.postal_code = postal_code
 
     def __unicode__(self):
-        return ', '.join(self.street, self.l, self.st, self.postalCode)
+        return ", ".join([self.street, self.city, self.state,
+                          self.postal_code])
