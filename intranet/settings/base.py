@@ -124,6 +124,9 @@ SESSION_REDIS_DB = 0
 SESSION_REDIS_PREFIX = VIRTUAL_ENV + ':session'
 
 SESSION_COOKIE_AGE = 60 * 60 * 2
+SESSION_SAVE_EVERY_REQUEST = True
+
+USER_ATTRIBUTE_CACHE_AGE = 60 * 60 * 24 * 30 * 2
 
 CACHES = {
     'default': {
@@ -146,6 +149,8 @@ LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
 BASE_DN = "dc=tjhsst,dc=edu"
 USER_DN = "ou=people,dc=tjhsst,dc=edu"
 CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
+
+
 
 
 TEMPLATE_DIRS = (
