@@ -1,17 +1,15 @@
 {% extends "base.html" %}
+{% load address_extras %}
 
 {% block content %}
     <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
     Full Name: {% if user.title %}{{ user.title }}{% endif %} {{ user.full_name }}<br>
+    Username: {{ user.username }}<br>
     Graduation Year: {{ user.graduation_year }} {% if user.graduation_year != now|date:"Y" %} (a.k.a never){% endif %}<br>
     Student ID: {{ user.student_id }}<br>
     Ion ID: {{ user.id }} <br>
-    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}<br>
-    {% if user.birthday|date:"M d, Y" == now|date:"M d, Y" and user.birthday %}
-    Happy Birthday!
-    {% else %}
-    Today is not your birthday :(
-    {% endif %}
+    Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|multiline }}</div><br>
+    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}
 
     <br>
 
