@@ -302,13 +302,22 @@ intersphinx_mapping = {
 # -- Django Setup -------------------------------------------------------------
 
 # add project root
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../intranet')))
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from settings import production
+from intranet import settings
 from django.core.management import setup_environ
-setup_environ(production)
+setup_environ(settings)
 
 
 # Django docs
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
+
+
+def skip(app, what, name, obj, skip, options):
+    if name in ("__weakref__", "__dict__", "base_fields", "media"):
+        return True
+    return skip
+
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip)

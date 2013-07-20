@@ -75,8 +75,7 @@ class LDAPConnection(object):
 
         Args:
             dn: The full DN of the user
-            attributes: A list a strings representing the LDAP fields
-                to fetch
+            attributes: A list of the LDAP fields to fetch (strings)
 
         Returns:
             LDAPResult object (empty if no results)
@@ -100,8 +99,7 @@ class LDAPConnection(object):
 
         Args:
             dn: The full DN of the class
-            attributes: A list a strings representing the LDAP fields
-                to fetch
+            attributes: A list of the LDAP fields to fetch (strings)
 
         Returns:
             LDAPResult object (empty if no results)

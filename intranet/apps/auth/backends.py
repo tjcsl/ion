@@ -2,6 +2,7 @@ import pexpect
 import uuid
 import os
 import logging
+from intranet import settings
 from intranet.apps.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -10,36 +11,32 @@ logger = logging.getLogger(__name__)
 class KerberosAuthenticationBackend(object):
     @staticmethod
     def get_kerberos_ticket(username, password):
-        host = "ion.tjhsst.edu"
-        ldap_realm = "CSL.TJHSST.EDU"
 
-        ad_realm = "LOCAL.TJHSST.EDU"
-        csl_realm = "CSL.TJHSST.EDU"
         cache = "/tmp/ion-" + str(uuid.uuid4())
 
         logger.debug("Setting KRB5CCNAME to " + cache)
         os.environ['KRB5CCNAME'] = cache
 
-        kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, csl_realm))
-        kinit.expect("{}@{}'s Password:".format(username, csl_realm))
+        kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
+        kinit.expect("{}@{}'s Password:".format(username, settings.CSL_REALM))
         kinit.sendline(password)
         kinit.expect(pexpect.EOF)
         kinit.close()
         exitstatus = kinit.exitstatus
-        realm = csl_realm
+        realm = settings.CSL_REALM
 
         if exitstatus != 0:
-            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, ad_realm))
-            kinit.expect("{}@{}'s Password:".format(username, ad_realm))
+            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
+            kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
             kinit.sendline(password)
             kinit.expect(pexpect.EOF)
             kinit.close()
             exitstatus = kinit.exitstatus
-            realm = ad_realm
+            realm = settings.AD_REALM
 
         if kinit.exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
-            kgetcred = pexpect.spawn("/usr/bin/kgetcred ldap/{}@{}".format(host, ldap_realm))
+            kgetcred = pexpect.spawn("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
             kgetcred.expect(pexpect.EOF)
             kgetcred.close()
 
@@ -56,6 +53,19 @@ class KerberosAuthenticationBackend(object):
             return False
 
     def authenticate(self, username=None, password=None):
+        """Authenticate a username-password pair.
+
+        Checks
+
+        Args:
+            Argument: Description.
+
+        Returns:
+            Return
+
+        Raises:
+            Error
+        """
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -73,7 +83,17 @@ class KerberosAuthenticationBackend(object):
             return None
 
     def get_user(self, user_id):
+        """Returns a user, given his or her user id. Required for a
+        custom authentication backend.
+
+        Args:
+            user_id: The user id of the user to fetch.
+
+        Returns:
+            User or None
+
+        """
         try:
-            return User.objects.get(id=user_id)
+            return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None

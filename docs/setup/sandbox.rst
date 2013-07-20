@@ -1,7 +1,9 @@
-*********************
-Setting up Virtualenv
-*********************
+***********************
+Setting up your sandbox
+***********************
 
+Setting up Virtualenv
+=====================
 SSH into Ion.
 
 Navigate to ``/usr/local/virtualenvs``:
@@ -55,3 +57,13 @@ If there’s no output, your sandbox should be ready to go. Finally, clean up so
 .. code-block:: bash
 
     $ rm freeze.txt req.txt
+
+
+Setting up Git
+==============
+git clone /shared/git/intranet3.git
+git branch dev origin/dev
+
+To add:
+shared setttings on /shared
+permissions

@@ -16,17 +16,16 @@ Contents
 
     setup/index
     architecture/index
-    djangoprimer/index
     developing/index
-    apps/index
+    sourcedoc/intranet
     administration/index
 
 
 Setup
 -----
 
-- :doc:`Setting up Git<setup/git>`
-- :doc:`Setting up Virtualenv<setup/virtualenv>`
+- :doc:`Setting up the server<setup/server>`
+- :doc:`Setting up a sandbox<setup/sandbox>`
 
 
 Architecture
@@ -37,12 +36,6 @@ Say stuff about the architecture design
 See the :doc:`Architecture documentation<architecture/index>`.
 
 
-Django Primer
--------------
-
-Overview django basics, provide links to tutorials, etc.
-
-Go to the :doc:`Django primer<djangoprimer/index>`.
 
 Developing for Intranet
 -----------------------
@@ -50,22 +43,13 @@ Developing for Intranet
 - :doc:`Coding Style Guide<developing/styleguide>`
 
 
-Apps
-----
-
-Apps are...
-
+Source Code Documentation
+-------------------------
 Yay! referencing django docs! :django:setting:`ROOT_URLCONF` setting.
 
 and python docs! :class:`threading.Thread`
 
-- :doc:`Auth<apps/auth>`
-- :doc:`Eighth<apps/eighth>`
-- :doc:`Filecenter<apps/filecenter>`
-- :doc:`Groups<apps/groups>`
-- :doc:`News<apps/news>`
-- :doc:`Polls<apps/polls>`
-- :doc:`Users<apps/users>`
+Go to the :doc:`Source Code Documentation<sourcedoc/intranet>`
 
 Administration
 --------------
