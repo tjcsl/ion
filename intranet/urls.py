@@ -26,6 +26,7 @@ urlpatterns = patterns('auth.views.',
 
 urlpatterns += patterns('users.views.',
     url(r'^profile$', profile),
+    url(r'^profile/(?P<user_id>\d+)$', profile),
 )
 
 urlpatterns += patterns('',

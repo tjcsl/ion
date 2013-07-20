@@ -47,6 +47,27 @@ class User(AbstractBaseUser):
     custom UserManager."""
     objects = UserManager()
 
+    @classmethod
+    def create(cls, dn=None, id=None):
+        """User factory method.
+
+        Creates a User method from a dn or a username. If both a dn and
+        a username is provided, the dn will be used.
+
+        Args:
+            - dn -- The full Distinguished Name of a user.
+            - id -- The user ID of the user to return.
+
+        Returns:
+            The User object if one could be created, otherwise None
+        """
+        if dn is not None:
+            return cls(dn=dn)
+        elif id is not None:
+            return cls(id=None)
+        else:
+            return None
+
     @staticmethod
     def create_secure_cache_key(identifier):
         """Create a cache key for sensitive information.
@@ -104,7 +125,7 @@ class User(AbstractBaseUser):
         """Set DN for a user. This should generally only be used for
         constructing ad-hoc User objects.
 
-            >>> User(dn="iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu")
+            >>> User.create(dn="iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu")
 
         """
         self.username = ldap.dn.str2dn(dn)[0][0][1]
@@ -320,7 +341,7 @@ class Class(object):
         if cached:
             logger.debug("Attribute 'teacher' of class {} loaded \
                           from cache.".format(self.section_id))
-            return User(dn=cached)
+            return User.create(dn=cached)
         else:
             c = LDAPConnection()
             results = c.class_attributes(self.dn, ['sponsorDn'])
@@ -331,7 +352,7 @@ class Class(object):
             # all of the properties and quickly reach the maximum
             # recursion depth
             cache.set(key, dn, settings.CLASS_TEACHER_CACHE_AGE)
-            return User(dn=dn)
+            return User.create(dn=dn)
 
     teacher = property(get_teacher)
 

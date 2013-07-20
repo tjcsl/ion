@@ -55,7 +55,7 @@ class KerberosAuthenticationBackend(object):
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
-        Checks
+        Creates a new user if one is not already in the database.
 
         Args:
             Argument: Description.
@@ -66,21 +66,20 @@ class KerberosAuthenticationBackend(object):
         Raises:
             Error
         """
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            logger.info("First login - creating new user in sql database")
-            user = User()
-            user.username = username
-            user.pk = user.ion_id
-            user.set_unusable_password()
-            user.save()
-
-        if self.get_kerberos_ticket(username, password):
-            logger.info("Authentication successful")
-            return user
-        else:
+        if not self.get_kerberos_ticket(username, password):
             return None
+        else:
+            logger.info("Authentication successful")
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                logger.info("First login - creating new user in sql database")
+                user = User()
+                user.username = username
+                user.pk = user.ion_id
+                user.set_unusable_password()
+                user.save()
+            return user
 
     def get_user(self, user_id):
         """Returns a user, given his or her user id. Required for a
