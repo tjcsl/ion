@@ -14,12 +14,22 @@ logger = logging.getLogger(__name__)
 
 
 class LDAPConnection(object):
+    """Represents an LDAP connection with wrappers for the raw ldap
+    queries.
+
+    Attributes:
+        conn: The singleton LDAP connection.
+
+    """
     conn = None
 
     def __init__(self):
-        """Initialize and/or return a singleton LDAPConnection object
+        """Initialize and/or return a singleton LDAPConnection object.
 
-        Connect to the LDAP
+        Connect to the LDAP server specified in settings and bind
+        using the GSSAPI protocol. The requisite KRB5CCNAME
+        environmental variable should have already been set by the
+        SetKerberosCache middleware.
 
         """
         if not LDAPConnection.conn:
@@ -51,11 +61,27 @@ class LDAPConnection(object):
              Should raise stuff but it doesn't yet
 
         """
-        logger.debug("Searching ldap - dn: {}, filter: {}, attributes: {}".format(dn, filter, attributes))
-        return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
+        logger.debug("Searching ldap - dn: {}, filter: {}, \
+                      attributes: {}".format(dn, filter, attributes))
+        return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE,
+                                            filter, attributes)
 
     def user_attributes(self, dn, attributes):
+        """Fetch a list of attributes of the specified user.
 
+        Fetch LDAP attributes of a tjhsstStudent or a tjhsstTeacher. The
+        LDAPResult will contain an empty set of results if the user does
+        not exist.
+
+        Args:
+            dn: The full DN of the user
+            attributes: A list a strings representing the LDAP fields
+                to fetch
+
+        Returns:
+            LDAPResult object (empty if no results)
+
+        """
         logger.debug("Fetching attributes '{}' of user {}".format(str(attributes), dn))
         filter = '(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))'
         try:
@@ -67,8 +93,23 @@ class LDAPConnection(object):
         return LDAPResult(r)
 
     def class_attributes(self, dn, attributes):
+        """Fetch a list of attributes of the specified class.
+
+        Fetch LDAP attributes of a tjhsstClass. The LDAPResult will
+        contain an empty set of results if the class does not exist.
+
+        Args:
+            dn: The full DN of the class
+            attributes: A list a strings representing the LDAP fields
+                to fetch
+
+        Returns:
+            LDAPResult object (empty if no results)
+
+        """
         logger.debug("Fetching attributes '" + str(attributes) + "' of class " + dn)
         filter = '(objectclass=tjhsstClass)'
+
         try:
             r = self.search(dn, filter, attributes)
         except ldap.NO_SUCH_OBJECT:
@@ -79,6 +120,15 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
+    """Represents the result of an LDAP query.
+
+    LDAPResult stores the raw result of an LDAP query and can process
+    the results in various ways.
+
+    Attributes:
+        result: the raw result of an LDAP query
+
+    """
     def __init__(self, result):
         self.result = result
 
@@ -92,10 +142,16 @@ class LDAPResult(object):
         return self.result
 
 
-# Include this? check effects on performance
 @classmethod
 @receiver(request_finished)
 def close_ldap_connection(sender, **kwargs):
+    """Closes the request's LDAP connection.
+
+    Listens for the request_finished signal from Django and upon
+    receit, unbinds from the directory, terminates the current
+    association, and frees resources.
+
+    """
     if LDAPConnection.conn:
         LDAPConnection.conn.unbind()
         LDAPConnection.conn = None
