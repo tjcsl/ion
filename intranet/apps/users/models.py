@@ -29,8 +29,9 @@ class UserManager(models.Manager):
 class User(AbstractBaseUser):
     """Django User model subclass with properties that fetch data from LDAP
 
-    Extends AbstractBaseUser so the model will work with Django's
-    built-in authorization functionality.
+    Represents a tjhsstStudent or tjhsstTeacher LDAP object.Extends
+    AbstractBaseUser so the model will work with Django's built-in
+    authorization functionality.
 
     """
     # Django Model Fields
@@ -38,7 +39,7 @@ class User(AbstractBaseUser):
     # first_name = models.CharField(max_length=50)
     # last_name = models.CharField(max_length=50)
 
-    """Required to replace the default User model."""
+    """Required to replace the default Django User model."""
     USERNAME_FIELD = 'username'
 
     """Override default Model Manager (objects) with
@@ -47,6 +48,28 @@ class User(AbstractBaseUser):
 
     @staticmethod
     def create_secure_cache_key(identifier):
+        """Create a cache key for sensitive information.
+
+        Caching personal information that was once access-protected
+        introduces an inherent security risk. To prevent retrieval of a
+        value from the cache, the plaintext key is first signed with the
+        secret key and then hashed using the SHA1 algorithm. That way,
+        one would need the secret key to construct the key for a
+        cached value and an existing key indicates nothing about the
+        relevance of the cooresponding value. For maximum effectiveness,
+        cache attributes of an object separately so the relevance of
+        cached info can not be inferred (e.g. cache a user's name
+        separate from his or her address so the two can not be
+        associated).
+
+        Args:
+            identifier: The plaintext identifier (generally of the form
+                "<dn>.<attribute>" for the cached data.
+
+        Returns:
+            String
+
+        """
         signer = Signer()
         signed = signer.sign(identifier)
         hash = hashlib.sha1()
@@ -90,6 +113,9 @@ class User(AbstractBaseUser):
     def get_classes(self):
         """Returns a list of Class objects for a user ordered by
         period number.
+
+        Returns:
+            List of Class objects
         """
         identifier = ".".join([self.dn, "classes"])
         key = User.create_secure_cache_key(identifier)
@@ -140,6 +166,12 @@ class User(AbstractBaseUser):
     # email
 
     def get_address(self):
+        """Returns the address of a user.
+
+        Returns:
+            Address object
+
+        """
         identifier = ".".join([self.dn, "address"])
         key = User.create_secure_cache_key(identifier)
 
@@ -169,6 +201,12 @@ class User(AbstractBaseUser):
     address = property(get_address)
 
     def get_birthday(self):
+        """Returns a user's birthday.
+
+        Returns:
+            datetime object
+
+        """
         identifier = ".".join([self.dn, "birthday"])
         key = User.create_secure_cache_key(identifier)
 
@@ -207,7 +245,7 @@ class User(AbstractBaseUser):
 
         Returns:
             Either a list of strings or a string, depending on
-            the input.
+            the attribute fetched.
 
 
         """
@@ -252,12 +290,25 @@ class User(AbstractBaseUser):
 
 
 class Class(object):
+    """Represents a tjhsstClass LDAP object.
+
+    Attributes:
+        dn: The DN of the cooresponding tjhsstClass in LDAP
+        section_id: The section ID of the class
+
+    """
     def __init__(self, dn):
         self.dn = dn
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
 
     def get_teacher(self):
+        """Returns the teacher/sponsor of the class
+
+        Returns:
+            User object
+
+        """
         key = ".".join([self.dn, 'teacher'])
 
         cached = cache.get(key)
@@ -271,6 +322,10 @@ class Class(object):
             results = c.class_attributes(self.dn, ['sponsorDn'])
             result = results.first_result()
             dn = result['sponsorDn'][0]
+
+            # Only cache the dn, since pickling would recursively fetch
+            # all of the properties and quickly reach the maximum
+            # recursion depth
             cache.set(key, dn, settings.CLASS_TEACHER_CACHE_AGE)
             return User(dn=dn)
     teacher = property(get_teacher)
@@ -279,6 +334,25 @@ class Class(object):
     # quarters
 
     def __getattr__(self, name):
+        """Return simple attributes of User
+
+        This is used to retrieve ldap fields that don't require special
+        processing, e.g. roomNumber or period. Fields names are
+        mapped to more user friendly names to increase readability of
+        templates. When more complex processing is required or a
+        complex return type is required, (such as a User object),
+        properties should be used instead.
+
+        Note that __getattr__ is used instead of __getattribute__ so
+        the method is called after checking regular attributes instead
+        of before.
+
+        Returns:
+            Either a list of strings or a string, depending on
+            the attribute fetched.
+
+
+        """
         key = ".".join([self.dn, name])
 
         cached = cache.get(key)
@@ -328,5 +402,5 @@ class Address(object):
         self.postal_code = postal_code
 
     def __unicode__(self):
-        return "{}<br>{}, {} {}".format(self.street, self.city, self.state,
-                                        self.postal_code)
+        return "{}; {}, {} {}".format(self.street, self.city, self.state,
+                                      self.postal_code)
