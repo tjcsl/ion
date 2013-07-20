@@ -36,6 +36,7 @@ class User(AbstractBaseUser):
     """
     # Django Model Fields
     username = models.CharField(max_length=50, unique=True, db_index=True)
+
     # first_name = models.CharField(max_length=50)
     # last_name = models.CharField(max_length=50)
 
@@ -51,20 +52,20 @@ class User(AbstractBaseUser):
         """Create a cache key for sensitive information.
 
         Caching personal information that was once access-protected
-        introduces an inherent security risk. To prevent retrieval of a
-        value from the cache, the plaintext key is first signed with the
-        secret key and then hashed using the SHA1 algorithm. That way,
-        one would need the secret key to construct the key for a
-        cached value and an existing key indicates nothing about the
-        relevance of the cooresponding value. For maximum effectiveness,
-        cache attributes of an object separately so the relevance of
-        cached info can not be inferred (e.g. cache a user's name
-        separate from his or her address so the two can not be
-        associated).
+        introduces an inherent security risk. To prevent human retrieval
+        of a value from the cache, the plaintext key is first signed
+        with the secret key and then hashed using the SHA1 algorithm.
+        That way, one would need the secret key to query for a specifi
+        cached value and an existing key would indicate nothing about
+        the relevance of the cooresponding value. For maximum
+        effectiveness, cache attributes of an object separately so the
+        context of a cached value can not be inferred (e.g. cache a
+        user's name separate from his or her address so the two can not
+        be associated).
 
         Args:
-            identifier: The plaintext identifier (generally of the form
-                "<dn>.<attribute>" for the cached data.
+            identifier: The plaintext identifier (generally of the form\
+                        "<dn>.<attribute>" for the cached data).
 
         Returns:
             String
@@ -136,27 +137,25 @@ class User(AbstractBaseUser):
                 results = c.user_attributes(self.dn, ['enrolledclass'])
                 classes = results.first_result()["enrolledclass"]
                 schedule = []
-                dn_list = []
                 for dn in classes:
                     class_object = Class(dn=dn)
-
-                    # Prepare a list of DNs for caching
-                    # (pickling a Class class loads all properties recursively
-                    # and quickly reaches the maximum recursion depth)
-                    dn_list.append(dn)
 
                     # Temporarily pack the classes in tuples so we can
                     # sort on an integer key instead of the period property
                     # to avoid tons of needless LDAP queries
-                    schedule.append((class_object.period, class_object))
-
-                cache.set(key, dn_list,
-                          settings.USER_CLASSES_CACHE_AGE)
+                    schedule.append((class_object.period, class_object, dn))
 
                 ordered_schedule = sorted(schedule, key=lambda e: e[0])
+
+                # Prepare a list of DNs for caching
+                # (pickling a Class class loads all properties recursively
+                # and quickly reaches the maximum recursion depth)
+                dn_list = list(zip(*ordered_schedule)[2])
+                cache.set(key, dn_list, settings.USER_CLASSES_CACHE_AGE)
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
             except KeyError:
                 return None
+
     classes = property(get_classes)
 
     # TODO:
@@ -198,6 +197,7 @@ class User(AbstractBaseUser):
                 return address_object
             except KeyError:
                 return None
+
     address = property(get_address)
 
     def get_birthday(self):
@@ -242,6 +242,9 @@ class User(AbstractBaseUser):
         Note that __getattr__ is used instead of __getattribute__ so
         the method is called after checking regular attributes instead
         of before.
+
+        :param name: The name to use.
+        :type name: str.
 
         Returns:
             Either a list of strings or a string, depending on
@@ -293,11 +296,12 @@ class Class(object):
     """Represents a tjhsstClass LDAP object.
 
     Attributes:
-        dn: The DN of the cooresponding tjhsstClass in LDAP
-        section_id: The section ID of the class
+        - dn -- The DN of the cooresponding tjhsstClass in LDAP
+        - section_id -- The section ID of the class
 
     """
     def __init__(self, dn):
+        """Initialize the Class object."""
         self.dn = dn
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
@@ -328,6 +332,7 @@ class Class(object):
             # recursion depth
             cache.set(key, dn, settings.CLASS_TEACHER_CACHE_AGE)
             return User(dn=dn)
+
     teacher = property(get_teacher)
 
     # TODO:
@@ -348,7 +353,7 @@ class Class(object):
         of before.
 
         Returns:
-            Either a list of strings or a string, depending on
+            Either a list of strings or a string, depending on \
             the attribute fetched.
 
 
@@ -389,18 +394,20 @@ class Address(object):
     """Represents the address of a user.
 
     Attributes:
-        street: The street name of the address.
-        city: The city name of the address.
-        state: The state name of the address.
-        postal_code: The zip code of the address.
+        - street -- The street name of the address.
+        - city -- The city name of the address.
+        - state -- The state name of the address.
+        - postal_code -- The zip code of the address.
 
     """
     def __init__(self, street, city, state, postal_code):
+        """Initialize the Address object."""
         self.street = street
         self.city = city
         self.state = state
         self.postal_code = postal_code
 
     def __unicode__(self):
+        """Return unicode representation for debugging."""
         return "{}; {}, {} {}".format(self.street, self.city, self.state,
                                       self.postal_code)
