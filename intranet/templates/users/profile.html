@@ -1,18 +1,19 @@
 {% extends "base.html" %}
-{% load address_extras %}
+{% load address_filters %}
+{% load phone_number_filters %}
 
 {% block content %}
     <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
-    Full Name: {% if user.title %}{{ user.title }}{% endif %} {{ user.full_name }}<br>
+    Full Name: {{ user.full_name }}<br>
     Username: {{ user.username }}<br>
     Graduation Year: {{ user.graduation_year }} {% if user.graduation_year != now|date:"Y" %} (a.k.a never){% endif %}<br>
-    Student ID: {{ user.student_id }}<br>
     Ion ID: {{ user.id }} <br>
     Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|multiline }}</div><br>
-    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}
+    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}<br>
+    Telephone: {{ user.home_phone|dashes }}
 
     <br>
-
+    {% if user.classes %}
     <h3>Schedule</h3>
     <table>
         <thead>
@@ -30,6 +31,11 @@
         <tr>
         {% endfor %}
     </table>
+    {% else %}
+    <br><br>
+    Schedule not available
+    {% endif %}
     <br>
     <a href='/logout'>Logout</a>
+
 {% endblock %}

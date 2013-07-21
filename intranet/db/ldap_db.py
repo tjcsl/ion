@@ -5,6 +5,7 @@
 import logging
 import ldap
 import ldap.sasl
+import os
 from intranet import settings
 from django.core.signals import request_finished
 from django.dispatch import receiver
@@ -82,7 +83,7 @@ class LDAPConnection(object):
 
         """
         logger.debug("Fetching attributes '{}' of user {}".format(str(attributes), dn))
-        filter = '(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))'
+        filter = "(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))"
         try:
             r = self.search(dn, filter, attributes)
         except ldap.NO_SUCH_OBJECT:

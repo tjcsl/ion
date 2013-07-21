@@ -24,8 +24,15 @@ class SetKerberosCache(object):
 
     """
     def process_request(self, request):
-        if "KRB5CCNAME" in request.session and "KRB5CCNAME" not in os.environ:
-            logger.debug("Reloading KRB5CCNAME environmental \
-                          variable from session")
-            os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
+        if "KRB5CCNAME" in request.session:
+            # It is important to check that the environmental variable
+            # matches the session variable because environmentals stay
+            # on the worker after requests.
+            if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
+                logger.debug("Reloading KRB5CCNAME environmental \
+                              variable from session")
+                os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
+        else:
+            logger.error("Could not reload Kerberos cache.")
+            request.session.flush()  # Log out the user
         return None

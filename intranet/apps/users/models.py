@@ -4,6 +4,7 @@ import ldap
 import hashlib
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
+from intranet.middleware import threadlocals
 from django.db import models
 from django import template
 from django.core.cache import cache
@@ -62,9 +63,28 @@ class User(AbstractBaseUser):
             The User object if one could be created, otherwise None
         """
         if dn is not None:
-            return cls(dn=dn)
+            try:
+                user = cls(dn=dn)
+                user.id = user.ion_id
+                return user
+            except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
+                return None
+
         elif id is not None:
-            return cls(id=None)
+            user_dn = User.dn_from_id(id)
+            if user_dn is not None:
+                return cls(dn=user_dn, id=id)
+            else:
+                return None
+        else:
+            return None
+
+    @classmethod
+    def dn_from_id(cls, id):
+        c = LDAPConnection()
+        result = c.search(settings.USER_DN, "(&(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher))(iodineUidNumber={}))".format(id), ['dn'])
+        if len(result) == 1:
+            return result[0][0]
         else:
             return None
 
@@ -99,13 +119,9 @@ class User(AbstractBaseUser):
         return hash.hexdigest()
 
     def get_full_name(self):
-        """Return full name, e.g. Guido van Rossum or Angela William,
-        depending on what information is available in LDAP.
-        """
-        if self.display_name:
-            return self.display_name
-        else:
-            return self.cn
+        """Return full name, e.g. Angela William. This is required
+        for subclasses of User."""
+        return self.cn
 
     full_name = property(get_full_name)
 
@@ -122,11 +138,8 @@ class User(AbstractBaseUser):
         return "iodineUid=" + self.username + "," + settings.USER_DN
 
     def set_dn(self, dn):
-        """Set DN for a user. This should generally only be used for
-        constructing ad-hoc User objects.
-
-            >>> User.create(dn="iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu")
-
+        """Set DN for a user and use the DN to populate the
+        username field.
         """
         self.username = ldap.dn.str2dn(dn)[0][0][1]
 
@@ -138,13 +151,15 @@ class User(AbstractBaseUser):
 
         Returns:
             List of Class objects
+
         """
         identifier = ".".join([self.dn, "classes"])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
+        visible = self.attribute_is_visible("showschedule")
 
-        if cached:
+        if cached and visible:
             logger.debug("Attribute 'classes' of user {} loaded \
                           from cache.".format(self.username))
             schedule = []
@@ -152,7 +167,7 @@ class User(AbstractBaseUser):
                 class_object = Class(dn=dn)
                 schedule.append(class_object)
             return schedule
-        else:
+        elif not cached and visible:
             c = LDAPConnection()
             try:
                 results = c.user_attributes(self.dn, ['enrolledclass'])
@@ -176,6 +191,8 @@ class User(AbstractBaseUser):
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
             except KeyError:
                 return None
+        else:
+            return None
 
     classes = property(get_classes)
 
@@ -196,12 +213,13 @@ class User(AbstractBaseUser):
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
+        visible = self.attribute_is_visible("showaddress")
 
-        if cached:
+        if cached and visible:
             logger.debug("Attribute 'address' of user {} loaded \
                           from cache.".format(self.username))
             return cached
-        else:
+        elif not cached and visible:
             c = LDAPConnection()
             try:
                 raw = c.user_attributes(self.dn,
@@ -218,7 +236,8 @@ class User(AbstractBaseUser):
                 return address_object
             except KeyError:
                 return None
-
+        else:
+            return None
     address = property(get_address)
 
     def get_birthday(self):
@@ -232,12 +251,13 @@ class User(AbstractBaseUser):
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
+        visible = self.attribute_is_visible("showbirthday")
 
-        if cached:
+        if cached and visible:
             logger.debug("Attribute 'birthday' of user {} loaded \
                           from cache.".format(self.username))
             return cached
-        else:
+        elif not cached and visible:
             c = LDAPConnection()
             try:
                 result = c.user_attributes(self.dn, ["birthday"])
@@ -247,8 +267,61 @@ class User(AbstractBaseUser):
                 return date_object
             except KeyError:
                 return None
+        else:
+            return None
 
     birthday = property(get_birthday)
+
+    def get_permissions(self):
+        """Fetches the LDAP permissions for a user.
+
+        Returns:
+            Dictionary with keys "parent" and "self", each mapping to a
+            list of permissions.
+        """
+        c = LDAPConnection()
+        raw = c.user_attributes(self.dn, ["perm-showaddress",
+                                          "perm-showtelephone",
+                                          "perm-showbirthday",
+                                          "perm-showschedule",
+                                          "perm-showeighth",
+                                          "perm-showpictures",
+                                          "perm-showaddress-self",
+                                          "perm-showtelephone-self",
+                                          "perm-showbirthday-self",
+                                          "perm-showschedule-self",
+                                          "perm-showeighth-self",
+                                          "perm-showpictures-self",
+                                          ])
+        results = raw.first_result()
+        perms = {"parent": {}, "self": {}}
+        for perm, value in results.iteritems():
+            bool_value = True if (value[0] == 'TRUE') else False
+            if perm.endswith("-self"):
+                perm_name = perm[5:-5]
+                perms["self"][perm_name] = bool_value
+            else:
+                perm_name = perm[5:]
+                perms["parent"][perm_name] = bool_value
+        return perms
+
+    permissions = property(get_permissions)
+
+    def attribute_is_visible(self, ldap_perm_name):
+        perms = self.permissions
+
+        try:
+            own_info = threadlocals.current_user().id == self.id
+        except AttributeError:
+            own_info = False
+
+        public = True
+        if ldap_perm_name in perms["parent"]:
+            public = perms["parent"][ldap_perm_name]
+        if ldap_perm_name in perms["self"]:
+            public = public and perms["self"][ldap_perm_name]
+
+        return own_info or public
 
     def __getattr__(self, name):
         """Return simple attributes of User
@@ -264,13 +337,9 @@ class User(AbstractBaseUser):
         the method is called after checking regular attributes instead
         of before.
 
-        :param name: The name to use.
-        :type name: str.
-
         Returns:
             Either a list of strings or a string, depending on
             the attribute fetched.
-
 
         """
         identifier = ".".join([self.dn, name])
@@ -278,27 +347,45 @@ class User(AbstractBaseUser):
 
         cached = cache.get(key)
 
-        if cached:
+        attr_ldap_field_map = {"ion_id": ("iodineUidNumber", False),
+                               "cn": ("cn", False),
+                               "display_name": ("displayName", False),
+                               "title": ("title", False),
+                               "first_name": ("givenName", False),
+                               "middle_name": ("middlename", False),
+                               "last_name": ("sn", False),
+                               "object_class": ("objectClass", False),
+                               "locker": ("locker", True),
+                               "graduation_year": ("graduationYear", False),
+                               "home_phone": ("homePhone", 'showtelephone'),
+                               "mobile_phone": ("mobile", False),
+                               "other_phones": ("telephoneNumber", False),
+                               "google_talk": ("googleTalk", False),
+                               "skype": ("skype", False),
+                               "webpage": ("webpage", False),
+                               }
+
+        ldap_field = attr_ldap_field_map[name]
+
+        if ldap_field[1] is False:
+            visible = True
+        else:
+            visible = self.attribute_is_visible(ldap_field[1])
+
+        if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded \
                           from cache.".format(name, self.username))
             return cached
-        else:
-            attr_ldap_field_map = {"home_phone": "homePhone",
-                                   "ion_id": "iodineUidNumber",
-                                   "student_id": "tjhsstStudentId",
-                                   "first_name": "givenName",
-                                   "middle_name": "middlename",
-                                   "last_name": "sn",
-                                   "locker": "locker",
-                                   "graduation_year": "graduationYear",
-                                   "display_name": "displayName",
-                                   "cn": "cn",
-                                   "title": "title",
-                                   }
+        elif not cached and visible:
+            # This map essentially turns camelcase names into
+            # Python-style attribute names. The second  elements of
+            # the tuples indicateds whether the piece of information
+            # is restricted in LDAP (false if not protected, else the
+            # name of the permission)
 
             if name in attr_ldap_field_map:
                 c = LDAPConnection()
-                field_name = attr_ldap_field_map[name]
+                field_name = ldap_field[0]
                 try:
                     result = c.user_attributes(self.dn, [field_name])
                     fields = result.first_result()
@@ -311,6 +398,8 @@ class User(AbstractBaseUser):
                 # Default behaviour
                 logger.debug("Attribute {} of user not found.".format(name))
                 raise AttributeError
+        else:
+            return None
 
 
 class Class(object):

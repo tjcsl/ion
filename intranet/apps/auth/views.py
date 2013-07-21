@@ -1,6 +1,6 @@
 import os
 import logging
-from intranet.apps.users.views import profile
+from intranet.apps.dashboard.views import dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
@@ -10,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 def index(request, auth_form=None, user_form=None):
     if request.user.is_authenticated():
-        # return profile(request)
-        return redirect('/profile')
+        return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
         return render(request,
@@ -25,6 +24,7 @@ def login_view(request):
 
         if form.is_valid():
             login(request, form.get_user())
+            # Initial load into session
             request.session["KRB5CCNAME"] = os.environ['KRB5CCNAME']
 
             return redirect('/')
