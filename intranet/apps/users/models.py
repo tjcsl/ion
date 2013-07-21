@@ -177,15 +177,16 @@ class User(AbstractBaseUser):
                     class_object = Class(dn=dn)
 
                     # Temporarily pack the classes in tuples so we can
-                    # sort on an integer key instead of the period property
-                    # to avoid tons of needless LDAP queries
+                    # sort on an integer key instead of the period
+                    # property to avoid tons of needless LDAP queries
                     schedule.append((class_object.period, class_object, dn))
 
                 ordered_schedule = sorted(schedule, key=lambda e: e[0])
 
                 # Prepare a list of DNs for caching
-                # (pickling a Class class loads all properties recursively
-                # and quickly reaches the maximum recursion depth)
+                # (pickling a Class class loads all properties
+                # recursively and quickly reaches the maximum
+                # recursion depth)
                 dn_list = list(zip(*ordered_schedule)[2])
                 cache.set(key, dn_list, settings.USER_CLASSES_CACHE_AGE)
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
@@ -279,31 +280,42 @@ class User(AbstractBaseUser):
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
         """
-        c = LDAPConnection()
-        raw = c.user_attributes(self.dn, ["perm-showaddress",
-                                          "perm-showtelephone",
-                                          "perm-showbirthday",
-                                          "perm-showschedule",
-                                          "perm-showeighth",
-                                          "perm-showpictures",
-                                          "perm-showaddress-self",
-                                          "perm-showtelephone-self",
-                                          "perm-showbirthday-self",
-                                          "perm-showschedule-self",
-                                          "perm-showeighth-self",
-                                          "perm-showpictures-self",
-                                          ])
-        results = raw.first_result()
-        perms = {"parent": {}, "self": {}}
-        for perm, value in results.iteritems():
-            bool_value = True if (value[0] == 'TRUE') else False
-            if perm.endswith("-self"):
-                perm_name = perm[5:-5]
-                perms["self"][perm_name] = bool_value
-            else:
-                perm_name = perm[5:]
-                perms["parent"][perm_name] = bool_value
-        return perms
+        key = ".".join([self.dn, 'user_info_permissions'])
+
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Permissions of user {} loaded \
+                          from cache.".format(self.username))
+            return cached
+        else:
+            c = LDAPConnection()
+            raw = c.user_attributes(self.dn, ["perm-showaddress",
+                                              "perm-showtelephone",
+                                              "perm-showbirthday",
+                                              "perm-showschedule",
+                                              "perm-showeighth",
+                                              "perm-showpictures",
+                                              "perm-showaddress-self",
+                                              "perm-showtelephone-self",
+                                              "perm-showbirthday-self",
+                                              "perm-showschedule-self",
+                                              "perm-showeighth-self",
+                                              "perm-showpictures-self",
+                                              ])
+            results = raw.first_result()
+            perms = {"parent": {}, "self": {}}
+            for perm, value in results.iteritems():
+                bool_value = True if (value[0] == 'TRUE') else False
+                if perm.endswith("-self"):
+                    perm_name = perm[5:-5]
+                    perms["self"][perm_name] = bool_value
+                else:
+                    perm_name = perm[5:]
+                    perms["parent"][perm_name] = bool_value
+
+            cache.set(key, perms, settings.LDAP_PERMISSIONS_CACHE_AGE)
+            return perms
 
     permissions = property(get_permissions)
 
