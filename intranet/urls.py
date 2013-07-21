@@ -30,6 +30,6 @@ urlpatterns += patterns('users.views.',
 )
 
 urlpatterns += patterns('',
-    url(r'^favicon\.png$', RedirectView.as_view(url='/static/img/favicon.png')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
     url(r'^\(productivity\)/cpuspam/botspam$', TemplateView.as_view(template_name="cpuspam.html")),
 )
