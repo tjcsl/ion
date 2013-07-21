@@ -394,7 +394,6 @@ class User(AbstractBaseUser):
             # the tuples indicateds whether the piece of information
             # is restricted in LDAP (false if not protected, else the
             # name of the permission)
-
             if name in attr_ldap_field_map:
                 c = LDAPConnection()
                 field_name = ldap_field[0]

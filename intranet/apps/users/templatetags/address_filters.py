@@ -12,4 +12,4 @@ def multiline(address):
                                           address.state, address.postal_code)
         return mark_safe(result)
     else:
-        return ''
+        return None
