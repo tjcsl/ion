@@ -8,17 +8,11 @@ from django.contrib.auth import login, logout
 logger = logging.getLogger(__name__)
 
 
-def index(request, auth_form=None, user_form=None):
+def index(request):
     if request.user.is_authenticated():
-        next = request.GET.get("next", "")
-        logger.info(next)
-        # raise Exception(1)
-        if next != "":
-            return redirect(next)
-        else:
-            return dashboard_view(request)
+        return dashboard_view(request)
     else:
-        auth_form = auth_form or AuthenticateForm()
+        auth_form = AuthenticateForm()
         return render(request,
                       'auth/login.html',
                       {'auth_form': auth_form, })
@@ -33,11 +27,16 @@ def login_view(request):
             # Initial load into session
             request.session["KRB5CCNAME"] = os.environ['KRB5CCNAME']
 
-            return redirect('/')
+            next = request.GET.get("next", "/")
+            return redirect(next)
         else:
             logger.info("Login failed")
             return index(request, auth_form=form)  # Modified to show errors
-    return redirect('/')
+    else:
+        auth_form = AuthenticateForm()
+        return render(request,
+                      'auth/login.html',
+                      {'auth_form': auth_form, })
 
 
 def logout_view(request):

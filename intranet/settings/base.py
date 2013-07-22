@@ -2,7 +2,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-LOGIN_URL = "/"
+LOGIN_URL = "/login"
 
 ADD_SLASHES = True
 
@@ -90,6 +90,10 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     # 'django.template.loaders.eggs.Loader',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -184,7 +188,7 @@ LOG_LEVEL = 'DEBUG' if os.getenv("PRODUCTION", "FALSE") == "FALSE" else 'INFO'
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         # 'verbose': {
         #     'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
