@@ -1,7 +1,4 @@
 import os
-import uuid
-import random
-import string
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -55,7 +52,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'collected_static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -131,7 +128,7 @@ USER_ATTRIBUTE_CACHE_AGE = 60 * 60 * 24 * 30 * 2
 USER_CLASSES_CACHE_AGE = 60 * 60 * 24 * 30 * 1
 CLASS_TEACHER_CACHE_AGE = 60 * 60 * 24 * 30 * 4
 CLASS_ATTRIBUTE_CACHE_AGE = 60 * 60 * 24 * 30 * 4
-LDAP_PERMISSIONS_CACHE_AGE = 60 * 60 * 24 * 30 * 2
+LDAP_PERMISSIONS_CACHE_AGE = 0
 
 CACHES = {
     'default': {
@@ -208,7 +205,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },

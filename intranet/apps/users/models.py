@@ -82,7 +82,11 @@ class User(AbstractBaseUser):
     @classmethod
     def dn_from_id(cls, id):
         c = LDAPConnection()
-        result = c.search(settings.USER_DN, "(&(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher))(iodineUidNumber={}))".format(id), ['dn'])
+        result = c.search(settings.USER_DN,
+                          "(&(|(objectClass=tjhsstStudent)"
+                              "(objectClass=tjhsstTeacher))"
+                              "(iodineUidNumber={}))".format(id),
+                          ['dn'])
         if len(result) == 1:
             return result[0][0]
         else:
@@ -160,8 +164,8 @@ class User(AbstractBaseUser):
         visible = self.attribute_is_visible("showschedule")
 
         if cached and visible:
-            logger.debug("Attribute 'classes' of user {} loaded \
-                          from cache.".format(self.username))
+            logger.debug("Attribute 'classes' of user {} loaded "
+                         "from cache.".format(self.username))
             schedule = []
             for dn in cached:
                 class_object = Class(dn=dn)
@@ -217,8 +221,8 @@ class User(AbstractBaseUser):
         visible = self.attribute_is_visible("showaddress")
 
         if cached and visible:
-            logger.debug("Attribute 'address' of user {} loaded \
-                          from cache.".format(self.username))
+            logger.debug("Attribute 'address' of user {} loaded "
+                         "from cache.".format(self.username))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -255,8 +259,8 @@ class User(AbstractBaseUser):
         visible = self.attribute_is_visible("showbirthday")
 
         if cached and visible:
-            logger.debug("Attribute 'birthday' of user {} loaded \
-                          from cache.".format(self.username))
+            logger.debug("Attribute 'birthday' of user {} loaded "
+                         "from cache.".format(self.username))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -285,8 +289,8 @@ class User(AbstractBaseUser):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Permissions of user {} loaded \
-                          from cache.".format(self.username))
+            logger.debug("Permissions of user {} loaded "
+                         "from cache.".format(self.username))
             return cached
         else:
             c = LDAPConnection()
@@ -323,17 +327,19 @@ class User(AbstractBaseUser):
         perms = self.permissions
 
         try:
-            own_info = threadlocals.current_user().id == self.id
+            own_info = str(threadlocals.current_user().id) == str(self.id)
         except AttributeError:
             own_info = False
 
-        public = True
-        if ldap_perm_name in perms["parent"]:
-            public = perms["parent"][ldap_perm_name]
-        if ldap_perm_name in perms["self"]:
-            public = public and perms["self"][ldap_perm_name]
-
-        return own_info or public
+        if own_info:
+            return True
+        else:
+            public = True
+            if ldap_perm_name in perms["parent"]:
+                public = perms["parent"][ldap_perm_name]
+            if ldap_perm_name in perms["self"]:
+                public = public and perms["self"][ldap_perm_name]
+            return public
 
     def __getattr__(self, name):
         """Return simple attributes of User
@@ -385,8 +391,8 @@ class User(AbstractBaseUser):
             visible = self.attribute_is_visible(ldap_field[1])
 
         if cached and visible:
-            logger.debug("Attribute '{}' of user {} loaded \
-                          from cache.".format(name, self.username))
+            logger.debug("Attribute '{}' of user {} loaded "
+                         "from cache.".format(name, self.username))
             return cached
         elif not cached and visible:
             # This map essentially turns camelcase names into
@@ -439,8 +445,8 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute 'teacher' of class {} loaded \
-                          from cache.".format(self.section_id))
+            logger.debug("Attribute 'teacher' of class {} loaded "
+                         "from cache.".format(self.section_id))
             return User.create(dn=cached)
         else:
             c = LDAPConnection()
@@ -484,8 +490,8 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute '{}' of class {} loaded \
-                          from cache.".format(name, self.section_id))
+            logger.debug("Attribute '{}' of class {} loaded "
+                         "from cache.".format(name, self.section_id))
             return cached
         else:
             attr_ldap_field_map = {"name": "cn",

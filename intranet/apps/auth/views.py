@@ -10,7 +10,13 @@ logger = logging.getLogger(__name__)
 
 def index(request, auth_form=None, user_form=None):
     if request.user.is_authenticated():
-        return dashboard_view(request)
+        next = request.GET.get("next", "")
+        logger.info(next)
+        # raise Exception(1)
+        if next != "":
+            return redirect(next)
+        else:
+            return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
         return render(request,

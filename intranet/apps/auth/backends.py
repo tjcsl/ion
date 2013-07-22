@@ -34,17 +34,17 @@ class KerberosAuthenticationBackend(object):
             exitstatus = kinit.exitstatus
             realm = settings.AD_REALM
 
-        if kinit.exitstatus == 0:
-            logger.debug("Kerberos authorized {}@{}".format(username, realm))
+        if exitstatus == 0:
+            logger.info("Kerberos authorized {}@{}".format(username, realm))
             kgetcred = pexpect.spawn("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
             kgetcred.expect(pexpect.EOF)
             kgetcred.close()
 
             if kgetcred.exitstatus == 0:
-                logger.debug("Kerberos got ticket for ldap service")
+                logger.info("Kerberos got ticket for ldap service")
                 return True
             else:
-                logger.debug("Kerberos failed to get ticket for LDAP service")
+                logger.error("Kerberos failed to get ticket for LDAP service")
                 os.system("/usr/bin/kdestroy")
                 # TODO: Try simple bind
                 return False

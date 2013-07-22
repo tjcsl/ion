@@ -5,7 +5,6 @@
 import logging
 import ldap
 import ldap.sasl
-import os
 from intranet import settings
 from django.core.signals import request_finished
 from django.dispatch import receiver
@@ -25,7 +24,7 @@ class LDAPConnection(object):
     conn = None
 
     def __init__(self):
-        """Initialize and/or return a singleton LDAPConnection object.
+        """Initialize a singleton LDAPConnection object.
 
         Connect to the LDAP server specified in settings and bind
         using the GSSAPI protocol. The requisite KRB5CCNAME
@@ -34,12 +33,12 @@ class LDAPConnection(object):
 
         """
         if not LDAPConnection.conn:
-            logger.debug("Connecting to LDAP")
+            logger.info("Connecting to LDAP")
             LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
-        # else:
-        #     logger.debug("Connection to LDAP already established")
+        else:
+            logger.info("Connection to LDAP already established")
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
@@ -62,8 +61,9 @@ class LDAPConnection(object):
              Should raise stuff but it doesn't yet
 
         """
-        logger.debug("Searching ldap - dn: {}, filter: {}, \
-                      attributes: {}".format(dn, filter, attributes))
+        logger.debug("Searching ldap - dn: {}, filter: {}, "
+                     "attributes: {}".format(dn, filter, attributes))
+        logger.debug(LDAPConnection.conn.whoami_s())
         return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                             filter, attributes)
 
@@ -82,7 +82,8 @@ class LDAPConnection(object):
             LDAPResult object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '{}' of user {}".format(str(attributes), dn))
+        logger.debug("Fetching attributes '{}' of user "
+                     "{}".format(str(attributes), dn))
         filter = "(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))"
         try:
             r = self.search(dn, filter, attributes)
@@ -106,7 +107,8 @@ class LDAPConnection(object):
             LDAPResult object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '" + str(attributes) + "' of class " + dn)
+        logger.debug("Fetching attributes '" + str(attributes) +
+                     "' of class " + dn)
         filter = '(objectclass=tjhsstClass)'
 
         try:
@@ -141,7 +143,6 @@ class LDAPResult(object):
         return self.result
 
 
-@classmethod
 @receiver(request_finished)
 def close_ldap_connection(sender, **kwargs):
     """Closes the request's LDAP connection.
@@ -151,6 +152,10 @@ def close_ldap_connection(sender, **kwargs):
     association, and frees resources.
 
     """
+    logger.info("Request finished")
     if LDAPConnection.conn:
-        LDAPConnection.conn.unbind()
+        LDAPConnection.conn.unbind_s()
         LDAPConnection.conn = None
+        logger.info("LDAP connection closed.")
+    else:
+        logger.info("No LDAP connection to close.")

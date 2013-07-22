@@ -32,7 +32,4 @@ class SetKerberosCache(object):
                 logger.debug("Reloading KRB5CCNAME environmental \
                               variable from session")
                 os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
-        else:
-            logger.error("Could not reload Kerberos cache.")
-            request.session.flush()  # Log out the user
         return None
