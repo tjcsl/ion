@@ -1,15 +1,16 @@
 import logging
-import datetime
 import ldap
 import hashlib
-from intranet.db.ldap_db import LDAPConnection
-from intranet import settings
-from intranet.middleware import threadlocals
+from datetime import datetime
 from django.db import models
 from django import template
 from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.signing import Signer
+from intranet.db.ldap_db import LDAPConnection
+from intranet import settings
+from intranet.middleware import threadlocals
+
 
 logger = logging.getLogger(__name__)
 register = template.Library()
@@ -84,8 +85,8 @@ class User(AbstractBaseUser):
         c = LDAPConnection()
         result = c.search(settings.USER_DN,
                           "(&(|(objectClass=tjhsstStudent)"
-                              "(objectClass=tjhsstTeacher))"
-                              "(iodineUidNumber={}))".format(id),
+                          "(objectClass=tjhsstTeacher))"
+                          "(iodineUidNumber={}))".format(id),
                           ['dn'])
         if len(result) == 1:
             return result[0][0]
@@ -149,6 +150,27 @@ class User(AbstractBaseUser):
 
     dn = property(get_dn, set_dn)
 
+    def get_grade(self):
+        """Returns the grade of a user.
+
+        Returns:
+            Grade object
+        """
+        key = ".".join([self.dn, 'grade'])
+
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Grade of user {} loaded "
+                         "from cache.".format(self.username))
+            return cached
+        else:
+            grade = Grade(self.graduation_year)
+            cache.set(key, grade, settings.CACHE_AGE['ldap_permissions'])
+            return grade
+
+    grade = property(get_grade)
+
     def get_classes(self):
         """Returns a list of Class objects for a user ordered by
         period number.
@@ -192,7 +214,7 @@ class User(AbstractBaseUser):
                 # recursively and quickly reaches the maximum
                 # recursion depth)
                 dn_list = list(zip(*ordered_schedule)[2])
-                cache.set(key, dn_list, settings.USER_CLASSES_CACHE_AGE)
+                cache.set(key, dn_list, settings.CACHE_AGE['user_classes'])
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
             except KeyError:
                 return None
@@ -203,9 +225,7 @@ class User(AbstractBaseUser):
 
     # TODO:
     # counselor
-    # homephone
     # gender
-    # email
 
     def get_address(self):
         """Returns the address of a user.
@@ -237,7 +257,7 @@ class User(AbstractBaseUser):
 
                 address_object = Address(street, city, state, postal_code)
                 cache.set(key, address_object,
-                          settings.USER_ATTRIBUTE_CACHE_AGE)
+                          settings.CACHE_AGE['user_attribute'])
                 return address_object
             except KeyError:
                 return None
@@ -267,8 +287,9 @@ class User(AbstractBaseUser):
             try:
                 result = c.user_attributes(self.dn, ["birthday"])
                 birthday = result.first_result()["birthday"][0]
-                date_object = datetime.datetime.strptime(birthday, '%Y%m%d')
-                cache.set(key, date_object, settings.USER_ATTRIBUTE_CACHE_AGE)
+                date_object = datetime.strptime(birthday, '%Y%m%d')
+                cache.set(key, date_object,
+                          settings.CACHE_AGE['user_attribute'])
                 return date_object
             except KeyError:
                 return None
@@ -276,6 +297,38 @@ class User(AbstractBaseUser):
             return None
 
     birthday = property(get_birthday)
+
+    # def picture_base64(self, year=None):
+    #     """Returns the base 64 representation of a user's picture.
+
+    #     Returns:
+    #         Base 64 string
+
+    #     """
+    #     c = LDAPConnection()
+    #     if year:
+    #         dn = "cn={},iodineUid={},{}".format(year,
+    #                                             self.username,
+    #                                             settings.USER_DN)
+    #     else:
+    #         preferred = self.preferredPhoto
+    #         if preferred == "AUTO":
+    #             current_grade = self.grade
+    #             dn = "cn={},iodineUid={},{}".format(year,
+    #                                                 self.username,
+    #                                                 settings.USER_DN)
+    #         else:
+    #             dn = "cn={},iodineUid={},{}".format(year,
+    #                                                 self.username,
+    #                                                 settings.USER_DN)
+    #     try:
+    #         result = c.user_attributes(self.dn, ["birthday"])
+    #         birthday = result.first_result()["birthday"][0]
+    #         date_object = datetime.datetime.strptime(birthday, '%Y%m%d')
+    #         cache.set(key, date_object, settings.CACHE_AGE['user_attribute'])
+    #         return date_object
+    #     except KeyError:
+    #         return "no picture"
 
     def get_permissions(self):
         """Fetches the LDAP permissions for a user.
@@ -318,7 +371,7 @@ class User(AbstractBaseUser):
                     perm_name = perm[5:]
                     perms["parent"][perm_name] = bool_value
 
-            cache.set(key, perms, settings.LDAP_PERMISSIONS_CACHE_AGE)
+            cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
             return perms
 
     permissions = property(get_permissions)
@@ -365,49 +418,124 @@ class User(AbstractBaseUser):
 
         cached = cache.get(key)
 
-        attr_ldap_field_map = {"ion_id": ("iodineUidNumber", False),
-                               "cn": ("cn", False),
-                               "display_name": ("displayName", False),
-                               "title": ("title", False),
-                               "first_name": ("givenName", False),
-                               "middle_name": ("middlename", False),
-                               "last_name": ("sn", False),
-                               "object_class": ("objectClass", False),
-                               "locker": ("locker", True),
-                               "graduation_year": ("graduationYear", False),
-                               "home_phone": ("homePhone", 'showtelephone'),
-                               "mobile_phone": ("mobile", False),
-                               "other_phones": ("telephoneNumber", False),
-                               "google_talk": ("googleTalk", False),
-                               "skype": ("skype", False),
-                               "webpage": ("webpage", False),
-                               }
+        # This map essentially turns camelcase names into
+        # Python-style attribute names. The second  elements of
+        # the tuples indicateds whether the piece of information
+        # is restricted in LDAP (false if not protected, else the
+        # name of the permission).
+        user_attributes = {
+            "ion_id": {
+                "ldap_name": "iodineUidNumber",
+                "perm": False,
+                "list": False
+            },
+            "cn": {
+                "ldap_name": "cn",
+                "perm": False,
+                "list": False
+            },
+            "display_name": {
+                "ldap_name": "displayName",
+                "perm": False,
+                "list": False
+            },
+            "title": {
+                "ldap_name": "title",
+                "perm": False,
+                "list": False
+            },
+            "first_name": {
+                "ldap_name": "givenName",
+                "perm": False,
+                "list": False
+            },
+            "middle_name": {
+                "ldap_name": "middlename",
+                "perm": False,
+                "list": False
+            },
+            "last_name": {
+                "ldap_name": "sn",
+                "perm": False,
+                "list": False
+            },
+            "user_type": {
+                "ldap_name": "objectClass",
+                "perm": False,
+                "list": False
+            },
+            "graduation_year": {
+                "ldap_name": "graduationYear",
+                "perm": False,
+                "list": False
+            },
+            "preferred_photo": {
+                "ldap_name": "preferredPhoto",
+                "perm": False,
+                "list": False
+            },
+            "emails": {
+                "ldap_name": "mail",
+                "perm": False,
+                "list": True
+            },
+            "home_phone": {
+                "ldap_name": "homePhone",
+                "perm": 'showtelephone',
+                "list": False
+            },
+            "mobile_phone": {
+                "ldap_name": "mobile",
+                "perm": False,
+                "list": False
+            },
+            "other_phones": {
+                "ldap_name": "telephoneNumber",
+                "perm": False,
+                "list": True
+            },
+            "google_talk": {
+                "ldap_name": "googleTalk",
+                "perm": False,
+                "list": False
+            },
+            "skype": {
+                "ldap_name": "skype",
+                "perm": False,
+                "list": False
+            },
+            "webpages": {
+                "ldap_name": "webpage",
+                "perm": False,
+                "list": True
+            },
+        }
 
-        ldap_field = attr_ldap_field_map[name]
+        attr = user_attributes[name]
 
-        if ldap_field[1] is False:
+        if attr["perm"] is False:
             visible = True
         else:
-            visible = self.attribute_is_visible(ldap_field[1])
+            visible = self.attribute_is_visible(attr["perm"])
 
         if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded "
                          "from cache.".format(name, self.username))
             return cached
         elif not cached and visible:
-            # This map essentially turns camelcase names into
-            # Python-style attribute names. The second  elements of
-            # the tuples indicateds whether the piece of information
-            # is restricted in LDAP (false if not protected, else the
-            # name of the permission)
-            if name in attr_ldap_field_map:
+            if name in user_attributes:
                 c = LDAPConnection()
-                field_name = ldap_field[0]
+                field_name = attr["ldap_name"]
                 try:
-                    result = c.user_attributes(self.dn, [field_name])
-                    fields = result.first_result()
-                    value = fields[field_name][0]
-                    cache.set(key, value, settings.USER_ATTRIBUTE_CACHE_AGE)
+                    raw = c.user_attributes(self.dn, [field_name])
+                    result = raw.first_result()[field_name]
+
+                    if attr["list"]:
+                        value = result
+                    else:
+                        value = result[0]
+
+                    cache.set(key, value, settings.CACHE_AGE['user_attribute'])
                     return value
                 except KeyError:
                     return None
@@ -428,7 +556,12 @@ class Class(object):
 
     """
     def __init__(self, dn):
-        """Initialize the Class object."""
+        """Initialize the Class object.
+
+        Args:
+            - dn -- The full DN of the class.
+
+        """
         self.dn = dn
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
@@ -457,7 +590,7 @@ class Class(object):
             # Only cache the dn, since pickling would recursively fetch
             # all of the properties and quickly reach the maximum
             # recursion depth
-            cache.set(key, dn, settings.CLASS_TEACHER_CACHE_AGE)
+            cache.set(key, dn, settings.CACHE_AGE['class_teacher'])
             return User.create(dn=dn)
 
     teacher = property(get_teacher)
@@ -479,6 +612,12 @@ class Class(object):
         the method is called after checking regular attributes instead
         of before.
 
+        This method should not be called manually - use dot notation or
+        getattr() to fetch an attribute.
+
+        Args:
+            - name -- The string name of the attribute.
+
         Returns:
             Either a list of strings or a string, depending on \
             the attribute fetched.
@@ -494,23 +633,51 @@ class Class(object):
                          "from cache.".format(name, self.section_id))
             return cached
         else:
-            attr_ldap_field_map = {"name": "cn",
-                                   "period": "classPeriod",
-                                   "class_id": "tjhsstClassId",
-                                   "course_length": "courseLength",
-                                   "room_number": "roomNumber",
-                                   }
+            class_attributes = {
+                "name": {
+                    "ldap_name": "cn",
+                    "list": False
+                },
+                "period": {
+                    "ldap_name": "classPeriod",
+                    "list": False
+                },
+                "class_id": {
+                    "ldap_name": "tjhsstClassId",
+                    "list": False
+                },
+                "course_length": {
+                    "ldap_name": "courseLength",
+                    "list": False
+                },
+                "room_number": {
+                    "ldap_name": "roomNumber",
+                    "list": False
+                },
+                "quarters": {
+                    "ldap_name": "quarterNumber",
+                    "list": True
+                }
+            }
 
-            if name in attr_ldap_field_map:
+            if name in class_attributes:
                 c = LDAPConnection()
-                field_name = attr_ldap_field_map[name]
+                attr = class_attributes[name]
+                field_name = attr["ldap_name"]
                 try:
-                    result = c.class_attributes(self.dn, [field_name])
-                    fields = result.first_result()
-                    value = fields[field_name][0]
-                    cache.set(key, value, settings.CLASS_ATTRIBUTE_CACHE_AGE)
+                    raw = c.class_attributes(self.dn, [field_name])
+                    result = raw.first_result()[field_name]
+                    if attr["list"]:
+                        value = result
+                    else:
+                        value = result[0]
+
+                    cache.set(key, value,
+                              settings.CACHE_AGE['class_attribute'])
                     return value
                 except KeyError:
+                    logger.warning("KeyError fetching " + name +
+                                   " for class " + self.dn)
                     return None
             else:
                 # Default behaviour
@@ -534,7 +701,37 @@ class Address(object):
         self.state = state
         self.postal_code = postal_code
 
-    def __unicode__(self):
-        """Return unicode representation for debugging."""
-        return "{}; {}, {} {}".format(self.street, self.city, self.state,
-                                      self.postal_code)
+    def __str__(self):
+        """Returns full address string."""
+        return "{}\n{}, {} {}".format(self.street, self.city,
+                                      self.state, self.postal_code)
+
+
+class Grade(object):
+    """Represents the grade of a user."""
+    names = ["freshman", "sophomore", "junior", "senior", "graduate"]
+
+    def __init__(self, graduation_year):
+        """Initialize the Grade object.
+
+        Args:
+            - graduation_year -- The graduation year of the user.
+        """
+        self._year = int(graduation_year)
+        today = datetime.now()
+        if today.month >= 7:
+            current_senior_year = today.year + 1
+        else:
+            current_senior_year = today.year
+
+        self._number = current_senior_year - self._year + 12
+        assert self._number in range(9, 12), "Graduation year out of bounds"
+        self._name = Grade.names[self._number - 9]
+
+    def number(self):
+        """Return the grade as a number (9-12)."""
+        return self._number
+
+    def __str__(self):
+        """Return name of the grade."""
+        return self._name
