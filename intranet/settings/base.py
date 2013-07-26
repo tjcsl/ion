@@ -66,10 +66,6 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
 
-# # Add all apps with static directories to STATICFILES_DIRS
-# apps_with_static_dir = ['home']
-# STATICFILES_DIRS += tuple([os.path.join(PROJECT_ROOT, 'apps/' + app + '/static') for app in apps_with_static_dir])
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -100,10 +96,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'intranet.middleware.environment.SetKerberosCache',
+    'intranet.middleware.environment.KerberosCacheMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'intranet.middleware.threadlocals.ThreadLocals',
+    'intranet.middleware.threadlocals.ThreadLocalsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'intranet.middleware.templates.StripNewlinesMiddleware',
 
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -128,11 +125,15 @@ SESSION_REDIS_PREFIX = VIRTUAL_ENV + ':session'
 SESSION_COOKIE_AGE = 60 * 60 * 2
 SESSION_SAVE_EVERY_REQUEST = True
 
-USER_ATTRIBUTE_CACHE_AGE = 60 * 60 * 24 * 30 * 2
-USER_CLASSES_CACHE_AGE = 60 * 60 * 24 * 30 * 1
-CLASS_TEACHER_CACHE_AGE = 60 * 60 * 24 * 30 * 4
-CLASS_ATTRIBUTE_CACHE_AGE = 60 * 60 * 24 * 30 * 4
-LDAP_PERMISSIONS_CACHE_AGE = 0
+CACHE_AGE = {
+    'user_attribute': 60 * 60 * 24 * 30 * 2,
+    'user_classes': 60 * 60 * 24 * 30 * 6,
+    'user_grade': 60 * 60 * 24 * 30 * 10,
+    'class_teacher': 60 * 60 * 24 * 30 * 6,
+    'class_attribute': 60 * 60 * 24 * 30 * 6,
+    'ldap_permissions': 60 * 60 * 24 * 30 * 2,
+}
+
 
 CACHES = {
     'default': {
@@ -157,10 +158,9 @@ USER_DN = "ou=people,dc=tjhsst,dc=edu"
 CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
 
-
-
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates" or
+    # "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_ROOT, 'templates'),
@@ -191,10 +191,11 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         # 'verbose': {
-        #     'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        #     'format': '%(levelname)s %(asctime)s %(module)s'
+        #               '%(process)d %(thread)d %(message)s'
         # },
         'simple': {
-            'format': '%(levelname)s: %(message)s'  # (%(name)s, line %(lineno)d)'
+            'format': '%(levelname)s: %(message)s'
         },
     },
     'filters': {
