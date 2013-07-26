@@ -1,18 +1,60 @@
 {% extends "base.html" %}
-{% load address_filters %}
 {% load phone_number_filters %}
 
 {% block content %}
     <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
     Full Name: {{ user.full_name }}<br>
     Username: {{ user.username }}<br>
-    Graduation Year: {{ user.graduation_year }}<br>
     Ion ID: {{ user.id }} <br>
-    Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|multiline }}</div><br>
-    Birthday: {% if user.birthday %} {{ user.birthday|date:"M d, Y" }}{% else %}None{% endif %}<br>
-    Telephone: {{ user.home_phone|dashes }}
+    User Type: {% if user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
 
-    <br>
+    {% if user.graduation_year %}
+        Graduation Year: {{ user.graduation_year }}<br>
+        Grade: {{ user.grade|capfirst }} ({{ user.grade.number }})<br>
+    {% endif %}
+
+    {% if user.address %}
+        Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|linebreaksbr}}</div><br>
+    {% endif %}
+
+    {% if user.birthday %}
+        Birthday: {{ user.birthday|date:"M d, Y" }}<br>
+    {% endif %}
+
+    {% if user.home_phone %}
+        Home Phone: {{ user.home_phone|dashes }}<br>
+    {% endif %}
+
+    {% if user.mobile_phone %}
+        Mobile Phone: {{ user.mobile_phone|dashes }}<br>
+    {% endif %}
+
+    {% if user.other_phones %}
+        Other Phones:
+        <ul>
+            {% for phone in user.other_phones %}
+                <li>{{ phone|dashes }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if user.emails %}
+    Emails:
+    <ul>
+        {% for email in user.emails %}
+            <li>{{ email }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if user.skype %}
+    Skype: {{ user.skype }}<br>
+    {% endif %}
+
+    {% if user.google_talk %}
+    Google Talk: {{ user.google_talk }}<br>
+    {% endif %}
+
     {% if user.classes %}
     <h3>Schedule</h3>
     <table>
@@ -21,6 +63,7 @@
             <td>Class</td>
             <td>Teacher</td>
             <td>Room Number</td>
+            <td>Quarters</td>
         </thead>
         {% for class in user.classes %}
         <tr>
@@ -28,6 +71,7 @@
             <td>{{ class.name }}</td>
             <td>{{ class.teacher.last_name }}</td>
             <td>{{ class.room_number }}</td>
+            <td>{% for quarter in class.quarters %}{{ quarter }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
         <tr>
         {% endfor %}
     </table>
