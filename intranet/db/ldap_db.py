@@ -5,10 +5,10 @@
 import logging
 import ldap
 import ldap.sasl
-from intranet import settings
 from django.core.signals import request_finished
+from django.core.handlers.wsgi import WSGIHandler
 from django.dispatch import receiver
-
+from intranet import settings
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +33,10 @@ class LDAPConnection(object):
 
         """
         if not LDAPConnection.conn:
-            logger.info("Connecting to LDAP")
+            logger.info("Connecting to LDAP.")
             LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
-        else:
-            logger.info("Connection to LDAP already established")
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
@@ -63,7 +61,6 @@ class LDAPConnection(object):
         """
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
-        logger.debug(LDAPConnection.conn.whoami_s())
         return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                             filter, attributes)
 
@@ -143,7 +140,9 @@ class LDAPResult(object):
         return self.result
 
 
-@receiver(request_finished)
+@receiver(request_finished,
+          dispatch_uid="close_ldap_connection",
+          sender=WSGIHandler)
 def close_ldap_connection(sender, **kwargs):
     """Closes the request's LDAP connection.
 
@@ -152,10 +151,7 @@ def close_ldap_connection(sender, **kwargs):
     association, and frees resources.
 
     """
-    logger.info("Request finished")
     if LDAPConnection.conn:
         LDAPConnection.conn.unbind_s()
         LDAPConnection.conn = None
         logger.info("LDAP connection closed.")
-    else:
-        logger.info("No LDAP connection to close.")
