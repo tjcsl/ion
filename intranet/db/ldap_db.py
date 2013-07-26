@@ -2,9 +2,9 @@ import logging
 import ldap
 import ldap.sasl
 from threading import local
-# from django.core.signals import request_finished
-# from django.core.handlers.wsgi import WSGIHandler
-# from django.dispatch import receiver
+from django.core.signals import request_finished
+from django.core.handlers.wsgi import WSGIHandler
+from django.dispatch import receiver
 from intranet import settings
 
 logger = logging.getLogger(__name__)
@@ -146,18 +146,18 @@ class LDAPResult(object):
         return self.result
 
 
-# @receiver(request_finished,
-#           dispatch_uid="close_ldap_connection",
-#           sender=WSGIHandler)
-# def close_ldap_connection(sender, **kwargs):
-#     """Closes the request's LDAP connection.
+@receiver(request_finished,
+          dispatch_uid="close_ldap_connection",
+          sender=WSGIHandler)
+def close_ldap_connection(sender, **kwargs):
+    """Closes the request's LDAP connection.
 
-#     Listens for the request_finished signal from Django and upon
-#     receit, unbinds from the directory, terminates the current
-#     association, and frees resources.
+    Listens for the request_finished signal from Django and upon
+    receit, unbinds from the directory, terminates the current
+    association, and frees resources.
 
-#     """
-#     if _thread_locals.ldap_conn:
-#         _thread_locals.ldap_conn.unbind_s()
-#         _thread_locals.ldap_conn = None
-#         logger.info("LDAP connection closed.")
+    """
+    if _thread_locals.ldap_conn:
+        _thread_locals.ldap_conn.unbind_s()
+        _thread_locals.ldap_conn = None
+        logger.info("LDAP connection closed.")
