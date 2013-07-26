@@ -12,11 +12,12 @@ def current_user():
 
     Returns:
         User object
+
     """
     return getattr(_thread_locals, 'user', None)
 
 
-class ThreadLocals(object):
+class ThreadLocalsMiddleware(object):
     """Stores the current authorized User object in thread locals for
     access in models (and elsewhere) without passing the user around as
     an argument.

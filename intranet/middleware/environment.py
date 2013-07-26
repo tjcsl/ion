@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class SetKerberosCache(object):
+class KerberosCacheMiddleware(object):
     """Reloads the KRB5CCNAME environmental variable from the session
     for potential use in future LDAP requests.
 
@@ -24,6 +24,9 @@ class SetKerberosCache(object):
 
     """
     def process_request(self, request):
+        """Propogate KRB5CCNAME session variable to the environmental
+        variable
+        """
         if "KRB5CCNAME" in request.session:
             # It is important to check that the environmental variable
             # matches the session variable because environmentals stay
