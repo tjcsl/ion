@@ -1,3 +1,4 @@
+import base64
 import logging
 import ldap
 import hashlib
@@ -165,7 +166,12 @@ class User(AbstractBaseUser):
                          "from cache.".format(self.username))
             return cached
         else:
-            grade = Grade(self.graduation_year)
+            grad_year = self.graduation_year
+            if not grad_year:
+                grade = None
+            else:
+                grade = Grade(grad_year)
+
             cache.set(key, grade, settings.CACHE_AGE['ldap_permissions'])
             return grade
 
@@ -298,37 +304,32 @@ class User(AbstractBaseUser):
 
     birthday = property(get_birthday)
 
-    # def picture_base64(self, year=None):
-    #     """Returns the base 64 representation of a user's picture.
+    def picture_base64(self, photo_year):
+        """Returns the base 64 representation of a user's picture.
 
-    #     Returns:
-    #         Base 64 string
+        Returns:
+            Base 64 string
 
-    #     """
-    #     c = LDAPConnection()
-    #     if year:
-    #         dn = "cn={},iodineUid={},{}".format(year,
-    #                                             self.username,
-    #                                             settings.USER_DN)
-    #     else:
-    #         preferred = self.preferredPhoto
-    #         if preferred == "AUTO":
-    #             current_grade = self.grade
-    #             dn = "cn={},iodineUid={},{}".format(year,
-    #                                                 self.username,
-    #                                                 settings.USER_DN)
-    #         else:
-    #             dn = "cn={},iodineUid={},{}".format(year,
-    #                                                 self.username,
-    #                                                 settings.USER_DN)
-    #     try:
-    #         result = c.user_attributes(self.dn, ["birthday"])
-    #         birthday = result.first_result()["birthday"][0]
-    #         date_object = datetime.datetime.strptime(birthday, '%Y%m%d')
-    #         cache.set(key, date_object, settings.CACHE_AGE['user_attribute'])
-    #         return date_object
-    #     except KeyError:
-    #         return "no picture"
+        """
+        c = LDAPConnection()
+        dn = "cn={}Photo,iodineUid={},{}".format(photo_year,
+                                                 self.username,
+                                                 settings.USER_DN)
+        try:
+            results = c.search(dn,
+                               "(objectClass=iodinePhoto)",
+                               ['jpegPhoto'])
+        except ldap.NO_SUCH_OBJECT:
+            return None
+
+        if len(results) == 1:
+            try:
+                result = results[0][1]['jpegPhoto'][0].encode('base64').decode('base64')
+                return result
+            except KeyError:
+                return None
+        else:
+            return None
 
     def get_permissions(self):
         """Fetches the LDAP permissions for a user.
@@ -540,7 +541,6 @@ class User(AbstractBaseUser):
                 except KeyError:
                     return None
             else:
-                # Default behaviour
                 logger.debug("Attribute {} of user not found.".format(name))
                 raise AttributeError
         else:
@@ -715,7 +715,7 @@ class Grade(object):
         """Initialize the Grade object.
 
         Args:
-            - graduation_year -- The graduation year of the user.
+            - graduation_year -- The graduation year of the user (e.g. 1492)
         """
         self._year = int(graduation_year)
         today = datetime.now()
@@ -725,10 +725,22 @@ class Grade(object):
             current_senior_year = today.year
 
         self._number = current_senior_year - self._year + 12
-        assert self._number in range(9, 12), "Graduation year out of bounds"
-        self._name = Grade.names[self._number - 9]
+
+        if self._number in range(9, 14):
+            self._name = Grade.names[self._number - 9]
+        else:
+            self._name = None
 
     def number(self):
+        """Return the grade as a number (9-12).
+
+        For use in templates since there is no nice integer conversion.
+        In Python code, use int() on a Grade object instead.
+
+        """
+        return self._number
+
+    def __int__(self):
         """Return the grade as a number (9-12)."""
         return self._number
 

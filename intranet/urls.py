@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from django.views.generic.base import TemplateView, RedirectView
 from .apps.auth.views import index, login_view, logout_view
-from .apps.users.views import profile
+from .apps.users.views import profile, picture
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -25,8 +25,8 @@ urlpatterns = patterns('auth.views.',
 )
 
 urlpatterns += patterns('users.views.',
-    url(r'^profile$', profile),
-    url(r'^profile/(?P<user_id>\d+)$', profile),
+    url(r'^profile/(?P<user_id>\d+)?$', profile),
+    url(r'^picture/(?P<user_id>\d+)/(?P<year>freshman|sophomore|junior|senior)?$', picture)
 )
 
 urlpatterns += patterns('',

@@ -25,7 +25,7 @@ CACHES['default']['OPTIONS']['DB'] = 1
 # }
 
 for key in CACHE_AGE:
-    CACHE_AGE[key] = 10
+    CACHE_AGE[key] = 0
 
 
 class glob_list(list):

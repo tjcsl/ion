@@ -1,16 +1,14 @@
-"""
-.. module:: ldap_db
-
-"""
 import logging
 import ldap
 import ldap.sasl
-from django.core.signals import request_finished
-from django.core.handlers.wsgi import WSGIHandler
-from django.dispatch import receiver
+from threading import local
+# from django.core.signals import request_finished
+# from django.core.handlers.wsgi import WSGIHandler
+# from django.dispatch import receiver
 from intranet import settings
 
 logger = logging.getLogger(__name__)
+_thread_locals = local()
 
 
 class LDAPConnection(object):
@@ -21,8 +19,6 @@ class LDAPConnection(object):
         conn: The singleton LDAP connection.
 
     """
-    conn = None
-
     def __init__(self):
         """Initialize a singleton LDAPConnection object.
 
@@ -32,11 +28,21 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
-        if not LDAPConnection.conn:
+        if not hasattr(_thread_locals, 'ldap_conn'):
             logger.info("Connecting to LDAP.")
-            LDAPConnection.conn = ldap.initialize(settings.LDAP_SERVER)
+            _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
-            LDAPConnection.conn.sasl_interactive_bind_s('', auth_tokens)
+            _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
+        logger.debug(_thread_locals.ldap_conn.whoami_s())
+
+    # def get_conn():
+    #     """Return the LDAP connection from threadlocals."""
+    #     if hasattr(_thread_locals, 'ldap_conn'):
+    #         return _thread_locals.ldap_conn
+    #     else:
+    #         return None
+
+    # conn = property(get_conn)
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
@@ -61,7 +67,7 @@ class LDAPConnection(object):
         """
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
-        return LDAPConnection.conn.search_s(dn, ldap.SCOPE_SUBTREE,
+        return _thread_locals.ldap_conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                             filter, attributes)
 
     def user_attributes(self, dn, attributes):
@@ -140,18 +146,18 @@ class LDAPResult(object):
         return self.result
 
 
-@receiver(request_finished,
-          dispatch_uid="close_ldap_connection",
-          sender=WSGIHandler)
-def close_ldap_connection(sender, **kwargs):
-    """Closes the request's LDAP connection.
+# @receiver(request_finished,
+#           dispatch_uid="close_ldap_connection",
+#           sender=WSGIHandler)
+# def close_ldap_connection(sender, **kwargs):
+#     """Closes the request's LDAP connection.
 
-    Listens for the request_finished signal from Django and upon
-    receit, unbinds from the directory, terminates the current
-    association, and frees resources.
+#     Listens for the request_finished signal from Django and upon
+#     receit, unbinds from the directory, terminates the current
+#     association, and frees resources.
 
-    """
-    if LDAPConnection.conn:
-        LDAPConnection.conn.unbind_s()
-        LDAPConnection.conn = None
-        logger.info("LDAP connection closed.")
+#     """
+#     if _thread_locals.ldap_conn:
+#         _thread_locals.ldap_conn.unbind_s()
+#         _thread_locals.ldap_conn = None
+#         logger.info("LDAP connection closed.")

@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 {% load phone_number_filters %}
+{% load staticfiles %}
 
 {% block content %}
     <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
+    <table>
+        {% if user.user_type == "tjhsstStudent" %}
+        <tr>
+            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/freshman"></td>
+            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/sophomore"></td>
+            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/junior"></td>
+            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/senior"></td>
+        <tr>
+        <tr>
+            <td align="center">Freshman</td>
+            <td align="center">Sophomore</td>
+            <td align="center">Junior</td>
+            <td align="center">Senior</td>
+        </tr>
+        {% else %}
+        <img width="172px" height="215px" src="/picture/{{ user.id }}">
+        {% endif %}
+    </table>
     Full Name: {{ user.full_name }}<br>
     Username: {{ user.username }}<br>
     Ion ID: {{ user.id }} <br>
