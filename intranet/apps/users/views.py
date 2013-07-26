@@ -47,22 +47,25 @@ def picture(request, user_id, year=None):
                         current_grade = 12
 
                 for i in reversed(range(9, current_grade + 1)):
-                    data = user.picture_base64(Grade.names[i - 9])
+                    data = user.photo_base64(Grade.names[i - 9])
                     if data:
                         break
-                if not data:
-                    print "hi"
+                if data is None:
                     image_file = default_image_path
                 else:
                     image_file = StringIO(data)
+
             # Exclude 'graduate' from names array
             elif preferred in Grade.names[:-1]:
-                data = user.picture_base64(preferred)
-                image_file = StringIO(data)
+                data = user.photo_base64(preferred)
+                if data:
+                    image_file = StringIO(data)
+                else:
+                    image_file = default_image_path
             else:
                 image_file = default_image_path
         else:
-            data = user.picture_base64(year)
+            data = user.photo_base64(year)
             if data:
                 image_file = StringIO(data)
             else:

@@ -304,7 +304,7 @@ class User(AbstractBaseUser):
 
     birthday = property(get_birthday)
 
-    def picture_base64(self, photo_year):
+    def photo_base64(self, photo_year):
         """Returns the base 64 representation of a user's picture.
 
         Returns:
