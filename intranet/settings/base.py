@@ -126,8 +126,10 @@ SESSION_COOKIE_AGE = 60 * 60 * 2
 SESSION_SAVE_EVERY_REQUEST = True
 
 CACHE_AGE = {
+    'dn_id_mapping': 60 * 60 * 24 * 30 * 12,
     'user_attribute': 60 * 60 * 24 * 30 * 2,
     'user_classes': 60 * 60 * 24 * 30 * 6,
+    'user_photo': 60 * 60 * 24 * 30 * 6,
     'user_grade': 60 * 60 * 24 * 30 * 10,
     'class_teacher': 60 * 60 * 24 * 30 * 6,
     'class_attribute': 60 * 60 * 24 * 30 * 6,
@@ -210,7 +212,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },

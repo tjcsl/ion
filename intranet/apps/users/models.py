@@ -1,4 +1,3 @@
-import base64
 import logging
 import ldap
 import hashlib
@@ -83,16 +82,26 @@ class User(AbstractBaseUser):
 
     @classmethod
     def dn_from_id(cls, id):
-        c = LDAPConnection()
-        result = c.search(settings.USER_DN,
-                          "(&(|(objectClass=tjhsstStudent)"
-                          "(objectClass=tjhsstTeacher))"
-                          "(iodineUidNumber={}))".format(id),
-                          ['dn'])
-        if len(result) == 1:
-            return result[0][0]
+        key = ".".join([id, 'dn'])
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("DN for ID {} loaded "
+                         "from cache.".format(id))
+            return cached
         else:
-            return None
+            c = LDAPConnection()
+            result = c.search(settings.USER_DN,
+                              "(&(|(objectClass=tjhsstStudent)"
+                              "(objectClass=tjhsstTeacher))"
+                              "(iodineUidNumber={}))".format(id),
+                              ['dn'])
+            if len(result) == 1:
+                dn = result[0][0]
+            else:
+                dn = None
+            cache.set(key, dn, settings.CACHE_AGE['dn_id_mapping'])
+            return dn
 
     @staticmethod
     def create_secure_cache_key(identifier):
@@ -229,9 +238,7 @@ class User(AbstractBaseUser):
 
     classes = property(get_classes)
 
-    # TODO:
-    # counselor
-    # gender
+    # TODO: counselor, gender
 
     def get_address(self):
         """Returns the address of a user.
@@ -253,9 +260,9 @@ class User(AbstractBaseUser):
         elif not cached and visible:
             c = LDAPConnection()
             try:
-                raw = c.user_attributes(self.dn,
-                                        ['street', 'l', 'st', 'postalCode'])
-                result = raw.first_result()
+                results = c.user_attributes(self.dn,
+                                            ['street', 'l', 'st', 'postalCode'])
+                result = results.first_result()
                 street = result['street'][0]
                 city = result['l'][0]
                 state = result['st'][0]
@@ -304,32 +311,119 @@ class User(AbstractBaseUser):
 
     birthday = property(get_birthday)
 
-    def photo_base64(self, photo_year):
-        """Returns the base 64 representation of a user's picture.
+    def photo_binary(self, photo_year):
+        """Returns the binary data for a user's picture.
 
         Returns:
-            Base 64 string
+            Binary data
 
         """
-        c = LDAPConnection()
-        dn = "cn={}Photo,iodineUid={},{}".format(photo_year,
-                                                 self.username,
-                                                 settings.USER_DN)
-        try:
-            results = c.search(dn,
-                               "(objectClass=iodinePhoto)",
-                               ['jpegPhoto'])
-        except ldap.NO_SUCH_OBJECT:
-            return None
+        identifier = ".".join([self.dn, "photo", photo_year])
+        key = identifier  # User.create_secure_cache_key(identifier)
 
-        if len(results) == 1:
+        cached = cache.get(key)
+
+        if self.own_info():
+            visible = True
+        else:
+            perms = self.photo_permissions
+
+            if perms["self"][photo_year] is None:
+                visible_self = perms["self"]["default"]
+            else:
+                visible_self = perms["self"][photo_year]
+            visible_parent = perms["parent"]
+
+            visible = visible_self and visible_parent
+
+        if cached and visible:
+            logger.debug("{} photo of user {} loaded "
+                         "from cache.".format(photo_year.title(),
+                                              self.username))
+            return cached
+        elif not cached and visible:
+            c = LDAPConnection()
+            dn = "cn={}Photo,{}".format(photo_year, self.dn)
             try:
-                result = results[0][1]['jpegPhoto'][0].encode('base64').decode('base64')
-                return result
-            except KeyError:
-                return None
+                results = c.search(dn,
+                                   "(objectClass=iodinePhoto)",
+                                   ['jpegPhoto'])
+                if len(results) == 1:
+                    data = results[0][1]['jpegPhoto'][0]
+                else:
+                    data = None
+            except ldap.NO_SUCH_OBJECT:
+                data = None
+
+            cache.set(key, data, settings.CACHE_AGE['ldap_permissions'])
+            return data
         else:
             return None
+
+    def get_photo_permissions(self):
+        """Fetches the LDAP permissions for a user's photos.
+
+        Returns:
+            Dictionary
+        """
+        key = ".".join([self.dn, 'photo_permissions'])
+
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Photo permissions of user {} loaded "
+                         "from cache.".format(self.username))
+            return cached
+        else:
+            c = LDAPConnection()
+
+            perms = {
+                "parent": False,
+                "self": {
+                    "default": False,
+                    "freshman": None,
+                    "sophomore": None,
+                    "junior": None,
+                    "senior": None
+                }
+            }
+
+            default_result = c.user_attributes(self.dn,
+                                               ["perm-showpictures-self",
+                                                "perm-showpictures"])
+            default = default_result.first_result()
+
+            if "perm-showpictures" in default:
+                perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
+
+            if "perm-showpictures-self" in default:
+                perms["self"]["default"] = \
+                    (default["perm-showpictures-self"][0] == "TRUE")
+
+            photos_result = c.search(self.dn,
+                                     "(objectclass=iodinePhoto)",
+                                     ["cn",
+                                      "perm-showpictures",
+                                      "perm-showpictures-self"])
+
+            photos = photos_result
+
+            for dn, attrs in photos:
+                grade = attrs["cn"][0][:-len("Photo")]
+                try:
+                    public = (attrs["perm-showpictures-self"][0] == "TRUE")
+                    perms["self"][grade] = public
+                except KeyError:
+                    try:
+                        public = (attrs["perm-showpictures"][0] == "TRUE")
+                        perms["self"][grade] = public
+                    except KeyError:
+                        perms["self"][grade] = False
+
+            cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
+            return perms
+
+    photo_permissions = property(get_photo_permissions)
 
     def get_permissions(self):
         """Fetches the LDAP permissions for a user.
@@ -348,22 +442,20 @@ class User(AbstractBaseUser):
             return cached
         else:
             c = LDAPConnection()
-            raw = c.user_attributes(self.dn, ["perm-showaddress",
-                                              "perm-showtelephone",
-                                              "perm-showbirthday",
-                                              "perm-showschedule",
-                                              "perm-showeighth",
-                                              "perm-showpictures",
-                                              "perm-showaddress-self",
-                                              "perm-showtelephone-self",
-                                              "perm-showbirthday-self",
-                                              "perm-showschedule-self",
-                                              "perm-showeighth-self",
-                                              "perm-showpictures-self",
-                                              ])
-            results = raw.first_result()
+            results = c.user_attributes(self.dn, ["perm-showaddress",
+                                                  "perm-showtelephone",
+                                                  "perm-showbirthday",
+                                                  "perm-showschedule",
+                                                  "perm-showeighth",
+                                                  "perm-showaddress-self",
+                                                  "perm-showtelephone-self",
+                                                  "perm-showbirthday-self",
+                                                  "perm-showschedule-self",
+                                                  "perm-showeighth-self",
+                                                  ])
+            result = results.first_result()
             perms = {"parent": {}, "self": {}}
-            for perm, value in results.iteritems():
+            for perm, value in result.iteritems():
                 bool_value = True if (value[0] == 'TRUE') else False
                 if perm.endswith("-self"):
                     perm_name = perm[5:-5]
@@ -377,15 +469,16 @@ class User(AbstractBaseUser):
 
     permissions = property(get_permissions)
 
+    def own_info(self):
+        try:
+            return (str(threadlocals.current_user().id) == str(self.id))
+        except AttributeError:
+            return False
+
     def attribute_is_visible(self, ldap_perm_name):
         perms = self.permissions
 
-        try:
-            own_info = str(threadlocals.current_user().id) == str(self.id)
-        except AttributeError:
-            own_info = False
-
-        if own_info:
+        if self.own_info():
             return True
         else:
             public = True
@@ -528,8 +621,8 @@ class User(AbstractBaseUser):
                 c = LDAPConnection()
                 field_name = attr["ldap_name"]
                 try:
-                    raw = c.user_attributes(self.dn, [field_name])
-                    result = raw.first_result()[field_name]
+                    results = c.user_attributes(self.dn, [field_name])
+                    result = results.first_result()[field_name]
 
                     if attr["list"]:
                         value = result
@@ -594,9 +687,6 @@ class Class(object):
             return User.create(dn=dn)
 
     teacher = property(get_teacher)
-
-    # TODO:
-    # quarters
 
     def __getattr__(self, name):
         """Return simple attributes of User
@@ -665,8 +755,8 @@ class Class(object):
                 attr = class_attributes[name]
                 field_name = attr["ldap_name"]
                 try:
-                    raw = c.class_attributes(self.dn, [field_name])
-                    result = raw.first_result()[field_name]
+                    results = c.class_attributes(self.dn, [field_name])
+                    result = results.first_result()[field_name]
                     if attr["list"]:
                         value = result
                     else:

@@ -28,21 +28,13 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
+        logger.debug("connecting")
         if not hasattr(_thread_locals, 'ldap_conn'):
             logger.info("Connecting to LDAP.")
             _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-        logger.debug(_thread_locals.ldap_conn.whoami_s())
-
-    # def get_conn():
-    #     """Return the LDAP connection from threadlocals."""
-    #     if hasattr(_thread_locals, 'ldap_conn'):
-    #         return _thread_locals.ldap_conn
-    #     else:
-    #         return None
-
-    # conn = property(get_conn)
+        # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
@@ -68,7 +60,7 @@ class LDAPConnection(object):
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
         return _thread_locals.ldap_conn.search_s(dn, ldap.SCOPE_SUBTREE,
-                                            filter, attributes)
+                                                 filter, attributes)
 
     def user_attributes(self, dn, attributes):
         """Fetch a list of attributes of the specified user.
@@ -157,7 +149,8 @@ def close_ldap_connection(sender, **kwargs):
     association, and frees resources.
 
     """
-    if _thread_locals.ldap_conn:
-        _thread_locals.ldap_conn.unbind_s()
-        _thread_locals.ldap_conn = None
-        logger.info("LDAP connection closed.")
+    if hasattr(_thread_locals, 'ldap_conn'):
+        if _thread_locals.ldap_conn:
+            _thread_locals.ldap_conn.unbind_s()
+            _thread_locals.ldap_conn = None
+            logger.info("LDAP connection closed.")

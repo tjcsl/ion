@@ -2,7 +2,6 @@ import os
 from cStringIO import StringIO
 from PIL import Image
 import logging
-import ldap
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -47,7 +46,7 @@ def picture(request, user_id, year=None):
                         current_grade = 12
 
                 for i in reversed(range(9, current_grade + 1)):
-                    data = user.photo_base64(Grade.names[i - 9])
+                    data = user.photo_binary(Grade.names[i - 9])
                     if data:
                         break
                 if data is None:
@@ -57,7 +56,7 @@ def picture(request, user_id, year=None):
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names[:-1]:
-                data = user.photo_base64(preferred)
+                data = user.photo_binary(preferred)
                 if data:
                     image_file = StringIO(data)
                 else:
@@ -65,7 +64,7 @@ def picture(request, user_id, year=None):
             else:
                 image_file = default_image_path
         else:
-            data = user.photo_base64(year)
+            data = user.photo_binary(year)
             if data:
                 image_file = StringIO(data)
             else:
