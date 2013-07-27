@@ -1,0 +1,693 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+<head>
+    <title>
+        {% block title %}
+        TJ Intranet
+        {% endblock %}
+    </title>
+
+    <meta charset='UTF-8' />
+    <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+    <link rel='icon' href='/favicon.ico' type='image/x-icon' />
+
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=PT+Sans' />
+    <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css' />
+    
+
+    <script type='text/javascript' src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+    <script type='text/javascript'>
+    data = {
+        {# TODO: This should be set to the value from docs/conf.py #}
+        'version': '3.0.0',
+        'static': '{{ STATIC_URL }}'
+    }
+    </script>
+
+
+    {% block css %}
+    {% endblock %}
+
+    {% block js %}
+    {% endblock %}
+
+    {% block head %}
+    {% endblock %}
+
+    <style type='text/css'>
+    /*rgb(8, 75, 164)
+    rgb(6, 54, 119)*/
+/* common */
+body {
+    font-family: 'PT Sans', Roboto, sans-serif;
+    font-size: 14px;
+    background-color: rgb(242, 242, 242); 
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.-gradient-blue {
+    background: rgb(8,75,164);
+    background-image: linear-gradient(bottom, rgb(8,75,164) 18%, rgb(7,56,117) 59%);
+    background-image: -o-linear-gradient(bottom, rgb(8,75,164) 18%, rgb(7,56,117) 59%);
+    background-image: -moz-linear-gradient(bottom, rgb(8,75,164) 18%, rgb(7,56,117) 59%);
+    background-image: -webkit-linear-gradient(bottom, rgb(8,75,164) 18%, rgb(7,56,117) 59%);
+    background-image: -ms-linear-gradient(bottom, rgb(8,75,164) 18%, rgb(7,56,117) 59%);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.18, rgb(8,75,164)),color-stop(0.59, rgb(7,56,117)));
+}
+
+.-gradient-blue-light {
+    background: rgb(70, 120, 187);
+    background-image: linear-gradient(bottom, rgb(70, 120, 187) 18%, rgb(65, 101, 150) 59%);
+    background-image: -o-linear-gradient(bottom, rgb(70, 120, 187) 18%, rgb(65, 101, 150) 59%);
+    background-image: -moz-linear-gradient(bottom, rgb(70, 120, 187) 18%, rgb(65, 101, 150) 59%);
+    background-image: -webkit-linear-gradient(bottom, rgb(70, 120, 187) 18%, rgb(65, 101, 150) 59%);
+    background-image: -ms-linear-gradient(bottom, rgb(70, 120, 187) 18%, rgb(65, 101, 150) 59%);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.18, rgb(70, 120, 187)),color-stop(0.59, rgb(65, 101, 150)));
+}
+
+.-button-t {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.-a-t,
+.-a-t:link,
+.-a-t:visited,
+.-a-t:hover,
+.-a-t:active {
+    color: black;
+    text-decoration: none;
+}
+
+.-rad-5px {
+    -moz-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+}
+    </style>
+    <style type='text/css'>
+/* header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    max-height: 50px;
+    color: white;
+    display: table;
+}
+
+.header>div {
+    /* display like a table */
+    display: table-cell;
+    vertical-align: middle;
+
+    line-height: 0;
+}
+
+.header .icon {
+    font-weight: normal;
+    font-size: 30px;
+    width: 130px;
+    background-image: url('logo-sm-white.png');
+    background-size: 39px 32px;
+    padding-left: 52px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+
+}
+
+.header .search {
+
+}
+
+.header .search input {
+    background: transparent;
+    float: left;
+    overflow: hidden;
+    border: none;
+    padding: 3px;
+    width: 150px;
+    border: none;
+    -moz-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    -moz-box-shadow: inset 0 0 2px 2px #f0f0f0;
+    -webkit-box-shadow: inset 0 0 2px 2px #f0f0f0;
+    box-shadow: inset 0 0 2px 2px #f0f0f0;
+    color: white;
+}
+
+.header .search button {
+    background: none;
+    width: 20px;
+    height: 20px;
+    margin: 0px;
+    border: none;
+    cursor: pointer;
+}
+
+/* notifications */
+.header .notif {
+    width: 1px;
+}
+
+.header .notif button i {
+    line-height: 0;
+    overflow: visible;
+    font-size: 20px;
+    color: white;
+    vertical-align: middle;
+}
+
+.header .notif-num {
+    width: 1px;
+}
+
+.header .notif-num button {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    background-color: white;
+    color: #1e5799;
+    font-size: 10px;
+    vertical-align: middle;
+    padding: 3px 7px 3px 5px;
+    text-align: center;
+    
+}
+
+
+.header .status {
+    width: 120px;
+    padding-left: 10px;;
+}
+
+.header .status .user .icon-user {
+    font-size: 20px;
+}
+
+.header .status .user {
+    font-size: 14px;
+    color: white;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class='top'>
+        <div class='header -gradient-blue'>
+            <div class='icon'>
+                Intranet
+            </div>
+
+            <div class='search'>
+                <input type='search' class='search-input' name='search' value='Search' />
+            </div>
+
+            <div class='notif'>
+                <button class='notif-btn -button-t'>
+                    <i class='icon-bell-alt'>&nbsp;</i>
+                </button>
+            </div>
+            <div class='notif-num'>
+                <button class='notif-btn notif-btn-num -rad-5px'>
+                    0
+                </button>
+            </div>
+            <div class='status'>
+                <button class='user -button-t'>
+                    <i class='icon-user'></i>
+                    John Doe
+                    <i class='icon-caret-down'></i>
+                </button>
+                <div class='user-dropdown -h'>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <style type='text/css'>
+/* left */
+.left {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 150px;
+    height: 100%;
+}
+
+.l-container {
+    margin-top: 40px;
+    margin-left: 40px;
+    width: 70px;
+    height: auto;
+    border: 1px solid rgb(216, 216, 216);
+    background-color: white;
+}
+
+.l-container button {
+    width: 100%;
+    height: 70px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: rgb(169, 169, 169);
+    border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+.l-container button:hover,
+.l-container button:focus,
+.l-container button.sel {
+    color: rgb(72, 72, 72);
+}
+
+.l-container button i {
+    font-size: 32px;
+    clear: both;
+}
+
+/* hacky, force new line after image */
+.l-container button i:after {
+    content: "\A";
+    white-space: pre;
+}
+    </style>
+    <div class='left' ns='l'>
+        <div class='l-container -rad-5px'>
+            <button class='l-dash sel'>
+                <i class='icon-dashboard'></i>
+                Dashboard
+            </button>
+            <button class='l-eighth'>
+                <i class='icon-pencil'></i>
+                Eighth
+            </button>
+            <button class='l-events'>
+                <i class='icon-calendar'></i>
+                Events
+            </button>
+            <button class='l-groups'>
+                <i class='icon-group'></i>
+                Groups
+            </button>
+            <button class='l-polls'>
+                <i class='icon-check'></i>
+                Polls
+            </button>
+            <button class='l-files'>
+                <i class='icon-folder-close'></i>
+                Files
+            </button>
+            <button class='l-mail'>
+                <i class='icon-envelope'></i>
+                Mail
+        </div>
+    </div>
+    <style type='text/css'>
+.middle {
+    position: absolute;
+    top: 60px;
+    left: 150px;
+}
+
+.c-a-post {
+    background-color: white;
+    -moz-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid rgb(216, 216, 216);
+    width: 500px;
+    padding: 10px;
+}
+
+.c-header {
+    display: inline;
+}
+
+.c-a-header {
+    display: inline;
+    font-size: 18px;
+}
+
+.c-a-status {
+    color: rgb(178, 178, 178);
+    font-size: 12px;
+}
+
+    </style>
+    <div class='middle'>
+        <div class='center' ns='c'>
+            {% block content %}
+
+                {% include "frontend/announcements.html" %}
+
+            {% endblock %}
+        </div>
+
+        <style type='text/css'>
+/* right */
+/*rgb(70, 120, 187)
+rgb(65, 101, 150)*/
+.right {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+}
+
+.r-eighth {
+    width: 400px;
+}
+
+.r-header {
+    display: table;
+    color: white;
+    width: 390px;
+    padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+
+    -moz-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.r-cont {
+    /* width + padding - elem padding - 2 */
+    width: 388px;
+    padding: 5px;
+    border: 1px solid rgb(8, 75, 164);
+}
+
+.r8-update {
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+.r8-update i {
+    color: rgb(255, 72, 72);
+}
+
+.r8-dayh {
+    margin-bottom: 10px;
+}
+
+.r8-dayh:last-child {
+    margin-bottom: 0;
+}
+
+.r8-blk {
+    background-color: rgb(215, 215, 215);
+    color: #1e5799;
+    font-size: 11px;
+    vertical-align: middle;
+    padding: 3px 5px 3px 7px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.r8-blk.sel {
+    background-color: rgb(255, 72, 72);
+}
+
+.r8-opts {
+    float: right;
+}
+
+.r8-opts button {
+    padding: 5px;
+    line-height: 0px;
+    height: 20px;
+    overflow: visible;
+}
+
+.r8-opts button.sel {
+    background-color: rgb(215, 215, 215);
+}
+
+        </style>
+        <div class='right' ns='r'>
+            <div class='r-eighth' ns='r8'>
+                <div class='r-header -gradient-blue-light -rad-5px'>
+                    Upcoming Eighth Periods
+                </div>
+                <div class='r-cont'>
+                    <div class='r8-update -rad-5px'>
+                        <i class='icon-warning-sign'></i>
+                        Signups close in 12 minutes.
+                    </div>
+                    <div class='r8-dayh r8-dayh-06122013A'>
+                        <span class='r8-blk -rad-5px'>
+                            A
+                        </span>
+                        Wednesday, June 12
+                        <span class='r8-opts'>
+                            <button class='-button-t -rad-5px sel'>
+                                Favorites
+                            </button>
+                            <button class='-button-t -rad-5px'>
+                                All
+                            </button>
+                        </span>
+                    </div>
+                    <style type='text/css'>
+.r8-actsel-act {
+    width: 100%;
+    height: 16px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.r8-actsel-act i {
+    display: inline;
+}
+
+.r8-actsel-info {
+    float: right;
+    color: rgb(169, 169, 169);
+}
+                    </style>
+                    <div class='r8-actsel r8-actsel-06122013A sel'>
+
+                        <div class='r8-actsel-act'>
+                            <i class='icon-circle'></i>
+                            <span class='r8-actsel-title'>
+                                Basket Weaving
+                                <span class='r8-actsel-info'>Agee - 123</span>
+                            </span>
+                        </div>
+                        <div class='r8-actsel-act'>
+                            <i class='icon-ok'></i>
+                            <span class='r8-actsel-title'>
+                                Dormancy Club
+                                <span class='r8-actsel-info'>William - 123</span>
+                            </span>
+                        </div>
+                        <div class='r8-actsel-act'>
+                            <i class='icon-circle-blank'></i>
+                            <span class='r8-actsel-title'>
+                                Sys Op Administrators
+                                <span class='r8-actsel-info'>Hamilton - 123</span>
+                            </span>
+                        </div>
+
+
+
+                    </div>
+
+
+                    <div class='r8-dayh r8-dayh-06122013B'>
+                        <span class='r8-blk -rad-5px sel'>
+                            B
+                        </span>
+                        Wednesday, June 11
+                        <span class='r8-opts'>
+                            
+                        </span>
+                    </div>
+
+                    <div class='r8-dayh r8-dayh-06132013A'>
+                        <span class='r8-blk -rad-5px'>
+                            A
+                        </span>
+                        Friday, June 13
+                        <span class='r8-opts'>
+                            
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <style type='text/css'>
+.r-split {
+    display: table;
+    margin-top: 20px;
+}
+
+.r-split div .r-header {
+    width: 185px;
+}
+
+.r-split div .r-cont {
+    /* width + padding - elem padding - 2 */
+    width: 183px;
+}
+
+.r-schedule,
+.r-birthdays {
+    display: table-cell;
+    width: 190px;
+}
+
+.r-schedule .r-cont,
+.r-birthdays .r-cont {
+    min-height: 250px;
+}
+
+.r-schedule {
+    padding-right: 10px;
+}
+            </style>
+            <div class='r-split'>
+                <div class='r-schedule' ns='r-s'>
+                    <div class='r-header -gradient-blue-light -rad-5px'>
+                        Bell Schedule
+                    </div>
+                    <style type='text/css'>
+.r-s-cont h3 {
+    display: block;
+    margin: 0;
+    text-align: center;
+}
+
+.r-s-cont table {
+    width: 100%;
+}
+
+.r-s-cont table th {
+    text-align: left;
+}
+
+.r-s-cont table td {
+    text-align: right;
+}
+                    </style>
+                    <div class='r-cont r-s-cont'>
+                        <h3>Anchor Day</h3>
+                        <table>
+                            <tr>
+                                <th>Period 1</th>
+                                <td>8:50 - 9:15</td>
+                            </tr>
+                            <tr>
+                                <th>Period 2</th>
+                                <td>9:25 - 10:05</td>
+                            </tr>
+                            <tr>
+                                <th>Period 3</th>
+                                <td>10:15 - 10:55</td>
+                            </tr>
+                            <tr>
+                                <th>Period 4</th>
+                                <td>11:05 - 11:45</td>
+                            </tr>
+                            <tr>
+                                <th>Lunch</th>
+                                <td>11:45 - 12:35</td>
+                            </tr>
+                            <tr>
+                                <th>Period 5</th>
+                                <td>12:35 - 1:15</td>
+                            </tr>
+                            <tr>
+                                <th>Period 6</th>
+                                <td>1:25 - 2:05</td>
+                            </tr>
+                            <tr>
+                                <th>Period 7</th>
+                                <td>2:05 - 2:55</td>
+                            </tr>
+                            <tr>
+                                <th>Break</th>
+                                <td>2:55 - 3:10</td>
+                            </tr>
+                            <tr>
+                                <th>Period 8B</th>
+                                <td>3:10 - 3:50</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class='r-birthdays' ns='r-b'>
+                    <div class='r-header -gradient-blue-light -rad-5px'>
+                        Birthdays
+                    </div>
+                    <style type='text/css'>
+.r-b-cont dl {
+    margin-top: 0;
+}
+
+.r-b-cont dl dt {
+    font-weight: bold;
+}
+
+.r-b-cont dl dd {
+    margin-left: 20px;
+}
+                    </style>
+                    <div class='r-cont r-b-cont'>
+                        <dl>
+                            <dt>June 10</dt>
+                            <dd>
+                                <a href='/profile/1234' class='-a-t'>
+                                    Bob Joe (15)
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href='/profile/1234' class='-a-t'>
+                                    Joe Bob (16)
+                                </a>
+                            </dd>
+                            <dt>June 11</td>
+                            <dd>
+                                <a href='/profile/1234' class='-a-t'>
+                                    Bob Joe (15)
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href='/profile/1234' class='-a-t'>
+                                    Joe Bob (16)
+                                </a>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='bottom'>
+        <div class='footer'>
+
+
+        </div>
+
+    </div>
+
+</body>
+</html>

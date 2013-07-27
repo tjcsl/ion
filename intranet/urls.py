@@ -33,3 +33,7 @@ urlpatterns += patterns('',
     url(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
     url(r'^\(productivity\)/cpuspam/botspam$', TemplateView.as_view(template_name="cpuspam.html")),
 )
+
+urlpatterns += patterns('',
+    (r'^frontend/', TemplateView.as_view(template_name="frontend/base.html")),
+)
