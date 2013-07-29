@@ -62,6 +62,8 @@ If there’s no output, your sandbox should be ready to go. Finally, clean up so
 Setting up Git
 ==============
 git clone /shared/git/intranet3.git
+
+git remote update
 git branch dev origin/dev
 
 To add:

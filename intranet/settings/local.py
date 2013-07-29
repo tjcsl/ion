@@ -35,35 +35,35 @@ class glob_list(list):
                 return True
         return False
 
-INTERNAL_IPS = glob_list([
-    '127.0.0.1',
-    '198.38.22.*',
-    '192.168.1.*'
-])
+# INTERNAL_IPS = glob_list([
+#     '127.0.0.1',
+#     '198.38.22.*',
+#     '192.168.1.*'
+# ])
 
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': True
-}
+# DEBUG_TOOLBAR_CONFIG = {
+#     'INTERCEPT_REDIRECTS': True
+# }
 
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    # 'debug_toolbar.panels.profiling.ProfilingDebugPanel',  # Views are called twice when this is enabled
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    # 'debug_toolbar.panels.cache.CacheDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-)
+# DEBUG_TOOLBAR_PANELS = (
+#     'debug_toolbar.panels.version.VersionDebugPanel',
+#     'debug_toolbar.panels.timer.TimerDebugPanel',
+#     'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+#     'debug_toolbar.panels.headers.HeaderDebugPanel',
+#     # 'debug_toolbar.panels.profiling.ProfilingDebugPanel',  # Views are called twice when this is enabled
+#     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+#     'debug_toolbar.panels.sql.SQLDebugPanel',
+#     'debug_toolbar.panels.template.TemplateDebugPanel',
+#     # 'debug_toolbar.panels.cache.CacheDebugPanel',
+#     'debug_toolbar.panels.signals.SignalDebugPanel',
+#     'debug_toolbar.panels.logger.LoggingPanel',
+# )
 
-MIDDLEWARE_CLASSES += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+# MIDDLEWARE_CLASSES += (
+#     'debug_toolbar.middleware.DebugToolbarMiddleware',
+# )
 
-INSTALLED_APPS += (
-    'debug_toolbar',
-    'django_extensions',
-)
+# INSTALLED_APPS += (
+#     'debug_toolbar',
+#     'django_extensions',
+# )
