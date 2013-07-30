@@ -46,33 +46,45 @@ table {
     border-spacing: 0;
 }
 
-/**********************************************/
+/*********************/
 
 body {
     font-family: "Open Sans", sans-serif;
     font-size: 13px;
+    color: rgb(72,72,72);
     background-color: rgb(242, 242, 242);
+    margin-top: 40px;
+    padding: 16px 26px 10px 26px;
+    min-width: 1000px;
+    line-height: 1.4;
 }
 
-a:active, a:visited, a {
+#main a, #main a:active, #main a:visited {
     text-decoration: none;
-    color: inherit;
+    color: rgb(32,66,224);
+}
+
+#main a:hover {
+    text-decoration: underline;
 }
 
 
 #header {
     position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     height: 40px;
     color: white;
     overflow: hidden;
-    min-width: 500px;
+    min-width: 1052px;
 
-    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(rgb(14,50,98)), to(rgb(20,69,136)));
-    background-image: -webkit-linear-gradient(bottom, rgb(14,50,98), rgb(20,69,136));
-    background-image: -moz-linear-gradient(bottom, rgb(14,50,98), rgb(20,69,136));
-    background-image: -o-linear-gradient(bottom, rgb(14,50,98), rgb(20,69,136));
-    background-image: linear-gradient(bottom, rgb(14,50,98), rgb(20,69,136));
+    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(rgb(13,53,115)), to(rgb(20,74,159)));
+    background-image: -webkit-linear-gradient(bottom, rgb(13,53,115), rgb(20,74,159));
+    background-image: -moz-linear-gradient(bottom, rgb(13,53,115), rgb(20,74,159));
+    background-image: -o-linear-gradient(bottom, rgb(13,53,115), rgb(20,74,159));
+    background-image: linear-gradient(bottom, rgb(13,53,115), rgb(20,74,159));
 
     text-shadow: 0 1px 0 rgb(4,33,71);
     border-bottom: 1px solid white;
@@ -87,11 +99,17 @@ a:active, a:visited, a {
     line-height: 40px;
 }
 
-
 h1 {
     font-weight: normal;
     font-size: 25px;
+    line-height: 25px;
+    color: white;
 }
+
+h2 {
+    font-size: 20px;
+}
+
 
 #intranet-title {
     float: left;
@@ -122,11 +140,11 @@ h1 {
     height: 20px;
     top: 10px;
 
-    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(rgb(7,54,116)), to(rgb(4,43,96)));
-    background-image: -webkit-linear-gradient(bottom, rgb(7,54,116), rgb(4,43,96));
-    background-image: -moz-linear-gradient(bottom, rgb(7,54,116), rgb(4,43,96));
-    background-image: -o-linear-gradient(bottom, rgb(7,54,116), rgb(4,43,96));
-    background-image: linear-gradient(bottom, rgb(7,54,116), rgb(4,43,96));
+    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(rgb(12, 52, 107)), to(rgb(7,54,117)));
+    background-image: -webkit-linear-gradient(bottom, rgb(12, 52, 107), rgb(7,54,117));
+    background-image: -moz-linear-gradient(bottom, rgb(12, 52, 107), rgb(7,54,117));
+    background-image: -o-linear-gradient(bottom, rgb(12, 52, 107), rgb(7,54,117));
+    background-image: linear-gradient(bottom, rgb(12, 52, 107), rgb(7,54,117));
 
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -136,7 +154,7 @@ h1 {
     border-bottom: 1px solid rgb(4,41,90);
     border-left: 1px solid rgb(6,47,104);*/
 
-    box-shadow: inset 0 0 5px rgb(12,39,75);
+    /*box-shadow: inset 0 0 1px rgb(12,39,75);*/
     line-height: 20px;
 }
 
@@ -156,7 +174,7 @@ h1 {
     margin: 0 3px 0 3px;
     padding: 0;
     float: right;
-
+    vertical-align: middle;
     font-family: "Open Sans", sans-serif;
     font-size: 13px;
     text-shadow: 0 1px 0 rgb(4,33,71);
@@ -168,37 +186,211 @@ h1 {
 }
 
 #notifications {
-    display: inline;
+    display: inline-block;
+    height: 40px;
+    margin-right: 10px;
 }
 
 #notifications-icon {
-    display: inline;
+    position: relative;
+    display: inline-block;
+    font-size: 17px;
+    top: 1px;
 }
 
-#notifications-count {
-    display: inline;
+
+#notifications-badge-wrapper {
+    display: inline-block;
+    height: 40px;
 }
 
-#user-dropdown-name {
-    display: inline;
+#notifications-badge {
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    height: 14px;
+    line-height: 14px;
+    padding: 0 4px;
+
+    border-radius: 3px;
+    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(rgb(205,0,11)), to(rgb(239,39,49)));
+    background-image: -webkit-linear-gradient(bottom, rgb(205,0,11), rgb(239,39,49));
+    background-image: -moz-linear-gradient(bottom, rgb(205,0,11), rgb(239,39,49));
+    background-image: -o-linear-gradient(bottom, rgb(205,0,11), rgb(239,39,49));
+    background-image: linear-gradient(bottom, rgb(205,0,11), rgb(239,39,49));
+
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgb(173, 2, 11);
+
+    box-shadow: 0 1px 0 rgb(4,33,71);
 }
 
+#username {
+    display: inline;
+    margin-right: 10px;
+}
+
+#username .icon-user {
+    margin-right: 1px;
+
+    font-size: 17px;
+    top: 1px;
+}
+
+#nav {
+    display: block;
+    width: 73px;
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+}
+
+#nav a, #nav a:active, #nav a:visited {
+    text-decoration: none;
+    color: rgb(169,169,169);
+}
+
+#nav a:hover {
+    text-decoration: none;
+    color: rgb(72,72,72);
+
+}
+
+#nav li {
+    height: 64px;
+    outline: 1px solid rgb(216, 216, 216);
+    margin: 1px 0 1px 0;
+    padding-top: auto;
+}
+
+
+#nav .selected {
+    background-color: white;
+}
+
+#nav li:first-child {
+    margin-top: -1px;
+}
+
+#nav li:last-child {
+    margin-bottom: -1px;
+}
+
+.nav-item-contents {
+    display: block;
+    padding-top: 11px;
+    padding-bottom: 11px;
+
+}
+
+.nav-item-contents i {
+    margin-bottom: 1px;
+}
+
+#nav .selected .nav-item-contents {
+    color: rgb(72,72,72);
+}
+
+.nav-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    background-image: url("/static/img/icons.png");
+    background-size: 168px 56px; /*retinafy w/ this*/
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dashboard-icon {
+    background-position: 0 0;
+}
+
+#nav .selected .dashboard-icon, .nav-item-contents:hover .dashboard-icon {
+    background-position: 0 28px;
+}
+
+.eighth-icon {
+    background-position: -28px 0;
+}
+
+#nav .selected .eighth-icon, .nav-item-contents:hover .eighth-icon {
+    background-position: -28px 28px;
+}
+
+.events-icon {
+    background-position: -56px 0;
+}
+
+#nav .selected .events-icon, .nav-item-contents:hover .events-icon {
+    background-position: -56px 28px;
+}
+
+.groups-icon {
+    background-position: -84px 0;
+}
+
+#nav .selected .groups-icon, .nav-item-contents:hover .groups-icon {
+    background-position: -84px 28px;
+}
+
+.polls-icon {
+    background-position: -112px 0;
+}
+
+#nav .selected .polls-icon, .nav-item-contents:hover .polls-icon {
+    background-position: -112px 28px;
+}
+
+.files-icon {
+    background-position: -140px 0;
+}
+
+#nav .selected .files-icon, .nav-item-contents:hover .files-icon {
+    background-position: -140px 28px;
+}
+
+/*---------- Dashboard ----------*/
+
+#announcements {
+    margin-right: 432px;
+    margin-left: 91px;
+    min-width: 400px;
+}
+
+#announcements h2{
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
 
 .announcement {
     background-color: white;
     border-radius: 5px 5px 5px 5px;
     border: 1px solid rgb(216, 216, 216);
-    width: 100%;
-    margin: 10px;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
-.announcement-title {
-    display: inline;
-    font-size: 18px;
+#announcements h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 2px;
 }
 
-.news-metatdata {
-    color: rgb(178, 178, 178);
+.announcement-metadata {
+    color: rgb(144,144,144);
     font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 5px;
 }
+
+#widgets {
+    display: block;
+    float: right;
+    width: 416px;
+    height: 500px;
+}
+
+

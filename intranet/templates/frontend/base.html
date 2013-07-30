@@ -19,10 +19,10 @@
     <script type="text/javascript" src="{% static "js/jquery-1.10.2.min.js" %}"></script>
 </head>
 
-<body>
+<body class=".dashboard-page">
     <div id="header">
         <div id="header-left">
-            <a href="/" id="intranet-title">
+            <a href="/frontend" id="intranet-title">
                 <div id="logo">
                 </div>
                 <h1>
@@ -34,7 +34,7 @@
                 <div id="search-icon">
                    <i class="icon-search"></i>
                 </div>
-                <input type="text" name="search" id="search-box" value="Search" onclick="this.value='';this.onclick=null;"></input>
+                <input type="text" name="search" id="search-box" value="Search" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}"></input>
             </div>
         </div>
 
@@ -43,20 +43,161 @@
                 <span id="notifications-icon">
                     <i class="icon-bell-alt"></i>
                 </span>
-                <span id="notifications-count">
-                    42
+                <span id="notifications-badge-wrapper">
+                    <span id="notifications-badge">
+                        42
+                    </span>
                 </span>
             </span>
-            <span id="user-dropdown-name">
-                <i class="icon-user"></i>
-                John Doe ▾
+
+            <span id="username">
+                <i class="icon-user"></i> John Doe <i class="icon-caret-down"></i>
             </span>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
 
+    <div id="main">
+        <ul id="nav">
+            <li class="selected">
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon dashboard-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon eighth-icon"></i>
+                    Eighth
+                </a>
+            </li>
+
+            <li>
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon events-icon"></i>
+                    Events
+                </a>
+            </li>
+            <li>
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon groups-icon"></i>
+                    Groups
+                </a>
+            </li>
+            <li>
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon polls-icon"></i>
+                    Polls
+                </a>
+            </li>
+            <li>
+                <a href="/frontend" class="nav-item-contents">
+                    <i class="nav-icon files-icon"></i>
+                    Files
+                </a>
+            </li>
+        </ul>
+
+        <div id="widgets">
+            <div class="r-eighth" ns="r8">
+                <div class="r-header -gradient-blue-light -rad-5px">
+                    Upcoming Eighth Periods
+                </div>
+                <div class="r-cont">
+                    <div class="r8-update -rad-5px">
+                        <i class="icon-warning-sign"></i>
+                        Signups close in 12 minutes.
+                    </div>
+                    <div class="r8-dayh r8-dayh-06122013A">
+                        <span class="r8-blk -rad-5px">
+                            A
+                        </span>
+                        Wednesday, June 12
+                        <span class="r8-opts">
+                            <button class="-button-t -rad-5px sel">
+                                Favorites
+                            </button>
+                            <button class="-button-t -rad-5px">
+                                All
+                            </button>
+                        </span>
+                    </div>
+                    <div class="r8-actsel r8-actsel-06122013A sel">
+
+                        <div class="r8-actsel-act">
+                            <i class="icon-circle"></i>
+                            <span class="r8-actsel-title">
+                                Basket Weaving
+                                <span class="r8-actsel-info">Agee - 123</span>
+                            </span>
+                        </div>
+                        <div class="r8-actsel-act">
+                            <i class="icon-ok"></i>
+                            <span class="r8-actsel-title">
+                                Dormancy Club
+                                <span class="r8-actsel-info">William - 123</span>
+                            </span>
+                        </div>
+                        <div class="r8-actsel-act">
+                            <i class="icon-circle-blank"></i>
+                            <span class="r8-actsel-title">
+                                Sys Op Administrators
+                                <span class="r8-actsel-info">Hamilton - 123</span>
+                            </span>
+                        </div>
+
+
+
+                    </div>
+
+
+                    <div class="r8-dayh r8-dayh-06122013B">
+                        <span class="r8-blk -rad-5px sel">
+                            B
+                        </span>
+                        Wednesday, June 11
+                        <span class="r8-opts">
+
+                        </span>
+                    </div>
+
+                    <div class="r8-dayh r8-dayh-06132013A">
+                        <span class="r8-blk -rad-5px">
+                            A
+                        </span>
+                        Friday, June 13
+                        <span class="r8-opts">
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+        <div id="announcements">
+            <h2>
+                Announcements
+            </h2>
+
+            {% for i in "12356789"|make_list %}
+                <div class="announcement">
+                    <h3>
+                        Parking Application Update
+                    </h3>
+
+                    <div class="announcement-metadata">
+                        Jane Smith • five minutes ago • to all students
+                    </div>
+                    <div class="announcement-content">
+                        If you turned in a paper parking application but did not complete the online form, you MUST do so by this Friday, June 14th. The online application is available <a href="/frontend">here</a>.
+                    </div>
+                </div>
+            {% endfor %}
+            <br>
+            <a href="/frontend">Archive</a>
+
+    </div>
 </body>
 </html>
