@@ -2,10 +2,5 @@
 Workflow
 ********
 
-Git
-===
-
-git workflow here
-
-
-other workflow information
+git remote update
+git branch dev origin/dev

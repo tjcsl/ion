@@ -1,9 +1,11 @@
 ***********************
-Setting up your sandbox
+Setting up Your Sandbox
 ***********************
 
-Setting up Virtualenv
-=====================
+----------
+Virtualenv
+----------
+
 SSH into Ion.
 
 Navigate to ``/usr/local/virtualenvs``:
@@ -12,60 +14,39 @@ Navigate to ``/usr/local/virtualenvs``:
 
     $ cd /usr/local/virtualenvs
 
-As root, create your Virtualenv, as follows. you should name it according to standard as ``<initials>-ion`` (e.g. ``aw-ion`` for Angela William):
+As root, create your Virtualenv with a name following the format ``<initials>-ion`` (e.g. ``aw-ion`` for Angela William):
 
 .. code-block:: bash
 
     $ ksu
     $ virtualenv --distribute --no-site-packages <initials>-ion
 
-Return to an unprivileged user:
+Return to an unprivileged user, navigate to your home directory, and activate your virtualenv.
 
 .. code-block:: bash
 
     $ exit
-
-Navigate to your home directory (``cd``), where you have a sandbox set up (if not, see Setting up Your Sandbox), and start working in your virtualenv:
-
-.. code-block:: bash
-
     $ cd ~
     $ workon <initials>-ion
 
-Install the requirements for a testing version of Intranet (change this to the staging area when one is set up):
+--------
+Codebase
+--------
+
+While still in your home directory, clone the shared Git repository.
 
 .. code-block:: bash
 
-    $ pip install -r /usr/local/www/intranet3/requirements/local.py
+    $ git clone /shared/git/intranet3.git
 
-Make sure that you have the requirements listed in that file:
-
-.. code-block:: bash
-
-    $ pip freeze
-
-To check if your install worked, make sure your environment has all the requisite packages.
+Checkout a local copy of the ``dev`` branch.
 
 .. code-block:: bash
 
-    $ pip freeze > freeze.txt
-    $ cat /usr/local/www/requirements.txt > req.txt
-    $ diff -q pip.txt req.txt
+    $ git checkout -b dev origin/dev
 
-If there’s no output, your sandbox should be ready to go. Finally, clean up some of your temporary files:
+Install the requirements for a testing version of Intranet.
 
 .. code-block:: bash
 
-    $ rm freeze.txt req.txt
-
-
-Setting up Git
-==============
-git clone /shared/git/intranet3.git
-
-git remote update
-git branch dev origin/dev
-
-To add:
-shared setttings on /shared
-permissions
+    $ pip install -r intranet3/requirements/local.py
