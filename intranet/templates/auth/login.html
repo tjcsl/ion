@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block js %}
+    {{ block.super }}
     <script type='text/javascript'>
         $(document).ready(function() {
             $('input[name=username]').focus();
@@ -29,7 +30,6 @@
 {% block body %}
     <h1>TJ Intranet - Login</h1>
     <div class='login'>
-        <p>Enter your username and password to log in:</p>
         {% if auth_form.errors %}
             <p class='error'>Invalid username or password</p>
         {% endif %}
@@ -37,7 +37,7 @@
         <form action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
             {% csrf_token %}
             {% for field in auth_form %}
-                {{ field }}
+                {{ field }}<br>
             {% endfor %}
             <input type='submit' value='Login' />
         </form>

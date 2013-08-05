@@ -17,12 +17,23 @@
     {% endblock %}
 
     {% block js %}
+        <script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+        <script type="text/javascript">
+            Modernizr.load({
+                test: Modernizr.borderradius,
+                nope: "{% static 'js/PIE/PIE.js' %}"
+            });
+            $(document).ready(function() {
+                $("body").removeClass("notransition");
+            });
+        </script>
     {% endblock %}
 
     {% block head %}
     {% endblock %}
 </head>
-<body>
+<body class="notransition">
     {% block body %}
     {% endblock %}
 </body>

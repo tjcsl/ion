@@ -12,11 +12,7 @@
 
 {% block js %}
     {{ block.super }}
-    {% include "jquery.html" with ui="YES" %}
-{% endblock %}
-
-{% block head %}
-    {{ block.super }}
+    {% include "jquery_ui.html" %}
     <script type="text/javascript">
         $(document).ready(function() {
             var heights = $(".eighth-activities").map(function() {
@@ -30,6 +26,7 @@
 
             $(".eighth-widget").data("max-height", max_height);
 
+            $(".block-header").bind( "touchstart", function(e){e.click()} );
             $(".block-header").click(function() {
                 var time = 200;
                 var opened = $(".eighth-block.open .eighth-activities");
