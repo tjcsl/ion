@@ -8,56 +8,105 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&amp;subset=latin,latin-ext,cyrillic-ext,greek-ext,cyrillic,vietnamese,greek" rel="stylesheet" type="text/css">
-     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
-     <!--[if IE 7]>
-       <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
-     <![endif]-->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
+    <!--[if IE 7]>
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
+    <![endif]-->
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
 
-    <script type="text/javascript" src="{% static "js/jquery-1.10.2.min.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui-1.10.3.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var heights = $(".eighth-activities").map(function() {
+                return $(this).children(".eighth-activity").length * 20;
+            }).get();
+
+            var max_height = Math.max.apply(null, heights);
+            if (max_height > 90) {
+                max_height = 90;
+            }
+
+            $(".eighth-widget").data("max-height", max_height);
+
+            $(".block-header").click(function() {
+                var time = 200;
+                var opened = $(".eighth-block.open .eighth-activities");
+                opened.stop().animate({height: 0}, time);
+                opened.parent().removeClass("open");
+
+                var block = $(this).parent();
+                var height = $(".eighth-widget").data("max-height");
+                block.children(".eighth-activities").stop().animate({height: height}, time);
+                block.addClass("open");
+            });
+
+            $(".eighth-activity").click(function() {
+                var time = 300;
+                $(this).stop().animate({ backgroundColor: "rgb(78,185,0)" }, time, function() {
+                    $(this).stop().delay(500).animate({ backgroundColor: "rgb(220,220,220)" }, time, function() {
+                        $(this).removeAttr("style");
+                    })
+                });
+
+                var icon = $(this).children("i");
+                icon.stop().animate({ color: "rgb(72,72,72)" }, time, function() {
+                    icon.stop().delay(500).animate({ color: "rgb(78,185,0)" }, time, function() {
+                        // icon.removeAttr("style");
+                    })
+                });
+
+
+
+
+
+            });
+        });
+    </script>
 </head>
 
-<body class=".dashboard-page">
-    <div id="header">
-        <div id="header-left">
-            <a href="/frontend" id="intranet-title">
-                <div id="logo">
+<body class="dashboard-page">
+    <div class="header">
+        <div class="header-left">
+            <a href="/frontend" class="intranet-title">
+                <div class="logo">
                 </div>
                 <h1>
                     Intranet
                 </h1>
             </a>
 
-            <div id="search-wrapper">
-                <div id="search-icon">
+            <div class="search">
+                <div class="search-icon">
                    <i class="icon-search"></i>
                 </div>
-                <input type="text" name="search" id="search-box" value="Search" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}"></input>
+                <input type="text" name="search" value="Search" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}"></input>
             </div>
         </div>
 
-        <div id="header-right">
-            <span id="notifications">
-                <span id="notifications-icon">
+        <div class="header-right">
+            <span class="notifications">
+                <span class="notifications-icon">
                     <i class="icon-bell-alt"></i>
                 </span>
-                <span id="notifications-badge-wrapper">
-                    <span id="notifications-badge">
+                <span class="notifications-badge-wrapper">
+                    <span class="notifications-badge">
                         42
                     </span>
                 </span>
             </span>
 
-            <span id="username">
+            <span class="username">
                 <i class="icon-user"></i> John Doe <i class="icon-caret-down"></i>
             </span>
         </div>
     </div>
 
-    <div id="main">
-        <ul id="nav">
+    <div class="main">
+        <ul class="nav">
             <li class="selected">
                 <a href="/frontend" class="nav-item-contents">
                     <i class="nav-icon dashboard-icon"></i>
@@ -98,103 +147,128 @@
             </li>
         </ul>
 
-        <div id="widgets">
-            <div class="r-eighth" ns="r8">
-                <div class="r-header -gradient-blue-light -rad-5px">
-                    Upcoming Eighth Periods
-                </div>
-                <div class="r-cont">
-                    <div class="r8-update -rad-5px">
+        <div class="widgets">
+            <div class="widget eighth-widget">
+                <div class="widget-title">
+                    <h2>
+                        Upcoming Eighth Periods
+                    </h2>
+                    <div class="info warning">
                         <i class="icon-warning-sign"></i>
-                        Signups close in 12 minutes.
+                        15 Minutes Left to Sign Up
                     </div>
-                    <div class="r8-dayh r8-dayh-06122013A">
-                        <span class="r8-blk -rad-5px">
-                            A
-                        </span>
-                        Wednesday, June 12
-                        <span class="r8-opts">
-                            <button class="-button-t -rad-5px sel">
-                                Favorites
-                            </button>
-                            <button class="-button-t -rad-5px">
-                                All
-                            </button>
-                        </span>
-                    </div>
-                    <div class="r8-actsel r8-actsel-06122013A sel">
-
-                        <div class="r8-actsel-act">
-                            <i class="icon-circle"></i>
-                            <span class="r8-actsel-title">
-                                Basket Weaving
-                                <span class="r8-actsel-info">Agee - 123</span>
+                </div>
+                <div class="widget-content">
+                    <div class="eighth-block">
+                        <div class="block-header">
+                            <span class="block-letter">
+                                A
                             </span>
-                        </div>
-                        <div class="r8-actsel-act">
-                            <i class="icon-ok"></i>
-                            <span class="r8-actsel-title">
-                                Dormancy Club
-                                <span class="r8-actsel-info">William - 123</span>
-                            </span>
-                        </div>
-                        <div class="r8-actsel-act">
-                            <i class="icon-circle-blank"></i>
-                            <span class="r8-actsel-title">
-                                Sys Op Administrators
-                                <span class="r8-actsel-info">Hamilton - 123</span>
-                            </span>
+                            Thursday, June 12
+                            <a class="info" href="/frontend">Choose from All Activities</a>
                         </div>
 
+                        <div class="eighth-activities">
+                                <div class="eighth-activity">
+                                    <i class="icon-circle"></i>
+                                    Basket Weaving
+                                    <span class='info'>Agee • 123</span>
+                                </div>
+                                <div class="eighth-activity selected">
+                                    <i class="icon-ok"></i>
+                                    Dormancy Club
+                                    <span class='info'>William • 456</span>
+                                </div>
+                        </div>
+                    </div>
 
+                    <div class="eighth-block open warning">
+                        <div class="block-header">
+                            <span class="block-letter">
+                                B
+                            </span>
+                            Thursday, June 12
+                            <a class="info" href="/frontend">Choose from All Activities</a>
+                        </div>
 
+                        <div class="eighth-activities">
+                                <div class="eighth-activity">
+                                    <i class="icon-circle"></i>
+                                    Basket Weaving
+                                    <span class='info'>Agee • 123</span>
+                                </div>
+                                <div class="eighth-activity selected">
+                                    <i class="icon-ok"></i>
+                                    Dormancy Club
+                                    <span class='info'>William • 456</span>
+                                </div>
+                                {% for i in "123456789"|make_list %}
+                                <div class="eighth-activity">
+                                    <i class="icon-circle-blank"></i>
+                                    Sys Op Administrators
+                                    <span class='info'>Hamilton • 115</span>
+                                </div>
+                                {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="eighth-block">
+                        <div class="block-header">
+                            <span class="block-letter">
+                                A
+                            </span>
+                            Thursday, June 12
+                            <a class="info" href="/frontend">Choose from All Activities</a>
+                        </div>
+
+                        <div class="eighth-activities">
+                                <div class="eighth-activity">
+                                    <i class="icon-circle"></i>
+                                    Basket Weaving
+                                    <span class='info'>Agee • 123</span>
+                                </div>
+                                <div class="eighth-activity selected">
+                                    <i class="icon-ok"></i>
+                                    Dormancy Club
+                                    <span class='info'>William • 456</span>
+                                </div>
+                                {% for i in "12"|make_list %}
+                                <div class="eighth-activity">
+                                    <i class="icon-circle-blank"></i>
+                                    Sys Op Administrators
+                                    <span class='info'>Hamilton • 115</span>
+                                </div>
+                                {% endfor %}
+                        </div>
                     </div>
 
 
-                    <div class="r8-dayh r8-dayh-06122013B">
-                        <span class="r8-blk -rad-5px sel">
-                            B
-                        </span>
-                        Wednesday, June 11
-                        <span class="r8-opts">
 
-                        </span>
-                    </div>
 
-                    <div class="r8-dayh r8-dayh-06132013A">
-                        <span class="r8-blk -rad-5px">
-                            A
-                        </span>
-                        Friday, June 13
-                        <span class="r8-opts">
-
-                        </span>
-                    </div>
                 </div>
             </div>
 
         </div>
 
-        <div id="announcements">
+        <div class="announcements">
             <h2>
                 Announcements
             </h2>
 
-            {% for i in "012356789"|make_list %}
+            {% for i in "123456789"|make_list %}
                 <div class="announcement">
                     <h3>
                         Parking Application Update
                     </h3>
 
                     <div class="announcement-metadata">
-                        Jane Smith • five minutes ago • to all students
+                        Jane Smith • {% widthratio i 1 3 %} minutes ago • to all students
                     </div>
                     <div class="announcement-content">
                         If you turned in a paper parking application but did not complete the online form, you MUST do so by this Friday, June 14th. The online application is available <a href="/frontend">here</a>.
                     </div>
                 </div>
             {% endfor %}
-            <br>
             <a href="/frontend">Archive</a>
 
     </div>

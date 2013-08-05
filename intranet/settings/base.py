@@ -178,6 +178,7 @@ INSTALLED_APPS = (
     'south',
     'intranet.apps.users',
     'intranet.apps.auth',
+    'intranet.apps.eighth',
     'intranet.middleware.environment'
 )
 
