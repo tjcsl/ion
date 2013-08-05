@@ -1,0 +1,53 @@
+{% extends "page_base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
+    <!--[if IE 7]>
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
+    <![endif]-->
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <div class="header-left">
+            <a href="/" class="intranet-title">
+                <div class="logo">
+                </div>
+                <h1>
+                    Intranet
+                </h1>
+            </a>
+
+            <div class="search">
+                <div class="search-icon">
+                   <i class="icon-search"></i>
+                </div>
+                <input type="text" name="search" value="Search" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}"></input>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="notifications">
+                <span class="notifications-icon">
+                    <i class="icon-bell-alt"></i>
+                </span>
+                <span class="notifications-badge-wrapper">
+                    <span class="notifications-badge">
+                        42
+                    </span>
+                </span>
+            </span>
+
+            <span class="username">
+                <i class="icon-user"></i> John Doe <i class="icon-caret-down"></i>
+            </span>
+        </div>
+    </div>
+    <div class="main">
+        {% block content %}
+        {% endblock %}
+    </div>
+{% endblock %}

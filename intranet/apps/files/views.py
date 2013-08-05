@@ -4,8 +4,8 @@ from django.shortcuts import render
 logger = logging.getLogger(__name__)
 
 
-def groups_view(request):
+def files_view(request):
     context = {"user": request.user,
-               "page": "groups"
+               "page": "files"
               }
-    return render(request, "groups/groups.html", context)
+    return render(request, "files/files.html", context)

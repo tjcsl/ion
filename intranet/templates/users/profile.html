@@ -1,104 +1,104 @@
-{% extends "base.html" %}
+{% extends "page_with_nav.html" %}
 {% load phone_number_filters %}
 {% load staticfiles %}
 
-{% block content %}
-    <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
-    <table>
-        {% if user.user_type == "tjhsstStudent" %}
-        <tr>
-            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/freshman"></td>
-            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/sophomore"></td>
-            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/junior"></td>
-            <td><img width="172px" height="215px" src="/picture/{{ user.id }}/senior"></td>
-        <tr>
-        <tr>
-            <td align="center">Freshman</td>
-            <td align="center">Sophomore</td>
-            <td align="center">Junior</td>
-            <td align="center">Senior</td>
-        </tr>
-        {% else %}
-        <img width="172px" height="215px" src="/picture/{{ user.id }}">
+{% block main %}
+    <div class="primary-content">
+        <h2>{{ user.first_name }} {{ user.last_name }}'s Profile</h2>
+        <table>
+            {% if user.user_type == "tjhsstStudent" %}
+            <tr>
+                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/freshman"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/sophomore"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/junior"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/senior"></td>
+            <tr>
+            <tr>
+                <td align="center">Freshman</td>
+                <td align="center">Sophomore</td>
+                <td align="center">Junior</td>
+                <td align="center">Senior</td>
+            </tr>
+            {% else %}
+            <img width="172px" height="215px" src="/picture/{{ user.id }}">
+            {% endif %}
+        </table>
+        Full Name: {{ user.full_name }}<br>
+        Username: {{ user.username }}<br>
+        Ion ID: {{ user.id }} <br>
+        User Type: {% if user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
+
+        {% if user.graduation_year %}
+            Graduation Year: {{ user.graduation_year }}<br>
+            Grade: {{ user.grade|capfirst }} ({{ user.grade.number }})<br>
         {% endif %}
-    </table>
-    Full Name: {{ user.full_name }}<br>
-    Username: {{ user.username }}<br>
-    Ion ID: {{ user.id }} <br>
-    User Type: {% if user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
 
-    {% if user.graduation_year %}
-        Graduation Year: {{ user.graduation_year }}<br>
-        Grade: {{ user.grade|capfirst }} ({{ user.grade.number }})<br>
-    {% endif %}
+        {% if user.address %}
+            Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|linebreaksbr}}</div><br>
+        {% endif %}
 
-    {% if user.address %}
-        Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|linebreaksbr}}</div><br>
-    {% endif %}
+        {% if user.birthday %}
+            Birthday: {{ user.birthday|date:"M d, Y" }}<br>
+        {% endif %}
 
-    {% if user.birthday %}
-        Birthday: {{ user.birthday|date:"M d, Y" }}<br>
-    {% endif %}
+        {% if user.home_phone %}
+            Home Phone: {{ user.home_phone|dashes }}<br>
+        {% endif %}
 
-    {% if user.home_phone %}
-        Home Phone: {{ user.home_phone|dashes }}<br>
-    {% endif %}
+        {% if user.mobile_phone %}
+            Mobile Phone: {{ user.mobile_phone|dashes }}<br>
+        {% endif %}
 
-    {% if user.mobile_phone %}
-        Mobile Phone: {{ user.mobile_phone|dashes }}<br>
-    {% endif %}
+        {% if user.other_phones %}
+            Other Phones:
+            <ul>
+                {% for phone in user.other_phones %}
+                    <li>{{ phone|dashes }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    {% if user.other_phones %}
-        Other Phones:
+        {% if user.emails %}
+        Emails:
         <ul>
-            {% for phone in user.other_phones %}
-                <li>{{ phone|dashes }}</li>
+            {% for email in user.emails %}
+                <li>{{ email }}</li>
             {% endfor %}
         </ul>
-    {% endif %}
+        {% endif %}
 
-    {% if user.emails %}
-    Emails:
-    <ul>
-        {% for email in user.emails %}
-            <li>{{ email }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        {% if user.skype %}
+        Skype: {{ user.skype }}<br>
+        {% endif %}
 
-    {% if user.skype %}
-    Skype: {{ user.skype }}<br>
-    {% endif %}
+        {% if user.google_talk %}
+        Google Talk: {{ user.google_talk }}<br>
+        {% endif %}
 
-    {% if user.google_talk %}
-    Google Talk: {{ user.google_talk }}<br>
-    {% endif %}
-
-    {% if user.classes %}
-    <h3>Schedule</h3>
-    <table>
-        <thead>
-            <td>Period</td>
-            <td>Class</td>
-            <td>Teacher</td>
-            <td>Room Number</td>
-            <td>Quarters</td>
-        </thead>
-        {% for class in user.classes %}
-        <tr>
-            <td>{{ class.period }} </td>
-            <td>{{ class.name }}</td>
-            <td>{{ class.teacher.last_name }}</td>
-            <td>{{ class.room_number }}</td>
-            <td>{% for quarter in class.quarters %}{{ quarter }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-        <tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <br><br>
-    Schedule not available
-    {% endif %}
-    <br>
-    <a href='/logout'>Logout</a>
-
+        {% if user.classes %}
+        <h3>Schedule</h3>
+        <table>
+            <thead>
+                <td>Period</td>
+                <td>Class</td>
+                <td>Teacher</td>
+                <td>Room Number</td>
+                <td>Quarters</td>
+            </thead>
+            {% for class in user.classes %}
+            <tr>
+                <td>{{ class.period }} </td>
+                <td>{{ class.name }}</td>
+                <td>{{ class.teacher.last_name }}</td>
+                <td>{{ class.room_number }}</td>
+                <td>{% for quarter in class.quarters %}{{ quarter }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            <tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <br><br>
+        Schedule not available
+        {% endif %}
+        <br>
+    </div>
 {% endblock %}

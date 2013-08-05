@@ -4,7 +4,6 @@ from fnmatch import fnmatch
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -24,9 +23,10 @@ CACHES['default']['OPTIONS']['DB'] = 1
 #     }
 # }
 
+# Make the cache age last just long enough to reload the page to
+# check if caching worked
 for key in CACHE_AGE:
     CACHE_AGE[key] = 15
-
 
 class glob_list(list):
     def __contains__(self, key):
@@ -41,29 +41,37 @@ INTERNAL_IPS = glob_list([
     '192.168.1.*'
 ])
 
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': True
-}
 
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    # 'debug_toolbar.panels.profiling.ProfilingDebugPanel',  # Views are called twice when this is enabled
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    # 'debug_toolbar.panels.cache.CacheDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-)
+SHOW_DEBUG_TOOLBAR = True if os.getenv('SHOW_DEBUG_TOOLBAR', 'YES') == 'YES' \
+                     else False
 
-MIDDLEWARE_CLASSES += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+if SHOW_DEBUG_TOOLBAR:
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False
+    }
+
+    DEBUG_TOOLBAR_PANELS = (
+        'debug_toolbar.panels.version.VersionDebugPanel',
+        'debug_toolbar.panels.timer.TimerDebugPanel',
+        'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+        'debug_toolbar.panels.headers.HeaderDebugPanel',
+        # 'debug_toolbar.panels.profiling.ProfilingDebugPanel',  # Views are called twice when this is enabled
+        'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+        'debug_toolbar.panels.sql.SQLDebugPanel',
+        'debug_toolbar.panels.template.TemplateDebugPanel',
+        # 'debug_toolbar.panels.cache.CacheDebugPanel',
+        'debug_toolbar.panels.signals.SignalDebugPanel',
+        'debug_toolbar.panels.logger.LoggingPanel',
+    )
+
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
 
 INSTALLED_APPS += (
-    'debug_toolbar',
     'django_extensions',
 )

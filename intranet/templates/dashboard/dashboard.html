@@ -1,8 +1,192 @@
-{% extends "base.html" %}
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
 
-{% block content %}
-    <h1>Welcome, {{ user.first_name }}!</h1>
-    <a href="/profile">My Profile</a><br>
-    <a href="/profile/8889">Someone Else's Profile</a><br><br>
-    <a href='/logout'>Logout</a>
+{% block title %}
+    {{ block.super}} - Dashboard
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "jquery.html" with ui="YES" %}
+{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var heights = $(".eighth-activities").map(function() {
+                return $(this).children(".eighth-activity").length * 20;
+            }).get();
+
+            var max_height = Math.max.apply(null, heights);
+            if (max_height > 90) {
+                max_height = 90;
+            }
+
+            $(".eighth-widget").data("max-height", max_height);
+
+            $(".block-header").click(function() {
+                var time = 200;
+                var opened = $(".eighth-block.open .eighth-activities");
+                opened.stop().animate({height: 0}, time);
+                opened.parent().removeClass("open");
+
+                var block = $(this).parent();
+                var height = $(".eighth-widget").data("max-height");
+                block.children(".eighth-activities").stop().animate({height: height}, time);
+                block.addClass("open");
+            });
+
+            $(".eighth-activity").click(function() {
+                var time = 300;
+                $(this).stop().animate({ backgroundColor: "rgb(78,185,0)" }, time, function() {
+                    $(this).stop().delay(500).animate({ backgroundColor: "rgb(220,220,220)" }, time, function() {
+                        $(this).removeAttr("style");
+                    })
+                });
+
+                var icon = $(this).children("i");
+                icon.stop().animate({ color: "rgb(72,72,72)" }, time, function() {
+                    icon.stop().delay(500).animate({ color: "rgb(78,185,0)" }, time, function() {
+                        // icon.removeAttr("style");
+                    })
+                });
+
+
+
+
+
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+<div class="widgets">
+    <div class="widget eighth-widget">
+        <div class="widget-title">
+            <h2>
+                Upcoming Eighth Periods
+            </h2>
+            <div class="info warning">
+                <i class="icon-warning-sign"></i>
+                15 Minutes Left to Sign Up
+            </div>
+        </div>
+        <div class="widget-content">
+            <div class="eighth-block">
+                <div class="block-header">
+                    <span class="block-letter">
+                        A
+                    </span>
+                    Thursday, June 12
+                    <a class="info" href="/">Choose from All Activities</a>
+                </div>
+
+                <div class="eighth-activities">
+                        <div class="eighth-activity">
+                            <i class="icon-circle"></i>
+                            Basket Weaving
+                            <span class='info'>Agee • 123</span>
+                        </div>
+                        <div class="eighth-activity selected">
+                            <i class="icon-ok"></i>
+                            Dormancy Club
+                            <span class='info'>William • 456</span>
+                        </div>
+                </div>
+            </div>
+
+            <div class="eighth-block open warning">
+                <div class="block-header">
+                    <span class="block-letter">
+                        B
+                    </span>
+                    Thursday, June 12
+                    <a class="info" href="/">Choose from All Activities</a>
+                </div>
+
+                <div class="eighth-activities">
+                        <div class="eighth-activity">
+                            <i class="icon-circle"></i>
+                            Basket Weaving
+                            <span class='info'>Agee • 123</span>
+                        </div>
+                        <div class="eighth-activity selected">
+                            <i class="icon-ok"></i>
+                            Dormancy Club
+                            <span class='info'>William • 456</span>
+                        </div>
+                        {% for i in "123456789"|make_list %}
+                        <div class="eighth-activity">
+                            <i class="icon-circle-blank"></i>
+                            Sys Op Administrators
+                            <span class='info'>Hamilton • 115</span>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+
+            <div class="eighth-block">
+                <div class="block-header">
+                    <span class="block-letter">
+                        A
+                    </span>
+                    Thursday, June 12
+                    <a class="info" href="/">Choose from All Activities</a>
+                </div>
+
+                <div class="eighth-activities">
+                        <div class="eighth-activity">
+                            <i class="icon-circle"></i>
+                            Basket Weaving
+                            <span class='info'>Agee • 123</span>
+                        </div>
+                        <div class="eighth-activity selected">
+                            <i class="icon-ok"></i>
+                            Dormancy Club
+                            <span class='info'>William • 456</span>
+                        </div>
+                        {% for i in "12"|make_list %}
+                        <div class="eighth-activity">
+                            <i class="icon-circle-blank"></i>
+                            Sys Op Administrators
+                            <span class='info'>Hamilton • 115</span>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="announcements primary-content">
+    <h2>
+        Announcements
+    </h2>
+
+    {% for i in "123456789"|make_list %}
+        <div class="announcement">
+            <h3>
+                Parking Application Update
+            </h3>
+
+            <div class="announcement-metadata">
+                Jane Smith • {% widthratio i 1 3 %} minutes ago • to all students
+            </div>
+            <div class="announcement-content">
+                If you turned in a paper parking application but did not complete the online form, you MUST do so by this Friday, June 14th. The online application is available <a href="/">here</a>.
+            </div>
+        </div>
+    {% endfor %}
+    <div class="announcements-archive-link">
+        <i class="icon-archive"></i>
+        <a href="/">Archive</a>
+    </div>
+</div>
 {% endblock %}
