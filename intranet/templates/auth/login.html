@@ -34,7 +34,7 @@
             <p class='login-error'>Invalid username or password</p>
         {% endif %}
 
-        <form action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
+        <form autocomplete="off" action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
             {% csrf_token %}
             {% for field in auth_form %}
                 {{ field }}<br>
