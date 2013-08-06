@@ -5,4 +5,4 @@ TEMPLATE_DEBUG = False
 
 # get secret key from environmental variable
 
-CACHES['default']['OPTIONS']['DB'] = 0
+CACHES['default']['OPTIONS']['DB'] = 1
