@@ -40,6 +40,13 @@ def runserver(port=None, dbt="yes"):
     with shell_env(SHOW_DEBUG_TOOLBAR=dbt.upper()):
         local("./manage.py runserver 0.0.0.0:{}".format(port))
 
+def killserver(port):
+    try:
+        int(port)
+    except ValueError:
+        abort("Not a valid port number.")
+
+    local("pgrep -f 'runserver 0.0.0.0:{}'|xargs kill -INT".format(port))
 
 def _require_root():
     with hide('running'):
