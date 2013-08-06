@@ -31,8 +31,13 @@ class KerberosCacheMiddleware(object):
             # It is important to check that the environmental variable
             # matches the session variable because environmentals stay
             # on the worker after requests.
-            if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
-                logger.debug("Reloading KRB5CCNAME environmental \
-                              variable from session")
+            if "KRB5CCNAME" in os.environ:
+                if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
+                    logger.info("Reloading KRB5CCNAME environmental "
+                                 "variable from session.")
+                    os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
+            else:
+                logger.info("KRB5CCNAME environmental variable not set - "
+                            "setting it to KRB5CCNAME from session vars.")
                 os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
         return None
