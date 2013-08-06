@@ -28,8 +28,9 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
-        logger.debug("connecting")
-        if not hasattr(_thread_locals, 'ldap_conn'):
+        logger.debug("Connecting")
+        if (not hasattr(_thread_locals, 'ldap_conn')) \
+           or (_thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP.")
             _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
@@ -150,7 +151,7 @@ def close_ldap_connection(sender, **kwargs):
 
     """
     if hasattr(_thread_locals, 'ldap_conn'):
-        if _thread_locals.ldap_conn:
+        if _thread_locals.ldap_conn is not None:
             _thread_locals.ldap_conn.unbind_s()
             _thread_locals.ldap_conn = None
             logger.info("LDAP connection closed.")
