@@ -2,6 +2,7 @@ import pexpect
 import uuid
 import os
 import logging
+from django.core.exceptions import ValidationError
 from intranet import settings
 from intranet.apps.users.models import User
 
@@ -22,6 +23,7 @@ class KerberosAuthenticationBackend(object):
         kinit.sendline(password)
         kinit.expect(pexpect.EOF)
         kinit.close()
+
         exitstatus = kinit.exitstatus
         realm = settings.CSL_REALM
 

@@ -33,10 +33,7 @@ def login_view(request):
             logger.info("Login failed")
             return index(request, auth_form=form)  # Modified to show errors
     else:
-        auth_form = AuthenticateForm()
-        return render(request,
-                      'auth/login.html',
-                      {'auth_form': auth_form, })
+        return redirect("/logout")
 
 
 def logout_view(request):

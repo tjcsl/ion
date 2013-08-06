@@ -15,15 +15,6 @@
     <script type='text/javascript'>
         $(document).ready(function() {
             $('input[name=username]').focus();
-            $('input').each(function() {
-                var empty_text = 'This field is required.';
-                if($(this).attr('value') == empty_text) {
-                    $(this).addClass('empty');
-                    $(this).attr('value', '');
-                    $(this).attr('placeholder', empty_text);
-                }
-            })
-
         });
     </script>
 {% endblock %}
@@ -37,11 +28,7 @@
                     </div>
                     <h1>TJ Intranet</h1>
                 </div>
-                {% if auth_form.errors %}
-                    <p class='login-error'>Invalid username or password</p>
-                {% endif %}
-
-                <form autocomplete="off" action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
+                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
                     {% csrf_token %}
                     {% for field in auth_form %}
                         {{ field }}<br>
@@ -51,7 +38,12 @@
             </div>
         </div>
         <div class="schedule">
+                <a href="/" class="chevron"><i class="icon-chevron-left"></i></a>
+                Today
+                <a href="/" class="chevron"><i class="icon-chevron-right"></i></a>
+                <br>
                 <h2>Anchor Day</h2>
+                </i><br>
                 Period 1: 8:30 - 9:15<br>
                 Period 2: 9:25 - 10:05<br>
                 Period 3: 10:15 - 10:55<br>
