@@ -82,7 +82,7 @@ class User(AbstractBaseUser):
 
     @classmethod
     def dn_from_id(cls, id):
-        key = ".".join([id, 'dn'])
+        key = ":".join([id, 'dn'])
         cached = cache.get(key)
 
         if cached:
@@ -166,7 +166,7 @@ class User(AbstractBaseUser):
         Returns:
             Grade object
         """
-        key = ".".join([self.dn, 'grade'])
+        key = ":".join([self.dn, 'grade'])
 
         cached = cache.get(key)
 
@@ -194,7 +194,7 @@ class User(AbstractBaseUser):
             List of Class objects
 
         """
-        identifier = ".".join([self.dn, "classes"])
+        identifier = ":".join([self.dn, "classes"])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
@@ -247,7 +247,7 @@ class User(AbstractBaseUser):
             Address object
 
         """
-        identifier = ".".join([self.dn, "address"])
+        identifier = ":".join([self.dn, "address"])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
@@ -285,7 +285,7 @@ class User(AbstractBaseUser):
             datetime object
 
         """
-        identifier = ".".join([self.dn, "birthday"])
+        identifier = ":".join([self.dn, "birthday"])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
@@ -318,7 +318,7 @@ class User(AbstractBaseUser):
             Binary data
 
         """
-        identifier = ".".join([self.dn, "photo", photo_year])
+        identifier = ":".join([self.dn, "photo", photo_year])
         key = identifier  # User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
@@ -366,7 +366,7 @@ class User(AbstractBaseUser):
         Returns:
             Dictionary
         """
-        key = ".".join([self.dn, 'photo_permissions'])
+        key = ":".join([self.dn, 'photo_permissions'])
 
         cached = cache.get(key)
 
@@ -432,7 +432,7 @@ class User(AbstractBaseUser):
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
         """
-        key = ".".join([self.dn, 'user_info_permissions'])
+        key = ":".join([self.dn, 'user_info_permissions'])
 
         cached = cache.get(key)
 
@@ -507,7 +507,7 @@ class User(AbstractBaseUser):
             the attribute fetched.
 
         """
-        identifier = ".".join([self.dn, name])
+        identifier = ":".join([self.dn, name])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
@@ -666,7 +666,7 @@ class Class(object):
             User object
 
         """
-        key = ".".join([self.dn, 'teacher'])
+        key = ":".join([self.dn, 'teacher'])
 
         cached = cache.get(key)
 
@@ -714,7 +714,7 @@ class Class(object):
 
 
         """
-        key = ".".join([self.dn, name])
+        key = ":".join([self.dn, name])
 
         cached = cache.get(key)
 
