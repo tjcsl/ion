@@ -16,13 +16,43 @@
         $(document).ready(function() {
             $('input[name=username]').focus();
             $('input').each(function() {
-                empty_text = 'This field is required.';
+                var empty_text = 'This field is required.';
                 if($(this).attr('value') == empty_text) {
                     $(this).addClass('empty');
                     $(this).attr('value', '');
                     $(this).attr('placeholder', empty_text);
                 }
             })
+
+            $(".toggle-schedule").click(function() {
+                var time = 300;
+                var schedule = $(".schedule");
+                var height = schedule.height();
+                var bottom = schedule.css("bottom")
+                if (bottom == (-1 * height) + "px") {
+                    schedule.stop().animate({ bottom: "0"}, time);
+                } else {
+                    schedule.stop().animate({ bottom: (-1 * height) + "px"}, time);
+                }
+
+                var schedule_top_position = 10;
+                if (bottom != "0px") {
+                    schedule_top_position += height
+                }
+
+                var link = $(this);
+                link.stop().animate({ bottom: schedule_top_position + "px"}, time);
+                if (link.text().trim() == "Show Schedule") {
+                    setTimeout(function() {
+                        link.text("Hide Schedule");
+                    }, time / 2);
+                } else {
+                    setTimeout(function() {
+                        link.text("Show Schedule");
+                    }, time / 2);
+                }
+
+            });
         });
     </script>
 {% endblock %}
@@ -42,5 +72,9 @@
             <input type='submit' value='Login' />
         </form>
     </div>
+    <div class="schedule">
+        Schedule here
+    </div>
+    <a href="javascrip:void(0)" class="toggle-schedule">Show Schedule</a>
     <a class="norton-seal" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en"><img src="{% static 'img/verisign-seal.png' %}" oncontextmenu="return false;" alt="orton Secured Seal - Click to Verify"></a>
 {% endblock %}

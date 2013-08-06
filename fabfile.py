@@ -109,3 +109,6 @@ def clear_cache():
         local("redis-cli -n {} FLUSHDB".format(REDIS_PRODUCTION_CACHE_DB))
     else:
         local("redis-cli -n {} FLUSHDB".format(REDIS_SANDBOX_CACHE_DB))
+
+def contributors():
+    local("git --no-pager shortlog -ns")
