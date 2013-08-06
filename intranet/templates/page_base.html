@@ -2,11 +2,7 @@
 <!doctype html>
 <html lang='en'>
 <head>
-    <title>
-        {% block title %}
-            Intranet
-        {% endblock %}
-    </title>
+    <title>{% block title %}Intranet{% endblock %}</title>
     <meta charset='UTF-8' />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -16,6 +12,12 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     {% endblock %}
 
+    {% block head %}
+    {% endblock %}
+</head>
+<body class="notransition">
+    {% block body %}
+    {% endblock %}
     {% block js %}
         <script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
@@ -26,15 +28,18 @@
             });
             $(document).ready(function() {
                 $("body").removeClass("notransition");
+
+                $(".nav a").click(function() {
+                    $(".nav .selected").removeClass("selected");
+                    $(this).parent().addClass("selected");
+                });
+
+                $(".header h1").click(function() {
+                    $(".nav .selected").removeClass("selected");
+                    $(".nav li").slice(0,1).addClass("selected");
+                });
             });
         </script>
-    {% endblock %}
-
-    {% block head %}
-    {% endblock %}
-</head>
-<body class="notransition">
-    {% block body %}
     {% endblock %}
 </body>
 </html>

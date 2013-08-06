@@ -28,10 +28,10 @@
 {% endblock %}
 
 {% block body %}
-    <h1>TJ Intranet - Login</h1>
     <div class='login'>
+        <h1>TJ Intranet</h1>
         {% if auth_form.errors %}
-            <p class='error'>Invalid username or password</p>
+            <p class='login-error'>Invalid username or password</p>
         {% endif %}
 
         <form action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
@@ -42,4 +42,5 @@
             <input type='submit' value='Login' />
         </form>
     </div>
+    <a class="norton-seal" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en"><img src="{% static 'img/verisign-seal.png' %}" oncontextmenu="return false;" alt="orton Secured Seal - Click to Verify"></a>
 {% endblock %}
