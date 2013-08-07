@@ -78,7 +78,7 @@ class KerberosAuthenticationBackend(object):
                 logger.info("First login - creating new user in sql database")
                 user = User()
                 user.username = username
-                user.pk = user.ion_id
+                user.id = user.ion_id
                 user.set_unusable_password()
                 user.save()
             return user
@@ -95,6 +95,6 @@ class KerberosAuthenticationBackend(object):
 
         """
         try:
-            return User.objects.get(pk=user_id)
+            return User.objects.get(id=user_id)
         except User.DoesNotExist:
             return None

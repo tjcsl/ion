@@ -80,6 +80,7 @@ class LDAPConnection(object):
         """
         logger.debug("Fetching attributes '{}' of user "
                      "{}".format(str(attributes), dn))
+        # raise Exception(2)
         filter = "(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))"
         try:
             r = self.search(dn, filter, attributes)

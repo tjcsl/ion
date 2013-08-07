@@ -64,10 +64,10 @@ class User(AbstractBaseUser):
 
     """
     # Django Model Fields
-    username = models.CharField(max_length=50, unique=True, db_index=True)
-
+    username = models.CharField(max_length=15, unique=True)
     # first_name = models.CharField(max_length=50)
     # last_name = models.CharField(max_length=50)
+    _dn = None
 
     """Required to replace the default Django User model."""
     USERNAME_FIELD = 'username'
@@ -78,7 +78,7 @@ class User(AbstractBaseUser):
 
     @classmethod
     def dn_from_id(cls, id):
-        key = ":".join([id, 'dn'])
+        key = ":".join([str(id), 'dn'])
         cached = cache.get(key)
 
         if cached:
@@ -129,34 +129,40 @@ class User(AbstractBaseUser):
         hash.update(signed)
         return hash.hexdigest()
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         """Return full name, e.g. Angela William. This is required
         for subclasses of User."""
         return self.cn
 
-    full_name = property(get_full_name)
-
-    def get_short_name(self):
+    @property
+    def short_name(self):
         """Return short name (first name) of a user. This is required
         for subclasses of User.
         """
         return self.first_name
 
-    short_name = property(get_short_name)
-
-    def get_dn(self):
+    @property
+    def dn(self):
         """Return the full distinguished name for a user in LDAP."""
-        return "iodineUid=" + self.username + "," + settings.USER_DN
+        if not self._dn and self.id:
+            self._dn = User.dn_from_id(self.id)
+        elif self.username:
+            self._dn = "iodineUid=" + self.username + "," + settings.USER_DN
+        return self._dn
 
-    def set_dn(self, dn):
+    @dn.setter
+    def dn(self, dn):
         """Set DN for a user and use the DN to populate the
         username field.
         """
-        self.username = ldap.dn.str2dn(dn)[0][0][1]
+        if not self._dn:
+            self._dn = dn
+        # if not self.username:
+        #     self.username = ldap.dn.str2dn(dn)[0][0][1]
 
-    dn = property(get_dn, set_dn)
-
-    def get_grade(self):
+    @property
+    def grade(self):
         """Returns the grade of a user.
 
         Returns:
@@ -180,9 +186,8 @@ class User(AbstractBaseUser):
             cache.set(key, grade, settings.CACHE_AGE['ldap_permissions'])
             return grade
 
-    grade = property(get_grade)
-
-    def get_classes(self):
+    @property
+    def classes(self):
         """Returns a list of Class objects for a user ordered by
         period number.
 
@@ -232,11 +237,11 @@ class User(AbstractBaseUser):
         else:
             return None
 
-    classes = property(get_classes)
 
     # TODO: counselor, gender
 
-    def get_address(self):
+    @property
+    def address(self):
         """Returns the address of a user.
 
         Returns:
@@ -272,9 +277,9 @@ class User(AbstractBaseUser):
                 return None
         else:
             return None
-    address = property(get_address)
 
-    def get_birthday(self):
+    @property
+    def birthday(self):
         """Returns a user's birthday.
 
         Returns:
@@ -304,8 +309,6 @@ class User(AbstractBaseUser):
                 return None
         else:
             return None
-
-    birthday = property(get_birthday)
 
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.
@@ -356,7 +359,8 @@ class User(AbstractBaseUser):
         else:
             return None
 
-    def get_photo_permissions(self):
+    @property
+    def photo_permissions(self):
         """Fetches the LDAP permissions for a user's photos.
 
         Returns:
@@ -419,9 +423,8 @@ class User(AbstractBaseUser):
             cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
             return perms
 
-    photo_permissions = property(get_photo_permissions)
-
-    def get_permissions(self):
+    @property
+    def permissions(self):
         """Fetches the LDAP permissions for a user.
 
         Returns:
@@ -462,8 +465,6 @@ class User(AbstractBaseUser):
 
             cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
             return perms
-
-    permissions = property(get_permissions)
 
     def own_info(self):
         try:
@@ -516,6 +517,11 @@ class User(AbstractBaseUser):
         user_attributes = {
             "ion_id": {
                 "ldap_name": "iodineUidNumber",
+                "perm": False,
+                "list": False
+            },
+            "ion_username": {
+                "ldap_name": "iodineUid",
                 "perm": False,
                 "list": False
             },
@@ -655,7 +661,8 @@ class Class(object):
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
 
-    def get_teacher(self):
+    @property
+    def teacher(self):
         """Returns the teacher/sponsor of the class
 
         Returns:
@@ -681,8 +688,6 @@ class Class(object):
             # recursion depth
             cache.set(key, dn, settings.CACHE_AGE['class_teacher'])
             return User.objects.create_user(dn=dn)
-
-    teacher = property(get_teacher)
 
     def __getattr__(self, name):
         """Return simple attributes of User
