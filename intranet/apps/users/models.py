@@ -24,8 +24,35 @@ class UserManager(models.Manager):
     default User model manager.
 
     """
-    def return_something(self):
-        return "something"
+    def create_user(self, dn=None, id=None):
+        """User factory method.
+
+        Creates a User method from a dn or a username. If both a dn and
+        a username is provided, the dn will be used.
+
+        Args:
+            - dn -- The full Distinguished Name of a user.
+            - id -- The user ID of the user to return.
+
+        Returns:
+            The User object if one could be created, otherwise None
+        """
+        if dn is not None:
+            try:
+                user = self.model(dn=dn)
+                user.id = user.ion_id
+                return user
+            except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
+                return None
+
+        elif id is not None:
+            user_dn = User.dn_from_id(id)
+            if user_dn is not None:
+                return self.model(dn=user_dn, id=id)
+            else:
+                return None
+        else:
+            return None
 
 
 class User(AbstractBaseUser):
@@ -48,37 +75,6 @@ class User(AbstractBaseUser):
     """Override default Model Manager (objects) with
     custom UserManager."""
     objects = UserManager()
-
-    @classmethod
-    def create(cls, dn=None, id=None):
-        """User factory method.
-
-        Creates a User method from a dn or a username. If both a dn and
-        a username is provided, the dn will be used.
-
-        Args:
-            - dn -- The full Distinguished Name of a user.
-            - id -- The user ID of the user to return.
-
-        Returns:
-            The User object if one could be created, otherwise None
-        """
-        if dn is not None:
-            try:
-                user = cls(dn=dn)
-                user.id = user.ion_id
-                return user
-            except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
-                return None
-
-        elif id is not None:
-            user_dn = User.dn_from_id(id)
-            if user_dn is not None:
-                return cls(dn=user_dn, id=id)
-            else:
-                return None
-        else:
-            return None
 
     @classmethod
     def dn_from_id(cls, id):
@@ -673,7 +669,7 @@ class Class(object):
         if cached:
             logger.debug("Attribute 'teacher' of class {} loaded "
                          "from cache.".format(self.section_id))
-            return User.create(dn=cached)
+            return User.objects.create_user(dn=cached)
         else:
             c = LDAPConnection()
             results = c.class_attributes(self.dn, ['sponsorDn'])
@@ -684,7 +680,7 @@ class Class(object):
             # all of the properties and quickly reach the maximum
             # recursion depth
             cache.set(key, dn, settings.CACHE_AGE['class_teacher'])
-            return User.create(dn=dn)
+            return User.objects.create_user(dn=dn)
 
     teacher = property(get_teacher)
 

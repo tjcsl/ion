@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def profile_view(request, user_id=None):
     if user_id is not None:
-        profile_user = User.create(id=user_id)
+        profile_user = User.objects.create_user(id=user_id)
         if profile_user is None:
             raise Http404
     else:
@@ -25,7 +25,7 @@ def profile_view(request, user_id=None):
 
 @login_required
 def picture_view(request, user_id, year=None):
-    user = User.create(id=user_id)
+    user = User.objects.create_user(id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT,
                                       "static/img/pig.jpg")
     if user is None:
