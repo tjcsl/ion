@@ -89,7 +89,7 @@ def clear_sessions():
     count = 0 if keys.strip() == "" else keys.count("\n") + 1
 
     if count == 0:
-        print("No sessions to destroy.")
+        puts("No sessions to destroy.")
         return 0
 
     plural = "s" if count != 1 else ""
@@ -105,7 +105,7 @@ def clear_sessions():
         local("{0}| xargs redis-cli -n "
               "{1} DEL".format(keys_command, REDIS_SESSION_DB))
 
-        print("Destroyed {} session{}.".format(count, plural))
+        puts("Destroyed {} session{}.".format(count, plural))
 
 
 def clear_cache():
@@ -118,4 +118,30 @@ def clear_cache():
         local("redis-cli -n {} FLUSHDB".format(REDIS_SANDBOX_CACHE_DB))
 
 def contributors():
-    local("git --no-pager shortlog -ns")
+    with hide('running'):
+        local("git --no-pager shortlog -ns")
+
+def linecount():
+    with hide('running'):
+        extensions = [("py", "Python"),
+                      ("html", "HTML"),
+                      ("css", "CSS"),
+                      ("js", "Javascript"),
+                      ("rst", "reST documentation")]
+        count = [0] * len(extensions)
+
+        for i, e in enumerate(extensions):
+            count[i] = int(local("find . -not -iwholename '*.git*' -not "
+                                 "-iwholename '*_build*' -name '*.{}' "
+                                 "| xargs wc -l | tail -1 | "
+                                 "awk '{{print $1;}}'".format(e[0]),
+                                 capture=True))
+        puts("")
+
+        total = sum(count)
+
+        for i, c in enumerate(count):
+            puts("{}{} lines of {} ({:.2f}%)".format(" " * (7 + 8 - len(str(c))), c, extensions[i][1], 100.0 * c / total))
+
+        puts("-" * 52)
+        puts("Total: {}{}".format(" " * (8 - len(str(total))), total))
