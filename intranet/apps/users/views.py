@@ -1,7 +1,7 @@
 import os
 from cStringIO import StringIO
-from PIL import Image
 import logging
+import io
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -26,8 +26,8 @@ def profile_view(request, user_id=None):
 @login_required
 def picture_view(request, user_id, year=None):
     user = User.objects.create_user(id=user_id)
-    default_image_path = os.path.join(settings.PROJECT_ROOT,
-                                      "static/img/pig.jpg")
+    default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/pig.jpg")
+
     if user is None:
         raise Http404
     else:
@@ -50,27 +50,32 @@ def picture_view(request, user_id, year=None):
                     if data:
                         break
                 if data is None:
-                    image_file = default_image_path
+                    image_buffer = io.open(default_image_path, mode="rb")
                 else:
-                    image_file = StringIO(data)
+                    image_buffer = StringIO(data)
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names[:-1]:
                 data = user.photo_binary(preferred)
+
                 if data:
-                    image_file = StringIO(data)
+                    image_buffer = StringIO(data)
                 else:
-                    image_file = default_image_path
+                    image_buffer = io.open(default_image_path)
             else:
-                image_file = default_image_path
+                image_buffer = io.open(default_image_path, mode="rb")
         else:
             data = user.photo_binary(year)
             if data:
-                image_file = StringIO(data)
+                image_buffer = StringIO(data)
             else:
-                image_file = default_image_path
+                image_buffer = io.open(default_image_path, mode="rb")
 
-        image = Image.open(image_file)
-        response = HttpResponse(mimetype='image/jpeg')
-        image.save(response, "JPEG")
+        response = HttpResponse(mimetype="image/jpeg")
+        response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id,
+                                          (year or preferred))
+        img = image_buffer.read()
+        image_buffer.close()
+        response.write(img)
+
         return response

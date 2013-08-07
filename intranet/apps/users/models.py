@@ -153,13 +153,12 @@ class User(AbstractBaseUser):
 
     @dn.setter
     def dn(self, dn):
-        """Set DN for a user and use the DN to populate the
-        username field.
+        """Set DN for a user.
         """
         if not self._dn:
             self._dn = dn
         # if not self.username:
-        #     self.username = ldap.dn.str2dn(dn)[0][0][1]
+            # self.username = ldap.dn.str2dn(dn)[0][0][1]
 
     @property
     def grade(self):

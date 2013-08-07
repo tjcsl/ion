@@ -26,7 +26,7 @@ CACHES['default']['OPTIONS']['DB'] = 2
 # Make the cache age last just long enough to reload the page to
 # check if caching worked
 for key in CACHE_AGE:
-    CACHE_AGE[key] = 15
+    CACHE_AGE[key] = 10
 
 class glob_list(list):
     def __contains__(self, key):

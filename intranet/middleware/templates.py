@@ -9,6 +9,7 @@ class StripNewlinesMiddleware(object):
     enhance readability.
     """
     def process_response(self, request, response):
-        response.content = re.sub(r'\n(\s*)\n', '\n', response.content)
-        response.content = re.sub(r'^(\s*)\n', '', response.content)
+        if response["Content-Type"] == "text/html":
+            response.content = re.sub(r'\n(\s*)\n', '\n', response.content)
+            response.content = re.sub(r'^(\s*)\n', '', response.content)
         return response
