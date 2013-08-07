@@ -350,7 +350,7 @@ class User(AbstractBaseUser):
                     data = results[0][1]['jpegPhoto'][0]
                 else:
                     data = None
-            except ldap.NO_SUCH_OBJECT:
+            except (ldap.NO_SUCH_OBJECT, KeyError):
                 data = None
 
             cache.set(key, data, settings.CACHE_AGE['ldap_permissions'])
