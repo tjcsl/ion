@@ -11,6 +11,7 @@ body {
     right: 0;
     width: 100%;
     height: 40px;
+    line-height: 40px;
     color: white;
     min-width: 1052px;
 
@@ -34,13 +35,8 @@ body {
     /*outline: 1px solid rgb(242,242,244);  Fix iOS Safari's zoom rendering problems */
 }
 
-.header-left {
-    float: left;
-}
-
-.header-right {
-    float: right;
-    line-height: 40px;
+.header .right {
+    -webkit-user-select: none;
 }
 
 h1 {
@@ -67,7 +63,7 @@ h1 {
     height: 20px;
     top: 10px;
 
-    background-color: #0e3c78;
+    background-color: rgb(14,60,120);
 
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -79,7 +75,7 @@ h1 {
     /*background-color: rgba(0,0,0,0.07);*/
     /*box-shadow: inset 0 0 10px rgba(20,44,77,0.75);*/
 
-    behavior: url("/static/js/PIE/PIE.htc");
+    behavior: url(/static/js/PIE/PIE.htc);
 }
 
 .search input {
@@ -117,21 +113,25 @@ h1 {
 
 .notifications {
     display: inline-block;
-    height: 40px;
-    margin-right: 10px;
+    position: relative;
+    padding: 0 10px;
+    line-height: normal;
 }
 
-.notifications-icon {
+.notifications i {
     position: relative;
     display: inline-block;
     font-size: 17px;
     top: 1px;
+    line-height: normal;
+    text-align: center;
+    width: 16px;
 }
 
 
 .notifications-badge-wrapper {
     display: inline-block;
-    height: 40px;
+    line-height: normal;
 }
 
 .notifications-badge {
@@ -147,7 +147,7 @@ h1 {
     -moz-border-radius: 3px;
     border-radius: 3px;
 
-    background: rgb(255,72,72);; /* Old browsers */
+    background-color: rgb(255,72,72);
 
 
     font-size: 10px;
@@ -161,8 +161,11 @@ h1 {
 }
 
 .username {
-    display: inline;
+    display: inline-block;
     margin-right: 10px;
+    position: relative;
+    padding: 0 10px 0 0;
+    line-height: normal;
 }
 
 .username .icon-user {
@@ -171,6 +174,98 @@ h1 {
     font-size: 17px;
     top: 1px;
 }
+
+.dropdown-menu {
+    display: block;
+    opacity: 0;
+    position: absolute;
+    color: rgb(72,72,72);
+    background-color: white;
+    top: 10px;
+    margin-top: 35px;
+    padding: 10px;
+    right: 0;
+    line-height: 1.7;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    border: 1px solid rgb(129, 129, 129);
+    cursor: auto;
+
+}
+
+.has-dropdown {
+    cursor: pointer;
+}
+
+.dropdown-item-wrapper {
+    height: 20px;
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
+.dropdown-open .dropdown-item-wrapper, .dropdown-item-wrapper:hover {
+    background-color: rgb(14,60,120);
+}
+
+.dropdown-menu li {
+    white-space: nowrap;
+}
+
+.dropdown-menu a {
+    color: rgb(72,72,72);
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    text-decoration: none;
+    color: rgb(150, 150, 150);
+}
+
+.dropdown-menu i {
+    font-size: 16px;
+    /*vertical-align: bottom;*/
+}
+.dropdown-menu .arrow {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-width: 10px;
+    border-style: solid;
+    border-bottom-color: rgb(129, 129, 129);
+    border-top-width: 0;
+    margin-top: -20px;
+    margin-left: -5px;
+}
+
+.dropdown-menu .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-width: 9px;
+    border-color: transparent;
+    content: " ";
+    top: 1px;
+    border-bottom-color: white;
+    border-top-width: 0;
+
+    border-style: solid;
+    margin-left: -9px;
+}
+
+.notifications .dropdown-menu .arrow {
+    /*width: 200px;*/
+    right: 30px;
+
+}
+
+.username .dropdown-menu .arrow{
+    /*width: 150px;*/
+    right: 40px;
+}
+
 
 .nav {
     display: block;
@@ -186,6 +281,11 @@ h1 {
     margin-bottom: 16px;
 
     behavior: url("/static/js/PIE/PIE.htc");
+}
+
+.nav a {
+    display: block;
+    padding: 9px 0;
 }
 
 .nav a, .nav a:active, .nav a:visited {
@@ -217,17 +317,13 @@ h1 {
     margin-bottom: -2px;
 }
 
-.nav-item-contents {
-    display: block;
-    padding: 9px 0;
 
-}
 
-/*.nav-item-contents i {
+/*a i {
     margin-bottom: -1px;
 }*/
 
-.nav .selected .nav-item-contents {
+.nav .selected a {
     color: rgb(72,72,72);
 }
 
@@ -245,7 +341,7 @@ h1 {
     background-position: 0 0;
 }
 
-.nav .selected .dashboard-icon, .nav-item-contents:hover .dashboard-icon {
+.nav .selected .dashboard-icon, a:hover .dashboard-icon {
     background-position: 0 28px;
 }
 
@@ -253,7 +349,7 @@ h1 {
     background-position: -28px 0;
 }
 
-.nav .selected .eighth-icon, .nav-item-contents:hover .eighth-icon {
+.nav .selected .eighth-icon, a:hover .eighth-icon {
     background-position: -28px 28px;
 }
 
@@ -261,7 +357,7 @@ h1 {
     background-position: -56px 0;
 }
 
-.nav .selected .events-icon, .nav-item-contents:hover .events-icon {
+.nav .selected .events-icon, a:hover .events-icon {
     background-position: -56px 28px;
 }
 
@@ -269,7 +365,7 @@ h1 {
     background-position: -84px 0;
 }
 
-.nav .selected .groups-icon, .nav-item-contents:hover .groups-icon {
+.nav .selected .groups-icon, a:hover .groups-icon {
     background-position: -84px 28px;
 }
 
@@ -277,7 +373,7 @@ h1 {
     background-position: -112px 0;
 }
 
-.nav .selected .polls-icon, .nav-item-contents:hover .polls-icon {
+.nav .selected .polls-icon, a:hover .polls-icon {
     background-position: -112px 28px;
 }
 
@@ -285,7 +381,7 @@ h1 {
     background-position: -140px 0;
 }
 
-.nav .selected .files-icon, .nav-item-contents:hover .files-icon {
+.nav .selected .files-icon, a:hover .files-icon {
     background-position: -140px 28px;
 }
 
