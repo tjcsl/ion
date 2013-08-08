@@ -13,16 +13,19 @@
 {% block js %}
     {{ block.super }}
     <script type='text/javascript'>
-        $(document).ready(function() {
-            $('input[name=username]').focus();
-        });
+        {% if not auth_form.errors %}
+            $(document).ready(function() {
+                $('input[name=username]').focus();
+            });
+        {% endif %}
+
+
     </script>
 {% endblock %}
 
 {% block body %}
     <div class="center">
         <div class="login">
-            <div class="left">
                 <div class="title">
                     <div class="logo">
                     </div>
@@ -36,7 +39,6 @@
                     <input type='submit' value='Login' />
                 </form>
             </div>
-        </div>
         <div class="schedule">
                 <a href="/" class="chevron"><i class="icon-chevron-left"></i></a>
                 Today
