@@ -9,9 +9,79 @@
     <![endif]-->
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    {% include "jquery_ui.html" %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var time = 150;
+
+            var clickInside = function(event) {
+                event.stopPropagation();
+            }
+
+            var clickOutside = function (e) {
+                if (! $(e.target).parents().andSelf().hasClass("dropdown-item-wrapper") ) {
+                    closeMenu($(".dropdown-open .dropdown-menu"), true);
+                    $(".has-dropdown").removeClass("dropdown-open");
+                }
+            }
+
+            var openMenu = function(menu, bindEvents) {
+                menu.show();
+                menu.stop().animate({ top: "0", opacity: 1 }, time, "easeInQuart", function() {
+                    if (bindEvents) {
+                        $(document).click(clickOutside);
+                        $(".dropdown-menu").click(clickInside);
+                    }
+                });
+            }
+
+            var closeMenu = function(menu, unbindEvents) {
+                menu.stop().animate({ top: "10px", opacity: 0 }, time, "easeOutQuart", function() {
+                    menu.hide();
+                    if (unbindEvents) {
+                        $(".dropdown-menu").unbind("click", clickInside);
+                        $(document).unbind("click", clickOutside);
+                    }
+                });
+            }
+
+
+            $(".has-dropdown").click(function(event) {
+                var menu_clicked = $(this).children(".dropdown-menu");
+                var already_open = $(".dropdown-open .dropdown-menu")
+
+                if ($(this).hasClass("dropdown-open")) {
+                    // Closing open menu
+                    closeMenu(menu_clicked);
+                    $(document).unbind("click", clickOutside);
+                    $(".dropdown-menu").unbind("click", clickInside);
+                    $(".has-dropdown").removeClass("dropdown-open");
+                } else if (already_open.length == 0) {
+                    // All menus closed, opening one of them
+                    openMenu(menu_clicked, true);
+                    menu_clicked.parent().addClass("dropdown-open");
+                } else {
+                    // Switching menu
+                    openMenu(menu_clicked, false);
+                    closeMenu(already_open, false);
+                    $(".has-dropdown").removeClass("dropdown-open");
+                    menu_clicked.parent().addClass("dropdown-open");
+                }
+            });
+
+            // Calculate dimensions to align arrow to icons/text in header
+            $(".notifications .dropdown-menu .arrow").css("right", ($(".notifications").width() - 14) + "px");
+            $(".username .dropdown-menu .arrow").css("right", ((($(".username .dropdown-item-wrapper").width() - 13 ) / 2) + 5) + "px");
+
+        });
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="header">
-        <div class="header-left">
+        <div class="left">
             <a href="/" class="intranet-title">
                 <div class="logo">
                 </div>
@@ -28,22 +98,39 @@
             </div>
         </div>
 
-        <div class="header-right">
-            <span class="notifications">
-                <span class="notifications-icon">
+        <ul class="right">
+            <li class="notifications has-dropdown">
+                <div class="dropdown-item-wrapper">
                     <i class="icon-bell-alt"></i>
-                </span>
-                <span class="notifications-badge-wrapper">
-                    <span class="notifications-badge">
-                        42
+                    <span class="notifications-badge-wrapper">
+                        <span class="notifications-badge">
+                            42
+                        </span>
                     </span>
-                </span>
-            </span>
+                </div>
+                <ul class="dropdown-menu">
+                    <div class="arrow"></div>
+                    <li>foo foo foo foo foo</li>
+                    <li>foo foo foo foo foo</li>
+                    <li>foo foo foo foo foo</li>
+                    <li>foo foo foo foo foo</li>
+                    <li>foo foo foo foo foo</li>
+                    <li>foo foo foo foo foo</li>
+                </ul>
+            </li>
 
-            <span class="username">
-                <i class="icon-user"></i> John Doe <i class="icon-caret-down"></i>
-            </span>
-        </div>
+            <li class="username has-dropdown">
+                <div class="dropdown-item-wrapper">
+                    <i class="icon-user"></i> {{ user.first_name }} <i class="icon-caret-down"></i>
+                </div>
+                    <ul class="dropdown-menu">
+                        <div class="arrow"></div>
+                        <li><a href="/profile"><i class="icon-user"></i> My Profile</a></li>
+                        <li><a href="/profile/8889"><i class="icon-smile"></i> Angela William's Profile</a></li>
+                        <li><a href="/logout"><i class="icon-off"></i> Logout</a></li>
+                    </ul>
+            </li>
+        </ul>
     </div>
     <div class="main">
         {% block content %}
