@@ -20,7 +20,8 @@ def profile_view(request, user_id=None):
     else:
         profile_user = request.user
 
-    return render(request, 'users/profile.html', {'user': profile_user})
+    return render(request, 'users/profile.html', {'user': request.user,
+                                                  'profile_user': profile_user})
 
 
 @login_required

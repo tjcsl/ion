@@ -4,14 +4,14 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>{{ user.first_name }} {{ user.last_name }}'s Profile</h2>
+        <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}'s Profile</h2>
         <table>
-            {% if user.user_type == "tjhsstStudent" %}
+            {% if profile_user.user_type == "tjhsstStudent" %}
             <tr>
-                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/freshman"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/sophomore"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/junior"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ user.id }}/senior"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/freshman"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/sophomore"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/junior"></td>
+                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/senior"></td>
             <tr>
             <tr>
                 <td align="center">Freshman</td>
@@ -20,62 +20,62 @@
                 <td align="center">Senior</td>
             </tr>
             {% else %}
-            <img width="172px" height="215px" src="/picture/{{ user.id }}">
+            <img width="172px" height="215px" src="/picture/{{ profile_user.id }}">
             {% endif %}
         </table>
-        Full Name: {{ user.full_name }}<br>
-        Username: {{ user.ion_username }}<br>
-        Ion ID: {{ user.id }} <br>
-        User Type: {% if user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
+        Full Name: {{ profile_user.full_name }}<br>
+        Username: {{ profile_user.ion_username }}<br>
+        Ion ID: {{ profile_user.id }} <br>
+        User Type: {% if profile_user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
 
-        {% if user.graduation_year %}
-            Graduation Year: {{ user.graduation_year }}<br>
-            Grade: {{ user.grade|capfirst }} ({{ user.grade.number }})<br>
+        {% if profile_user.graduation_year %}
+            Graduation Year: {{ profile_user.graduation_year }}<br>
+            Grade: {{ profile_user.grade|capfirst }} ({{ profile_user.grade.number }})<br>
         {% endif %}
 
-        {% if user.address %}
-            Address: <div style="display: inline-block; vertical-align: top;">{{ user.address|linebreaksbr}}</div><br>
+        {% if profile_user.address %}
+            Address: <div style="display: inline-block; vertical-align: top;">{{ profile_user.address|linebreaksbr}}</div><br>
         {% endif %}
 
-        {% if user.birthday %}
-            Birthday: {{ user.birthday|date:"M d, Y" }}<br>
+        {% if profile_user.birthday %}
+            Birthday: {{ profile_user.birthday|date:"M d, Y" }}<br>
         {% endif %}
 
-        {% if user.home_phone %}
-            Home Phone: {{ user.home_phone|dashes }}<br>
+        {% if profile_user.home_phone %}
+            Home Phone: {{ profile_user.home_phone|dashes }}<br>
         {% endif %}
 
-        {% if user.mobile_phone %}
-            Mobile Phone: {{ user.mobile_phone|dashes }}<br>
+        {% if profile_user.mobile_phone %}
+            Mobile Phone: {{ profile_user.mobile_phone|dashes }}<br>
         {% endif %}
 
-        {% if user.other_phones %}
+        {% if profile_user.other_phones %}
             Other Phones:
             <ul>
-                {% for phone in user.other_phones %}
+                {% for phone in profile_user.other_phones %}
                     <li>{{ phone|dashes }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
 
-        {% if user.emails %}
+        {% if profile_user.emails %}
         Emails:
         <ul>
-            {% for email in user.emails %}
+            {% for email in profile_user.emails %}
                 <li>{{ email }}</li>
             {% endfor %}
         </ul>
         {% endif %}
 
-        {% if user.skype %}
-        Skype: {{ user.skype }}<br>
+        {% if profile_user.skype %}
+        Skype: {{ profile_user.skype }}<br>
         {% endif %}
 
-        {% if user.google_talk %}
-        Google Talk: {{ user.google_talk }}<br>
+        {% if profile_user.google_talk %}
+        Google Talk: {{ profile_user.google_talk }}<br>
         {% endif %}
 
-        {% if user.classes %}
+        {% if profile_user.classes %}
         <h3>Schedule</h3>
         <table>
             <thead>
@@ -85,7 +85,7 @@
                 <td>Room Number</td>
                 <td>Quarters</td>
             </thead>
-            {% for class in user.classes %}
+            {% for class in profile_user.classes %}
             <tr>
                 <td>{{ class.period }} </td>
                 <td>{{ class.name }}</td>
