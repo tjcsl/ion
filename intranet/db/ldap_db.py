@@ -28,7 +28,6 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
-        logger.debug("Connecting")
         if (not hasattr(_thread_locals, 'ldap_conn')) \
            or (_thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP.")
