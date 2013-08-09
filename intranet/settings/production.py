@@ -1,16 +1,21 @@
 import urlparse
 from .base import *
+import secret
+"""In production, add a file called secret.py to the settings package that
+defines SECRET_KEY and DATABASE_URL.
+
+DATABASE_URL should be of the following form:
+    postgres://<user>:<password>@<host>/<database>
+"""
 
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-# get secret key from environmental variable
-SECRET_KEY = os.environ["SECRET_KEY"]
 
 CACHES['default']['OPTIONS']['DB'] = 1
 
 urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+url = urlparse.urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
