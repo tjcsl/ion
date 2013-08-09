@@ -15,7 +15,7 @@ class EighthBlock(models.Model):
     block = models.CharField(null=False, max_length=1)
     locked = models.BooleanField(null=False)
 
-    def __str__(self):
+    def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block)
 
 
@@ -38,7 +38,7 @@ class EighthActivity(models.Model):
 
     # Single students allowed
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -63,7 +63,7 @@ class EighthSignup(models.Model):
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False)
 
-    def __str__(self):
+    def __unicode__(self):
         return "{}: {} ({})".format(self.user,
                                     self.activity,
                                     self.block)
@@ -92,7 +92,7 @@ class SignupAlert(models.Model):
     night_before = models.BooleanField(null=False)
     day_of = models.BooleanField(null=False)
 
-    def __str__(self):
+    def __unicode__(self):
         return "{}: [{}] Night before "\
                "[{}] Day of".format(self.user,
                                     "X" if self.night_before else " ",
@@ -111,7 +111,7 @@ class EighthAbsence(models.Model):
     block = models.ForeignKey(EighthBlock)
     user = models.ForeignKey(User)
 
-    def __str__(self):
+    def __unicode__(self):
         return "{}: {}".format(self.user, self.block)
 
     class Meta:

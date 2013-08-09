@@ -825,7 +825,7 @@ class Address(object):
         self.state = state
         self.postal_code = postal_code
 
-    def __str__(self):
+    def __unicode__(self):
         """Returns full address string."""
         return "{}\n{}, {} {}".format(self.street, self.city,
                                       self.state, self.postal_code)
@@ -868,7 +868,7 @@ class Grade(object):
         """Return the grade as a number (9-12)."""
         return self._number
 
-    def __str__(self):
+    def __unicode__(self):
         """Return name of the grade."""
         return self._name
 
