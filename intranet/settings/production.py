@@ -9,7 +9,7 @@ DATABASE_URL should be of the following form:
 """
 
 DEBUG = False
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = DEBUG
 
 
 CACHES['default']['OPTIONS']['DB'] = 1
