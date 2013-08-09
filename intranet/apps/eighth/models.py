@@ -3,6 +3,14 @@ from intranet.apps.users.models import User
 
 
 class EighthBlock(models.Model):
+    """Represents an eighth period block.
+
+    Attributes:
+        - date -- The date of the block.
+        - block -- The block letter (e.g. A, B).
+        - locked -- Whether signups are closed.
+
+    """
     date = models.DateField(null=False)
     block = models.CharField(null=False, max_length=1)
     locked = models.BooleanField(null=False)
@@ -12,11 +20,22 @@ class EighthBlock(models.Model):
 
 
 class EighthActivity(models.Model):
+    """Represents an eighth period activity.
+
+    Attributes:
+        - name -- The name of the activity.
+        - sponsors -- The EighthSponsors for the activity.
+        - members -- The students signed up for the activity\
+                     (extra information about the signup is in the\
+                     EighthSignup intermediate model).
+
+    """
     name = models.CharField(null=False, max_length=63)
     # sponsors = models.ManyToManyField(User)
     members = models.ManyToManyField(User, through="EighthSignup")
 
     # Groups allowed
+
     # Single students allowed
 
     def __str__(self):
@@ -29,6 +48,17 @@ class EighthScheduledActivity(models.Model):
 
 
 class EighthSignup(models.Model):
+    """Represents a signup/membership in an eighth period activity.
+
+    Attributes:
+        - user -- The :class:`User<intranet.apps.users.models.User>`\
+                  who has signed up.
+        - block -- The :class:`EighthBlock` of the activity for which \
+                   the user has signed up.
+        - activity -- The :class:`EighthActivity` for which the user \
+                      has signed up.
+
+    """
     user = models.ForeignKey(User, null=False)
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False)
@@ -46,7 +76,19 @@ class EighthSignup(models.Model):
 
 
 class SignupAlert(models.Model):
-    user = models.ForeignKey(User, null=False)
+    """Stores a user's preferences for signup alerts.
+
+    Description
+
+    Attributes:
+        - user -- The :class:`User<intranet.apps.users.models.User>`.
+        - night_before -- (BOOL) Whether the user wants emails the \
+                          night before if he/she hasn't signed up yet
+        - day_of -- (BOOL) Whether the user wants emails the day of if \
+                    he/she hasn't signed up yet
+
+    """
+    user = models.ForeignKey(User, null=False, unique=True)
     night_before = models.BooleanField(null=False)
     day_of = models.BooleanField(null=False)
 
@@ -58,6 +100,14 @@ class SignupAlert(models.Model):
 
 
 class EighthAbsence(models.Model):
+    """Represents a user's absence for an eighth period block.
+
+    Attributes:
+        - block -- The `EighthBlock` of the absence.
+        - user -- The :class:`User<intranet.apps.users.models.User>`\
+                  who was absent.
+
+    """
     block = models.ForeignKey(EighthBlock)
     user = models.ForeignKey(User)
 
