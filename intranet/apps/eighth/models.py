@@ -33,6 +33,11 @@ class EighthSignup(models.Model):
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False)
 
+    def __str__(self):
+        return "{}: {} ({})".format(self.user,
+                                    self.activity,
+                                    self.block)
+
     class Meta:
         unique_together = (("user", "block"),)
         index_together = [
@@ -45,10 +50,19 @@ class SignupAlert(models.Model):
     night_before = models.BooleanField(null=False)
     day_of = models.BooleanField(null=False)
 
+    def __str__(self):
+        return "{}: [{}] Night before "\
+               "[{}] Day of".format(self.user,
+                                    "X" if self.night_before else " ",
+                                    "X" if self.day_of else " ")
+
 
 class EighthAbsence(models.Model):
     block = models.ForeignKey(EighthBlock)
     user = models.ForeignKey(User)
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.block)
 
     class Meta:
         unique_together = (("block", "user"),)
