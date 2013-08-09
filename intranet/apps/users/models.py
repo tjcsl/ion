@@ -213,6 +213,9 @@ class User(AbstractBaseUser):
             try:
                 results = c.user_attributes(self.dn, ['enrolledclass'])
                 classes = results.first_result()["enrolledclass"]
+            except KeyError:
+                return None
+            else:
                 schedule = []
                 for dn in classes:
                     class_object = Class(dn=dn)
@@ -231,12 +234,10 @@ class User(AbstractBaseUser):
                 dn_list = list(zip(*ordered_schedule)[2])
                 cache.set(key, dn_list, settings.CACHE_AGE['user_classes'])
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
-            except KeyError:
-                return None
         else:
             return None
 
-    # TODO: counselor, gender
+    # TODO: gender
     @property
     def counselor(self):
         """Returns a user's counselor as a User object.
@@ -252,21 +253,21 @@ class User(AbstractBaseUser):
         if cached:
             logger.debug("Attribute 'counselor' of user {} loaded "
                          "from cache.".format(self.username))
-            user_object = User.create_user(dn=cached)
+            user_object = User.objects.create_user(dn=cached)
             return user_object
-        elif not cached:
+        else:
             c = LDAPConnection()
             try:
                 result = c.user_attributes(self.dn, ["counselor"])
                 counselor = result.first_result()["counselor"][0]
+            except KeyError:
                 cache.set(key, counselor,
                           settings.CACHE_AGE['user_attribute'])
-                user_object = User.create_user(id=counselor)
-                return user_object
-            except KeyError:
                 return None
-        else:
-            return None
+            else:
+                user_object = User.objects.create_user(id=counselor)
+                return user_object
+
 
     @property
     def address(self):
@@ -296,13 +297,14 @@ class User(AbstractBaseUser):
                 city = result['l'][0]
                 state = result['st'][0]
                 postal_code = result['postalCode'][0]
-
+            except KeyError:
+                return None
+            else:
                 address_object = Address(street, city, state, postal_code)
                 cache.set(key, address_object,
                           settings.CACHE_AGE['user_attribute'])
                 return address_object
-            except KeyError:
-                return None
+
         else:
             return None
 
@@ -329,12 +331,14 @@ class User(AbstractBaseUser):
             try:
                 result = c.user_attributes(self.dn, ["birthday"])
                 birthday = result.first_result()["birthday"][0]
+            except KeyError:
+                return None
+            else:
                 date_object = datetime.strptime(birthday, '%Y%m%d')
                 cache.set(key, date_object,
                           settings.CACHE_AGE['user_attribute'])
                 return date_object
-            except KeyError:
-                return None
+
         else:
             return None
 
@@ -791,6 +795,11 @@ class Class(object):
                 try:
                     results = c.class_attributes(self.dn, [field_name])
                     result = results.first_result()[field_name]
+                except KeyError:
+                    logger.warning("KeyError fetching " + name +
+                                   " for class " + self.dn)
+                    return None
+                else:
                     if attr["list"]:
                         value = result
                     else:
@@ -799,10 +808,6 @@ class Class(object):
                     cache.set(key, value,
                               settings.CACHE_AGE['class_attribute'])
                     return value
-                except KeyError:
-                    logger.warning("KeyError fetching " + name +
-                                   " for class " + self.dn)
-                    return None
             else:
                 # Default behaviour
                 raise AttributeError
