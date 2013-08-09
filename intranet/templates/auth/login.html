@@ -7,53 +7,46 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.schedule.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.schedule.css" %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type='text/javascript'>
+    <script type="text/javascript">
         $(document).ready(function() {
-            /* input */
-            $u = $('input[name=username]');
-            $p = $('input[name=password]');
-            invalid = 'Invalid ';
-            if($u.attr('placeholder') != invalid+'username' && $p.attr('placeholder') == invalid+'password') {
-                $p.focus();
+            /* Input */
+            var $username = $("input[name=username]");
+            var $password = $("input[name=password]");
+            if ((! $username.hasClass("error")) && $password.hasClass("error")) {
+                $password.focus();
             } else {
-                $u.focus();
+                $username.focus();
             }
 
-            /* schedule */
-            $('.schedule-left').click(function() {
-                console.log('Last week');
+            /* Schedule */
+            $(".schedule-left").click(function() {
+                console.log("Last week");
             });
-            $('.schedule-right').click(function() {
-                console.log('Next week');
+            $(".schedule-right").click(function() {
+                console.log("Next week");
             })
 
-            if($('body').hasClass('touch')) {
-                $('.schedule-one, .schedule-two').fadeIn('slow');
-                $('.schedule-four, .schedule-five').fadeIn('slow');
-                $('.schedule-bottom').addClass('hovered hovered-once');
+            if($("body").hasClass("touch")) {
+                $(".schedule-one, .schedule-two").fadeIn("slow");
+                $(".schedule-four, .schedule-five").fadeIn("slow");
+                $(".schedule-bottom").addClass("hovered hovered-once");
             } else {
-                $('.schedule-bottom').hover(function() {
-                    $('.schedule-one, .schedule-two').fadeIn();
-                    $('.schedule-four, .schedule-five').fadeIn();
-                    $('.schedule-bottom').addClass('hovered hovered-once');
+                $(".schedule-bottom").hover(function() {
+                    $(".schedule-one, .schedule-two").fadeIn();
+                    $(".schedule-four, .schedule-five").fadeIn();
+                    $(".schedule-bottom").addClass("hovered hovered-once");
                 }, function() {
-                    $('.schedule-one, .schedule-two').fadeOut();
-                    $('.schedule-four, .schedule-five').fadeOut();
-                    $('.schedule-bottom').removeClass('hovered');
+                    $(".schedule-one, .schedule-two").fadeOut();
+                    $(".schedule-four, .schedule-five").fadeOut();
+                    $(".schedule-bottom").removeClass("hovered");
                 });
             }
-            setTimeout(function() {
-                if(!$('.schedule-bottom').hasClass('hovered-once')) {
-                    $('.schedule-one, .schedule-two').fadeIn('slow');
-                    $('.schedule-four, .schedule-five').fadeIn('slow');
-                }
-            }, 1000);
         });
     </script>
 {% endblock %}
@@ -67,12 +60,12 @@
                         </div>
                         <h1>TJ Intranet</h1>
                     </div>
-                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
+                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" method="post">
                     {% csrf_token %}
                     {% for field in auth_form %}
                         {{ field }}<br />
                     {% endfor %}
-                    <input type='submit' value='Login' />
+                    <input type="submit" value="Login" />
                 </form>
             </div>
             <div class="schedule">
@@ -162,7 +155,7 @@
         </div>
     </div>
     <div class="bg"></div>
-    <a class="verisign-seal-sm" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en" onclick="window.open(this.href, 'norton', 'menubar=no,location=yes,resizable=no,scrollbars=no,status=no,width=542,height=280'); return false">
-        <img src="{% static 'img/verisign-seal-sm.png' %}" oncontextmenu="return false;" alt="Norton Secured Seal - Click to Verify" />
+    <a class="verisign-seal-sm" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en" onclick="window.open(this.href, "norton", "menubar=no,location=yes,resizable=no,scrollbars=no,status=no,width=542,height=280"); return false">
+        <img src="{% static "img/verisign-seal-sm.png" %}" oncontextmenu="return false;" alt="Norton Secured Seal - Click to Verify" />
     </a>
 {% endblock %}
