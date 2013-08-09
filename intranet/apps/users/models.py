@@ -236,8 +236,37 @@ class User(AbstractBaseUser):
         else:
             return None
 
-
     # TODO: counselor, gender
+    @property
+    def counselor(self):
+        """Returns a user's counselor as a User object.
+
+        Returns:
+            A :class:`User` object for the user's counselor
+
+        """
+        key = ":".join([self.dn, "counselor"])
+
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Attribute 'counselor' of user {} loaded "
+                         "from cache.".format(self.username))
+            user_object = User.create_user(dn=cached)
+            return user_object
+        elif not cached:
+            c = LDAPConnection()
+            try:
+                result = c.user_attributes(self.dn, ["counselor"])
+                counselor = result.first_result()["counselor"][0]
+                cache.set(key, counselor,
+                          settings.CACHE_AGE['user_attribute'])
+                user_object = User.create_user(id=counselor)
+                return user_object
+            except KeyError:
+                return None
+        else:
+            return None
 
     @property
     def address(self):
@@ -308,6 +337,8 @@ class User(AbstractBaseUser):
                 return None
         else:
             return None
+
+
 
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.
