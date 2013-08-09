@@ -2,23 +2,6 @@ from django.db import models
 from intranet.apps.users.models import User
 
 
-class EighthBlock(models.Model):
-    """Represents an eighth period block.
-
-    Attributes:
-        - date -- The date of the block.
-        - block -- The block letter (e.g. A, B).
-        - locked -- Whether signups are closed.
-
-    """
-    date = models.DateField(null=False)
-    block = models.CharField(null=False, max_length=1)
-    locked = models.BooleanField(null=False)
-
-    def __unicode__(self):
-        return "{}: {}".format(str(self.date), self.block)
-
-
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
 
@@ -32,7 +15,6 @@ class EighthActivity(models.Model):
     """
     name = models.CharField(null=False, max_length=63)
     # sponsors = models.ManyToManyField(User)
-    members = models.ManyToManyField(User, through="EighthSignup")
 
     # Groups allowed
 
@@ -42,9 +24,40 @@ class EighthActivity(models.Model):
         return self.name
 
 
+class EighthBlock(models.Model):
+    """Represents an eighth period block.
+
+    Attributes:
+        - date -- The date of the block.
+        - block -- The block letter (e.g. A, B).
+        - locked -- Whether signups are closed.
+        - activities -- The activities scheduled for the block.
+
+    """
+    date = models.DateField(null=False)
+    block = models.CharField(max_length=1)
+    locked = models.BooleanField(default=False)
+    activities = models.ManyToManyField(EighthActivity,
+                                        through="EighthScheduledActivity")
+
+    def __unicode__(self):
+        return "{}: {}".format(str(self.date), self.block)
+
+    class Meta:
+        unique_together = (("date", "block"),)
+
+
 
 class EighthScheduledActivity(models.Model):
-    pass
+    block = models.ForeignKey(EighthBlock, null=False)
+    activity = models.ForeignKey(EighthActivity, null=False, blank=False)
+    members = models.ManyToManyField(User, through="EighthSignup")
+
+    comments = models.CharField(max_length=255)
+    # override sponsors
+    # override rooms
+
+    attendance_taken = models.BooleanField(null=False, default=False)
 
 
 class EighthSignup(models.Model):
@@ -61,7 +74,7 @@ class EighthSignup(models.Model):
     """
     user = models.ForeignKey(User, null=False)
     block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthActivity, null=False)
+    activity = models.ForeignKey(EighthScheduledActivity, null=False)
 
     def __unicode__(self):
         return "{}: {} ({})".format(self.user,
