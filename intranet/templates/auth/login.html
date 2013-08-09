@@ -24,38 +24,40 @@
 {% endblock %}
 
 {% block body %}
-    <div class="center">
-        <div class="login">
-                <div class="title">
-                    <div class="logo">
+    <div class="center-wrapper">
+        <div class="center">
+            <div class="login">
+                    <div class="title">
+                        <div class="logo">
+                        </div>
+                        <h1>TJ Intranet</h1>
                     </div>
-                    <h1>TJ Intranet</h1>
+                    <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
+                        {% csrf_token %}
+                        {% for field in auth_form %}
+                            {{ field }}<br>
+                        {% endfor %}
+                        <input type='submit' value='Login' />
+                    </form>
                 </div>
-                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
-                    {% csrf_token %}
-                    {% for field in auth_form %}
-                        {{ field }}<br>
-                    {% endfor %}
-                    <input type='submit' value='Login' />
-                </form>
+            <div class="schedule">
+                    <a href="/" class="chevron"><i class="icon-chevron-left"></i></a>
+                    Today
+                    <a href="/" class="chevron"><i class="icon-chevron-right"></i></a>
+                    <br>
+                    <h2>Anchor Day</h2>
+                    </i><br>
+                    Period 1: 8:30 - 9:15<br>
+                    Period 2: 9:25 - 10:05<br>
+                    Period 3: 10:15 - 10:55<br>
+                    Period 4: 11:05 - 11:45<br>
+                    Lunch: 11:45 - 12:35<br>
+                    Period 5: 12:35 - 1:15<br>
+                    Period 6: 1:25 - 2:05<br>
+                    Period 7: 2:15 - 2:55<br>
+                    Break: 2:55 - 3:10<br>
+                    Period 8: 3:10 - 3:50
             </div>
-        <div class="schedule">
-                <a href="/" class="chevron"><i class="icon-chevron-left"></i></a>
-                Today
-                <a href="/" class="chevron"><i class="icon-chevron-right"></i></a>
-                <br>
-                <h2>Anchor Day</h2>
-                </i><br>
-                Period 1: 8:30 - 9:15<br>
-                Period 2: 9:25 - 10:05<br>
-                Period 3: 10:15 - 10:55<br>
-                Period 4: 11:05 - 11:45<br>
-                Lunch: 11:45 - 12:35<br>
-                Period 5: 12:35 - 1:15<br>
-                Period 6: 1:25 - 2:05<br>
-                Period 7: 2:15 - 2:55<br>
-                Break: 2:55 - 3:10<br>
-                Period 8: 3:10 - 3:50
         </div>
     </div>
     <a class="norton-seal" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en"><img src="{% static 'img/verisign-seal.png' %}" oncontextmenu="return false;" alt="orton Secured Seal - Click to Verify"></a>

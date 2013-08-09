@@ -31,8 +31,8 @@
                 menu.show();
                 menu.stop().animate({ top: "0", opacity: 1 }, time, "easeInQuart", function() {
                     if (bindEvents) {
-                        $(document).click(clickOutside);
-                        $(".dropdown-menu").click(clickInside);
+                        $(document).bind("click tap", clickOutside);
+                        $(".dropdown-menu").bind("click", clickInside);
                     }
                 });
             }
@@ -42,7 +42,7 @@
                     menu.hide();
                     if (unbindEvents) {
                         $(".dropdown-menu").unbind("click", clickInside);
-                        $(document).unbind("click", clickOutside);
+                        $(document).unbind("click tap", clickOutside);
                     }
                 });
             }
@@ -55,7 +55,7 @@
                 if ($(this).hasClass("dropdown-open")) {
                     // Closing open menu
                     closeMenu(menu_clicked);
-                    $(document).unbind("click", clickOutside);
+                    $(document).unbind("click tap", clickOutside);
                     $(".dropdown-menu").unbind("click", clickInside);
                     $(".has-dropdown").removeClass("dropdown-open");
                 } else if (already_open.length == 0) {
