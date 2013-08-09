@@ -70,7 +70,7 @@ class User(AbstractBaseUser):
     _dn = None
 
     """Required to replace the default Django User model."""
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = "username"
 
     """Override default Model Manager (objects) with
     custom UserManager."""
@@ -116,8 +116,8 @@ class User(AbstractBaseUser):
         be associated).
 
         Args:
-            identifier: The plaintext identifier (generally of the form\
-                        "<dn>.<attribute>" for the cached data).
+            - identifier -- The plaintext identifier (generally of the form\
+                            "<dn>.<attribute>" for the cached data).
 
         Returns:
             String
@@ -671,6 +671,9 @@ class User(AbstractBaseUser):
         else:
             return None
 
+    def __unicode__(self):
+        return self.username or self.ion_username
+
 
 class Class(object):
     """Represents a tjhsstClass LDAP object.
@@ -868,3 +871,5 @@ class Grade(object):
     def __str__(self):
         """Return name of the grade."""
         return self._name
+
+

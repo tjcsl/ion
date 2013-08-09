@@ -2,7 +2,6 @@ import pexpect
 import uuid
 import os
 import logging
-from django.core.exceptions import ValidationError
 from intranet import settings
 from intranet.apps.users.models import User
 
@@ -12,6 +11,15 @@ logger = logging.getLogger(__name__)
 class KerberosAuthenticationBackend(object):
     @staticmethod
     def get_kerberos_ticket(username, password):
+        """Attempts to create a Kerberos ticket for a user.
+
+        Args:
+            - username -- The username.
+            - password -- The password.
+
+        Returns:
+            Boolean indicating success or failure of ticket creation
+        """
 
         cache = "/tmp/ion-" + str(uuid.uuid4())
 
@@ -60,13 +68,12 @@ class KerberosAuthenticationBackend(object):
         Creates a new user if one is not already in the database.
 
         Args:
-            Argument: Description.
+            - username -- The username of the `User` to authenticate.
+            - password -- The password of the `User` to authenticate.
 
         Returns:
-            Return
+            `User`
 
-        Raises:
-            Error
         """
         if not self.get_kerberos_ticket(username, password):
             return None
