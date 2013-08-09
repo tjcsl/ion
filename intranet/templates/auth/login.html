@@ -7,19 +7,54 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.schedule.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type='text/javascript'>
-        {% if not auth_form.errors %}
-            $(document).ready(function() {
-                $('input[name=username]').focus();
+        $(document).ready(function() {
+            /* input */
+            $u = $('input[name=username]');
+            $p = $('input[name=password]');
+            invalid = 'Invalid ';
+            if($u.attr('placeholder') != invalid+'username' && $p.attr('placeholder') == invalid+'password') {
+                $p.focus();
+            } else {
+                $u.focus();
+            }
+
+            /* schedule */
+            $('.schedule-left').click(function() {
+                console.log('Last week');
             });
-        {% endif %}
+            $('.schedule-right').click(function() {
+                console.log('Next week');
+            })
 
-
+            if($('body').hasClass('touch')) {
+                $('.schedule-one, .schedule-two').fadeIn('slow');
+                $('.schedule-four, .schedule-five').fadeIn('slow');
+                $('.schedule-bottom').addClass('hovered hovered-once');
+            } else {
+                $('.schedule-bottom').hover(function() {
+                    $('.schedule-one, .schedule-two').fadeIn();
+                    $('.schedule-four, .schedule-five').fadeIn();
+                    $('.schedule-bottom').addClass('hovered hovered-once');
+                }, function() {
+                    $('.schedule-one, .schedule-two').fadeOut();
+                    $('.schedule-four, .schedule-five').fadeOut();
+                    $('.schedule-bottom').removeClass('hovered');
+                });
+            }
+            setTimeout(function() {
+                if(!$('.schedule-bottom').hasClass('hovered-once')) {
+                    $('.schedule-one, .schedule-two').fadeIn('slow');
+                    $('.schedule-four, .schedule-five').fadeIn('slow');
+                }
+            }, 1000);
+        });
     </script>
 {% endblock %}
 
@@ -32,33 +67,102 @@
                         </div>
                         <h1>TJ Intranet</h1>
                     </div>
-                    <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
-                        {% csrf_token %}
-                        {% for field in auth_form %}
-                            {{ field }}<br>
-                        {% endfor %}
-                        <input type='submit' value='Login' />
-                    </form>
-                </div>
+                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action='/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}' method='post'>
+                    {% csrf_token %}
+                    {% for field in auth_form %}
+                        {{ field }}<br />
+                    {% endfor %}
+                    <input type='submit' value='Login' />
+                </form>
+            </div>
             <div class="schedule">
-                    <a href="/" class="chevron"><i class="icon-chevron-left"></i></a>
-                    Today
-                    <a href="/" class="chevron"><i class="icon-chevron-right"></i></a>
-                    <br>
-                    <h2>Anchor Day</h2>
-                    </i><br>
-                    Period 1: 8:30 - 9:15<br>
-                    Period 2: 9:25 - 10:05<br>
-                    Period 3: 10:15 - 10:55<br>
-                    Period 4: 11:05 - 11:45<br>
-                    Lunch: 11:45 - 12:35<br>
-                    Period 5: 12:35 - 1:15<br>
-                    Period 6: 1:25 - 2:05<br>
-                    Period 7: 2:15 - 2:55<br>
-                    Break: 2:55 - 3:10<br>
-                    Period 8: 3:10 - 3:50
+                <a href="/" class="chevron schedule-left"><i class="icon-chevron-left"></i></a>
+                Today
+                <a href="/" class="chevron schedule-right"><i class="icon-chevron-right"></i></a>
+                <br />
+                <h2>Anchor Day</h2>
+                <br />
+                Period 1: 8:30 - 9:15<br />
+                Period 2: 9:25 - 10:05<br />
+                Period 3: 10:15 - 10:55<br />
+                Period 4: 11:05 - 11:45<br />
+                Lunch: 11:45 - 12:35<br />
+                Period 5: 12:35 - 1:15<br />
+                Period 6: 1:25 - 2:05<br />
+                Period 7: 2:15 - 2:55<br />
+                Break: 2:55 - 3:10<br />
+                Period 8: 3:10 - 3:50
             </div>
         </div>
     </div>
-    <a class="norton-seal" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en"><img src="{% static 'img/verisign-seal.png' %}" oncontextmenu="return false;" alt="orton Secured Seal - Click to Verify"></a>
+    <div class="schedule-bottom">
+        <div class="schedule schedule-one">
+            Monday
+            <br />
+            <h2>Anchor Day</h2>
+            <br />
+            Period 1: 8:30 - 9:15<br />
+            Period 2: 9:25 - 10:05<br />
+            Period 3: 10:15 - 10:55<br />
+            Period 4: 11:05 - 11:45<br />
+            Lunch: 11:45 - 12:35<br />
+            Period 5: 12:35 - 1:15<br />
+            Period 6: 1:25 - 2:05<br />
+            Period 7: 2:15 - 2:55<br />
+            Break: 2:55 - 3:10<br />
+            Period 8: 3:10 - 3:50
+        </div>
+        <div class="schedule schedule-two">
+            Tuesday
+            <br />
+            <h2>Anchor Day</h2>
+            <br />
+            Period 1: 8:30 - 9:15<br />
+            Period 2: 9:25 - 10:05<br />
+            Period 3: 10:15 - 10:55<br />
+            Period 4: 11:05 - 11:45<br />
+            Lunch: 11:45 - 12:35<br />
+            Period 5: 12:35 - 1:15<br />
+            Period 6: 1:25 - 2:05<br />
+            Period 7: 2:15 - 2:55<br />
+            Break: 2:55 - 3:10<br />
+            Period 8: 3:10 - 3:50
+        </div>
+        <div class="schedule schedule-four">
+            Thursday
+            <br />
+            <h2>Anchor Day</h2>
+            <br />
+            Period 1: 8:30 - 9:15<br />
+            Period 2: 9:25 - 10:05<br />
+            Period 3: 10:15 - 10:55<br />
+            Period 4: 11:05 - 11:45<br />
+            Lunch: 11:45 - 12:35<br />
+            Period 5: 12:35 - 1:15<br />
+            Period 6: 1:25 - 2:05<br />
+            Period 7: 2:15 - 2:55<br />
+            Break: 2:55 - 3:10<br />
+            Period 8: 3:10 - 3:50
+        </div>
+        <div class="schedule schedule-five">
+            Friday
+            <br />
+            <h2>Anchor Day</h2>
+            <br />
+            Period 1: 8:30 - 9:15<br />
+            Period 2: 9:25 - 10:05<br />
+            Period 3: 10:15 - 10:55<br />
+            Period 4: 11:05 - 11:45<br />
+            Lunch: 11:45 - 12:35<br />
+            Period 5: 12:35 - 1:15<br />
+            Period 6: 1:25 - 2:05<br />
+            Period 7: 2:15 - 2:55<br />
+            Break: 2:55 - 3:10<br />
+            Period 8: 3:10 - 3:50
+        </div>
+    </div>
+    <div class="bg"></div>
+    <a class="verisign-seal-sm" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en" onclick="window.open(this.href, 'norton', 'menubar=no,location=yes,resizable=no,scrollbars=no,status=no,width=542,height=280'); return false">
+        <img src="{% static 'img/verisign-seal-sm.png' %}" oncontextmenu="return false;" alt="Norton Secured Seal - Click to Verify" />
+    </a>
 {% endblock %}
