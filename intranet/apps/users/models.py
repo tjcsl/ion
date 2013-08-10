@@ -246,7 +246,7 @@ class User(AbstractBaseUser):
         """Returns a user's counselor as a User object.
 
         Returns:
-            A :class:`User` object for the user's counselor
+            :class:`User` object for the user's counselor
 
         """
         key = ":".join([self.dn, "counselor"])
@@ -256,7 +256,7 @@ class User(AbstractBaseUser):
         if cached:
             logger.debug("Attribute 'counselor' of user {} loaded "
                          "from cache.".format(self.username))
-            user_object = User.create_user(dn=cached)
+            user_object = User.create_user(id=cached)
             return user_object
         else:
             c = LDAPConnection()
