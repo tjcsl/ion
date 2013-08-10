@@ -2,6 +2,11 @@
 {% load phone_number_filters %}
 {% load staticfiles %}
 
+{% block title %}
+    {{ block.super }} - Profile - {{ profile_user.full_name }}
+{% endblock %}
+
+
 {% block css %}
     {{ block.super }}
 <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
@@ -63,28 +68,16 @@ $(document).ready(function() {
             <div class="user-container">
 
                 <table class="user-info-contact">
-                    <tr>
-                        <th>Full Name:</th>
-                        <td>{{ profile_user.full_name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Username:</th>
-                        <td title="Numeric ID: {{ profile_user.id }}">
-                            <a href="mailto:{{ profile_user.ion_username }}@tjhsst.edu">
-                                {{ profile_user.ion_username }}
-                            </a>
-                        </td>
-                    </tr>
                     {% if profile_user.birthday %}
                     <tr>
-                        <th>Birthday</th>
+                        <th>Birthday:</th>
                         <td>{{ profile_user.birthday|date:"M d, Y" }}</td>
                     </tr>
                     {% endif %}
                     {% if profile_user.counselor %}
                         <tr>
-                            <th>Counselor</th>
-                            <span> {{ profile_user.counselor.last_name }} </span>
+                            <th>Counselor:</th>
+                            <td> {{ profile_user.counselor.last_name }} </td>
                         </div>
                     {% endif %}
                     {% if profile_user.emails %}
