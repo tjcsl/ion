@@ -14,7 +14,7 @@ class EighthActivity(models.Model):
 
     """
     name = models.CharField(null=False, max_length=63)
-    # sponsors = models.ManyToManyField(User)
+    sponsors = models.ManyToManyField(User)
 
     # Groups allowed
 
