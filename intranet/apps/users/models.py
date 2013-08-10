@@ -264,10 +264,10 @@ class User(AbstractBaseUser):
                 result = c.user_attributes(self.dn, ["counselor"])
                 counselor = result.first_result()["counselor"][0]
             except KeyError:
-                cache.set(key, counselor,
-                          settings.CACHE_AGE['user_attribute'])
                 return None
             else:
+                cache.set(key, counselor,
+                          settings.CACHE_AGE['user_attribute'])
                 user_object = User.create_user(id=counselor)
                 return user_object
 
