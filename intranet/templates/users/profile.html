@@ -2,103 +2,205 @@
 {% load phone_number_filters %}
 {% load staticfiles %}
 
+{% block css %}
+    {{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.preferred-user-picture').click(function() {
+        $('.user-pictures').slideToggle();
+    });
+    $('.user-pictures').click(function() {
+        $('.user-pictures').slideToggle();
+    });
+});
+</script>
+{% endblock %}
+
 {% block main %}
     <div class="primary-content">
-        <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}'s Profile</h2>
-        <table>
-            {% if profile_user.user_type == "tjhsstStudent" %}
-            <tr>
-                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/freshman"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/sophomore"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/junior"></td>
-                <td><img width="172px" height="215px" src="/picture/{{ profile_user.id }}/senior"></td>
-            <tr>
-            <tr>
-                <td align="center">Freshman</td>
-                <td align="center">Sophomore</td>
-                <td align="center">Junior</td>
-                <td align="center">Senior</td>
+        <div class="user-pictures">
+        {% if profile_user.user_type == "tjhsstStudent" %}
+            <table><tr>
+                <td><img class="freshman" src="/picture/{{ profile_user.id }}/freshman" alt="Freshman Picture" title="Freshman Picture" /></td>
+                <td><img class="sophomore" src="/picture/{{ profile_user.id }}/sophomore" alt="Sophomore Picture" title="Sophomore Picture" /></td>
+                <td><img class="junior" src="/picture/{{ profile_user.id }}/junior" alt="Junior Picture" title="Junior Picture" /></td>
+                <td><img class="senior" src="/picture/{{ profile_user.id }}/senior" alt="Senior Picture" title="Senior Picture" /></td>
             </tr>
-            {% else %}
-            <img width="172px" height="215px" src="/picture/{{ profile_user.id }}">
-            {% endif %}
-        </table>
-        Full Name: {{ profile_user.full_name }}<br>
-        Username: {{ profile_user.ion_username }}<br>
-        Ion ID: {{ profile_user.id }} <br>
-        User Type: {% if profile_user.user_type == "tjhsstStudent" %}Student{% else %}Staff{% endif %}<br>
-
-        {% if profile_user.graduation_year %}
-            Graduation Year: {{ profile_user.graduation_year }}<br>
-            Grade: {{ profile_user.grade|capfirst }} ({{ profile_user.grade.number }})<br>
-        {% endif %}
-
-        {% if profile_user.address %}
-            Address: <div style="display: inline-block; vertical-align: top;">{{ profile_user.address|linebreaksbr}}</div><br>
-        {% endif %}
-
-        {% if profile_user.birthday %}
-            Birthday: {{ profile_user.birthday|date:"M d, Y" }}<br>
-        {% endif %}
-
-        {% if profile_user.home_phone %}
-            Home Phone: {{ profile_user.home_phone|dashes }}<br>
-        {% endif %}
-
-        {% if profile_user.mobile_phone %}
-            Mobile Phone: {{ profile_user.mobile_phone|dashes }}<br>
-        {% endif %}
-
-        {% if profile_user.other_phones %}
-            Other Phones:
-            <ul>
-                {% for phone in profile_user.other_phones %}
-                    <li>{{ phone|dashes }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if profile_user.emails %}
-        Emails:
-        <ul>
-            {% for email in profile_user.emails %}
-                <li>{{ email }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if profile_user.skype %}
-        Skype: {{ profile_user.skype }}<br>
-        {% endif %}
-
-        {% if profile_user.google_talk %}
-        Google Talk: {{ profile_user.google_talk }}<br>
-        {% endif %}
-
-        {% if profile_user.classes %}
-        <h3>Schedule</h3>
-        <table>
-            <thead>
-                <td>Period</td>
-                <td>Class</td>
-                <td>Teacher</td>
-                <td>Room Number</td>
-                <td>Quarters</td>
-            </thead>
-            {% for class in profile_user.classes %}
-            <tr>
-                <td>{{ class.period }} </td>
-                <td>{{ class.name }}</td>
-                <td>{{ class.teacher.last_name }}</td>
-                <td>{{ class.room_number }}</td>
-                <td>{% for quarter in class.quarters %}{{ quarter }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-            <tr>
-            {% endfor %}
-        </table>
+            <tfoot>
+                <td>Freshman</td>
+                <td>Sophomore</td>
+                <td>Junior</td>
+                <td>Senior</td>
+            </tfoot>
+            </table>
         {% else %}
-        <br><br>
-        Schedule not available
+            No other pictures are available.
         {% endif %}
-        <br>
+        </div>
+        <img class="preferred-user-picture" src="/picture/{{ profile_user.id }}" alt="Preferred Picture" title="Preferred Picture" />
+        
+        
+        <div class="user-info">
+            <div class="user-title">
+                <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}</h2>
+                <h3>
+                {% if profile_user.user_type == "tjhsstStudent" %}
+                    {% if profile_user.graduation_year %}
+                    {{ profile_user.grade|capfirst }} 
+                    ({{ profile_user.grade.number }}, 
+                    {{ profile_user.graduation_year }})
+                    {% endif %}
+                {% else %}
+                    Staff
+                {% endif %}
+                </h3>
+            </div>
+            <div class="user-container">
+
+                <table class="user-info-contact">
+                    <tr>
+                        <th>Full Name:</th>
+                        <td>{{ profile_user.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Username:</th>
+                        <td title="Numeric ID: {{ profile_user.id }}">
+                            <a href="mailto:{{ profile_user.ion_username }}@tjhsst.edu">
+                                {{ profile_user.ion_username }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% if profile_user.birthday %}
+                    <tr>
+                        <th>Birthday</th>
+                        <td>{{ profile_user.birthday|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endif %}
+                    {% comment %}
+                    {% if profile_user.counselor %}
+                        <tr>
+                            <th>Counselor</th>
+                            <span> profile_user.counselor.last_name </span>
+                        </div>
+                    {% endif %}
+                    {% endcomment %}
+                    {% if profile_user.emails %}
+                    <tr>
+                        <th>
+                            Email{% if profile_user.emails|length > 1 %}s{% endif %}:
+                        </th>
+                        {% for email in profile_user.emails %}
+                            <td>
+                                <a href="mailto:{{ email }}">
+                                    {{ email }}
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                    {% if profile_user.skype or profile_user.google_talk %}
+                    <tr>
+                        <th>Web:</th>
+                        {% if profile_user.skype %}
+                            <td>
+                                <a href="skype:{{ profile_user.skype }}">
+                                    {{ profile_user.skype }} (Skype)
+                                </a>
+                            </td>
+                        {% endif %}
+                        {% if profile_user.google_talk %}
+                            <td>
+                                {{ profile_user.google_talk }} (Google Talk)
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
+                    {% if profile_user.home_phone %}
+                    <tr>
+                        <th>Home Phone:</th>
+                        <td>
+                            <a href="tel:{{ profile_user.home_phone }}">
+                                {{ profile_user.home_phone|dashes }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile_user.mobile_phone %}
+                    <tr>
+                        <th>Cell Phone:</th>
+                        <td>
+                            <a href="tel:{{ profile_user.home_phone }}">
+                                {{ profile_user.mobile_phone|dashes }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile_user.other_phones %}
+                    <tr>
+                        <th>
+                            Other Phone{% if profile_user.other_phones|length > 1 %}s{% endif %}:
+                        </th>
+                        <td>
+                            {% for phone in profile_user.other_phones %}
+                                <a href="tel:{{ phone }}">
+                                    {{ phone|dashes }}
+                                </a>
+                                <br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile_user.address %}
+                    <tr>
+                        <th>Address:</th>
+                        <td>{{ profile_user.address|linebreaksbr }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                </table>
+
+                <section class="user-info-schedule">
+                    {% if profile_user.classes %}
+                    <h3>Schedule: </h3>
+                    <table>
+                        <thead>
+                            <td>Period</td>
+                            <td>Name (Teacher)</td>
+                            <td>Room</td>
+                            <td>Quarters</td>
+                        </thead>
+                    {% for class in profile_user.classes %}
+                        <tr>
+                            <td>{{ class.period }} </td>
+                            <td>{{ class.name }} ({{ class.teacher.last_name }})</td>
+                            <td>{{ class.room_number }}</td>
+                            <td>
+                                {% if class.quarters|length == 4 %}
+                                    Full Year
+                                {% elif class.quarters|length == 2 %}
+                                    Half Year (
+                                    {% for quarter in class.quarters %}
+                                        {{ quarter }}
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %})
+                                {% else %}
+                                    {% for quarter in class.quarters %}
+                                        {{ quarter }}
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    {% endif %}
+                </section>
+            </section>
+        </div>
     </div>
 {% endblock %}
