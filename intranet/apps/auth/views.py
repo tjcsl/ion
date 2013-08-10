@@ -32,8 +32,10 @@ def login_view(request):
         else:
             logger.info("Login failed")
             return index(request, auth_form=form)  # Modified to show errors
+    elif request.GET.get("next"):
+        return redirect("/?next={}".format(request.GET.get("next")))
     else:
-        return redirect("/logout")
+        return redirect('/')
 
 
 def logout_view(request):
@@ -44,4 +46,4 @@ def logout_view(request):
         pass
     logger.info("Destroying kerberos cache and logging out")
     logout(request)
-    return redirect('/')
+    return redirect('/?logout=true')
