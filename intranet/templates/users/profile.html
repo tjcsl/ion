@@ -47,17 +47,19 @@ $(document).ready(function() {
             No other pictures are available.
         {% endif %}
         </div>
-        <img class="preferred-user-picture" src="/picture/{{ profile_user.id }}" alt="Preferred Picture" title="Preferred Picture" />
+        <img class="preferred-user-picture" src="/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View pictures" width="172" height="215" />
 
 
         <div class="user-info">
             <div class="user-title">
-                <h2>{{ profile_user.full_name }}</h2>
+                <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">{{ profile_user.full_name }}</h2>
                 <h3>
                 {% if profile_user.user_type == "tjhsstStudent" %}
                     {% if profile_user.graduation_year %}
                         {{ profile_user.grade|capfirst }}
                         ({{ profile_user.graduation_year }})
+                    {% else %}
+                        Student
                     {% endif %}
                 {% else %}
                     Staff
@@ -117,14 +119,17 @@ $(document).ready(function() {
                         <th>Social</th>
                         <td>
                             {% if profile_user.skype %}
-
                                     <a href="skype:{{ profile_user.skype }}">
                                         {{ profile_user.skype }} (Skype)
                                     </a>
-
+                                    {% if profile_user.google_talk %}<br />{% endif %}
+                            {% endif %}
+                            {% if profile_user.google_talk %}
+                                <a href="gtalk:{{ profile_user.google_talk }}">
+                                    {{ profile_user.google_talk }} (Google Talk)
+                                </a>
                             {% endif %}
                         </td>
-
                     </tr>
                     {% endif %}
                     {% if profile_user.home_phone %}
@@ -176,7 +181,7 @@ $(document).ready(function() {
 
                 <section class="user-info-schedule">
                     {% if profile_user.classes %}
-                        <h3>Schedule: </h3>
+                        <h3>Schedule:</h3>
                         <table>
                             <thead>
                                 <td>Period</td>
@@ -209,8 +214,18 @@ $(document).ready(function() {
                             </tr>
                         {% endfor %}
                     </table>
+                    {% else %}
+                        <h3>Schedule:</h3>
+                        <p>You do not have permission to view this user's schedule.</p>
                     {% endif %}
                 </section>
+
+
+            </div>
+
+            <section class="user-info-eighth">
+                <h3>Eighth Period:</h3>
+                <p>WHEEEEE EIGHTH PERIOD</p>
             </section>
         </div>
     </div>
