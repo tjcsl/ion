@@ -43,16 +43,16 @@ $(document).ready(function() {
         {% endif %}
         </div>
         <img class="preferred-user-picture" src="/picture/{{ profile_user.id }}" alt="Preferred Picture" title="Preferred Picture" />
-        
-        
+
+
         <div class="user-info">
             <div class="user-title">
                 <h2>{{ profile_user.first_name }} {{ profile_user.last_name }}</h2>
                 <h3>
                 {% if profile_user.user_type == "tjhsstStudent" %}
                     {% if profile_user.graduation_year %}
-                    {{ profile_user.grade|capfirst }} 
-                    ({{ profile_user.grade.number }}, 
+                    {{ profile_user.grade|capfirst }}
+                    ({{ profile_user.grade.number }},
                     {{ profile_user.graduation_year }})
                     {% endif %}
                 {% else %}
@@ -81,18 +81,16 @@ $(document).ready(function() {
                         <td>{{ profile_user.birthday|date:"M d, Y" }}</td>
                     </tr>
                     {% endif %}
-                    {% comment %}
                     {% if profile_user.counselor %}
                         <tr>
                             <th>Counselor</th>
-                            <span> profile_user.counselor.last_name </span>
+                            <span> {{ profile_user.counselor.last_name }} </span>
                         </div>
                     {% endif %}
-                    {% endcomment %}
                     {% if profile_user.emails %}
                     <tr>
                         <th>
-                            Email{% if profile_user.emails|length > 1 %}s{% endif %}:
+                            Email{{ profile_user.emails|pluralize }}:
                         </th>
                         {% for email in profile_user.emails %}
                             <td>
@@ -143,7 +141,7 @@ $(document).ready(function() {
                     {% if profile_user.other_phones %}
                     <tr>
                         <th>
-                            Other Phone{% if profile_user.other_phones|length > 1 %}s{% endif %}:
+                            Other Phone{{ profile_user.other_phones|pluralize }}:
                         </th>
                         <td>
                             {% for phone in profile_user.other_phones %}
@@ -161,7 +159,7 @@ $(document).ready(function() {
                         <td>{{ profile_user.address|linebreaksbr }}</td>
                     </tr>
                     {% endif %}
-                    
+
                 </table>
 
                 <section class="user-info-schedule">
@@ -183,14 +181,14 @@ $(document).ready(function() {
                                 {% if class.quarters|length == 4 %}
                                     Full Year
                                 {% elif class.quarters|length == 2 %}
-                                    Half Year (
-                                    {% for quarter in class.quarters %}
-                                        {{ quarter }}
-                                        {% if not forloop.last %}, {% endif %}
-                                    {% endfor %})
+                                    {% if 1 in class.quarters and 2 in class.quarters %}
+                                        First Semester
+                                    {% else %}
+                                        Second Semester
+                                    {% endif %}
                                 {% else %}
                                     {% for quarter in class.quarters %}
-                                        {{ quarter }}
+                                        Quarter {{ quarter }}
                                         {% if not forloop.last %}, {% endif %}
                                     {% endfor %}
                                 {% endif %}
