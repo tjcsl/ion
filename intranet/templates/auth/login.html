@@ -18,11 +18,20 @@
             /* Input */
             var $username = $("input[name=username]");
             var $password = $("input[name=password]");
-            if ((! $username.hasClass("error")) && $password.hasClass("error")) {
+            if(!$username.hasClass("error") && $password.hasClass("error")) {
                 $password.focus();
             } else {
                 $username.focus();
             }
+
+            /* Message */
+            $msg = $(".message");
+            $msg.click(function() {
+                $(this).slideUp();
+            });
+            setTimeout(function() {
+                $msg.slideUp();
+            }, 2000);
 
             /* Schedule */
             $(".schedule-left").click(function() {
@@ -35,12 +44,12 @@
             if($("body").hasClass("touch")) {
                 $(".schedule-one, .schedule-two").fadeIn("slow");
                 $(".schedule-four, .schedule-five").fadeIn("slow");
-                $(".schedule-bottom").addClass("hovered hovered-once");
+                $(".schedule-bottom").addClass("hovered");
             } else {
                 $(".schedule-bottom").hover(function() {
                     $(".schedule-one, .schedule-two").fadeIn();
                     $(".schedule-four, .schedule-five").fadeIn();
-                    $(".schedule-bottom").addClass("hovered hovered-once");
+                    $(".schedule-bottom").addClass("hovered");
                 }, function() {
                     $(".schedule-one, .schedule-two").fadeOut();
                     $(".schedule-four, .schedule-five").fadeOut();
@@ -60,6 +69,16 @@
                         </div>
                         <h1>TJ Intranet</h1>
                     </div>
+                {% if request.GET.logout %}
+                    <div class="message message-logout">
+                        You were successfully logged out.
+                    </div>
+                {% endif %}
+                {% if request.GET.next %}
+                    <div class="message message-next">
+                        Log in to access this page.
+                    </div>
+                {% endif %}
                 <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" method="post">
                     {% csrf_token %}
                     {% for field in auth_form %}
