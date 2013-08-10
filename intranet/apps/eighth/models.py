@@ -14,7 +14,7 @@ class EighthActivity(models.Model):
 
     """
     name = models.CharField(null=False, max_length=63)
-    sponsors = models.ManyToManyField(User)
+    sponsors = models.ManyToManyField(EighthUser)
 
     # Groups allowed
 
@@ -31,7 +31,8 @@ class EighthBlock(models.Model):
         - date -- The date of the block.
         - block -- The block letter (e.g. A, B).
         - locked -- Whether signups are closed.
-        - activities -- The activities scheduled for the block.
+        - activities -- List of \
+                        :class:`EighthScheduledActivity` for the block.
 
     """
     date = models.DateField(null=False)
@@ -73,7 +74,6 @@ class EighthSignup(models.Model):
 
     """
     user = models.ForeignKey(User, null=False)
-    block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthScheduledActivity, null=False)
 
     def __unicode__(self):
@@ -81,11 +81,11 @@ class EighthSignup(models.Model):
                                     self.activity,
                                     self.block)
 
-    class Meta:
-        unique_together = (("user", "block"),)
-        index_together = [
-            ["user", "block"],
-        ]
+    # class Meta:
+    #     unique_together = (("user", "block"),)
+    #     index_together = [
+    #         ["user", "block"],
+    #     ]
 
 
 class SignupAlert(models.Model):

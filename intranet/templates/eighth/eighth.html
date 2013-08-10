@@ -13,14 +13,10 @@
 {% block main %}
     <div class="primary-content">
         <ul>
-            {% for eighth_block in blocks %}
-                <li>
-                    {{ eighth_block.date|date:"M d, Y" }}: {{ eighth_block.block }}
-                <ul>
-                    {% for activity in eighth_block.activities.all %}
-                        <li>{{ activity.name }}</li>
-                    {% endfor %}
-                </ul></li>
+            {{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }}
+            {% for activity in block_info.activities %}
+
+                <li> {{ activity.name }} ({{ activity.members }} Member{{ activity.members|pluralize }}) </li>
             {% endfor %}
         </ul>
 
