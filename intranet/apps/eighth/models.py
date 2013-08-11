@@ -2,19 +2,31 @@ from django.db import models
 from intranet.apps.users.models import User
 
 
+class EighthSponsor(models.Model):
+    """Represents a sponsor for an eighth period activity.
+
+    A sponsor could be an actual user or just a name.
+
+    Attributes:
+        - user -- A :class:`User<intranet.apps.users.models.User>`\
+                  object for the sponsor.
+        - name -- A name for the sponsor if there is
+
+    """
+    user = models.ForeignKey(User, null=True)
+    name = models.CharField(null=True, max_length=63)
+
+
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
 
     Attributes:
         - name -- The name of the activity.
         - sponsors -- The EighthSponsors for the activity.
-        - members -- The students signed up for the activity\
-                     (extra information about the signup is in the\
-                     EighthSignup intermediate model).
 
     """
     name = models.CharField(null=False, max_length=63)
-    sponsors = models.ManyToManyField(EighthUser)
+    sponsors = models.ManyToManyField(EighthSponsor)
 
     # Groups allowed
 
@@ -81,11 +93,8 @@ class EighthSignup(models.Model):
                                     self.activity,
                                     self.block)
 
-    # class Meta:
-    #     unique_together = (("user", "block"),)
-    #     index_together = [
-    #         ["user", "block"],
-    #     ]
+    class Meta:
+        unique_together = (("user", "activity"),)
 
 
 class SignupAlert(models.Model):
@@ -129,3 +138,4 @@ class EighthAbsence(models.Model):
 
     class Meta:
         unique_together = (("block", "user"),)
+

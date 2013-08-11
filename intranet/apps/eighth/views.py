@@ -19,21 +19,41 @@ def eighth_signup_view(request):
     # EighthBlock.objects.get(id=1).eighthscheduledactivity_set.select_related().all()[0].members.all()
     # eighth_blocks = []
 
-    block = EighthBlock.objects.get(id=1)
+    block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=1)
+    # sponsors = EighthBlock.objects.
     block_info = {
         "date": block.date,
         "block_letter": block.block,
         "activities": []
     }
-    activities = block.eighthscheduledactivity_set.all().select_related("activity").prefetch_related("members")
-    # block_info["activities"] = list(block.activities.all().values("name"))
+    for scheduled_activity in block.eighthscheduledactivity_set.select_related("activity").prefetch_related("members").all():
+        activity_info = {
+            "name": scheduled_activity.activity.name,
+            "members": scheduled_activity.members.count(),
+            # "sponsors": scheduled_activity.activity.sponsors.all()
+        }
+        block_info["activities"].append(activity_info)
 
-    for activity in activities:
-        block_info["activities"].append({
-                "name": activity.activity.name,
-                "members": activity.members.count()
-            })
+    # block.acti
 
+    # activities = block.eighthscheduledactivity_set.all().prefetch_related("members", "activity")
+    # # block_info["activities"] = list(block.activities.all().values("name"))
+
+    # for scheduled_activity in activities:
+    #     activity_info = {
+    #         "name": scheduled_activity.activity.name,
+    #         "members": scheduled_activity.members.count(),
+    #         "sponsors": []
+    #         }
+    #     sponsors = scheduled_activity.activity.sponsors.select_related("user").all()
+    #     for sponsor in sponsors:
+    #         if sponsor.user:
+    #             name = sponsor.user.full_name
+    #         else:
+    #             name = sponsor.name
+    #         activity_info["sponsors"].append(name)
+
+    #     block_info["activities"].append(activity_info)
     logger.debug(block_info)
 
     context = {"user": request.user,
