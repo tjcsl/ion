@@ -11,7 +11,6 @@ from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from intranet.middleware import threadlocals
 
-
 logger = logging.getLogger(__name__)
 register = template.Library()
 

@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    {{ block.super}} - Eighth Period
+    {{ block.super }} - Eighth Period
 {% endblock %}
 
 {% block css %}
@@ -13,15 +13,16 @@
 {% block main %}
     <div class="primary-content">
         <ul>
-            {% comment %}
             {{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }}
-            {% for activity in block_info.activities %}
+            {% for id, activity in block_info.activities.items %}
                 <li>
-                    {{ activity.name }} ({{ activity.members }} Member{{ activity.members|pluralize }},
-                    sponsored by {% for sponsor in activity.sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                    {{ activity.name }}
+                    <ul>
+                        <li>{{ activity.members }} student{{ activity.members|pluralize }} signed up</li>
+                        <li>Sponsored by {% for sponsor in activity.sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+                    </ul>
                 </li>
             {% endfor %}
-            {% endcomment %}
         </ul>
 
 

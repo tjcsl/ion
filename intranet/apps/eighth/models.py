@@ -10,7 +10,7 @@ class EighthSponsor(models.Model):
     Attributes:
         - user -- A :class:`User<intranet.apps.users.models.User>`\
                   object for the sponsor.
-        - name -- A name for the sponsor if there is
+        - name -- The name of the sponsor
 
     """
     user = models.ForeignKey(User, null=True)
@@ -104,8 +104,6 @@ class EighthSignup(models.Model):
 
 class SignupAlert(models.Model):
     """Stores a user's preferences for signup alerts.
-
-    Description
 
     Attributes:
         - user -- The :class:`User<intranet.apps.users.models.User>`.
