@@ -1,8 +1,8 @@
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.db.models import Count
 from .models import EighthBlock
-from intranet.apps.users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -24,37 +24,18 @@ def eighth_signup_view(request):
     block_info = {
         "date": block.date,
         "block_letter": block.block,
-        "activities": []
+        "activities": {}
     }
-    for scheduled_activity in block.eighthscheduledactivity_set.select_related("activity").prefetch_related("members").all():
+    for scheduled_activity in block.eighthscheduledactivity_set.select_related("activity").all():
         activity_info = {
             "name": scheduled_activity.activity.name,
-            "members": scheduled_activity.members.count(),
-            # "sponsors": scheduled_activity.activity.sponsors.all()
+            "members": 0
         }
-        block_info["activities"].append(activity_info)
+        block_info["activities"][scheduled_activity.activity.id] = activity_info
 
-    # block.acti
 
-    # activities = block.eighthscheduledactivity_set.all().prefetch_related("members", "activity")
-    # # block_info["activities"] = list(block.activities.all().values("name"))
-
-    # for scheduled_activity in activities:
-    #     activity_info = {
-    #         "name": scheduled_activity.activity.name,
-    #         "members": scheduled_activity.members.count(),
-    #         "sponsors": []
-    #         }
-    #     sponsors = scheduled_activity.activity.sponsors.select_related("user").all()
-    #     for sponsor in sponsors:
-    #         if sponsor.user:
-    #             name = sponsor.user.full_name
-    #         else:
-    #             name = sponsor.name
-    #         activity_info["sponsors"].append(name)
-
-    #     block_info["activities"].append(activity_info)
-    logger.debug(block_info)
+    for activity in block.eighthsignup_set.filter(block=block).annotate(user_count=Count("user")).values("activity", "user_count"):
+        block_info["activities"][activity["activity"]]["members"] = activity["user_count"]
 
     context = {"user": request.user,
                "page": "eighth",
