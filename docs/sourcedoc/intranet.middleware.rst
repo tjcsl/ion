@@ -9,3 +9,13 @@ Middleware Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: intranet.middleware.templates
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: intranet.middleware.threadlocals
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
