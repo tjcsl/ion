@@ -64,7 +64,7 @@ class EighthBlock(models.Model):
 class EighthScheduledActivity(models.Model):
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False, blank=False)
-    # members = models.ManyToManyField(User, through="EighthSignup")
+    members = models.ManyToManyField(User, through="EighthSignup")
 
     comments = models.CharField(max_length=255)
     # override sponsors
@@ -86,20 +86,19 @@ class EighthSignup(models.Model):
 
     """
     user = models.ForeignKey(User, null=False)
-    block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthActivity, null=False)
+    # block = models.ForeignKey(EighthBlock, null=False)
+    activity = models.ForeignKey(EighthScheduledActivity, null=False)
 
     def __unicode__(self):
-        return "{}: {} ({})".format(self.user,
-                                    self.activity,
-                                    self.block)
+        return "{}: {}".format(self.user,
+                               self.activity)
 
-    class Meta:
-        unique_together = (("user", "block"),)
-        index_together = [
-            ["user", "block"],
-            ["block", "activity"]
-        ]
+    # class Meta:
+        # unique_together = (("user", "block"),)
+        # index_together = [
+        #     ["user", "block"],
+        #     ["block", "activity"]
+        # ]
 
 
 class SignupAlert(models.Model):
