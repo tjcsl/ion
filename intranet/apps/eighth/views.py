@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def eighth_signup_view(request):
-    block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=1)
+    block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=4)
     block_info = {
         "date": block.date,
         "block_letter": block.block,
