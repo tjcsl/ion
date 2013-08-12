@@ -2,7 +2,7 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db.models import Count
-from .models import EighthBlock, EighthActivity, EighthSponsor
+from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup
 from intranet.apps.eighth.models import User
 
 logger = logging.getLogger(__name__)
@@ -24,11 +24,11 @@ def eighth_signup_view(request):
             "members": 0,
             "sponsors": []
         }
-        block_info["activities"][scheduled_activity.activity.id] = activity_info
+        block_info["activities"][scheduled_activity.id] = activity_info
 
 
-    for activity in block.eighthsignup_set.filter(block=block).annotate(user_count=Count("user")).values("activity", "user_count"):
-        block_info["activities"][activity["activity"]]["members"] = activity["user_count"]
+    for activity, user_count in EighthSignup.objects.filter(activity__block=4).values_list("activity_id").annotate(user_count=Count("activity")):
+        block_info["activities"][activity]["members"] = user_count
 
     sponsors_dict = EighthSponsor.objects.all().values_list("id", "user_id", "name")
     all_sponsors = dict(((sponsor[0], {"user_id": sponsor[1], "name": sponsor[2]}) for sponsor in sponsors_dict))
