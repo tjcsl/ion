@@ -145,3 +145,29 @@ def linecount():
 
         puts("-" * 52)
         puts("Total: {}{}".format(" " * (8 - len(str(total))), total))
+
+def load_fixtures():
+    n = _choose_from_list(["Production database (PostgreSQL)",
+                           "Sandbox database (SQLite3)"],
+                           "Which database would you like to clear and repopulate?")
+    if n == 0:
+        if not confirm("Are you sure you want to clear the production database?"):
+            return 0
+        production = "TRUE"
+        local("dropdb -h localhost ion")
+        local("createdb -h localhost ion")
+    else:
+        production = "FALSE"
+        local("rm testing_database.db")
+
+    with shell_env(PRODUCTION=production):
+        local("./manage.py syncdb")
+        files = ["intranet/apps/users/fixtures/users.json",
+                 "intranet/apps/eighth/fixtures/sponsors.json",
+                 "intranet/apps/eighth/fixtures/rooms.json",
+                 "intranet/apps/eighth/fixtures/blocks.json",
+                 "intranet/apps/eighth/fixtures/activities.json",
+                 "intranet/apps/eighth/fixtures/s_activities.json",
+                 "intranet/apps/eighth/fixtures/signups_0.json"]
+        for json_file in files:
+            local("./manage.py loaddata {}".format(json_file))
