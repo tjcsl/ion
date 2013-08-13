@@ -83,7 +83,6 @@ class EighthBlock(models.Model):
         unique_together = (("date", "block"),)
 
 
-
 class EighthScheduledActivity(models.Model):
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False, blank=False)

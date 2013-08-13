@@ -1,48 +1,90 @@
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.db.models import Count
-from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, EighthScheduledActivity
+from django.db.models import Count, Q
+from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
+                    EighthScheduledActivity
 from intranet.apps.eighth.models import User
 
 logger = logging.getLogger(__name__)
 
 
 @login_required
-def eighth_signup_view(request):
-    block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=2555)
+def eighth_signup_view(request, block_id):
+    block = EighthBlock.objects \
+                       .prefetch_related("eighthscheduledactivity_set") \
+                       .get(id=block_id)
+    next = EighthBlock.objects \
+                      .order_by("date", "block") \
+                      .filter(Q(date__gt=block.date) | (Q(date=block.date) \
+                       & Q(block__gt=block.block)))[0] \
+                      .id
+    prev = EighthBlock.objects \
+                      .order_by("-date", "-block") \
+                      .filter(Q(date__lt=block.date) | (Q(date=block.date) \
+                       & Q(block__lt=block.block)))[0] \
+                      .id
     block_info = {
         "date": block.date,
         "block_letter": block.block,
-        "activities": {}
+        "activities": {},
+        "next_block": next,
+        "previous_block": prev
     }
     scheduled_activity_to_activity_map = {}
 
-    scheduled_activities = block.eighthscheduledactivity_set.all().select_related("activity")
+    scheduled_activities = block.eighthscheduledactivity_set \
+                                .all() \
+                                .select_related("activity")
     for scheduled_activity in scheduled_activities:
         activity_info = {
             "name": scheduled_activity.activity.name,
             "members": 0,
             "capacity": 0,
             "rooms": [],
-            "sponsors": []
+            "sponsors": [],
+            "description": []
         }
-        scheduled_activity_to_activity_map[scheduled_activity.id] = scheduled_activity.activity.id
-        block_info["activities"][scheduled_activity.activity.id] = activity_info
+        scheduled_activity_to_activity_map[scheduled_activity.id] = \
+            scheduled_activity.activity.id
 
-    activities = EighthSignup.objects.filter(activity__block=block).values_list("activity__activity_id").annotate(user_count=Count("activity"))
+        block_info["activities"][scheduled_activity.activity.id] = \
+            activity_info
+
+    activities = EighthSignup.objects \
+                             .filter(activity__block=block) \
+                             .values_list("activity__activity_id") \
+                             .annotate(user_count=Count("activity"))
 
     for activity, user_count in activities:
         block_info["activities"][activity]["members"] = user_count
 
-    sponsors_dict = EighthSponsor.objects.all().values_list("id", "user_id", "first_name", "last_name")
-    all_sponsors = dict(((sponsor[0], {"user_id": sponsor[1], "name": sponsor[3]}) for sponsor in sponsors_dict))
+    sponsors_dict = EighthSponsor.objects \
+                                 .all() \
+                                 .values_list("id",
+                                              "user_id",
+                                              "first_name",
+                                              "last_name")
+
+    all_sponsors = dict((sponsor[0],
+                          {"user_id": sponsor[1],
+                           "name": sponsor[3]}) for sponsor in sponsors_dict)
 
     activity_ids = scheduled_activities.values_list("activity__id")
-    sponsorships = EighthActivity.sponsors.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("sponsors").values("eighthactivity", "eighthsponsor")
+    sponsorships = EighthActivity.sponsors \
+                                 .through \
+                                 .objects \
+                                 .filter(eighthactivity_id__in=activity_ids) \
+                                 .select_related("sponsors") \
+                                 .values("eighthactivity", "eighthsponsor")
 
     scheduled_activity_ids = scheduled_activities.values_list("id", flat=True)
-    overidden_sponsorships = EighthScheduledActivity.sponsors.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).values("eighthscheduledactivity", "eighthsponsor")
+    overidden_sponsorships = \
+        EighthScheduledActivity.sponsors \
+        .through \
+        .objects \
+        .filter(eighthscheduledactivity_id__in=scheduled_activity_ids) \
+        .values("eighthscheduledactivity", "eighthsponsor")
 
     for sponsorship in sponsorships:
         activity_id = int(sponsorship["eighthactivity"])
@@ -54,10 +96,12 @@ def eighth_signup_view(request):
         else:
             name = None
 
-        block_info["activities"][activity_id]["sponsors"].append(sponsor["name"] or name)
+        block_info["activities"][activity_id]["sponsors"] \
+            .append(sponsor["name"] or name)
 
     for sponsorship in overidden_sponsorships:
-        activity_id = scheduled_activity_to_activity_map[sponsorship["eighthscheduledactivity"]]
+        scheduled_activity_id = sponsorship["eighthscheduledactivity"]
+        activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
         sponsor_id = sponsorship["eighthsponsor"]
         sponsor = all_sponsors[sponsor_id]
 
@@ -66,16 +110,29 @@ def eighth_signup_view(request):
         else:
             name = None
 
-        block_info["activities"][activity_id]["sponsors"].append(sponsor["name"] or name)
+        block_info["activities"][activity_id]["sponsors"] \
+            .append(sponsor["name"] or name)
 
-    roomings = EighthActivity.rooms.through.objects.filter(eighthactivity_id__in=activity_ids).select_related("eighthroom", "eighthactivity")
-    overidden_roomings = EighthScheduledActivity.rooms.through.objects.filter(eighthscheduledactivity_id__in=scheduled_activity_ids).select_related("eighthroom", "eighthscheduledactivity")
+    roomings = EighthActivity.rooms \
+                             .through \
+                             .objects \
+                             .filter(eighthactivity_id__in=activity_ids) \
+                             .select_related("eighthroom", "eighthactivity")
+    overidden_roomings = \
+        EighthScheduledActivity.rooms \
+                               .through \
+                               .objects \
+                               .filter(eighthscheduledactivity_id__in= \
+                                       scheduled_activity_ids). \
+                               select_related("eighthroom",
+                                              "eighthscheduledactivity")
 
     for rooming in roomings:
         activity_id = rooming.eighthactivity.id
         room_name = rooming.eighthroom.name
         block_info["activities"][activity_id]["rooms"].append(room_name)
-        block_info["activities"][activity_id]["capacity"] += rooming.eighthroom.capacity
+        block_info["activities"][activity_id]["capacity"] += \
+            rooming.eighthroom.capacity
 
     activities_rooms_overidden = []
     for rooming in overidden_roomings:
@@ -87,7 +144,8 @@ def eighth_signup_view(request):
             block_info["activities"][activity_id]["capacity"] = 0
         room_name = rooming.eighthroom.name
         block_info["activities"][activity_id]["rooms"].append(room_name)
-        block_info["activities"][activity_id]["capacity"] += rooming.eighthroom.capacity
+        block_info["activities"][activity_id]["capacity"] += \
+            rooming.eighthroom.capacity
 
     # logger.debug(block_info)
     context = {"user": request.user,

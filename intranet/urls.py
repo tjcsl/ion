@@ -36,7 +36,7 @@ urlpatterns += patterns('users.views.',
 )
 
 urlpatterns += patterns('eighth.views.',
-    url(r'^eighth$', eighth_signup_view),
+    url(r'^eighth/(?P<block_id>\d+)$', eighth_signup_view),
 )
 
 urlpatterns += patterns('events.views.',
