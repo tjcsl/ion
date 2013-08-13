@@ -20,9 +20,10 @@ def _choose_from_list(options, question):
         if int(n) not in range(len(options)):
             raise ValueError("Not a valid option.")
         else:
-            return True
+            return int(n)
 
-    prompt(message, validate=valid)
+    prompt(message, validate=valid, key="answer")
+    return env.answer
 
 def clean_pyc():
     local("find . -name '*.pyc' -delete")
@@ -158,7 +159,8 @@ def load_fixtures():
         local("createdb -h localhost ion")
     else:
         production = "FALSE"
-        local("rm testing_database.db")
+        with settings(warn_only=True):
+            local("rm testing_database.db")
 
     with shell_env(PRODUCTION=production):
         local("./manage.py syncdb")
