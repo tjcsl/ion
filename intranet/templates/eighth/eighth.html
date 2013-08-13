@@ -12,6 +12,7 @@
 
 {% block main %}
     <div class="primary-content">
+        <h2>{{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }} Block</h2>
         <table>
             <thead>
                 <td>Name</td>
@@ -19,11 +20,14 @@
                 <td>Rooms</td>
                 <td>Sponsors</td>
             </thead>
-            {{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }}
             {% for id, activity in block_info.activities.items %}
                 <tr>
-                    <td>{{ activity.name }}</td>
-                    <td>{% if activity.capacity = 0 %}Cancelled{% else %}{{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}{% endif %}</td>
+                    <td>
+                        {{ activity.name }}
+                    </td>
+                    <td>
+                        {% if activity.capacity = 0 %}Cancelled{% else %}{{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}{% endif %}
+                    </td>
                     <td>
                         {% for room in activity.rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
