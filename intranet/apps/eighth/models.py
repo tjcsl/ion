@@ -14,8 +14,22 @@ class EighthSponsor(models.Model):
 
     """
     user = models.ForeignKey(User, null=True)
-    name = models.CharField(null=True, max_length=63)
+    first_name = models.CharField(null=True, max_length=63)
+    last_name = models.CharField(null=True, max_length=63)
+    online_attendance = models.BooleanField(null=False, default=True)
 
+
+class EighthRoom(models.Model):
+    """Represents a room in which an eighth period activity can be held
+
+    Attributes:
+        - Attribute -- Description.
+
+    """
+    name = models.CharField(null=True, max_length=63)
+    capacity = models.SmallIntegerField(null=False, default=-1)
+
+    unique_together = (("room_number", "name", "capacity"),)
 
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
@@ -26,7 +40,16 @@ class EighthActivity(models.Model):
 
     """
     name = models.CharField(null=False, max_length=63)
+    description = models.TextField()
     sponsors = models.ManyToManyField(EighthSponsor)
+    rooms = models.ManyToManyField(EighthRoom)
+
+    restricted = models.BooleanField(null=False, default=False)
+    presign = models.BooleanField(null=False, default=False)
+    one_a_day = models.BooleanField(null=False, default=False)
+    both_blocks = models.BooleanField(null=False, default=False)
+    sticky = models.BooleanField(null=False, default=False)
+    special = models.BooleanField(null=False, default=False)
 
     # Groups allowed
 
@@ -66,11 +89,15 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity, null=False, blank=False)
     members = models.ManyToManyField(User, through="EighthSignup")
 
-    comments = models.CharField(max_length=255)
-    # override sponsors
-    # override rooms
+    comment = models.CharField(max_length=255)
+
+    # Overidden attributes
+    sponsors = models.ManyToManyField(EighthSponsor)
+    rooms = models.ManyToManyField(EighthRoom)
 
     attendance_taken = models.BooleanField(null=False, default=False)
+    cancelled = models.BooleanField(null=False, default=False)
+    room_changed = models.BooleanField(null=False, default=False)
 
 
 class EighthSignup(models.Model):
@@ -79,15 +106,13 @@ class EighthSignup(models.Model):
     Attributes:
         - user -- The :class:`User<intranet.apps.users.models.User>`\
                   who has signed up.
-        - block -- The :class:`EighthBlock` of the activity for which \
-                   the user has signed up.
-        - activity -- The :class:`EighthActivity` for which the user \
+        - activity -- The :class:`EighthScheduledActivity` for which the user \
                       has signed up.
 
     """
     user = models.ForeignKey(User, null=False)
-    # block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthScheduledActivity, null=False)
+    activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
+    has_pass = models.BooleanField(null=False, default=False)
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
@@ -140,4 +165,3 @@ class EighthAbsence(models.Model):
 
     class Meta:
         unique_together = (("block", "user"),)
-
