@@ -14,16 +14,23 @@ def eighth_signup_view(request, block_id):
     block = EighthBlock.objects \
                        .prefetch_related("eighthscheduledactivity_set") \
                        .get(id=block_id)
-    next = EighthBlock.objects \
-                      .order_by("date", "block") \
-                      .filter(Q(date__gt=block.date) | (Q(date=block.date) \
-                       & Q(block__gt=block.block)))[0] \
-                      .id
-    prev = EighthBlock.objects \
-                      .order_by("-date", "-block") \
-                      .filter(Q(date__lt=block.date) | (Q(date=block.date) \
-                       & Q(block__lt=block.block)))[0] \
-                      .id
+    try:
+        next = EighthBlock.objects \
+                          .order_by("date", "block") \
+                          .filter(Q(date__gt=block.date)|(Q(date=block.date) \
+                           & Q(block__gt=block.block)))[0] \
+                          .id
+    except IndexError:
+        next = None;
+
+    try:
+        prev = EighthBlock.objects \
+                          .order_by("-date", "-block") \
+                          .filter(Q(date__lt=block.date)|(Q(date=block.date) \
+                           & Q(block__lt=block.block)))[0] \
+                          .id
+    except IndexError:
+        prev = None
     block_info = {
         "date": block.date,
         "block_letter": block.block,
@@ -92,7 +99,11 @@ def eighth_signup_view(request, block_id):
         sponsor = all_sponsors[sponsor_id]
 
         if sponsor["user_id"]:
-            name = User.create_user(id=sponsor["user_id"]).last_name
+            user = User.create_user(id=sponsor["user_id"])
+            if user is not None:
+                name = user.last_name
+            else:
+                name = None
         else:
             name = None
 
@@ -106,7 +117,11 @@ def eighth_signup_view(request, block_id):
         sponsor = all_sponsors[sponsor_id]
 
         if sponsor["user_id"]:
-            name = User.create_user(id=sponsor["user_id"]).last_name
+            user = User.create_user(id=sponsor["user_id"])
+            if user is not None:
+                name = user.last_name
+            else:
+                name = None
         else:
             name = None
 

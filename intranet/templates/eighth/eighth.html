@@ -12,8 +12,16 @@
 
 {% block main %}
     <div class="primary-content">
+        {% if block_info.previous_block %}
+            <a href="/eighth/{{ block_info.previous_block }}" class="block-arrow previous-block"><i class="icon-chevron-left"></i></a>
+        {% endif %}
+
         <h2>{{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }} Block</h2>
-        {{ block_info.previous_block }} < > {{ block_info.next_block }}
+
+        {% if block_info.next_block %}
+            <a href="/eighth/{{ block_info.next_block }}" class="block-arrow next-block"><i class="icon-chevron-right"></i></a>
+        {% endif %}
+
         <table>
             <thead>
                 <td>Name</td>
@@ -27,7 +35,7 @@
                         {{ activity.name }}
                     </td>
                     <td>
-                        {% if activity.capacity = 0 %}Cancelled{% else %}{{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}{% endif %}
+                        {{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}
                     </td>
                     <td>
                         {% for room in activity.rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}
