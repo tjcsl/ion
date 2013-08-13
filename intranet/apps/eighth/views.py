@@ -1,4 +1,5 @@
 import logging
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db.models import Count, Q
@@ -10,7 +11,17 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
-def eighth_signup_view(request, block_id):
+def eighth_signup_view(request, block_id=None):
+    if block_id is None:
+        now = datetime.datetime.now()
+        # Show same day if it's before 17:00
+        if now.hour < 17:
+            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        block_id = EighthBlock.objects \
+                              .order_by("date", "block") \
+                              .filter(date__gte=now)[0] \
+                              .id
     block = EighthBlock.objects \
                        .prefetch_related("eighthscheduledactivity_set") \
                        .get(id=block_id)
