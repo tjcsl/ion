@@ -12,18 +12,27 @@
 
 {% block main %}
     <div class="primary-content">
-        <ul>
+        <table>
+            <thead>
+                <td>Name</td>
+                <td>Signups</td>
+                <td>Rooms</td>
+                <td>Sponsors</td>
+            </thead>
             {{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }}
             {% for id, activity in block_info.activities.items %}
-                <li>
-                    {{ activity.name }}
-                    <ul>
-                        <li>{{ activity.members }} student{{ activity.members|pluralize }} signed up</li>
-                        <li>Sponsor: {% for sponsor in activity.sponsors %}{{ sponsor.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
-                    </ul>
-                </li>
+                <tr>
+                    <td>{{ activity.name }}</td>
+                    <td>{% if activity.capacity = 0 %}Cancelled{% else %}{{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}{% endif %}</td>
+                    <td>
+                        {% for room in activity.rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </td>
+                    <td>
+                        {% for sponsor in activity.sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
 
 
 
