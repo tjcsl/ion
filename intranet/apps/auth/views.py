@@ -4,6 +4,7 @@ from intranet.apps.dashboard.views import dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.views.generic.base import View
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,8 @@ def index(request, auth_form=None):
                       {'auth_form': auth_form, })
 
 
-def login_view(request):
-    if request.method == 'POST':
+class login_view(View):
+    def post(self, request):
         form = AuthenticateForm(data=request.POST)
 
         if form.is_valid():
@@ -32,7 +33,7 @@ def login_view(request):
         else:
             logger.info("Login failed")
             return index(request, auth_form=form)  # Modified to show errors
-    else:
+    def get(self, request):
         return index(request)
 
 
