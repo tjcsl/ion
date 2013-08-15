@@ -16,6 +16,7 @@ register = template.Library()
 
 
 class UserManager(models.Manager):
+
     """User model Manager for table-level LDAP queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -27,6 +28,7 @@ class UserManager(models.Manager):
 
 
 class User(AbstractBaseUser):
+
     """Django User model subclass with properties that fetch data from LDAP
 
     Represents a tjhsstStudent or tjhsstTeacher LDAP object.Extends
@@ -270,7 +272,6 @@ class User(AbstractBaseUser):
                 user_object = User.create_user(id=counselor)
                 return user_object
 
-
     @property
     def address(self):
         """Returns the address of a user.
@@ -343,8 +344,6 @@ class User(AbstractBaseUser):
 
         else:
             return None
-
-
 
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.
@@ -682,6 +681,7 @@ class User(AbstractBaseUser):
 
 
 class Class(object):
+
     """Represents a tjhsstClass LDAP object.
 
     Attributes:
@@ -689,6 +689,7 @@ class Class(object):
         - section_id -- The section ID of the class
 
     """
+
     def __init__(self, dn):
         """Initialize the Class object.
 
@@ -816,6 +817,7 @@ class Class(object):
 
 
 class Address(object):
+
     """Represents the address of a user.
 
     Attributes:
@@ -825,6 +827,7 @@ class Address(object):
         - postal_code -- The zip code of the address.
 
     """
+
     def __init__(self, street, city, state, postal_code):
         """Initialize the Address object."""
         self.street = street
@@ -839,6 +842,7 @@ class Address(object):
 
 
 class Grade(object):
+
     """Represents the grade of a user."""
     names = ["freshman", "sophomore", "junior", "senior", "graduate"]
 
@@ -878,5 +882,3 @@ class Grade(object):
     def __unicode__(self):
         """Return name of the grade."""
         return self._name
-
-

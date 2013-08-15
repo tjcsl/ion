@@ -25,6 +25,7 @@ def _choose_from_list(options, question):
     prompt(message, validate=valid, key="answer")
     return env.answer
 
+
 def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
@@ -41,6 +42,7 @@ def runserver(port=None, dbt="yes"):
     with shell_env(SHOW_DEBUG_TOOLBAR=dbt.upper()):
         local("./manage.py runserver 0.0.0.0:{}".format(port))
 
+
 def killserver(port):
     try:
         int(port)
@@ -48,6 +50,7 @@ def killserver(port):
         abort("Not a valid port number.")
 
     local("pgrep -f 'runserver 0.0.0.0:{}'|xargs kill -INT".format(port))
+
 
 def _require_root():
     with hide('running'):
@@ -95,7 +98,6 @@ def clear_sessions():
 
     plural = "s" if count != 1 else ""
 
-
     if not confirm("Are you sure you want to destroy {} {}"
                    "session{}?".format(count,
                                        "production " if ve == "ion" else "",
@@ -118,9 +120,11 @@ def clear_cache():
     else:
         local("redis-cli -n {} FLUSHDB".format(REDIS_SANDBOX_CACHE_DB))
 
+
 def contributors():
     with hide('running'):
         local("git --no-pager shortlog -ns")
+
 
 def linecount():
     with hide('running'):
@@ -147,10 +151,11 @@ def linecount():
         puts("-" * 52)
         puts("Total: {}{}".format(" " * (8 - len(str(total))), total))
 
+
 def load_fixtures():
     n = _choose_from_list(["Production database (PostgreSQL)",
                            "Sandbox database (SQLite3)"],
-                           "Which database would you like to clear and repopulate?")
+                          "Which database would you like to clear and repopulate?")
     if n == 0:
         if not confirm("Are you sure you want to clear the production database?"):
             return 0

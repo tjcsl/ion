@@ -14,9 +14,11 @@ def current_user():
 
 
 class ThreadLocalsMiddleware(object):
+
     """Stores the current authorized User object in thread locals for
     access in models (and elsewhere) without passing the user around as
     an argument.
     """
+
     def process_request(self, request):
         _thread_locals.user = getattr(request, 'user', None)
