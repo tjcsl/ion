@@ -24,7 +24,7 @@ DATABASES = {
 }
 
 # Make this unique, and don"t share it with anybody.
-SECRET_KEY = "crjl#r4ORLYLYLYLYLv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
+SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 CACHES["default"]["OPTIONS"]["DB"] = 2
 
