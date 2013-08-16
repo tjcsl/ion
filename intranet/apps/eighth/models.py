@@ -3,6 +3,7 @@ from intranet.apps.users.models import User
 
 
 class EighthSponsor(models.Model):
+
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be an actual user or just a name.
@@ -20,6 +21,7 @@ class EighthSponsor(models.Model):
 
 
 class EighthRoom(models.Model):
+
     """Represents a room in which an eighth period activity can be held
 
     Attributes:
@@ -31,7 +33,9 @@ class EighthRoom(models.Model):
 
     unique_together = (("room_number", "name", "capacity"),)
 
+
 class EighthActivity(models.Model):
+
     """Represents an eighth period activity.
 
     Attributes:
@@ -60,6 +64,7 @@ class EighthActivity(models.Model):
 
 
 class EighthBlock(models.Model):
+
     """Represents an eighth period block.
 
     Attributes:
@@ -100,6 +105,7 @@ class EighthScheduledActivity(models.Model):
 
 
 class EighthSignup(models.Model):
+
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:
@@ -126,6 +132,7 @@ class EighthSignup(models.Model):
 
 
 class SignupAlert(models.Model):
+
     """Stores a user's preferences for signup alerts.
 
     Attributes:
@@ -148,6 +155,7 @@ class SignupAlert(models.Model):
 
 
 class EighthAbsence(models.Model):
+
     """Represents a user's absence for an eighth period block.
 
     Attributes:

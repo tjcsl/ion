@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class KerberosCacheMiddleware(object):
+
     """Reloads the KRB5CCNAME environmental variable from the session
     for potential use in future LDAP requests.
 
@@ -23,6 +24,7 @@ class KerberosCacheMiddleware(object):
     it does not have access to the current session (request.session).
 
     """
+
     def process_request(self, request):
         """Propogate KRB5CCNAME session variable to the environmental
         variable
@@ -34,7 +36,7 @@ class KerberosCacheMiddleware(object):
             if "KRB5CCNAME" in os.environ:
                 if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
                     logger.info("Reloading KRB5CCNAME environmental "
-                                 "variable from session.")
+                                "variable from session.")
                     os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
             else:
                 logger.info("KRB5CCNAME environmental variable not set - "

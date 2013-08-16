@@ -5,7 +5,7 @@ from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import render
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
-                    EighthScheduledActivity
+    EighthScheduledActivity
 from intranet.apps.eighth.models import User
 
 logger = logging.getLogger(__name__)
@@ -33,17 +33,17 @@ def eighth_signup_view(request, block_id=None):
     try:
         next = EighthBlock.objects \
                           .order_by("date", "block") \
-                          .filter(Q(date__gt=block.date)|(Q(date=block.date) \
-                           & Q(block__gt=block.block)))[0] \
+                          .filter(Q(date__gt=block.date) | (Q(date=block.date)
+                                                            & Q(block__gt=block.block)))[0] \
                           .id
     except IndexError:
-        next = None;
+        next = None
 
     try:
         prev = EighthBlock.objects \
                           .order_by("-date", "-block") \
-                          .filter(Q(date__lt=block.date)|(Q(date=block.date) \
-                           & Q(block__lt=block.block)))[0] \
+                          .filter(Q(date__lt=block.date) | (Q(date=block.date)
+                                                            & Q(block__lt=block.block)))[0] \
                           .id
     except IndexError:
         prev = None
@@ -90,8 +90,8 @@ def eighth_signup_view(request, block_id=None):
                                               "last_name")
 
     all_sponsors = dict((sponsor[0],
-                          {"user_id": sponsor[1],
-                           "name": sponsor[3]}) for sponsor in sponsors_dict)
+                         {"user_id": sponsor[1],
+                          "name": sponsor[3]}) for sponsor in sponsors_dict)
 
     activity_ids = scheduled_activities.values_list("activity__id")
     sponsorships = EighthActivity.sponsors \
@@ -153,10 +153,10 @@ def eighth_signup_view(request, block_id=None):
         EighthScheduledActivity.rooms \
                                .through \
                                .objects \
-                               .filter(eighthscheduledactivity_id__in= \
+                               .filter(eighthscheduledactivity_id__in=
                                        scheduled_activity_ids). \
-                               select_related("eighthroom",
-                                              "eighthscheduledactivity")
+        select_related("eighthroom",
+                       "eighthscheduledactivity")
 
     for rooming in roomings:
         activity_id = rooming.eighthactivity.id
@@ -182,5 +182,5 @@ def eighth_signup_view(request, block_id=None):
     context = {"user": request.user,
                "page": "eighth",
                "block_info": block_info
-              }
+               }
     return render(request, "eighth/eighth.html", context)

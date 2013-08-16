@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class KerberosAuthenticationBackend(object):
+
     @staticmethod
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.

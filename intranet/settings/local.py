@@ -4,7 +4,9 @@ from fnmatch import fnmatch
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+
 class InvalidString(str):
+
     def __mod__(self, other):
         from django.template.base import TemplateSyntaxError
         raise TemplateSyntaxError(
@@ -37,7 +39,9 @@ CACHES["default"]["OPTIONS"]["DB"] = 2
 for key in CACHE_AGE:
     CACHE_AGE[key] = 60
 
+
 class glob_list(list):
+
     def __contains__(self, key):
         for elt in self:
             if fnmatch(key, elt):
@@ -52,7 +56,7 @@ INTERNAL_IPS = glob_list([
 
 
 SHOW_DEBUG_TOOLBAR = True if os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES" \
-                     else False
+    else False
 
 if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {

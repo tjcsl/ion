@@ -5,7 +5,9 @@ from django.utils.html import strip_tags
 
 logger = logging.getLogger(__name__)
 
+
 class AuthenticateForm(AuthenticationForm):
+
     """Implements a login form.
 
     Attributes:

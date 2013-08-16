@@ -12,6 +12,7 @@ _thread_locals = local()
 
 
 class LDAPConnection(object):
+
     """Represents an LDAP connection with wrappers for the raw ldap
     queries.
 
@@ -19,6 +20,7 @@ class LDAPConnection(object):
         conn: The singleton LDAP connection.
 
     """
+
     def __init__(self):
         """Initialize a singleton LDAPConnection object.
 
@@ -117,6 +119,7 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
+
     """Represents the result of an LDAP query.
 
     LDAPResult stores the raw result of an LDAP query and can process
@@ -126,6 +129,7 @@ class LDAPResult(object):
         result: the raw result of an LDAP query
 
     """
+
     def __init__(self, result):
         self.result = result
 
