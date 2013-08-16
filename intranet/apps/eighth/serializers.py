@@ -1,26 +1,6 @@
-from .models import EighthBlock, EighthActivity
 from rest_framework import serializers
-
-
-class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = EighthBlock
-        fields = ("id",
-                  "url",
-                  "date",
-                  "block",
-                  "locked",
-                  "activities")
-
-class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = EighthBlock
-        # Omit activities so people can't kill the database
-        fields = ("id",
-                  "url",
-                  "date",
-                  "block",
-                  "locked")
+from .models import EighthBlock, EighthActivity
+from intranet.apps.users.serializers import UserSerializer
 
 class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -35,6 +15,29 @@ class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
                   "both_blocks",
                   "sticky",
                   "special")
+
+class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EighthBlock
+        # Omit activities so people can't kill the database
+        fields = ("id",
+                  "url",
+                  "date",
+                  "block",
+                  "locked")
+
+class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
+    activities = EighthActivitySerializer()
+    class Meta:
+        model = EighthBlock
+        fields = ("id",
+                  "url",
+                  "date",
+                  "block",
+                  "locked",
+                  "activities")
+
+class EighthSponsorSerializer(models.Model):
 
 
 
