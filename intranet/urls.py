@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from rest_framework import routers
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
-from .apps.eighth.views import eighth_signup_view, EighthBlockViewSet
+from .apps.eighth.views import eighth_signup_view, EighthBlockViewSet, EighthActivityViewSet
 from .apps.events.views import events_view
 from .apps.groups.views import groups_view
 from .apps.polls.views import polls_view
@@ -52,7 +52,8 @@ urlpatterns += patterns("",
 #####################
 
 router = routers.DefaultRouter()
-router.register(r"blocks", EighthBlockViewSet)
+router.register(r"eighth/blocks", EighthBlockViewSet)
+router.register(r"eighth/activities", EighthActivityViewSet)
 
 """Wire up the API using automatic URL routing and
 include login URLs for the browseable API.

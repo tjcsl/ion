@@ -8,7 +8,7 @@ from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
     EighthScheduledActivity
 from rest_framework import viewsets
 from intranet.apps.eighth.models import User
-from .serializers import EighthBlockSerializer
+from .serializers import EighthBlockSerializer, EighthActivitySerializer
 
 logger = logging.getLogger(__name__)
 
@@ -190,7 +190,13 @@ def eighth_signup_view(request, block_id=None):
 
 
 class EighthBlockViewSet(viewsets.ModelViewSet):
-    """API endpoint that allows viewing EighthBlocks.
+    """API endpoint that allows viewing EighthBlock objects.
     """
     queryset = EighthBlock.objects.all()
     serializer_class = EighthBlockSerializer
+
+class EighthActivityViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows viewing EighthActivity objects.
+    """
+    queryset = EighthActivity.objects.all()
+    serializer_class = EighthActivitySerializer
