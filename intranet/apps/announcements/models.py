@@ -1,5 +1,4 @@
 from django.db import models
-from intranet.apps.users.models import User
 
 
 class Announcement(models.Model):
@@ -11,7 +10,7 @@ class Announcement(models.Model):
             - content -- The HTML content of the news post
             - authors -- The name of the author
             - added -- The date the announcement was added
-            - updated -- The last date the announcement was updated
+            - updated -- The most recent date the announcement was updated
 
     """
     name = models.CharField(max_length=127)
