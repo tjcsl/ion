@@ -161,17 +161,17 @@
         Announcements
     </h2>
 
-    {% for i in "123456789"|make_list %}
+    {% for announcement in announcements %}
         <div class="announcement">
             <h3>
-                Parking Application Update
+                {{ announcement.name }}
             </h3>
 
             <div class="announcement-metadata">
-                Jane Smith • {% widthratio i 1 3 %} minutes ago • to all students
+               {% for author in announcement.authors.all %} {{ author.full_name }} {% endfor %} • {% if announcement.time.minutes <= 59 %} {{ announcement.time.minutes }} minutes ago {% elif announcement.time.hours <= 23 %} {{ announcement.time.hours }} hours ago {% elif announcement.time.days <= 30 %} {{ announcement.time.days }} days ago {% elif announcement.time.months <= 12 %} {{ announcement.time.months }} months ago {% elif announcement.time.years %} {{ announcement.time.years }} years ago {% endif %} • to all students
             </div>
             <div class="announcement-content">
-                If you turned in a paper parking application but did not complete the online form, you MUST do so by this Friday, June 14th. The online application is available <a href="/">here</a>.
+	    	{{ announcement.content }}
             </div>
         </div>
     {% endfor %}
