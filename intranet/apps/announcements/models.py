@@ -2,21 +2,20 @@ from django.db import models
 from intranet.apps.users.models import User
 
 
-class NewsPost(models.Model):
+class Announcement(models.Model):
 
-    """Represents a news post.
+    """Represents an announcement.
 
     Attributes:
-            - title -- The title of the news post
-            - content -- The content (in HTML) of the news post
-            - authors -- The :class:`User<intranet.apps.users.models.User>`\
-                                    objects of the people who submitted the newspost.
-            - groups -- The :class:`Group<intranet.apps.groups.models.Group>`\
-                                    the newspost is visible to. Default is all users.
+            - title -- The title of the announcement
+            - content -- The HTML content of the news post
+            - authors -- The name of the author
+            - added -- The date the announcement was added
+            - updated -- The last date the announcement was updated
 
     """
-    name = models.CharField(null=False, max_length=128)
-    content = models.CharField(max_length=10000)
-    authors = models.ManyToManyField(User)
-    date = models.DateTimeField()
-    # groups = models.ManyToManyField(Group)
+    name = models.CharField(max_length=127)
+    content = models.TextField()
+    author = models.CharField(max_length=63)
+    added = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
