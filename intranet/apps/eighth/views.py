@@ -35,7 +35,7 @@ def eighth_signup_view(request, block_id=None):
         next = EighthBlock.objects \
                           .order_by("date", "block") \
                           .filter(Q(date__gt=block.date) | (Q(date=block.date)
-                           & Q(block__gt=block.block)))[0] \
+                                                            & Q(block__gt=block.block)))[0] \
                           .id
     except IndexError:
         next = None
@@ -44,7 +44,7 @@ def eighth_signup_view(request, block_id=None):
         prev = EighthBlock.objects \
                           .order_by("-date", "-block") \
                           .filter(Q(date__lt=block.date) | (Q(date=block.date)
-                           & Q(block__lt=block.block)))[0] \
+                                                            & Q(block__lt=block.block)))[0] \
                           .id
     except IndexError:
         prev = None

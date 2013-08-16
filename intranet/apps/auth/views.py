@@ -20,6 +20,7 @@ def index(request, auth_form=None):
 
 
 class login_view(View):
+
     def post(self, request):
         form = AuthenticateForm(data=request.POST)
 
@@ -33,6 +34,7 @@ class login_view(View):
         else:
             logger.info("Login failed")
             return index(request, auth_form=form)  # Modified to show errors
+
     def get(self, request):
         return index(request)
 
