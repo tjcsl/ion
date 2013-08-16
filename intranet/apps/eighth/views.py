@@ -190,7 +190,7 @@ def eighth_signup_view(request, block_id=None):
 
 
 class EighthBlockViewSet(viewsets.ModelViewSet):
-    """API endpoint that allows viewing :class:`EighthBlock`s.
+    """API endpoint that allows viewing EighthBlocks.
     """
     queryset = EighthBlock.objects.all()
     serializer_class = EighthBlockSerializer

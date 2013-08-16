@@ -10,10 +10,6 @@ from .apps.polls.views import polls_view
 from .apps.files.views import files_view
 
 
-router = routers.DefaultRouter()
-router.register(r"blocks", EighthBlockViewSet)
-
-
 urlpatterns = patterns("auth.views.",
     url(r"^$", index),
     url(r"^login$", login_view.as_view()),
@@ -51,10 +47,17 @@ urlpatterns += patterns("",
 )
 
 
+#####################
+#        API        #
+#####################
+
+router = routers.DefaultRouter()
+router.register(r"blocks", EighthBlockViewSet)
+
 """Wire up the API using automatic URL routing and
 include login URLs for the browseable API.
 """
 urlpatterns += patterns("",
-    url(r"^", include(router.urls)),
+    url(r"^api/", include(router.urls)),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework"))
 )

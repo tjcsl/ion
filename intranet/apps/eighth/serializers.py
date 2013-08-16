@@ -5,4 +5,4 @@ from rest_framework import serializers
 class EighthBlockSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthBlock
-        fields = ("date", "block", "locked", "activities")
+        fields = ("id", "date", "block", "locked")

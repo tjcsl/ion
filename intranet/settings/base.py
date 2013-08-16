@@ -160,8 +160,8 @@ USER_DN = "ou=people,dc=tjhsst,dc=edu"
 CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "PAGINATE_BY": 10
 }
 
 TEMPLATE_DIRS = (
