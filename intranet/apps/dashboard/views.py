@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard_view(request):
-    announcements = Announcement.objects.order_by("-date").all()[:10]
+    announcements = Announcement.objects.order_by("-updated").all()[:10]
 
     context = {"user": request.user,
                "page": "dashboard",

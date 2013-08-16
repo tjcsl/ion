@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load dates %}
 
 {% block title %}
     {{ block.super}} - Dashboard
@@ -168,7 +169,7 @@
             </h3>
 
             <div class="announcement-metadata">
-                {{ author }} • {{ announcement.time|fuzzy_date }} • to all students
+                {{ announcement.author }} • {{ announcement.updated|fuzzy_date }} • to all students
             </div>
             <div class="announcement-content">
 	    	{{ announcement.content }}

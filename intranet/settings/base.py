@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'intranet.apps',
     'intranet.apps.users',
     'intranet.apps.auth',
     'intranet.apps.eighth',
