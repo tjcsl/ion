@@ -501,6 +501,10 @@ class User(AbstractBaseUser):
             cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
             return perms
 
+    @property
+    def is_staff(self):
+        return self.user_type == "tjhsstTeacher"
+
     def own_info(self):
         try:
             return (str(threadlocals.current_user().id) == str(self.id))
