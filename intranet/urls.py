@@ -25,10 +25,10 @@ from .apps.files.views import files_view
 #)
 
 urlpatterns = patterns('auth.views.',
-    url(r'^$', index),
-    url(r'^login$', login_view.as_view()),
-    url(r'^logout$', logout_view),
-)
+                       url(r'^$', index),
+                       url(r'^login$', login_view.as_view()),
+                       url(r'^logout$', logout_view),
+                       )
 
 urlpatterns += patterns('users.views.',
                         url(r'^profile/(?P<user_id>\d+)?$', profile_view),
