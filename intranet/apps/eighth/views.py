@@ -6,7 +6,9 @@ from django.http import Http404
 from django.shortcuts import render
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
     EighthScheduledActivity
+from rest_framework import viewsets
 from intranet.apps.eighth.models import User
+from .serializers import EighthBlockSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,7 @@ def eighth_signup_view(request, block_id=None):
         next = EighthBlock.objects \
                           .order_by("date", "block") \
                           .filter(Q(date__gt=block.date) | (Q(date=block.date)
-                                                            & Q(block__gt=block.block)))[0] \
+                           & Q(block__gt=block.block)))[0] \
                           .id
     except IndexError:
         next = None
@@ -44,7 +46,7 @@ def eighth_signup_view(request, block_id=None):
         prev = EighthBlock.objects \
                           .order_by("-date", "-block") \
                           .filter(Q(date__lt=block.date) | (Q(date=block.date)
-                                                            & Q(block__lt=block.block)))[0] \
+                           & Q(block__lt=block.block)))[0] \
                           .id
     except IndexError:
         prev = None
@@ -185,3 +187,10 @@ def eighth_signup_view(request, block_id=None):
                "block_info": block_info
                }
     return render(request, "eighth/eighth.html", context)
+
+
+class EighthBlockViewSet(viewsets.ModelViewSet):
+    """API endpoint that allows viewing :class:`EighthBlock`s.
+    """
+    queryset = EighthBlock.objects.all()
+    serializer_class = EighthBlockSerializer
