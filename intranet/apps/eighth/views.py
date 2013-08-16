@@ -3,12 +3,13 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
-    EighthScheduledActivity
+                    EighthScheduledActivity
 from rest_framework import viewsets
+from rest_framework.response import Response
 from intranet.apps.eighth.models import User
-from .serializers import EighthBlockSerializer, EighthActivitySerializer
+from .serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivitySerializer
 
 logger = logging.getLogger(__name__)
 
@@ -189,13 +190,22 @@ def eighth_signup_view(request, block_id=None):
     return render(request, "eighth/eighth.html", context)
 
 
-class EighthBlockViewSet(viewsets.ModelViewSet):
+class EighthBlockViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint that allows viewing EighthBlock objects.
     """
     queryset = EighthBlock.objects.all()
-    serializer_class = EighthBlockSerializer
 
-class EighthActivityViewSet(viewsets.ModelViewSet):
+    def list(self, request):
+        serializer = EighthBlockListSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        block = get_object_or_404(self.queryset, pk=pk)
+        serializer = EighthBlockDetailSerializer(block)
+        return Response(serializer.data)
+
+
+class EighthActivityViewSet(viewsets.ReadOnlyModelViewSet):
     """API endpoint that allows viewing EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()

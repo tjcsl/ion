@@ -52,8 +52,8 @@ urlpatterns += patterns("",
 #####################
 
 router = routers.DefaultRouter()
-router.register(r"eighth/blocks", EighthBlockViewSet)
-router.register(r"eighth/activities", EighthActivityViewSet)
+router.register(r"blocks", EighthBlockViewSet)
+router.register(r"activities", EighthActivityViewSet)
 
 """Wire up the API using automatic URL routing and
 include login URLs for the browseable API.

@@ -2,10 +2,18 @@ from .models import EighthBlock, EighthActivity
 from rest_framework import serializers
 
 
-class EighthBlockSerializer(serializers.HyperlinkedModelSerializer):
+class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthBlock
+
         fields = ("id", "date", "block", "locked", "activities")
+
+class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EighthBlock
+
+        # Omitting "activities" so people can't kill the database
+        fields = ("id", "date", "block", "locked")
 
 class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
