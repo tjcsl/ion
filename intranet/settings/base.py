@@ -161,7 +161,6 @@ CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "PAGINATE_BY": 10,
     "USE_ABSOLUTE_URLS": True,
 }
 

@@ -15,7 +15,7 @@ class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthBlock
-        # Omitting "activities" so people can't kill the database
+        # Omit activities so people can't kill the database
         fields = ("id",
                   "url",
                   "date",

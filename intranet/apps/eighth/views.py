@@ -210,7 +210,7 @@ class EighthActivityList(generics.ListAPIView):
     serializer_class = EighthActivitySerializer
 
 
-class EighthActivityDetail(generics.ListAPIView):
+class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that allows viewing EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()
