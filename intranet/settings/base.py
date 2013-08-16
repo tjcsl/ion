@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     'intranet.apps.users',
     'intranet.apps.auth',
     'intranet.apps.eighth',
+    'intranet.apps.announcements',
     'intranet.middleware.environment'
 )
 

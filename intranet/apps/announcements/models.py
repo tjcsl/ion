@@ -18,4 +18,5 @@ class NewsPost(models.Model):
     name = models.CharField(null=False, max_length=128)
     content = models.CharField(max_length=10000)
     authors = models.ManyToManyField(User)
+    date = models.DateTimeField()
     # groups = models.ManyToManyField(Group)
