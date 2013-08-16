@@ -12,42 +12,22 @@
 
 {% block main %}
     <div class="primary-content">
-        {% if block_info.previous_block %}
-            <a href="/eighth/{{ block_info.previous_block }}" class="block-arrow previous-block"><i class="icon-chevron-left"></i></a>
-        {% endif %}
+        <div class="block-picker">
+            <button class="block-nav earlier-blocks">
+                <i class="icon-chevron-left"></i>
+            </button>
 
-        <h2>{{ block_info.date|date:"M d, Y" }}: {{ block_info.block_letter }} Block</h2>
-
-        {% if block_info.next_block %}
-            <a href="/eighth/{{ block_info.next_block }}" class="block-arrow next-block"><i class="icon-chevron-right"></i></a>
-        {% endif %}
-
-        <table>
-            <thead>
-                <td>Name</td>
-                <td>Signups</td>
-                <td>Rooms</td>
-                <td>Sponsors</td>
-            </thead>
-            {% for id, activity in block_info.activities.items %}
-                <tr>
-                    <td>
-                        {{ activity.name }}
-                    </td>
-                    <td>
-                        {{ activity.members }}/{% if activity.capacity = -1 %}∞{% else %}{{ activity.capacity }}{% endif %}
-                    </td>
-                    <td>
-                        {% for room in activity.rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </td>
-                    <td>
-                        {% for sponsor in activity.sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-
-
+            <button class="block-nav later-blocks">
+                <i class="icon-chevron-right"></i>
+            </button>
+            <ul class="blocks-container">
+                {% for i in "zzzjlsfdjfhjsadklhjkfdsjkhlfdsalkhjfdskjhjfhdklslhjkfasdlkhjfsdalhjkfsdhjlkflkjshaf"|make_list %}
+                    <li class="block">
+                        hi
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
     </div>
 {% endblock %}

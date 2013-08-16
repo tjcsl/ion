@@ -1,8 +1,9 @@
 import logging
 import datetime
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.db.models import Count, Q
+from django.http import Http404
+from django.shortcuts import render
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
                     EighthScheduledActivity
 from intranet.apps.eighth.models import User
@@ -22,9 +23,13 @@ def eighth_signup_view(request, block_id=None):
                               .order_by("date", "block") \
                               .filter(date__gte=now)[0] \
                               .id
-    block = EighthBlock.objects \
-                       .prefetch_related("eighthscheduledactivity_set") \
-                       .get(id=block_id)
+    try:
+        block = EighthBlock.objects \
+                           .prefetch_related("eighthscheduledactivity_set") \
+                           .get(id=block_id)
+    except EighthBlock.DoesNotExist:
+        raise Http404
+
     try:
         next = EighthBlock.objects \
                           .order_by("date", "block") \
