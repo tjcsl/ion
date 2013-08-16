@@ -10,20 +10,56 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.css' %}" />
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var container_width = $(".day-picker").width();
+            var blocks_width = $(".days-container").width();
+            $(".days-container").css("margin-left", (container_width - blocks_width) / 2);
+
+
+            $(".day-nav").click(function(e) {
+                var offset = ($(".day").width() + 1) + "px"
+                if ($(e.target).parents().andSelf().hasClass("later-days")) {
+                    offset = "-=" + offset;
+                } else {
+                    offset = "+=" + offset;
+                }
+
+                $(".days-container").animate({
+                    marginLeft: offset
+                }, {
+                    duration: 200,
+                    easing: "swing"
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+
 {% block main %}
     <div class="primary-content">
-        <div class="block-picker">
-            <button class="block-nav earlier-blocks">
+        <div class="day-picker">
+            <button class="day-nav earlier-days">
                 <i class="icon-chevron-left"></i>
             </button>
 
-            <button class="block-nav later-blocks">
+            <button class="day-nav later-days">
                 <i class="icon-chevron-right"></i>
             </button>
-            <ul class="blocks-container">
-                {% for i in "zzzjlsfdjfhjsadklhjkfdsjkhlfdsalkhjfdskjhjfhdklslhjkfasdlkhjfsdalhjkfsdhjlkflkjshaf"|make_list %}
-                    <li class="block">
-                        hi
+            <ul class="days-container">
+                {% for i in "zzzjlsfdj"|make_list %}
+                    <li class="day">
+                        <div class="block-title">
+                            Monday, January 23
+                        </div>
+                        {% for b in "AB"|make_list %}
+                            <div class="block">
+                                {{ b }}
+                            </div>
+                        {% endfor %}
                     </li>
                 {% endfor %}
             </ul>
