@@ -3,12 +3,11 @@ from django.views.generic.base import TemplateView, RedirectView
 from rest_framework import routers
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
-from .apps.eighth.views import eighth_signup_view, EighthBlockViewSet, EighthActivityViewSet
+from .apps.eighth.views import eighth_signup_view
 from .apps.events.views import events_view
 from .apps.groups.views import groups_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
-
 
 urlpatterns = patterns("auth.views.",
     url(r"^$", index),
@@ -44,21 +43,7 @@ urlpatterns += patterns("files.views.",
 urlpatterns += patterns("",
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico")),
     # url(r"^\(productivity\)/cpuspam/botspam$", TemplateView.as_view(template_name="cpuspam.html"))
+    url(r"^api/", include("intranet.apps.api.urls")),
+    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
 
-
-#####################
-#        API        #
-#####################
-
-router = routers.DefaultRouter()
-router.register(r"blocks", EighthBlockViewSet)
-router.register(r"activities", EighthActivityViewSet)
-
-"""Wire up the API using automatic URL routing and
-include login URLs for the browseable API.
-"""
-urlpatterns += patterns("",
-    url(r"^api/", include(router.urls)),
-    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework"))
-)

@@ -5,20 +5,36 @@ from rest_framework import serializers
 class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthBlock
-
-        fields = ("id", "date", "block", "locked", "activities")
+        fields = ("id",
+                  "url",
+                  "date",
+                  "block",
+                  "locked",
+                  "activities")
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthBlock
-
         # Omitting "activities" so people can't kill the database
-        fields = ("id", "date", "block", "locked")
+        fields = ("id",
+                  "url",
+                  "date",
+                  "block",
+                  "locked")
 
 class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthActivity
-        fields = ("id", "name", "description", "restricted", "presign", "one_a_day", "both_blocks", "sticky", "special")
+        fields = ("id",
+                  "url",
+                  "name",
+                  "description",
+                  "restricted",
+                  "presign",
+                  "one_a_day",
+                  "both_blocks",
+                  "sticky",
+                  "special")
 
 
 
@@ -32,18 +48,10 @@ class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
 #         - sponsors -- The EighthSponsors for the activity.
 
 #     """
-#     name = models.CharField(max_length=63)
-#     description = models.TextField()
 #     sponsors = models.ManyToManyField(EighthSponsor)
 #     rooms = models.ManyToManyField(EighthRoom)
 
-#     restricted = models.BooleanField(default=False)
-#     presign = models.BooleanField(default=False)
-#     one_a_day = models.BooleanField(default=False)
-#     both_blocks = models.BooleanField(default=False)
-#     sticky = models.BooleanField(default=False)
-#     special = models.BooleanField(default=False)
-
+#
 #     # Groups allowed
 
 #     # Single students allowed

@@ -6,8 +6,7 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
                     EighthScheduledActivity
-from rest_framework import viewsets
-from rest_framework.response import Response
+from rest_framework import generics
 from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivitySerializer
 
@@ -190,22 +189,28 @@ def eighth_signup_view(request, block_id=None):
     return render(request, "eighth/eighth.html", context)
 
 
-class EighthBlockViewSet(viewsets.ReadOnlyModelViewSet):
-    """API endpoint that allows viewing EighthBlock objects.
+class EighthBlockList(generics.ListAPIView):
+    """API endpoint that allows viewing a list of EighthBlock objects.
     """
     queryset = EighthBlock.objects.all()
-
-    def list(self, request):
-        serializer = EighthBlockListSerializer(self.queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        block = get_object_or_404(self.queryset, pk=pk)
-        serializer = EighthBlockDetailSerializer(block)
-        return Response(serializer.data)
+    serializer_class = EighthBlockListSerializer
 
 
-class EighthActivityViewSet(viewsets.ReadOnlyModelViewSet):
+class EighthBlockDetail(generics.RetrieveAPIView):
+    """API endpoint that allows viewing an EighthBlock object.
+    """
+    queryset = EighthBlock.objects.all()
+    serializer_class = EighthBlockDetailSerializer
+
+
+class EighthActivityList(generics.ListAPIView):
+    """API endpoint that allows viewing EighthActivity objects.
+    """
+    queryset = EighthActivity.objects.all()
+    serializer_class = EighthActivitySerializer
+
+
+class EighthActivityDetail(generics.ListAPIView):
     """API endpoint that allows viewing EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()
