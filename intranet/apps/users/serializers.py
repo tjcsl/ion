@@ -2,18 +2,12 @@ from rest_framework import serializers
 
 
 class UserListSerializer(serializers.Serializer):
+    full_name = serializers.CharField(max_length=63)
+    short_name = serializers.CharField(max_length=31)
+    # display_name = serializers.
+    ion_id = serializers.IntegerField()
+    ion_username = serializers.CharField(max_length=15)
+
     email = serializers.EmailField()
     content = serializers.CharField(max_length=200)
     created = serializers.DateTimeField()
-
-    def restore_object(self, attrs, instance=None):
-        """
-        Given a dictionary of deserialized field values, either update
-        an existing model instance, or create a new model instance.
-        """
-        if instance is not None:
-            instance.email = attrs.get('email', instance.email)
-            instance.content = attrs.get('content', instance.content)
-            instance.created = attrs.get('created', instance.created)
-            return instance
-        return Comment(**attrs)
