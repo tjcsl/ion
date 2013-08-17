@@ -1,6 +1,9 @@
+import logging
 from django.db import models
 from django.db.models import Count, Q
 from intranet.apps.users.models import User
+
+logger = logging.getLogger(__name__)
 
 
 class EighthSponsor(models.Model):
@@ -88,8 +91,7 @@ class EighthBlock(models.Model):
                               .order_by("date", "block") \
                               .filter(Q(date__gt=self.date) \
                                | (Q(date=self.date) \
-                               & Q(block__gt=self.block)))[quantity] \
-                              .id
+                               & Q(block__gt=self.block)))
         except IndexError:
             return None
 
@@ -99,8 +101,7 @@ class EighthBlock(models.Model):
                               .order_by("-date", "-block") \
                               .filter(Q(date__lt=self.date) \
                                | (Q(date=self.date) \
-                               & Q(block__lt=self.block)))[0] \
-                              .id
+                               & Q(block__lt=self.block)))
         except IndexError:
             return None
 

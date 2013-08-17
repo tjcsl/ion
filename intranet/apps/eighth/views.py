@@ -33,15 +33,15 @@ def eighth_signup_view(request, block_id=None):
     except EighthBlock.DoesNotExist:
         raise Http404
 
-    next = block.next_blocks(1)
-    prev = block.previous_blocks(1)
+    next = block.next_blocks(10)
+    prev = block.previous_blocks(10)
 
     block_info = {
         "date": block.date,
         "block_letter": block.block,
         "activities": {},
-        "next_block": next,
-        "previous_block": prev
+        "next_blocks": next,
+        "previous_blocks": prev
     }
     scheduled_activity_to_activity_map = {}
 
@@ -167,7 +167,6 @@ def eighth_signup_view(request, block_id=None):
         block_info["activities"][activity_id]["capacity"] += \
             rooming.eighthroom.capacity
 
-    logger.debug(block_info)
     context = {"user": request.user,
                "page": "eighth",
                "block_info": block_info
