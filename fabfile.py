@@ -11,9 +11,7 @@ REDIS_SANDBOX_CACHE_DB = 2
 
 
 def _choose_from_list(options, question):
-    """
-      Choose an item from a list.
-    """
+    """Choose an item from a list."""
     message = ""
     for index, value in enumerate(options):
         message += "[{}] {}\n".format(index, value)
@@ -30,16 +28,12 @@ def _choose_from_list(options, question):
 
 
 def clean_pyc():
-    """
-      Clean .pyc files in the current directory.
-    """
+    """Clean .pyc files in the current directory."""
     local("find . -name '*.pyc' -delete")
 
 
 def runserver(port=None, dbt="yes"):
-    """
-      Start the Django development testing server through manage.py runserver
-    """
+    """Clear compiled python files and start the Django dev server."""
     if not port:
         abort("You must specify a port.")
 
@@ -53,9 +47,7 @@ def runserver(port=None, dbt="yes"):
 
 
 def killserver(port):
-    """
-      Kill the currently running Django development server.
-    """
+    """Kill the currently running Django development server on a port."""
     try:
         int(port)
     except ValueError:
@@ -65,27 +57,21 @@ def killserver(port):
 
 
 def _require_root():
-    """
-      Check if running as root.
-    """
+    """Check if running as root."""
     with hide('running'):
         if local('whoami', capture=True) != "root":
             abort("You must be root.")
 
 
 def clean_production_pyc():
-    """
-      Clean .pyc files as root.
-    """
+    """Clean production .pyc files."""
     _require_root()
     with lcd(PRODUCTION_DOCUMENT_ROOT):
         clean_pyc()
 
 
 def restart_production_gunicorn():
-    """
-      Restart the production gunicorn instance as root.
-    """
+    """Restart the production gunicorn instance as root."""
     _require_root()
     with hide('running'):
         if local('whoami', capture=True) != "root":
@@ -97,9 +83,7 @@ def restart_production_gunicorn():
 
 
 def clear_sessions():
-    """
-      Clear all sessions in a sandbox or production.
-    """
+    """Clear all sessions for all sandboxes or for production."""
     if "VIRTUAL_ENV" in os.environ:
         ve = os.path.basename(os.environ['VIRTUAL_ENV'])
     else:
@@ -136,9 +120,7 @@ def clear_sessions():
 
 
 def clear_cache():
-    """
-      Clear the production or sandbox redis cache.
-    """
+    """Clear the production or sandbox redis cache."""
     n = _choose_from_list(["Production cache",
                            "Sandbox cache"],
                           "Which cache would you like to clear?")
@@ -149,21 +131,19 @@ def clear_cache():
 
 
 def contributors():
-    """
-      See a list of contributors through git.
-    """
+    """Print a list of contributors through git."""
     with hide('running'):
         local("git --no-pager shortlog -ns")
 
 
 def linecount():
-    """
-      Get a total line count of files with these types:
-        * Python
-        * HTML
-        * CSS
-        * Javascript
-        * reST documentation
+    """Get a total line count of files with these types:
+        - Python
+        - HTML
+        - CSS
+        - Javascript
+        - reST documentation
+
     """
     with hide('running'):
         extensions = [("py", "Python"),
@@ -191,10 +171,8 @@ def linecount():
 
 
 def load_fixtures():
-    """
-      Clear and repopulate either the production or sandbox
-      database with filler data as defined in fixtures.
-    """
+    """Clear and repopulate a database with data from fixtures."""
+
     n = _choose_from_list(["Production database (PostgreSQL)",
                            "Sandbox database (SQLite3)"],
                           "Which database would you like to clear and repopulate?")
@@ -219,4 +197,5 @@ def load_fixtures():
                  "intranet/apps/eighth/fixtures/s_activities.json",
                  "intranet/apps/eighth/fixtures/signups_0.json",
                  "intranet/apps/announcements/fixtures/announcements.json"]
-        for json_fi
+        for json_file in files:
+            local("./manage.py loaddata {}".format(json_file))

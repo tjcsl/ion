@@ -190,7 +190,7 @@ class EighthBlockDetail(generics.RetrieveAPIView):
 
 
 class EighthActivityList(generics.ListAPIView):
-    """API endpoint that allows viewing EighthActivity objects.
+    """API endpoint that allows viewing a list of EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()
     serializer_class = EighthActivitySerializer

@@ -8,7 +8,9 @@ logger = logging.getLogger(__name__)
 
 @register.filter
 def fuzzy_date(date):
-    """Formats a :class:`datetime.datetime` object relative to the current time"""
+    """Formats a :class:`datetime.datetime` object relative to the current time
+    """
+
     date = date.replace(tzinfo=None)
     diff = datetime.now() - date
 
