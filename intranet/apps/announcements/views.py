@@ -16,9 +16,9 @@ def announcements_view(request, action="add", id=None):
         elif action == "modify":
             announcement = Announcement.objects.get(id=id)
             form = AnnouncementForm(request.POST, instance=announcement)
-        if form.is_valid() and request.POST.get("author","") == request.user.full_name:
+        if form.is_valid() and request.POST.get("author", "") == request.user.full_name:
             form.save()
-	    success = True
+            success = True
     elif action == "add":
         form = AnnouncementForm()
     elif action == "modify":
@@ -26,5 +26,5 @@ def announcements_view(request, action="add", id=None):
         form = AnnouncementForm(instance=announcement)
     elif action == "delete":
         announcement = Announcement.objects.get(id=id).delete()
-	return render(request, "announcements/deleted.html", {"user": request.user})
+        return render(request, "announcements/deleted.html", {"user": request.user})
     return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": action, "id": id, "success": success})

@@ -16,10 +16,8 @@
     <table>
     {% csrf_token %}
     {% for field in form.visible_fields %}
-        <div class="fieldWrapper">
-	    {{ field.errors }}
-	    {{ field.label_tag }}: {{ field }}
-	</div>
+        <tr><td>{{ field.errors }}</td></tr>
+	<tr><td>{{ field.label_tag }}:</td><td>{{ field }}</td></tr>
     {% endfor %}
     <tr><td><input type="submit" /></td></tr>
     </table>
