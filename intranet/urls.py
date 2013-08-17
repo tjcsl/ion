@@ -49,5 +49,5 @@ urlpatterns += patterns("",
                         )
 
 urlpatterns += patterns("announcements.views.",
-                        url(r"^announcements/(?P<action>add|modify)(/(?P<id>\d+))?$", announcements_view),
+                        url(r"^announcements/(?P<action>add|modify|delete)(/(?P<id>\d+))?$", announcements_view),
                         )

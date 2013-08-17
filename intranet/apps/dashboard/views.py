@@ -17,3 +17,4 @@ def dashboard_view(request):
                "announcements": announcements
                }
     return render(request, "dashboard/dashboard.html", context)
+
