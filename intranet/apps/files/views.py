@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def files_view(request):
-	"""The main filecenter view."""
+    """The main filecenter view."""
     context = {"user": request.user,
                "page": "files"
                }
