@@ -9,6 +9,9 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard_view(request):
+	"""
+		Process and show the dashboard view.
+	"""
     announcements = Announcement.objects.order_by("-updated").all()[:10]
 
     context = {"user": request.user,
