@@ -21,7 +21,9 @@ def index(request, auth_form=None):
 
 
 class login_view(View):
+
     """Log in and redirect a user."""
+
     def post(self, request):
         """Validate and process the login POST request."""
         form = AuthenticateForm(data=request.POST)

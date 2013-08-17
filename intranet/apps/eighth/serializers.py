@@ -2,7 +2,9 @@ from rest_framework import serializers
 from .models import EighthBlock, EighthActivity
 # from intranet.apps.users.serializers import UserSerializer
 
+
 class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = EighthActivity
         fields = ("id",
@@ -16,7 +18,9 @@ class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
                   "sticky",
                   "special")
 
+
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = EighthBlock
         # Omit activities so people can't kill the database
@@ -26,8 +30,10 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
                   "block",
                   "locked")
 
+
 class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
     activities = EighthActivitySerializer()
+
     class Meta:
         model = EighthBlock
         fields = ("id",

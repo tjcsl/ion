@@ -18,7 +18,6 @@ def fuzzy_date(date):
     minutes = seconds // 60
     hours = minutes // 60
 
-
     if minutes <= 1:
         return "moments ago"
     elif minutes < 60:

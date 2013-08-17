@@ -86,9 +86,9 @@ class EighthBlock(models.Model):
         try:
             return EighthBlock.objects \
                               .order_by("date", "block") \
-                              .filter(Q(date__gt=self.date) \
-                               | (Q(date=self.date) \
-                               & Q(block__gt=self.block)))[quantity] \
+                              .filter(Q(date__gt=self.date)
+                                      | (Q(date=self.date)
+                                         & Q(block__gt=self.block)))[quantity] \
                               .id
         except IndexError:
             return None
@@ -97,9 +97,9 @@ class EighthBlock(models.Model):
         try:
             return EighthBlock.objects \
                               .order_by("-date", "-block") \
-                              .filter(Q(date__lt=self.date) \
-                               | (Q(date=self.date) \
-                               & Q(block__lt=self.block)))[0] \
+                              .filter(Q(date__lt=self.date)
+                                      | (Q(date=self.date)
+                                         & Q(block__lt=self.block)))[0] \
                               .id
         except IndexError:
             return None

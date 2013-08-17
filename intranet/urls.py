@@ -11,43 +11,43 @@ from .apps.files.views import files_view
 from .apps.announcements.views import announcements_view
 
 urlpatterns = patterns("auth.views.",
-    url(r"^$", index),
-    url(r"^login$", login_view.as_view()),
-    url(r"^logout$", logout_view),
-)
+                       url(r"^$", index),
+                       url(r"^login$", login_view.as_view()),
+                       url(r"^logout$", logout_view),
+                       )
 
 urlpatterns += patterns("users.views.",
-    url(r"^profile/(?P<user_id>\d+)?$", profile_view),
-    url(r"^picture/(?P<user_id>\d+)/(?P<year>freshman|sophomore|junior|senior)?$", picture_view)
-)
+                        url(r"^profile/(?P<user_id>\d+)?$", profile_view),
+                        url(r"^picture/(?P<user_id>\d+)/(?P<year>freshman|sophomore|junior|senior)?$", picture_view)
+                        )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth/(?P<block_id>\d+)?$", eighth_signup_view),
-)
+                        url(r"^eighth/(?P<block_id>\d+)?$", eighth_signup_view),
+                        )
 
 urlpatterns += patterns("events.views.",
-    url(r"^events$", events_view),
-)
+                        url(r"^events$", events_view),
+                        )
 
 urlpatterns += patterns("groups.views.",
                         url(r"^groups$", groups_view),
                         )
 
 urlpatterns += patterns("polls.views.",
-    url(r"^polls$", polls_view),
-)
+                        url(r"^polls$", polls_view),
+                        )
 
 urlpatterns += patterns("files.views.",
-    url(r"^files$", files_view),
-)
+                        url(r"^files$", files_view),
+                        )
 
 urlpatterns += patterns("",
-    url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico")),
-    # url(r"^\(productivity\)/cpuspam/botspam$", TemplateView.as_view(template_name="cpuspam.html"))
-    url(r"^api/", include("intranet.apps.api.urls")),
-    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-)
+                        url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico")),
+                        # url(r"^\(productivity\)/cpuspam/botspam$", TemplateView.as_view(template_name="cpuspam.html"))
+                        url(r"^api/", include("intranet.apps.api.urls")),
+                        url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+                        )
 
 urlpatterns += patterns("announcements.views.",
-    url(r"^announcements/(?P<action>add|modify)(/(?P<id>\d+))?$", announcements_view),
-)
+                        url(r"^announcements/(?P<action>add|modify)(/(?P<id>\d+))?$", announcements_view),
+                        )
