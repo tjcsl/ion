@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Q
 from intranet.apps.users.models import User
 
 
@@ -80,6 +81,28 @@ class EighthBlock(models.Model):
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity")
+
+    def next_blocks(self, quantity=1):
+        try:
+            return EighthBlock.objects \
+                              .order_by("date", "block") \
+                              .filter(Q(date__gt=self.date) \
+                               | (Q(date=self.date) \
+                               & Q(block__gt=self.block)))[quantity] \
+                              .id
+        except IndexError:
+            return None
+
+    def previous_blocks(self, quantity=1):
+        try:
+            return EighthBlock.objects \
+                              .order_by("-date", "-block") \
+                              .filter(Q(date__lt=self.date) \
+                               | (Q(date=self.date) \
+                               & Q(block__lt=self.block)))[0] \
+                              .id
+        except IndexError:
+            return None
 
     def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block)

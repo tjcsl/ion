@@ -1,7 +1,7 @@
 import logging
 import datetime
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
@@ -33,23 +33,9 @@ def eighth_signup_view(request, block_id=None):
     except EighthBlock.DoesNotExist:
         raise Http404
 
-    try:
-        next = EighthBlock.objects \
-                          .order_by("date", "block") \
-                          .filter(Q(date__gt=block.date) | (Q(date=block.date)
-                           & Q(block__gt=block.block)))[0] \
-                          .id
-    except IndexError:
-        next = None
+    next = block.next_blocks(1)
+    prev = block.previous_blocks(1)
 
-    try:
-        prev = EighthBlock.objects \
-                          .order_by("-date", "-block") \
-                          .filter(Q(date__lt=block.date) | (Q(date=block.date)
-                           & Q(block__lt=block.block)))[0] \
-                          .id
-    except IndexError:
-        prev = None
     block_info = {
         "date": block.date,
         "block_letter": block.block,
