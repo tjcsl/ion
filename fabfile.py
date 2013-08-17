@@ -219,4 +219,5 @@ def load_fixtures():
                  "intranet/apps/eighth/fixtures/s_activities.json",
                  "intranet/apps/eighth/fixtures/signups_0.json",
                  "intranet/apps/announcements/fixtures/announcements.json"]
-        for json_fi
+        for json_file in files:
+            local("./manage.py loaddata {}".format(json_file))
