@@ -82,6 +82,15 @@ class User(AbstractBaseUser):
 
     @classmethod
     def dn_from_id(cls, id):
+        """Get a dn, given an ID.
+
+        Args:
+            - id -- the ID of the user.
+
+        Returns:
+            - String if dn was found, otherwise None
+
+        """
         key = ":".join([str(id), 'dn'])
         cached = cache.get(key)
 
@@ -503,15 +512,39 @@ class User(AbstractBaseUser):
 
     @property
     def is_staff(self):
+        """Checks if a user is a tjhsstTeacher.
+
+        Returns:
+            Boolean
+
+        """
         return self.user_type == "tjhsstTeacher"
 
     def own_info(self):
+        """Checks if a user is viewing his or her own info.
+
+        For example, a user's own student directory page should have 
+        everything on it when viewed by the user.
+
+        Returns:
+            Boolean
+        
+        """
         try:
             return (str(threadlocals.current_user().id) == str(self.id))
         except AttributeError:
             return False
 
     def attribute_is_visible(self, ldap_perm_name):
+        """Checks if an attribute is visible to the public.
+
+        Args:
+            - ldap_perm_name -- the name of the permission to check.
+
+        Returns:
+            Boolean
+
+        """
         perms = self.permissions
 
         if self.own_info():

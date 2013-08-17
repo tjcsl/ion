@@ -13,6 +13,13 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def profile_view(request, user_id=None):
+    """Displays a view of a user's profile.
+
+    Args:
+        - user_id -- the ID of the user whose profile is being viewed.
+                     If not specified, show the user's own profile.
+
+    """
     if user_id is not None:
         profile_user = User.create_user(id=user_id)
         if profile_user is None:
@@ -26,6 +33,15 @@ def profile_view(request, user_id=None):
 
 @login_required
 def picture_view(request, user_id, year=None):
+    """Displays a view of a user's picture.
+
+    Args:
+        - user_id -- the ID of the user whose picture is being
+                      fetched.
+        - year -- the user's picture from this year is fetched.
+                  If not specified, use the preferred picture.
+
+    """
     user = User.create_user(id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/pig.jpg")
 
