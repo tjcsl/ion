@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 def index(request, auth_form=None):
+    """
+        Process and show the main login page and form.
+    """
     if request.user.is_authenticated():
         return dashboard_view(request)
     else:
@@ -20,8 +23,13 @@ def index(request, auth_form=None):
 
 
 class login_view(View):
-
+    """
+        The login view.
+    """
     def post(self, request):
+        """
+            Validate and process the login POST request.
+        """
         form = AuthenticateForm(data=request.POST)
 
         if form.is_valid():
@@ -36,10 +44,16 @@ class login_view(View):
             return index(request, auth_form=form)  # Modified to show errors
 
     def get(self, request):
+        """
+            Show the login page on a GET request.
+        """
         return index(request)
 
 
 def logout_view(request):
+    """
+        Clear the kerberos cache and log out.
+    """
     try:
         kerberos_cache = request.session["KRB5CCNAME"]
         os.system("/usr/bin/kdestroy -c " + kerberos_cache)

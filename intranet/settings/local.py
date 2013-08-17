@@ -41,8 +41,13 @@ for key in CACHE_AGE:
 
 
 class glob_list(list):
-
+    """
+        Finds pathnames matching a specified pattern.
+    """
     def __contains__(self, key):
+        """
+            Check if key contains a matching function.
+        """
         for elt in self:
             if fnmatch(key, elt):
                 return True
