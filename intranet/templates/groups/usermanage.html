@@ -1,0 +1,21 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - Modify User's Groups
+{% endblock %}
+
+{% block main %}
+<div class="groups primary-content">
+    {% if success %} <div class="message"> Successfully modified {{ user.full_name }}'s groups </div> {% endif %} 
+    <h2>
+        Modify {{ user.full_name }}(#{{ user.id }})'s groups
+    </h2>
+    <br />
+    <h2>{{ user.full_name }} is a member of: (click to remove user from group)</h2>
+    {% for group in groups %} <a href="/groups/user/{{ user.id }}/remove/{{ group.id }}">{{ group.name }}</a>- {{ group.description }}<br /> {% endfor %}
+    <h2>{{ user.full_name }} is not a member of: (click to add user to group)</h2>
+    {% for group in othergroups %} <a href="/groups/user/{{ user.id }}/add/{{ group.id }}">{{ group.name }}</a> - {{ group.description }}<br /> {% endfor %}
+</div>
+{% endblock %}

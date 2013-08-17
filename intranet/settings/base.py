@@ -187,6 +187,7 @@ INSTALLED_APPS = (
     "intranet.apps.auth",
     "intranet.apps.eighth",
     "intranet.apps.announcements",
+    "intranet.apps.groups",
     "intranet.middleware.environment"
 )
 

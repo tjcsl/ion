@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
-                    EighthScheduledActivity
+    EighthScheduledActivity
 from rest_framework import generics
 from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivitySerializer
@@ -175,6 +175,7 @@ def eighth_signup_view(request, block_id=None):
 
 
 class EighthBlockList(generics.ListAPIView):
+
     """API endpoint that allows viewing a list of EighthBlock objects.
     """
     queryset = EighthBlock.objects.all()
@@ -182,6 +183,7 @@ class EighthBlockList(generics.ListAPIView):
 
 
 class EighthBlockDetail(generics.RetrieveAPIView):
+
     """API endpoint that allows viewing an EighthBlock object.
     """
     queryset = EighthBlock.objects.all()
@@ -189,6 +191,7 @@ class EighthBlockDetail(generics.RetrieveAPIView):
 
 
 class EighthActivityList(generics.ListAPIView):
+
     """API endpoint that allows viewing a list of EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()
@@ -196,6 +199,7 @@ class EighthActivityList(generics.ListAPIView):
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
+
     """API endpoint that allows viewing EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()

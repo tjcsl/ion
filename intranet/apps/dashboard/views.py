@@ -15,5 +15,5 @@ def dashboard_view(request):
     context = {"user": request.user,
                "page": "dashboard",
                "announcements": announcements
-              }
+               }
     return render(request, "dashboard/dashboard.html", context)
