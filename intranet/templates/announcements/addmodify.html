@@ -1,0 +1,23 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {% if action == "modify" %} Modify {% elif action == "add" %} Add {% endif %} Announcement
+{% endblock %}
+
+{% block main %}
+{% if request.POST.name %} <div class="message primary-content"> Successfully {% if action == "modify" %} modified {% elif action == "add" %} added {% endif %} announcement with name {{ request.POST.name|escape }}. </div> {% endif %}
+<div class="announcements primary-content">
+    <h2>
+        {% if action == "modify" %} Modify {% elif action == "add" %} Add {% endif %} Announcement
+    </h2>
+    <form action="/announcements/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td><input type="submit" /></td></tr>
+    </table>
+    </form>
+</div>
+{% endblock %}

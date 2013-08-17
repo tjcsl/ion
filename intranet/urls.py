@@ -8,6 +8,7 @@ from .apps.events.views import events_view
 from .apps.groups.views import groups_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
+from .apps.announcements.views import announcements_view
 
 urlpatterns = patterns("auth.views.",
     url(r"^$", index),
@@ -47,3 +48,6 @@ urlpatterns += patterns("",
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
 
+urlpatterns += patterns("announcements.views.",
+    url(r"^announcements/(?P<action>add|modify)(/(?P<id>\d+))?$", announcements_view),
+)

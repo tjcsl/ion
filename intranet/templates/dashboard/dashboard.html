@@ -159,17 +159,17 @@
 
 <div class="announcements primary-content">
     <h2>
-        Announcements
+        Announcements - <a href="/announcements/add">Add Announcement</a>
     </h2>
 
     {% for announcement in announcements %}
         <div class="announcement">
             <h3>
-                {{ announcement.name }}
+                {{ announcement.name }} {# todo: add admin_news check against groups before letting users edit/delete #} <a class="announcement-icon icon-edit" href="/announcements/modify/{{ announcement.id }}"></a>
             </h3>
 
             <div class="announcement-metadata">
-                {{ announcement.author }} • {{ announcement.updated|fuzzy_date|capfirst }} • to all students
+                {{ announcement.author|escape }} • {{ announcement.updated|fuzzy_date|capfirst }} • to all students
             </div>
             <div class="announcement-content">
 	    	{{ announcement.content|safe }}
