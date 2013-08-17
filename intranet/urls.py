@@ -30,7 +30,7 @@ urlpatterns += patterns("events.views.",
                         )
 
 urlpatterns += patterns("groups.views.",
-                        url(r"^groups$", groups_view),
+                        url(r"^groups(/(?P<action>add|modify|delete|user))?(/(?P<id>\d+))?(/(?P<useraction>add|remove)/(?P<groupid>\d+))?$", groups_view),
                         )
 
 urlpatterns += patterns("polls.views.",

@@ -10,6 +10,7 @@ from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from intranet.middleware import threadlocals
+from intranet.apps.groups.models import Group
 
 logger = logging.getLogger(__name__)
 register = template.Library()
@@ -48,6 +49,9 @@ class User(AbstractBaseUser):
     """Override default Model Manager (objects) with
     custom UserManager."""
     objects = UserManager()
+
+    # Field to hold groups the user is in
+    usergroups = models.ManyToManyField(Group)
 
     @classmethod
     def create_user(cls, dn=None, id=None):
@@ -557,6 +561,21 @@ class User(AbstractBaseUser):
             if ldap_perm_name in perms["self"]:
                 public = public and perms["self"][ldap_perm_name]
             return public
+
+    @property
+    def groups(self):
+        return self.usergroups.all()
+
+    def is_authorized(self, permission):
+        groups = [i.name for i in self.groups]
+        if "admin_all" in groups:
+            return True
+        elif permission == "groups":
+            return "admin_groups" in groups
+        elif permission == "news":
+            return "admin_news" in groups
+        elif permission == "......":
+            pass
 
     def __getattr__(self, name):
         """Return simple attributes of User
