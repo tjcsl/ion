@@ -10,6 +10,7 @@ from .forms import GroupForm
 logger = logging.getLogger(__name__)
 
 
+@login_required
 @authorized_required("groups")
 def groups_view(request, action=None, id=None, useraction=None, groupid=None):
     success = False
