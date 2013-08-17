@@ -50,10 +50,10 @@
                 <i class="icon-chevron-right"></i>
             </button>
             <ul class="days-container">
-                {% for i in "zzs"|make_list %}
-                    <li class="day">
+                {% for i in "123456789123456788"|make_list %}
+                    <li class="day{% if i = 9 %} today{% endif %}">
                         <div class="block-title">
-                            Monday, January 23
+                            Monday, January {{ i }}
                         </div>
                         {% for b in "AB"|make_list %}
                             <div class="block">
@@ -64,7 +64,27 @@
                 {% endfor %}
             </ul>
         </div>
-        {{ block_info.next_blocks }}
 
+        <div class="middle">
+            <div class="block-title">
+                <h2>
+                    Monday, June 3
+                </h2>
+                <h3>
+                    B Block
+                </h3>
+            </div>
+
+            <div class="controls">
+                <button>Hide Restricted</button>
+                <button>Skip to Date</button>
+                <button>Manage Favorites</button>
+                <button>Manage Absences</button>
+            </div>
+        </div>
+
+        <div class="activity-picker">
+
+        </div>
     </div>
 {% endblock %}
