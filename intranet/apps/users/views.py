@@ -37,7 +37,7 @@ def picture_view(request, user_id, year=None):
 
     Args:
         - user_id -- the ID of the user whose picture is being
-                      fetched.
+                     fetched.
         - year -- the user's picture from this year is fetched.
                   If not specified, use the preferred picture.
 

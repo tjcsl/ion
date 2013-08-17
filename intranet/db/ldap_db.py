@@ -134,18 +134,14 @@ class LDAPResult(object):
         self.result = result
 
     def first_result(self):
-        """
-            Get the first result.
-        """
+        """Fetch the first LDAP object in the response."""
         if len(self.result) > 0:
             return self.result[0][1]
         else:
             return []
 
     def results_array(self):
-        """
-            Return the array of results.
-        """
+        """Return the full array of results."""
         return self.result
 
 

@@ -1,7 +1,5 @@
 def setup(app):
-	"""
-		Setup for django docs.
-	"""
+	"""Setup for djangodocs."""
     app.add_crossref_type(
         directivename="setting",
         rolename="setting",

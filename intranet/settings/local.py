@@ -6,7 +6,7 @@ TEMPLATE_DEBUG = DEBUG
 
 
 class InvalidString(str):
-
+    """An error for undefined context variables in templates."""
     def __mod__(self, other):
         from django.template.base import TemplateSyntaxError
         raise TemplateSyntaxError(
@@ -41,13 +41,9 @@ for key in CACHE_AGE:
 
 
 class glob_list(list):
-    """
-        Finds pathnames matching a specified pattern.
-    """
+    """A list of glob-style strings."""
     def __contains__(self, key):
-        """
-            Check if key contains a matching function.
-        """
+        """Check if a string matches a glob in the list."""
         for elt in self:
             if fnmatch(key, elt):
                 return True

@@ -523,12 +523,13 @@ class User(AbstractBaseUser):
     def own_info(self):
         """Checks if a user is viewing his or her own info.
 
-        For example, a user's own student directory page should have 
-        everything on it when viewed by the user.
+        Used primarily to load private personal information from the
+        cache. (A student should see all info on his or her own profile
+        regardless of how the permissions are set.)
 
         Returns:
             Boolean
-        
+
         """
         try:
             return (str(threadlocals.current_user().id) == str(self.id))
