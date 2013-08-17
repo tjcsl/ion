@@ -314,10 +314,16 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext"))
 
 
 def skip(app, what, name, obj, skip, options):
+    """
+        Files to skip.
+    """
     if name in ("__weakref__", "__dict__", "base_fields", "media"):
         return True
     return skip
 
 
 def setup(app):
+    """
+        Setup autodoc.
+    """
     app.connect('autodoc-skip-member', skip)
