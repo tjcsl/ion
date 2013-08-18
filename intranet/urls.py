@@ -40,7 +40,7 @@ urlpatterns += patterns("polls.views.",
                         )
 
 urlpatterns += patterns("files.views.",
-                        url(r"^files$/?", files_view),
+                        url(r"^files/?$", files_view),
                         )
 
 urlpatterns += patterns("",
