@@ -12,6 +12,13 @@
 
 {% block main %}
     <div class="primary-content">
-        Huzzah! Groups!
+        You are in the following groups:
+        <ul>
+            {% for group in user.groups.all %}
+                <li>{{ group }}</li>
+            {% empty %}
+                (no groups)
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}

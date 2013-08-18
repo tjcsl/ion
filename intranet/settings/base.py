@@ -79,7 +79,7 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
 )
 
-AUTH_USER_MODEL = "auth.User"
+AUTH_USER_MODEL = "users.User"
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -187,7 +187,7 @@ INSTALLED_APPS = (
     "intranet.apps.auth",
     "intranet.apps.eighth",
     "intranet.apps.announcements",
-    "intranet.apps.groups",
+    # "intranet.apps.groups",
     "intranet.middleware.environment"
 )
 
