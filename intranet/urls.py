@@ -12,45 +12,45 @@ from .apps.announcements.views import announcements_view
 
 
 urlpatterns = patterns("",
-    url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico")),
+    url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
     # url(r"^\(productivity\)/cpuspam/botspam$", TemplateView.as_view(template_name="cpuspam.html"))
-    url(r"^api/", include("intranet.apps.api.urls")),
+    url(r"^api/", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
 
 urlpatterns += patterns("auth.views.",
-    url(r"^$", index),
-    url(r"^login$", login_view.as_view()),
-    url(r"^logout$", logout_view),
+    url(r"^$", index, name="index"),
+    url(r"^login$", login_view.as_view(), name="login"),
+    url(r"^logout$", logout_view, name="logout"),
 )
 
 urlpatterns += patterns("announcements.views.",
-    url(r"^announcements(?:/(?P<action>add))?$", announcements_view),
-    url(r"^announcements/(?P<action>modify|delete)/(?P<id>\d+)$", announcements_view),
+    url(r"^announcements(?:/(?P<action>add))?$", announcements_view, name="add_announcement"),
+    url(r"^announcements/(?P<action>modify|delete)/(?P<id>\d+)$", announcements_view, name="modify_delete_announcement"),
 )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth(?:/(?P<block_id>\d+))?$$", eighth_signup_view),
+    url(r"^eighth(?:/(?P<block_id>\d+))?$$", eighth_signup_view, name="eighth"),
 )
 
 urlpatterns += patterns("events.views.",
-    url(r"^events$", events_view),
+    url(r"^events$", events_view, name="events"),
 )
 
 urlpatterns += patterns("files.views.",
-    url(r"^files$", files_view),
+    url(r"^files$", files_view, name="files"),
 )
 
 urlpatterns += patterns("groups.views.",
-    url(r"^groups$", groups_view),
-	url(r"^groups/add$", add_group_view),
+    url(r"^groups$", groups_view, name="groups"),
+	url(r"^groups/add$", add_group_view, name="add_groups"),
 )
 
 urlpatterns += patterns("polls.views.",
-    url(r"^polls$", polls_view),
+    url(r"^polls$", polls_view, name="polls"),
 )
 
 urlpatterns += patterns("users.views.",
-    url(r"^profile(?:/(?P<user_id>\d+))?$", profile_view),
-    url(r"^picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", picture_view)
+    url(r"^profile(?:/(?P<user_id>\d+))?$", profile_view, name="user_profile"),
+    url(r"^picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", picture_view, name="profile_picture")
 )
