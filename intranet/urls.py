@@ -5,40 +5,42 @@ from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
 from .apps.eighth.views import eighth_signup_view
 from .apps.events.views import events_view
-from .apps.groups.views import groups_view
+from .apps.groups.views import groups_view, add_group_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
 from .apps.announcements.views import announcements_view
 
 urlpatterns = patterns("auth.views.",
-                       url(r"^$", index),
-                       url(r"^login$", login_view.as_view()),
-                       url(r"^logout$", logout_view),
+                       url(r"/?^$", index),
+                       url(r"^login/?$", login_view.as_view()),
+                       url(r"^logout/?$", logout_view),
                        )
 
 urlpatterns += patterns("users.views.",
-                        url(r"^profile/(?P<user_id>\d+)?$", profile_view),
-                        url(r"^picture/(?P<user_id>\d+)/(?P<year>freshman|sophomore|junior|senior)?$", picture_view)
+                        url(r"^profile/(?P<user_id>\d+)?/?$", profile_view),
+                        url(r"^picture/(?P<user_id>\d+)/(?P<year>freshman|sophomore|junior|senior)?/?$", picture_view)
                         )
 
 urlpatterns += patterns("eighth.views.",
-                        url(r"^eighth/(?P<block_id>\d+)?$", eighth_signup_view),
+                        url(r"^eighth/(?P<block_id>\d+)?/?$", eighth_signup_view),
                         )
 
 urlpatterns += patterns("events.views.",
-                        url(r"^events$", events_view),
+                        url(r"^events/?$", events_view),
                         )
 
 urlpatterns += patterns("groups.views.",
-                        url(r"^groups(/(?P<action>add|modify|delete|user))?(/(?P<id>\d+))?(/(?P<useraction>add|remove)/(?P<groupid>\d+))?$", groups_view),
+                        url(r"^groups/?$", groups_view),
+			url(r"^groups/add/?$", add_group_view),
+			
                         )
 
 urlpatterns += patterns("polls.views.",
-                        url(r"^polls$", polls_view),
+                        url(r"^polls/?$", polls_view),
                         )
 
 urlpatterns += patterns("files.views.",
-                        url(r"^files$", files_view),
+                        url(r"^files$/?", files_view),
                         )
 
 urlpatterns += patterns("",
@@ -49,5 +51,5 @@ urlpatterns += patterns("",
                         )
 
 urlpatterns += patterns("announcements.views.",
-                        url(r"^announcements/(?P<action>add|modify|delete)(/(?P<id>\d+))?$", announcements_view),
+                        url(r"^announcements/(?P<action>add|modify|delete)(/(?P<id>\d+))?/?$", announcements_view),
                         )

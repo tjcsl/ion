@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.http import HttpResponse
 from intranet.apps.users.models import User
+from .forms import GroupForm
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,24 @@ def groups_view(request):
     return render(request, "groups/groups.html", context)
 
 # Create individual views for each form action
+@login_required
+def add_group_view(request):
+    success = False
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+	    form.save()
+	    success = True
+    else:
+        form = GroupForm()
 
+    context = {"user": request.user,
+               "page": "groups",
+	       "form": form,
+	       "action": "add",
+	       "success": success
+	       }
+    return render(request, "groups/addmodify.html", context)	    
 
 # success = False
 # if request.method == 'POST':
