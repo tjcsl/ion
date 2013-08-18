@@ -8,7 +8,7 @@ DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 
-DEBUG = os.get_env("DEBUG", "FALSE") == "TRUE"
+DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 TEMPLATE_DEBUG = DEBUG
 
 
