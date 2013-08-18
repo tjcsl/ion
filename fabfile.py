@@ -1,7 +1,6 @@
 from __future__ import with_statement
 from fabric.api import *
 from fabric.contrib.console import confirm
-# from fabric.operations.prompt
 import os
 
 PRODUCTION_DOCUMENT_ROOT = "/usr/local/www/intranet3"
@@ -70,29 +69,30 @@ def clean_production_pyc():
         clean_pyc()
 
 
-def restart_production_gunicorn():
+def restart_production_gunicorn(skip=False):
     """Restart the production gunicorn instance as root."""
     _require_root()
-    with hide('running'):
-        if local('whoami', capture=True) != "root":
-            abort("You must be root.")
-    if confirm("Are you sure you want to restart the production?"
-               "Gunicorn instance?"):
 
-        local("supervisorctl reload")
+    if skip or confirm("Are you sure you want to restart the production "
+                       "Gunicorn instance?"):
+        clean_production_pyc()
+        local("supervisorctl restart ion")
 
 
-def clear_sessions():
+def clear_sessions(input=None):
     """Clear all sessions for all sandboxes or for production."""
     if "VIRTUAL_ENV" in os.environ:
-        ve = os.path.basename(os.environ['VIRTUAL_ENV'])
+        ve = os.path.basename(os.environ["VIRTUAL_ENV"])
     else:
         ve = ""
 
-    ve = prompt("Enter the name of the "
-                "sandbox whose sessions you would like to delete, or "
-                "\"ion\" to clear production sessions:",
-                default=ve)
+    if input is not None:
+        ve = input
+    else:
+        ve = prompt("Enter the name of the "
+                    "sandbox whose sessions you would like to delete, or "
+                    "\"ion\" to clear production sessions:",
+                    default=ve)
 
     c = "redis-cli -n {0} KEYS {1}:session:* | sed 's/\"^.*\")//g'"
     keys_command = c.format(REDIS_SESSION_DB, ve)
@@ -119,11 +119,15 @@ def clear_sessions():
         puts("Destroyed {} session{}.".format(count, plural))
 
 
-def clear_cache():
+def clear_cache(input=None):
     """Clear the production or sandbox redis cache."""
-    n = _choose_from_list(["Production cache",
-                           "Sandbox cache"],
-                          "Which cache would you like to clear?")
+    if input is not None:
+        n = input
+    else:
+        n = _choose_from_list(["Production cache",
+                               "Sandbox cache"],
+                               "Which cache would you like to clear?")
+
     if n == 0:
         local("redis-cli -n {} FLUSHDB".format(REDIS_PRODUCTION_CACHE_DB))
     else:
@@ -175,7 +179,7 @@ def load_fixtures():
 
     n = _choose_from_list(["Production database (PostgreSQL)",
                            "Sandbox database (SQLite3)"],
-                          "Which database would you like to clear and repopulate?")
+                           "Which database would you like to clear and repopulate?")
     if n == 0:
         if not confirm("Are you sure you want to clear the production database?"):
             return 0
@@ -199,3 +203,28 @@ def load_fixtures():
                  "intranet/apps/announcements/fixtures/announcements.json"]
         for json_file in files:
             local("./manage.py loaddata {}".format(json_file))
+
+def deploy():
+    _require_root()
+    obnoxious_mode = True
+
+    if obnoxious_mode:
+        # TODO: ensure the build is green
+        if not confirm("Are you sure you want to deploy?"):
+            abort()
+        if not confirm("This will kill all active sessions. Are you still sure?"):
+            abort()
+        if not confirm("Has the database been migrated?"):
+            abort()
+        if not confirm("Are you absolutely sure you want to deploy? This is your last chance to stop the deployment"):
+            abort()
+        if not confirm("JK this is actually your last chance. Are you sure?"):
+            abort()
+
+    with lcd(PRODUCTION_DOCUMENT_ROOT):
+        local("git pull")
+        clear_sessions("ion")
+        clear_cache(0)
+        restart_production_gunicorn(True)
+
+    puts("Deploy complete!")
