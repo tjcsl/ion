@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from intranet.apps.users.models import User
-from intranet.decorators import authorized_required
 from .models import Group
 from .forms import GroupForm
 
@@ -11,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
-@authorized_required("groups")
 def groups_view(request, action=None, id=None, useraction=None, groupid=None):
     success = False
     if request.method == 'POST':
