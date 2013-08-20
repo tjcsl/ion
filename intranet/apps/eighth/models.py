@@ -86,24 +86,18 @@ class EighthBlock(models.Model):
                                         through="EighthScheduledActivity")
 
     def next_blocks(self, quantity=1):
-        try:
-            return EighthBlock.objects \
-                              .order_by("date", "block") \
-                              .filter(Q(date__gt=self.date) \
-                               | (Q(date=self.date) \
-                               & Q(block__gt=self.block)))
-        except IndexError:
-            return None
+        return EighthBlock.objects \
+                          .order_by("date", "block") \
+                          .filter(Q(date__gt=self.date) \
+                           | (Q(date=self.date) \
+                           & Q(block__gt=self.block)))[:quantity]
 
     def previous_blocks(self, quantity=1):
-        try:
-            return EighthBlock.objects \
-                              .order_by("-date", "-block") \
-                              .filter(Q(date__lt=self.date) \
-                               | (Q(date=self.date) \
-                               & Q(block__lt=self.block)))
-        except IndexError:
-            return None
+        return reversed(EighthBlock.objects \
+                                   .order_by("-date", "-block") \
+                                   .filter(Q(date__lt=self.date) \
+                                    | (Q(date=self.date) \
+                                    & Q(block__lt=self.block)))[:quantity])
 
     def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block)

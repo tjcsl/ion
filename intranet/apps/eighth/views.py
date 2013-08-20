@@ -1,3 +1,4 @@
+from itertools import chain
 import logging
 import datetime
 from django.contrib.auth.decorators import login_required
@@ -18,7 +19,7 @@ def eighth_signup_view(request, block_id=None):
     if block_id is None:
         now = datetime.datetime.now()
         d = datetime.timedelta(days=-200)
-        now += d
+        # now += d
         # Show same day if it's before 17:00
         if now.hour < 17:
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -38,13 +39,37 @@ def eighth_signup_view(request, block_id=None):
     next = block.next_blocks(10)
     prev = block.previous_blocks(10)
 
+    surrounding_blocks = list(chain(prev, [block], next))
+
+    schedule = []
+
+    for b in surrounding_blocks:
+        if len(schedule) and schedule[-1]["date"] == b.date:
+            info = {
+                "id": b.id,
+                "block_letter": b.block
+            }
+            schedule[-1]["blocks"].append(info)
+        else:
+            day = {}
+            day["date"] = b.date
+            day["blocks"] = []
+            info = {
+                "id": b.id,
+                "block_letter": b.block
+            }
+            day["blocks"].append(info)
+            schedule.append(day)
+
+    logger.debug(schedule)
+
     block_info = {
         "date": block.date,
         "block_letter": block.block,
         "activities": {},
-        "next_blocks": next,
-        "previous_blocks": prev
+        "schedule": schedule
     }
+
     scheduled_activity_to_activity_map = {}
 
     scheduled_activities = block.eighthscheduledactivity_set \

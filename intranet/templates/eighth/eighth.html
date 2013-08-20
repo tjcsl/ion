@@ -96,16 +96,18 @@
                 <i class="icon-chevron-right"></i>
             </button>
             <ul class="days-container">
-                {% for i in "123456789123456788"|make_list %}
-                    <li class="day{% if i = 9 %} today{% endif %}">
+                {% for day in block_info.schedule %}
+                    <li class="day{% if day.date = block_info.date %} today{% endif %}">
                         <div class="block-title">
-                            Monday, January {{ i }}
+                            {{ day.date|date:"M d, Y" }}
                         </div>
-                        {% for b in "AB"|make_list %}
-                            <div class="block">
-                                {{ b }}
-                            </div>
-                        {% endfor %}
+                            {% for b in day.blocks %}
+                                <div class="block">
+                                    <a href="{% url 'eighth' b.id %}">
+                                        {{ b.block_letter }}
+                                    </a>
+                                </div>
+                            {% endfor %}
                     </li>
                 {% endfor %}
             </ul>
@@ -114,10 +116,10 @@
         <div class="middle">
             <div class="block-title">
                 <h2>
-                    Monday, June 3
+                    {{ block_info.date|date:"M d, Y" }}
                 </h2>
                 <h4>
-                    B Block
+                    {{ block_info.block_letter }} Block
                 </h4>
             </div>
 
