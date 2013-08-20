@@ -145,9 +145,9 @@ def eighth_signup_view(request, block_id=None):
                                .through \
                                .objects \
                                .filter(eighthscheduledactivity_id__in=
-                                       scheduled_activity_ids). \
-        select_related("eighthroom",
-                       "eighthscheduledactivity")
+                                       scheduled_activity_ids) \
+                               .select_related("eighthroom",
+                                               "eighthscheduledactivity")
 
     for rooming in roomings:
         activity_id = rooming.eighthactivity.id
