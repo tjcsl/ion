@@ -14,9 +14,9 @@
     {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function() {
-            var container_width = $(".day-picker").width();
-            var blocks_width = $(".days-container").width();
-            $(".days-container").css("margin-left", (container_width - blocks_width) / 2);
+            var containerWidth = $(".day-picker").width();
+            var blocksWidth = $(".days-container").width();
+            $(".days-container").css("margin-left", (containerWidth - blocksWidth) / 2);
 
 
             $(".day-nav").click(function(e) {
@@ -36,6 +36,46 @@
             });
 
         });
+
+
+        function stickyHeaders(headers) {
+            this.load = function() {
+                headers.each(function() {
+                    var id = Math.floor(Math.random()*99999);
+                    var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
+                    stuckCopy.addClass("hidden stuck");
+                    $(this).attr("id", id);
+                    stuckCopy.attr("id", id + "-stuck");
+
+                    $.data(this, "pos", $(this).position().top);
+                    console.log($.data(this));
+                });
+            }
+
+            this.scroll = function() {
+                headers.each(function(i) {
+                    var thisHeader = $(this),
+                        nextHeader = headers.eq(i + 1),
+                        prevHeader = headers.eq(i - 1);
+
+
+                });
+
+            }
+
+
+        }
+
+        $(document).ready(function() {
+            var sh = new stickyHeaders($(".sticky-header"));
+            sh.load();
+
+            $(".activities").on("scroll", function() {
+                sh.scroll();
+
+            });
+        });
+
     </script>
 {% endblock %}
 
@@ -70,9 +110,9 @@
                 <h2>
                     Monday, June 3
                 </h2>
-                <h3>
+                <h4>
                     B Block
-                </h3>
+                </h4>
             </div>
 
             <div class="controls">
@@ -84,7 +124,31 @@
         </div>
 
         <div class="activity-picker">
-
+            <div class="activities">
+                <h5 class="sticky-header">All</h5>
+                <ul>
+                    {% for id, block in block_info.activities.items %}
+                        <li>{{ block.name }}</li>
+                    {% endfor %}
+                </ul>
+                <h5 class="sticky-header">Favorites</h5>
+                <ul>
+                    {% for id, block in block_info.activities.items %}
+                        <li>{{ block.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="activity-detail">
+                <h3>
+                    Basket Weaving
+                </h3>
+                <dl>
+                    <dt>Room:</dt><dd>73</dd>
+                    <dt>Sponsor:</dt><dd>Chuck Norris</dd>
+                    <dt>Capacity:</dt><dd>42</dd>
+                    <dt class="description">Description:</dt><dd class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, possimus tenetur inventore maiores impedit ullam nam earum quos eveniet quidem. Quisquam, consequatur doloremque commodi debitis distinctio. Officia, ab odit error!</dd>
+                </dl>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 def eighth_signup_view(request, block_id=None):
     if block_id is None:
         now = datetime.datetime.now()
+        d = datetime.timedelta(days=-200)
+        now += d
         # Show same day if it's before 17:00
         if now.hour < 17:
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
