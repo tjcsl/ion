@@ -5,7 +5,7 @@ from datetime import datetime
 from django.db import models
 from django import template
 from django.core.cache import cache
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 register = template.Library()
 
 
-class UserManager(models.Manager):
+class UserManager(UserManager):
 
     """User model Manager for table-level LDAP queries.
 
@@ -24,7 +24,8 @@ class UserManager(models.Manager):
     default User model manager.
 
     """
-    pass
+    def foo():
+        pass
 
 
 class User(AbstractBaseUser, PermissionsMixin):
