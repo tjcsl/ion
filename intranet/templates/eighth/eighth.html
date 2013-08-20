@@ -40,10 +40,13 @@
 
         function stickyHeaders(headers) {
             this.load = function() {
-                headers.each(function() {
+                headers.each(function(i) {
                     var id = Math.floor(Math.random()*99999);
                     var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
                     stuckCopy.addClass("hidden stuck");
+                    if (i == 0) {
+                        stuckCopy.removeClass("hidden");
+                    }
                     stuckCopy.removeClass("sticky-header");
                     $(this).attr("id", id);
                     stuckCopy.attr("id", id + "-stuck");
@@ -53,17 +56,12 @@
             this.scroll = function() {
                 headers.each(function(i) {
                     var thisHeader = $(this),
-                        nextHeader = headers.eq(i + 1),
                         prevHeader = headers.eq(i - 1);
                     var top = thisHeader.position().top;
-                    if (i==1) {
-                        console.log(top);
-                    }
-                    if (top < 0) {
+
+                    if (top <= 0) {
                         $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
                         $("#" + prevHeader.attr("id") + "-stuck").addClass("hidden");
-                    } else if (top == 0) {
-                        $("#" + thisHeader.attr("id") + "-stuck").addClass("hidden");
                     } else if (top < 31) {
                         $("#" + prevHeader.attr("id") + "-stuck").css("top", top);
                     } else {
