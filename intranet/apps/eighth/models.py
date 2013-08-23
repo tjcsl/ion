@@ -73,14 +73,14 @@ class EighthBlock(models.Model):
 
     Attributes:
         - date -- The date of the block.
-        - block -- The block letter (e.g. A, B).
+        - block_letter -- The block letter (e.g. A, B).
         - locked -- Whether signups are closed.
         - activities -- List of \
                         :class:`EighthScheduledActivity` for the block.
 
     """
     date = models.DateField(null=False)
-    block = models.CharField(max_length=1)
+    block_letter = models.CharField(max_length=1)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity")
