@@ -26,7 +26,8 @@ urlpatterns += patterns("auth.views.",
 
 urlpatterns += patterns("announcements.views.",
     url(r"^announcements(?:/(?P<action>add))?$", announcements_view, name="add_announcement"),
-    url(r"^announcements/(?P<action>modify|delete)/(?P<id>\d+)$", announcements_view, name="modify_delete_announcement"),
+    url(r"^announcements/(?P<action>modify)/(?P<id>\d+)$", announcements_view, name="modify_announcement"),
+    url(r"^announcements/(?P<action>delete)/$", announcements_view, name="delete_announcement"),
 )
 
 urlpatterns += patterns("eighth.views.",
