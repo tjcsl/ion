@@ -1,6 +1,5 @@
 /* common JS */
 
-
 /* common functions */
 
 function csrfSafeMethod(method) {
@@ -9,7 +8,7 @@ function csrfSafeMethod(method) {
 }
 
 $.ajaxSetup({
-    crossDomain: false, // obviates need for sameOrigin test
+    crossDomain: false,
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type)) {
             xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
@@ -18,11 +17,10 @@ $.ajaxSetup({
 });
 
 /*
-	Perform a jQuery POST request and
-	include the Django CSRF token.
-	Uses the same syntax as $.post
+	Perform a jQuery POST request using
+	the same syntax as $.post
 */
-post = function(url, params, callback) {
+function post(url, params, callback) {
 	console.log(params);
 	$.post(url, params)
 	  .fail(function(d) {

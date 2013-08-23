@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def announcements_view(request, action="add", id=None):
     success = False
-    if request.method == 'POST':
+    if request.method == "POST":
         if action == "add":
             form = AnnouncementForm(request.POST)
         elif action == "modify":
@@ -33,5 +33,5 @@ def announcements_view(request, action="add", id=None):
         except AttributeError:
             post_id = None
         announcement = Announcement.objects.get(id=post_id).delete()
-        return render(request, "common/success.html")
+        return render(request, "success.html")
     return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": action, "id": id, "success": success})
