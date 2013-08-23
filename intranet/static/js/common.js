@@ -3,30 +3,34 @@
 
 /* common functions */
 
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+    crossDomain: false, // obviates need for sameOrigin test
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+        }
+    }
+});
+
 /*
-	Perform a jQuery POST request and 
+	Perform a jQuery POST request and
 	include the Django CSRF token.
 	Uses the same syntax as $.post
 */
 post = function(url, params, callback) {
-	params['csrfmiddlewaretoken'] = get_csrf();
 	console.log(params);
 	$.post(url, params)
 	  .fail(function(d) {
-		console.error('POST FAIL');
+		console.error("POST FAIL");
 		console.log(d);
-		alert('An error occurred sending your request to the server. Try again in a few moments.');
+		alert("An error occurred sending your request to the server. Try again in a few moments.");
 	}).done(callback);
 };
-
-/*
-	Get the Django CSRF token. It is saved
-	as an attribute on the body tag so it
-	can be accessed by Javascript.
-*/
-get_csrf = function() {
-	return $('body').attr('data-csrf');
-}
 
 
 /* KC */
