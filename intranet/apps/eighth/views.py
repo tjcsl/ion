@@ -61,7 +61,6 @@ def eighth_signup_view(request, block_id=None):
             day["blocks"].append(info)
             schedule.append(day)
 
-    logger.debug(schedule)
 
     block_info = {
         "date": block.date,

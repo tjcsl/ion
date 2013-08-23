@@ -13,6 +13,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
+        // Center current day in day picker
         $(document).ready(function() {
             var containerWidth = $(".day-picker").width();
             var blocksWidth = $(".days-container").width();
@@ -34,18 +35,18 @@
                     easing: "swing"
                 });
             });
-
         });
 
-
+        // Sticky headers for activity picker
         function stickyHeaders(headers) {
             this.load = function() {
                 headers.each(function(i) {
-                    var id = Math.floor(Math.random()*99999);
+                    var id = Math.floor((i + 1) * Math.random() * 99999);
                     var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
-                    stuckCopy.addClass("hidden stuck");
                     if (i == 0) {
-                        stuckCopy.removeClass("hidden");
+                        stuckCopy.addClass("stuck");
+                    } else {
+                        stuckCopy.addClass("hidden stuck");
                     }
                     stuckCopy.removeClass("sticky-header");
                     $(this).attr("id", id);
@@ -81,7 +82,6 @@
                 sh.scroll();
             });
         });
-
     </script>
 {% endblock %}
 
