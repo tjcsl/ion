@@ -11,6 +11,7 @@ $(document).ready(function() {
     $(".eighth-widget").data("max-height", max_height);
 
     $(".block-header").bind( "touchstart", function(e){e.click()} );
+
     $(".block-header").click(function() {
         var time = 200;
         var opened = $(".eighth-block.open .eighth-activities");
