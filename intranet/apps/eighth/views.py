@@ -7,7 +7,9 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
     EighthScheduledActivity
-from rest_framework import generics
+from rest_framework import generics, views
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivitySerializer
 
@@ -208,12 +210,19 @@ class EighthBlockList(generics.ListAPIView):
     serializer_class = EighthBlockListSerializer
 
 
-class EighthBlockDetail(generics.RetrieveAPIView):
-
+class EighthBlockDetail(views.APIView):
     """API endpoint that allows viewing an EighthBlock object.
     """
-    queryset = EighthBlock.objects.all()
-    serializer_class = EighthBlockDetailSerializer
+    def get_object(self, pk):
+        try:
+            return EighthBlock.objects.get(pk=pk)
+        except EighthBlock.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        block = self.get_object(pk)
+        serializer = EighthBlockDetailSerializer(block)
+        return Response(serializer.data)
 
 
 class EighthActivityList(generics.ListAPIView):

@@ -7,6 +7,6 @@ from rest_framework.reverse import reverse
 @api_view(("GET",))
 def api_root(request, format=None):
     return Response({
-        "activities": reverse("eighthactivity-list", request=request, format=format),
+        # "activities": reverse("eighthactivity-list", request=request, format=format),
         "blocks": reverse("eighthblock-list", request=request, format=format),
     })

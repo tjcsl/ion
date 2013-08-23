@@ -31,17 +31,17 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
                   "locked")
 
 
-class EighthBlockDetailSerializer(serializers.HyperlinkedModelSerializer):
-    activities = EighthActivitySerializer()
+class FoobarField(serializers.Field):
+    def to_native(self, obj):
+        return "foobar"
 
+class EighthBlockDetailSerializer(serializers.Serializer):
+    # activities = EighthActivitySerializer()
+    foo = FoobarField(source='*')
     class Meta:
-        model = EighthBlock
-        fields = ("id",
-                  "url",
-                  "date",
-                  "block",
-                  "locked",
-                  "activities")
+        # model = EighthBlock
+        fields = ("foo",)
+
 
 # class EighthSponsorSerializer(models.Model):
 #   pass
