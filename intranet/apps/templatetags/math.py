@@ -22,6 +22,13 @@ def round_to_places(number, precision=0):
 
 
 @register.filter
+def to_int(num):
+    """Converts a number to an integer."""
+
+    return int(num)
+
+
+@register.filter
 def percent(dividend, divisor):
     """Return the quotient of the arguments as an integer percentage.
 
@@ -32,3 +39,10 @@ def percent(dividend, divisor):
         return int(100.0 * dividend / divisor)
     except ZeroDivisionError:
         return 0
+
+
+@register.filter
+def divide(dividend, divisor):
+    """Returns the quotient of the arguments as a float."""
+
+    return 1.0 * dividend / divisor
