@@ -1,5 +1,6 @@
 from django.db.models import Count
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 from .models import EighthBlock, EighthActivity, EighthSignup, EighthSponsor, EighthScheduledActivity
 from intranet.apps.users.models import User
 # from intranet.apps.users.serializers import UserSerializer
@@ -33,12 +34,10 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
                   "locked")
 
 
-class ActivitiesListField(serializers.Field):
-
-    def to_native(self, obj):
-        return fetch_activities_list_with_metadata(obj)
-
 class EighthBlockDetailSerializer(serializers.Serializer):
+    id = serializers.Field()
+    url = serializers.HyperlinkedIdentityField(view_name="eighthblock-detail")
+
     # * means pass whole object to the field's to_native
     activities = serializers.SerializerMethodField("fetch_activities_list_with_metadata")
     date = serializers.DateField()
@@ -53,12 +52,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                     .select_related("activity")
         for scheduled_activity in scheduled_activities:
             activity_info = {
+                "id": scheduled_activity.id,
+                "url": reverse("eighthactivity-detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
+                "description": scheduled_activity.activity.description,
                 "members": 0,
                 "capacity": 0,
                 "rooms": [],
-                "sponsors": [],
-                "description": scheduled_activity.activity.description
+                "sponsors": []
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = \
                 scheduled_activity.activity.id
@@ -173,7 +174,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         return activities_list
 
     class Meta:
-        fields = ("activities","date", "block_letter")
+        fields = ("id", "activities","date", "block_letter")
 
 
 # class EighthSponsorSerializer(models.Model):

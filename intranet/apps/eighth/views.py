@@ -92,7 +92,7 @@ class EighthBlockDetail(views.APIView):
         except EighthBlock.DoesNotExist:
             raise Http404
 
-        serializer = EighthBlockDetailSerializer(block)
+        serializer = EighthBlockDetailSerializer(block, context={"request": request})
         return Response(serializer.data)
 
 
