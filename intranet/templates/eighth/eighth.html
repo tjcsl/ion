@@ -15,14 +15,37 @@
     <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/eighth.js' %}"></script>
     <script type="text/javascript">
-        var activities_models = $.parseJSON("{{ bootstrapped_activities_list|escapejs }}")
+        window.loadModels = function() {
+            window.activityModels = new eighth.ActivityList();
+            data = _.values($.parseJSON("{{ bootstrapped_activities_list|escapejs }}"));
+            activityModels.reset(data);
+        }
     </script>
+    <script type="text/javascript" src="{% static 'js/eighth/eighth.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signups.js' %}"></script>
 {% endblock %}
 
 {% block main %}
+    <script type="text/template" id="activity-details-template">
+        {% verbatim %}
+        <h3>
+            <%= name %>
+        </h3>
+        <dl>
+            <dt>Room:</dt><dd>foobar</dd>
+            <dt>Sponsor:</dt>
+            <dd>
+                <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} });%>
+            </dd>
+
+            <dt>Capacity:</dt><dd><%= roster.capacity %></dd>
+            <% if (description) {%>
+                <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
+            <%}%>
+        </dl>
+        {% endverbatim %}
+    </script>
     <div class="primary-content">
         <div class="day-picker">
             <button class="day-nav earlier-days">
@@ -61,7 +84,7 @@
             </div>
 
             <div class="controls">
-                <button>Hide Restricted</button>
+                <button id="add">Hide Restricted</button>
                 <button>Jump to Date</button>
                 <button>Manage Favorites</button>
                 <button>Manage Absences</button>
@@ -75,35 +98,21 @@
                     <input type="text" placeholder="Search">
                 </span>
             </div>
-            <div class="activities">
-                <h5 class="sticky-header">Favorites</h5>
-                <ul>
-                    {% for id, block in block_info.activities.items %}
-                        {% if forloop.counter < 10 %}
-                            <li>
-                                <span class="activity-icons">
-                                    <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
-                                </span>
-                                                          <span class="activity-name">{{ block.name }}</span>
-                                <span class="sponsor-name"></span>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+            <div id="activity-list">
                 <h5 class="sticky-header">All</h5>
-                <ul>
-                    {% for id, block in block_info.activities.items %}
-                        <li>
+                <ul id="all-activities">
+                    {% for id, b in block_info.activities.items %}
+                        <li data-activity-id="{{ id }}">
                             <span class="activity-icons">
                                 <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
                             </span>
-                            <span class="activity-name">{{ block.name }}</span>
+                            <span class="activity-name">{{ b.name }}</span>
                             <span class="sponsor-name"></span>
                         </li>
                     {% endfor %}
                 </ul>
             </div>
-            <div class="activity-detail">
+            <div id="activity-detail">
                 <h3>
                     Basket Weaving
                 </h3>
