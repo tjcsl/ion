@@ -13,7 +13,6 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
-        // Center current day in day picker
         $(document).ready(function() {
             var containerWidth = $(".day-picker").width();
             var blocksWidth = $(".days-container").width();
@@ -35,18 +34,18 @@
                     easing: "swing"
                 });
             });
+
         });
 
-        // Sticky headers for activity picker
+
         function stickyHeaders(headers) {
             this.load = function() {
                 headers.each(function(i) {
-                    var id = Math.floor((i + 1) * Math.random() * 99999);
+                    var id = Math.floor(Math.random()*99999);
                     var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
+                    stuckCopy.addClass("hidden stuck");
                     if (i == 0) {
-                        stuckCopy.addClass("stuck");
-                    } else {
-                        stuckCopy.addClass("hidden stuck");
+                        stuckCopy.removeClass("hidden");
                     }
                     stuckCopy.removeClass("sticky-header");
                     $(this).attr("id", id);
@@ -82,6 +81,7 @@
                 sh.scroll();
             });
         });
+
     </script>
 {% endblock %}
 
@@ -96,18 +96,16 @@
                 <i class="icon-chevron-right"></i>
             </button>
             <ul class="days-container">
-                {% for day in block_info.schedule %}
-                    <li class="day{% if day.date = block_info.date %} today{% endif %}">
+                {% for i in "123456789123456788"|make_list %}
+                    <li class="day{% if i = 9 %} today{% endif %}">
                         <div class="block-title">
-                            {{ day.date|date:"M d, Y" }}
+                            Monday, January {{ i }}
                         </div>
-                            {% for b in day.blocks %}
-                                <div class="block">
-                                    <a href="{% url 'eighth' b.id %}">
-                                        {{ b.block_letter }}
-                                    </a>
-                                </div>
-                            {% endfor %}
+                        {% for b in "AB"|make_list %}
+                            <div class="block">
+                                {{ b }}
+                            </div>
+                        {% endfor %}
                     </li>
                 {% endfor %}
             </ul>
@@ -116,10 +114,10 @@
         <div class="middle">
             <div class="block-title">
                 <h2>
-                    {{ block_info.date|date:"M d, Y" }}
+                    Monday, June 3
                 </h2>
                 <h4>
-                    {{ block_info.block_letter }} Block
+                    B Block
                 </h4>
             </div>
 
@@ -143,14 +141,31 @@
                 <ul>
                     {% for id, block in block_info.activities.items %}
                         {% if forloop.counter < 10 %}
-                            <li>{{ block.name }}</li>
+                            <li data-title="{{ block.name }}"
+                                data-sponsor="Chuck Norris"
+                                data-room="73"
+                                data-signups="13"
+                                data-capacity="42"
+                                data-description="Lorem ipsum">
+                                <span class="activity-icons">
+                                    <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                </span>
+                                <span class="activity-name">{{ block.name }}</span>
+                                <span class="sponsor-name">
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
                 <h5 class="sticky-header">All</h5>
                 <ul>
                     {% for id, block in block_info.activities.items %}
-                        <li>{{ block.name }}</li>
+                        <li>
+                                <span class="activity-icons">
+                                    <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                </span>
+                                <span class="activity-name">{{ block.name }}</span>
+                                <span class="sponsor-name">
+                            </li>
                     {% endfor %}
                 </ul>
             </div>

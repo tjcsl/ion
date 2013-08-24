@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def announcements_view(request, action="add", id=None):
     success = False
-    if request.method == "POST":
+    if request.method == 'POST':
         if action == "add":
             form = AnnouncementForm(request.POST)
         elif action == "modify":
