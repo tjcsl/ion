@@ -57,8 +57,11 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "url": reverse("eighthactivity-detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
-                "members": 0,
-                "capacity": 0,
+                "roster": {
+                        "count": 0,
+                        "capacity": 0,
+                        "url": "http://foobar.com"
+                    },
                 "rooms": [],
                 "sponsors": []
             }
@@ -74,7 +77,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                  .annotate(user_count=Count("activity"))
 
         for activity, user_count in activities:
-            activities_list[activity]["members"] = user_count
+            activities_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects \
                                      .all() \
@@ -156,7 +159,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_id = rooming.eighthactivity.id
             room_name = rooming.eighthroom.name
             activities_list[activity_id]["rooms"].append(room_name)
-            activities_list[activity_id]["capacity"] += \
+            activities_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
 
         activities_rooms_overidden = []
@@ -166,10 +169,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             if activity_id not in activities_rooms_overidden:
                 activities_rooms_overidden.append(activity_id)
                 del activities_list[activity_id]["rooms"][:]
-                activities_list[activity_id]["capacity"] = 0
+                activities_list[activity_id]["roster"]["capacity"] = 0
             room_name = rooming.eighthroom.name
             activities_list[activity_id]["rooms"].append(room_name)
-            activities_list[activity_id]["capacity"] += \
+            activities_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
 
         return activities_list
