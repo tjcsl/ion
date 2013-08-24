@@ -29,20 +29,18 @@ def to_int(num):
 
 
 @register.filter
-def percent(dividend, divisor):
-    """Return the quotient of the arguments as an integer percentage.
-
-    Returns 0 if the divisor is 0.
-
-    """
-    try:
-        return int(100.0 * dividend / divisor)
-    except ZeroDivisionError:
-        return 0
-
-
-@register.filter
 def divide(dividend, divisor):
     """Returns the quotient of the arguments as a float."""
 
-    return 1.0 * dividend / divisor
+    try:
+        return 1.0 * dividend / divisor
+    except ZeroDivisionError:
+        return 0.0
+
+
+@register.filter
+def multiply(num1, num2):
+    """Returns the product of the arguments."""
+
+    return num1 * num2
+
