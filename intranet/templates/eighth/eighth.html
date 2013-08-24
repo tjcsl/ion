@@ -33,13 +33,29 @@
             <%= name %>
         </h3>
         <dl>
-            <dt>Room:</dt><dd>foobar</dd>
-            <dt>Sponsor:</dt>
+            <dt>Rooms:</dt>
             <dd>
-                <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} });%>
+                <% rooms = _.uniq(rooms)%>
+                <% if (rooms.length != 0) {%>
+                        <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
+                <%} else {%>
+                    <br />
+                <%}%>
+            </dd>
+            <dt>Sponsors:</dt>
+            <dd>
+                <% sponsors = _.uniq(sponsors) %>
+                <% if (sponsors.length != 0) {%>
+                        <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
+                <%} else {%>
+                    <br />
+                <%}%>
             </dd>
 
             <dt>Capacity:</dt><dd><%= roster.capacity %></dd>
+            <br />
+            <%= roster.count %> students have already signed up.
+            <br />
             <% if (description) {%>
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
@@ -113,15 +129,7 @@
                 </ul>
             </div>
             <div id="activity-detail">
-                <h3>
-                    Basket Weaving
-                </h3>
-                <dl>
-                    <dt>Room:</dt><dd>73</dd>
-                    <dt>Sponsor:</dt><dd>Chuck Norris</dd>
-                    <dt>Capacity:</dt><dd>42</dd>
-                    <dt class="description">Description:</dt><dd class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, possimus tenetur inventore maiores impedit ullam nam earum quos eveniet quidem. Quisquam, consequatur doloremque commodi debitis distinctio. Officia, ab odit error!</dd>
-                </dl>
+                Add some sort of empty state here
             </div>
         </div>
     </div>
