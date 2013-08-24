@@ -115,8 +115,22 @@
                 </span>
             </div>
             <div id="activity-list">
+                <h5 class="sticky-header">Favorites</h5>
+                <ul class="favorite-activities">
+                    {% for id, b in block_info.activities.items %}
+                        {% if forloop.counter0 < 10 %}
+                            <li data-activity-id="{{ id }}">
+                                <span class="activity-icons">
+                                    <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                </span>
+                                <span class="activity-name">{{ b.name }}</span>
+                                <span class="sponsor-name"></span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
                 <h5 class="sticky-header">All</h5>
-                <ul id="all-activities">
+                <ul class="all-activities">
                     {% for id, b in block_info.activities.items %}
                         <li data-activity-id="{{ id }}">
                             <span class="activity-icons">

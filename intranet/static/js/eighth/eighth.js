@@ -65,7 +65,7 @@ $(document).ready(function() {
     var sh = new stickyHeaders($(".sticky-header"));
     sh.load();
 
-    $(".activities").on("scroll", function() {
+    $("#activity-list").on("scroll", function() {
         sh.scroll();
     });
 });
