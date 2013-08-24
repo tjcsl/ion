@@ -9,6 +9,7 @@ from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
     EighthScheduledActivity
 from rest_framework import generics, views
 from rest_framework.decorators import api_view
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, \
@@ -66,10 +67,11 @@ def eighth_signup_view(request, block_id=None):
 
     block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
     block_info["schedule"] = schedule
-
+    json_string = JSONRenderer().render(block_info["activities"])
     context = {"user": request.user,
                "page": "eighth",
-               "block_info": block_info
+               "block_info": block_info,
+               "bootstrapped_activities_list": JSONRenderer().render(block_info["activities"])
                }
 
     return render(request, "eighth/eighth.html", context)
