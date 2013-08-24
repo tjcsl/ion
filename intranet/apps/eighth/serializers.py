@@ -52,7 +52,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                     .select_related("activity")
         for scheduled_activity in scheduled_activities:
             activity_info = {
-                "id": scheduled_activity.id,
+                "activity_id": scheduled_activity.activity.id,
+                "scheduled_activity_id": scheduled_activity.id,
                 "url": reverse("eighthactivity-detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
