@@ -53,7 +53,7 @@
                 <%}%>
             </dd>
 
-            <dt>Capacity:</dt><dd><% if (roster.capacity == -1 || roster.capacity == 0) {%>∞<%} else {%><%= roster.capacity %><%}%></dd>
+            <dt>Capacity:</dt><dd><% if (roster.capacity == -1 || roster.capacity == 0) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
             <br />
             <%= roster.count %> students have already signed up.
             <br />
@@ -73,20 +73,22 @@
                 <i class="icon-chevron-right"></i>
             </button>
             <ul class="days-container">
-                {% for day in block_info.schedule %}
-                    <li class="day{% if day.date = block_info.date %} today{% endif %}">
-                        <div class="block-title">
-                            {{ day.date|date:"M d, Y" }}
-                        </div>
-                            {% for b in day.blocks %}
-                                <div class="block">
-                                    <a href="{% url 'eighth' b.id %}">
-                                        {{ b.block_letter }}
-                                    </a>
-                                </div>
-                            {% endfor %}
-                    </li>
-                {% endfor %}
+                {% spaceless %}
+                    {% for day in block_info.schedule %}
+                        <li class="day{% if day.date = block_info.date %} today{% endif %}">
+                            <div class="block-title">
+                                {{ day.date|date:"M d, Y" }}
+                            </div>
+                                {% for b in day.blocks %}
+                                    <div class="block">
+                                        <a href="{% url 'eighth' b.id %}">
+                                            {{ b.block_letter }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                        </li>
+                    {% endfor %}
+                {% endspaceless %}
             </ul>
         </div>
 

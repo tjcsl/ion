@@ -43,7 +43,6 @@ def eighth_signup_view(request, block_id=None):
     prev = block.previous_blocks(10)
 
     surrounding_blocks = list(chain(prev, [block], next))
-
     schedule = []
 
     for b in surrounding_blocks:

@@ -100,7 +100,7 @@ class EighthBlock(models.Model):
                                     & Q(block_letter__lt=self.block_letter)))[:quantity])
 
     def __unicode__(self):
-        return "{}: {}".format(str(self.date), self.block)
+        return "{}: {}".format(str(self.date), self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)
