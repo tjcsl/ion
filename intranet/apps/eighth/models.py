@@ -87,23 +87,23 @@ class EighthBlock(models.Model):
 
     def next_blocks(self, quantity=1):
         return EighthBlock.objects \
-                          .order_by("date", "block") \
+                          .order_by("date", "block_letter") \
                           .filter(Q(date__gt=self.date) \
                            | (Q(date=self.date) \
-                           & Q(block__gt=self.block)))[:quantity]
+                           & Q(block_letter__gt=self.block_letter)))[:quantity]
 
     def previous_blocks(self, quantity=1):
         return reversed(EighthBlock.objects \
-                                   .order_by("-date", "-block") \
+                                   .order_by("-date", "-block_letter") \
                                    .filter(Q(date__lt=self.date) \
                                     | (Q(date=self.date) \
-                                    & Q(block__lt=self.block)))[:quantity])
+                                    & Q(block_letter__lt=self.block_letter)))[:quantity])
 
     def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block)
 
     class Meta:
-        unique_together = (("date", "block"),)
+        unique_together = (("date", "block_letter"),)
 
 
 class EighthScheduledActivity(models.Model):
