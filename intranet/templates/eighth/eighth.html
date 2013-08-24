@@ -12,77 +12,14 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/eighth.js' %}"></script>
     <script type="text/javascript">
-        // Center current day in day picker
-        $(document).ready(function() {
-            var containerWidth = $(".day-picker").width();
-            var blocksWidth = $(".days-container").width();
-            $(".days-container").css("margin-left", (containerWidth - blocksWidth) / 2);
-
-
-            $(".day-nav").click(function(e) {
-                var offset = ($(".day").width() + 1) + "px"
-                if ($(e.target).parents().andSelf().hasClass("later-days")) {
-                    offset = "-=" + offset;
-                } else {
-                    offset = "+=" + offset;
-                }
-
-                $(".days-container").animate({
-                    marginLeft: offset
-                }, {
-                    duration: 200,
-                    easing: "swing"
-                });
-            });
-        });
-
-        // Sticky headers for activity picker
-        function stickyHeaders(headers) {
-            this.load = function() {
-                headers.each(function(i) {
-                    var id = Math.floor((i + 1) * Math.random() * 99999);
-                    var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
-                    if (i == 0) {
-                        stuckCopy.addClass("stuck");
-                    } else {
-                        stuckCopy.addClass("hidden stuck");
-                    }
-                    stuckCopy.removeClass("sticky-header");
-                    $(this).attr("id", id);
-                    stuckCopy.attr("id", id + "-stuck");
-                });
-            }
-
-            this.scroll = function() {
-                headers.each(function(i) {
-                    var thisHeader = $(this),
-                        prevHeader = headers.eq(i - 1);
-                    var top = thisHeader.position().top;
-
-                    if (top <= 0) {
-                        $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
-                        $("#" + prevHeader.attr("id") + "-stuck").addClass("hidden");
-                    } else if (top < 31) {
-                        $("#" + prevHeader.attr("id") + "-stuck").css("top", top);
-                    } else {
-                        $("#" + prevHeader.attr("id") + "-stuck").css("top", 31);
-                    }
-                });
-            }
-
-
-        }
-
-        $(document).ready(function() {
-            var sh = new stickyHeaders($(".sticky-header"));
-            sh.load();
-
-            $(".activities").on("scroll", function() {
-                sh.scroll();
-            });
-        });
+        // var foo_models = new FooCollection(foo|escapejs );
     </script>
+    <script type="text/javascript" src="{% static 'js/eighth/signups.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -143,14 +80,26 @@
                 <ul>
                     {% for id, block in block_info.activities.items %}
                         {% if forloop.counter < 10 %}
-                            <li>{{ block.name }}</li>
+                            <li>
+                                <span class="activity-icons">
+                                    <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                </span>
+                                                          <span class="activity-name">{{ block.name }}</span>
+                                <span class="sponsor-name"></span>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
                 <h5 class="sticky-header">All</h5>
                 <ul>
                     {% for id, block in block_info.activities.items %}
-                        <li>{{ block.name }}</li>
+                        <li>
+                            <span class="activity-icons">
+                                <span class="sched-ico pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                            </span>
+                            <span class="activity-name">{{ block.name }}</span>
+                            <span class="sponsor-name"></span>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
