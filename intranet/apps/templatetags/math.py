@@ -28,3 +28,8 @@ def int(number):
     return int(round(number))
 
 
+@register.filter
+def divide(dividend, divisor):
+    """Divide a number by the number passed as an argument."""
+
+    return dividend / divisor
