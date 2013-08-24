@@ -39,12 +39,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     url = serializers.HyperlinkedIdentityField(view_name="eighthblock-detail")
 
     # * means pass whole object to the field's to_native
-    activities = serializers.SerializerMethodField("fetch_activities_list_with_metadata")
+    activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=1)
 
-    def fetch_activities_list_with_metadata(self, block):
-        activities_list = {}
+    def fetch_activity_list_with_metadata(self, block):
+        activity_list = {}
         scheduled_activity_to_activity_map = {}
 
         scheduled_activities = block.eighthscheduledactivity_set \
@@ -68,7 +68,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             scheduled_activity_to_activity_map[scheduled_activity.id] = \
                 scheduled_activity.activity.id
 
-            activities_list[scheduled_activity.activity.id] = \
+            activity_list[scheduled_activity.activity.id] = \
                 activity_info
 
         activities = EighthSignup.objects \
@@ -77,7 +77,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                  .annotate(user_count=Count("activity"))
 
         for activity, user_count in activities:
-            activities_list[activity]["roster"]["count"] = user_count
+            activity_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects \
                                      .all() \
@@ -120,7 +120,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 name = None
 
-            activities_list[activity_id]["sponsors"] \
+            activity_list[activity_id]["sponsors"] \
                 .append(sponsor["name"] or name)
 
         for sponsorship in overidden_sponsorships:
@@ -138,7 +138,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 name = None
 
-            activities_list[activity_id]["sponsors"] \
+            activity_list[activity_id]["sponsors"] \
                 .append(sponsor["name"] or name)
 
         roomings = EighthActivity.rooms \
@@ -158,8 +158,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
             room_name = rooming.eighthroom.name
-            activities_list[activity_id]["rooms"].append(room_name)
-            activities_list[activity_id]["roster"]["capacity"] += \
+            activity_list[activity_id]["rooms"].append(room_name)
+            activity_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
 
         activities_rooms_overidden = []
@@ -168,14 +168,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overidden:
                 activities_rooms_overidden.append(activity_id)
-                del activities_list[activity_id]["rooms"][:]
-                activities_list[activity_id]["roster"]["capacity"] = 0
+                del activity_list[activity_id]["rooms"][:]
+                activity_list[activity_id]["roster"]["capacity"] = 0
             room_name = rooming.eighthroom.name
-            activities_list[activity_id]["rooms"].append(room_name)
-            activities_list[activity_id]["roster"]["capacity"] += \
+            activity_list[activity_id]["rooms"].append(room_name)
+            activity_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
 
-        return activities_list
+        return activity_list
 
     class Meta:
         fields = ("id", "activities","date", "block_letter")
