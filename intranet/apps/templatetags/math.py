@@ -22,20 +22,13 @@ def round(number, precision=0):
 
 
 @register.filter
-def int(number):
-    """Rounds a number to the nearest integer."""
-
-    return int(round(number))
-
-
-@register.filter
-def divide(dividend, divisor):
-    """Divide a number by the number passed as an argument.
+def percent(dividend, divisor):
+    """Return the quotient of the arguments as an integer percentage.
 
     Returns 0 if the divisor is 0.
 
     """
     try:
-        return dividend / divisor
+        return int(100.0 * dividend / divisor)
     except ZeroDivisionError:
         return 0
