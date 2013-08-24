@@ -13,21 +13,21 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/dashboard.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-
+            
             // TODO: Move the logic from jQuery to separate functions,
             // e.g. announcements.delete(id)
-
+            
             $(".announcement-delete").click(function() {
-                announcement_id = $(this).attr("data-id");
-                if(!confirm("Delete announcement " + announcement_id + "?")) return;
+                annid = $(this).attr("data-id");
+                if(!confirm("Delete announcement "+annid+"?")) return;
                 // TODO: Possibly POST to /api
-                post("/announcements/delete",
-                     {"id": announcement_id},
+                post("/announcements/delete/", 
+                     {"id": annid},
                      function(d) {
-                        $(".announcement[data-id=" + announcement_id + "]").slideUp();
+                        $(".announcement[data-id="+annid+"]").slideUp();
                         $(".ajax-message").html("Successfully deleted announcement.")
                                           .click(function() {
                                             $(this).slideUp();
@@ -36,6 +36,11 @@
                     }
                 );
             });
+
+            $(".announcement-add").click(function() {
+                /* TODO: Make the add announcement textbox on this same page */
+                location.href = "/announcements/add";
+            })
         });
     </script>
 {% endblock %}
@@ -147,7 +152,7 @@
         Announcements
         <span class="announcements-icon-wrapper">
             <div class="button announcement-add">
-                <i class="icon-plus"></i>
+                <i class="icon-plus"></i> 
                 Add
             </div>
         </span>
@@ -156,10 +161,10 @@
     {% for announcement in announcements %}
         <div class="announcement" data-id="{{ announcement.id }}">
             <h3>
-                {{ announcement.name }} {# todo: add admin_news check against groups before letting users edit/delete #}
+                {{ announcement.name }} {# todo: add admin_news check against groups before letting users edit/delete #} 
                 <div class="announcement-icon-wrapper">
                     <a href="/announcements/modify/{{ announcement.id }}">
-                        <i class="announcement-icon icon-pencil" href="/announcements/modify/{{ announcement.id }}"></i>
+                        <i class="announcement-icon icon-pencil" href="/announcements/modify/{{ announcement.id }}"></i> 
                     </a>
                     <a href="" onclick="return false">
                         <i class="announcement-icon icon-trash announcement-delete" data-id="{{ announcement.id }}"></i>
@@ -178,7 +183,7 @@
     <div class="content-center">
         <a href="/archive">
             <div class="button">
-                <i class="icon-archive"></i>
+                <i class="icon-archive"></i> 
                 Archive
             </div>
         </a>
