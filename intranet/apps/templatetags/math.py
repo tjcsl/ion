@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 @register.filter
-def round(number, precision=0):
+def round_to_places(number, precision=0):
     """Rounds a number to a given precision in decimal digits
     (default 0 digits) and returns the integer value.
 
