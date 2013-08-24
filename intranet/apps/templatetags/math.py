@@ -30,6 +30,12 @@ def int(number):
 
 @register.filter
 def divide(dividend, divisor):
-    """Divide a number by the number passed as an argument."""
+    """Divide a number by the number passed as an argument.
 
-    return dividend / divisor
+    Returns 0 if the divisor is 0.
+
+    """
+    try:
+        return dividend / divisor
+    except ZeroDivisionError:
+        return 0
