@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load math %}
 
 {% block title %}
     {{ block.super }} - Eighth Period
@@ -121,7 +122,7 @@
                         {% if forloop.counter0 < 10 %}
                             <li data-activity-id="{{ id }}">
                                 <span class="activity-icons">
-                                    <span class="activity-icon pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                    <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity }}">&nbsp;</span>
                                 </span>
                                 <span class="activity-name">{{ b.name }}</span>
                                 <span class="sponsor-name"></span>
@@ -134,7 +135,7 @@
                     {% for id, b in block_info.activities.items %}
                         <li data-activity-id="{{ id }}">
                             <span class="activity-icons">
-                                <span class="activity-icon pie{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
+                                <span class="activity-icon pie-{% cycle 0,2,4,6,8,10 %}">&nbsp;</span>
                             </span>
                             <span class="activity-name">{{ b.name }}</span>
                             <span class="sponsor-name"></span>
