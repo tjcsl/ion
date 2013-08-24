@@ -19,3 +19,12 @@ def round(number, precision=0):
     """
 
     return round(number, precision)
+
+
+@register.filter
+def int(number):
+    """Rounds a number to the nearest integer."""
+
+    return int(round(number))
+
+
