@@ -3,14 +3,14 @@ from threading import local
 _thread_locals = local()
 
 
-def current_user():
+def request():
     """Return the currently authorized User object.
 
     Returns:
         User object
 
     """
-    return getattr(_thread_locals, 'user', None)
+    return getattr(_thread_locals, "request", None)
 
 
 class ThreadLocalsMiddleware(object):
@@ -24,4 +24,4 @@ class ThreadLocalsMiddleware(object):
         """
             Processes the request.
         """
-        _thread_locals.user = getattr(request, 'user', None)
+        _thread_locals.request = request #getattr(request, "user", None)

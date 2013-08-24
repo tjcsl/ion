@@ -30,11 +30,11 @@ SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 CACHES["default"]["OPTIONS"]["DB"] = 2
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}
 
 # Make the cache age last just long enough to reload the page to
 # check if caching worked
@@ -82,9 +82,9 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.panels.logger.LoggingPanel",
     )
 
-    MIDDLEWARE_CLASSES += (
+    MIDDLEWARE_CLASSES = (
         "debug_toolbar.middleware.DebugToolbarMiddleware",
-    )
+    ) + MIDDLEWARE_CLASSES
 
     INSTALLED_APPS += (
         "debug_toolbar",

@@ -533,7 +533,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         try:
-            return (str(threadlocals.current_user().id) == str(self.id))
+            return (str(threadlocals.request().user.id) == str(self.id))
         except AttributeError:
             return False
 
@@ -681,7 +681,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
         }
 
-        attr = user_attributes[name]
+        if name in user_attributes:
+            attr = user_attributes[name]
+        else:
+            raise AttributeError
 
         if attr["perm"] is False:
             visible = True
@@ -705,7 +708,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     else:
                         value = result[0]
 
-                    cache.set(key, value, settings.CACHE_AGE['user_attribute'])
+                    cache.set(key, value, settings.CACHE_AGE["user_attribute"])
                     return value
                 except KeyError:
                     return None

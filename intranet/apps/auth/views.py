@@ -16,12 +16,11 @@ def index(request, auth_form=None):
     else:
         auth_form = auth_form or AuthenticateForm()
         return render(request,
-                      'auth/login.html',
-                      {'auth_form': auth_form, })
+                      "auth/login.html",
+                      {"auth_form": auth_form, })
 
 
 class login_view(View):
-
     """Log in and redirect a user."""
 
     def post(self, request):
@@ -31,7 +30,7 @@ class login_view(View):
         if form.is_valid():
             login(request, form.get_user())
             # Initial load into session
-            request.session["KRB5CCNAME"] = os.environ['KRB5CCNAME']
+            request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
 
             next = request.GET.get("next", "/")
             return redirect(next)

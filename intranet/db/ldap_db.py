@@ -2,17 +2,18 @@ import logging
 import ldap
 import ldap.sasl
 from threading import local
+from django.contrib.auth import logout
 from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
 from django.dispatch import receiver
 from intranet import settings
+from intranet.middleware import threadlocals
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
 
 
 class LDAPConnection(object):
-
     """Represents an LDAP connection with wrappers for the raw ldap
     queries.
 
@@ -20,7 +21,6 @@ class LDAPConnection(object):
         conn: The singleton LDAP connection.
 
     """
-
     def __init__(self):
         """Initialize a singleton LDAPConnection object.
 
@@ -30,13 +30,13 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
-        if (not hasattr(_thread_locals, 'ldap_conn')) \
+        if (not hasattr(_thread_locals, "ldap_conn")) \
            or (_thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP.")
             _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
             auth_tokens = ldap.sasl.gssapi()
             _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-        # logger.debug(_thread_locals.ldap_conn.whoami_s())
+            # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.

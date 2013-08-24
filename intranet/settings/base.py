@@ -99,6 +99,7 @@ MIDDLEWARE_CLASSES = (
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.templates.StripNewlinesMiddleware",
 
