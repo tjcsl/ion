@@ -6,7 +6,7 @@ register = template.Library()
 logger = logging.getLogger(__name__)
 
 
-@register.filter
+@register.filter(expects_localtime=True)
 def fuzzy_date(date):
     """Formats a :class:`datetime.datetime` object relative to the current time
     """
