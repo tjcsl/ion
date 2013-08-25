@@ -5,7 +5,7 @@ TJ Intranet Documentation
 Intro
 =====
 
-Describe Intranet here... here's a reStructuredText :doc:`cheat sheet<rst-cheatsheet/rst-cheatsheet>`.
+Intranet3 (Ion) is the next-generation Intranet platform for TJHSST. Using Python, Django, Redis, Postgres, and many other technologies, Ion was developed from the ground up to be simple, well-documented, and extensible.
 
 Contents
 ========
@@ -31,7 +31,7 @@ Setup
 Architecture
 ------------
 
-Say stuff about the architecture design
+Ion uses Django, Redis, Postgres, and many other Python frameworks and tools.
 
 See the :doc:`Architecture documentation<architecture/index>`.
 
