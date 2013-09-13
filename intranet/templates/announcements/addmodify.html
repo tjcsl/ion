@@ -15,13 +15,9 @@
     <form action="/announcements/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
     <table>
     {% csrf_token %}
-    {% for field in form.visible_fields %}
-        <tr><td>{{ field.errors }}</td></tr>
-	<tr><td>{{ field.label_tag }}:</td><td>{{ field }}</td></tr>
-    {% endfor %}
+    {{ form.as_table }}
     <tr><td><input type="submit" /></td></tr>
     </table>
-    <input type="hidden" name="author" value="{{ user.full_name }}" />
     </form>
 </div>
 {% endblock %}

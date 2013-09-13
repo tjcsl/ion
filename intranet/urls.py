@@ -8,7 +8,7 @@ from .apps.events.views import events_view
 from .apps.groups.views import groups_view, add_group_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
-from .apps.announcements.views import announcements_view
+from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
 
 
 urlpatterns = patterns("",
@@ -25,13 +25,13 @@ urlpatterns += patterns("auth.views.",
 )
 
 urlpatterns += patterns("announcements.views.",
-    url(r"^announcements(?:/(?P<action>add))?$", announcements_view, name="add_announcement"),
-    url(r"^announcements/(?P<action>modify)/(?P<id>\d+)$", announcements_view, name="modify_announcement"),
-    url(r"^announcements/(?P<action>delete)/$", announcements_view, name="delete_announcement"),
+    url(r"^announcements/add$", add_announcement_view, name="add_announcement"),
+    url(r"^announcements/modify/(?P<id>\d+)$", modify_announcement_view, name="modify_announcement"),
+    url(r"^announcements/delete$", delete_announcement_view, name="delete_announcement"),
 )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth(?:/(?P<block_id>\d+))?$$", eighth_signup_view, name="eighth"),
+    url(r"^eighth(?:/(?P<block_id>\d+))?$", eighth_signup_view, name="eighth"),
 )
 
 urlpatterns += patterns("events.views.",
