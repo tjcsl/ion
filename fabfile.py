@@ -221,11 +221,12 @@ def deploy():
             abort("Aborted.")
 
     with lcd(PRODUCTION_DOCUMENT_ROOT):
-        local("git pull")
-        clear_sessions("ion")
-        clear_cache(0)
-        with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
-            local("./manage.py collectstatic")
-        restart_production_gunicorn(True)
+        with shell_env(PRODUCTION="TRUE"):
+            local("git pull")
+            clear_sessions("ion")
+            clear_cache(0)
+            with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
+                local("./manage.py collectstatic")
+            restart_production_gunicorn(True)
 
     puts("Deploy complete!")
