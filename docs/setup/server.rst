@@ -195,6 +195,11 @@ Add the Git hook to automatically push changes to Bitbucket by creating a post-r
     git push --all bitbucket
     git push --tags bitbucket
 
+Make the post-receive hook executable.
+
+.. code-block:: bash
+
+    $ chmod +x hooks/post-receive
 
 Create a directory for the production code.
 
