@@ -27,10 +27,16 @@ def eighth_signup_view(request, block_id=None):
         if now.hour < 17:
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        block_id = EighthBlock.objects \
-                              .order_by("date", "block_letter") \
-                              .filter(date__gte=now)[0] \
-                              .id
+        try:
+            block_id = EighthBlock.objects \
+                                  .order_by("date", "block_letter") \
+                                  .filter(date__gte=now)[0] \
+                                  .id
+        except IndexError:
+            block_id = EighthBlock.objects \
+                                  .order_by("-date", "-block_letter") \
+                                  .filter(date__lte=now)[0] \
+                                  .id
 
     try:
         block = EighthBlock.objects \
