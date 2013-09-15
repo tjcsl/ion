@@ -8,30 +8,39 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
-def announcements_view(request, action="add", id=None):
+def add_announcement_view(request):
     success = False
     if request.method == 'POST':
-        if action == "add":
-            form = AnnouncementForm(request.POST)
-        elif action == "modify":
-            announcement = Announcement.objects.get(id=id)
-            form = AnnouncementForm(request.POST, instance=announcement)
-        else:
-            form = None
-        if form != None and form.is_valid() and request.POST.get("author", "") == request.user.full_name:
+        form = AnnouncementForm(request.POST)
+        if form != None and form.is_valid():
             form.save()
             success = True
-    elif action == "add":
+    else:
         form = AnnouncementForm()
-    elif action == "modify":
+    return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": "add", "success": success})
+
+
+@login_required
+def modify_announcement_view(request, id=None):
+    success = False
+    if request.method == 'POST':
+        announcement = Announcement.objects.get(id=id)
+        form = AnnouncementForm(request.POST, instance=announcement)
+        if form != None and form.is_valid():
+            form.save()
+            success = True
+    else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    elif action == "delete":
+    return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": "modify", "id": id, "success": success})
+
+
+@login_required
+def delete_announcement_view(request):
+    post_id = None
+    try:
+        post_id = request.POST["id"]
+    except AttributeError:
         post_id = None
-        try:
-            post_id = request.POST.id
-        except AttributeError:
-            post_id = None
-        announcement = Announcement.objects.get(id=post_id).delete()
-        return render(request, "success.html")
-    return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": action, "id": id, "success": success})
+    announcement = Announcement.objects.get(id=post_id).delete()
+    return render(request, "success.html", {"user": request.user})
