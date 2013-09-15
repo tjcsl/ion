@@ -21,13 +21,13 @@ def fuzzy_date(date):
     if minutes <= 1:
         return "moments ago"
     elif minutes < 60:
-        return "{} minutes ago".format(seconds // 60)
+        return "{} minutes ago".format(int(seconds // 60))
     elif hours < 24:
-        return "{} hours ago".format(diff.seconds // (60 * 60))
+        return "{} hours ago".format(int(diff.seconds // (60 * 60)))
     elif diff.days == 1:
         return "yesterday"
     elif diff.days < 7:
-        return "{} days ago".format(seconds // (60 * 60 * 24))
+        return "{} days ago".format(int(seconds // (60 * 60 * 24)))
     elif diff.days < 14:
         return date.strftime("Last %A")
     else:
