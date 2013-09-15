@@ -25,7 +25,7 @@
                 if(!confirm("Delete announcement " + announcement_id + "?")) return;
                 // TODO: Possibly POST to /api
                 post("/announcements/delete",
-                     {id: announcement_id},
+                     {"id": announcement_id},
                      function(d) {
                         $(".announcement[data-id=" + announcement_id + "]").slideUp();
                         $(".ajax-message").html("Successfully deleted announcement.")
@@ -39,6 +39,7 @@
 
             $(".announcement-add").click(function() {
                 /* TODO: Make the add announcement textbox on this same page */
+                // $('.announcement-add-div').slideDown();
                 location.href = "/announcements/add";
             })
         });
@@ -157,7 +158,46 @@
             </div>
         </span>
     </h2>
+    <div class="announcements-container">
+        <style>
+        .announcement-add-div {
+            display: none;
+            position: relative;
+        }
+        .announcement-add-title {
+            margin-right: 20px;
+        }
+        .announcement-add-icon-wrapper {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 6px 10px;
+        }
+        </style>
 
+        <div class="announcement announcement-add-div" data-id="add">
+            <h3>
+                <div class="announcement-add-title" contenteditable>
+                    Enter a title..
+                </div>
+                <div class="announcement-icon-wrapper announcement-add-icon-wrapper">
+                    <a href="" onclick="return false">
+                        <i class="announcement-icon icon-trash announcement-add-delete" data-id="add"></i>
+                    </a>
+                </div>
+
+                &nbsp;
+            </h3>
+            <div class="announcement-metadata">
+                Your name &bull; <span class="announcement-add-today"></span> &bull; to
+                <select name="groups">
+                    <option value="all">all students</option>
+                </select>
+            </div>
+            <div class="announcement-content announcement-add-content" contenteditable>
+                Enter text..
+            </div>
+        </div>
     {% for announcement in announcements %}
         <div class="announcement" data-id="{{ announcement.id }}">
             <h3>
@@ -180,6 +220,7 @@
             </div>
         </div>
     {% endfor %}
+    </div>
     <div class="content-center">
         <a href="/archive">
             <div class="button">
