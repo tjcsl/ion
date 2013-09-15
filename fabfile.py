@@ -184,8 +184,8 @@ def load_fixtures():
         if not confirm("Are you sure you want to clear the production database?"):
             return 0
         production = "TRUE"
-        local("dropdb -h localhost ion")
-        local("createdb -h localhost ion")
+        local("dropdb ion")
+        local("createdb ion")
     else:
         production = "FALSE"
         with settings(warn_only=True):
