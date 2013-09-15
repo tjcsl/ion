@@ -771,6 +771,30 @@ class Class(object):
             cache.set(key, dn, settings.CACHE_AGE['class_teacher'])
             return User.create_user(dn=dn)
 
+    @property
+    def quarters(self):
+        """Returns the quarters a class is in session.
+
+        Returns:
+            Integer list
+
+        """
+        key = ":".join([self.dn, "quarters"])
+
+        cached = cache.get(key)
+
+        if cached:
+            logger.debug("Attribute 'quarters' of class {} loaded "
+                         "from cache.".format(self.section_id))
+            return cached
+        else:
+            c = LDAPConnection()
+            results = c.class_attributes(self.dn, ["quarterNumber"])
+            result = [int(i) for i in results.first_result()["quarterNumber"]]
+
+            cache.set(key, result, settings.CACHE_AGE["class_attribute"])
+            return result
+
     def __getattr__(self, name):
         """Return simple attributes of User
 
@@ -826,10 +850,6 @@ class Class(object):
                 "room_number": {
                     "ldap_name": "roomNumber",
                     "list": False
-                },
-                "quarters": {
-                    "ldap_name": "quarterNumber",
-                    "list": True
                 }
             }
 
