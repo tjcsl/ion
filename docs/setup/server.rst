@@ -8,6 +8,7 @@ Portage USE flags
 
 Add the following flags to ``/etc/portage/package.use``::
 
+    net-nds/openldap kerberos sasl
     dev-python/python-ldap sasl
     dev-libs/cyrus-sasl kerberos ldap
 
@@ -97,8 +98,9 @@ Install the ``python-ldap`` module, the Cyrus-SASL C library, and the Pip packag
 
 .. code-block:: bash
 
-    $ emerge python-ldap
+    $ emerge net-nds/openldap
     $ emerge dev-libs/cyrus-sasl
+    $ emerge python-ldap
     $ emerge dev-python/pip
 
 ----------
@@ -161,7 +163,7 @@ Install Git.
 Set up the production code base
 -------------------------------
 
-Create the local shared Git repository.
+Exit from root. Create the local shared Git repository.
 
 .. code-block:: bash
 
