@@ -205,6 +205,7 @@ def load_fixtures():
             local("./manage.py loaddata {}".format(json_file))
 
 def deploy():
+    """Deploy to production."""
     _require_root()
     obnoxious_mode = True
 
