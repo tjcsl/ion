@@ -51,21 +51,22 @@ def eighth_signup_view(request, block_id=None):
     surrounding_blocks = list(chain(prev, [block], next))
     schedule = []
 
+    signups = EighthSignup.objects.filter(user=request.user).select_related("activity", "activity__activity")
+    block_signup_map = {s.activity.block.id: s.activity.activity.name for s in signups}
+
     for b in surrounding_blocks:
+        info = {
+            "id": b.id,
+            "block_letter": b.block_letter,
+            "current_signup": block_signup_map.get(b.id, "")
+        }
+
         if len(schedule) and schedule[-1]["date"] == b.date:
-            info = {
-                "id": b.id,
-                "block_letter": b.block_letter
-            }
             schedule[-1]["blocks"].append(info)
         else:
             day = {}
             day["date"] = b.date
             day["blocks"] = []
-            info = {
-                "id": b.id,
-                "block_letter": b.block_letter
-            }
             day["blocks"].append(info)
             schedule.append(day)
 
