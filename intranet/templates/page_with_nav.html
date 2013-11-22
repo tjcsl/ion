@@ -19,6 +19,7 @@
 
 {% block content %}
     <ul class="nav">
+    {% block nav %}
         <li {% if page = "dashboard" %}class="selected"{% endif %}>
             <a href="/">
                 <i class="nav-icon dashboard-icon"></i>
@@ -60,6 +61,15 @@
                 Files
             </a>
         </li>
+        {# TODO: CHECK FOR ADMIN PRIVELEGES #}
+        <li>
+            <a href="/admin">
+                <i class="nav-icon blank-icon text-icon">&rarr;</i>
+                Admin
+            </a>
+        </li>
+
+    {% endblock %}
     </ul>
     {% block main %}
     {% endblock %}
