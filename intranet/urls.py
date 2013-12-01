@@ -9,7 +9,7 @@ from .apps.groups.views import groups_view, add_group_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
 from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
-
+from .apps.admin.views import admin_view, admin_eighth_view
 
 urlpatterns = patterns("",
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
@@ -49,6 +49,11 @@ urlpatterns += patterns("groups.views.",
 
 urlpatterns += patterns("polls.views.",
     url(r"^polls$", polls_view, name="polls"),
+)
+
+urlpatterns += patterns("admin.views.",
+    url(r"^admin$", admin_view, name="admin"),
+    url(r"^admin/eighth$", admin_eighth_view, name="admin_eighth")
 )
 
 urlpatterns += patterns("users.views.",

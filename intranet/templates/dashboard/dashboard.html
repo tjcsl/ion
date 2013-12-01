@@ -21,8 +21,9 @@
             // e.g. announcements.delete(id)
 
             $(".announcement-delete").click(function() {
-                announcement_id = $(this).attr("data-id");
-                if(!confirm("Delete announcement " + announcement_id + "?")) return;
+                var announcement_id = $(this).attr("data-id"),
+                    announcement_title = $(".announcement[data-id=" + announcement_id + "] > h3").html();
+                if(!confirm("Delete announcement " + announcement_id + "? \n\n Title: " + announcement_title)) return;
                 // TODO: Possibly POST to /api
                 post("/announcements/delete",
                      {"id": announcement_id},
@@ -39,10 +40,59 @@
 
             $(".announcement-add").click(function() {
                 /* TODO: Make the add announcement textbox on this same page */
-                // $('.announcement-add-div').slideDown();
-                location.href = "/announcements/add";
-            })
+                $('.announcement-add-div').slideDown();
+                var today = new Date();
+                $('.announcement-add-today').html(
+                    (['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][today.getDay()]) + ", " +
+                    (['January','February','March','April','May','June','July','August','September','October','November','December'][today.getMonth()]) + " " +
+                    today.getDate() + ", " + today.getFullYear()
+                    );
+                $('.announcement-add-title, .announcement-add-content').click(function() {
+                    /*var h = $(this).html(), p = $(this).attr('placeholder');
+                    if(trim(h) == trim(p)) {
+                        $(this).html('');
+                        this.select();
+                    } */
+                });
+
+                $('.announcement-add-submit').click(function() {
+                    // .announcement-add-title, .announcement-add-author, .announcement-add-content
+                    var name = $('.announcement-add-title').html(),
+                        author = $('.announcement-add-author').html(),
+                        content = $('.announcement-add-content').html();
+
+                    $.post('/announcements/add', {
+                        'name': name,
+                        'author': author,
+                        'content': content
+                    }, function(d) {
+                        $('.announcement-add-div').html('Announcement added.');
+                    });
+                })
+                // location.href = "/announcements/add";
+            });
         });
+
+
+    </script>
+    <style>
+    div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
+        content: attr(data-placeholder);
+        float: left;
+        margin-left: 5px;
+        color: rgb(72, 72, 72);
+    }
+    </style>
+    <script>
+    $(function() {
+        $('div[data-placeholder]').on('keydown keypress input', function() {
+            if(this.textContent) {
+                this.dataset.divPlaceholderContent = 'true';
+            } else {
+                delete(this.dataset.divPlaceholderContent);
+            }
+        });
+    });
     </script>
 {% endblock %}
 
@@ -164,21 +214,35 @@
             display: none;
             position: relative;
         }
+
         .announcement-add-title {
             margin-right: 20px;
         }
+
+        .announcement-add-content {
+            height: 150px;
+        }
+
         .announcement-add-icon-wrapper {
             position: absolute;
             right: 0;
             top: 0;
             padding: 6px 10px;
         }
+
+        .announcement-add-submit {
+            position: absolute;
+            right: 0;
+            margin-top: -33px;
+            margin-right: 5px;
+        }
+
         </style>
 
         <div class="announcement announcement-add-div" data-id="add">
             <h3>
-                <div class="announcement-add-title" contenteditable>
-                    Enter a title..
+                <div class="announcement-add-title" contenteditable="true" data-placeholder="Enter a title..">
+                    
                 </div>
                 <div class="announcement-icon-wrapper announcement-add-icon-wrapper">
                     <a href="" onclick="return false">
@@ -189,13 +253,23 @@
                 &nbsp;
             </h3>
             <div class="announcement-metadata">
-                Your name &bull; <span class="announcement-add-today"></span> &bull; to
+                <span class="announcement-add-author" contenteditable="true">
+                    {{ user.full_name }}
+                </span>
+                 &bull; <span class="announcement-add-today"></span> &bull; to
                 <select name="groups">
                     <option value="all">all students</option>
+                    {# add list of groups here #}
                 </select>
+                <div class="announcement-add-options">
+                <!-- Expires: -->
+                </div>
             </div>
-            <div class="announcement-content announcement-add-content" contenteditable>
-                Enter text..
+            <div class="announcement-content announcement-add-content" contenteditable="true" data-placeholder="Enter post content..">
+                
+            </div>
+            <div class="button announcement-add-submit">
+                Submit
             </div>
         </div>
     {% for announcement in announcements %}

@@ -1,0 +1,291 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth/student.index.css' %}" />
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+<script>
+$(document).ready(function() {
+    // blocks
+    $('.eighth-wk-blocks td').click(function() {
+        blk = $(this).attr('data-block');
+        dis = $(this).attr('disabled');
+        if(blk != null && (dis == null || dis == "")) {
+            console.log('Clicked on block'+blk);
+            $('.acts-list').hide();
+            $('.acts-list-'+blk).show();
+        }
+    });
+
+    // activity
+    $('.act-row').click(function() {
+        aid = $(this).attr('class').split('act-row act-')[1];
+        console.log('Clicked on '+aid);
+        $el = $('.info-'+aid);
+        if($el.length > 0) {
+            $('.acts-info>div').hide();
+            $el.show();
+        } else console.log('aid info does not exist');
+    });
+});
+</script>
+{% endblock %}
+{% block main %}
+    <table class="eighth-table">
+        <thead><tr><td>
+        <table class="eighth-week-header">
+            <thead>
+                <td class="arrow-b"><i class="icon-backward"></i></td>
+                <th>This Week</th>
+                <td class="arrow-n"><i class="icon-forward"></i></td>
+            </thead>
+        </table>
+        </td></tr><tr><td>
+        <table class="eighth-week">
+            <tr class="eighth-wk-days">
+                <th>Monday</th>
+                <th>Wednesday</th>
+                <th>Friday</th>
+            </tr>
+            <tr class="eighth-wk-blocks eighth-wk-blockA">
+                <td class="disabled" disabled>
+                    <div class="blk-noblk">&nbsp;</div>
+                </td>
+
+                <td data-block="1">
+                    <div class="blk-block a">A</div>
+                    <div class="blk-title">Sys Op Administrators</div>
+                    <table class="blk-detail">
+                        <tr>
+                            <th>Sponsor:</th>
+                            <td>Hamilton</td>
+                        </tr>
+                        <tr>
+                            <th>Room:</th>
+                            <td>115</td>
+                        </tr>
+                    </table>
+                    <div class="blk-btns">
+                        <span class="blk-btn blk-btn-roster">View Roster</span>
+                        <span class="blk-btn blk-btn-info">View Activity Info</span>
+                    </div>
+                </td>
+                <td data-block="2">
+                    <div class="blk-block a">A</div>
+                    <div class="blk-title">Sys Op Administrators</div>
+                    <table class="blk-detail">
+                        <tr>
+                            <th>Sponsor:</th>
+                            <td>Hamilton</td>
+                        </tr>
+                        <tr>
+                            <th>Room:</th>
+                            <td>115</td>
+                        </tr>
+                    </table>
+                    <div class="blk-btns">
+                        <span class="blk-btn blk-btn-roster">View Roster</span>
+                        <span class="blk-btn blk-btn-info">View Activity Info</span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="eighth-wk-blocks eighth-wk-blockB">
+                <td data-block="3">
+                    <div class="blk-block a">A</div>
+                    <div class="blk-locked icon-lock"></div>
+                    <div class="blk-title">Sys Op Administrators</div>
+                    <table class="blk-detail">
+                        <tr>
+                            <th>Sponsor:</th>
+                            <td>Hamilton</td>
+                        </tr>
+                        <tr>
+                            <th>Room:</th>
+                            <td>115</td>
+                        </tr>
+                    </table>
+                    <div class="blk-btns">
+                        <span class="blk-btn blk-btn-roster">View Roster</span>
+                        <span class="blk-btn blk-btn-info">View Activity Info</span>
+                    </div>
+                </td>
+
+                <td data-block="4">
+                    <div class="blk-block a">B</div>
+                    <div class="blk-title blk-title-nosel">No activity selected</div>
+                    <p class="blk-nosel-help">Click to sign up for an activity</p>
+                    <div class="blk-btns">
+                    </div>
+                </td>
+                <td data-block="5">
+                    <div class="blk-block b">B</div>
+                    <div class="blk-title">Sys Op Administrators</div>
+                    <table class="blk-detail">
+                        <tr>
+                            <th>Sponsor:</th>
+                            <td>Hamilton</td>
+                        </tr>
+                        <tr>
+                            <th>Room:</th>
+                            <td>115</td>
+                        </tr>
+                    </table>
+                    <div class="blk-btns">
+                        <span class="blk-btn blk-btn-roster">View Roster</span>
+                        <span class="blk-btn blk-btn-info">View Activity Info</span>
+                    </div>
+                </td>
+            </tr>
+        </table></td></tr>
+        </thead>
+        <tfoot>
+            <tr><td><table class="eighth-bottom-container">
+            <tr><td class="eighth-bottom-left">
+            <div class="eighth-acts">
+                <div class="acts-list acts-list-1">
+    <!--
+                    <div class="acts-group-title agrpt-all">All Activities:</div>
+                    <div class="acts-group agrp-su">
+                        <div class="act-row act-(aid)">
+                            <span class="act-icons">
+                                <span class="sched-ico pie(round((Signups)/(Capacity))*10)" title="(Signups)/(Capacity)"></span>
+                            </span>
+                            <span class="act-text">
+                                <span class="act-title">Activity Name</span>
+                                <span class="act-info">(Sponsors, Room: Room)</span>
+                            </span>
+                        </div>
+                    </div>
+    -->
+                    <div class="acts-group-title">Signed up for</div>
+                    <div class="acts-group">
+                        <div class="act-row act-1">
+                            <span class="sched-ico pie2" title="3/15"></span>
+                            <span class="act-text">
+                                <span class="act-title">Sys Op Administrators</span>
+                                <span class="act-info">(Hamilton, Room: 115)</span>
+                            </span>
+                            <span class="fav-ico" title="Favorite">
+                                <span class="sched-ico fav"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="acts-group-title">Recent</div>
+                    <div class="acts-group">
+                        <div class="act-row act-2">
+                            <span class="sched-ico pie2" title="3/15"></span>
+                            <span class="act-text">
+                                <span class="act-title">Study Hall</span>
+                                <span class="act-info">(Hamilton, Room: 115)</span>
+                            </span>
+                            <span class="fav-ico" title="Favorite">
+                                <span class="sched-ico fav"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="acts-group-title">Favorites</div>
+                    <div class="acts-group">
+                        <div class="act-row act-3">
+                            <span class="sched-ico pie2" title="3/15"></span>
+                            <span class="act-text">
+                                <span class="act-title">Sys Op Administrators</span>
+                                <span class="act-info">(Hamilton, Room: 115)</span>
+                            </span>
+                            <span class="fav-ico" title="Favorite">
+                                <span class="sched-ico fav"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="acts-group-title">All</div>
+                    <div class="acts-group">
+                        <div class="act-row act-4">
+                            <span class="sched-ico pie2" title="3/15"></span>
+                            <span class="act-text">
+                                <span class="act-title">Sys Op Administrators</span>
+                                <span class="act-info">(Hamilton, Room: 115)</span>
+                            </span>
+                            <span class="fav-ico" title="Favorite">
+                                <span class="sched-ico fav"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                </td><td class="eighth-bottom-right">
+                <div class="acts-info">
+                    <div class="info-default">
+                        <p>Select an activity to view more information about it here.</p>
+                    </div>
+                    <div class="info-1 info-hide">
+                        <div class="info-title">Sys Op Administrators</div>
+                        <table class="info-desc">
+                            <tr>
+                                <th>Sponsor</th>
+                                <td>Hamilton</td>
+                            </tr>
+                            <tr>
+                                <th>Room</th>
+                                <td>115</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>Sysadmins sdafh sdjf safdsf sdf sdf sadf dsf jksdhfsjkdah kjshf kjlhsf sjafhks dfhjlh ksl fl</td>
+                            </tr>
+                            <tr>
+                                <th>Roster</th>
+                                <td>
+                                    <ul class="info-roster">
+                                        <li>John Doe (9)</li>
+                                        <li>Sally Doe (9)</li>
+                                        <li>Angela William (10)</li>
+                                        <li>Bob Smith (11)</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="info-2 info-hide">
+                        <div class="info-title">Study Hall</div>
+                        <table class="info-desc">
+                            <tr>
+                                <th>Sponsor</th>
+                                <td>Hamilton</td>
+                            </tr>
+                            <tr>
+                                <th>Room</th>
+                                <td>115</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>Study Hall sdafh sdjf safdsf sdf sdf sadf dsf jksdhfsjkdah kjshf kjlhsf sjafhks dfhjlh ksl fl</td>
+                            </tr>
+                            <tr>
+                                <th>Roster</th>
+                                <td>
+                                    <ul class="info-roster">
+                                        <li>John Doe (9)</li>
+                                        <li>Sally Doe (9)</li>
+                                        <li>Angela William (10)</li>
+                                        <li>Bob Smith (11)</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </td></tr>
+        </tfoot>
+    </table>
+{% endblock %}
