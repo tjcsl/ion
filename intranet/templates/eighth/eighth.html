@@ -54,18 +54,15 @@
             </dd>
 
             <dt>Capacity:</dt><dd><% if (roster.capacity == -1 || roster.capacity == 0) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
-            <br />
-            
-            <button class="signup-button">
-                Sign Up
-            </button>
+            <div><%= roster.count %> students have already signed up.</div>
 
-            <br />
-            <%= roster.count %> students have already signed up.
-            <br />
             <% if (description) {%>
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
+
+            <button class="signup-button">
+                Sign Up
+            </button>
         </dl>
         {% endverbatim %}
     </script>
@@ -117,7 +114,7 @@
             </div>
         </div>
 
-        <div class="activity-picker">
+        <div id="activity-picker" class="hidden-detail">
             <div class="search-wrapper">
                 <i class="icon-search"></i>
                 <span>
@@ -153,7 +150,9 @@
                 </ul>
             </div>
             <div id="activity-detail">
-                Add some sort of empty state here
+                <h3 class="empty-state">
+                    Select an activity
+                </h3>
             </div>
         </div>
     </div>
