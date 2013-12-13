@@ -4,8 +4,8 @@
 $(document).ready(function() {
     var containerWidth = $(".day-picker").width();
     var blocksWidth = $(".days-container").width();
-    $(".days-container").css("margin-left", (containerWidth - blocksWidth) / 2);
 
+    $(".days-container").css("margin-left", (containerWidth - blocksWidth + (1 - $(".days-container .day").size() % 2) * $(".days-container .day").width()) / 2);
 
     $(".day-nav").click(function(e) {
         var offset = ($(".day").width() + 1) + "px"
