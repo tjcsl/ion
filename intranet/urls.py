@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.views.generic.base import TemplateView, RedirectView
 from rest_framework import routers
@@ -17,6 +18,12 @@ urlpatterns = patterns("",
     url(r"^api/", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
+if settings.SHOW_DEBUG_TOOLAR:
+    import debug_toolbar
+
+    urlpatterns += patterns("",
+        url(r"^__debug__/", include(debug_toolbar.urls)),
+    )
 
 urlpatterns += patterns("auth.views.",
     url(r"^$", index, name="index"),
