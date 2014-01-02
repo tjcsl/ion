@@ -18,7 +18,8 @@ urlpatterns = patterns("",
     url(r"^api/", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
-if settings.SHOW_DEBUG_TOOLAR:
+
+if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns += patterns("",
