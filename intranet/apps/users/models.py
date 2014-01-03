@@ -888,6 +888,9 @@ class Class(object):
             }
         }
 
+        if name not in class_attributes:
+            raise AttributeError("'Class' has no attribute '{}'".format(name))
+
         key = ":".join([self.dn, name])
 
         cached = cache.get(key)
@@ -897,29 +900,25 @@ class Class(object):
                          "from cache.".format(name, self.section_id))
             return cached
         else:
-            if name in class_attributes:
-                c = LDAPConnection()
-                attr = class_attributes[name]
-                field_name = attr["ldap_name"]
-                try:
-                    results = c.class_attributes(self.dn, [field_name])
-                    result = results.first_result()[field_name]
-                except KeyError:
-                    logger.warning("KeyError fetching " + name +
-                                   " for class " + self.dn)
-                    return None
-                else:
-                    if attr["list"]:
-                        value = result
-                    else:
-                        value = result[0]
-
-                    cache.set(key, value,
-                              timeout=settings.CACHE_AGE['class_attribute'])
-                    return value
+            c = LDAPConnection()
+            attr = class_attributes[name]
+            field_name = attr["ldap_name"]
+            try:
+                results = c.class_attributes(self.dn, [field_name])
+                result = results.first_result()[field_name]
+            except KeyError:
+                logger.warning("KeyError fetching " + name +
+                               " for class " + self.dn)
+                return None
             else:
-                # Default behaviour
-                raise AttributeError
+                if attr["list"]:
+                    value = result
+                else:
+                    value = result[0]
+
+                cache.set(key, value,
+                          timeout=settings.CACHE_AGE['class_attribute'])
+                return value
 
 
 class Address(object):
