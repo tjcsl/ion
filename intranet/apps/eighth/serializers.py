@@ -112,7 +112,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             sponsor = all_sponsors[sponsor_id]
 
             if sponsor["user_id"]:
-                user = User.create_user(id=sponsor["user_id"])
+                user = User.get_user(id=sponsor["user_id"])
                 if user is not None:
                     name = user.last_name
                 else:
@@ -130,7 +130,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             sponsor = all_sponsors[sponsor_id]
 
             if sponsor["user_id"]:
-                user = User.create_user(id=sponsor["user_id"])
+                user = User.get_user(id=sponsor["user_id"])
                 if user is not None:
                     name = user.last_name
                 else:

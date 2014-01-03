@@ -29,39 +29,59 @@ class UserManager(UserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    """Django User model subclass with properties that fetch data from LDAP
+    """Django User model subclass with properties that fetch data
+    from LDAP
 
     Represents a tjhsstStudent or tjhsstTeacher LDAP object.Extends
     AbstractBaseUser so the model will work with Django's built-in
     authorization functionality.
 
+    The User model is primarily an abstraction of LDAP which has just
+    enough fields duplicated in the SQL database for Django to accept
+    it as a valid user model that can have relations to other models in
+    the database.
+
+    When creating a user object, use User.get_user() so the User object
+    can access all of its data in LDAP. Using the default User()
+    constructor is not a good idea, since, for example, if you create a
+    user object form a DN (User(dn="...'')), you will not be able to
+    fetch the user id.
+
+    When fetching a username, do not use the username attribute.
+    Instead, use ion_username, which pulls the username from LDAP
+    instead of the SQL database, which does not necessarily contain the
+    user object.
+
     """
+
     # Django Model Fields
-    username = models.CharField(max_length=15, unique=True)
-    # first_name = models.CharField(max_length=50)
-    # last_name = models.CharField(max_length=50)
+    username = models.CharField(max_length=30, unique=True)
+
+    # Private dn cache
     _dn = None
 
-    """Required to replace the default Django User model."""
+    # Required to replace the default Django User model
     USERNAME_FIELD = "username"
 
     """Override default Model Manager (objects) with
-    custom UserManager."""
+    custom UserManager to add table-level functionality."""
     objects = UserManager()
 
     @classmethod
-    def create_user(cls, dn=None, id=None):
-        """User factory method.
+    def get_user(cls, dn=None, id=None, username=None):
+        """Retrieve a user object from LDAP
 
-        Creates a User method from a dn or a username. If both a dn and
-        a username is provided, the dn will be used.
+        Creates a User object from a dn, user id, or a username based on
+        data in the LDAP database.
 
         Args:
-            - dn -- The full Distinguished Name of a user.
+            - dn -- The full LDAP Distinguished Name of a user.
             - id -- The user ID of the user to return.
+            - username -- The username of the user to return.
 
         Returns:
-            The User object if one could be created, otherwise None
+            The User object if the user could be found in LDAP,
+            otherwise None
         """
         if dn is not None:
             try:
@@ -71,13 +91,15 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
                 return None
-
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
                 return User(dn=user_dn, id=id)
             else:
                 return None
+        elif username is not None:
+            dn = User.dn_from_username(username)
+            return get_user(dn=dn)
         else:
             return None
 
@@ -113,6 +135,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             cache.set(key, dn, timeout=settings.CACHE_AGE['dn_id_mapping'])
             return dn
 
+    @classmethod
+    def dn_from_username(cls, username):
+        return "iodineUid=" + username + "," + settings.USER_DN
+
     @staticmethod
     def create_secure_cache_key(identifier):
         """Create a cache key for sensitive information.
@@ -130,8 +156,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         be associated).
 
         Args:
-            - identifier -- The plaintext identifier (generally of the form\
-                            "<dn>.<attribute>" for the cached data).
+            - identifier -- The plaintext identifier (generally of the \
+                            form "<dn>.<attribute>" for the cached data).
 
         Returns:
             String
@@ -162,7 +188,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self._dn and self.id:
             self._dn = User.dn_from_id(self.id)
         elif self.username:
-            self._dn = "iodineUid=" + self.username + "," + settings.USER_DN
+            self._dn = User.dn_from_username(self.username)
         return self._dn
 
     @dn.setter
@@ -269,7 +295,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached:
             logger.debug("Attribute 'counselor' of user {} loaded "
                          "from cache.".format(self.id))
-            user_object = User.create_user(id=cached)
+            user_object = User.get_user(id=cached)
             return user_object
         else:
             c = LDAPConnection()
@@ -281,7 +307,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             else:
                 cache.set(key, counselor,
                           timeout=settings.CACHE_AGE['user_attribute'])
-                user_object = User.create_user(id=counselor)
+                user_object = User.get_user(id=counselor)
                 return user_object
 
     @property
@@ -764,7 +790,7 @@ class Class(object):
         if cached:
             logger.debug("Attribute 'teacher' of class {} loaded "
                          "from cache.".format(self.section_id))
-            return User.create_user(dn=cached)
+            return User.get_user(dn=cached)
         else:
             c = LDAPConnection()
             results = c.class_attributes(self.dn, ['sponsorDn'])
@@ -775,7 +801,7 @@ class Class(object):
             # all of the properties and quickly reach the maximum
             # recursion depth
             cache.set(key, dn, timeout=settings.CACHE_AGE['class_teacher'])
-            return User.create_user(dn=dn)
+            return User.get_user(dn=dn)
 
     @property
     def quarters(self):

@@ -22,7 +22,7 @@ def profile_view(request, user_id=None):
 
     """
     if user_id is not None:
-        profile_user = User.create_user(id=user_id)
+        profile_user = User.get_user(id=user_id)
         if profile_user is None:
             raise Http404
     else:
@@ -43,7 +43,7 @@ def picture_view(request, user_id, year=None):
                   If not specified, use the preferred picture.
 
     """
-    user = User.create_user(id=user_id)
+    user = User.get_user(id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/pig.jpg")
 
     if user is None:
