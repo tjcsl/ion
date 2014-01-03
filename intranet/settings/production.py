@@ -11,6 +11,7 @@ DATABASE_URL should be of the following form:
 DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 TEMPLATE_DEBUG = DEBUG
 
+SHOW_DEBUG_TOOLBAR = False
 
 CACHES['default']['OPTIONS']['DB'] = 1
 

@@ -145,8 +145,10 @@ CACHES = {
         "OPTIONS": {
             "PARSER_CLASS": "redis.connection.HiredisParser"
         },
+        "KEY_PREFIX": VIRTUAL_ENV
     },
 }
+
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
