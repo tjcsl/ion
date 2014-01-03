@@ -113,7 +113,7 @@ class LDAPConnection(object):
             r = self.search(dn, filter, attributes)
         except ldap.NO_SUCH_OBJECT:
             logger.error("No such class " + dn)
-            return LDAPResult([])
+            raise
         logger.debug("Query returned " + str(r))
         return LDAPResult(r)
 
