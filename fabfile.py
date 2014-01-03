@@ -31,17 +31,21 @@ def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
 
-def runserver(port=None, dbt="yes"):
+def runserver(port=None, debug_toolbar="yes", dummy_cache="no", short_cache="no"):
     """Clear compiled python files and start the Django dev server."""
-    if not port:
+    if not port or not port.isdigit():
         abort("You must specify a port.")
 
     clean_pyc()
+    debug_toolbar="yes"
+    yes_or_no = ("debug_toolbar", "dummy_cache", "short_cache")
+    for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
+        if arg not in ("yes", "no"):
+            abort("Specify 'yes' or 'no' for '" + name + "' option.")
 
-    if dbt.lower() not in ("yes", "no"):
-        abort("Specify 'yes' or 'no' for 'dbt' option (enable debug toolbar.)")
-
-    with shell_env(SHOW_DEBUG_TOOLBAR=dbt.upper()):
+    with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(),
+                   DUMMY_CACHE=dummy_cache.upper(),
+                   SHORT_CACHE=short_cache.upper()):
         local("./manage.py runserver 0.0.0.0:{}".format(port))
 
 
@@ -52,7 +56,7 @@ def killserver(port):
     except ValueError:
         abort("Not a valid port number.")
 
-    local("pgrep -f 'runserver 0.0.0.0:{}'|xargs kill -INT".format(port))
+    local("pgrep -f 'runserver 0.0.0.0:{}'|xargs kill".format(port))
 
 
 def _require_root():

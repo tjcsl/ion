@@ -33,16 +33,18 @@ SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 CACHES["default"]["OPTIONS"]["DB"] = 2
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+if os.getenv("DUMMY_CACHE", "NO") == "YES":
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
     }
-}
 
-# Make the cache age last just long enough to reload the page to
-# check if caching worked
-# for key in CACHE_AGE:
-#     CACHE_AGE[key] = 60
+if os.getenv("SHORT_CACHE", "NO") == "YES":
+    # Make the cache age last just long enough to reload the page to
+    # check if caching worked
+    for key in CACHE_AGE:
+        CACHE_AGE[key] = 60
 
 
 class glob_list(list):
