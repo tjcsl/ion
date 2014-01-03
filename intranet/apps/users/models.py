@@ -88,18 +88,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
-                return None
+                raise User.DoesNotExist
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
                 return User(dn=user_dn, id=id)
             else:
-                return None
+                raise User.DoesNotExist
         elif username is not None:
             dn = User.dn_from_username(username)
             return get_user(dn=dn)
         else:
-            return None
+            raise TypeError("get_user() requires at least one argument.")
 
     @staticmethod
     def dn_from_id(id):
@@ -615,10 +615,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             the attribute fetched.
 
         """
-        identifier = ":".join([self.dn, name])
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
 
         # This map essentially turns camelcase names into
         # Python-style attribute names. The second  elements of
@@ -718,10 +714,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
         }
 
-        if name in user_attributes:
-            attr = user_attributes[name]
-        else:
-            raise AttributeError
+        if name not in user_attributes:
+            raise AttributeError("'User' has no attribute '{}'".format(name))
+
+        if self.dn == None:
+            raise Exception("Could not determine DN of User")
+
+        identifier = ":".join((self.dn, name))
+        key = User.create_secure_cache_key(identifier)
+
+        cached = cache.get(key)
+
+
+        attr = user_attributes[name]
 
         if attr["perm"] is None:
             visible = True
@@ -733,26 +738,22 @@ class User(AbstractBaseUser, PermissionsMixin):
                          "from cache.".format(name, self.id))
             return cached
         elif not cached and visible:
-            if name in user_attributes:
-                c = LDAPConnection()
-                field_name = attr["ldap_name"]
-                try:
-                    results = c.user_attributes(self.dn, [field_name])
-                    result = results.first_result()[field_name]
+            c = LDAPConnection()
+            field_name = attr["ldap_name"]
+            try:
+                results = c.user_attributes(self.dn, [field_name])
+                result = results.first_result()[field_name]
 
-                    if attr["list"]:
-                        value = result
-                    else:
-                        value = result[0]
+                if attr["list"]:
+                    value = result
+                else:
+                    value = result[0]
 
-                    cache.set(key, value,
-                              timeout=settings.CACHE_AGE["user_attribute"])
-                    return value
-                except KeyError:
-                    return None
-            else:
-                logger.debug("Attribute {} of user not found.".format(name))
-                raise AttributeError
+                cache.set(key, value,
+                          timeout=settings.CACHE_AGE["user_attribute"])
+                return value
+            except KeyError:
+                return None
         else:
             return None
 
@@ -763,6 +764,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Class(object):
 
     """Represents a tjhsstClass LDAP object.
+
+    Note that this is not a Django model, but rather an interface
+    to LDAP classes.
 
     Attributes:
         - dn -- The DN of the cooresponding tjhsstClass in LDAP
@@ -860,6 +864,30 @@ class Class(object):
 
 
         """
+
+        class_attributes = {
+            "name": {
+                "ldap_name": "cn",
+                "list": False
+            },
+            "period": {
+                "ldap_name": "classPeriod",
+                "list": False
+            },
+            "class_id": {
+                "ldap_name": "tjhsstClassId",
+                "list": False
+            },
+            "course_length": {
+                "ldap_name": "courseLength",
+                "list": False
+            },
+            "room_number": {
+                "ldap_name": "roomNumber",
+                "list": False
+            }
+        }
+
         key = ":".join([self.dn, name])
 
         cached = cache.get(key)
@@ -869,29 +897,6 @@ class Class(object):
                          "from cache.".format(name, self.section_id))
             return cached
         else:
-            class_attributes = {
-                "name": {
-                    "ldap_name": "cn",
-                    "list": False
-                },
-                "period": {
-                    "ldap_name": "classPeriod",
-                    "list": False
-                },
-                "class_id": {
-                    "ldap_name": "tjhsstClassId",
-                    "list": False
-                },
-                "course_length": {
-                    "ldap_name": "courseLength",
-                    "list": False
-                },
-                "room_number": {
-                    "ldap_name": "roomNumber",
-                    "list": False
-                }
-            }
-
             if name in class_attributes:
                 c = LDAPConnection()
                 attr = class_attributes[name]
