@@ -187,7 +187,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached:
             logger.debug("Grade of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             return cached
         else:
             grad_year = self.graduation_year
@@ -217,7 +217,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached and visible:
             logger.debug("Attribute 'classes' of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             schedule = []
             for dn in cached:
                 class_object = Class(dn=dn)
@@ -268,7 +268,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached:
             logger.debug("Attribute 'counselor' of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             user_object = User.create_user(id=cached)
             return user_object
         else:
@@ -300,7 +300,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached and visible:
             logger.debug("Attribute 'address' of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -339,7 +339,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached and visible:
             logger.debug("Attribute 'birthday' of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -385,7 +385,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached and visible:
             logger.debug("{} photo of user {} loaded "
                          "from cache.".format(photo_year.title(),
-                                              self.username))
+                                              self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -420,7 +420,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached:
             logger.debug("Photo permissions of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             return cached
         else:
             c = LDAPConnection()
@@ -486,7 +486,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached:
             logger.debug("Permissions of user {} loaded "
-                         "from cache.".format(self.username))
+                         "from cache.".format(self.id))
             return cached
         else:
             c = LDAPConnection()
@@ -725,7 +725,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     def __unicode__(self):
-        return self.username or self.ion_username
+        return self.username or self.ion_username or self.id
 
 
 class Class(object):
