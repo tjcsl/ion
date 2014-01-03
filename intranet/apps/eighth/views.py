@@ -77,7 +77,8 @@ def eighth_signup_view(request, block_id=None):
     context = {"user": request.user,
                "page": "eighth",
                "block_info": block_info,
-               "bootstrapped_activities_list": JSONRenderer().render(block_info["activities"])
+               "bootstrapped_activities_list": JSONRenderer().render(block_info["activities"]),
+               "active_block": block
                }
 
     return render(request, "eighth/eighth.html", context)

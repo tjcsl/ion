@@ -60,7 +60,7 @@
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
 
-            <button class="signup-button">
+            <button id="signup-button">
                 Sign Up
             </button>
         </dl>
@@ -78,13 +78,13 @@
             <ul class="days-container">
                 {% spaceless %}
                     {% for day in block_info.schedule %}
-                        <li class="day{% if day.date = block_info.date %} today{% endif %}">
+                        <li class="day">
                             <div class="block-title">
                                 {{ day.date|date:"M d, Y" }}
                             </div>
                                 {% for b in day.blocks %}
                                     <a href="{% url 'eighth' b.id %}">
-                                        <div class="block">
+                                        <div class="block{% if active_block.id = b.id %} active-block{% endif %}">
                                             <span class="block-letter">
                                                 {{ b.block_letter }}
                                             </span>

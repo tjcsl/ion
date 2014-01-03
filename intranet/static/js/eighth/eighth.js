@@ -4,10 +4,22 @@
 $(document).ready(function() {
     var containerWidth = $(".day-picker").width();
     var blocksWidth = $(".days-container").width();
+    console.log(containerWidth);
+    console.log(blocksWidth);
 
-    $(".days-container").css("margin-left", (containerWidth - blocksWidth + (1 - $(".days-container .day").size() % 2) * $(".days-container .day").width()) / 2);
+    if ($(".days-container .day").size() % 2 == 0) {
+        $(".days-container").css("margin-left", (containerWidth - blocksWidth + (1 - $(".days-container .day").size() % 2) * $(".days-container .day").width()) / 2);
+    } else {
+         $(".days-container").css("margin-left", (containerWidth - blocksWidth) / 2);
+    }
+
 
     $(".day-nav").click(function(e) {
+        if(e.shiftKey || e.ctrlKey || e.altKey) {
+            console.log("hi");
+            return;
+        }
+
         var offset = ($(".day").width() + 1) + "px"
         if ($(e.target).parents().andSelf().hasClass("later-days")) {
             offset = "-=" + offset;
