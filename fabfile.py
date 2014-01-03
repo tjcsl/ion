@@ -31,21 +31,29 @@ def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
 
-def runserver(port=None, debug_toolbar="yes", dummy_cache="no", short_cache="no"):
+def runserver(port=None,
+              debug_toolbar="yes",
+              dummy_cache="no",
+              short_cache="no",
+              warn_invalid_template_vars="no"):
     """Clear compiled python files and start the Django dev server."""
     if not port or not port.isdigit():
         abort("You must specify a port.")
 
     clean_pyc()
     debug_toolbar="yes"
-    yes_or_no = ("debug_toolbar", "dummy_cache", "short_cache")
+    yes_or_no = ("debug_toolbar",
+                 "dummy_cache",
+                 "short_cache",
+                 "warn_invalid_template_vars")
     for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
         if arg not in ("yes", "no"):
             abort("Specify 'yes' or 'no' for '" + name + "' option.")
 
     with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(),
                    DUMMY_CACHE=dummy_cache.upper(),
-                   SHORT_CACHE=short_cache.upper()):
+                   SHORT_CACHE=short_cache.upper(),
+                   WARN_INVALID_TEMPLATE_VARS=warn_invalid_template_vars.upper()):
         local("./manage.py runserver 0.0.0.0:{}".format(port))
 
 
