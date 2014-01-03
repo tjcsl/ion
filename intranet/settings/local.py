@@ -1,5 +1,6 @@
 from fnmatch import fnmatch
 import logging
+import traceback
 from .base import *
 
 logger = logging.getLogger(__name__)
@@ -7,17 +8,15 @@ logger = logging.getLogger(__name__)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-class InvalidString(str):
+if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
+    class InvalidString(str):
 
-    """An error for undefined context variables in templates."""
+        """An error for undefined context variables in templates."""
 
-    def __mod__(self, other):
-        #from django.template.base import TemplateSyntaxError
-        #raise TemplateSyntaxError(
-        #    "Undefined variable or unknown value for: \"%s\"" % other)
-        logger.warning("Undefined variable or unknown value for: \"%s\"" % other)
-
-TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
+        def __mod__(self, other):
+            logger.warning("Undefined variable or unknown value for: \"%s\"" % other)
+            return ""
+    TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
 
 
 DATABASES = {
