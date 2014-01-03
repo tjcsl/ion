@@ -24,8 +24,7 @@ class UserManager(UserManager):
     default User model manager.
 
     """
-    def foo():
-        pass
+    pass
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -68,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 user = User(dn=dn)
                 user.id = user.ion_id
+
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
                 return None
@@ -96,7 +96,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("DN for ID {} loaded "
+            logger.debug("DN for User with ID {} loaded "
                          "from cache.".format(id))
             return cached
         else:
@@ -110,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 dn = result[0][0]
             else:
                 dn = None
-            cache.set(key, dn, settings.CACHE_AGE['dn_id_mapping'])
+            cache.set(key, dn, timeout=settings.CACHE_AGE['dn_id_mapping'])
             return dn
 
     @staticmethod
@@ -196,7 +196,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             else:
                 grade = Grade(grad_year)
 
-            cache.set(key, grade, settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, grade,
+                      timeout=settings.CACHE_AGE['ldap_permissions'])
             return grade
 
     @property
@@ -246,7 +247,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 # recursively and quickly reaches the maximum
                 # recursion depth)
                 dn_list = list(zip(*ordered_schedule)[2])
-                cache.set(key, dn_list, settings.CACHE_AGE['user_classes'])
+                cache.set(key, dn_list,
+                          timeout=settings.CACHE_AGE['user_classes'])
                 return list(zip(*ordered_schedule)[1])  # Unpacked class list
         else:
             return None
@@ -278,7 +280,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return None
             else:
                 cache.set(key, counselor,
-                          settings.CACHE_AGE['user_attribute'])
+                          timeout=settings.CACHE_AGE['user_attribute'])
                 user_object = User.create_user(id=counselor)
                 return user_object
 
@@ -315,7 +317,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             else:
                 address_object = Address(street, city, state, postal_code)
                 cache.set(key, address_object,
-                          settings.CACHE_AGE['user_attribute'])
+                          timeout=settings.CACHE_AGE['user_attribute'])
                 return address_object
 
         else:
@@ -349,7 +351,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             else:
                 date_object = datetime.strptime(birthday, '%Y%m%d')
                 cache.set(key, date_object,
-                          settings.CACHE_AGE['user_attribute'])
+                          timeout=settings.CACHE_AGE['user_attribute'])
                 return date_object
 
         else:
@@ -399,7 +401,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             except (ldap.NO_SUCH_OBJECT, KeyError):
                 data = None
 
-            cache.set(key, data, settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, data,
+                      timeout=settings.CACHE_AGE['ldap_permissions'])
             return data
         else:
             return None
@@ -465,7 +468,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     except KeyError:
                         perms["self"][grade] = False
 
-            cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, perms,
+                      timeout=settings.CACHE_AGE['ldap_permissions'])
             return perms
 
     @property
@@ -508,7 +512,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     perm_name = perm[5:]
                     perms["parent"][perm_name] = bool_value
 
-            cache.set(key, perms, settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, perms,
+                      timeout=settings.CACHE_AGE['ldap_permissions'])
             return perms
 
     @property
@@ -591,92 +596,92 @@ class User(AbstractBaseUser, PermissionsMixin):
         user_attributes = {
             "ion_id": {
                 "ldap_name": "iodineUidNumber",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "ion_username": {
                 "ldap_name": "iodineUid",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "cn": {
                 "ldap_name": "cn",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "display_name": {
                 "ldap_name": "displayName",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "title": {
                 "ldap_name": "title",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "first_name": {
                 "ldap_name": "givenName",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "middle_name": {
                 "ldap_name": "middlename",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "last_name": {
                 "ldap_name": "sn",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "user_type": {
                 "ldap_name": "objectClass",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "graduation_year": {
                 "ldap_name": "graduationYear",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "preferred_photo": {
                 "ldap_name": "preferredPhoto",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "emails": {
                 "ldap_name": "mail",
-                "perm": False,
+                "perm": None,
                 "list": True
             },
             "home_phone": {
                 "ldap_name": "homePhone",
-                "perm": 'showtelephone',
+                "perm": "showtelephone",
                 "list": False
             },
             "mobile_phone": {
                 "ldap_name": "mobile",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "other_phones": {
                 "ldap_name": "telephoneNumber",
-                "perm": False,
+                "perm": None,
                 "list": True
             },
             "google_talk": {
                 "ldap_name": "googleTalk",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "skype": {
                 "ldap_name": "skype",
-                "perm": False,
+                "perm": None,
                 "list": False
             },
             "webpages": {
                 "ldap_name": "webpage",
-                "perm": False,
+                "perm": None,
                 "list": True
             },
         }
@@ -686,14 +691,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             raise AttributeError
 
-        if attr["perm"] is False:
+        if attr["perm"] is None:
             visible = True
         else:
             visible = self.attribute_is_visible(attr["perm"])
 
         if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded "
-                         "from cache.".format(name, self.username))
+                         "from cache.".format(name, self.id))
             return cached
         elif not cached and visible:
             if name in user_attributes:
@@ -708,7 +713,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     else:
                         value = result[0]
 
-                    cache.set(key, value, settings.CACHE_AGE["user_attribute"])
+                    cache.set(key, value,
+                              timeout=settings.CACHE_AGE["user_attribute"])
                     return value
                 except KeyError:
                     return None
@@ -768,7 +774,7 @@ class Class(object):
             # Only cache the dn, since pickling would recursively fetch
             # all of the properties and quickly reach the maximum
             # recursion depth
-            cache.set(key, dn, settings.CACHE_AGE['class_teacher'])
+            cache.set(key, dn, timeout=settings.CACHE_AGE['class_teacher'])
             return User.create_user(dn=dn)
 
     @property
@@ -792,17 +798,18 @@ class Class(object):
             results = c.class_attributes(self.dn, ["quarterNumber"])
             result = [int(i) for i in results.first_result()["quarterNumber"]]
 
-            cache.set(key, result, settings.CACHE_AGE["class_attribute"])
+            cache.set(key, result,
+                      timeout=settings.CACHE_AGE["class_attribute"])
             return result
 
     def __getattr__(self, name):
-        """Return simple attributes of User
+        """Return simple attributes of Class
 
         This is used to retrieve ldap fields that don't require special
         processing, e.g. roomNumber or period. Fields names are
         mapped to more user friendly names to increase readability of
         templates. When more complex processing is required or a
-        complex return type is required, (such as a User object),
+        complex return type is required, (such as a Class object),
         properties should be used instead.
 
         Note that __getattr__ is used instead of __getattribute__ so
@@ -871,7 +878,7 @@ class Class(object):
                         value = result[0]
 
                     cache.set(key, value,
-                              settings.CACHE_AGE['class_attribute'])
+                              timeout=settings.CACHE_AGE['class_attribute'])
                     return value
             else:
                 # Default behaviour
@@ -880,7 +887,7 @@ class Class(object):
 
 class Address(object):
 
-    """Represents the address of a user.
+    """Represents a user's address.
 
     Attributes:
         - street -- The street name of the address.
@@ -905,7 +912,7 @@ class Address(object):
 
 class Grade(object):
 
-    """Represents the grade of a user."""
+    """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior", "graduate"]
 
     def __init__(self, graduation_year):
