@@ -41,16 +41,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     it as a valid user model that can have relations to other models in
     the database.
 
-    When creating a user object, use User.get_user() so the User object
-    can access all of its data in LDAP. Using the default User()
-    constructor is not a good idea, since, for example, if you create a
-    user object form a DN (User(dn="...'')), you will not be able to
-    fetch the user id.
+    When creating a user object to fetch LDAP data, use User.get_user().
+    User() should only be used to add a user to the SQL database and
+    User.objects.get() should not be used because users in LDAP are not
+    necessarily in the SQL database.
 
-    When fetching a username, do not use the username attribute.
+    When fetching a username, do not use the "username" model field.
     Instead, use ion_username, which pulls the username from LDAP
-    instead of the SQL database, which does not necessarily contain the
-    user object.
+    instead of the SQL database.
 
     """
 
@@ -103,8 +101,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
-    @classmethod
-    def dn_from_id(cls, id):
+    @staticmethod
+    def dn_from_id(id):
         """Get a dn, given an ID.
 
         Args:
@@ -114,11 +112,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             - String if dn was found, otherwise None
 
         """
+        logger.debug("Fetching DN of User with ID {}.".format(id))
         key = ":".join([str(id), 'dn'])
         cached = cache.get(key)
 
         if cached:
-            logger.debug("DN for User with ID {} loaded "
+            logger.debug("DN of User with ID {} loaded "
                          "from cache.".format(id))
             return cached
         else:
@@ -131,13 +130,20 @@ class User(AbstractBaseUser, PermissionsMixin):
             if len(result) == 1:
                 dn = result[0][0]
             else:
+                logger.debug("No such User with ID {}.".format(id))
                 dn = None
             cache.set(key, dn, timeout=settings.CACHE_AGE['dn_id_mapping'])
             return dn
 
-    @classmethod
-    def dn_from_username(cls, username):
-        return "iodineUid=" + username + "," + settings.USER_DN
+    @staticmethod
+    def dn_from_username(username):
+        logger.debug("Fetching DN of User with username {}.".format(username))
+        return "iodineUid=" + ldap.dn.escape_dn_chars(username) + "," + settings.USER_DN
+
+    @staticmethod
+    def username_from_dn(dn):
+        logger.debug("Fetching username of User with ID {}.".format(id))
+        return ldap.dn.str2dn(dn)[0][0][1]
 
     @staticmethod
     def create_secure_cache_key(identifier):

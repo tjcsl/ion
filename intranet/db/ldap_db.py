@@ -85,9 +85,9 @@ class LDAPConnection(object):
         filter = "(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))"
         try:
             r = self.search(dn, filter, attributes)
-        except ldap.NO_SUCH_OBJECT:
+        except ldap.NO_SUCH_OBJECT as e:
             logger.error("No such user " + dn)
-            return LDAPResult([])
+            raise
         logger.debug("Query returned " + str(r))
         return LDAPResult(r)
 
