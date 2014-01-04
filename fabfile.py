@@ -33,6 +33,7 @@ def clean_pyc():
 
 def runserver(port=None,
               debug_toolbar="yes",
+              werkzeug="no",
               dummy_cache="no",
               short_cache="no",
               warn_invalid_template_vars="no"):
@@ -43,6 +44,7 @@ def runserver(port=None,
     clean_pyc()
 
     yes_or_no = ("debug_toolbar",
+                 "werkzeug",
                  "dummy_cache",
                  "short_cache",
                  "warn_invalid_template_vars")
@@ -54,7 +56,7 @@ def runserver(port=None,
                    DUMMY_CACHE=dummy_cache.upper(),
                    SHORT_CACHE=short_cache.upper(),
                    WARN_INVALID_TEMPLATE_VARS=warn_invalid_template_vars.upper()):
-        local("./manage.py runserver 0.0.0.0:{}".format(port))
+        local("./manage.py runserver{} 0.0.0.0:{}".format("_plus" if werkzeug.lower() == "yes" else "", port))
 
 
 def killserver(port):
