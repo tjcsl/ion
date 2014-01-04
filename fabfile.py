@@ -41,7 +41,7 @@ def runserver(port=None,
         abort("You must specify a port.")
 
     clean_pyc()
-    debug_toolbar="yes"
+
     yes_or_no = ("debug_toolbar",
                  "dummy_cache",
                  "short_cache",
