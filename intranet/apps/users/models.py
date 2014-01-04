@@ -7,7 +7,7 @@ from django import template
 from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
-from intranet.db.ldap_db import LDAPConnection
+from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet import settings
 from intranet.middleware import threadlocals
 

@@ -162,6 +162,14 @@ BASE_DN = "dc=tjhsst,dc=edu"
 USER_DN = "ou=people,dc=tjhsst,dc=edu"
 CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
+LDAP_OBJECT_CLASSES = {
+    "student": "tjhsstStudent",
+    "teacher": "tjhsstTeacher",
+    "simple_user": "simpleUser",
+    "attendance_user": "tjhsstUser"
+}
+
+
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "USE_ABSOLUTE_URLS": True,
