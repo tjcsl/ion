@@ -15,14 +15,25 @@ _thread_locals = local()
 
 class LDAPFilter(object):
     @staticmethod
+    def operator(operator, *conditions):
+        return "(" + operator + "".join(("(" + c + ")" for c in conditions)) + ")"
+
+    @staticmethod
+    def and_filter(*conditions):
+        return LDAPFilter.operator("&", *conditions)
+
+    @staticmethod
+    def or_filter(*conditions):
+        return LDAPFilter.operator("|", *conditions)
+
+
+    @staticmethod
     def attribute_in_list(attribute, values):
         """Returns a filter for selecting all entries for which a
         specified attribute is contained in a specified list of values.
         """
-
-        return "(|" + \
-               "".join(("({}={})".format(attribute, v) for v in values)) + \
-               ")"
+        conditions = (attribute + "=" + v for v in values)
+        return LDAPFilter.or_filter(*conditions)
 
     @staticmethod
     def all_users():
