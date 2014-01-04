@@ -55,6 +55,15 @@ class LDAPConnection(object):
             _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
+
+    @property
+    def raw_connection(self):
+        """Return the raw connection from threadlocals
+        """
+
+        return _thread_locals.ldap_conn
+
+
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
 
