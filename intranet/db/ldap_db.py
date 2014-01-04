@@ -13,6 +13,23 @@ logger = logging.getLogger(__name__)
 _thread_locals = local()
 
 
+class LDAPFilter(object):
+    @staticmethod
+    def attribute_in_list(attribute, values):
+        """Returns a filter for selecting all entries for which a
+        specified attribute is contained in a specified list of values.
+        """
+
+        return "(|" + "".join(("({}={})".format(attribute, v) for v in values)) + ")"
+
+    @staticmethod
+    def all_users():
+        """Returns a filter for selecting all user objects in LDAP
+        """
+
+        return LDAPFilter.attribute_in_list("objectclass", settings.LDAP_OBJECT_CLASSES.values())
+
+
 class LDAPConnection(object):
     """Represents an LDAP connection with wrappers for the raw ldap
     queries.
@@ -56,7 +73,7 @@ class LDAPConnection(object):
             An LDAPResult object.
 
         Raises:
-             Should raise stuff but it doesn't yet
+            Should raise stuff but it doesn't yet
 
         """
         logger.debug("Searching ldap - dn: {}, filter: {}, "
@@ -81,8 +98,9 @@ class LDAPConnection(object):
         """
         logger.debug("Fetching attributes '{}' of user "
                      "{}".format(str(attributes), dn))
-        # raise Exception(2)
-        filter = "(|(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher))"
+
+        filter = LDAPFilter.all_users()
+
         try:
             r = self.search(dn, filter, attributes)
         except ldap.NO_SUCH_OBJECT as e:
