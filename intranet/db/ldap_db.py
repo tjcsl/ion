@@ -20,14 +20,17 @@ class LDAPFilter(object):
         specified attribute is contained in a specified list of values.
         """
 
-        return "(|" + "".join(("({}={})".format(attribute, v) for v in values)) + ")"
+        return "(|" + \
+               "".join(("({}={})".format(attribute, v) for v in values)) + \
+               ")"
 
     @staticmethod
     def all_users():
         """Returns a filter for selecting all user objects in LDAP
         """
 
-        return LDAPFilter.attribute_in_list("objectclass", settings.LDAP_OBJECT_CLASSES.values())
+        user_object_classes = settings.LDAP_OBJECT_CLASSES.values()
+        return LDAPFilter.attribute_in_list("objectclass",user_object_classes)
 
 
 class LDAPConnection(object):
@@ -146,7 +149,6 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
-
     """Represents the result of an LDAP query.
 
     LDAPResult stores the raw result of an LDAP query and can process
