@@ -16,8 +16,7 @@ register = template.Library()
 
 
 class UserManager(UserManager):
-
-    """User model Manager for table-level LDAP queries.
+    """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
     to a method fails for this Manager, the call is deferred to the
@@ -28,13 +27,11 @@ class UserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
     """Django User model subclass with properties that fetch data
     from LDAP
 
-    Represents a tjhsstStudent or tjhsstTeacher LDAP object.Extends
-    AbstractBaseUser so the model will work with Django's built-in
-    authorization functionality.
+    Represents a user object in LDAP.Extends AbstractBaseUser so the
+    model will work with Django's built-in authorization functionality.
 
     The User model is primarily an abstraction of LDAP which has just
     enough fields duplicated in the SQL database for Django to accept
@@ -88,13 +85,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
-                raise User.DoesNotExist
+                raise User.DoesNotExist("`User` with DN '{}'' does not exist.".format(dn))
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
                 return User(dn=user_dn, id=id)
             else:
-                raise User.DoesNotExist
+                raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
         elif username is not None:
             dn = User.dn_from_username(username)
             return get_user(dn=dn)
@@ -123,10 +120,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             c = LDAPConnection()
             result = c.search(settings.USER_DN,
-                              "(&(|(objectClass=tjhsstStudent)"
-                              "(objectClass=tjhsstTeacher))"
-                              "(iodineUidNumber={}))".format(id),
+                              "iodineUidNumber={}".format(id),
                               ['dn'])
+            print(result)
             if len(result) == 1:
                 dn = result[0][0]
             else:
@@ -401,7 +397,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         cached = cache.get(key)
 
-        if self.own_info():
+        if self.is_http_request_sender():
             visible = True
         else:
             perms = self.photo_permissions
@@ -549,17 +545,52 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
-    def is_staff(self):
-        """Checks if a user is a tjhsstTeacher.
+    def is_teacher(self):
+        """Checks if user is a teacher.
 
         Returns:
             Boolean
 
         """
+
         return self.user_type == "tjhsstTeacher"
 
-    def own_info(self):
-        """Checks if a user is viewing his or her own info.
+    @property
+    def is_student(self):
+        """Checks if user is a student.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.user_type == "tjhsstStudent"
+
+    @property
+    def is_attendance_user(self):
+        """Checks if user is an attendance-only user.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.user_type == "tjhsstUser"
+
+    @property
+    def is_simple_user(self):
+        """Checks if user is a simple user (e.g. eighth office user)
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.user_type == "simpleUser"
+
+
+    def is_http_request_sender(self):
+        """Checks if a user the HTTP request sender (accessing own info)
 
         Used primarily to load private personal information from the
         cache. (A student should see all info on his or her own profile
@@ -574,6 +605,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         except AttributeError:
             return False
 
+
     def attribute_is_visible(self, ldap_perm_name):
         """Checks if an attribute is visible to the public.
 
@@ -586,7 +618,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         perms = self.permissions
 
-        if self.own_info():
+        if self.is_http_request_sender():
             return True
         else:
             public = True
@@ -763,7 +795,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Class(object):
 
-    """Represents a tjhsstClass LDAP object.
+    """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
     Note that this is not a Django model, but rather an interface
     to LDAP classes.
@@ -859,8 +891,7 @@ class Class(object):
             - name -- The string name of the attribute.
 
         Returns:
-            Either a list of strings or a string, depending on \
-            the attribute fetched.
+            Either a list of strings or a string, depending on the attribute fetched.
 
 
         """
@@ -955,7 +986,7 @@ class Grade(object):
         """Initialize the Grade object.
 
         Args:
-            - graduation_year -- The graduation year of the user (e.g. 1492)
+            - graduation_year -- The numerical graduation year of the user
         """
         self._year = int(graduation_year)
         today = datetime.now()
