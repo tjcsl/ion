@@ -41,7 +41,7 @@ function stickyHeaders(headers) {
     this.load = function() {
         headers.each(function(i) {
             var id = Math.floor((i + 1) * Math.random() * 99999);
-            var stuckCopy = $(this).clone().prependTo($(".activity-picker"));
+            var stuckCopy = $(this).clone().prependTo($("#activity-picker"));
             if (i == 0) {
                 stuckCopy.addClass("stuck");
             } else {
