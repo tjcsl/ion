@@ -1,6 +1,6 @@
 import logging
 from django.db import models
-from django.db.models import Count, Q
+from django.db.models import Q
 from intranet.apps.users.models import User
 
 logger = logging.getLogger(__name__)

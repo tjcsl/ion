@@ -7,7 +7,7 @@ from django import template
 from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
-from intranet.db.ldap_db import LDAPConnection, LDAPFilter
+from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from intranet.middleware import threadlocals
 
@@ -94,7 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
         elif username is not None:
             dn = User.dn_from_username(username)
-            return get_user(dn=dn)
+            return User.get_user(dn=dn)
         else:
             raise TypeError("get_user() requires at least one argument.")
 
