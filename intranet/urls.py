@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls import patterns, url, include
-from django.views.generic.base import TemplateView, RedirectView
-from rest_framework import routers
+from django.views.generic.base import RedirectView
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
 from .apps.eighth.views import eighth_signup_view
@@ -10,11 +9,9 @@ from .apps.groups.views import groups_view, add_group_view
 from .apps.polls.views import polls_view
 from .apps.files.views import files_view
 from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
-#from .apps.admin.views import admin_view, admin_eighth_view
 
 urlpatterns = patterns("",
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
-    # url(r"^\(productivity\)/cpuspam/botspam$", TemplateView.as_view(template_name="cpuspam.html"))
     url(r"^api/", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 )
