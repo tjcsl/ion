@@ -68,7 +68,6 @@ class EighthActivity(models.Model):
 
 
 class EighthBlock(models.Model):
-
     """Represents an eighth period block.
 
     Attributes:
@@ -88,15 +87,15 @@ class EighthBlock(models.Model):
     def next_blocks(self, quantity=1):
         return EighthBlock.objects \
                           .order_by("date", "block_letter") \
-                          .filter(Q(date__gt=self.date) \
-                           | (Q(date=self.date) \
+                          .filter(Q(date__gt=self.date)
+                           | (Q(date=self.date)
                            & Q(block_letter__gt=self.block_letter)))[:quantity]
 
     def previous_blocks(self, quantity=1):
-        return reversed(EighthBlock.objects \
-                                   .order_by("-date", "-block_letter") \
-                                   .filter(Q(date__lt=self.date) \
-                                    | (Q(date=self.date) \
+        return reversed(EighthBlock.objects
+                                   .order_by("-date", "-block_letter")
+                                   .filter(Q(date__lt=self.date)
+                                    | (Q(date=self.date)
                                     & Q(block_letter__lt=self.block_letter)))[:quantity])
 
     def __unicode__(self):
@@ -107,23 +106,42 @@ class EighthBlock(models.Model):
 
 
 class EighthScheduledActivity(models.Model):
+    """Represents the relationship between an activity and a block in
+    which it has been scheduled.
+
+    Attributes:
+        - block -- the :class:`EighthBlock` during which an \
+                   :class:`EighthActivity` has been scheduled
+        - activity -- the scheduled :class:`EighthActivity`
+        - members -- the :class:`User<intranet.apps.users.models.User>`s\
+                     who have signed up for an :class:`EighthBlock`
+        - comment -- notes for the Eighth Office
+        - sponsors -- :class:`EighthSponsor`s that will override the \
+                      :class:`EighthActivity`'s default sponsors
+        - rooms -- :class:`EighthRoom`s that will override the \
+                   :class:`EighthActivity`'s default rooms
+        - attendance_taken -- whether the :class:`EighthSponsor` for \
+                              the scheduled :class:`EighthActivity` \
+                              has taken attendance yet
+        - cancelled -- whether the :class:`EighthScheduledActivity` \
+                       has been cancelled
+
+    """
     block = models.ForeignKey(EighthBlock, null=False)
     activity = models.ForeignKey(EighthActivity, null=False, blank=False)
     members = models.ManyToManyField(User, through="EighthSignup")
 
     comment = models.CharField(max_length=255)
 
-    # Overidden attributes
+    # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor)
     rooms = models.ManyToManyField(EighthRoom)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
-    room_changed = models.BooleanField(default=False)
 
 
 class EighthSignup(models.Model):
-
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:

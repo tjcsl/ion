@@ -13,7 +13,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, \
-                         EighthBlockDetailSerializer, EighthActivitySerializer
+    EighthBlockDetailSerializer, EighthActivitySerializer
 
 logger = logging.getLogger(__name__)
 
