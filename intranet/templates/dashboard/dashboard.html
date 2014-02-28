@@ -138,69 +138,6 @@
         </span>
     </h2>
     <div class="announcements-container">
-        <style>
-        .announcement-add-div {
-            display: none;
-            position: relative;
-        }
-
-        .announcement-add-title {
-            margin-right: 20px;
-        }
-
-        .announcement-add-content {
-            height: 150px;
-        }
-
-        .announcement-add-icon-wrapper {
-            position: absolute;
-            right: 0;
-            top: 0;
-            padding: 6px 10px;
-        }
-
-        .announcement-add-submit {
-            position: absolute;
-            right: 0;
-            margin-top: -33px;
-            margin-right: 5px;
-        }
-
-        </style>
-
-        <div class="announcement announcement-add-div" data-id="add">
-            <h3>
-                <div class="announcement-add-title" contenteditable="true" data-placeholder="Enter a title..">
-
-                </div>
-                <div class="announcement-icon-wrapper announcement-add-icon-wrapper">
-                    <a href="" onclick="return false">
-                        <i class="announcement-icon icon-trash announcement-add-delete" data-id="add"></i>
-                    </a>
-                </div>
-
-                &nbsp;
-            </h3>
-            <div class="announcement-metadata">
-                <span class="announcement-add-author" contenteditable="true">
-                    {{ user.full_name }}
-                </span>
-                 &bull; <span class="announcement-add-today"></span> &bull; to
-                <select name="groups">
-                    <option value="all">all students</option>
-                    {# add list of groups here #}
-                </select>
-                <div class="announcement-add-options">
-                <!-- Expires: -->
-                </div>
-            </div>
-            <div class="announcement-content announcement-add-content" contenteditable="true" data-placeholder="Enter post content..">
-
-            </div>
-            <div class="button announcement-add-submit">
-                Submit
-            </div>
-        </div>
     {% for announcement in announcements %}
         <div class="announcement" data-id="{{ announcement.id }}">
             <h3>
