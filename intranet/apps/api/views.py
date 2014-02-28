@@ -9,4 +9,5 @@ def api_root(request, format=None):
     return Response({
         # "activities": reverse("eighthactivity-list", request=request, format=format),
         "blocks": reverse("eighthblock-list", request=request, format=format),
+        "signups": reverse("eighthsignup-list", request=request, format=format),
     })

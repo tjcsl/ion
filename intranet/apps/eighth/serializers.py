@@ -6,8 +6,7 @@ from intranet.apps.users.models import User
 # from intranet.apps.users.serializers import UserSerializer
 
 
-class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
-
+class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthActivity
         fields = ("id",
@@ -23,7 +22,6 @@ class EighthActivitySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = EighthBlock
         # Omit activities so people can't kill the database
@@ -38,7 +36,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     id = serializers.Field()
     url = serializers.HyperlinkedIdentityField(view_name="eighthblock-detail")
 
-    # * means pass whole object to the field's to_native
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=1)
@@ -58,10 +55,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
                 "roster": {
-                        "count": 0,
-                        "capacity": 0,
-                        "url": "http://foobar.com"
-                    },
+                    "count": 0,
+                    "capacity": 0,
+                    "url": "http://foobar.com"
+                },
                 "rooms": [],
                 "sponsors": []
             }
@@ -178,8 +175,27 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         return activity_list
 
     class Meta:
-        fields = ("id", "activities","date", "block_letter")
+        fields = ("id",
+                  "activities",
+                  "date",
+                  "block_letter")
 
 
-# class EighthSponsorSerializer(models.Model):
-#   pass
+class EighthSignupSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="eighthsignup-detail")
+    block = serializers.SerializerMethodField("block_id")
+    activity = serializers.SerializerMethodField("activity_id")
+
+    def block_id(self, signup):
+        return reverse("eighthblock-detail", args=[signup.activity.block.id], request=self.context["request"])
+
+    def activity_id(self, signup):
+        return signup.activity.activity.id
+
+    class Meta:
+        model = EighthSignup
+        fields = ("id",
+                  "url",
+                  "block",
+                  "activity",
+                  "user")

@@ -149,11 +149,12 @@ class EighthSignup(models.Model):
                   who has signed up.
         - activity -- The :class:`EighthScheduledActivity` for which the user \
                       has signed up.
+        - after_deadline -- Whether the signup was after deadline.
 
     """
     user = models.ForeignKey(User, null=False)
     activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
-    has_pass = models.BooleanField(default=False)
+    after_deadline = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "{}: {}".format(self.user,

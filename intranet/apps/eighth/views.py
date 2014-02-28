@@ -2,18 +2,15 @@ from itertools import chain
 import logging
 import datetime
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404
-from .models import EighthBlock, EighthActivity, EighthSponsor, EighthSignup, \
-    EighthScheduledActivity
+from django.shortcuts import render
+from .models import EighthBlock, EighthActivity, EighthSignup
 from rest_framework import generics, views
-from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from intranet.apps.eighth.models import User
 from .serializers import EighthBlockListSerializer, \
-    EighthBlockDetailSerializer, EighthActivitySerializer
+    EighthBlockDetailSerializer, EighthActivityDetailSerializer, \
+    EighthSignupSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -70,22 +67,21 @@ def eighth_signup_view(request, block_id=None):
             day["blocks"].append(info)
             schedule.append(day)
 
-
     block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
     block_info["schedule"] = schedule
-    json_string = JSONRenderer().render(block_info["activities"])
-    context = {"user": request.user,
-               "page": "eighth",
-               "block_info": block_info,
-               "bootstrapped_activities_list": JSONRenderer().render(block_info["activities"]),
-               "active_block": block
-               }
+
+    context = {
+        "user": request.user,
+        "page": "eighth",
+        "block_info": block_info,
+        "activities_list": JSONRenderer().render(block_info["activities"]),
+        "active_block": block
+    }
 
     return render(request, "eighth/eighth.html", context)
 
 
 class EighthBlockList(generics.ListAPIView):
-
     """API endpoint that allows viewing a list of EighthBlock objects.
     """
     queryset = EighthBlock.objects.all()
@@ -95,7 +91,7 @@ class EighthBlockList(generics.ListAPIView):
 class EighthBlockDetail(views.APIView):
     """API endpoint that allows viewing an EighthBlock object.
     """
-    def get(self, request, pk, format=None):
+    def get(self, request, pk):
         try:
             block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(pk=pk)
         except EighthBlock.DoesNotExist:
@@ -105,12 +101,11 @@ class EighthBlockDetail(views.APIView):
         return Response(serializer.data)
 
 
-class EighthActivityList(generics.ListAPIView):
-
-    """API endpoint that allows viewing a list of EighthActivity objects.
-    """
-    queryset = EighthActivity.objects.all()
-    serializer_class = EighthActivitySerializer
+# class EighthActivityList(generics.ListAPIView):
+#     """API endpoint that allows viewing a list of EighthActivity objects.
+#     """
+#     queryset = EighthActivity.objects.all()
+#     serializer_class = EighthActivityDetailSerializer
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
@@ -118,4 +113,38 @@ class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that allows viewing EighthActivity objects.
     """
     queryset = EighthActivity.objects.all()
-    serializer_class = EighthActivitySerializer
+    serializer_class = EighthActivityDetailSerializer
+
+
+class EighthSignupList(views.APIView):
+    """API endpoint that allows viewing an EighthBlock object.
+    """
+    def get(self, request):
+        user_id = self.request.QUERY_PARAMS.get("user", None)
+        block_id = self.request.QUERY_PARAMS.get("block", None)
+
+        if user_id is None:
+            user_id = request.user.id
+
+        signups = EighthSignup.objects.filter(user_id=user_id).select_related("activity__block").select_related("activity__activity")
+
+        if block_id is not None:
+            signups = signups.filter(activity__block_id=block_id)
+
+        serializer = EighthSignupSerializer(signups, context={"request": request})
+        data = serializer.data
+
+        if block_id is not None:
+            if len(data) == 1:
+                data = data[0]
+            else:
+                raise Http404
+
+        return Response(data)
+
+
+class EighthSignupDetail(generics.RetrieveAPIView):
+    """API endpoint that allows viewing an EighthBlock object.
+    """
+    queryset = EighthSignup.objects.all()
+    serializer_class = EighthSignupSerializer
