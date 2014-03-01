@@ -309,6 +309,8 @@ Install ElasticSearch. Portage may ask you to modify a few configuration files. 
 
     $ emerge app-misc/elasticsearch
 
+Copy config files into place.
+
 Start ElasticSearch.
 
 .. code-block:: bash
@@ -320,6 +322,4 @@ Add the ElasticSearch service to the default runlevel.
 .. code-block:: bash
 
     $ rc-update add supervisord default
-
-
 
