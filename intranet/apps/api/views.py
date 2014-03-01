@@ -6,8 +6,9 @@ from rest_framework.reverse import reverse
 
 @api_view(("GET",))
 def api_root(request, format=None):
-    return Response({
-        # "activities": reverse("eighthactivity-list", request=request, format=format),
-        "blocks": reverse("eighthblock-list", request=request, format=format),
-        "signups": reverse("eighthsignup-list", request=request, format=format),
-    })
+    """Welcome to the Ion API!
+
+    Documentation can be found at [www.foo.com](http://www.foo.com)
+    """
+
+    return Response("Documentation can be found at www.foo.com")
