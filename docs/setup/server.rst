@@ -299,4 +299,27 @@ Add the Supervisor service to the default runlevel.
 
     $ rc-update add supervisord default
 
+-------------
+ElasticSearch
+-------------
+
+Install ElasticSearch. Portage may ask you to modify a few configuration files. Make the necessary changes and try again.
+
+.. code-block:: bash
+
+    $ emerge app-misc/elasticsearch
+
+Start ElasticSearch.
+
+.. code-block:: bash
+
+    $ /etc/init.d/elasticsearch start
+
+Add the ElasticSearch service to the default runlevel.
+
+.. code-block:: bash
+
+    $ rc-update add supervisord default
+
+
 
