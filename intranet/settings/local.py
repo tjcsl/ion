@@ -48,7 +48,6 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
 
 
 class glob_list(list):
-
     """A list of glob-style strings."""
 
     def __contains__(self, key):
