@@ -1,7 +1,20 @@
 {% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}">
+{% endblock %}
+
 
 {% block main %}
 <div class="primary-content">
-    Search results for <b>{{ search_query }}</b>
+    <h2>Search Results</h2>
+    <form class="search" action="/search" method="get" autocomplete="off">
+            <input type="text" name="q" value="{{ search_query }}">
+            <button type="submit">
+               <i class="icon-search"></i>
+            </button>
+    </form>
 </div>
 {% endblock %}
