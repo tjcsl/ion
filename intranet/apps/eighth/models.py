@@ -144,8 +144,9 @@ class EighthSignup(models.Model):
     Attributes:
         - user -- The :class:`User<intranet.apps.users.models.User>`\
                   who has signed up.
-        - activity -- The :class:`EighthScheduledActivity` for which the user \
-                      has signed up.
+        - scheduled_activity -- The :class:`EighthScheduledActivity` for which
+                                the user \
+                                has signed up.
         - after_deadline -- Whether the signup was after deadline.
 
     """
@@ -155,7 +156,7 @@ class EighthSignup(models.Model):
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
-                               self.activity)
+                               self.scheduled_activity.id)
 
     # class Meta:
         # unique_together = (("user", "block"),)
