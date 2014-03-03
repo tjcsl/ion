@@ -20,7 +20,6 @@ $(document).ready(function() {
         },
 
         render: function(){
-            console.log(this);
             var container = this.options.viewContainer,
                 activity = this.model,
                 renderedContent = this.template(this.model.toJSON());
@@ -45,7 +44,10 @@ $(document).ready(function() {
             return this;
         },
 
-        showDetail: function() {
+        showDetail: function(e) {
+            $("#activity-list li.selected").removeClass("selected");
+            $(e.target).addClass("selected");
+
             activityDetailView = new eighth.ActivityDetailView({
                 model: this.model,
                 viewContainer: $("#activity-detail")
