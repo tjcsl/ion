@@ -1,9 +1,12 @@
+import logging
 from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from .models import EighthBlock, EighthActivity, EighthSignup, EighthSponsor, EighthScheduledActivity
 from intranet.apps.users.models import User
 # from intranet.apps.users.serializers import UserSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,9 +25,10 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="eighth_block_detail")
+
     class Meta:
         model = EighthBlock
-        # Omit activities so people can't kill the database
         fields = ("id",
                   "url",
                   "date",
@@ -34,8 +38,6 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
 
 class EighthBlockDetailSerializer(serializers.Serializer):
     id = serializers.Field()
-    url = serializers.HyperlinkedIdentityField(view_name="eighthblock-detail")
-
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=1)
@@ -49,15 +51,15 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                     .select_related("activity")
         for scheduled_activity in scheduled_activities:
             activity_info = {
-                "activity_id": scheduled_activity.activity.id,
-                "scheduled_activity_id": scheduled_activity.id,
-                "url": reverse("eighthactivity-detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
+                "id": scheduled_activity.activity.id,
+                "scheduled_activity": scheduled_activity.id,
+                "url": reverse("eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
                 "roster": {
-                    "count": 0,
+                    "count": -1,
                     "capacity": 0,
-                    "url": "http://foobar.com"
+                    "url": reverse("eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"])
                 },
                 "rooms": [],
                 "sponsors": []
@@ -69,11 +71,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 activity_info
 
         activities = EighthSignup.objects \
-                                 .filter(activity__block=block) \
-                                 .values_list("activity__activity_id") \
-                                 .annotate(user_count=Count("activity"))
+                                 .filter(scheduled_activity__block=block) \
+                                 .values_list("scheduled_activity__activity_id") \
+                                 .annotate(user_count=Count("scheduled_activity"))
 
         for activity, user_count in activities:
+            logger.debug("hello")
             activity_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects \
@@ -182,20 +185,26 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
 
 class EighthSignupSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="eighthsignup-detail")
-    block = serializers.SerializerMethodField("block_id")
-    activity = serializers.SerializerMethodField("activity_id")
+    block = serializers.SerializerMethodField("block_info")
+    activity = serializers.SerializerMethodField("activity_info")
+    scheduled_activity = serializers.SerializerMethodField("scheduled_activity_info")
 
-    def block_id(self, signup):
-        return reverse("eighthblock-detail", args=[signup.activity.block.id], request=self.context["request"])
+    def block_info(self, signup):
+        return {
+            "id": signup.activity.block.id,
+            "url": reverse("eighth_block_detail", args=[signup.activity.block.id], request=self.context["request"])
+        }
 
-    def activity_id(self, signup):
+    def activity_info(self, signup):
         return signup.activity.activity.id
+
+    def scheduled_activity_info(self, signup):
+        return signup.activity.id
 
     class Meta:
         model = EighthSignup
         fields = ("id",
-                  "url",
                   "block",
                   "activity",
+                  "scheduled_activity",
                   "user")

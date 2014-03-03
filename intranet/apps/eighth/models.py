@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class EighthSponsor(models.Model):
-
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be an actual user or just a name.
@@ -25,7 +24,6 @@ class EighthSponsor(models.Model):
 
 
 class EighthRoom(models.Model):
-
     """Represents a room in which an eighth period activity can be held
 
     Attributes:
@@ -39,12 +37,11 @@ class EighthRoom(models.Model):
 
 
 class EighthActivity(models.Model):
-
     """Represents an eighth period activity.
 
     Attributes:
         - name -- The name of the activity.
-        - sponsors -- The EighthSponsors for the activity.
+        - sponsors -- The :class:`EighthSponsor`s for the activity.
 
     """
     name = models.CharField(max_length=63)
@@ -75,7 +72,7 @@ class EighthBlock(models.Model):
         - block_letter -- The block letter (e.g. A, B).
         - locked -- Whether signups are closed.
         - activities -- List of \
-                        :class:`EighthScheduledActivity` for the block.
+                        :class:`EighthScheduledActivity`s for the block.
 
     """
     date = models.DateField(null=False)
@@ -153,7 +150,7 @@ class EighthSignup(models.Model):
 
     """
     user = models.ForeignKey(User, null=False)
-    activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
     after_deadline = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -192,7 +189,6 @@ class SignupAlert(models.Model):
 
 
 class EighthAbsence(models.Model):
-
     """Represents a user's absence for an eighth period block.
 
     Attributes:
