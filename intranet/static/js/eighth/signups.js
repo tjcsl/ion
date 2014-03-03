@@ -3,7 +3,7 @@ var eighth = {};
 $(document).ready(function() {
 
     eighth.Activity = Backbone.Model.extend({
-        idAttribute: "activity_id"
+        idAttribute: "id"
     });
 
     eighth.ActivityList = Backbone.Collection.extend({
@@ -20,6 +20,7 @@ $(document).ready(function() {
         },
 
         render: function(){
+            console.log(this);
             var container = this.options.viewContainer,
                 activity = this.model,
                 renderedContent = this.template(this.model.toJSON());
