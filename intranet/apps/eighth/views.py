@@ -48,8 +48,8 @@ def eighth_signup_view(request, block_id=None):
     surrounding_blocks = list(chain(prev, [block], next))
     schedule = []
 
-    signups = EighthSignup.objects.filter(user=request.user).select_related("activity", "activity__activity")
-    block_signup_map = {s.activity.block.id: s.activity.activity.name for s in signups}
+    signups = EighthSignup.objects.filter(user=request.user).select_related("scheduled_activity", "scheduled_activity__activity")
+    block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity.activity.name for s in signups}
 
     for b in surrounding_blocks:
         info = {
@@ -82,14 +82,14 @@ def eighth_signup_view(request, block_id=None):
 
 
 class EighthBlockList(generics.ListAPIView):
-    """API endpoint that allows viewing a list of EighthBlock objects.
+    """API endpoint that lists all eighth blocks
     """
     queryset = EighthBlock.objects.all()
     serializer_class = EighthBlockListSerializer
 
 
 class EighthBlockDetail(views.APIView):
-    """API endpoint that allows viewing an EighthBlock object.
+    """API endpoint that shows details for an eighth block
     """
     def get(self, request, pk):
         try:
@@ -102,49 +102,48 @@ class EighthBlockDetail(views.APIView):
 
 
 # class EighthActivityList(generics.ListAPIView):
-#     """API endpoint that allows viewing a list of EighthActivity objects.
+#     """API endpoint that allows viewing a list of eighth activities
 #     """
 #     queryset = EighthActivity.objects.all()
 #     serializer_class = EighthActivityDetailSerializer
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
-
-    """API endpoint that allows viewing EighthActivity objects.
+    """API endpoint that shows details of an eighth activity.
     """
     queryset = EighthActivity.objects.all()
     serializer_class = EighthActivityDetailSerializer
 
 
-class EighthSignupList(views.APIView):
-    """API endpoint that allows viewing an EighthBlock object.
+class EighthUserSignupList(views.APIView):
+    """API endpoint that lists all signups for a certain user
     """
-    def get(self, request):
-        user_id = self.request.QUERY_PARAMS.get("user", None)
-        block_id = self.request.QUERY_PARAMS.get("block", None)
+    def get(self, request, user_id):
+        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
 
-        if user_id is None:
-            user_id = request.user.id
-
-        signups = EighthSignup.objects.filter(user_id=user_id).select_related("activity__block").select_related("activity__activity")
-
-        if block_id is not None:
-            signups = signups.filter(activity__block_id=block_id)
+        # if block_id is not None:
+            # signups = signups.filter(activity__block_id=block_id)
 
         serializer = EighthSignupSerializer(signups, context={"request": request})
         data = serializer.data
 
-        if block_id is not None:
-            if len(data) == 1:
-                data = data[0]
-            else:
-                raise Http404
-
         return Response(data)
 
 
+class EighthScheduledActivitySignupList(views.APIView):
+    """API endpoint that lists all signups for a certain scheduled activity
+    """
+    def get(self, request, scheduled_activity_id):
+        signups = EighthSignup.objects.filter(scheduled_activity__id=scheduled_activity_id)
+
+        serializer = EighthSignupSerializer(signups, context={"request": request})
+        data = serializer.data
+
+        return Response(serializer.data)
+
+
 class EighthSignupDetail(generics.RetrieveAPIView):
-    """API endpoint that allows viewing an EighthBlock object.
+    """API endpoint that shows details of an eighth signup
     """
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer
