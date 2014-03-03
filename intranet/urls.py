@@ -1,14 +1,15 @@
 from django.conf import settings
 from django.conf.urls import patterns, url, include
 from django.views.generic.base import RedirectView
+from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
 from .apps.eighth.views import eighth_signup_view
 from .apps.events.views import events_view
+from .apps.files.views import files_view
 from .apps.groups.views import groups_view, add_group_view
 from .apps.polls.views import polls_view
-from .apps.files.views import files_view
-from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
+from .apps.search.views import search_view
 
 urlpatterns = patterns("",
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
@@ -64,4 +65,8 @@ urlpatterns += patterns("polls.views.",
 urlpatterns += patterns("users.views.",
     url(r"^profile(?:/(?P<user_id>\d+))?$", profile_view, name="user_profile"),
     url(r"^picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", picture_view, name="profile_picture")
+)
+
+urlpatterns += patterns("search.views.",
+    url(r"^search$", search_view, name="search"),
 )
