@@ -1,4 +1,5 @@
 var eighth = {};
+var previousSelection = $("#activity-list li")[0];
 
 $(document).ready(function() {
 
@@ -45,8 +46,9 @@ $(document).ready(function() {
         },
 
         showDetail: function(e) {
-            $("#activity-list li.selected").removeClass("selected");
+            $(previousSelection).removeClass("selected");
             $(e.target).addClass("selected");
+            previousSelection = e.target;
 
             activityDetailView = new eighth.ActivityDetailView({
                 model: this.model,
