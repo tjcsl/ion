@@ -170,6 +170,7 @@ LDAP_OBJECT_CLASSES = {
     "attendance_user": "tjhsstUser"
 }
 
+FCPS_STUDENT_ID_LENGTH = 9
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
