@@ -1,8 +1,10 @@
-from django.shortcuts import render
 import elasticsearch
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from intranet import settings
 
 
+@login_required
 def search_view(request):
     q = request.GET.get("q", "").strip()
     if q:
