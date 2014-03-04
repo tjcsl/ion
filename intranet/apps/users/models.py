@@ -281,7 +281,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
-    # TODO: gender
     @property
     def counselor(self):
         """Returns a user's counselor as a User object.
@@ -691,6 +690,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
             "last_name": {
                 "ldap_name": "sn",
+                "perm": None,
+                "list": False
+            },
+            "gender": {
+                "ldap_name": "gender",
                 "perm": None,
                 "list": False
             },
