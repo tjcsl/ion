@@ -150,13 +150,15 @@ CACHES = {
     },
 }
 
-
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
 LDAP_REALM = "CSL.TJHSST.EDU"
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
+
+AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
+AUTHUSER_PASSWORD = "0.2nartd"
 
 # LDAP schema config
 BASE_DN = "dc=tjhsst,dc=edu"
@@ -200,6 +202,7 @@ INSTALLED_APPS = (
     "intranet.apps.auth",
     "intranet.apps.eighth",
     "intranet.apps.announcements",
+    "intranet.apps.search",
     # "intranet.apps.groups",
     "intranet.middleware.environment"
 )

@@ -65,9 +65,12 @@ class LDAPConnection(object):
            or (_thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP.")
             _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
-            auth_tokens = ldap.sasl.gssapi()
-            _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-            # logger.debug(_thread_locals.ldap_conn.whoami_s())
+            try:
+                auth_tokens = ldap.sasl.gssapi()
+                _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
+            except ldap.LOCAL_ERROR:
+                _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+            logger.debug(_thread_locals.ldap_conn.whoami_s())
 
 
     @property
@@ -129,7 +132,6 @@ class LDAPConnection(object):
         except ldap.NO_SUCH_OBJECT as e:
             logger.error("No such user " + dn)
             raise
-        logger.debug("Query returned " + str(r))
         return LDAPResult(r)
 
     def class_attributes(self, dn, attributes):
@@ -155,7 +157,6 @@ class LDAPConnection(object):
         except ldap.NO_SUCH_OBJECT:
             logger.error("No such class " + dn)
             raise
-        logger.debug("Query returned " + str(r))
         return LDAPResult(r)
 
 
