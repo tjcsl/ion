@@ -175,7 +175,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def full_name(self):
         """Return full name, e.g. Angela William. This is required
         for subclasses of User."""
-        return self.cn
+        return self.common_name
 
     @property
     def short_name(self):
@@ -664,7 +664,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "perm": None,
                 "list": False
             },
-            "cn": {
+            "common_name": {
                 "ldap_name": "cn",
                 "perm": None,
                 "list": False
