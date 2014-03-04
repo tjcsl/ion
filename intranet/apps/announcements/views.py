@@ -17,7 +17,7 @@ def add_announcement_view(request):
             success = True
     else:
         form = AnnouncementForm()
-    return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": "add", "success": success})
+    return render(request, 'announcements/addmodify.html', {"form": form, "action": "add", "success": success})
 
 
 @login_required
@@ -32,7 +32,7 @@ def modify_announcement_view(request, id=None):
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, 'announcements/addmodify.html', {"user": request.user, "form": form, "action": "modify", "id": id, "success": success})
+    return render(request, 'announcements/addmodify.html', {"form": form, "action": "modify", "id": id, "success": success})
 
 
 @login_required
@@ -43,4 +43,4 @@ def delete_announcement_view(request):
     except AttributeError:
         post_id = None
     announcement = Announcement.objects.get(id=post_id).delete()
-    return render(request, "success.html", {"user": request.user})
+    return render(request, "success.html", {})

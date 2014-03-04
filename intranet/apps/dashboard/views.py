@@ -12,8 +12,8 @@ def dashboard_view(request):
     """Process and show the dashboard."""
     announcements = Announcement.objects.order_by("-updated").all()[:10]
 
-    context = {"user": request.user,
-               "page": "dashboard",
-               "announcements": announcements
-               }
+    context = {
+        "page": "dashboard",
+        "announcements": announcements
+    }
     return render(request, "dashboard/dashboard.html", context)

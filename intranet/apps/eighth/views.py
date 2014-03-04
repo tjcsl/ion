@@ -71,7 +71,6 @@ def eighth_signup_view(request, block_id=None):
     block_info["schedule"] = schedule
 
     context = {
-        "user": request.user,
         "page": "eighth",
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),

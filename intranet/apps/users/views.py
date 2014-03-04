@@ -28,8 +28,7 @@ def profile_view(request, user_id=None):
     else:
         profile_user = request.user
 
-    return render(request, 'users/profile.html', {'user': request.user,
-                                                  'profile_user': profile_user})
+    return render(request, "users/profile.html", {"profile_user": profile_user})
 
 
 @login_required
@@ -79,7 +78,7 @@ def picture_view(request, user_id, year=None):
                 if data:
                     image_buffer = StringIO(data)
                 else:
-                    image_buffer = io.open(default_image_path)
+                    image_buffer = io.open(default_image_path, mode="rb")
             else:
                 image_buffer = io.open(default_image_path, mode="rb")
         else:
@@ -92,7 +91,11 @@ def picture_view(request, user_id, year=None):
         response = HttpResponse(mimetype="image/jpeg")
         response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id,
                                           (year or preferred))
-        img = image_buffer.read()
+        try:
+            img = image_buffer.read()
+        except UnicodeDecodeError:
+            img = io.open(default_image_path, mode="rb").read()
+
         image_buffer.close()
         response.write(img)
 
