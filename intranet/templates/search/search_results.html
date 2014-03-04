@@ -20,5 +20,14 @@
                <i class="icon-search"></i>
             </button>
     </form>
+    <ul>
+        {% for user in search_results %}
+            <li>
+                <a href="{% url 'user_profile' user.ion_id %}">{{ user.display_name }} ({{ user.graduation_year }})</a>
+                <br>
+                <img src="{% url 'profile_picture' user.ion_id %}">
+            </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
