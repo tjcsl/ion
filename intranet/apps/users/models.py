@@ -1,7 +1,8 @@
+from datetime import datetime
+import hashlib
 import logging
 import ldap
-import hashlib
-from datetime import datetime
+import os
 from django.db import models
 from django import template
 from django.core.cache import cache
@@ -165,6 +166,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             String
 
         """
+
+        if os.environ.get("SECURE_CACHE", "YES") == "NO":
+            return identifier
         signer = Signer()
         signed = signer.sign(identifier)
         hash = hashlib.sha1()
@@ -444,10 +448,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         key = ":".join([self.dn, 'photo_permissions'])
 
         cached = cache.get(key)
-
+        
         if cached:
             logger.debug("Photo permissions of user {} loaded "
                          "from cache.".format(self.id))
+            logger.debug(cached)
             return cached
         else:
             c = LDAPConnection()
@@ -467,7 +472,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                ["perm-showpictures-self",
                                                 "perm-showpictures"])
             default = default_result.first_result()
-
+            logger.debug(default)
             if "perm-showpictures" in default:
                 perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
 
@@ -496,7 +501,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         perms["self"][grade] = False
 
             cache.set(key, perms,
-                      timeout=settings.CACHE_AGE['ldap_permissions'])
+                      timeout=settings.CACHE_AGE["ldap_permissions"])
             return perms
 
     @property
