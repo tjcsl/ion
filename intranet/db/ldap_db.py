@@ -70,7 +70,8 @@ class LDAPConnection(object):
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
             except ldap.LOCAL_ERROR:
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-            logger.debug(_thread_locals.ldap_conn.whoami_s())
+                logger.error("SASL bind failed - using simple bind")
+            # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
 
     @property
