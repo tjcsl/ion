@@ -262,12 +262,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             for dn in cached:
                 class_object = Class(dn=dn)
                 schedule.append(class_object)
+
             return schedule
         elif not cached and visible:
             c = LDAPConnection()
             try:
                 results = c.user_attributes(self.dn, ['enrolledclass'])
                 classes = results.first_result()["enrolledclass"]
+                logger.debug("Classes: {}".format(classes))
             except KeyError:
                 return None
             else:
@@ -278,7 +280,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                     # Temporarily pack the classes in tuples so we can
                     # sort on an integer key instead of the period
                     # property to avoid tons of needless LDAP queries
-                    schedule.append((class_object.period, class_object, dn))
+                    # 
+                    sortvalue = class_object.sortvalue
+                    schedule.append((sortvalue, class_object, dn))
 
                 ordered_schedule = sorted(schedule, key=lambda e: e[0])
 
@@ -886,6 +890,19 @@ class Class(object):
             cache.set(key, result,
                       timeout=settings.CACHE_AGE["class_attribute"])
             return result
+
+    @property
+    def sortvalue(self):
+        """Returns the sort value of this class
+
+        This can be derived from the following formula:
+            Period + Sum of values of quarters / 11
+
+        Returns:
+            A float value of the equation.
+
+        """
+        return float(self.period) + (float(sum(self.quarters)) / 11)
 
     def __getattr__(self, name):
         """Return simple attributes of Class
