@@ -35,6 +35,13 @@ def eighth_signup_view(request, block_id=None):
                                   .filter(date__lte=now)[0] \
                                   .id
 
+    is_admin = True
+    if "user" in request.GET and is_admin:
+        user = request.GET["user"]
+    else:
+        user = request.user.id
+
+
     try:
         block = EighthBlock.objects \
                            .prefetch_related("eighthscheduledactivity_set") \
@@ -42,13 +49,13 @@ def eighth_signup_view(request, block_id=None):
     except EighthBlock.DoesNotExist:
         raise Http404
 
-    next = block.next_blocks(10)
-    prev = block.previous_blocks(10)
+    next = block.next_blocks()
+    prev = block.previous_blocks()
 
     surrounding_blocks = list(chain(prev, [block], next))
     schedule = []
 
-    signups = EighthSignup.objects.filter(user=request.user).select_related("scheduled_activity", "scheduled_activity__activity")
+    signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity.activity.name for s in signups}
 
     for b in surrounding_blocks:
@@ -72,6 +79,7 @@ def eighth_signup_view(request, block_id=None):
 
     context = {
         "page": "eighth",
+        "user": user,
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),
         "active_block": block
