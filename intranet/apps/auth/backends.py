@@ -57,7 +57,6 @@ class KerberosAuthenticationBackend(object):
             else:
                 logger.error("Kerberos failed to get ticket for LDAP service")
                 os.system("/usr/bin/kdestroy")
-                # TODO: Try simple bind
                 return False
         else:
             os.system("/usr/bin/kdestroy")
