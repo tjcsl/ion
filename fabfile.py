@@ -65,9 +65,7 @@ def kill_server(port):
         int(port)
     except ValueError:
         abort("Invalid port number.")
-
-    local("ps ax | grep '/usr/local/virtualenvs/.*/python.*{}' | grep -v grep | cut -d' ' -f1 | xargs kill".format(port))
-
+    local("ps au | grep virtualenvs | grep {} | grep -v grep | cut -d' ' -f2 | xargs kill -9".format(port))
 
 def _require_root():
     """Check if running as root."""
