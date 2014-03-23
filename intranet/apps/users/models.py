@@ -24,7 +24,16 @@ class UserManager(UserManager):
     default User model manager.
 
     """
-    pass
+    def user_with_student_id(self, student_id):
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                           "tjhsstStudentId={}".format(student_id),
+                           ["dn"])
+
+        if len(results) == 1:
+            return User.get_user(dn=results[0][0])
+        return None
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -123,7 +132,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             result = c.search(settings.USER_DN,
                               "iodineUidNumber={}".format(id),
                               ['dn'])
-            print(result)
             if len(result) == 1:
                 dn = result[0][0]
             else:
@@ -448,7 +456,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         key = ":".join([self.dn, 'photo_permissions'])
 
         cached = cache.get(key)
-        
+
         if cached:
             logger.debug("Photo permissions of user {} loaded "
                          "from cache.".format(self.id))
