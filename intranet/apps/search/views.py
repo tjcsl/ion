@@ -1,6 +1,7 @@
 import elasticsearch
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from intranet.apps.users.models import User
 from intranet import settings
 
 
@@ -8,8 +9,11 @@ from intranet import settings
 def search_view(request):
     q = request.GET.get("q", "").strip()
     if q:
-        if q.isdigit() and len(q) == settings.FCPS_STUDENT_ID_LENGTH:
-            pass
+        if q.isdigit():
+            u = User.objects.user_with_student_id(q)
+            if u is not None:
+                return u
+
         es = elasticsearch.Elasticsearch()
         results = es.search(index="ion", body={
             "query": {
