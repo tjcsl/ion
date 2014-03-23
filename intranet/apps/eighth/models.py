@@ -81,19 +81,25 @@ class EighthBlock(models.Model):
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity")
 
-    def next_blocks(self, quantity=1):
-        return EighthBlock.objects \
-                          .order_by("date", "block_letter") \
-                          .filter(Q(date__gt=self.date)
-                           | (Q(date=self.date)
-                           & Q(block_letter__gt=self.block_letter)))[:quantity]
+    def next_blocks(self, quantity=-1):
+        blocks =  EighthBlock.objects \
+                             .order_by("date", "block_letter") \
+                             .filter(Q(date__gt=self.date)
+                              | (Q(date=self.date)
+                              & Q(block_letter__gt=self.block_letter)))
+        if quantity == -1:
+            return blocks
+        return blocks[:quantity]
 
-    def previous_blocks(self, quantity=1):
-        return reversed(EighthBlock.objects
-                                   .order_by("-date", "-block_letter")
-                                   .filter(Q(date__lt=self.date)
-                                    | (Q(date=self.date)
-                                    & Q(block_letter__lt=self.block_letter)))[:quantity])
+    def previous_blocks(self, quantity=-1):
+        blocks = EighthBlock.objects \
+                            .order_by("-date", "-block_letter") \
+                            .filter(Q(date__lt=self.date)
+                             | (Q(date=self.date)
+                             & Q(block_letter__lt=self.block_letter)))
+        if quantity == -1:
+            return reversed(blocks)
+        return reversed(blocks[:quantity])
 
     def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block_letter)
