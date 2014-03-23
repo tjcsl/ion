@@ -56,6 +56,12 @@ $(document).ready(function() {
             });
 
             activityDetailView.render();
+
+            $("#signup-button").click(function(event) {
+                $(this).unbind(event);
+                var target = document.getElementById("signup-spinner");
+                var spinner = new Spinner(spinnerOptions).spin(target);
+            });
         }
     });
 

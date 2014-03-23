@@ -16,6 +16,7 @@
     <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/spin.min.js' %}"></script>
     <script type="text/javascript">
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
@@ -60,9 +61,14 @@
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
 
-            <button id="signup-button">
-                Sign Up
-            </button>
+            <div id="signup-section">
+                <button id="signup-button">
+                    Sign Up
+                </button>
+                <div id="signup-spinner-container">
+                    <div id="signup-spinner"></div>
+                </div>
+            </div>
         </dl>
         {% endverbatim %}
     </script>
@@ -109,7 +115,7 @@
             </div>
 
             <div class="controls">
-                <button id="add">Hide Restricted</button>
+                <button>Hide Restricted</button>
                 <button>Jump to Date</button>
                 <button>Manage Favorites</button>
                 <button>Manage Absences</button>
