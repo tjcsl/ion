@@ -6,6 +6,20 @@
     {{ block.super}} - {{ action|title }} Announcement
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'lib/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+form input#id_name, form input#id_author {
+    width: 300px;
+}
+    </style>
+{% endblock %}
+
 {% block main %}
 {% if request.POST.name and success %} <div class="message primary-content"> Successfully {% if action == "modify" %} modified {% elif action == "add" %} added {% endif %} announcement with name {{ request.POST.name|escape }}. </div> {% endif %}
 <div class="announcements primary-content">
@@ -20,4 +34,8 @@
     </table>
     </form>
 </div>
+<script type="text/javascript">
+// name of <textarea> is content
+CKEDITOR.replace("content");
+</script>
 {% endblock %}
