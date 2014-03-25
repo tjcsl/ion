@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class KerberosAuthenticationBackend(object):
-
     @staticmethod
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
@@ -24,7 +23,7 @@ class KerberosAuthenticationBackend(object):
 
         cache = "/tmp/ion-" + str(uuid.uuid4())
 
-        logger.debug("Setting KRB5CCNAME to " + cache)
+        logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
         kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
