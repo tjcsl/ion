@@ -2,13 +2,12 @@ import os
 from django.core.management.base import BaseCommand
 import elasticsearch
 from intranet import settings
-from intranet.apps.users.models import User
 from intranet.db import ldap_db
+
 
 class Command(BaseCommand):
     help = "Updates the ElasticSearch index with user, class, and eighth period data"
 
-    
     def handle(self, **options):
         # Destroy kerberos tickets to force simple auth
         os.system("kdestroy")
@@ -20,12 +19,13 @@ class Command(BaseCommand):
                       "givenName",
                       "middlename",
                       "sn",
+                      "nickname",
                       "gender",
                       "graduationYear"]
 
         l = ldap_db.LDAPConnection()
         users = l.user_attributes(settings.USER_DN, attributes).results_array()
-        
+
         def get_attr(user, a):
             return user[1].get(a, [None])[0]
 
@@ -45,6 +45,7 @@ class Command(BaseCommand):
                     "first_name": get_attr(user, "givenName"),
                     "middle_name": get_attr(user, "middlename"),
                     "last_name": get_attr(user, "sn"),
+                    "nickname": get_attr(user, "nickname"),
                     "gender": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
                     "graduation_year": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None
                 }
