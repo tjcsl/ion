@@ -95,7 +95,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
-                raise User.DoesNotExist("`User` with DN '{}'' does not exist.".format(dn))
+                raise User.DoesNotExist("`User` with DN '{}' does not exist.".format(dn))
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
@@ -280,7 +280,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     # Temporarily pack the classes in tuples so we can
                     # sort on an integer key instead of the period
                     # property to avoid tons of needless LDAP queries
-                    # 
+                    #
                     sortvalue = class_object.sortvalue
                     schedule.append((sortvalue, class_object, dn))
 
@@ -604,7 +604,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.user_type == "simpleUser"
 
-
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
 
@@ -620,7 +619,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return (str(threadlocals.request().user.id) == str(self.id))
         except AttributeError:
             return False
-
 
     def attribute_is_visible(self, ldap_perm_name):
         """Checks if an attribute is visible to the public.
@@ -673,111 +671,115 @@ class User(AbstractBaseUser, PermissionsMixin):
             "ion_id": {
                 "ldap_name": "iodineUidNumber",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "ion_username": {
                 "ldap_name": "iodineUid",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "common_name": {
                 "ldap_name": "cn",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "display_name": {
                 "ldap_name": "displayName",
                 "perm": None,
-                "list": False
+                "is_list": False
+            },
+            "nickname": {
+                "ldap_name": "nickname",
+                "perm": None,
+                "is_list": False
             },
             "title": {
                 "ldap_name": "title",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "first_name": {
                 "ldap_name": "givenName",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "middle_name": {
                 "ldap_name": "middlename",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "last_name": {
                 "ldap_name": "sn",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "gender": {
                 "ldap_name": "gender",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "user_type": {
                 "ldap_name": "objectClass",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "graduation_year": {
                 "ldap_name": "graduationYear",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "preferred_photo": {
                 "ldap_name": "preferredPhoto",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "emails": {
                 "ldap_name": "mail",
                 "perm": None,
-                "list": True
+                "is_list": True
             },
             "home_phone": {
                 "ldap_name": "homePhone",
                 "perm": "showtelephone",
-                "list": False
+                "is_list": False
             },
             "mobile_phone": {
                 "ldap_name": "mobile",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "other_phones": {
                 "ldap_name": "telephoneNumber",
                 "perm": None,
-                "list": True
+                "is_list": True
             },
             "google_talk": {
                 "ldap_name": "googleTalk",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "skype": {
                 "ldap_name": "skype",
                 "perm": None,
-                "list": False
+                "is_list": False
             },
             "webpages": {
                 "ldap_name": "webpage",
                 "perm": None,
-                "list": True
+                "is_list": True
             },
         }
 
         if name not in user_attributes:
             raise AttributeError("'User' has no attribute '{}'".format(name))
 
-        if self.dn == None:
+        if self.dn is None:
             raise Exception("Could not determine DN of User")
 
         identifier = ":".join((self.dn, name))
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
-
 
         attr = user_attributes[name]
 
@@ -797,7 +799,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 results = c.user_attributes(self.dn, [field_name])
                 result = results.first_result()[field_name]
 
-                if attr["list"]:
+                if attr["is_list"]:
                     value = result
                 else:
                     value = result[0]
@@ -933,23 +935,23 @@ class Class(object):
         class_attributes = {
             "name": {
                 "ldap_name": "cn",
-                "list": False
+                "is_list": False
             },
             "period": {
                 "ldap_name": "classPeriod",
-                "list": False
+                "is_list": False
             },
             "class_id": {
                 "ldap_name": "tjhsstClassId",
-                "list": False
+                "is_list": False
             },
             "course_length": {
                 "ldap_name": "courseLength",
-                "list": False
+                "is_list": False
             },
             "room_number": {
                 "ldap_name": "roomNumber",
-                "list": False
+                "is_list": False
             }
         }
 
@@ -976,7 +978,7 @@ class Class(object):
                                " for class " + self.dn)
                 return None
             else:
-                if attr["list"]:
+                if attr["is_list"]:
                     value = result
                 else:
                     value = result[0]
@@ -1039,7 +1041,7 @@ class Grade(object):
     def number(self):
         """Return the grade as a number (9-12).
 
-        For use in templates since there is no nice integer conversion.
+        For use in templates since there is no nice integer casting.
         In Python code, use int() on a Grade object instead.
 
         """
