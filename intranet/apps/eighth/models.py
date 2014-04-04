@@ -22,6 +22,16 @@ class EighthSponsor(models.Model):
     last_name = models.CharField(null=True, max_length=63)
     online_attendance = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        try:
+            l = self.last_name
+        except NameError:
+            l = ""
+        try:
+            f = self.first_name
+        except NameError:
+            f = ""
+        return "{}, {}".format(l, f)
 
 class EighthRoom(models.Model):
     """Represents a room in which an eighth period activity can be held
@@ -35,6 +45,8 @@ class EighthRoom(models.Model):
 
     unique_together = (("room_number", "name", "capacity"),)
 
+    def __unicode__(self):
+        return "{} ({})".format(name, capcity)
 
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
@@ -143,6 +155,8 @@ class EighthScheduledActivity(models.Model):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return "{} on {}".format(self.activity.name, self.block)
 
 class EighthSignup(models.Model):
     """Represents a signup/membership in an eighth period activity.
