@@ -17,13 +17,18 @@ $(document).ready(function() {
 
     eighthResize = function() {
         var height = document.documentElement.clientHeight;
-        if(height < 650) {
+        if(height < 650 && height - 90 > 250) {
             $("#activity-picker").css("height",  height - 90);
+            $(".primary-content").addClass("viewing");
         }
     }
     $(document).bind("resize", eighthResize);
     eighthResize();
-    $("html,body").animate({
+    /*$("html,body").animate({
         scrollTop: $("#activity-picker").offset().top
-    }, 500);
+    }, 500);*/
+
+    $(".middle .switch").click(function() {
+        $(".primary-content").toggleClass("viewing");
+    })
 })
