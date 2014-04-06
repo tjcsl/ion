@@ -208,6 +208,7 @@ INSTALLED_APPS = (
     "intranet.apps.announcements",
     "intranet.apps.search",
     # "intranet.apps.groups",
+    "intranet.apps.schedule",
     "intranet.middleware.environment"
 )
 
