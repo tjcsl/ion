@@ -31,11 +31,11 @@ class login_view(View):
             login(request, form.get_user())
             # Initial load into session
             request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
-
+            logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
             next = request.GET.get("next", "/")
             return redirect(next)
         else:
-            logger.info("Login failed")
+            logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
             return index(request, auth_form=form)  # Modified to show errors
 
     def get(self, request):
