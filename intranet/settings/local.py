@@ -104,3 +104,5 @@ INSTALLED_APPS += (
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
 ]
+
+STATIC_DOC_ROOT = '/home/2016jwoglom/intranet3/intranet/static/'
