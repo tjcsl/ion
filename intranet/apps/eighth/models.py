@@ -1,4 +1,6 @@
+from itertools import chain
 import logging
+import datetime
 from django.db import models
 from django.db.models import Q
 from intranet.apps.users.models import User
@@ -76,6 +78,38 @@ class EighthActivity(models.Model):
         return self.name
 
 
+class EighthBlockManager(models.Manager):
+    def get_next_block(self):
+        """Gets the next block.
+           Returns: the block ID"""
+        now = datetime.datetime.now()
+
+        # Show same day if it's before 17:00
+        if now.hour < 17:
+           now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        try:
+            block_id = self \
+                                  .order_by("date", "block_letter") \
+                                  .filter(date__gte=now)[0] \
+                                  .id
+        except IndexError:
+            block_id = self \
+                                  .order_by("-date", "-block_letter") \
+                                  .filter(date__lte=now)[0] \
+                                  .id
+        return block_id
+
+    def get_current_blocks(self):
+        try:
+            block = EighthBlock.objects \
+                               .prefetch_related("eighthscheduledactivity_set") \
+                               .get(id=self.get_next_block())
+        except EighthBlock.DoesNotExist:
+            raise Http404
+
+        return block.get_surrounding_blocks()
+
 class EighthBlock(models.Model):
     """Represents an eighth period block.
 
@@ -93,6 +127,7 @@ class EighthBlock(models.Model):
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity")
 
+    objects = EighthBlockManager()
     def next_blocks(self, quantity=-1):
         blocks =  EighthBlock.objects \
                              .order_by("date", "block_letter") \
@@ -112,6 +147,17 @@ class EighthBlock(models.Model):
         if quantity == -1:
             return reversed(blocks)
         return reversed(blocks[:quantity])
+
+    def get_surrounding_blocks(self):
+        """Get the blocks around the one given.
+           Returns: a list of all of those blocks."""
+        
+
+        next = self.next_blocks()
+        prev = self.previous_blocks()
+
+        surrounding_blocks = list(chain(prev, [self], next))
+        return surrounding_blocks
 
     def __unicode__(self):
         return "{}: {}".format(str(self.date), self.block_letter)
