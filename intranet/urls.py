@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
 from .apps.auth.views import index, login_view, logout_view
 from .apps.users.views import profile_view, picture_view
-from .apps.eighth.views import eighth_signup_view
+from .apps.eighth.views import *
 from .apps.events.views import events_view
 from .apps.files.views import files_view
 from .apps.groups.views import groups_view, add_group_view
@@ -40,7 +40,11 @@ urlpatterns += patterns("announcements.views.",
 )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth(?:/block/(?P<block_id>\d+))?$", eighth_signup_view, name="eighth"),
+    url(r"^eighth/?$", eighth_redirect_view, name="eighth_redirect"),
+    url(r"^eighth/admin/?$", eighth_admin_view, name="eighth_admin"),
+    url(r"^eighth/teacher/?$", eighth_teacher_view, name="eighth_teacher"),
+    url(r"^eighth/choose/block/?$", eighth_choose_block, name="eighth_choose_block"),
+    url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth_signup_view, name="eighth_signup"),
 )
 
 urlpatterns += patterns("events.views.",
@@ -59,11 +63,6 @@ urlpatterns += patterns("groups.views.",
 urlpatterns += patterns("polls.views.",
     url(r"^polls$", polls_view, name="polls"),
 )
-
-#urlpatterns += patterns("admin.views.",
-#    url(r"^admin$", admin_view, name="admin"),
-#    url(r"^admin/eighth$", admin_eighth_view, name="admin_eighth")
-#)
 
 urlpatterns += patterns("users.views.",
     url(r"^profile(?:/(?P<user_id>\d+))?$", profile_view, name="user_profile"),

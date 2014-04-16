@@ -1,6 +1,4 @@
-from itertools import chain
 import logging
-import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -31,36 +29,37 @@ def eighth_redirect_view(request):
 def eighth_admin_view(request):
     return render(request, "eighth/admin.html", {"page": "eighth_admin"})
 
+@eighth_admin_required
+def eighth_choose_block(request):
+    next = request.GET.get('next', 'signup')
+
+    blocks = EighthBlock.objects.get_current_blocks()
+    return render(request, "eighth/choose_block.html", {
+        "page": "eighth_admin",
+        "blocks": blocks,
+        "next": "/eighth/{}/".format(next)
+    })
+
+
+
+
+
 @login_required
 def eighth_teacher_view(request):
     return render(request, "eighth/teacher.html", {"page": "eighth_teacher"})
 
+
+
 @login_required
 def eighth_signup_view(request, block_id=None):
     if block_id is None:
-        now = datetime.datetime.now()
-
-        # Show same day if it's before 17:00
-        if now.hour < 17:
-            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
-
-        try:
-            block_id = EighthBlock.objects \
-                                  .order_by("date", "block_letter") \
-                                  .filter(date__gte=now)[0] \
-                                  .id
-        except IndexError:
-            block_id = EighthBlock.objects \
-                                  .order_by("-date", "-block_letter") \
-                                  .filter(date__lte=now)[0] \
-                                  .id
+        block_id = EighthBlock.objects.get_next_block()
 
     is_admin = True
     if "user" in request.GET and is_admin:
         user = request.GET["user"]
     else:
         user = request.user.id
-
 
     try:
         block = EighthBlock.objects \
@@ -69,11 +68,10 @@ def eighth_signup_view(request, block_id=None):
     except EighthBlock.DoesNotExist:
         raise Http404
 
-    next = block.next_blocks()
-    prev = block.previous_blocks()
-
-    surrounding_blocks = list(chain(prev, [block], next))
+    surrounding_blocks = block.get_surrounding_blocks()
     schedule = []
+
+
 
     signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity.activity.name for s in signups}
