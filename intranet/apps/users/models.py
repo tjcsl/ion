@@ -199,8 +199,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             try:
                 group = Group.objects.get(name=group_name)
-            except DoesNotExist:
-                return false
+            except Group.DoesNotExist:
+                return False
         return group in self.groups.all()
 
     def has_admin_permission(self, perm):
