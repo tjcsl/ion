@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.http import Http404
 from django.shortcuts import render, redirect
 from .models import EighthBlock, EighthActivity, EighthSignup
@@ -12,6 +13,18 @@ from .serializers import EighthBlockListSerializer, \
 from intranet.apps.auth.decorators import *
 logger = logging.getLogger(__name__)
 
+def unmatch(match):
+    """Takes a string like block/1/activity/2/group/3 and
+       returns a dictionary of {'block': 1, 'activity': 2, 'group': 3}
+    """
+
+    if match is None:
+        return {}
+
+    spl = match.split('/')
+    keys = spl[::2]
+    values = spl[1::2]
+    return dict(zip(keys, values))
 
 @login_required
 def eighth_redirect_view(request):
@@ -27,7 +40,10 @@ def eighth_redirect_view(request):
 
 @eighth_admin_required
 def eighth_admin_view(request):
-    return render(request, "eighth/admin.html", {"page": "eighth_admin"})
+    return render(request, "eighth/admin.html", {
+        "page": "eighth_admin",
+        "success": 'success' in request.POST
+    })
 
 @eighth_admin_required
 def eighth_choose_block(request):
@@ -37,22 +53,73 @@ def eighth_choose_block(request):
     return render(request, "eighth/choose_block.html", {
         "page": "eighth_admin",
         "blocks": blocks,
-        "next": "/eighth/{}/".format(next)
+        "next": "/eighth/{}block/".format(next)
     })
 
 @eighth_admin_required
 def eighth_choose_activity(request):
-    next = request.GET.get('next', 'signup')
+    next = request.GET.get('next', '')
 
     activities = EighthActivity.objects.all().order_by("name")
     return render(request, "eighth/choose_activity.html", {
         "page": "eighth_admin",
         "activities": activities,
-        "next": "/eighth/{}/".format(next)
+        "next": "/eighth/{}activity/".format(next)
+    })
+
+@eighth_admin_required
+def eighth_choose_group(request):
+    next = request.GET.get('next', '')
+
+    groups = Group.objects.all().order_by("name")
+    return render(request, "eighth/choose_group.html", {
+        "page": "eighth_admin",
+        "groups": groups,
+        "next": "/eighth/{}group/".format(next)
+    })
+
+@eighth_admin_required
+def eighth_confirm_view(request, action=None, postfields=None):
+    if action is None:
+        action = "complete this operation"
+
+    if postfields is None:
+        postfields = {}
+
+    return render(request, "eighth/confirm.html", {
+        "page": "eighth_admin",
+        "request": request,
+        "action": action,
+        "postfields": postfields
     })
 
 
+@eighth_admin_required
+def eighth_students_register(request, match=None):
+    map = unmatch(match)
+    block, activity, group = map.get('block'), map.get('activity'), map.get('group')
+    next = request.path.split('eighth/')[1]
+    if block is None:
+        return redirect("/eighth/choose/block?next="+next)
+    if activity is None:
+        return redirect("/eighth/choose/activity?next="+next)
+    if group is None:
+        return redirect("/eighth/choose/group?next="+next)
 
+    grp = Group.objects.get(id=group)
+    act = EighthActivity.objects.get(id=activity)
+    blk = EighthBlock.objects.get(id=block)
+    if request.POST.get('confirm') is True:
+        
+        return redirect("/eighth/admin?success=1")
+    else:
+        return eighth_confirm_view(request,
+            "register {} for {} on {}".format(
+                grp.name,
+                act.name,
+                blk
+            )
+        )
 
 
 @login_required
