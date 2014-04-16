@@ -1,0 +1,28 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period (Administrative)
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+   <div class="primary-content">
+        <h3>Choose a block</h3>
+        <ul>
+        {% for block in blocks %}
+            <li><a href="{{ next }}{{ block.id }}">
+            {{ block.date | date:"l, M d, Y" }} 
+            Block {{ block.block_letter }}
+            </a></li>
+        {% endfor %}
+        </ul>
+   </div>
+{% endblock %}
