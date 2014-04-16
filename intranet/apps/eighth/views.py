@@ -40,6 +40,17 @@ def eighth_choose_block(request):
         "next": "/eighth/{}/".format(next)
     })
 
+@eighth_admin_required
+def eighth_choose_activity(request):
+    next = request.GET.get('next', 'signup')
+
+    activities = EighthActivity.objects.all().order_by("name")
+    return render(request, "eighth/choose_activity.html", {
+        "page": "eighth_admin",
+        "activities": activities,
+        "next": "/eighth/{}/".format(next)
+    })
+
 
 
 

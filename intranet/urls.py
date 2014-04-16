@@ -43,7 +43,9 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/?$", eighth_redirect_view, name="eighth_redirect"),
     url(r"^eighth/admin/?$", eighth_admin_view, name="eighth_admin"),
     url(r"^eighth/teacher/?$", eighth_teacher_view, name="eighth_teacher"),
+
     url(r"^eighth/choose/block/?$", eighth_choose_block, name="eighth_choose_block"),
+    url(r"^eighth/choose/activity/?$", eighth_choose_activity, name="eighth_choose_activity"),
     url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth_signup_view, name="eighth_signup"),
 )
 

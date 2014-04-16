@@ -20,18 +20,12 @@
 
 {% block main %}
    <div class="primary-content">
-        <h3 style="font-size: 24px">Choose a block</h3>
+        <h3 style="font-size: 24px">Choose an activity</h3>
         <table>
-        {% for block in blocks %}
+        {% for activity in activities %}
             <tr>
-                <td><a href="{{ next }}{{ block.id }}">
-                {{ block.date | date:"l" }}
-                </a></td>
-                <td><a href="{{ next }}{{ block.id }}">
-                {{ block.date | date:"M d, Y" }}
-                </a></td>
-                <td><a href="{{ next }}{{ block.id }}">
-                {{ block.block_letter }} Block
+                <td><a href="{{ next }}{{ activity.id }}">
+                {{ activity.id }} {{ activity.name }}
                 </a></td>
             </tr>
         {% endfor %}
