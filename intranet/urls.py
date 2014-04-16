@@ -45,7 +45,7 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/teacher/?$", eighth_teacher_view, name="eighth_teacher"),
 
     url(r"^eighth/choose/block/?$", eighth_choose_block, name="eighth_choose_block"),
-    url(r"^eighth/choose/activity/?$", eighth_choose_activity, name="eighth_choose_activity"),
+    url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", eighth_choose_activity, name="eighth_choose_activity"),
     url(r"^eighth/choose/group/?$", eighth_choose_group, name="eighth_choose_group"),
 
     url(r"^eighth/students/register/$", eighth_students_register, name="eighth_students_register"),

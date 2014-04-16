@@ -3,6 +3,17 @@ var previousSelection = $("#activity-list li")[0];
 
 $(document).ready(function() {
 
+    eighth.signUp = function(bid, aid) {
+        $.post("/eighth/signup/block/"+bid, {
+            "bid": bid,
+            "aid": aid,
+            "confirm": true
+        }, function(d) {
+            if(d.trim() == "success") {
+                location.reload();
+            } else alert(d);
+        })
+    };
     eighth.Activity = Backbone.Model.extend({
         idAttribute: "id"
     });
@@ -55,12 +66,18 @@ $(document).ready(function() {
                 viewContainer: $("#activity-detail")
             });
 
-            activityDetailView.render();
+            $("#activity-detail").attr("data-aid", activityDetailView.model.id);
 
+            activityDetailView.render();
+            console.log(activityDetailView);
             $("#signup-button").click(function(event) {
                 $(this).unbind(event);
                 var target = document.getElementById("signup-spinner");
                 var spinner = new Spinner(spinnerOptions).spin(target);
+                var aid = $("#activity-detail").attr("data-aid");
+                var bid = $("#activity-detail").attr("data-bid");
+                eighth.signUp(bid, aid);
+
             });
         }
     });
