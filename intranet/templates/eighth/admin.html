@@ -8,6 +8,56 @@
 
 {% block css %}
     {{ block.super }}
+    <style type="text/css">
+.primary-content {
+    width: calc(100% - 92px);
+    height: 100%;
+}
+
+.primary-content .searchbox {
+    margin-left: 50px;
+}
+
+.primary-content #box {
+    font-size: 32px;
+    color: black;
+    background-color: transparent;
+    min-width: 100%;
+}
+
+#box::-webkit-input-placeholder,
+#box:-moz-placeholder,
+#box::-moz-placeholder,
+#box:-ms-input-placeholder {
+    color: black;
+}
+
+.grid {
+    width: 100%;
+    height: 100%;
+}
+
+.grid td {
+    padding: 15px;
+}
+
+.grid h3 {
+    font-size: 18px;
+}
+
+@media (max-width: 700px) {
+    .grid tr {
+        display: inline-table;
+        width: 100%;
+    }
+
+    .grid td {
+        display: block;
+    }
+}
+
+
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -15,5 +65,62 @@
 {% endblock %}
 
 {% block main %}
-   <img src="https://iodine.tjhsst.edu/www/gc/const.gif" />
+   <div class="primary-content">
+        <div class="searchbox">
+            <input id="box" placeholder="Choose an option.." />
+            <!-- eventually this would be a search for the options -->
+        </div>
+
+        <table class="grid">
+        <tr>
+            <td><h3>Student Options</h3>
+            <ul>
+                <li>Register a group of students</li>
+                <li>Customize special student groups</li>
+                <li>Add students to a restricted activity</li>
+                <li>Switch students from one activity to another</li>
+            </ul>
+            </td>
+
+            <td><h3>Attendance Options</h3>
+            <ul>
+                <li>Reschedule students for a single activity</li>
+                <li>View attendance data</li>
+                <li>View delinquent (absent) students</li>
+                <li>View after-deadline changes</li>
+                <li>View activities that have not taken attendance</li>
+                <li>Migrate outstanding passes</li>
+            </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><h3>Activity Scheduling Options</h3>
+            <ul>
+                <li>Modify activities</li>
+                <li>Modify rooms</li>
+                <li>Modify activity sponsors</li>
+                <li><b>Schedule an activity</b></li>
+                <li><b>View class rosters</b></li>
+                <li><b>View room utilization (by block)</b></li>
+                <li><b>View room utilization (by room)</b></li>
+                <li>View sponsor schedule</li>
+                <li>View activity schedule</li>
+                <li>Modify group restriction lists</li>
+            </ul>
+            </td>
+
+            <td><h3>Special Options</h3>
+            <ul>
+                <li><b>Finalize student schedules</b></li>
+                <li><b>Print activity rosters</b></li>
+                <li><b>Change starting date</b></li>
+                <li>Customize eighth period blocks</li>
+                <li>Move an eighth period block</li>
+                <li>Export out of school schedules</li>
+                <li>Edit printers</li>
+            </ul>
+            </td>
+        </tr>
+        </table>
+   </div>
 {% endblock %}
