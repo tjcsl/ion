@@ -3,7 +3,7 @@ import logging
 import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import EighthBlock, EighthActivity, EighthSignup
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
@@ -11,9 +11,29 @@ from rest_framework.response import Response
 from .serializers import EighthBlockListSerializer, \
     EighthBlockDetailSerializer, EighthActivityDetailSerializer, \
     EighthSignupSerializer
-
+from intranet.apps.auth.decorators import *
 logger = logging.getLogger(__name__)
 
+
+@login_required
+def eighth_redirect_view(request):
+    if request.user.is_eighth_admin:
+        pg = "admin"
+    elif request.user.is_teacher:
+        pg = "teacher"
+    elif request.user.is_student:
+        pg = "signup"
+    else
+        pg = ".."
+    return redirect("/eighth/" + pg)
+
+@eighth_admin_required
+def eighth_admin_view(request):
+    return render(request, "eighth/admin.html", {"page": "eighth_admin"})
+
+@login_required
+def eighth_teacher_view(request):
+    return render(request, "eighth/teacher.html", {"page": "eighth_teacher"})
 
 @login_required
 def eighth_signup_view(request, block_id=None):
@@ -85,7 +105,7 @@ def eighth_signup_view(request, block_id=None):
         "active_block": block
     }
 
-    return render(request, "eighth/eighth.html", context)
+    return render(request, "eighth/signup.html", context)
 
 
 class EighthBlockList(generics.ListAPIView):
