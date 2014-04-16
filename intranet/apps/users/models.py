@@ -5,13 +5,14 @@ import ldap
 import os
 from django.db import models
 from django import template
+from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from intranet.middleware import threadlocals
-
+from django.contrib.auth.models import Group
 logger = logging.getLogger(__name__)
 register = template.Library()
 
@@ -35,6 +36,8 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
+
+        
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass with properties that fetch data
@@ -183,6 +186,33 @@ class User(AbstractBaseUser, PermissionsMixin):
         hash.update(signed)
         return hash.hexdigest()
 
+    def member_of(self, group_name):
+        """Returns whether a user is a member of a certain group.
+
+        Returns:
+            Boolean
+
+        """
+
+        if isinstance(group_name, Group):
+            group = group_name
+        else:
+            try:
+                group = Group.objects.get(name=group_name)
+            except DoesNotExist:
+                return false
+        return group in self.groups.all()
+
+    def has_admin_permission(self, perm):
+        """Returns whether a user is in the {perm}_all group
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.member_of("admin_all") or self.member_of("admin_"+perm)
+
     @property
     def full_name(self):
         """Return full name, e.g. Angela William. This is required
@@ -195,6 +225,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         for subclasses of User.
         """
         return self.first_name
+
+    def get_short_name(self):
+        return self.short_name
 
     @property
     def dn(self):
@@ -561,6 +594,17 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
+    def is_eighth_admin(self):
+        """Checks if user is an eighth period admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission('eighth')
+
+    @property
     def is_teacher(self):
         """Checks if user is a teacher.
 
@@ -581,6 +625,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.user_type == "tjhsstStudent"
+
+    @property
+    def is_staff(self):
+        """Checks if a user has django admin priveleges.
+
+        Returns:
+            Boolean
+
+        """
+
+        #return self.username in settings.ADMIN_USERS
+        return self.member_of("admin_all")
 
     @property
     def is_attendance_user(self):
@@ -766,6 +822,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "list": True
             },
         }
+
+        #if name == "is_staff" and self.username in settings.ADMIN_USERS:
+        #    return True
+
 
         if name not in user_attributes:
             raise AttributeError("'User' has no attribute '{}'".format(name))
