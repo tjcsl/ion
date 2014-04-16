@@ -23,7 +23,7 @@ def eighth_redirect_view(request):
         pg = "teacher"
     elif request.user.is_student:
         pg = "signup"
-    else
+    else:
         pg = ".."
     return redirect("/eighth/" + pg)
 
