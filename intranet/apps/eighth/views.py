@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404
 from django.shortcuts import render, redirect
-from .models import EighthBlock, EighthActivity, EighthSignup
+from .models import EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -57,10 +57,19 @@ def eighth_choose_block(request):
     })
 
 @eighth_admin_required
-def eighth_choose_activity(request):
+def eighth_choose_activity(request, block_id=None):
     next = request.GET.get('next', '')
 
-    activities = EighthActivity.objects.all().order_by("name")
+    if block_id is None:
+        """ show all activities """
+        activities = EighthActivity.objects.all().order_by("name")
+    else:
+        activities = []
+        schactivities = EighthScheduledActivity.objects \
+                            .filter(block__id=block_id) \
+                            .order_by("activity__name")
+        for schact in schactivities:
+            activities.append(schact.activity)
     return render(request, "eighth/choose_activity.html", {
         "page": "eighth_admin",
         "activities": activities,
@@ -94,6 +103,57 @@ def eighth_confirm_view(request, action=None, postfields=None):
     })
 
 
+#@eighth_admin_required
+def signup_student(user, block, activity, force=False):
+    """Sign up a student for an eighth period activity.
+        signup_student(user_id, block_id, activity_id, False)
+        signup_student(user_id, eighthscheduledactivity, None, False)
+
+    Returns:
+        The EighthSignup object for the user and EighthScheduledActivity.
+    """
+
+    try:
+        sch_activity = EighthScheduledActivity.objects.get(
+            block=block,
+            activity=activity
+        )
+    except EighthScheduledActivity.DoesNotExist:
+        raise Exception("The scheduled activity does not exist.")
+
+    try:
+        current_signup = EighthScheduledActivity.objects.get(
+            block__id=block_id,
+            members__id=user_id
+        )
+        if current_signup.activity.sticky and not force:
+            raise Exception("You are stuck in a stickied activity: {}" \
+                .format(current_signup.activity)
+            )
+        #elif current_signup.activity.both_blocks:
+        #    raise Exception("This is a both blocks activity: {}" \
+        #        .format(current_signup.activity)
+        #    )
+        else:
+            """remove the signup for the previous activity"""
+            EighthSignup.objects.get(
+                user=user,
+                scheduled_activity=current_signup
+            ).delete()
+    except EighthScheduledActivity.DoesNotExist:
+        """They haven't signed up for anything, which is fine."""
+        pass
+
+    signup = EighthSignup.objects.create(
+        user=user,
+        scheduled_activity=sch_activity
+    )
+    return signup
+    """ A sch_activity.members.add() isn't needed -- it's done automatically. """
+    
+
+
+
 @eighth_admin_required
 def eighth_students_register(request, match=None):
     map = unmatch(match)
@@ -102,7 +162,7 @@ def eighth_students_register(request, match=None):
     if block is None:
         return redirect("/eighth/choose/block?next="+next)
     if activity is None:
-        return redirect("/eighth/choose/activity?next="+next)
+        return redirect("/eighth/choose/activity/block/"+block+"?next="+next)
     if group is None:
         return redirect("/eighth/choose/group?next="+next)
 
@@ -110,7 +170,13 @@ def eighth_students_register(request, match=None):
     act = EighthActivity.objects.get(id=activity)
     blk = EighthBlock.objects.get(id=block)
     if request.POST.get('confirm') is True:
-        
+        users = User.objects.filter(groups__id=group)
+
+        for user in users:
+            signup_student(user.id, block, activity, True)            
+
+
+
         return redirect("/eighth/admin?success=1")
     else:
         return eighth_confirm_view(request,
