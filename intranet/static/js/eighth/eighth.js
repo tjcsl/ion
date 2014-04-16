@@ -18,14 +18,18 @@ $(document).ready(function() {
 
 
     
-    $leftelem = $("li.day>a[data-bid='" + $("#activity-detail").attr("data-bid") + "']")
-                    .parent();
-    for(i=0; i<Math.round(($(".day-picker").width()/$("li.day").width())/2); i++) $leftelem = $leftelem.prev();
+
     $(".days-container").css({
         "margin-left": parseInt(
             ($(".days-container").css("margin-left")
                 .split("px")[0]
-            ) - ($leftelem.offset().left)
+            ) - ((function() {
+                $leftelem = $("li.day>a[data-bid='" +
+                                $("#activity-detail").attr("data-bid") +
+                            "']").parent();
+                for(i=0; i<Math.round(($(".day-picker").width()/$("li.day").width())/2); i++) $leftelem = $leftelem.prev();
+                return $leftelem;
+            })().offset().left)
         )
 
     });

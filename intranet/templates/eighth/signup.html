@@ -13,6 +13,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.scrollto.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
@@ -91,7 +92,7 @@
                                 {{ day.date|date:"M d, Y" }}
                             </div>
                                 {% for b in day.blocks %}
-                                    <a href="{% url 'eighth_signup' b.id %}">
+                                    <a href="{% url 'eighth_signup' b.id %}" data-bid="{{ b.id }}">
                                         <div class="block{% if active_block.id = b.id %} active-block{% endif %}">
                                             <span class="block-letter">
                                                 {{ b.block_letter }}

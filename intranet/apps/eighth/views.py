@@ -1,7 +1,7 @@
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from .models import EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
 from rest_framework import generics, views
@@ -103,8 +103,15 @@ def eighth_confirm_view(request, action=None, postfields=None):
     })
 
 
-#@eighth_admin_required
+@eighth_admin_required
 def signup_student(user, block, activity, force=False):
+    return signup_student_do(user, block, activity, force)
+
+@eighth_student_required
+def signup_self(request, block, activity):
+    return signup_student_do(request.user, block, activity, False)
+
+def signup_student_do(user, block, activity, force=False):
     """Sign up a student for an eighth period activity.
         signup_student(user_id, block_id, activity_id, False)
         signup_student(user_id, eighthscheduledactivity, None, False)
@@ -130,7 +137,7 @@ def signup_student(user, block, activity, force=False):
             raise Exception("You are stuck in a stickied activity: {}" \
                 .format(current_signup.activity)
             )
-        """ TODO: BOTH BLOCKS """
+        # TODO: BOTH BLOCKS
         #elif current_signup.activity.both_blocks:
         #    raise Exception("This is a both blocks activity: {}" \
         #        .format(current_signup.activity)
@@ -189,14 +196,28 @@ def eighth_students_register(request, match=None):
         )
 
 
-@login_required
+@eighth_teacher_required
 def eighth_teacher_view(request):
     return render(request, "eighth/teacher.html", {"page": "eighth_teacher"})
 
 
 
-@login_required
+@eighth_student_required
 def eighth_signup_view(request, block_id=None):
+
+    if 'confirm' in request.POST:
+        """Actually sign up"""
+        signup = signup_self(
+            request,
+            request.POST.get('bid'),
+            request.POST.get('aid')
+        )
+
+        if isinstance(signup, EighthSignup):
+            return HttpResponse("success")
+
+
+
     if block_id is None:
         block_id = EighthBlock.objects.get_next_block()
 
