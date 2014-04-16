@@ -7,6 +7,11 @@
 
 {% block css %}
     {{ block.super }}
+    <style type="text/css">
+    .primary-content table td {
+        padding: 5px 0;
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -15,14 +20,21 @@
 
 {% block main %}
    <div class="primary-content">
-        <h3>Choose a block</h3>
-        <ul>
+        <h3 style="font-size: 24px">Choose a block</h3>
+        <table>
         {% for block in blocks %}
-            <li><a href="{{ next }}{{ block.id }}">
-            {{ block.date | date:"l, M d, Y" }} 
-            Block {{ block.block_letter }}
-            </a></li>
+            <tr>
+                <td><a href="{{ next }}{{ block.id }}">
+                {{ block.date | date:"l" }}
+                </a></td>
+                <td><a href="{{ next }}{{ block.id }}">
+                {{ block.date | date:"M d, Y" }}
+                </a></td>
+                <td><a href="{{ next }}{{ block.id }}">
+                {{ block.block_letter }} Block
+                </a></td>
+            </tr>
         {% endfor %}
-        </ul>
+        </table>
    </div>
 {% endblock %}
