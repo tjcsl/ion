@@ -123,13 +123,14 @@ def signup_student(user, block, activity, force=False):
 
     try:
         current_signup = EighthScheduledActivity.objects.get(
-            block__id=block_id,
-            members__id=user_id
+            block=block,
+            members=user
         )
         if current_signup.activity.sticky and not force:
             raise Exception("You are stuck in a stickied activity: {}" \
                 .format(current_signup.activity)
             )
+        """ TODO: BOTH BLOCKS """
         #elif current_signup.activity.both_blocks:
         #    raise Exception("This is a both blocks activity: {}" \
         #        .format(current_signup.activity)
