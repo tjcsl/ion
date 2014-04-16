@@ -6,13 +6,25 @@ $(document).ready(function() {
     var blocksWidth = $(".days-container").width();
     console.log(containerWidth);
     console.log(blocksWidth);
-
+    /*
+     * TODO: Make this better.
+     * How and why the heck does this work?
+     */
     if ($(".days-container .day").size() % 2 == 0) {
         $(".days-container").css("margin-left", (containerWidth - blocksWidth + (1 - $(".days-container .day").size() % 2) * $(".days-container .day").width()) / 2);
     } else {
          $(".days-container").css("margin-left", (containerWidth - blocksWidth) / 2);
     }
 
+    $(".days-container").css({
+        "margin-left": parseInt(
+            ($(".days-container").css("margin-left")
+                .split("px")[0]
+            ) - ($("li.day>a[data-bid='" + $("#activity-detail").attr("data-bid") + "']")
+                    .parent().prev().prev().offset().left
+            )
+        )
+    });
 
     $(".day-nav").click(function(e) {
         if(e.shiftKey || e.ctrlKey || e.altKey) {
