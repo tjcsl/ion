@@ -43,6 +43,23 @@
     </style>
 {% endblock %}
 
+{% block main %}
+    {% if request.GET.success == "1" %}
+        <div class="success-banner">
+            The operation was completed successfully.
+        </div>
+        <script type="text/javascript">
+        $(function() {
+            $(".success-banner").click(function() {
+                $(this).slideUp(500);
+            });
+        });
+        </script>
+    {% endif %}
+
+    {{ block.super }}
+{% endblock %}
+
 {% block eighth-main %}
     <table class="grid">
     <tr>
