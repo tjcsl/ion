@@ -2,7 +2,7 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from .models import EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
