@@ -2,15 +2,15 @@ from django.conf import settings
 from django.conf.urls import patterns, url, include
 import django.contrib.admin
 from django.views.generic.base import RedirectView
-from .apps.announcements.views import add_announcement_view, modify_announcement_view, delete_announcement_view
-from .apps.auth.views import index, login_view, logout_view
-from .apps.users.views import profile_view, picture_view
-from .apps.eighth.views import *
-from .apps.events.views import events_view
-from .apps.files.views import files_view
-from .apps.groups.views import groups_view, add_group_view
-from .apps.polls.views import polls_view
-from .apps.search.views import search_view
+from .apps.announcements import views as announcements
+from .apps.auth import views as auth
+from .apps.users import views as users
+from .apps.eighth import views as eighth
+from .apps.events import views as events
+from .apps.files import views as files
+from .apps.groups import views as groups
+from .apps.polls import views as polls
+from .apps.search import views as search
 
 django.contrib.admin.autodiscover()
 
@@ -28,56 +28,56 @@ if settings.SHOW_DEBUG_TOOLBAR:
     )
 
 urlpatterns += patterns("auth.views.",
-    url(r"^$", index, name="index"),
-    url(r"^login$", login_view.as_view(), name="login"),
-    url(r"^logout$", logout_view, name="logout"),
+    url(r"^$", auth.index, name="index"),
+    url(r"^login$", auth.login_view.as_view(), name="login"),
+    url(r"^logout$", auth.logout_view, name="logout"),
 )
 
 urlpatterns += patterns("announcements.views.",
-    url(r"^announcements/add$", add_announcement_view, name="add_announcement"),
-    url(r"^announcements/modify/(?P<id>\d+)$", modify_announcement_view, name="modify_announcement"),
-    url(r"^announcements/delete$", delete_announcement_view, name="delete_announcement"),
+    url(r"^announcements/add$", announcements.add_announcement_view, name="add_announcement"),
+    url(r"^announcements/modify/(?P<id>\d+)$", announcements.modify_announcement_view, name="modify_announcement"),
+    url(r"^announcements/delete$", announcements.delete_announcement_view, name="delete_announcement"),
 )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth/?$", eighth_redirect_view, name="eighth_redirect"),
-    url(r"^eighth/admin/?$", eighth_admin_view, name="eighth_admin"),
-    url(r"^eighth/teacher/?$", eighth_teacher_view, name="eighth_teacher"),
+    url(r"^eighth/?$", eighth.eighth_redirect_view, name="eighth_redirect"),
+    url(r"^eighth/admin/?$", eighth.eighth_admin_view, name="eighth_admin"),
+    url(r"^eighth/teacher/?$", eighth.eighth_teacher_view, name="eighth_teacher"),
 
-    url(r"^eighth/choose/block/?$", eighth_choose_block, name="eighth_choose_block"),
-    url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", eighth_choose_activity, name="eighth_choose_activity"),
-    url(r"^eighth/choose/group/?$", eighth_choose_group, name="eighth_choose_group"),
+    url(r"^eighth/choose/block/?$", eighth.eighth_choose_block, name="eighth_choose_block"),
+    url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", eighth.eighth_choose_activity, name="eighth_choose_activity"),
+    url(r"^eighth/choose/group/?$", eighth.eighth_choose_group, name="eighth_choose_group"),
 
-    url(r"^eighth/students/register/$", eighth_students_register, name="eighth_students_register"),
-    url(r"^eighth/students/register/(?P<match>.+)/$", eighth_students_register, name="eighth_students_register"),
+    url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
+    url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
 
-    url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth_signup_view, name="eighth_signup"),
+    url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth.eighth_signup_view, name="eighth_signup"),
 )
 
 urlpatterns += patterns("events.views.",
-    url(r"^events$", events_view, name="events"),
+    url(r"^events$", events.events_view, name="events"),
 )
 
 urlpatterns += patterns("files.views.",
-    url(r"^files$", files_view, name="files"),
+    url(r"^files$", files.files_view, name="files"),
 )
 
 urlpatterns += patterns("groups.views.",
-    url(r"^groups$", groups_view, name="groups"),
-	url(r"^groups/add$", add_group_view, name="add_groups"),
+    url(r"^groups$", groups.groups_view, name="groups"),
+	url(r"^groups/add$", groups.add_group_view, name="add_groups"),
 )
 
 urlpatterns += patterns("polls.views.",
-    url(r"^polls$", polls_view, name="polls"),
+    url(r"^polls$", polls.polls_view, name="polls"),
 )
 
 urlpatterns += patterns("users.views.",
-    url(r"^profile(?:/(?P<user_id>\d+))?$", profile_view, name="user_profile"),
-    url(r"^picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", picture_view, name="profile_picture")
+    url(r"^profile(?:/(?P<user_id>\d+))?$", users.profile_view, name="user_profile"),
+    url(r"^picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", users.picture_view, name="profile_picture")
 )
 
 urlpatterns += patterns("search.views.",
-    url(r"^search$", search_view, name="search"),
+    url(r"^search$", search.search_view, name="search"),
 )
 
 urlpatterns += [
