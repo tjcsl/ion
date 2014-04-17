@@ -97,24 +97,13 @@ def eighth_confirm_view(request, action=None, postfields=None):
 
     return render(request, "eighth/confirm.html", {
         "page": "eighth_admin",
-        "request": request,
         "action": action,
         "postfields": postfields
     })
 
 
-@eighth_admin_required
 def signup_student(user, block, activity, force=False):
-    return signup_student_do(user, block, activity, force)
-
-@eighth_student_required
-def signup_self(request, block, activity):
-    return signup_student_do(request.user, block, activity, False)
-
-def signup_student_do(user, block, activity, force=False):
     """Sign up a student for an eighth period activity.
-        signup_student(user_id, block_id, activity_id, False)
-        signup_student(user_id, eighthscheduledactivity, None, False)
 
     Returns:
         The EighthSignup object for the user and EighthScheduledActivity.
@@ -177,11 +166,11 @@ def eighth_students_register(request, match=None):
     grp = Group.objects.get(id=group)
     act = EighthActivity.objects.get(id=activity)
     blk = EighthBlock.objects.get(id=block)
-    if request.POST.get('confirm') is True:
-        users = User.objects.filter(groups__id=group)
+    if 'confirm' in request.POST:
+        users = User.objects.filter(groups=grp)
 
         for user in users:
-            signup_student(user.id, block, activity, True)            
+            signup_student(user, blk, act, True)            
 
 
 
