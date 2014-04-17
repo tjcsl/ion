@@ -31,7 +31,6 @@ $(document).ready(function() {
                 return $leftelem;
             })().offset().left)
         )
-
     });
 
     $(".day-nav").click(function(e) {

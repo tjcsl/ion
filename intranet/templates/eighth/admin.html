@@ -1,37 +1,9 @@
-{% extends "page_with_nav.html" %}
+{% extends "eighth/page_eighth_admin.html" %}
 {% load staticfiles %}
-{% load math %}
-
-{% block title %}
-    {{ block.super }} - Eighth Period (Administrative)
-{% endblock %}
 
 {% block css %}
     {{ block.super }}
     <style type="text/css">
-.primary-content {
-    width: calc(100% - 92px);
-    height: 100%;
-}
-
-.primary-content .searchbox {
-    margin-left: 50px;
-}
-
-.primary-content #box {
-    font-size: 32px;
-    color: black;
-    background-color: transparent;
-    min-width: 100%;
-}
-
-#box::-webkit-input-placeholder,
-#box:-moz-placeholder,
-#box::-moz-placeholder,
-#box:-ms-input-placeholder {
-    color: black;
-}
-
 .grid {
     width: 100%;
     height: 100%;
@@ -63,126 +35,113 @@
         display: block;
     }
 }
-
-
     </style>
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-{% endblock %}
+{% block eighth-main %}
+    <table class="grid">
+    <tr>
+        <td><h3>Student Options</h3>
+        <ul>
+            <li><a href="students/register">
+            Register a group of students
+            </a></li>
+            <li><a href="">
+            Customize special student groups
+            </a></li>
+            <li><a href="students/register_restricted">
+            Add students to a restricted activity
+            </a></li>
+            <li><a href="students/switch">
+            Switch students from one activity to another
+            </a></li>
+        </ul>
+        </td>
 
-{% block main %}
-   <div class="primary-content">
-        <div class="searchbox">
-            <input id="box" placeholder="Choose an option.." />
-            <!-- eventually this would be a search for the options -->
-        </div>
+        <td><h3>Attendance Options</h3>
+        <ul>
+            <li><a href="attendance/reschedule">
+            Reschedule students for a single activity
+            </a></li>
+            <li><a href="attendance/view">
+            View attendance data
+            </a></li>
+            <li><a href="attendance/view_absent">
+            View delinquent (absent) students
+            </a></li>
+            <li><a href="attendance/view_postsigns">
+            View after-deadline changes
+            </a></li>
+            <li><a href="attendance/view_late_att">
+            View activities that have not taken attendance
+            </a></li>
+            <li><a href="attendance/passes_migrate">
+            Migrate outstanding passes
+            </a></li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><h3>Activity Scheduling Options</h3>
+        <ul>
+            <li><a href="activities/modify">
+            Modify activities
+            </a></li>
+            <li><b><a href="activities/schedule">
+            Schedule an activity
+            </a></b></li>
+            <li><a href="activities/sponsors">
+            Modify activity sponsors
+            </a></li>
+            <li><a href="rooms/modify">
+            Modify rooms
+            </a></li>
+            <li><b><a href="rosters/view">
+            View class rosters
+            </a></b></li>
+            <li><b><a href="rooms/util_block">
+            View room utilization (by block)
+            </a></b></li>
+            <li><b><a href="rooms/util_room">
+            View room utilization (by room)
+            </a></b></li>
+            <li><a href="sponsors/view">
+            View sponsor schedule
+            </a></li>
+            <li><a href="activities/view_schedule">
+            View activity schedule
+            </a></li>
+            <li><a href="groups/edit">
+            Modify group restriction lists
+            </a></li>
+        </ul>
+        </td>
 
-        <table class="grid">
-        <tr>
-            <td><h3>Student Options</h3>
-            <ul>
-                <li><a href="students/register">
-                Register a group of students
-                </a></li>
-                <li><a href="">
-                Customize special student groups
-                </a></li>
-                <li><a href="students/register_restricted">
-                Add students to a restricted activity
-                </a></li>
-                <li><a href="students/switch">
-                Switch students from one activity to another
-                </a></li>
-            </ul>
-            </td>
-
-            <td><h3>Attendance Options</h3>
-            <ul>
-                <li><a href="attendance/reschedule">
-                Reschedule students for a single activity
-                </a></li>
-                <li><a href="attendance/view">
-                View attendance data
-                </a></li>
-                <li><a href="attendance/view_absent">
-                View delinquent (absent) students
-                </a></li>
-                <li><a href="attendance/view_postsigns">
-                View after-deadline changes
-                </a></li>
-                <li><a href="attendance/view_late_att">
-                View activities that have not taken attendance
-                </a></li>
-                <li><a href="attendance/passes_migrate">
-                Migrate outstanding passes
-                </a></li>
-            </ul>
-            </td>
-        </tr>
-        <tr>
-            <td><h3>Activity Scheduling Options</h3>
-            <ul>
-                <li><a href="activities/modify">
-                Modify activities
-                </a></li>
-                <li><b><a href="activities/schedule">
-                Schedule an activity
-                </a></b></li>
-                <li><a href="activities/sponsors">
-                Modify activity sponsors
-                </a></li>
-                <li><a href="rooms/modify">
-                Modify rooms
-                </a></li>
-                <li><b><a href="rosters/view">
-                View class rosters
-                </a></b></li>
-                <li><b><a href="rooms/util_block">
-                View room utilization (by block)
-                </a></b></li>
-                <li><b><a href="rooms/util_room">
-                View room utilization (by room)
-                </a></b></li>
-                <li><a href="sponsors/view">
-                View sponsor schedule
-                </a></li>
-                <li><a href="activities/view_schedule">
-                View activity schedule
-                </a></li>
-                <li><a href="groups/edit">
-                Modify group restriction lists
-                </a></li>
-            </ul>
-            </td>
-
-            <td><h3>Special Options</h3>
-            <ul>
-                <li><b><a href="finalize/">
-                Finalize student schedules
-                </a></b></li>
-                <li><b><a href="rosters/print">
-                Print activity rosters
-                </a></b></li>
-                <li><b><a href="startdate/">
-                Change starting date
-                </a></b></li>
-                <li><a href="blocks/edit">
-                Customize eighth period blocks
-                </a></li>
-                <li><a href="blocks/move">
-                Move an eighth period block
-                </a></li>
-                <li><a href="export/">
-                Export out of school schedules
-                </a></li>
-                <li><a href="printers/">
-                Edit printers
-                </a></li>
-            </ul>
-            </td>
-        </tr>
-        </table>
-   </div>
+        <td><h3>Special Options</h3>
+        <ul>
+            <li><b><a href="finalize/">
+            Finalize student schedules
+            </a></b></li>
+            <li><b><a href="rosters/print">
+            Print activity rosters
+            </a></b></li>
+            <li><b><a href="startdate/">
+            Change starting date
+            </a></b></li>
+            <li><a href="blocks/edit">
+            Customize eighth period blocks
+            </a></li>
+            <li><a href="blocks/move">
+            Move an eighth period block
+            </a></li>
+            <li><a href="export/">
+            Export out of school schedules
+            </a></li>
+            <li><a href="printers/">
+            Edit printers
+            </a></li>
+        </ul>
+        </td>
+    </tr>
+    </table>
 {% endblock %}

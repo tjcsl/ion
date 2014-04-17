@@ -1,0 +1,26 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period (Administrative)
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+{% endblock %}
+
+{% block main %}
+   <div class="primary-content">
+        <div class="searchbox">
+        <form action="/eighth/search" method="get">
+            <input id="box" name="q" placeholder="Look up a student, teacher, or activity" value="" />
+            <input id="box-btn" type="submit" value="Go" />
+        </div>
+        <div class="inner-content">
+        {% block eighth-main %}
+
+        {% endblock %}
+        </div>
+   </div>
+{% endblock %}

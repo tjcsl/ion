@@ -1,9 +1,5 @@
-{% extends "page_with_nav.html" %}
+{% extends "eighth/page_eighth_admin.html" %}
 {% load staticfiles %}
-
-{% block title %}
-    {{ block.super }} - Eighth Period (Administrative)
-{% endblock %}
 
 {% block css %}
     {{ block.super }}
@@ -14,21 +10,15 @@
     </style>
 {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-{% endblock %}
-
-{% block main %}
-   <div class="primary-content">
-        <h3 style="font-size: 24px">Choose an activity</h3>
-        <table>
-        {% for activity in activities %}
-            <tr>
-                <td><a href="{{ next }}{{ activity.id }}">
-                {{ activity.id }} {{ activity.name }}
-                </a></td>
-            </tr>
-        {% endfor %}
-        </table>
-   </div>
+{% block eighth-main %}
+    <h3 style="font-size: 24px">Choose an activity</h3>
+    <table>
+    {% for activity in activities %}
+        <tr>
+            <td><a href="{{ next }}{{ activity.id }}">
+            {{ activity.id }} {{ activity.name }}
+            </a></td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}
