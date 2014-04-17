@@ -15,9 +15,10 @@ def index(request, auth_form=None):
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
-        return render(request,
-                      "auth/login.html",
-                      {"auth_form": auth_form, })
+        return render(request, "auth/login.html", {
+            "auth_form": auth_form,
+            "request": request
+        })
 
 
 class login_view(View):
