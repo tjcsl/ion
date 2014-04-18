@@ -51,8 +51,9 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
     url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
 # Activity
-    url(r"^eighth/activities/modify/$", eighth.eighth_activities_modify, name="eighth_activities_modify"),
-    url(r"^eighth/activities/modify/(?P<match>.+)/$", eighth.eighth_activities_modify, name="eighth_activities_modify"),
+    url(r"^eighth/activities/edit/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/add/$", eighth.eighth_activities_add, name="eighth_activities_add"),
 #Special
     url(r"^eighth/blocks/edit/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
     url(r"^eighth/blocks/edit/(?P<block_id>\d+)$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),

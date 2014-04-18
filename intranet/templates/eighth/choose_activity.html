@@ -23,33 +23,6 @@
 {% endblock %}
 
 {% block eighth-main %}
-    {% if request.GET.add %}
-    <div class="add">
-        <h3 style="font-size: 24px">Create an activity</h3>
-
-        <form class="addform" name="addform" method="post" action="/eighth/activities/create">
-        {% csrf_token %}
-        <table>
-        <tr>
-        <td><label for="name">Name</label></td>
-        <td><input type="text" name="name" /></td>
-        </tr>
-        <tr>
-        <td><label for="description">Description</label></td>
-        <td><textarea name="name"></textarea></td>
-        </tr>
-        <tr>
-        <td><label for="id">ID</label></td>
-        <td><select name="id">
-        <option value="auto" selected>Automatically select</option>
-        {% for id in ids %}
-        <option value="{{ id }}">{{ id }}</option>
-        {% endfor %}
-        </select></td>
-        </table>
-        </form>
-    </div>
-    {% endif %}
     <h3 style="font-size: 24px">Choose an activity</h3>
     <table>
     {% for activity in activities %}

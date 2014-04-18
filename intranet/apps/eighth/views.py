@@ -38,6 +38,14 @@ def parse_date(date):
     dtime = datetime.datetime(*structtime[:6])
     return dtime
 
+def activities_findopenids():
+    """Finds open IDs for new activities."""
+    acts = EighthActivity.objects.all()
+    free = range(1, 2999)
+    for act in acts:
+        free.remove(act.id)
+    return free
+
 @login_required
 def eighth_redirect_view(request):
     if request.user.is_eighth_admin:
@@ -201,26 +209,48 @@ def eighth_students_register(request, match=None):
         )
 
 @eighth_admin_required
-def eighth_activities_modify(request, match=None):
-    map = unmatch(match)
-    activity = map.get('activity')
-    next = request.path.split('eighth/')[1]
-    if activity is None:
-        return redirect("/eighth/choose/activity?add=1&next="+next)
+def eighth_activities_edit(request, activity_id=None):
+    if activity_id is None:
+        activities = EighthActivity.objects.all()
+        return render(request, "eighth/activities.html", {
+            "page": "eighth_admin",
+            "activities": activities,
+            "ids": activities_findopenids()
+        })
+    else:
+        activity = EighthActivity.objects.get(id=activity_id)
+        return render(request, "eighth/activity_edit.html", {
+            "page": "eighth_admin",
+            "activity": activity
+        })
 
 @eighth_admin_required
 def eighth_activities_add(request):
     if 'confirm' in request.POST:
-        opts = {}
-        if 'id' in request.POST and len(EighthActivity.objects.filter(id=request.POST.get('id'))) < 1:
-            # ID is good
-            opts["id"] = request.POST.get('id')
-        opts["name"] = request.POST.get('name')
-        opts["description"] = request.POST.get('description')
-        ea = EighthActivity.objects.create(opts)
+        name = request.POST.get('name')
+        desc = request.POST.get('description')
+        if desc is None:
+            desc = ""
+        if 'id' in request.POST and request.POST.get('id') is not "auto":
+            try:
+                idfilter = EighthActivity.objects.filter(id=int(request.POST.get('id')))
+                if len(idfilter) < 1:
+                    # ID is good
+                    ea = EighthActivity.objects.create(
+                        id=request.POST.get('id'),
+                        name=name,
+                        description=desc
+                    )
+                    return redirect("/eighth/activities/edit/{}".format(ea.id))
+            except ValueError:
+                pass
+        ea = EighthActivity.objects.create(
+            name=name,
+            description=desc
+        )
         return redirect("/eighth/activities/edit/{}".format(ea.id))
     else:
-        return eighth_confirm_view(request)
+        return redirect("/eighth/activities/edit")
 
 @eighth_admin_required
 def eighth_blocks_edit(request, block_id=None):
