@@ -48,7 +48,7 @@ class EighthRoom(models.Model):
     unique_together = (("room_number", "name", "capacity"),)
 
     def __unicode__(self):
-        return "{} ({})".format(name, capcity)
+        return "{} ({})".format(self.name, self.capacity)
 
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
