@@ -1,9 +1,11 @@
 import logging
+import time
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from .models import EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
+from .models import EighthSponsor, EighthRoom, EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -25,6 +27,16 @@ def unmatch(match):
     keys = spl[::2]
     values = spl[1::2]
     return dict(zip(keys, values))
+
+def parse_date(date):
+    """Takes a string of a date like 04/01/2014 and
+       returns a datetime object used in a DateField
+    """
+    # Make a time.struct_time object out of the string
+    structtime = time.strptime(date, "%m/%d/%Y")
+    # Convert to datetime format
+    dtime = datetime.datetime(*structtime[:6])
+    return dtime
 
 @login_required
 def eighth_redirect_view(request):
@@ -59,6 +71,13 @@ def eighth_choose_block(request):
 @eighth_admin_required
 def eighth_choose_activity(request, block_id=None):
     next = request.GET.get('next', '')
+    context = {
+        "page": "eighth_admin",
+        "next": "/eighth/{}activity/".format(next)
+    }
+    if 'add' in request.GET:
+        context["sponsors"] = EighthSponsor.objects.all()
+        context["rooms"] = EighthRoom.objects.all()
 
     if block_id is None:
         """ show all activities """
@@ -70,11 +89,8 @@ def eighth_choose_activity(request, block_id=None):
                             .order_by("activity__name")
         for schact in schactivities:
             activities.append(schact.activity)
-    return render(request, "eighth/choose_activity.html", {
-        "page": "eighth_admin",
-        "activities": activities,
-        "next": "/eighth/{}activity/".format(next)
-    })
+    context["activities"] = activities
+    return render(request, "eighth/choose_activity.html", context)
 
 @eighth_admin_required
 def eighth_choose_group(request):
@@ -184,6 +200,70 @@ def eighth_students_register(request, match=None):
             )
         )
 
+@eighth_admin_required
+def eighth_activities_modify(request, match=None):
+    map = unmatch(match)
+    activity = map.get('activity')
+    next = request.path.split('eighth/')[1]
+    if activity is None:
+        return redirect("/eighth/choose/activity?add=1&next="+next)
+
+@eighth_admin_required
+def eighth_blocks_edit(request, block_id=None):
+    if block_id is None:
+        blocks = EighthBlock.objects.get_current_blocks()
+        return render(request, "eighth/blocks.html", {
+            "page": "eighth_admin",
+            "blocks": blocks
+        })
+    elif 'confirm' in request.POST:
+        block = EighthBlock.objects.get(id=block_id)
+        date = parse_date(request.POST.get('date'))
+        if date != block.date:
+            block.date = date
+        block_letter = request.POST.get('block_letter')
+        if block_letter != block.block_letter:
+            block.block_letter = block_letter
+        block.save()
+        return redirect("/eighth/blocks/edit/?success=1")
+    else:
+        block = EighthBlock.objects.get(id=block_id)
+        return render(request, "eighth/block_edit.html", {
+            "page": "eighth_admin",
+            "block": block
+        })
+
+@eighth_admin_required
+def eighth_blocks_add(request):
+    blockletters = request.POST.getlist('blocks')
+    date = request.POST.get('date')
+
+    if 'confirm' in request.POST:
+        # Because of multiple checkbox wierdness
+        blockletters = request.POST.get('blocks').split(',')
+        blocks = []
+        dtime = parse_date(date)
+        for bl in blockletters:
+            if len(EighthBlock.objects.filter(date=dtime, block_letter=list(bl)[0])) < 1:
+                EighthBlock.objects.create(
+                    date=dtime,
+                    block_letter=list(bl)[0]
+                )
+            else:
+                pass
+                # The block already existed
+        return redirect("/eighth/admin?success=1")
+    else:
+        blocks = ""
+        for bl in blockletters:
+            blocks += "<li>{} {} Block</li>".format(date, bl)
+        return eighth_confirm_view(request,
+            "register the following blocks: <ul>{}</ul>".format(blocks),
+            {
+                "date": date,
+                "blocks": ','.join(blockletters)
+            }
+        )
 
 @eighth_teacher_required
 def eighth_teacher_view(request):
@@ -196,8 +276,8 @@ def eighth_signup_view(request, block_id=None):
 
     if 'confirm' in request.POST:
         """Actually sign up"""
-        signup = signup_self(
-            request,
+        signup = signup_student(
+            request.user,
             request.POST.get('bid'),
             request.POST.get('aid')
         )
@@ -250,12 +330,20 @@ def eighth_signup_view(request, block_id=None):
     block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
     block_info["schedule"] = schedule
 
+    """Get the ID of the currently selected activity for the current day,
+       so it can be checked in the activity listing."""
+    try:
+        cur_signup = signups.get(scheduled_activity__block=block)
+        cur_signup_id = cur_signup.scheduled_activity.activity.id
+    except EighthSignup.DoesNotExist:
+        cur_signup_id = None
     context = {
         "page": "eighth",
         "user": user,
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),
-        "active_block": block
+        "active_block": block,
+        "cur_signup_id": cur_signup_id
     }
 
     return render(request, "eighth/signup.html", context)

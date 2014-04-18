@@ -43,13 +43,21 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/?$", eighth.eighth_redirect_view, name="eighth_redirect"),
     url(r"^eighth/admin/?$", eighth.eighth_admin_view, name="eighth_admin"),
     url(r"^eighth/teacher/?$", eighth.eighth_teacher_view, name="eighth_teacher"),
-
+# Choose
     url(r"^eighth/choose/block/?$", eighth.eighth_choose_block, name="eighth_choose_block"),
     url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", eighth.eighth_choose_activity, name="eighth_choose_activity"),
     url(r"^eighth/choose/group/?$", eighth.eighth_choose_group, name="eighth_choose_group"),
-
+# Student
     url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
     url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
+# Activity
+    url(r"^eighth/activities/modify/$", eighth.eighth_activities_modify, name="eighth_activities_modify"),
+    url(r"^eighth/activities/modify/(?P<match>.+)/$", eighth.eighth_activities_modify, name="eighth_activities_modify"),
+#Special
+    url(r"^eighth/blocks/edit/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/edit/(?P<block_id>\d+)$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/delete/(?P<block_id>\d+)$", eighth.eighth_blocks_delete, name="eighth_blocks_delete"),
+    url(r"^eighth/blocks/add/$", eighth.eighth_blocks_add, name="eighth_blocks_add"),
 
     url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth.eighth_signup_view, name="eighth_signup"),
 )
