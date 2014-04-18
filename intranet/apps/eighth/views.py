@@ -210,13 +210,7 @@ def eighth_activities_modify(request, match=None):
 
 @eighth_admin_required
 def eighth_blocks_edit(request, block_id=None):
-    if block_id is None:
-        blocks = EighthBlock.objects.get_current_blocks()
-        return render(request, "eighth/blocks.html", {
-            "page": "eighth_admin",
-            "blocks": blocks
-        })
-    elif 'confirm' in request.POST:
+    if 'confirm' in request.POST:
         block = EighthBlock.objects.get(id=block_id)
         date = parse_date(request.POST.get('date'))
         if date != block.date:
@@ -226,12 +220,33 @@ def eighth_blocks_edit(request, block_id=None):
             block.block_letter = block_letter
         block.save()
         return redirect("/eighth/blocks/edit/?success=1")
-    else:
+    elif block_id is not None:
         block = EighthBlock.objects.get(id=block_id)
         return render(request, "eighth/block_edit.html", {
             "page": "eighth_admin",
-            "block": block
+            "blockobj": block,
+            "block_id": block_id
         })
+    else:
+        blocks = EighthBlock.objects.get_current_blocks()
+        return render(request, "eighth/blocks.html", {
+            "page": "eighth_admin",
+            "blocks": blocks
+        })
+@eighth_admin_required
+def eighth_blocks_delete(request, block_id):
+    try:
+        blk = EighthBlock.objects.get(id=block_id)
+    except EighthBlock.DoesNotExist:
+        raise Http404
+
+    if 'confirm' in request.POST:
+        blk.delete()
+        return redirect("/eighth/blocks/edit/?success=1")
+    else:
+        return eighth_confirm_view(request,
+            "delete block {}".format(blk)
+        )
 
 @eighth_admin_required
 def eighth_blocks_add(request):
