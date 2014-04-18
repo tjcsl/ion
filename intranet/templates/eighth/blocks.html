@@ -1,0 +1,85 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'js/lib/jquery-ui.smoothness.css' %}" />
+    <style type="text/css">
+    .primary-content table td {
+        padding: 5px;
+    }
+
+    .add {
+        position: absolute;
+        left: 60%;
+        width: 39%;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+      $(function() {
+        $("#date").datepicker({
+          changeMonth: true,
+          changeYear: true
+        });
+      });
+    </script>
+{% endblock %}
+
+{% block eighth-main %}
+    <div class="add">
+        <h3 style="font-size: 24px">Add a block</h3>
+        <form action="/eighth/blocks/add/" method="post">
+        {% csrf_token %}
+        <table>
+        <tr>
+        <td><label for="date">Date</label></td>
+        <td>
+            <input type="text" name="date" id="date" />
+        </td>
+        </tr>
+        <tr>
+        <td><label for="blocks">Blocks</label></td>
+        <td>
+            <input type="checkbox" name="blocks" value="A" checked />A Block<br />
+            <input type="checkbox" name="blocks" value="B" checked />B Block<br />
+            <input type="checkbox" name="blocks" value="C" />C Block<br />
+            <input type="checkbox" name="blocks" value="D" />D Block<br />
+            <input type="checkbox" name="blocks" value="E" />E Block<br />
+            <input type="checkbox" name="blocks" value="F" />F Block<br />
+        </td>
+        </tr>
+        <tr>
+        <td rowspan=2><input type="submit" value="Add Block" /></td>
+        </tr>
+        </table>
+        </form>
+    </div>
+
+    </div>
+    <h3 style="font-size: 24px">Choose a block</h3>
+    <table>
+    {% for block in blocks %}
+        <tr>
+            <td>
+            {{ block.date | date:"l" }}
+            </td>
+            <td>
+            {{ block.date | date:"M d, Y" }}
+            </td>
+            <td>
+            {{ block.block_letter }} Block
+            </td>
+            <td><a href="/eighth/blocks/edit/{{ block.id }}">
+                Edit
+            </a></td>
+            <td><a href="/eighth/blocks/delete/{{ block.id }}">
+                Delete
+            </a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
