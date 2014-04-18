@@ -19,20 +19,21 @@
 {% endblock %}
 
 {% block eighth-main %}
-    <h3 style="font-size: 24px">Modify {{ block }}</h3>
-    <form action="/eighth/blocks/edit/{{ block.id }}" method="post">
+    <h3 style="font-size: 24px">Modify {{ blockobj.date|date:"M, d Y" }}: {{ blockobj.block_letter }}</h3>
+    <form action="/eighth/blocks/edit/{{ blockobj.id }}" method="post">
+    <input type="hidden" name="confirm" value="1" />
     {% csrf_token %}
     <table>
     <tr>
     <td><label for="date">Date</label></td>
     <td>
-        <input type="text" name="date" id="date" value="{{ block.date|date:'m/d/Y' }}" />
+        <input type="text" name="date" id="date" value="{{ blockobj.date|date:'m/d/Y' }}" />
     </td>
     </tr>
     <tr>
-    <td><label for="blocks">Blocks</label></td>
+    <td><label for="blocks">Block</label></td>
     <td>
-    <input type="text" name="block_letter" value="{{ block.block_letter }}" />
+    <input type="text" name="block_letter" value="{{ blockobj.block_letter }}" maxlength="1" size="1" />
     </td>
     </tr>
     <tr>
