@@ -1,0 +1,43 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'js/lib/jquery-ui.smoothness.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+      $(function() {
+        $("#date").datepicker({
+          changeMonth: true,
+          changeYear: true
+        });
+      });
+    </script>
+{% endblock %}
+
+{% block eighth-main %}
+    <h3 style="font-size: 24px">Modify {{ block }}</h3>
+    <form action="/eighth/blocks/edit/{{ block.id }}" method="post">
+    {% csrf_token %}
+    <table>
+    <tr>
+    <td><label for="date">Date</label></td>
+    <td>
+        <input type="text" name="date" id="date" value="{{ block.date|date:'m/d/Y' }}" />
+    </td>
+    </tr>
+    <tr>
+    <td><label for="blocks">Blocks</label></td>
+    <td>
+    <input type="text" name="block_letter" value="{{ block.block_letter }}" />
+    </td>
+    </tr>
+    <tr>
+    <td rowspan=2><input type="submit" value="Edit Block" /></td>
+    </tr>
+    </table>
+    </form>
+{% endblock %}
