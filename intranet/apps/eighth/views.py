@@ -209,6 +209,20 @@ def eighth_activities_modify(request, match=None):
         return redirect("/eighth/choose/activity?add=1&next="+next)
 
 @eighth_admin_required
+def eighth_activities_add(request):
+    if 'confirm' in request.POST:
+        opts = {}
+        if 'id' in request.POST and len(EighthActivity.objects.filter(id=request.POST.get('id'))) < 1:
+            # ID is good
+            opts["id"] = request.POST.get('id')
+        opts["name"] = request.POST.get('name')
+        opts["description"] = request.POST.get('description')
+        ea = EighthActivity.objects.create(opts)
+        return redirect("/eighth/activities/edit/{}".format(ea.id))
+    else:
+        return eighth_confirm_view(request)
+
+@eighth_admin_required
 def eighth_blocks_edit(request, block_id=None):
     if 'confirm' in request.POST:
         block = EighthBlock.objects.get(id=block_id)

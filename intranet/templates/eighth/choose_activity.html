@@ -39,54 +39,13 @@
         <td><textarea name="name"></textarea></td>
         </tr>
         <tr>
-        <td valign="top"><label for="sponsors">Sponsors</label><br />
-            <a href="#" onclick="for(i=0;i<(j=document.forms.addform.sponsors.options).length;i++) j[i].selected=false;">Deselect</a></td>
-        <td>
-            <select name="sponsors" multiple=multiple size=15>
-            {% for sponsor in sponsors %}
-                <option value="{{ sponsor.id }}">{{ sponsor }}</option>
-            {% endfor %}
-            </select>
-        </td>
-        </tr>
-        <tr>
-        <td valign="top"><label for="rooms">Rooms</label><br />
-            <a href="#" onclick="for(i=0;i<(j=document.forms.addform.rooms.options).length;i++) j[i].selected=false;">Deselect</a></td>
-        <td>
-            <select name="rooms" multiple=multiple size=15>
-            {% for room in rooms %}
-                <option value="{{ room.id }}">{{ room }}</option>
-            {% endfor %}
-            </select>
-        </td>
-        </tr>
-        <tr>
-        <td><label for="restricted">Restricted</label></td>
-        <td><input type="radio" name="restricted" value=1 /></td>
-        </tr>
-        <tr>
-        <td><label for="presign">Presign</label></td>
-        <td><input type="radio" name="presign" value=1 /></td>
-        </tr>
-        <tr>
-        <td><label for="one_a_day">One a day</label></td>
-        <td><input type="radio" name="one_a_day" value=1 /></td>
-        </tr>
-        <tr>
-        <td><label for="both_blocks">Both Blocks</label></td>
-        <td><input type="radio" name="both_blocks" value=1 /></td>
-        </tr>
-        <tr>
-        <td><label for="sticky">Sticky</label></td>
-        <td><input type="radio" name="sticky" value=1 /></td>
-        </tr>
-        <tr>
-        <td><label for="special">Special</label></td>
-        <td><input type="radio" name="special" value=1 /></td>
-        </tr>
-        <tr>
-        <td rowspan=2><input type="submit" value="Add" /></td>
-        </tr>
+        <td><label for="id">ID</label></td>
+        <td><select name="id">
+        <option value="auto" selected>Automatically select</option>
+        {% for id in ids %}
+        <option value="{{ id }}">{{ id }}</option>
+        {% endfor %}
+        </select></td>
         </table>
         </form>
     </div>
