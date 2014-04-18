@@ -7,10 +7,90 @@
     .primary-content table td {
         padding: 5px;
     }
+    .add {
+        position: absolute;
+        left: 60%;
+        width: 39%;
+    }
+    .add input, .add textarea, .add select {
+        width: 100%;
+    }
+
+    .add table {
+        width: 100%;
+    }
     </style>
 {% endblock %}
 
 {% block eighth-main %}
+    {% if request.GET.add %}
+    <div class="add">
+        <h3 style="font-size: 24px">Create an activity</h3>
+
+        <form class="addform" name="addform" method="post" action="/eighth/activities/create">
+        {% csrf_token %}
+        <table>
+        <tr>
+        <td><label for="name">Name</label></td>
+        <td><input type="text" name="name" /></td>
+        </tr>
+        <tr>
+        <td><label for="description">Description</label></td>
+        <td><textarea name="name"></textarea></td>
+        </tr>
+        <tr>
+        <td valign="top"><label for="sponsors">Sponsors</label><br />
+            <a href="#" onclick="for(i=0;i<(j=document.forms.addform.sponsors.options).length;i++) j[i].selected=false;">Deselect</a></td>
+        <td>
+            <select name="sponsors" multiple=multiple size=15>
+            {% for sponsor in sponsors %}
+                <option value="{{ sponsor.id }}">{{ sponsor }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <td valign="top"><label for="rooms">Rooms</label><br />
+            <a href="#" onclick="for(i=0;i<(j=document.forms.addform.rooms.options).length;i++) j[i].selected=false;">Deselect</a></td>
+        <td>
+            <select name="rooms" multiple=multiple size=15>
+            {% for room in rooms %}
+                <option value="{{ room.id }}">{{ room }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <td><label for="restricted">Restricted</label></td>
+        <td><input type="radio" name="restricted" value=1 /></td>
+        </tr>
+        <tr>
+        <td><label for="presign">Presign</label></td>
+        <td><input type="radio" name="presign" value=1 /></td>
+        </tr>
+        <tr>
+        <td><label for="one_a_day">One a day</label></td>
+        <td><input type="radio" name="one_a_day" value=1 /></td>
+        </tr>
+        <tr>
+        <td><label for="both_blocks">Both Blocks</label></td>
+        <td><input type="radio" name="both_blocks" value=1 /></td>
+        </tr>
+        <tr>
+        <td><label for="sticky">Sticky</label></td>
+        <td><input type="radio" name="sticky" value=1 /></td>
+        </tr>
+        <tr>
+        <td><label for="special">Special</label></td>
+        <td><input type="radio" name="special" value=1 /></td>
+        </tr>
+        <tr>
+        <td rowspan=2><input type="submit" value="Add" /></td>
+        </tr>
+        </table>
+        </form>
+    </div>
+    {% endif %}
     <h3 style="font-size: 24px">Choose an activity</h3>
     <table>
     {% for activity in activities %}
