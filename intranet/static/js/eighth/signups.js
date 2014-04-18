@@ -10,7 +10,19 @@ $(document).ready(function() {
             "confirm": true
         }, function(d) {
             if(d.trim() == "success") {
-                location.reload();
+                console.log("Successfully signed up for "+aid+" on "+bid);
+                $d = $("#activity-detail[data-aid="+aid+"]");
+                $c = $("li.day>a[data-bid="+bid+"]>div");
+                // Replace the text on the day selector
+                $c.html($c.html().replace(
+                    $c.html().split("</span>")[1].trim(),
+                    $("h3", $d).html().trim()
+                ));
+                $("#activity-list li.signedup").removeClass("signedup");
+                $("#activity-list li[data-activity-id="+aid+"]").addClass("signedup");
+                $("#signup-spinner-container")
+                    .html("<i class='icon-ok' style='color: green; zoom: 1.5' />")
+                    .css("margin-left","2px");
             } else alert(d);
         })
     };
