@@ -217,12 +217,50 @@ def eighth_activities_edit(request, activity_id=None):
             "activities": activities,
             "ids": activities_findopenids()
         })
-    else:
-        activity = EighthActivity.objects.get(id=activity_id)
-        return render(request, "eighth/activity_edit.html", {
-            "page": "eighth_admin",
-            "activity": activity
-        })
+    if 'confirm' in request.POST:
+        act = EighthActivity.objects.get(id=activity_id)
+        if 'name' in request.POST:
+            act.name = request.POST.get('name')
+        if 'description' in request.POST:
+            act.description = request.POST.get('description')
+        if 'sponsors' in request.POST:
+            sponsors = request.POST.getlist('sponsors')
+            for sponsor in sponsors:
+                sp = EighthSponsor.objects.get(id=sponsor)
+                if sp not in act.sponsors.all():
+                    act.sponsors.add(sp)
+            for sponsor in act.sponsors.all():
+                if sponsor not in sponsors:
+                    act.sponsors.remove(sponsor)
+        if 'rooms' in request.POST:
+            rooms = request.POST.getlist('rooms')
+            for room in rooms:
+                rm = EighthRoom.objects.get(id=room)
+                if rm not in act.rooms.all():
+                    act.rooms.add(rm)
+            for room in act.rooms.all():
+                if room not in rooms:
+                    act.rooms.remove(room)
+        act.restricted = ('restricted' in request.POST)
+        act.presign = ('presign' in request.POST)
+        act.one_a_day = ('one_a_day' in request.POST)
+        act.both_blocks = ('both_blocks' in request.POST)
+        act.sticky = ('sticky' in request.POST)
+        act.special = ('special' in request.POST)
+        
+        #for i in ('restricted','presign','one_a_day','both_blocks','sticky','special'):
+        #    if i in request.POST:
+        #        setattr(act, i, (request.POST.get(i) is '1'))
+        #    else:
+        #        setattr(act, i, False)
+        act.save()
+    activity = EighthActivity.objects.get(id=activity_id)
+    return render(request, "eighth/activity_edit.html", {
+        "page": "eighth_admin",
+        "actobj": activity,
+        "sponsors": EighthSponsor.objects.all(),
+        "rooms": EighthRoom.objects.all()
+    })
 
 @eighth_admin_required
 def eighth_activities_add(request):
