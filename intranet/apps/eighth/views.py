@@ -225,22 +225,21 @@ def eighth_activities_edit(request, activity_id=None):
             act.description = request.POST.get('description')
         if 'sponsors' in request.POST:
             sponsors = request.POST.getlist('sponsors')
+            for sponsor in act.sponsors.all():
+                act.sponsors.remove(sponsor)
             for sponsor in sponsors:
                 sp = EighthSponsor.objects.get(id=sponsor)
                 if sp not in act.sponsors.all():
                     act.sponsors.add(sp)
-            for sponsor in act.sponsors.all():
-                if sponsor not in sponsors:
-                    act.sponsors.remove(sponsor)
+            
         if 'rooms' in request.POST:
             rooms = request.POST.getlist('rooms')
+            for room in act.rooms.all():
+                act.rooms.remove(room)
             for room in rooms:
                 rm = EighthRoom.objects.get(id=room)
                 if rm not in act.rooms.all():
                     act.rooms.add(rm)
-            for room in act.rooms.all():
-                if room not in rooms:
-                    act.rooms.remove(room)
         act.restricted = ('restricted' in request.POST)
         act.presign = ('presign' in request.POST)
         act.one_a_day = ('one_a_day' in request.POST)
@@ -254,7 +253,11 @@ def eighth_activities_edit(request, activity_id=None):
         #    else:
         #        setattr(act, i, False)
         act.save()
-    activity = EighthActivity.objects.get(id=activity_id)
+    try:
+        activity = EighthActivity.objects.get(id=activity_id)
+    except EighthActivity.DoesNotExist:
+        raise Http404
+
     return render(request, "eighth/activity_edit.html", {
         "page": "eighth_admin",
         "actobj": activity,
@@ -290,6 +293,23 @@ def eighth_activities_add(request):
     else:
         return redirect("/eighth/activities/edit")
 
+
+@eighth_admin_required
+def eighth_activities_delete(request, activity_id):
+    try:
+        act = EighthActivity.objects.get(id=activity_id)
+    except EighthActivity.DoesNotExist:
+        raise Http404
+
+    if 'confirm' in request.POST:
+        act.delete()
+        return redirect("/eighth/activities/edit/?success=1")
+    else:
+        return eighth_confirm_view(request,
+            "delete activity {}".format(act.name)
+        )
+
+
 @eighth_admin_required
 def eighth_blocks_edit(request, block_id=None):
     if 'confirm' in request.POST:
@@ -315,6 +335,7 @@ def eighth_blocks_edit(request, block_id=None):
             "page": "eighth_admin",
             "blocks": blocks
         })
+
 @eighth_admin_required
 def eighth_blocks_delete(request, block_id):
     try:
