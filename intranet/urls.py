@@ -51,14 +51,17 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
     url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
 # Activity
+    url(r"^eighth/activities/add/$", eighth.eighth_activities_add, name="eighth_activities_add"),
+    url(r"^eighth/activities/view/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
     url(r"^eighth/activities/edit/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
     url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
-    url(r"^eighth/activities/add/$", eighth.eighth_activities_add, name="eighth_activities_add"),
+    url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", eighth.eighth_activities_delete, name="eighth_activities_delete"),
 #Special
+    url(r"^eighth/blocks/add/$", eighth.eighth_blocks_add, name="eighth_blocks_add"),
+    url(r"^eighth/blocks/view/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
     url(r"^eighth/blocks/edit/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
     url(r"^eighth/blocks/edit/(?P<block_id>\d+)$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
     url(r"^eighth/blocks/delete/(?P<block_id>\d+)$", eighth.eighth_blocks_delete, name="eighth_blocks_delete"),
-    url(r"^eighth/blocks/add/$", eighth.eighth_blocks_add, name="eighth_blocks_add"),
 
     url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth.eighth_signup_view, name="eighth_signup"),
 )
