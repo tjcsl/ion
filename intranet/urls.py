@@ -58,6 +58,14 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
     url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", eighth.eighth_activities_delete, name="eighth_activities_delete"),
 
+
+    url(r"^eighth/activities/sponsors/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/add/$", eighth.eighth_activities_sponsors_add, name="eighth_activities_sponsors_add"),
+    url(r"^eighth/activities/sponsors/view/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/edit/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/edit/(?P<sponsor_id>\d+)$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/delete/(?P<sponsor_id>\d+)$", eighth.eighth_activities_sponsors_delete, name="eighth_activities_sponsors_delete"),
+
     url(r"^eighth/rooms/$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
     url(r"^eighth/rooms/add/$", eighth.eighth_rooms_add, name="eighth_rooms_add"),
     url(r"^eighth/rooms/view/$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
