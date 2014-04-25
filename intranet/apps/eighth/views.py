@@ -1,6 +1,7 @@
 import logging
 import time
 import datetime
+from itertools import chain
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse
@@ -38,6 +39,19 @@ def parse_date(date):
     dtime = datetime.datetime(*structtime[:6])
     return dtime
 
+def get_current_blocks(request=None):
+    if request:
+        d = request.session['startdate']
+        # In format MM/DD/YYYY
+        dt = datetime.date(int(d[6:10]), int(d[:2]), int(d[3:5]))
+        logger.info("dt={}".format(dt))
+        s = EighthBlock.objects.filter(date__gt=dt)[:1]
+        logger.info("s={}".format(s))
+        if len(s) > 0:
+            return list(chain([s[0]], s[0].next_blocks()))
+    return EighthBlock.objects.get_current_blocks()
+
+
 def activities_findopenids():
     """Finds open IDs for new activities."""
     acts = EighthActivity.objects.all()
@@ -69,7 +83,7 @@ def eighth_admin_view(request):
 def eighth_choose_block(request):
     next = request.GET.get('next', 'signup')
 
-    blocks = EighthBlock.objects.get_current_blocks()
+    blocks = get_current_blocks(request)
     return render(request, "eighth/choose_block.html", {
         "page": "eighth_admin",
         "blocks": blocks,
@@ -207,6 +221,36 @@ def eighth_students_register(request, match=None):
                 blk
             )
         )
+
+@eighth_admin_required
+def eighth_groups_edit(request, group_id=None):
+    if group_id is None:
+        return render(request, "eighth/groups.html", {
+            "groups": Group.objects.all()
+        })
+    elif 'confirm' in request.POST:
+        try:
+            gr = Group.objects.get(id=group_id)
+        except Group.DoesNotExist:
+            raise Http404
+        if 'name' in request.POST:
+            gr.name = request.POST.get('name')
+        if 'remove_member' in request.POST:
+            rem = request.POST.getlist('remove_member')
+            for member in rem:
+                User.objects.get(id=member).groups.remove(gr)
+        if 'add_member' in request.POST:
+            add = request.POST.getlist('add_member')
+            for member in add:
+                User.objects.get(id=member).groups.add(gr)
+        gr.save()
+        return redirect("/eighth/groups/")
+    else:
+        return render(request, "eighth/group_edit.html", {
+            "group": Group.objects.get(id=group_id),
+            "members": User.objects.filter(groups__id=group_id)
+        })
+
 
 @eighth_admin_required
 def eighth_activities_edit(request, activity_id=None):
@@ -459,10 +503,11 @@ def eighth_blocks_edit(request, block_id=None):
             "block_id": block_id
         })
     else:
-        blocks = EighthBlock.objects.get_current_blocks()
+        blocks = get_current_blocks(request)
         return render(request, "eighth/blocks.html", {
             "page": "eighth_admin",
-            "blocks": blocks
+            "blocks": blocks,
+            "date": request.session.get('startdate', '')
         })
 
 @eighth_admin_required
@@ -513,6 +558,25 @@ def eighth_blocks_add(request):
                 "blocks": ','.join(blockletters)
             }
         )
+
+@eighth_admin_required
+def eighth_startdate(request):
+    # In format MM/DD/YYYY
+    if 'startdate' not in request.session or request.session['startdate'] == '':
+        d = unicode(datetime.datetime.now())
+        request.session['startdate'] = "{}/{}/{}".format(d[5:7], d[8:10], d[0:4])
+    if 'confirm' in request.POST and 'date' in request.POST:
+        request.session['startdate'] = request.POST.get('date')
+        next = request.POST.get('next', request.GET.get('next', 'eighth/admin'))
+        return redirect("/{}".format(next[1:]))
+    else:
+        return render(request, "eighth/startdate.html", {
+            "page": "eighth_admin",
+            "template": True,
+            "date": request.session['startdate']
+        })
+
+
 
 @eighth_teacher_required
 def eighth_teacher_view(request):
@@ -601,7 +665,7 @@ def eighth_signup_view(request, block_id=None):
 class EighthBlockList(generics.ListAPIView):
     """API endpoint that lists all eighth blocks
     """
-    queryset = EighthBlock.objects.all()
+    queryset = EighthBlock.objects.get_current_blocks()
     serializer_class = EighthBlockListSerializer
 
 
