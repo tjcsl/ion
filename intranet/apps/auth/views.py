@@ -15,6 +15,7 @@ def index(request, auth_form=None):
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
+        request.session.set_test_cookie()
         return render(request, "auth/login.html", {
             "auth_form": auth_form,
             "request": request
@@ -27,7 +28,10 @@ class login_view(View):
     def post(self, request):
         """Validate and process the login POST request."""
         form = AuthenticateForm(data=request.POST)
-
+        if request.session.test_cookie_worked():
+            request.session.delete_test_cookie()
+        else:
+            logger.error("No cookie support detected! This could cause problems.")
         if form.is_valid():
             login(request, form.get_user())
             # Initial load into session
