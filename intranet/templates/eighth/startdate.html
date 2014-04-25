@@ -1,0 +1,30 @@
+{% extends template|yesno:"eighth/page_eighth_admin.html,eighth/page_eighth_onlymain.html" %}
+{% block eighth-main %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'js/lib/jquery-ui.smoothness.css' %}" />
+<script type="text/javascript">
+      $(function() {
+        $("#date, .datepicker").datepicker({
+          changeMonth: true,
+          changeYear: true
+        });
+      });
+</script>
+<div class="changedate">
+
+<span style="font-size: 16px">Change starting date: </span>
+<form action="/eighth/startdate/" method="post" style="display: inline">
+{% csrf_token %}
+{% if request.POST.next %}
+    <input type="hidden" name="next" value="{{ request.POST.next }}" />
+{% elif request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}" />
+{% else %}
+    <input type="hidden" name="next" value="{{ request.path }}" />
+{% endif %}
+    <input type="hidden" name="confirm" value="1" />
+    <input type="text" id="date" name="date" value="{{ date }}" />
+    <input type="submit" value="Change" />
+</form>
+</div>
+{% endblock %}
