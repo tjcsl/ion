@@ -2,6 +2,7 @@ import logging
 import time
 import datetime
 from itertools import chain
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse
@@ -39,13 +40,17 @@ def parse_date(date):
     dtime = datetime.datetime(*structtime[:6])
     return dtime
 
+def get_startdate_obj(request):
+    return request.session.get('startdate', '')
+
+def get_startdate_str(request):
+    return datetime.datetime.strftime(request.session.get('startdate', ''), "%m/%d/%Y")
+
 def get_current_blocks(request=None):
-    if request:
-        d = request.session['startdate']
-        # In format MM/DD/YYYY
-        dt = datetime.date(int(d[6:10]), int(d[:2]), int(d[3:5]))
-        logger.info("dt={}".format(dt))
-        s = EighthBlock.objects.filter(date__gt=dt)[:1]
+    if request is not None:
+        cd = datetime.datetime.now()
+        d = request.session.get('startdate', cd)
+        s = EighthBlock.objects.filter(date__gt=d)[:1]
         logger.info("s={}".format(s))
         if len(s) > 0:
             return list(chain([s[0]], s[0].next_blocks()))
@@ -140,7 +145,7 @@ def eighth_confirm_view(request, action=None, postfields=None):
     })
 
 
-def signup_student(user, block, activity, force=False):
+def signup_student(request, user, block, activity, force=False):
     """Sign up a student for an eighth period activity.
 
     Returns:
@@ -161,8 +166,8 @@ def signup_student(user, block, activity, force=False):
             members=user
         )
         if current_signup.activity.sticky and not force:
-            raise Exception("You are stuck in a stickied activity: {}" \
-                .format(current_signup.activity)
+            messages.error(request,
+                "{} is stickied into {}.".format(user, current_signup.activity)
             )
         # TODO: BOTH BLOCKS
         #elif current_signup.activity.both_blocks:
@@ -200,7 +205,7 @@ def eighth_students_register(request, match=None):
         return redirect("/eighth/choose/activity/block/"+block+"?next="+next)
     if group is None:
         return redirect("/eighth/choose/group?next="+next)
-
+    force = ('force' in request.GET)
     grp = Group.objects.get(id=group)
     act = EighthActivity.objects.get(id=activity)
     blk = EighthBlock.objects.get(id=block)
@@ -208,9 +213,7 @@ def eighth_students_register(request, match=None):
         users = User.objects.filter(groups=grp)
 
         for user in users:
-            signup_student(user, blk, act, True)            
-
-
+            ret = signup_student(request, user, blk, act, force)
 
         return redirect("/eighth/admin?success=1")
     else:
@@ -507,7 +510,7 @@ def eighth_blocks_edit(request, block_id=None):
         return render(request, "eighth/blocks.html", {
             "page": "eighth_admin",
             "blocks": blocks,
-            "date": request.session.get('startdate', '')
+            "date": get_startdate_str(request)
         })
 
 @eighth_admin_required
@@ -563,17 +566,18 @@ def eighth_blocks_add(request):
 def eighth_startdate(request):
     # In format MM/DD/YYYY
     if 'startdate' not in request.session or request.session['startdate'] == '':
-        d = unicode(datetime.datetime.now())
-        request.session['startdate'] = "{}/{}/{}".format(d[5:7], d[8:10], d[0:4])
+        d = datetime.datetime.now()
+        request.session['startdate'] = d
     if 'confirm' in request.POST and 'date' in request.POST:
-        request.session['startdate'] = request.POST.get('date')
+        da = request.POST.get('date')
+        request.session['startdate'] = datetime.datetime.strptime(da, "%m/%d/%Y")
         next = request.POST.get('next', request.GET.get('next', 'eighth/admin'))
         return redirect("/{}".format(next[1:]))
     else:
         return render(request, "eighth/startdate.html", {
             "page": "eighth_admin",
             "template": True,
-            "date": request.session['startdate']
+            "date": get_startdate_str(request) #request.session['startdate']
         })
 
 
@@ -590,6 +594,7 @@ def eighth_signup_view(request, block_id=None):
     if 'confirm' in request.POST:
         """Actually sign up"""
         signup = signup_student(
+            request,
             request.user,
             request.POST.get('bid'),
             request.POST.get('aid')
