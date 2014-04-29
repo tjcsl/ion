@@ -50,6 +50,7 @@ urlpatterns += patterns("eighth.views.",
 # Student
     url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
     url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
+
     url(r"^eighth/groups/$", eighth.eighth_groups_edit, name="eighth_groups_edit"),
     url(r"^eighth/groups/edit/(?P<group_id>\d+)$", eighth.eighth_groups_edit, name="eighth_groups_edit"),
 # Activity
