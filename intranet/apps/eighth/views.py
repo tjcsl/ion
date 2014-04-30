@@ -356,6 +356,18 @@ def eighth_activities_delete(request, activity_id):
             "delete activity {}".format(act.name)
         )
 
+@eighth_admin_required
+def eighth_activities_schedule(request, match=None):
+    req = unmatch(match)
+    activity = req.get('activity')
+    if activity is None:
+        return redirect("/eighth/choose/activity?next=activities/schedule/")
+    return render(request, "eighth/activity_schedule.html", {
+        "rooms": EighthRoom.objects.all(),
+        "sponsors": EighthSponsor.objects.all(),
+        "blocks": get_current_blocks(request),
+        "activity": EighthActivity.objects.get(id=activity)
+    })
 
 @eighth_admin_required
 def eighth_activities_sponsors_edit(request, sponsor_id=None):

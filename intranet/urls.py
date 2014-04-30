@@ -61,6 +61,9 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
     url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", eighth.eighth_activities_delete, name="eighth_activities_delete"),
 
+    url(r"^eighth/activities/schedule/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
+    url(r"^eighth/activities/schedule/(?P<match>.+)/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
+
 
     url(r"^eighth/activities/sponsors/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
     url(r"^eighth/activities/sponsors/add/$", eighth.eighth_activities_sponsors_add, name="eighth_activities_sponsors_add"),
