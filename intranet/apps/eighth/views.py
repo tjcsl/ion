@@ -366,8 +366,16 @@ def eighth_activities_schedule(request, match=None):
         "rooms": EighthRoom.objects.all(),
         "sponsors": EighthSponsor.objects.all(),
         "blocks": get_current_blocks(request),
+        "activities": EighthActivity.objects.all(),
         "activity": EighthActivity.objects.get(id=activity)
     })
+
+@eighth_admin_required
+def eighth_activities_schedule_form(request):
+    if 'activity' in request.GET:
+        return redirect("/eighth/activities/schedule/activity/{}".format(request.GET.get('activity')))
+    else:
+        raise Http404
 
 @eighth_admin_required
 def eighth_activities_sponsors_edit(request, sponsor_id=None):

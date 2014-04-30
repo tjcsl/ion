@@ -1,0 +1,72 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content table {
+        width: 70%;
+    }
+
+    .primary-content table td {
+        padding: 5px;
+    }
+
+    .primary-content table td i {
+        padding-left: 15px;
+    }
+    select:not([size]) {
+-webkit-appearance: menulist-button;
+background-color: #E0E0E0;
+background-image: -webkit-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -moz-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -ms-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -o-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: linear-gradient(#E8E8E8, #D8D8D8);
+border-style: solid;
+border-width: 1px;
+border-color: #D3D3D3;
+border-bottom-color: #B0B0B0;
+text-shadow: 0px 1px 0px white;
+color: #020202;
+}
+
+.select-container input {
+    font-size: 24px;
+}
+
+.select-container > form {
+    display: inline;
+}
+
+    .select-container {
+        width: 100%;
+    }
+    select.activity, select.activity option {
+        font-size: 18pt;
+        width: 90%;
+        width: calc(100% - 100px);
+    }
+
+    </style>
+{% endblock %}
+
+
+{% block eighth-main %}
+    <h3 style="font-size: 24px">Schedule Activity</h3>
+    <div class="select-container">
+        <form action="/eighth/activities/schedule/form" method="get">
+        <select name="activity" class="activity" onchange="this.form.submit()">
+        {% for act in activities %}
+            <option value="{{ act.id }}"{% if act.id == activity.id %} selected{% endif %}>{{ act.name }}</option>
+        {% endfor %}
+        </select>
+        </form>
+        <form action="/eighth/activities/schedule/form" method="get">
+        <input name="activity" value="" placeholder="AID" onchange="this.form.submit()" size=4 />
+        </form>
+        </div>
+    </form>
+    <table>
+    </table>
+{% endblock %}

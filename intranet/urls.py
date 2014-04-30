@@ -62,6 +62,7 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", eighth.eighth_activities_delete, name="eighth_activities_delete"),
 
     url(r"^eighth/activities/schedule/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
+    url(r"^eighth/activities/schedule/form/$", eighth.eighth_activities_schedule_form, name="eighth_activities_schedule_form"),
     url(r"^eighth/activities/schedule/(?P<match>.+)/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
 
 
