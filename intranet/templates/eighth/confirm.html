@@ -1,0 +1,34 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period (Administrative)
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content table td {
+        padding: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+   <div class="primary-content">
+        <h3 style="font-size: 24px">Confirm</h3>
+        <h4 style="font-size: 14px">Are you sure you want to {{ action|safe }}?</h4>
+        <form method="post" action="{{ request.path }}">
+        {% csrf_token %}
+            {% for key, value in postfields.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}" />
+            {% endfor %}
+            <input type="submit" name="confirm" value="Yes" />
+            <input type="button" onclick="location = '/eighth'" value="No" />
+        </form>
+   </div>
+{% endblock %}

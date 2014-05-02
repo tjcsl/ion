@@ -1,0 +1,67 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content table {
+        width: 70%;
+    }
+
+    .primary-content table td {
+        padding: 5px;
+    }
+
+    .primary-content table td i {
+        padding-left: 15px;
+    }
+
+    .add {
+        position: absolute;
+        left: 70%;
+        width: 25%;
+    }
+    </style>
+{% endblock %}
+
+
+{% block eighth-main %}
+     <div class="add">
+        <h3 style="font-size: 24px">Create a group</h3>
+
+        <form class="addform" name="addform" method="post" action="/eighth/students/groups/add/">
+        <input type="hidden" name="confirm" value=1 />
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td><label for="name">Name</label></td>
+            <td><input type="text" name="name" /></td>
+        </tr>
+        <tr><td rowspan=2>
+            <input type="submit" value="Add group" />
+        </td></tr>
+        </table>
+        </form>
+    </div>
+
+    </div>
+    <h3 style="font-size: 24px">Choose a group</h3>
+    <table>
+    {% for group in groups %}
+        <tr>
+            <th>
+                {{ group.id }}
+            </th>
+            <td>
+                <b>{{ group.name }}</b>
+            </td>
+            <td><a href="/eighth/groups/edit/{{ group.id }}">
+                Edit
+            </a></td>
+            <td><a href="/eighth/groups/delete/{{ group.id }}">
+                Delete
+            </a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

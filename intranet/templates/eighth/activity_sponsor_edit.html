@@ -1,0 +1,43 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block eighth-main %}
+    <h3 style="font-size: 24px">Modify {{ sponsor.first_name }} {{ sponsor.last_name }}</h3>
+    <form method="post" action="/eighth/activities/sponsors/edit/{{ sponsor.id }}">
+        <input type="hidden" name="confirm" value=1 />
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td><label for="name">Name (First/Last)</label></td>
+            <td>
+                <input type="text" name="first_name" value="{{ sponsor.first_name }}" /> <br />
+                <input type="text" name="last_name" value="{{ sponsor.last_name }}" />
+            </td>
+        </tr>
+        <tr>
+            <td><label for="user">User</label></td>
+            <td>
+                <select name="user">
+                    <option value="">None</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}"{% if sponsor.user.id == user.id %} selected{% endif %}>{{ user }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+        <td>
+            <label for="online_attendance">Online Attendance</label>
+        </td>
+        <td>
+            <input type="checkbox" name="online_attendance" value="1"{% if sponsor.online_attendance %} checked{% endif %} />
+        </td>
+        </tr>
+        <tr>
+        <td rowspan=2>
+            <input type="submit" value="Edit activity sponsor" />
+        </td>
+        </tr>
+        </table>
+        </form>
+{% endblock %}

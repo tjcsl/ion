@@ -1,0 +1,31 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content table td {
+        padding: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block eighth-main %}
+
+    <h3 style="font-size: 24px">Choose a block</h3>
+    <table>
+    {% for block in blocks %}
+        <tr>
+            <td><a href="{{ next }}{{ block.id }}">
+            {{ block.date | date:"l" }}
+            </a></td>
+            <td><a href="{{ next }}{{ block.id }}">
+            {{ block.date | date:"M d, Y" }}
+            </a></td>
+            <td><a href="{{ next }}{{ block.id }}">
+            {{ block.block_letter }} Block
+            </a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

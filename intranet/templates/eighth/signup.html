@@ -13,6 +13,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.scrollto.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
@@ -26,6 +27,8 @@
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/eighth.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signups.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/responsive.eighth.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -89,7 +92,7 @@
                                 {{ day.date|date:"M d, Y" }}
                             </div>
                                 {% for b in day.blocks %}
-                                    <a href="{% url 'eighth' b.id %}">
+                                    <a href="{% url 'eighth_signup' b.id %}" data-bid="{{ b.id }}">
                                         <div class="block{% if active_block.id = b.id %} active-block{% endif %}">
                                             <span class="block-letter">
                                                 {{ b.block_letter }}
@@ -114,13 +117,18 @@
                 </h4>
             </div>
 
-            <div class="controls">
+            <div class="switch">
+                <i class="icon-chevron-up up"></i>
+                <i class="icon-chevron-down down"></i>
+            </div>
+
+            <!--div class="controls">
                 <i class="icon-wrench icon-2x overflow-icon"></i>
                 <button>Hide Restricted</button>
                 <button>Jump to Date</button>
                 <button>Manage Favorites</button>
                 <button>Manage Absences</button>
-            </div>
+            </div-->
         </div>
 
         <div id="activity-picker" class="hidden-detail">
@@ -131,6 +139,10 @@
                 </span>
             </div>
             <div id="activity-list">
+                <div class="backbtn">
+                    <i class='icon-chevron-left'></i>
+                </div>
+                <!--
                 <h5 class="sticky-header">Favorites</h5>
                 <ul class="favorite-activities">
                     {% for id, b in block_info.activities.items %}
@@ -145,10 +157,12 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
+                -->
                 <h5 class="sticky-header">All</h5>
                 <ul class="all-activities">
                     {% for id, b in block_info.activities.items %}
-                        <li data-activity-id="{{ id }}">
+                        <li data-activity-id="{{ id }}"{% if cur_signup_id == id %} class="signedup"{% endif %}>
+                        
                             <span class="activity-icons">
                                 <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
                             </span>
@@ -158,7 +172,7 @@
                     {% endfor %}
                 </ul>
             </div>
-            <div id="activity-detail">
+            <div id="activity-detail" data-bid="{{ block_info.id }}">
                 <h3 class="empty-state">
                     Select an activity
                 </h3>

@@ -98,4 +98,11 @@ if SHOW_DEBUG_TOOLBAR:
 
 INSTALLED_APPS += (
     "django_extensions",
+    "django.contrib.admin",
 )
+
+TEMPLATE_CONTEXT_PROCESSORS += (
+    "django.contrib.auth.context_processors.auth",
+)
+
+STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'intranet/static/')

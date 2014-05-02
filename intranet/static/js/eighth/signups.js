@@ -3,6 +3,29 @@ var previousSelection = $("#activity-list li")[0];
 
 $(document).ready(function() {
 
+    eighth.signUp = function(bid, aid) {
+        $.post("/eighth/signup/block/"+bid, {
+            "bid": bid,
+            "aid": aid,
+            "confirm": true
+        }, function(d) {
+            if(d.trim() == "success") {
+                console.log("Successfully signed up for "+aid+" on "+bid);
+                $d = $("#activity-detail[data-aid="+aid+"]");
+                $c = $("li.day>a[data-bid="+bid+"]>div");
+                // Replace the text on the day selector
+                $c.html($c.html().replace(
+                    $c.html().split("</span>")[1].trim(),
+                    $("h3", $d).html().trim()
+                ));
+                $("#activity-list li.signedup").removeClass("signedup");
+                $("#activity-list li[data-activity-id="+aid+"]").addClass("signedup");
+                $("#signup-spinner-container")
+                    .html("<i class='icon-ok' style='color: green; zoom: 1.5' />")
+                    .css("margin-left","2px");
+            } else alert(d);
+        })
+    };
     eighth.Activity = Backbone.Model.extend({
         idAttribute: "id"
     });
@@ -55,12 +78,18 @@ $(document).ready(function() {
                 viewContainer: $("#activity-detail")
             });
 
-            activityDetailView.render();
+            $("#activity-detail").attr("data-aid", activityDetailView.model.id);
 
+            activityDetailView.render();
+            console.log(activityDetailView);
             $("#signup-button").click(function(event) {
                 $(this).unbind(event);
                 var target = document.getElementById("signup-spinner");
                 var spinner = new Spinner(spinnerOptions).spin(target);
+                var aid = $("#activity-detail").attr("data-aid");
+                var bid = $("#activity-detail").attr("data-bid");
+                eighth.signUp(bid, aid);
+
             });
         }
     });

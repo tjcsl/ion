@@ -1,0 +1,36 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content table td {
+        padding: 5px;
+    }
+    .add {
+        position: absolute;
+        left: 60%;
+        width: 39%;
+    }
+    .add input, .add textarea, .add select {
+        width: 100%;
+    }
+
+    .add table {
+        width: 100%;
+    }
+    </style>
+{% endblock %}
+
+{% block eighth-main %}
+    <h3 style="font-size: 24px">Choose an activity</h3>
+    <table>
+    {% for activity in activities %}
+        <tr>
+            <td><a href="{{ next }}{{ activity.id }}">
+            {{ activity.id }} {{ activity.name }}
+            </a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

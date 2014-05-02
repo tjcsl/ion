@@ -4,6 +4,7 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.core.css' %}" />
     <!--[if IE 7]>
         <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
     <![endif]-->
@@ -12,6 +13,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/lib/jquery-ui-1.10.3.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/responsive.core.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var time = 150;
@@ -21,6 +23,9 @@
             }
 
             var clickOutside = function (e) {
+                if($(e.target).parents().andSelf().hasClass("dropdown-allow")) {
+                    return;
+                }
                 if (! $(e.target).parents().andSelf().hasClass("dropdown-item-wrapper") ) {
                     closeMenu($(".dropdown-open .dropdown-menu"), true);
                     $(".has-dropdown").removeClass("dropdown-open");
@@ -79,8 +84,14 @@
 {% endblock %}
 
 {% block body %}
+    <div class="nav-g"></div>
     <div class="header">
         <div class="left">
+            <div class="dropdown-taparea">
+                <div class="dropdown-icon">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
             <a href="/" class="intranet-title">
                 <div class="logo">
                 </div>
