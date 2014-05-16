@@ -5,11 +5,25 @@
     {{ block.super }}
     <style type="text/css">
     .primary-content table {
-        width: 70%;
+        width: 100%;
+    }
+
+    .primary-content table tr.headings,
+    .primary-content td.block_propagate,
+    .primary-content td.block_save {
+        text-align: center;
     }
 
     .primary-content table td {
         padding: 5px;
+    }
+
+    .primary-content tr.headings th.selectall {
+        text-align: left;
+    }
+
+    .primary-content td.block_enabled {
+        width: 10px;
     }
 
     .primary-content table td i {
@@ -47,12 +61,51 @@ color: #020202;
         width: 90%;
         width: calc(100% - 100px);
     }
+.schact-roomslist {
+    position: absolute;
+    top: 200px;
+    left: 100px;
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+    background-color: yellow;
+    border: 2px solid black;
+    display: none;
+}
 
     </style>
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+selectAll = function() {
+    for(i in j=document.querySelectorAll(".primary-content table td.block_enabled input")) {
+        j[i].checked=!j[i].checked;
+    }
+}
+
+roomsList = function(bid) {
+    $(".schact-roomslist").show().attr("data-bid", bid);
+}
+
+addRoom = function() {
+    var bid = $(".schact-roomslist").attr("data-bid");
+    var fm = $("form[name='block" + bid + "']");
+    console.log(bid, fm);
+}
+    </script>
+{% endblock %}
 
 {% block eighth-main %}
+    <div class="schact-roomslist">
+    <span style="position: absolute;right: 0;top: 0;cursor: pointer" onclick="$(this).parent().hide()">X</span>
+    <ul>
+        {% for room in rooms %}
+        <li><a href="#" onclick="addRoom({{ room.id }})">{{ room.name }}</a></li>
+        {% endfor %}
+    </ul>
+    </div>
     <h3 style="font-size: 24px">Schedule Activity</h3>
     <div class="select-container">
         <form action="/eighth/activities/schedule/form" method="get">
@@ -65,8 +118,54 @@ color: #020202;
         <form action="/eighth/activities/schedule/form" method="get">
         <input name="activity" value="" placeholder="AID" onchange="this.form.submit()" size=4 />
         </form>
-        </div>
-    </form>
+    </div>
+    {{ form }}
     <table>
+        <tr class="headings">
+            <th>&nbsp;</th>
+            <th class="selectall">
+                <a href="javascript:;" onclick="selectAll()">Select All</a>
+            </th>
+            <th>Rooms</th>
+            <th>Sponsors</th>
+            <th>Comments</th>
+            <th>Propagate</th>
+            <th>Save</th>
+
+        </tr>
+    {% for block in blocks %}
+    <form name="block{{ block.id }}" action="/eighth/activities/schedule/activity/{{ activity.id }}/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="block" value="{{ block.id }}" />
+    <input type="hidden" name="activity" value="{{ activity.id }}" />
+    <tr id="block{{ block.id }}">
+        <td class="block_enabled"><a name="block{{ block.id }}" />
+            <input type="checkbox" name="block_enabled" value="1"{% if block.id in activity_blocks %} checked{% endif %} />
+        </td>
+        <td class="block_day">
+            {{ block }}
+        </td>
+        <td class="block_rooms">
+            <input type="hidden" name="rooms" value="" />
+            <a href="#block{{ block.id }}" onclick="roomsList({{ block.id }})">Add</a>
+        </td>
+        <td class="block_sponsors">
+            <select name="sponsors" multiple>
+            {% for sponsor in sponsors %}<option value="{{ sponsor.id }}">{{ sponsor }}</option>{% endfor %}
+            </select>
+        </td>
+        <td class="block_comment">
+            <textarea name="comment" style="width: 100%">{{ schact.comments }}</textarea>
+        </td>
+        <td class="block_propagate">
+            <button onclick="propagate_up({{ block.id }})">^</button> &nbsp;
+            <button onclick="propagate_down({{ block.id }})">v</button>
+        </td>
+        <td class="block_save">
+            <input type="submit" name="confirm" value="Save" />
+        </td>
+    </tr>
+    </form>
+    {% endfor %}
     </table>
 {% endblock %}

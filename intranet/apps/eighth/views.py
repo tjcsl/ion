@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from .models import EighthSponsor, EighthRoom, EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity
+from .models import EighthSponsor, EighthRoom, EighthBlock, EighthActivity, EighthSignup, EighthScheduledActivity, EighthScheduledActivityForm
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -43,13 +43,17 @@ def parse_date(date):
 def get_startdate_obj(request):
     return request.session.get('startdate', '')
 
+def get_startdate_fallback(request):
+    cd = datetime.datetime.now()
+    d = request.session.get('startdate', cd)
+    return d
+
 def get_startdate_str(request):
     return datetime.datetime.strftime(request.session.get('startdate', ''), "%m/%d/%Y")
 
 def get_current_blocks(request=None):
     if request is not None:
-        cd = datetime.datetime.now()
-        d = request.session.get('startdate', cd)
+        d = get_startdate_fallback(request)
         s = EighthBlock.objects.filter(date__gt=d)[:1]
         logger.info("s={}".format(s))
         if len(s) > 0:
@@ -362,12 +366,32 @@ def eighth_activities_schedule(request, match=None):
     activity = req.get('activity')
     if activity is None:
         return redirect("/eighth/choose/activity?next=activities/schedule/")
+    if 'confirm' in request.POST:
+        try:
+            blk = EighthScheduledActivity.objects.get(block__id=request.POST.get('block'),
+                                                activity__id=activity)
+            if not 'block_enabled' in request.POST:
+                blk.delete()
+            else:
+                actsch = EighthScheduledActivityForm(request.POST, instance=blk)
+                actsch.save()
+        except EighthScheduledActivity.DoesNotExist:
+            actsch = EighthScheduledActivityForm(request.POST)
+            logger.debug(actsch)
+            logger.debug(request.POST)
+            actsch = actsch.save()
+            actsch.activity = EighthActivity.objects.get(id=activity)
+            actsch.save()
+    sd = get_startdate_fallback(request)
+    schacts = EighthScheduledActivity.objects.filter(block__date__gt=sd)
     return render(request, "eighth/activity_schedule.html", {
         "rooms": EighthRoom.objects.all(),
         "sponsors": EighthSponsor.objects.all(),
         "blocks": get_current_blocks(request),
         "activities": EighthActivity.objects.all(),
-        "activity": EighthActivity.objects.get(id=activity)
+        "activity": EighthActivity.objects.get(id=activity),
+        "form": EighthScheduledActivityForm(),
+        "schacts": schacts
     })
 
 @eighth_admin_required
