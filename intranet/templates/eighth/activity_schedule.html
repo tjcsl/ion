@@ -26,9 +26,6 @@
         width: 10px;
     }
 
-    .primary-content table td i {
-        padding-left: 15px;
-    }
     select:not([size]) {
 -webkit-appearance: menulist-button;
 background-color: #E0E0E0;
@@ -133,33 +130,52 @@ addRoom = function() {
             <th>Save</th>
 
         </tr>
-    {% for block in blocks %}
-    <form name="block{{ block.id }}" action="/eighth/activities/schedule/activity/{{ activity.id }}/" method="post">
+    {% for schblock in schblocks %}
+    <form name="block{{ schblock.block.id }}" action="/eighth/activities/schedule/activity/{{ schblock.activity.id }}/" method="post">
     {% csrf_token %}
-    <input type="hidden" name="block" value="{{ block.id }}" />
-    <input type="hidden" name="activity" value="{{ activity.id }}" />
-    <tr id="block{{ block.id }}">
-        <td class="block_enabled"><a name="block{{ block.id }}" />
-            <input type="checkbox" name="block_enabled" value="1"{% if block.id in activity_blocks %} checked{% endif %} />
+    <input type="hidden" name="block" value="{{ schblock.block.id }}" />
+    <input type="hidden" name="activity" value="{{ schblock.activity.id }}" />
+    <tr id="block{{ schblock.block.id }}">
+        <td class="block_enabled">
+        <a name="block{{ schblock.block.id }}"></a>
+        <a name="schact{{ schblock.schact.id }}"></a>
+        <!--{% if schblock.schact %}
+            <i class='icon-ok'></i>
+        {% else %}
+            <i class='icon-remove'></i>
+        {% endif %}-->
+        <input type="checkbox" name="scheduled" value=1{% if schblock.schact %} checked{% endif %} />
         </td>
         <td class="block_day">
-            {{ block }}
+        {{ schblock.block.date|date:'D N j' }}<br />
+        <a href="/eighth/blocks/edit/{{ schblock.block.id }}">
+        {{ schblock.block.block_letter }} Block
+        </a>
         </td>
         <td class="block_rooms">
-            <input type="hidden" name="rooms" value="" />
-            <a href="#block{{ block.id }}" onclick="roomsList({{ block.id }})">Add</a>
+            {% for room in schblock.schact.rooms.all %}
+                <a href="/eighth/rooms/view#room{{ room.id }}">{{ room }}</a>
+                <br />
+            {% endfor %}
+                <a href="#" onclick="return addRoom({{ schblock.block.id }})">
+                    <i class='icon-plus'></i> Add Room
+                </a>
         </td>
         <td class="block_sponsors">
-            <select name="sponsors" multiple>
-            {% for sponsor in sponsors %}<option value="{{ sponsor.id }}">{{ sponsor }}</option>{% endfor %}
-            </select>
+            {% for sponsor in schblock.schact.sponsors.all %}
+                <a href="/eighth/sponsors/view#sponsor{{ sponsor.id }}">{{ sponsor }}</a>
+                <br />
+            {% endfor %}
+                <a href="#" onclick="return addSponsor({{ schblock.block.id }})">
+                    <i class='icon-plus'></i> Add Sponsor
+                </a>
         </td>
         <td class="block_comment">
-            <textarea name="comment" style="width: 100%">{{ schact.comments }}</textarea>
+            <textarea name="comment" style="width: 100%">{{ schblock.schact.comment }}</textarea>
         </td>
         <td class="block_propagate">
-            <button onclick="propagate_up({{ block.id }})">^</button> &nbsp;
-            <button onclick="propagate_down({{ block.id }})">v</button>
+            <button onclick="propagate_up({{ block.id }})"><i class='icon-chevron-sign-up'></i></button> &nbsp;
+            <button onclick="propagate_down({{ block.id }})"><i class='icon-chevron-sign-down'></i></button>
         </td>
         <td class="block_save">
             <input type="submit" name="confirm" value="Save" />

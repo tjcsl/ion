@@ -43,13 +43,16 @@ def parse_date(date):
 def get_startdate_obj(request):
     return request.session.get('startdate', '')
 
-def get_startdate_fallback(request):
+def get_startdate_fallback(request=None):
     cd = datetime.datetime.now()
-    d = request.session.get('startdate', cd)
+    if request is not None and request.session is not None:
+        d = request.session.get('startdate', cd)
+    else:
+        d = cd
     return d
 
 def get_startdate_str(request):
-    return datetime.datetime.strftime(request.session.get('startdate', ''), "%m/%d/%Y")
+    return datetime.datetime.strftime(get_startdate_fallback(request), "%m/%d/%Y")
 
 def get_current_blocks(request=None):
     if request is not None:
@@ -367,31 +370,25 @@ def eighth_activities_schedule(request, match=None):
     if activity is None:
         return redirect("/eighth/choose/activity?next=activities/schedule/")
     if 'confirm' in request.POST:
-        try:
-            blk = EighthScheduledActivity.objects.get(block__id=request.POST.get('block'),
-                                                activity__id=activity)
-            if not 'block_enabled' in request.POST:
-                blk.delete()
-            else:
-                actsch = EighthScheduledActivityForm(request.POST, instance=blk)
-                actsch.save()
-        except EighthScheduledActivity.DoesNotExist:
-            actsch = EighthScheduledActivityForm(request.POST)
-            logger.debug(actsch)
-            logger.debug(request.POST)
-            actsch = actsch.save()
-            actsch.activity = EighthActivity.objects.get(id=activity)
-            actsch.save()
+        pass
     sd = get_startdate_fallback(request)
-    schacts = EighthScheduledActivity.objects.filter(block__date__gt=sd)
+    schacts = EighthScheduledActivity.objects.filter(
+        activity__id=activity,
+        block__date__gt=sd
+    )
+    blocks = EighthBlock.objects.filter(
+        date__gt=sd
+    )
+    schblocks = []
+    for block in blocks:
+        sa = schacts.filter(block__id=block.id)
+        schblocks.append({
+            "block": block,
+            "schact": sa[0] if sa else None
+        })
+    logger.debug(schblocks)
     return render(request, "eighth/activity_schedule.html", {
-        "rooms": EighthRoom.objects.all(),
-        "sponsors": EighthSponsor.objects.all(),
-        "blocks": get_current_blocks(request),
-        "activities": EighthActivity.objects.all(),
-        "activity": EighthActivity.objects.get(id=activity),
-        "form": EighthScheduledActivityForm(),
-        "schacts": schacts
+        "schblocks": schblocks
     })
 
 @eighth_admin_required
