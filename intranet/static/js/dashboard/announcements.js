@@ -29,4 +29,8 @@ $(document).ready(function() {
             delete(this.dataset.divPlaceholderContent);
         }
     });
+
+    $(".announcement-add").click(function() {
+        location.href = "/announcements/add";
+    });
 });
