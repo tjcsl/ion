@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 from .apps.announcements import views as announcements
 from .apps.auth import views as auth
 from .apps.users import views as users
-from .apps.eighth import views as eighth
+from .apps.eighth.views import activities, actsponsors, blocks, common, groups as eighth_groups, main, rooms, signup
 from .apps.events import views as events
 from .apps.files import views as files
 from .apps.groups import views as groups
@@ -40,57 +40,56 @@ urlpatterns += patterns("announcements.views.",
 )
 
 urlpatterns += patterns("eighth.views.",
-    url(r"^eighth/?$", eighth.eighth_redirect_view, name="eighth_redirect"),
-    url(r"^eighth/admin/?$", eighth.eighth_admin_view, name="eighth_admin"),
-    url(r"^eighth/teacher/?$", eighth.eighth_teacher_view, name="eighth_teacher"),
+    url(r"^eighth/?$", main.eighth_redirect_view, name="eighth_redirect"),
+    url(r"^eighth/admin/?$", main.eighth_admin_view, name="eighth_admin"),
+    url(r"^eighth/teacher/?$", main.eighth_teacher_view, name="eighth_teacher"),
 # Choose
-    url(r"^eighth/choose/block/?$", eighth.eighth_choose_block, name="eighth_choose_block"),
-    url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", eighth.eighth_choose_activity, name="eighth_choose_activity"),
-    url(r"^eighth/choose/group/?$", eighth.eighth_choose_group, name="eighth_choose_group"),
+    url(r"^eighth/choose/block/?$", blocks.eighth_choose_block, name="eighth_choose_block"),
+    url(r"^eighth/choose/activity(?:/block/(?P<block_id>\d+))?$", activities.eighth_choose_activity, name="eighth_choose_activity"),
+    url(r"^eighth/choose/group/?$", eighth_groups.eighth_choose_group, name="eighth_choose_group"),
 # Student
-    url(r"^eighth/students/register/$", eighth.eighth_students_register, name="eighth_students_register"),
-    url(r"^eighth/students/register/(?P<match>.+)/$", eighth.eighth_students_register, name="eighth_students_register"),
+    url(r"^eighth/students/register/$", signup.eighth_students_register, name="eighth_students_register"),
+    url(r"^eighth/students/register/(?P<match>.+)/$", signup.eighth_students_register, name="eighth_students_register"),
 
-    url(r"^eighth/groups/$", eighth.eighth_groups_edit, name="eighth_groups_edit"),
-    url(r"^eighth/groups/edit/(?P<group_id>\d+)$", eighth.eighth_groups_edit, name="eighth_groups_edit"),
+    url(r"^eighth/groups/$", eighth_groups.eighth_groups_edit, name="eighth_groups_edit"),
+    url(r"^eighth/groups/edit/(?P<group_id>\d+)$", eighth_groups.eighth_groups_edit, name="eighth_groups_edit"),
 # Activity
-    url(r"^eighth/activities/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
-    url(r"^eighth/activities/add/$", eighth.eighth_activities_add, name="eighth_activities_add"),
-    url(r"^eighth/activities/view/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
-    url(r"^eighth/activities/edit/$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
-    url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", eighth.eighth_activities_edit, name="eighth_activities_edit"),
-    url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", eighth.eighth_activities_delete, name="eighth_activities_delete"),
+    url(r"^eighth/activities/$", activities.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/add/$", activities.eighth_activities_add, name="eighth_activities_add"),
+    url(r"^eighth/activities/view/$", activities.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/edit/$", activities.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/edit/(?P<activity_id>\d+)$", activities.eighth_activities_edit, name="eighth_activities_edit"),
+    url(r"^eighth/activities/delete/(?P<activity_id>\d+)$", activities.eighth_activities_delete, name="eighth_activities_delete"),
 
-    url(r"^eighth/activities/schedule/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
-    url(r"^eighth/activities/schedule/form/$", eighth.eighth_activities_schedule_form, name="eighth_activities_schedule_form"),
-    url(r"^eighth/activities/schedule/(?P<match>.+)/$", eighth.eighth_activities_schedule, name="eighth_activities_schedule"),
+    url(r"^eighth/activities/schedule/$", activities.eighth_activities_schedule, name="eighth_activities_schedule"),
+    url(r"^eighth/activities/schedule/form/$", activities.eighth_activities_schedule_form, name="eighth_activities_schedule_form"),
+    url(r"^eighth/activities/schedule/(?P<match>.+)/$", activities.eighth_activities_schedule, name="eighth_activities_schedule"),
 
+    url(r"^eighth/activities/sponsors/$", actsponsors.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/add/$", actsponsors.eighth_activities_sponsors_add, name="eighth_activities_sponsors_add"),
+    url(r"^eighth/activities/sponsors/view/$", actsponsors.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/edit/$", actsponsors.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/edit/(?P<sponsor_id>\d+)$", actsponsors.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
+    url(r"^eighth/activities/sponsors/delete/(?P<sponsor_id>\d+)$", actsponsors.eighth_activities_sponsors_delete, name="eighth_activities_sponsors_delete"),
 
-    url(r"^eighth/activities/sponsors/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
-    url(r"^eighth/activities/sponsors/add/$", eighth.eighth_activities_sponsors_add, name="eighth_activities_sponsors_add"),
-    url(r"^eighth/activities/sponsors/view/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
-    url(r"^eighth/activities/sponsors/edit/$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
-    url(r"^eighth/activities/sponsors/edit/(?P<sponsor_id>\d+)$", eighth.eighth_activities_sponsors_edit, name="eighth_activities_sponsors_edit"),
-    url(r"^eighth/activities/sponsors/delete/(?P<sponsor_id>\d+)$", eighth.eighth_activities_sponsors_delete, name="eighth_activities_sponsors_delete"),
-
-    url(r"^eighth/rooms/$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
-    url(r"^eighth/rooms/add/$", eighth.eighth_rooms_add, name="eighth_rooms_add"),
-    url(r"^eighth/rooms/view/$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
-    url(r"^eighth/rooms/edit/$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
-    url(r"^eighth/rooms/edit/(?P<room_id>\d+)$", eighth.eighth_rooms_edit, name="eighth_rooms_edit"),
-    url(r"^eighth/rooms/delete/(?P<room_id>\d+)$", eighth.eighth_rooms_delete, name="eighth_rooms_delete"),
+    url(r"^eighth/rooms/$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
+    url(r"^eighth/rooms/add/$", rooms.eighth_rooms_add, name="eighth_rooms_add"),
+    url(r"^eighth/rooms/view/$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
+    url(r"^eighth/rooms/edit/$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
+    url(r"^eighth/rooms/edit/(?P<room_id>\d+)$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
+    url(r"^eighth/rooms/delete/(?P<room_id>\d+)$", rooms.eighth_rooms_delete, name="eighth_rooms_delete"),
 
 #Special
-    url(r"^eighth/blocks/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
-    url(r"^eighth/blocks/add/$", eighth.eighth_blocks_add, name="eighth_blocks_add"),
-    url(r"^eighth/blocks/view/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
-    url(r"^eighth/blocks/edit/$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
-    url(r"^eighth/blocks/edit/(?P<block_id>\d+)$", eighth.eighth_blocks_edit, name="eighth_blocks_edit"),
-    url(r"^eighth/blocks/delete/(?P<block_id>\d+)$", eighth.eighth_blocks_delete, name="eighth_blocks_delete"),
+    url(r"^eighth/blocks/$", blocks.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/add/$", blocks.eighth_blocks_add, name="eighth_blocks_add"),
+    url(r"^eighth/blocks/view/$", blocks.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/edit/$", blocks.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/edit/(?P<block_id>\d+)$", blocks.eighth_blocks_edit, name="eighth_blocks_edit"),
+    url(r"^eighth/blocks/delete/(?P<block_id>\d+)$", blocks.eighth_blocks_delete, name="eighth_blocks_delete"),
 
-    url(r"^eighth/startdate/$", eighth.eighth_startdate, name="eighth_startdate"),
+    url(r"^eighth/startdate/$", common.eighth_startdate, name="eighth_startdate"),
 
-    url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", eighth.eighth_signup_view, name="eighth_signup"),
+    url(r"^eighth/signup(?:/block/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
 )
 
 urlpatterns += patterns("events.views.",

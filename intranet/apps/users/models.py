@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
+from intranet.settings.base import SUPERUSERS
 from intranet.db.ldap_db import LDAPConnection
 from intranet import settings
 from intranet.middleware import threadlocals
@@ -659,6 +660,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.user_type == "simpleUser"
+
+    def is_superuser(self):
+        """Checks if user is in admin_all or in SUPERUSERS
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.member_of("admin_all") or self.username in SUPERUSERS
 
 
     def is_http_request_sender(self):

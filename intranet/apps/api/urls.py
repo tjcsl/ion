@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
-from intranet.apps.eighth.views import EighthBlockList, EighthBlockDetail, \
-    EighthActivityDetail, EighthUserSignupList, \
+from intranet.apps.eighth.views.blocks import EighthBlockList, EighthBlockDetail
+from intranet.apps.eighth.views.activities import EighthActivityDetail
+from intranet.apps.eighth.views.signup import EighthUserSignupList, \
     EighthScheduledActivitySignupList
 from .views import api_root
 
