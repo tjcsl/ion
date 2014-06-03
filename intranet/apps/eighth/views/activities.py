@@ -2,12 +2,11 @@
 from django.shortcuts import redirect, render
 from django.http import Http404
 from intranet.apps.auth.decorators import eighth_admin_required
-from intranet.apps.eighth.models import EighthActivity, EighthSponsor, EighthRoom, \
-    EighthScheduledActivity
+from intranet.apps.eighth.models import EighthActivity, EighthSponsor, EighthRoom, EighthScheduledActivity, EighthBlock
 from intranet.apps.eighth.serializers import EighthActivityDetailSerializer
 from itertools import chain
 from rest_framework import generics, views
-from .common import get_startdate_fallback, eighth_confirm_view
+from .common import get_startdate_fallback, eighth_confirm_view, unmatch
 import logging
 logger = logging.getLogger(__name__)
 

@@ -1,18 +1,19 @@
 """ Signup """
 from django.contrib import messages
 from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect
 from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from intranet.apps.eighth.serializers import EighthBlockListSerializer, \
     EighthBlockDetailSerializer, EighthActivityDetailSerializer, \
     EighthSignupSerializer
-from .common import unmatch
+from .common import unmatch, eighth_confirm_view
 from ..models import EighthSponsor, EighthRoom, EighthBlock, EighthActivity, \
     EighthSignup, EighthScheduledActivity, EighthScheduledActivityForm
-from intranet.apps.auth.decorators import eighth_admin_required
+from django.contrib.auth.models import Group
+from intranet.apps.auth.decorators import eighth_admin_required, eighth_student_required
 from django.contrib.auth.decorators import login_required
-from intranet.apps.auth.decorators import eighth_student_required
 import logging
 logger = logging.getLogger(__name__)
 

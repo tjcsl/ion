@@ -4,6 +4,7 @@ from django.http import Http404
 from intranet.apps.auth.decorators import eighth_admin_required
 from intranet.apps.eighth.models import EighthSponsor
 from itertools import chain
+from intranet.apps.users.models import User
 from .common import eighth_confirm_view
 import logging
 logger = logging.getLogger(__name__)
