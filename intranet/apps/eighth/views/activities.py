@@ -174,7 +174,11 @@ def eighth_activities_schedule(request, match=None):
         })
     logger.debug(schblocks)
     return render(request, "eighth/activity_schedule.html", {
-        "schblocks": schblocks
+        "schblocks": schblocks,
+        "activity": EighthActivity.objects.get(id=activity),
+        "activities": EighthActivity.objects.all(),
+        "rooms": EighthRoom.objects.all(),
+        "sponsors": EighthSponsor.objects.all()
     })
 
 @eighth_admin_required
