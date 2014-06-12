@@ -156,7 +156,20 @@ def eighth_activities_schedule(request, match=None):
     if activity is None:
         return redirect("/eighth/choose/activity?next=activities/schedule/")
     if 'confirm' in request.POST:
-        pass
+        blockid = request.POST.get('block')
+        schact = EighthScheduledActivity.objects.get(
+            activity__id=activity,
+            block__id=blockid
+        )
+        roomadds = request.POST.getlist('room')
+        roomdeletes = request.POST.getlist('room_delete')
+        for rm in roomadds:
+            room = EighthRoom.objects.get(id=rm)
+            schact.rooms.add(room)
+        for rm in roomdeletes:
+            room = EighthRoom.objects.get(id=rm)
+            schact.rooms.remove(room)
+        schact.save()
     sd = get_startdate_fallback(request)
     schacts = EighthScheduledActivity.objects.filter(
         activity__id=activity,

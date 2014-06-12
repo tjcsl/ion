@@ -4,25 +4,43 @@
 {% block css %}
     {{ block.super }}
     <style type="text/css">
-    .primary-content table {
+    .primary-content .sch-table {
         width: 100%;
     }
 
-    .primary-content table tr.headings,
-    .primary-content td.block_propagate,
-    .primary-content td.block_save {
+    .sch-table {
+        display: table;
+        width: 100%;
+    }
+    .sch-table > form {
+        width: 100%;
+        display: table-footer-group; /* WHY? */
+    }
+
+    .sch-row {
+        display: table-row;
+        width: 100%;
+    }
+
+    .sch-col {
+        display: table-cell;
+        width: 16.6%;
+    }
+    .primary-content .sch-row.headings,
+    .primary-content .sch-col.block_propagate,
+    .primary-content .sch-col.block_save {
         text-align: center;
     }
 
-    .primary-content table td {
+    .primary-content .sch-col  {
         padding: 5px;
     }
 
-    .primary-content tr.headings th.selectall {
+    .primary-content .sch-row.headings .sch-col.selectall {
         text-align: left;
     }
 
-    .primary-content td.block_enabled {
+    .primary-content .sch-col.block_enabled {
         width: 10px;
     }
 
@@ -85,11 +103,20 @@ selectAll = function() {
 roomsList = function(bid) {
     $(".schact-roomslist").show().attr("data-bid", bid);
 }
-
-addRoom = function() {
+removeRoom = function(bid, rid) {
+    var fm = $("form[name='block"+bid+"']");
+    $(".block_rooms input[name=room]", fm).each(function(){
+        if($(this).attr('value') == rid) $(this).remove();
+    });
+    $(".block_rooms .room-"+rid, fm).remove();
+    $(".block_rooms", fm).append("<input type='hidden' name='room_delete' value='"+rid+"' />");
+}
+addRoom = function(rid, rt) {
     var bid = $(".schact-roomslist").attr("data-bid");
     var fm = $("form[name='block" + bid + "']");
-    console.log(bid, fm);
+    $(".block_rooms", fm).append('<input type="hidden" name="room" value="'+rid+'" />');
+    $(".block_rooms > div", fm).append("<span class='room-"+rid+"'><b>"+rt+"</b> (<a href='#' onclick='removeRoom("+bid+","+rid+")'>Remove</a>)<br /></span>");
+    b = fm;
 }
     </script>
 {% endblock %}
@@ -99,7 +126,7 @@ addRoom = function() {
     <span style="position: absolute;right: 0;top: 0;cursor: pointer" onclick="$(this).parent().hide()">X</span>
     <ul>
         {% for room in rooms %}
-        <li><a href="#" onclick="addRoom({{ room.id }})">{{ room.name }}</a></li>
+        <li><a href="#" onclick="addRoom({{ room.id }}, '{{ room.name }}')">{{ room.name }}</a></li>
         {% endfor %}
     </ul>
     </div>
@@ -117,26 +144,25 @@ addRoom = function() {
         </form>
     </div>
     {{ form }}
-    <table>
-        <tr class="headings">
-            <th>&nbsp;</th>
-            <th class="selectall">
+    <div class="sch-table">
+        <div class="sch-row headings">
+            <div class="sch-col selectall">
                 <a href="javascript:;" onclick="selectAll()">Select All</a>
-            </th>
-            <th>Rooms</th>
-            <th>Sponsors</th>
-            <th>Comments</th>
-            <th>Propagate</th>
-            <th>Save</th>
+            </div>
+            <div class="sch-col">Rooms</div>
+            <div class="sch-col">Sponsors</div>
+            <div class="sch-col">Comments</div>
+            <div class="sch-col">Propagate</div>
+            <div class="sch-col">Save</div>
 
-        </tr>
+        </div>
     {% for schblock in schblocks %}
     <form name="block{{ schblock.block.id }}" action="/eighth/activities/schedule/activity/{{ schblock.activity.id }}/" method="post">
+  <div class="sch-row" id="block{{ schblock.block.id }}">
     {% csrf_token %}
     <input type="hidden" name="block" value="{{ schblock.block.id }}" />
-    <input type="hidden" name="activity" value="{{ schblock.activity.id }}" />
-    <tr id="block{{ schblock.block.id }}">
-        <td class="block_enabled">
+    <input type="hidden" name="activity" value="{{ schblock.schact.activity.id }}" />
+        <div class="sch-col block_enabled">
         <a name="block{{ schblock.block.id }}"></a>
         <a name="schact{{ schblock.schact.id }}"></a>
         <!--{% if schblock.schact %}
@@ -151,17 +177,20 @@ addRoom = function() {
         <a href="/eighth/blocks/edit/{{ schblock.block.id }}">
         {{ schblock.block.block_letter }} Block
         </a>
-        </td>
-        <td class="block_rooms">
+        </div>
+        <div class="sch-col block_rooms">
+            <div>
             {% for room in schblock.schact.rooms.all %}
-                <a href="/eighth/rooms/view#room{{ room.id }}">{{ room }}</a>
-                <br />
+                <span class='room-{{ room.id }}'>
+                    <b>{{ room }}</b> (<a href="#" onclick="removeRoom({{ schblock.block.id }}, {{ room.id }})">Remove</a>)<br />
+                </span>
             {% endfor %}
-                <a href="#" onclick="return addRoom({{ schblock.block.id }})">
+            </div>
+                <a href="#" onclick="return roomsList({{ schblock.block.id }})">
                     <i class='icon-plus'></i> Add Room
                 </a>
-        </td>
-        <td class="block_sponsors">
+        </div>
+        <div class="sch-col block_sponsors">
             {% for sponsor in schblock.schact.sponsors.all %}
                 <a href="/eighth/sponsors/view#sponsor{{ sponsor.id }}">{{ sponsor }}</a>
                 <br />
@@ -169,19 +198,20 @@ addRoom = function() {
                 <a href="#" onclick="return addSponsor({{ schblock.block.id }})">
                     <i class='icon-plus'></i> Add Sponsor
                 </a>
-        </td>
-        <td class="block_comment">
+        </div>
+        <div class="sch-col block_comment">
             <textarea name="comment" style="width: 100%">{{ schblock.schact.comment }}</textarea>
-        </td>
-        <td class="block_propagate">
+        </div>
+        <div class="sch-col block_propagate">
             <button onclick="propagate_up({{ block.id }})"><i class='icon-chevron-sign-up'></i></button> &nbsp;
             <button onclick="propagate_down({{ block.id }})"><i class='icon-chevron-sign-down'></i></button>
-        </td>
-        <td class="block_save">
+        </div>
+        <div class="sch-col block_save">
             <input type="submit" name="confirm" value="Save" />
-        </td>
-    </tr>
-    </form>
+        </div>
+    </div>
+  </div>
+  </form>
     {% endfor %}
     </table>
 {% endblock %}
