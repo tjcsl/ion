@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 from .apps.announcements import views as announcements
 from .apps.auth import views as auth
 from .apps.users import views as users
-from .apps.eighth.views import activities, actsponsors, blocks, common, groups as eighth_groups, main, rooms, signup
+from .apps.eighth.views import activities, actsponsors, blocks, common, groups as eighth_groups, main, rooms, signup, attendance
 from .apps.events import views as events
 from .apps.files import views as files
 from .apps.groups import views as groups
@@ -78,6 +78,10 @@ urlpatterns += patterns("eighth.views.",
     url(r"^eighth/rooms/edit/$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
     url(r"^eighth/rooms/edit/(?P<room_id>\d+)$", rooms.eighth_rooms_edit, name="eighth_rooms_edit"),
     url(r"^eighth/rooms/delete/(?P<room_id>\d+)$", rooms.eighth_rooms_delete, name="eighth_rooms_delete"),
+
+    url(r"^eighth/attendance/view/$", attendance.eighth_attendance_view, name="eighth_attendance_view"),
+    url(r"^eighth/attendance/view/block/(?P<block_id>\d+)/$", attendance.eighth_attendance_view, name="eighth_attendance_view"),
+    url(r"^eighth/attendance/view/block/(?P<block_id>\d+)/activity/(?P<activity_id>\d+)/$", attendance.eighth_attendance_view, name="eighth_attendance_view"),
 
 #Special
     url(r"^eighth/blocks/$", blocks.eighth_blocks_edit, name="eighth_blocks_edit"),
