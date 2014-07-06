@@ -1,10 +1,7 @@
-""" Signup """
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
-from rest_framework import generics, views
 from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
 from intranet.apps.eighth.serializers import EighthBlockListSerializer, \
     EighthBlockDetailSerializer, EighthActivityDetailSerializer, \
     EighthSignupSerializer
@@ -174,35 +171,3 @@ def eighth_signup_view(request, block_id=None):
     }
 
     return render(request, "eighth/signup.html", context)
-
-class EighthUserSignupList(views.APIView):
-    """API endpoint that lists all signups for a certain user
-    """
-    def get(self, request, user_id):
-        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
-
-        # if block_id is not None:
-            # signups = signups.filter(activity__block_id=block_id)
-
-        serializer = EighthSignupSerializer(signups, context={"request": request})
-        data = serializer.data
-
-        return Response(data)
-
-class EighthScheduledActivitySignupList(views.APIView):
-    """API endpoint that lists all signups for a certain scheduled activity
-    """
-    def get(self, request, scheduled_activity_id):
-        signups = EighthSignup.objects.filter(scheduled_activity__id=scheduled_activity_id)
-
-        serializer = EighthSignupSerializer(signups, context={"request": request})
-        data = serializer.data
-
-        return Response(serializer.data)
-
-class EighthSignupDetail(generics.RetrieveAPIView):
-    """API endpoint that shows details of an eighth signup
-    """
-    queryset = EighthSignup.objects.all()
-    serializer_class = EighthSignupSerializer
-

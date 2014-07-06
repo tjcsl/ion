@@ -1,4 +1,3 @@
-""" Rooms """
 from django.http import Http404
 from django.shortcuts import redirect, render
 from intranet.apps.eighth.models import EighthRoom

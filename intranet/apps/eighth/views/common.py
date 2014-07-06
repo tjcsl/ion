@@ -1,4 +1,3 @@
-""" Common """
 import datetime
 import time
 from django.shortcuts import redirect, render
@@ -36,7 +35,7 @@ def get_startdate_obj(request):
 
 def get_startdate_fallback(request=None):
     """
-    Get the current startdate in request.session, OR 
+    Get the current startdate in request.session, OR
     fall back on the current date.
     """
     cd = datetime.datetime.now()

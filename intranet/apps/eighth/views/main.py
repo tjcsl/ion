@@ -1,4 +1,3 @@
-""" Main views """
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from intranet.apps.auth.decorators import eighth_admin_required, eighth_teacher_required

@@ -1,4 +1,3 @@
-""" Activities """
 from django.shortcuts import redirect, render
 from django.http import Http404
 from intranet.apps.auth.decorators import eighth_admin_required
@@ -70,7 +69,7 @@ def eighth_activities_edit(request, activity_id=None):
                 sp = EighthSponsor.objects.get(id=sponsor)
                 if sp not in act.sponsors.all():
                     act.sponsors.add(sp)
-            
+
         if 'rooms' in request.POST:
             rooms = request.POST.getlist('rooms')
             for room in act.rooms.all():
@@ -85,7 +84,7 @@ def eighth_activities_edit(request, activity_id=None):
         act.both_blocks = ('both_blocks' in request.POST)
         act.sticky = ('sticky' in request.POST)
         act.special = ('special' in request.POST)
-        
+
         #for i in ('restricted','presign','one_a_day','both_blocks','sticky','special'):
         #    if i in request.POST:
         #        setattr(act, i, (request.POST.get(i) is '1'))
@@ -200,18 +199,4 @@ def eighth_activities_schedule_form(request):
         return redirect("/eighth/activities/schedule/activity/{}".format(request.GET.get('activity')))
     else:
         raise Http404
-
-# class EighthActivityList(generics.ListAPIView):
-#     """API endpoint that allows viewing a list of eighth activities
-#     """
-#     queryset = EighthActivity.objects.all()
-#     serializer_class = EighthActivityDetailSerializer
-
-
-class EighthActivityDetail(generics.RetrieveAPIView):
-    """API endpoint that shows details of an eighth activity.
-    """
-    queryset = EighthActivity.objects.all()
-    serializer_class = EighthActivityDetailSerializer
-
 

@@ -1,4 +1,3 @@
-""" Activity sponsors """
 from django.shortcuts import redirect, render
 from django.http import Http404
 from intranet.apps.auth.decorators import eighth_admin_required

@@ -1,4 +1,3 @@
-""" Blocks """
 from rest_framework import generics, views
 from django.shortcuts import redirect, render
 from intranet.apps.eighth.models import EighthBlock
@@ -111,23 +110,4 @@ def eighth_blocks_add(request):
                 "blocks": ','.join(blockletters)
             }
         )
-
-class EighthBlockList(generics.ListAPIView):
-    """API endpoint that lists all eighth blocks
-    """
-    queryset = EighthBlock.objects.get_current_blocks()
-    serializer_class = EighthBlockListSerializer
-
-
-class EighthBlockDetail(views.APIView):
-    """API endpoint that shows details for an eighth block
-    """
-    def get(self, request, pk):
-        try:
-            block = EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(pk=pk)
-        except EighthBlock.DoesNotExist:
-            raise Http404
-
-        serializer = EighthBlockDetailSerializer(block, context={"request": request})
-        return Response(serializer.data)
 
