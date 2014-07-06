@@ -3,6 +3,7 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.forms import ModelForm
 from intranet.apps.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -205,6 +206,11 @@ class EighthScheduledActivity(models.Model):
 
     def __unicode__(self):
         return "{} on {}".format(self.activity.name, self.block)
+
+class EighthScheduledActivityForm(ModelForm):
+    class Meta:
+        model = EighthScheduledActivity
+        fields = ['block', 'activity', 'comment', 'sponsors', 'rooms']
 
 class EighthSignup(models.Model):
     """Represents a signup/membership in an eighth period activity.

@@ -1,5 +1,5 @@
 import logging
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from .models import Announcement
 from .forms import AnnouncementForm
@@ -7,7 +7,7 @@ from .forms import AnnouncementForm
 logger = logging.getLogger(__name__)
 
 
-@login_required
+#@perm_req("announcement.add_announcement")
 def add_announcement_view(request):
     success = False
     if request.method == 'POST':
@@ -20,7 +20,7 @@ def add_announcement_view(request):
     return render(request, 'announcements/addmodify.html', {"form": form, "action": "add", "success": success})
 
 
-@login_required
+#@perm_req("announcement.modify_announcement")
 def modify_announcement_view(request, id=None):
     success = False
     if request.method == 'POST':

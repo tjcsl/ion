@@ -1,0 +1,217 @@
+{% extends "eighth/page_eighth_admin.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content .sch-table {
+        width: 100%;
+    }
+
+    .sch-table {
+        display: table;
+        width: 100%;
+    }
+    .sch-table > form {
+        width: 100%;
+        display: table-footer-group; /* WHY? */
+    }
+
+    .sch-row {
+        display: table-row;
+        width: 100%;
+    }
+
+    .sch-col {
+        display: table-cell;
+        width: 16.6%;
+    }
+    .primary-content .sch-row.headings,
+    .primary-content .sch-col.block_propagate,
+    .primary-content .sch-col.block_save {
+        text-align: center;
+    }
+
+    .primary-content .sch-col  {
+        padding: 5px;
+    }
+
+    .primary-content .sch-row.headings .sch-col.selectall {
+        text-align: left;
+    }
+
+    .primary-content .sch-col.block_enabled {
+        width: 10px;
+    }
+
+    select:not([size]) {
+-webkit-appearance: menulist-button;
+background-color: #E0E0E0;
+background-image: -webkit-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -moz-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -ms-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: -o-linear-gradient(#E8E8E8, #D8D8D8);
+background-image: linear-gradient(#E8E8E8, #D8D8D8);
+border-style: solid;
+border-width: 1px;
+border-color: #D3D3D3;
+border-bottom-color: #B0B0B0;
+text-shadow: 0px 1px 0px white;
+color: #020202;
+}
+
+.select-container input {
+    font-size: 24px;
+}
+
+.select-container > form {
+    display: inline;
+}
+
+    .select-container {
+        width: 100%;
+    }
+    select.activity, select.activity option {
+        font-size: 18pt;
+        width: 90%;
+        width: calc(100% - 100px);
+    }
+.schact-roomslist {
+    position: absolute;
+    top: 200px;
+    left: 100px;
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+    background-color: yellow;
+    border: 2px solid black;
+    display: none;
+}
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+selectAll = function() {
+    for(i in j=document.querySelectorAll(".primary-content table td.block_enabled input")) {
+        j[i].checked=!j[i].checked;
+    }
+}
+
+roomsList = function(bid) {
+    $(".schact-roomslist").show().attr("data-bid", bid);
+}
+removeRoom = function(bid, rid) {
+    var fm = $("form[name='block"+bid+"']");
+    $(".block_rooms input[name=room]", fm).each(function(){
+        if($(this).attr('value') == rid) $(this).remove();
+    });
+    $(".block_rooms .room-"+rid, fm).remove();
+    $(".block_rooms", fm).append("<input type='hidden' name='room_delete' value='"+rid+"' />");
+}
+addRoom = function(rid, rt) {
+    var bid = $(".schact-roomslist").attr("data-bid");
+    var fm = $("form[name='block" + bid + "']");
+    $(".block_rooms", fm).append('<input type="hidden" name="room" value="'+rid+'" />');
+    $(".block_rooms > div", fm).append("<span class='room-"+rid+"'><b>"+rt+"</b> (<a href='#' onclick='removeRoom("+bid+","+rid+")'>Remove</a>)<br /></span>");
+    b = fm;
+}
+    </script>
+{% endblock %}
+
+{% block eighth-main %}
+    <div class="schact-roomslist">
+    <span style="position: absolute;right: 0;top: 0;cursor: pointer" onclick="$(this).parent().hide()">X</span>
+    <ul>
+        {% for room in rooms %}
+        <li><a href="#" onclick="addRoom({{ room.id }}, '{{ room.name }}')">{{ room.name }}</a></li>
+        {% endfor %}
+    </ul>
+    </div>
+    <h3 style="font-size: 24px">Schedule Activity</h3>
+    <div class="select-container">
+        <form action="/eighth/activities/schedule/form" method="get">
+        <select name="activity" class="activity" onchange="this.form.submit()">
+        {% for act in activities %}
+            <option value="{{ act.id }}"{% if act.id == activity.id %} selected{% endif %}>{{ act.name }}</option>
+        {% endfor %}
+        </select>
+        </form>
+        <form action="/eighth/activities/schedule/form" method="get">
+        <input name="activity" value="" placeholder="AID" onchange="this.form.submit()" size=4 />
+        </form>
+    </div>
+    {{ form }}
+    <div class="sch-table">
+        <div class="sch-row headings">
+            <div class="sch-col selectall">
+                <a href="javascript:;" onclick="selectAll()">Select All</a>
+            </div>
+            <div class="sch-col">Rooms</div>
+            <div class="sch-col">Sponsors</div>
+            <div class="sch-col">Comments</div>
+            <div class="sch-col">Propagate</div>
+            <div class="sch-col">Save</div>
+
+        </div>
+    {% for schblock in schblocks %}
+    <form name="block{{ schblock.block.id }}" action="/eighth/activities/schedule/activity/{{ schblock.activity.id }}/" method="post">
+  <div class="sch-row" id="block{{ schblock.block.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="block" value="{{ schblock.block.id }}" />
+    <input type="hidden" name="activity" value="{{ schblock.schact.activity.id }}" />
+        <div class="sch-col block_enabled">
+        <a name="block{{ schblock.block.id }}"></a>
+        <a name="schact{{ schblock.schact.id }}"></a>
+        <!--{% if schblock.schact %}
+            <i class='icon-ok'></i>
+        {% else %}
+            <i class='icon-remove'></i>
+        {% endif %}-->
+        <input type="checkbox" name="scheduled" value=1{% if schblock.schact %} checked{% endif %} />
+        </td>
+        <td class="block_day">
+        {{ schblock.block.date|date:'D N j' }}<br />
+        <a href="/eighth/blocks/edit/{{ schblock.block.id }}">
+        {{ schblock.block.block_letter }} Block
+        </a>
+        </div>
+        <div class="sch-col block_rooms">
+            <div>
+            {% for room in schblock.schact.rooms.all %}
+                <span class='room-{{ room.id }}'>
+                    <b>{{ room }}</b> (<a href="#" onclick="removeRoom({{ schblock.block.id }}, {{ room.id }})">Remove</a>)<br />
+                </span>
+            {% endfor %}
+            </div>
+                <a href="#" onclick="return roomsList({{ schblock.block.id }})">
+                    <i class='icon-plus'></i> Add Room
+                </a>
+        </div>
+        <div class="sch-col block_sponsors">
+            {% for sponsor in schblock.schact.sponsors.all %}
+                <a href="/eighth/sponsors/view#sponsor{{ sponsor.id }}">{{ sponsor }}</a>
+                <br />
+            {% endfor %}
+                <a href="#" onclick="return addSponsor({{ schblock.block.id }})">
+                    <i class='icon-plus'></i> Add Sponsor
+                </a>
+        </div>
+        <div class="sch-col block_comment">
+            <textarea name="comment" style="width: 100%">{{ schblock.schact.comment }}</textarea>
+        </div>
+        <div class="sch-col block_propagate">
+            <button onclick="propagate_up({{ block.id }})"><i class='icon-chevron-sign-up'></i></button> &nbsp;
+            <button onclick="propagate_down({{ block.id }})"><i class='icon-chevron-sign-down'></i></button>
+        </div>
+        <div class="sch-col block_save">
+            <input type="submit" name="confirm" value="Save" />
+        </div>
+    </div>
+  </div>
+  </form>
+    {% endfor %}
+    </table>
+{% endblock %}

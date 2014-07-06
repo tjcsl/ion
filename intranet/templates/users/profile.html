@@ -108,7 +108,7 @@ $(document).ready(function() {
                         </th>
                         <td>
                             {% for url in profile_user.webpages %}
-                            <a href="{{ url }}">{{ url|cut:"http://"|cut:"https://" }}</a>
+                            <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
                             {% if not forloop.last %}<br />{% endif %}
                             {% endfor %}
                         </td>

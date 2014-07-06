@@ -56,10 +56,44 @@
                 });
             }
         });
+
+        bgs = [
+            {"background-image": "http://i.imgur.com/RNp1Jf0.jpg", "background-position-x": "left", "credit": "James Woglom"},
+            {"background-image": "http://ppcdn.500px.org/73308057/2c506d8e866ef51e118f2feb2c286b6db89732bb/2048.jpg", "credit": "Paparwin Tanupatarachai"},
+            {"background-image": "https://farm6.staticflickr.com/5015/5476119516_3727b96440_o.jpg", "credit": "Robert O'Duill"},
+            {"background-image": "http://i.imgur.com/PLn0Owa.jpg", "credit": "SnackSnailowitz (Reddit)"},
+            {"background-image": "http://i.imgur.com/Es3PkWF.jpg", "credit": "Dima Moiseenko"},
+            {"background-image": "http://i.imgur.com/0UAglPO.jpg", "credit": "Trey Ratcliff"}
+        ], bgi = 0;
+
+        bgrotate = function() {
+            $("div.bgfade").fadeIn(500);
+            bgi++;
+            if(bgi == bgs.length) bgi = 0;
+            var dat = bgs[bgi];
+            console.log("Background", dat);
+            setTimeout(function() {
+            $("body").css("background-position-x", "center");
+            for(i in dat) {
+                if(i == "background-image") {
+                    $("body").css(i, "url("+dat[i]+")");
+                } else $("body").css(i, dat[i]);
+            }
+            $(".bgcredit").html(dat.credit ? "Photo by "+dat.credit : "");
+            $("div.bgfade").fadeOut(500);
+            }, 500);
+        }
+        $(document).ready(function() {
+            setInterval(bgrotate, 10000);
+        });
     </script>
 {% endblock %}
-
+{% block bodyclass %} bg{% endblock %}
 {% block body %}
+    <div class="devel-warning">
+        <b>This is not production software.</b>
+        This application is still in the process of being fully developed and tested. Visit the current TJ Intranet at <a href="https://iodine.tjhsst.edu">iodine.tjhsst.edu</a>.
+    </div>
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
         <div class="center">
             <div class="login">
@@ -100,11 +134,12 @@
                 Break: 2:55 - 3:10<br />
                 Period 8: 3:10 - 3:50
             -->
-            <iframe src="https://iodine.tjhsst.edu/ajax/dayschedule?&iframe" seamless=seamless allowtransparency=true width="310" height="350" style="position: absolute;left: 50%;margin-left: -155px;"></iframe>
+            <iframe src="https://iodine.tjhsst.edu/ajax/dayschedule?&iframe" seamless=seamless allowtransparency=true width="310" height="350"></iframe>
             </div>
         </div>
     </div>
     <div class="bg"></div>
+    <div class="bgfade"></div><div class="bgcredit"></div>
     <a class="verisign-seal-sm" target="_blank" title="Norton Secured Seal - Click to Verify" oncontextmenu="return false;" href="https://trustsealinfo.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=ion.tjhsst.edu&amp;lang=en" onclick="window.open(this.href, "norton", "menubar=no,location=yes,resizable=no,scrollbars=no,status=no,width=542,height=280"); return false">
         <img src="{% static "img/verisign-seal-sm.png" %}" oncontextmenu="return false;" alt="Norton Secured Seal - Click to Verify" />
     </a>

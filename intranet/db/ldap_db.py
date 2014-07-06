@@ -68,6 +68,7 @@ class LDAPConnection(object):
             try:
                 auth_tokens = ldap.sasl.gssapi()
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
+                logger.info("Connected.")
             except ldap.LOCAL_ERROR:
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.error("SASL bind failed - using simple bind")
