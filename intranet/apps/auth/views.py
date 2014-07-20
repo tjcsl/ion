@@ -9,7 +9,7 @@ from django.views.generic.base import View
 logger = logging.getLogger(__name__)
 
 
-def index(request, auth_form=None):
+def index_view(request, auth_form=None):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated():
         return dashboard_view(request)
@@ -41,11 +41,11 @@ class login_view(View):
             return redirect(next)
         else:
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
-            return index(request, auth_form=form)  # Modified to show errors
+            return index_view(request, auth_form=form)  # Modified to show errors
 
     def get(self, request):
         """Redirect to the login page."""
-        return index(request)
+        return index_view(request)
 
 
 def logout_view(request):

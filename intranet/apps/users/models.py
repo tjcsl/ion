@@ -10,7 +10,6 @@ from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
-from intranet import settings
 from intranet.middleware import threadlocals
 from django.contrib.auth.models import Group
 logger = logging.getLogger(__name__)
@@ -36,8 +35,6 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
-
-        
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Django User model subclass with properties that fetch data
@@ -186,19 +183,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         hash.update(signed)
         return hash.hexdigest()
 
-    def member_of(self, group_name):
+    def member_of(self, group):
         """Returns whether a user is a member of a certain group.
+
+        Args:
+            - group: the name of a group (string) or a group object
 
         Returns:
             Boolean
 
         """
 
-        if isinstance(group_name, Group):
-            group = group_name
-        else:
+        if not isinstance(group, Group):
             try:
-                group = Group.objects.get(name=group_name)
+                group = Group.objects.get(name=group)
             except Group.DoesNotExist:
                 return False
         return group in self.groups.all()
