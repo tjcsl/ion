@@ -2,12 +2,10 @@ import logging
 import ldap
 import ldap.sasl
 from threading import local
-from django.contrib.auth import logout
 from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
 from django.dispatch import receiver
 from intranet import settings
-from intranet.middleware import threadlocals
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -26,7 +24,6 @@ class LDAPFilter(object):
     def or_filter(*conditions):
         return LDAPFilter.operator("|", *conditions)
 
-
     @staticmethod
     def attribute_in_list(attribute, values):
         """Returns a filter for selecting all entries for which a
@@ -41,7 +38,7 @@ class LDAPFilter(object):
         """
 
         user_object_classes = settings.LDAP_OBJECT_CLASSES.values()
-        return LDAPFilter.attribute_in_list("objectclass",user_object_classes)
+        return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
 
 
 class LDAPConnection(object):
@@ -74,14 +71,12 @@ class LDAPConnection(object):
                 logger.error("SASL bind failed - using simple bind")
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
-
     @property
     def raw_connection(self):
         """Return the raw connection from threadlocals
         """
 
         return _thread_locals.ldap_conn
-
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
