@@ -31,7 +31,7 @@ def eighth_signup_view(request, block_id=None):
     surrounding_blocks = block.get_surrounding_blocks()
     schedule = []
 
-    signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__activity")
+    signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity.activity.name for s in signups}
 
     for b in surrounding_blocks:
@@ -68,5 +68,5 @@ def eighth_signup_view(request, block_id=None):
         "active_block": block,
         "cur_signup_id": cur_signup_id
     }
-
+    logger.debug("start rendering")
     return render(request, "eighth/signup.html", context)
