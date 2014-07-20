@@ -25,7 +25,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="eighth_block_detail")
+    url = serializers.HyperlinkedIdentityField(view_name="api_eighth_block_detail")
 
     class Meta:
         model = EighthBlock
@@ -53,13 +53,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_info = {
                 "id": scheduled_activity.activity.id,
                 "scheduled_activity": scheduled_activity.id,
-                "url": reverse("eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
+                "url": reverse("api_eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
                 "roster": {
                     "count": 0,
                     "capacity": 0,
-                    "url": reverse("eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"])
+                    "url": reverse("api_eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"])
                 },
                 "rooms": [],
                 "sponsors": []
@@ -191,7 +191,7 @@ class EighthSignupSerializer(serializers.ModelSerializer):
     def block_info(self, signup):
         return {
             "id": signup.scheduled_activity.block.id,
-            "url": reverse("eighth_block_detail", args=[signup.scheduled_activity.block.id], request=self.context["request"])
+            "url": reverse("api_eighth_block_detail", args=[signup.scheduled_activity.block.id], request=self.context["request"])
         }
 
     def activity_info(self, signup):
