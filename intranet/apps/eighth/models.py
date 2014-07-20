@@ -3,6 +3,7 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.http import Http404
 from django.forms import ModelForm
 from intranet.apps.users.models import User
 
@@ -36,6 +37,7 @@ class EighthSponsor(models.Model):
             f = ""
         return "{}, {}".format(l, f)
 
+
 class EighthRoom(models.Model):
     """Represents a room in which an eighth period activity can be held
 
@@ -51,6 +53,7 @@ class EighthRoom(models.Model):
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
+
 
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
@@ -89,18 +92,16 @@ class EighthBlockManager(models.Manager):
 
         # Show same day if it's before 17:00
         if now.hour < 17:
-           now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
         try:
-            block_id = self \
-                                  .order_by("date", "block_letter") \
-                                  .filter(date__gte=now)[0] \
-                                  .id
+            block_id = self.order_by("date", "block_letter") \
+                           .filter(date__gte=now)[0] \
+                           .id
         except IndexError:
-            block_id = self \
-                                  .order_by("-date", "-block_letter") \
-                                  .filter(date__lte=now)[0] \
-                                  .id
+            block_id = self.order_by("-date", "-block_letter") \
+                           .filter(date__lte=now)[0] \
+                           .id
         return block_id
 
     def get_current_blocks(self):
@@ -112,6 +113,7 @@ class EighthBlockManager(models.Manager):
             raise Http404
 
         return block.get_surrounding_blocks()
+
 
 class EighthBlock(models.Model):
     """Represents an eighth period block.
@@ -131,12 +133,13 @@ class EighthBlock(models.Model):
                                         through="EighthScheduledActivity")
 
     objects = EighthBlockManager()
+
     def next_blocks(self, quantity=-1):
-        blocks =  EighthBlock.objects \
-                             .order_by("date", "block_letter") \
-                             .filter(Q(date__gt=self.date)
-                              | (Q(date=self.date)
-                              & Q(block_letter__gt=self.block_letter)))
+        blocks = EighthBlock.objects \
+                            .order_by("date", "block_letter") \
+                            .filter(Q(date__gt=self.date)
+                                    | (Q(date=self.date)
+                                    & Q(block_letter__gt=self.block_letter)))
         if quantity == -1:
             return blocks
         return blocks[:quantity]
@@ -145,8 +148,8 @@ class EighthBlock(models.Model):
         blocks = EighthBlock.objects \
                             .order_by("-date", "-block_letter") \
                             .filter(Q(date__lt=self.date)
-                             | (Q(date=self.date)
-                             & Q(block_letter__lt=self.block_letter)))
+                                    | (Q(date=self.date)
+                                    & Q(block_letter__lt=self.block_letter)))
         if quantity == -1:
             return reversed(blocks)
         return reversed(blocks[:quantity])
@@ -154,7 +157,6 @@ class EighthBlock(models.Model):
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.
            Returns: a list of all of those blocks."""
-        
 
         next = self.next_blocks()
         prev = self.previous_blocks()
@@ -207,10 +209,12 @@ class EighthScheduledActivity(models.Model):
     def __unicode__(self):
         return "{} on {}".format(self.activity.name, self.block)
 
+
 class EighthScheduledActivityForm(ModelForm):
     class Meta:
         model = EighthScheduledActivity
         fields = ['block', 'activity', 'comment', 'sponsors', 'rooms']
+
 
 class EighthSignup(models.Model):
     """Represents a signup/membership in an eighth period activity.
