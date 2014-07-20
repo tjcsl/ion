@@ -77,6 +77,7 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.panels.versions.VersionsPanel",
         "debug_toolbar.panels.timer.TimerPanel",
         # "debug_toolbar.panels.profiling.ProfilingPanel",
+        "debug_toolbar_line_profiler.panel.ProfilingPanel",
         "debug_toolbar.panels.settings.SettingsPanel",
         "debug_toolbar.panels.headers.HeadersPanel",
         "debug_toolbar.panels.request.RequestPanel",

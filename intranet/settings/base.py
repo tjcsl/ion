@@ -209,7 +209,9 @@ INSTALLED_APPS = (
     "intranet.apps.search",
     #"intranet.apps.groups",
     "intranet.apps.schedule",
-    "intranet.middleware.environment"
+    "intranet.middleware.environment",
+    "debug_toolbar_line_profiler",
+
 )
 
 # A sample logging configuration. The only tangible logging
