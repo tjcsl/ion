@@ -3,7 +3,7 @@ import uuid
 import os
 import logging
 from intranet import settings
-from intranet.apps.users.models import User
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 

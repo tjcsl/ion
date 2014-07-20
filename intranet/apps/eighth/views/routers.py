@@ -1,5 +1,6 @@
 """
-Views that render differently depending on the user that requests them.
+Views that redirect to different places depending on the user that
+requests them.
 """
 
 from django.contrib.auth.decorators import login_required

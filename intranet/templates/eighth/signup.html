@@ -1,0 +1,182 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load math %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.scrollto.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/json2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/backbone-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/spin.min.js' %}"></script>
+    <script type="text/javascript">
+        window.loadModels = function() {
+            window.activityModels = new eighth.ActivityList();
+            data = _.values($.parseJSON("{{ activities_list|escapejs }}"));
+            activityModels.reset(data);
+        }
+    </script>
+    <script type="text/javascript" src="{% static 'js/eighth/eighth.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/signups.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/responsive.eighth.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <script type="text/template" id="activity-details-template">
+        {% verbatim %}
+        <h3>
+            <%= name %>
+        </h3>
+        <dl>
+            <dt>Rooms:</dt>
+            <dd>
+                <% rooms = _.uniq(rooms)%>
+                <% if (rooms.length != 0) {%>
+                        <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
+                <%} else {%>
+                    <br />
+                <%}%>
+            </dd>
+            <dt>Sponsors:</dt>
+            <dd>
+                <% sponsors = _.uniq(sponsors) %>
+                <% if (sponsors.length != 0) {%>
+                        <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
+                <%} else {%>
+                    <br />
+                <%}%>
+            </dd>
+
+            <dt>Capacity:</dt><dd><% if (roster.capacity == -1 || roster.capacity == 0) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
+            <div><%= roster.count %> students have already signed up.</div>
+
+            <% if (description) {%>
+                <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
+            <%}%>
+
+            <div id="signup-section">
+                <button id="signup-button">
+                    Sign Up
+                </button>
+                <div id="signup-spinner-container">
+                    <div id="signup-spinner"></div>
+                </div>
+            </div>
+        </dl>
+        {% endverbatim %}
+    </script>
+    <div class="primary-content">
+        <div class="day-picker">
+            <button class="day-nav earlier-days">
+                <i class="icon-chevron-left"></i>
+            </button>
+
+            <button class="day-nav later-days">
+                <i class="icon-chevron-right"></i>
+            </button>
+            <ul class="days-container">
+                {% spaceless %}
+                    {% for day in block_info.schedule %}
+                        <li class="day">
+                            <div class="block-title">
+                                {{ day.date|date:"M d, Y" }}
+                            </div>
+                                {% for b in day.blocks %}
+                                    <a href="{% url 'eighth_signup' b.id %}" data-bid="{{ b.id }}">
+                                        <div class="block{% if active_block.id = b.id %} active-block{% endif %}">
+                                            <span class="block-letter">
+                                                {{ b.block_letter }}
+                                            </span>
+                                            {{ b.current_signup }}
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                        </li>
+                    {% endfor %}
+                {% endspaceless %}
+            </ul>
+        </div>
+
+        <div class="middle">
+            <div class="block-title">
+                <h2>
+                    {{ block_info.date|date:"M d, Y" }}
+                </h2>
+                <h4>
+                    {{ block_info.block_letter }} Block
+                </h4>
+            </div>
+
+            <div class="switch">
+                <i class="icon-chevron-up up"></i>
+                <i class="icon-chevron-down down"></i>
+            </div>
+
+            <!--div class="controls">
+                <i class="icon-wrench icon-2x overflow-icon"></i>
+                <button>Hide Restricted</button>
+                <button>Jump to Date</button>
+                <button>Manage Favorites</button>
+                <button>Manage Absences</button>
+            </div-->
+        </div>
+
+        <div id="activity-picker" class="hidden-detail">
+            <div class="search-wrapper">
+                <i class="icon-search"></i>
+                <span>
+                    <input type="text" placeholder="Search">
+                </span>
+            </div>
+            <div id="activity-list">
+                <div class="backbtn">
+                    <i class='icon-chevron-left'></i>
+                </div>
+                <!--
+                <h5 class="sticky-header">Favorites</h5>
+                <ul class="favorite-activities">
+                    {% for id, b in block_info.activities.items %}
+                        {% if forloop.counter0 < 10 %}
+                            <li data-activity-id="{{ id }}">
+                                <span class="activity-icons">
+                                    <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
+                                </span>
+                                <span class="activity-name">{{ b.name }}</span>
+                                <span class="sponsor-name"></span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                -->
+                <h5 class="sticky-header">All</h5>
+                <ul class="all-activities">
+                    {% for id, b in block_info.activities.items %}
+                        <li data-activity-id="{{ id }}"{% if cur_signup_id == id %} class="signedup"{% endif %}>
+                        
+                            <span class="activity-icons">
+                                <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
+                            </span>
+                            <span class="activity-name">{{ b.name }}</span>
+                            <span class="sponsor-name"></span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div id="activity-detail" data-bid="{{ block_info.id }}">
+                <h3 class="empty-state">
+                    Select an activity
+                </h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}

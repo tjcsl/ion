@@ -2,9 +2,9 @@ import logging
 from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from ..users.models import User
 from .models import EighthBlock, EighthActivity, EighthSignup, EighthSponsor, EighthScheduledActivity
-from intranet.apps.users.models import User
-# from intranet.apps.users.serializers import UserSerializer
+
 
 logger = logging.getLogger(__name__)
 

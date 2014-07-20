@@ -1,8 +1,8 @@
 import elasticsearch
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from intranet.apps.users.models import User
-from intranet.apps.users.views import profile_view
+from ..users.models import User
+from ..users.views import profile_view
 
 
 @login_required

@@ -1,29 +1,17 @@
+import logging
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render
 from rest_framework.renderers import JSONRenderer
-from intranet.apps.eighth.serializers import EighthBlockDetailSerializer
 from ..models import EighthBlock, EighthSignup
+from ..serializers import EighthBlockDetailSerializer
 
 
-import logging
 logger = logging.getLogger(__name__)
 
 
+@login_required
 def eighth_signup_view(request, block_id=None):
-
-    # if 'confirm' in request.POST:
-    #     """Actually sign up"""
-    #     signup = signup_student(
-    #         request,
-    #         request.user,
-    #         request.POST.get('bid'),
-    #         request.POST.get('aid')
-    #     )
-
-    #     # TODO: This should be done in the API
-    #     if isinstance(signup, EighthSignup):
-    #         return HttpResponse("success")
-
     if block_id is None:
         block_id = EighthBlock.objects.get_next_block()
 

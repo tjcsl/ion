@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Q
 from django.http import Http404
 from django.forms import ModelForm
-from intranet.apps.users.models import User
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 

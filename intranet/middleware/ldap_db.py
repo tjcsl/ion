@@ -5,9 +5,9 @@ import urllib
 import urlparse
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from intranet.apps.auth.views import login_view
-from intranet.db.ldap_db import LDAPConnection
-from intranet.utils import urls
+from ..apps.auth.views import login_view
+from ..db.ldap_db import LDAPConnection
+from ..utils import urls
 
 logger = logging.getLogger(__name__)
 

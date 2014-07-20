@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.http import HttpResponse
-from intranet.apps.users.models import User
+from ..users.models import User
 from .forms import GroupForm
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def add_group_view(request):
 	    "action": "add",
 	    "success": success
 	}
-    return render(request, "groups/addmodify.html", context)	    
+    return render(request, "groups/addmodify.html", context)
 
 # success = False
 # if request.method == 'POST':

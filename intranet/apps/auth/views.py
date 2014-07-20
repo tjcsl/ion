@@ -1,6 +1,6 @@
 import os
 import logging
-from intranet.apps.dashboard.views import dashboard_view
+from ..dashboard.views import dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout

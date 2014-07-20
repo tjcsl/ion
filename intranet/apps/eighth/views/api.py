@@ -1,8 +1,8 @@
 from django.http import Http404
 from rest_framework import generics, views
 from rest_framework.response import Response
-from .models import EighthActivity, EighthBlock, EighthSignup
-from .serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityDetailSerializer, EighthSignupSerializer
+from ..models import EighthActivity, EighthBlock, EighthSignup
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityDetailSerializer, EighthSignupSerializer
 
 
 # class EighthActivityList(generics.ListAPIView):
