@@ -21,8 +21,13 @@
     margin-bottom: 5px;
 }
 
-.day-nav, .day-nav:hover, .day-nav:active {
-    position: relative;
+.day-picker-buttons {
+    height: 100px;
+    width: 100%;
+}
+
+.day-picker-buttons button, .day-picker-buttons button:hover, .day-picker-buttons button:active {
+    position: absolute;
     display: inline-block;
     width: 30px;
     height: 100%;
@@ -36,18 +41,18 @@
 }
 
 .earlier-days {
-    float: left;
     border: none;
     border-right: 1px solid rgb(216, 216, 216);
 }
 
 .later-days {
-    float: right;
+    right: 0;
     border: none;
     border-left: 1px solid rgb(216, 216, 216);
 }
 
-.day-nav i {
+
+.day-picker-buttons button i {
     left: 50%;
     top: 50%;
 }
@@ -62,10 +67,20 @@
     outline: 1px solid rgb(216, 216, 216);
 }
 
+.active-block {
+    background-color: rgb(228, 228, 228);
+}
+
+.active-block:not(:hover) .block-letter {
+    background-color: rgb(252,252,252);
+}
+
 .days-container {
-    position: absolute;
     padding: 0;
-    margin-left: 0;
+    margin-left: 30px;
+    margin-right: 29px; /* Account for 1px margin-right on .day */
+    overflow: hidden;
+    text-align: center;
 }
 
 
@@ -78,12 +93,17 @@
 
 .block {
     height: 32px;
+    line-height: 32px;
     display: block;
     padding: 3px;
 }
 
 .block:hover {
     background-color: rgb(252,252,252);
+}
+
+.day {
+    text-align: left;
 }
 
 .day a, .day a:hover {

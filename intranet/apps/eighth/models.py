@@ -142,7 +142,7 @@ class EighthBlock(models.Model):
                                     & Q(block_letter__gt=self.block_letter)))
         if quantity == -1:
             return blocks
-        return blocks[:quantity]
+        return blocks[:quantity + 1]
 
     def previous_blocks(self, quantity=-1):
         blocks = EighthBlock.objects \
@@ -152,7 +152,7 @@ class EighthBlock(models.Model):
                                     & Q(block_letter__lt=self.block_letter)))
         if quantity == -1:
             return reversed(blocks)
-        return reversed(blocks[:quantity])
+        return reversed(blocks[:quantity + 1])
 
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.
