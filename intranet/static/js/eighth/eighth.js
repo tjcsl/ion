@@ -1,15 +1,18 @@
 // Scripts for initial layout, sticky headers, etc.
 
 function centerCurrentDay() {
-    var $day = $(".centered-day");
+    var $activeBlock = $(".active-block");
+    var $day = $activeBlock.parents(".day");
     var dayWidth = $(".day:first").width() + 1;
     var numPrevDays = $day.prevAll().length;
     var containerWidth = $(".days-container").width();
     var scrollCenter =  numPrevDays * dayWidth - (containerWidth - dayWidth) / 2;
 
+    // Scroll to day
     $(".days-container").scrollLeft(scrollCenter);
-    updateDayNavButtonStatus();
 
+    // Scroll to block if more than two blocks on the day
+    $activeBlock.parents(".blocks.many-blocks").scrollTo($activeBlock);
 }
 
 function updateDayNavButtonStatus() {
@@ -30,38 +33,26 @@ function updateDayNavButtonStatus() {
 
 
 $(function() {
-    $(".active-block").parents(".day").addClass("centered-day");
     centerCurrentDay();
+    updateDayNavButtonStatus();
 
     $(window).resize(function() {
-        centerCurrentDay();
+        updateDayNavButtonStatus();
     });
 
+    $(".days-container").scroll(function() {
+        updateDayNavButtonStatus();
+    })
 
 
     $(".day-picker-buttons button").click(function(e) {
-
-        var $currentlyCenteredDay = $(".centered-day");
-
         var scrollLeft = ($(".day").width() + 1) + "px"
         if ($(e.target).parents().andSelf().hasClass("later-days")) {
             // Right button clicked
             scrollLeft = "+=" + scrollLeft;
-
-            var $next = $currentlyCenteredDay.next();
-            if ($next) {
-                $currentlyCenteredDay.removeClass("centered-day");
-                $next.addClass("centered-day");
-            }
         } else {
             // Left button clicked
             scrollLeft = "-=" + scrollLeft;
-
-            var $prev = $currentlyCenteredDay.prev();
-            if ($prev) {
-                $currentlyCenteredDay.removeClass("centered-day");
-                $prev.addClass("centered-day");
-            }
         }
 
         $(".days-container").animate({

@@ -19,6 +19,13 @@
     overflow: hidden;
     white-space: nowrap;
     margin-bottom: 5px;
+
+
+    /* The transform stuff is to fix a dumb webkit bug
+       http://stackoverflow.com/questions/10314207/webkit-not-respecting-overflowhidden-with-border-radius
+    */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .day-picker-buttons {
@@ -79,16 +86,25 @@
     padding: 0;
     margin-left: 30px;
     margin-right: 29px; /* Account for 1px margin-right on .day */
+    /* Replace overflow:hidden with this to enable mouse scrolling of blocks;
+       overflow-y: hidden;
+       overflow-x: scroll;
+    */
     overflow: hidden;
     text-align: center;
 }
 
 
-.day-picker .block-title {
+.day-picker .day-title {
     height: 24px;
     display: block;
     font-size: 16px;
     text-align: center;
+}
+
+.blocks {
+    height: 76px;
+    overflow-y: scroll;
 }
 
 .block {
@@ -96,6 +112,11 @@
     line-height: 32px;
     display: block;
     padding: 3px;
+}
+
+.many-blocks .block {
+    height: 25px;
+    line-height: 25px;
 }
 
 .block:hover {
@@ -159,6 +180,12 @@
     border-radius: 5px;
     border: 1px solid rgb(216, 216, 216);
     overflow: hidden;
+
+    /* The transform stuff is to fix a dumb webkit bug
+       http://stackoverflow.com/questions/10314207/webkit-not-respecting-overflowhidden-with-border-radius
+    */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 
 }
 
