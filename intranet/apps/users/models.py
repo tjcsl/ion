@@ -202,14 +202,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         return group in self.groups.all()
 
     def has_admin_permission(self, perm):
-        """Returns whether a user is in the {perm}_all group
+        """Returns whether a user has an admin permission (explicitly,
+        or implied by being in the "admin_all" group)
 
         Returns:
             Boolean
 
         """
 
-        return self.member_of("admin_all") or self.member_of("admin_"+perm)
+        return self.member_of("admin_all") or self.member_of("admin_" + perm)
 
     @property
     def full_name(self):
@@ -625,18 +626,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "tjhsstStudent"
 
     @property
-    def is_staff(self):
-        """Checks if a user has django admin priveleges.
-
-        Returns:
-            Boolean
-
-        """
-
-        #return self.username in settings.ADMIN_USERS
-        return self.member_of("admin_all")
-
-    @property
     def is_attendance_user(self):
         """Checks if user is an attendance-only user.
 
@@ -833,10 +822,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "is_list": True
             },
         }
-
-        #if name == "is_staff" and self.username in settings.ADMIN_USERS:
-        #    return True
-
 
         if name not in user_attributes:
             raise AttributeError("'User' has no attribute '{}'".format(name))

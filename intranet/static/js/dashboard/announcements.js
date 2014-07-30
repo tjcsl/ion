@@ -8,16 +8,11 @@ $(document).ready(function() {
 
         if(!confirm("Delete announcement \"" + announcement_title + "\"")) return;
 
-        // TODO: Possibly POST to /api
-        post("/announcements/delete",
+        $.post("/announcements/delete",
              {"id": announcement_id},
-             function(d) {
+             function(data, textStatus, xhr) {
                 $(".announcement[data-id=" + announcement_id + "]").slideUp();
-                $(".ajax-message").html("Successfully deleted announcement.")
-                                  .click(function() {
-                                    $(this).slideUp();
-                                  })
-                                  .slideDown();
+                alert("Successfully deleted announcement.");
             }
         );
     });
