@@ -130,10 +130,10 @@
     <h2>
         Announcements
         <span class="announcements-icon-wrapper">
-            <div class="button announcement-add">
+            <a class="button announcement-add" href="{% url 'add_announcement' %}">
                 <i class="icon-plus"></i>
                 Add
-            </div>
+            </a>
         </span>
     </h2>
     <div class="announcements-container">
@@ -145,8 +145,8 @@
                     <a href="{% url 'modify_announcement' announcement.id %}">
                         <i class="announcement-icon icon-pencil"></i>
                     </a>
-                    <a href="" onclick="return false">
-                        <i class="announcement-icon icon-trash announcement-delete" data-id="{{ announcement.id }}"></i>
+                    <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                        <i class="announcement-icon icon-trash"></i>
                     </a>
                 </div>
             </h3>
@@ -161,11 +161,9 @@
     {% endfor %}
     </div>
     <div class="content-center">
-        <a href="/archive">
-            <div class="button">
+        <a href="/archive" class="button">
                 <i class="icon-archive"></i>
                 Archive
-            </div>
         </a>
     </div>
 </div>

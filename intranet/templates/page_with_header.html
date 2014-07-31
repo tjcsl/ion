@@ -5,17 +5,43 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.core.css' %}" />
-    <!--[if IE 7]>
-        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/messenger/build/css/messenger.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/messenger/build/css/messenger-theme-flat.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/lib/jquery-ui-1.10.3.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/responsive.core.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/messenger/build/js/messenger.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/messenger/build/js/messenger-theme-flat.js' %}"></script>
+
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
+            Messenger.options = {
+                extraClasses: "messenger-fixed messenger-on-bottom messenger-on-right",
+                theme: "flat",
+                messageDefaults: {
+                    hideAfter: 4,
+                    showCloseButton: true
+                }
+            }
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level >= 30 %}
+                        Messenger().error("{{ message|escapejs }}");
+                    {% elif message.level == 25 %}
+                        Messenger().success("{{ message|escapejs }}");
+                    {% else %}
+                        Messenger().info("{{ message|escapejs }}");
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+
+
+        $(function() {
             var time = 150;
 
             var clickInside = function(event) {

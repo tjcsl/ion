@@ -1,5 +1,7 @@
 import logging
-from django.shortcuts import render
+from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from ..auth.decorators import announcements_admin_required
 from .models import Announcement
 from .forms import AnnouncementForm
@@ -9,30 +11,30 @@ logger = logging.getLogger(__name__)
 
 @announcements_admin_required
 def add_announcement_view(request):
-    success = False
     if request.method == 'POST':
         form = AnnouncementForm(request.POST)
         if form is not None and form.is_valid():
             form.save()
-            success = True
+            messages.success(request, "Successfully added announcement.")
+            return redirect("index")
     else:
         form = AnnouncementForm()
-    return render(request, 'announcements/addmodify.html', {"form": form, "action": "add", "success": success})
+    return render(request, 'announcements/add_modify.html', {"form": form, "action": "add"})
 
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
-    success = False
     if request.method == 'POST':
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form is not None and form.is_valid():
             form.save()
-            success = True
+            messages.success(request, "Successfully modified announcement.")
+            return redirect("index")
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, 'announcements/addmodify.html', {"form": form, "action": "modify", "id": id, "success": success})
+    return render(request, 'announcements/add_modify.html', {"form": form, "action": "modify", "id": id})
 
 
 @announcements_admin_required
@@ -43,4 +45,5 @@ def delete_announcement_view(request):
     except AttributeError:
         post_id = None
     Announcement.objects.get(id=post_id).delete()
-    return render(request, "success.html", {})
+
+    return HttpResponse(status=204)
