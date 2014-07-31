@@ -19,7 +19,7 @@ urlpatterns = [
     url(r"^groups/", include("intranet.apps.groups.urls")),
     url(r"^polls/", include("intranet.apps.polls.urls")),
     url(r"^search/", include("intranet.apps.search.urls")),
-    url(r"^users/", include("intranet.apps.users.urls")),
+    url(r"^profile/", include("intranet.apps.users.urls")),
 
     url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]
