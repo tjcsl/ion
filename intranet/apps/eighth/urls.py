@@ -1,6 +1,7 @@
-from django.conf.urls import url
+from django.conf.urls import include, url
 from .views import routers, student_signup, teacher_attendance
-from .views.admin import general
+from .views.admin.general import (
+    eighth_admin_index_view, EighthAdminExampleWizard)
 
 
 urlpatterns = [
@@ -13,6 +14,14 @@ urlpatterns = [
     url(r"^attendance$", teacher_attendance.eighth_teacher_attendance_view, name="eighth_teacher_attendance"),
 
     # Admin
-    url(r"^admin$", general.eighth_admin_index_view, name="eighth_admin_index"),
+    url(r"^admin$", eighth_admin_index_view, name="eighth_admin_index"),
+]
 
+
+eighth_admin_patterns = [
+    url(r"^example$", EighthAdminExampleWizard.as_view(EighthAdminExampleWizard.FORMS), name="eighth_admin_form_example"),
+]
+
+urlpatterns += [
+    url(r"^admin/", include(eighth_admin_patterns)),
 ]

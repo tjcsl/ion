@@ -1,0 +1,35 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+    <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+    <form action="" method="post">{% csrf_token %}
+    <table>
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+            {{ form }}
+        {% endfor %}
+    {% else %}
+        {{ wizard.form }}
+    {% endif %}
+    </table>
+    {% if wizard.steps.prev %}
+    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">first step</button>
+    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">prev step</button>
+    {% endif %}
+    <input type="submit" value="submit"/>
+    </form>
+
+    {% if form_data %}
+    {{ form_data }}
+    {% endif %}
+</div>
+{% endblock %}
