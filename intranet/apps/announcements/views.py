@@ -1,13 +1,13 @@
 import logging
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from ..auth.decorators import announcements_admin_required
 from .models import Announcement
 from .forms import AnnouncementForm
 
 logger = logging.getLogger(__name__)
 
 
-#@perm_req("announcement.add_announcement")
+@announcements_admin_required
 def add_announcement_view(request):
     success = False
     if request.method == 'POST':
@@ -20,7 +20,7 @@ def add_announcement_view(request):
     return render(request, 'announcements/addmodify.html', {"form": form, "action": "add", "success": success})
 
 
-#@perm_req("announcement.modify_announcement")
+@announcements_admin_required
 def modify_announcement_view(request, id=None):
     success = False
     if request.method == 'POST':
@@ -35,7 +35,7 @@ def modify_announcement_view(request, id=None):
     return render(request, 'announcements/addmodify.html', {"form": form, "action": "modify", "id": id, "success": success})
 
 
-
+@announcements_admin_required
 def delete_announcement_view(request):
     post_id = None
     try:

@@ -15,5 +15,6 @@ def admin_required(group):
     return user_passes_test(in_admin_group)
 
 
-# Convenience decorator for the many views that require eighth admin.
+# Convenience decorators for some of the apps
 eighth_admin_required = admin_required("eighth")
+announcements_admin_required = admin_required("announcements")
