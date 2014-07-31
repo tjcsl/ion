@@ -659,17 +659,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.user_type == "simpleUser"
 
-    @property
-    def is_superuser(self):
-        """Checks if user should have superuser privileges
-
-        Returns:
-            Boolean
-
-        """
-
-        return self.member_of("admin_all")
-
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
 
