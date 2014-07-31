@@ -15,8 +15,5 @@ def admin_required(group):
     return user_passes_test(in_admin_group)
 
 
-def eighth_admin_required():
-    """Convenience decorator for the many views that require eighth
-    admin.
-    """
-    return admin_required("eighth")
+# Convenience decorator for the many views that require eighth admin.
+eighth_admin_required = admin_required("eighth")

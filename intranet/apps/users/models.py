@@ -626,6 +626,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "tjhsstStudent"
 
     @property
+    def is_staff(self):
+        """Checks if a user should have access to the Django Admin
+        interface.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.member_of("admin_all")
+
+    @property
     def is_attendance_user(self):
         """Checks if user is an attendance-only user.
 
@@ -647,6 +659,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.user_type == "simpleUser"
 
+    @property
     def is_superuser(self):
         """Checks if user should have superuser privileges
 
