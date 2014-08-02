@@ -7,11 +7,12 @@ class BlockSelectionForm(forms.Form):
 
 
 class ActivitySelectionForm(forms.Form):
-    activity = forms.ModelChoiceField(queryset=EighthActivity.objects.all(), empty_label="Select an activity")
+    def __init__(self, block=None, *args, **kwargs):
+        super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
+        if block is None:
+            queryset = EighthActivity.objects.all()
+        else:
+            queryset = block.activities.all()
 
-class BlockFilteredActivitySelectionForm(ActivitySelectionForm):
-    def __init__(self, block=None, **kwargs):
-        if block is not None:
-            self.activity = forms.ModelChoiceField(queryset=block.activities.all(), empty_label="Select an activity")
-        super(BlockFilteredActivitySelectionForm, self).__init__(**kwargs)
+        self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, empty_label="Select an activity")

@@ -24,7 +24,14 @@ class EighthAdminExampleWizard(SessionWizardView):
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
+    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step == "activity":
+            block = self.get_cleaned_data_for_step("block")["block"]
+            kwargs.update({"block": block})
+        return kwargs
+
     def done(self, form_list, **kwargs):
-        messages.info(self.request, 'Successfully did something')
+        messages.info(self.request, "Successfully did something")
 
         return redirect("eighth_admin_index")

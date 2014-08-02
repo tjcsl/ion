@@ -1,10 +1,10 @@
 var eighth = {};
 var previousSelection = $("#activity-list li")[0];
 
-$(document).ready(function() {
+$(function() {
 
     eighth.signUp = function(bid, aid) {
-        $.post("/eighth/signup/block/"+bid, {
+        $.post("/eighth/signup/" + bid, {
             "bid": bid,
             "aid": aid,
             "confirm": true
@@ -26,6 +26,7 @@ $(document).ready(function() {
             } else alert(d);
         })
     };
+
     eighth.Activity = Backbone.Model.extend({
         idAttribute: "id"
     });
