@@ -12,18 +12,58 @@
                 <button>Add</button>
             </form>
 
-            <h4>Activity Details</h4>
+            <h4>Edit Activity</h4>
+            <select placeholder="Select or search for an activity">
+                {% for activity in all_activities %}
+                    <option value="{{ activity.id }}">{{ activity.id }}: {{ activity.name }}</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <button>Edit</button>
+            </div>
         </td>
         <td>
             <h3>Blocks</h3>
+
+            <h4>Add Block</h4>
+            <form action="">
+                <input type="text" placeholder="Date">
+                <input type="text" placeholder="Block Letter">
+                <button>Add</button>
+            </form>
+
+            <h4>Block Actions</h4>
+            <select placeholder="Select or search for a block">
+                {% for block in blocks_after_start_date %}
+                    <option value="{{ block.id }}">{{ block.id }}: {{ block.date|date:"D., N j, Y" }} ({{ block.block_letter }})</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <button>Print Rosters</button>
+                <button>Edit Block</button>
+            </div>
         </td>
     </tr>
     <tr>
         <td>
             <h3>Scheduling</h3>
+            <ul class="fa-ul">
+                <li><a href=""><i class="fa-li fa fa-eye"></i>View scheduled activity</a></li>
+                <li><a href=""><i class="fa-li fa fa-list-alt"></i>Schedule an activity</a></li>
+                <li><a href=""><i class="fa-li fa fa-calendar"></i>View when an activity is scheduled</a></li>
+                <li><a href=""><i class="fa-li fa fa-share"></i>Move students from one scheduled activity to another</a></li>
+            </ul>
         </td>
         <td>
             <h3>Attendance</h3>
+            <ul class="fa-ul">
+                <li><a href=""><i class="fa-li fa fa-check-square"></i>View/take attendance</a></li>
+                <li><a href=""><i class="fa-li fa fa-gavel"></i>View delinquent students</a></li>
+                <li><a href=""><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
+                <li><a href=""><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
+                <li><a href=""><i class="fa-li fa fa-ban"></i>Reject all outstanding passes</a></li>
+                <li><a href=""><i class="fa-li fa fa-building"></i>Export out-of-building schedules</a></li>
+            </ul>
         </td>
     </tr>
     <tr>

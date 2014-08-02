@@ -10,10 +10,14 @@ from ...utils import get_start_date
 @eighth_admin_required
 def eighth_admin_dashboard_view(request):
     start_date = get_start_date(request)
+    all_activities = EighthActivity.objects.order_by("name")
+    blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date)\
+                                                 .order_by("date")
+
     context = {
         "start_date": start_date,
-        "all_activities": EighthActivity.objects.all(),
-        "blocks_after_start_date": EighthBlock.objects.filter(date__gte=start_date)
+        "all_activities": all_activities,
+        "blocks_after_start_date": blocks_after_start_date
     }
     return render(request, "eighth/admin/dashboard.html", context)
 
