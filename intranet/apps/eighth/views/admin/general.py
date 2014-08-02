@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import Group
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
@@ -13,11 +14,13 @@ def eighth_admin_dashboard_view(request):
     all_activities = EighthActivity.objects.order_by("name")
     blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date)\
                                                  .order_by("date")
+    groups = Group.objects.order_by("name")
 
     context = {
         "start_date": start_date,
         "all_activities": all_activities,
-        "blocks_after_start_date": blocks_after_start_date
+        "blocks_after_start_date": blocks_after_start_date,
+        "groups": groups
     }
     return render(request, "eighth/admin/dashboard.html", context)
 
