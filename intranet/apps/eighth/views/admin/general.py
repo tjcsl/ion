@@ -3,11 +3,19 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin import BlockSelectionForm, ActivitySelectionForm
+from ...models import EighthActivity, EighthBlock
+from ...utils import get_start_date
 
 
 @eighth_admin_required
-def eighth_admin_index_view(request):
-    return render(request, "eighth/admin/index.html", {})
+def eighth_admin_dashboard_view(request):
+    start_date = get_start_date(request)
+    context = {
+        "start_date": start_date,
+        "all_activities": EighthActivity.objects.all(),
+        "blocks_after_start_date": EighthBlock.objects.filter(date__gte=start_date)
+    }
+    return render(request, "eighth/admin/dashboard.html", context)
 
 
 class EighthAdminExampleWizard(SessionWizardView):

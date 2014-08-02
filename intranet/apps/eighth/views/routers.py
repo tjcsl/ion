@@ -12,7 +12,7 @@ def eighth_redirect_view(request):
     if request.user.is_student:
         view = "eighth_signup"
     elif request.user.is_eighth_admin:
-        view = "eighth_admin_index"
+        view = "eighth_admin_dashboard"
     elif request.user.is_teacher or request.user.is_attendance_user:
         view = "eighth_attendance"
     else:
