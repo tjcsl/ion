@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @announcements_admin_required
 def add_announcement_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AnnouncementForm(request.POST)
         if form is not None and form.is_valid():
             form.save()
@@ -19,12 +19,12 @@ def add_announcement_view(request):
             return redirect("index")
     else:
         form = AnnouncementForm()
-    return render(request, 'announcements/add_modify.html', {"form": form, "action": "add"})
+    return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
 
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
-    if request.method == 'POST':
+    if request.method == "POST":
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form is not None and form.is_valid():
@@ -34,7 +34,7 @@ def modify_announcement_view(request, id=None):
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, 'announcements/add_modify.html', {"form": form, "action": "modify", "id": id})
+    return render(request, "announcements/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
 @announcements_admin_required

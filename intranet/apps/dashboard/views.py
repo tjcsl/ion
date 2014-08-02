@@ -12,7 +12,6 @@ def dashboard_view(request):
     announcements = Announcement.objects.order_by("-updated").all()[:10]
 
     context = {
-        "page": "dashboard",
         "announcements": announcements
     }
     return render(request, "dashboard/dashboard.html", context)

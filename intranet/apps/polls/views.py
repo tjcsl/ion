@@ -7,5 +7,4 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def polls_view(request):
-    context = {"page": "polls"}
-    return render(request, "polls/polls.html", context)
+    return render(request, "polls/polls.html")

@@ -8,5 +8,4 @@ logger = logging.getLogger(__name__)
 @login_required
 def files_view(request):
     """The main filecenter view."""
-    context = {"page": "files"}
-    return render(request, "files/files.html", context)
+    return render(request, "files/files.html")

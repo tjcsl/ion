@@ -61,7 +61,6 @@ def eighth_signup_view(request, block_id=None):
     except EighthSignup.DoesNotExist:
         cur_signup_id = None
     context = {
-        "page": "eighth",
         "user": user,
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),
