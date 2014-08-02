@@ -62,7 +62,7 @@
                 <li><a href=""><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
                 <li><a href=""><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
                 <li><a href=""><i class="fa-li fa fa-ban"></i>Reject all outstanding passes</a></li>
-                <li><a href=""><i class="fa-li fa fa-building"></i>Export out-of-building schedules</a></li>
+                <li><a href=""><i class="fa-li fa fa-building-o"></i>Export out-of-building schedules</a></li>
             </ul>
         </td>
     </tr>
@@ -101,11 +101,56 @@
         </td>
         <td>
             <h3>Rooms</h3>
+
+            <h4>Add Room</h4>
+            <form action="">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Capacity">
+                <button>Add</button>
+            </form>
+
+            <h4>Room Actions</h4>
+            <select placeholder="Select or search for a room">
+                {% for room in rooms %}
+                    <option value="{{ room.id }}">{{ room.name }} ({{ room.capacity }})</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <button>Print Rosters</button>
+                <button>Edit Room</button>
+            </div>
+
+            <ul class="fa-ul">
+                <li><a href=""><i class="fa-li fa fa-check-square-o"></i>Room sanity check</a></li>
+                <li><a href=""><i class="fa-li fa fa-building-o"></i>View utilization of rooms for block</a></li>
+                <li><a href=""><i class="fa-li fa fa-map-marker"></i>View utilization of given room in block range</a></li>
+            </ul>
         </td>
     </tr>
     <tr>
         <td>
             <h3>Sponsors</h3>
+
+            <h4>Add Sponsor</h4>
+            <form action="">
+                <input type="text" placeholder="First Name">
+                <input type="text" placeholder="Last Name"><br>
+                <input type="text" placeholder="User ID"><br>
+                <input type="checkbox" id="online-attendance" checked>
+                <label for="online-attendance">Online Attendance</label><br>
+                <button>Add</button>
+            </form>
+
+            <h4>Sponsor Actions</h4>
+            <select placeholder="Select or search for a sponsor">
+                {% for sponsor in sponsors %}
+                    <option value="{{ sponsor.id }}">{{ sponsor.first_name }} {{ sponsor.last_name }}{% if sponsor.user %} (User {{ sponsor.user.id }}){% endif %}</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <button>Print Rosters</button>
+                <button>Edit Room</button>
+            </div>
         </td>
     </tr>
 </table>

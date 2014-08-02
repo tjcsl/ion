@@ -4,7 +4,7 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin import BlockSelectionForm, ActivitySelectionForm
-from ...models import EighthActivity, EighthBlock
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ...utils import get_start_date
 
 
@@ -15,12 +15,16 @@ def eighth_admin_dashboard_view(request):
     blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date)\
                                                  .order_by("date")
     groups = Group.objects.order_by("name")
+    rooms = EighthRoom.objects.all()
+    sponsors = EighthSponsor.objects.order_by("last_name", "first_name")
 
     context = {
         "start_date": start_date,
         "all_activities": all_activities,
         "blocks_after_start_date": blocks_after_start_date,
-        "groups": groups
+        "groups": groups,
+        "rooms": rooms,
+        "sponsors": sponsors
     }
     return render(request, "eighth/admin/dashboard.html", context)
 
