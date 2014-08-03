@@ -1,5 +1,5 @@
 $(function() {
-    $("select.selectize").selectize({});
+    $("select").selectize({});
     $("input.datepicker").datepicker();
 
 
