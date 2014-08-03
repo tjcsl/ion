@@ -111,7 +111,7 @@ class EighthBlockManager(models.Manager):
         try:
             block = EighthBlock.objects \
                                .prefetch_related("eighthscheduledactivity_set") \
-                               .get(id=self.get_first_upcoming_block())
+                               .get(id=self.get_first_upcoming_block().id)
         except EighthBlock.DoesNotExist:
             # raise Http404
             return []
