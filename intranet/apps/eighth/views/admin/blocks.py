@@ -1,5 +1,5 @@
+from django import http
 from django.contrib import messages
-from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
@@ -19,12 +19,15 @@ def add_block_view(request):
             messages.error(request, "Error adding block.")
             return eighth_admin_dashboard_view(request, add_block_form=form)
     else:
-        return HttpResponseNotAllowed(["POST"])
-
+        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
 
 @eighth_admin_required
 def edit_block_view(request, block_id=None):
-    block = EighthBlock.objects.get(id=block_id)
+    try:
+        block = EighthBlock.objects.get(id=block_id)
+    except EighthBlock.DoesNotExist:
+        return http.HttpResponseNotFound()
+
     if request.method == "POST":
         form = BlockForm(request.POST, instance=block)
         if form.is_valid():

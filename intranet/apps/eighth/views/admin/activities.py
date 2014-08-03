@@ -1,5 +1,5 @@
+from django import http
 from django.contrib import messages
-from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import QuickActivityForm, ActivityForm
@@ -20,12 +20,16 @@ def add_activity_view(request):
             messages.error(request, "Error adding announcement.")
             return eighth_admin_dashboard_view(request, add_activity_form=form)
     else:
-        return HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
 
 @eighth_admin_required
 def edit_activity_view(request, activity_id=None):
-    activity = EighthActivity.objects.get(id=activity_id)
+    try:
+        activity = EighthActivity.objects.get(id=activity_id)
+    except EighthActivity.DoesNotExist:
+        return http.HttpResponseNotFound()
+
     if request.method == "POST":
         form = ActivityForm(request.POST, instance=activity)
         if form.is_valid():

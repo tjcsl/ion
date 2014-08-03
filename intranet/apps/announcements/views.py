@@ -1,6 +1,6 @@
 import logging
+from django import http
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render, redirect
 from ..auth.decorators import announcements_admin_required
 from .models import Announcement
@@ -54,6 +54,6 @@ def delete_announcement_view(request):
         # by using .filter instead of .get
         Announcement.objects.filter(id=post_id).delete()
 
-        return HttpResponse(status=204)
+        return http.HttpResponse(status=204)
     else:
-        return HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
