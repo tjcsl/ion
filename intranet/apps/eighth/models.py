@@ -249,29 +249,6 @@ class EighthSignup(models.Model):
         # ]
 
 
-# class SignupAlert(models.Model):
-
-#     """Stores a user's preferences for signup alerts.
-
-#     Attributes:
-#         - user -- The :class:`User<intranet.apps.users.models.User>`.
-#         - night_before -- (BOOL) Whether the user wants emails the \
-#                           night before if he/she hasn't signed up yet
-#         - day_of -- (BOOL) Whether the user wants emails the day of if \
-#                     he/she hasn't signed up yet
-
-#     """
-#     user = models.ForeignKey(User, null=False, unique=True)
-#     night_before = models.BooleanField(null=False)
-#     day_of = models.BooleanField(null=False)
-
-#     def __unicode__(self):
-#         return "{}: [{}] Night before "\
-#                "[{}] Day of".format(self.user,
-#                                     "X" if self.night_before else " ",
-#                                     "X" if self.day_of else " ")
-
-
 class EighthAbsence(models.Model):
     """Represents a user's absence for an eighth period block.
 

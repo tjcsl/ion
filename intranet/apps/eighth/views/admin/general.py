@@ -11,7 +11,7 @@ from ...utils import get_start_date
 
 
 @eighth_admin_required
-def eighth_admin_dashboard_view(request):
+def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
     all_activities = EighthActivity.objects.order_by("name")
     blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date)\
@@ -20,14 +20,22 @@ def eighth_admin_dashboard_view(request):
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.order_by("last_name", "first_name")
 
+    forms = {
+        "add_activity_form": activity_forms.QuickAddActivityForm,
+
+    }
+
     context = {
         "start_date": start_date,
         "all_activities": all_activities,
         "blocks_after_start_date": blocks_after_start_date,
         "groups": groups,
         "rooms": rooms,
-        "sponsors": sponsors
+        "sponsors": sponsors,
     }
+
+    for form_name, form_class in forms.items():
+        context[form_name] = kwargs.get(form_name, form_class())
 
     return render(request, "eighth/admin/dashboard.html", context)
 
