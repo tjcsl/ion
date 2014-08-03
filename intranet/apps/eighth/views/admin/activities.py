@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect, render
-from django.core.urlresolvers import resolve, reverse
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import QuickAddActivityForm, ActivityForm
 from ...models import EighthActivity
