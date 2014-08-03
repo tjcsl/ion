@@ -19,5 +19,5 @@ $.ajaxSetup({
 $(function() {
     $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").mouseup(function() {
         $(this).blur();
-    })
+    });
 });
