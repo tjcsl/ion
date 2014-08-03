@@ -13,11 +13,11 @@ def add_activity_view(request):
         form = QuickActivityForm(request.POST)
         if form.is_valid():
             activity = form.save()
-            messages.success(request, "Successfully added announcement.")
+            messages.success(request, "Successfully added activity.")
             return redirect("eighth_admin_edit_activity",
                             activity_id=activity.id)
         else:
-            messages.error(request, "Error adding announcement.")
+            messages.error(request, "Error adding activity.")
             return eighth_admin_dashboard_view(request, add_activity_form=form)
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
@@ -34,10 +34,10 @@ def edit_activity_view(request, activity_id=None):
         form = ActivityForm(request.POST, instance=activity)
         if form.is_valid():
             form.save()
-            messages.success(request, "Successfully edited announcement.")
+            messages.success(request, "Successfully edited activity.")
             return redirect("eighth_admin_dashboard")
         else:
-            messages.error(request, "Error adding announcement.")
+            messages.error(request, "Error adding activity.")
     else:
         form = ActivityForm(instance=activity)
 
