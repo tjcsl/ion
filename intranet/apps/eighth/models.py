@@ -139,6 +139,13 @@ class EighthBlock(models.Model):
 
     objects = EighthBlockManager()
 
+    def save(self, *args, **kwargs):
+            letter = getattr(self, "block_letter", None)
+            if letter:
+                self.block_letter = letter.capitalize()
+
+            super(EighthBlock, self).save(*args, **kwargs)
+
     def next_blocks(self, quantity=-1):
         blocks = EighthBlock.objects \
                             .order_by("date", "block_letter") \
