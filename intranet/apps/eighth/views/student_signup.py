@@ -1,7 +1,7 @@
 import logging
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.renderers import JSONRenderer
 from ..models import EighthBlock, EighthSignup
 from ..serializers import EighthBlockDetailSerializer
@@ -13,20 +13,31 @@ logger = logging.getLogger(__name__)
 @login_required
 def eighth_signup_view(request, block_id=None):
     if block_id is None:
-        block_id = EighthBlock.objects.get_next_block()
+        next_block = EighthBlock.objects.get_first_upcoming_block()
+        if next_block is not None:
+            block_id = next_block.id
 
-    is_admin = True
+    is_admin = request.user.is_eighth_admin
+
     if "user" in request.GET and is_admin:
         user = request.GET["user"]
     else:
-        user = request.user.id
+        if request.user.is_student:
+            user = request.user.id
+        else:
+            return redirect("index")
 
     try:
         block = EighthBlock.objects \
                            .prefetch_related("eighthscheduledactivity_set") \
                            .get(id=block_id)
     except EighthBlock.DoesNotExist:
-        raise Http404
+        if EighthBlock.objects.count() == 0:
+            # No blocks have been added yet
+            return render(request, "eighth/signup.html", {"no_blocks": True})
+        else:
+            # The provided block_id is invalid
+            raise Http404
 
     surrounding_blocks = block.get_surrounding_blocks()
     schedule = []
@@ -53,19 +64,11 @@ def eighth_signup_view(request, block_id=None):
     block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
     block_info["schedule"] = schedule
 
-    """Get the ID of the currently selected activity for the current day,
-       so it can be checked in the activity listing."""
-    try:
-        cur_signup = signups.get(scheduled_activity__block=block)
-        cur_signup_id = cur_signup.scheduled_activity.activity.id
-    except EighthSignup.DoesNotExist:
-        cur_signup_id = None
     context = {
         "user": user,
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),
         "active_block": block,
-        "cur_signup_id": cur_signup_id
     }
-    logger.debug("start rendering")
+
     return render(request, "eighth/signup.html", context)

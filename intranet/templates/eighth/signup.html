@@ -21,7 +21,7 @@
     <script type="text/javascript">
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
-            data = _.values($.parseJSON("{{ activities_list|escapejs }}"));
+            data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
             activityModels.reset(data);
         }
     </script>
@@ -164,7 +164,7 @@
                 <h5 class="sticky-header">All</h5>
                 <ul class="all-activities">
                     {% for id, b in block_info.activities.items %}
-                        <li data-activity-id="{{ id }}"{% if cur_signup_id == id %} class="signedup"{% endif %}>
+                        <li data-activity-id="{{ id }}">
 
                             <span class="activity-icons">
                                 <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>

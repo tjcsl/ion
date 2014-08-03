@@ -3,7 +3,9 @@ from django.contrib.auth.models import Group
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin import BlockSelectionForm, ActivitySelectionForm
+from ...forms.admin import (
+    activities as activity_forms, blocks as block_forms, rooms as room_forms,
+    sponsors as sponsor_forms)
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ...utils import get_start_date
 
@@ -26,13 +28,14 @@ def eighth_admin_dashboard_view(request):
         "rooms": rooms,
         "sponsors": sponsors
     }
+
     return render(request, "eighth/admin/dashboard.html", context)
 
 
 class EighthAdminExampleWizard(SessionWizardView):
     FORMS = [
-        ("block", BlockSelectionForm),
-        ("activity", ActivitySelectionForm)
+        ("block", block_forms.BlockSelectionForm),
+        ("activity", activity_forms.ActivitySelectionForm)
     ]
 
     TEMPLATES = {

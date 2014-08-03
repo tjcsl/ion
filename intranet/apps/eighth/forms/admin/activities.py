@@ -1,9 +1,5 @@
 from django import forms
-from ..models import EighthActivity, EighthBlock
-
-
-class BlockSelectionForm(forms.Form):
-    block = forms.ModelChoiceField(queryset=EighthBlock.objects.all(), empty_label="Select a block")
+from ...models import EighthActivity
 
 
 class ActivitySelectionForm(forms.Form):

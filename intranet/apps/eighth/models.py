@@ -85,9 +85,15 @@ class EighthActivity(models.Model):
 
 
 class EighthBlockManager(models.Manager):
-    def get_next_block(self):
-        """Gets the next block.
-           Returns: the block ID"""
+    def get_first_upcoming_block(self):
+        """Gets the first upcoming block (the first block that will
+        take place in the future). If there is no block in the future,
+        the most recent block will be returned
+
+        Returns: the `EighthBlock` object
+
+        """
+
         now = datetime.datetime.now()
 
         # Show same day if it's before 17:00
@@ -99,18 +105,17 @@ class EighthBlockManager(models.Manager):
                            .filter(date__gte=now)[0] \
                            .id
         except IndexError:
-            block_id = self.order_by("-date", "-block_letter") \
-                           .filter(date__lte=now)[0] \
-                           .id
+            block_id = None
         return block_id
 
     def get_current_blocks(self):
         try:
             block = EighthBlock.objects \
                                .prefetch_related("eighthscheduledactivity_set") \
-                               .get(id=self.get_next_block())
+                               .get(id=self.get_first_upcoming_block())
         except EighthBlock.DoesNotExist:
-            raise Http404
+            # raise Http404
+            return []
 
         return block.get_surrounding_blocks()
 
@@ -244,27 +249,27 @@ class EighthSignup(models.Model):
         # ]
 
 
-class SignupAlert(models.Model):
+# class SignupAlert(models.Model):
 
-    """Stores a user's preferences for signup alerts.
+#     """Stores a user's preferences for signup alerts.
 
-    Attributes:
-        - user -- The :class:`User<intranet.apps.users.models.User>`.
-        - night_before -- (BOOL) Whether the user wants emails the \
-                          night before if he/she hasn't signed up yet
-        - day_of -- (BOOL) Whether the user wants emails the day of if \
-                    he/she hasn't signed up yet
+#     Attributes:
+#         - user -- The :class:`User<intranet.apps.users.models.User>`.
+#         - night_before -- (BOOL) Whether the user wants emails the \
+#                           night before if he/she hasn't signed up yet
+#         - day_of -- (BOOL) Whether the user wants emails the day of if \
+#                     he/she hasn't signed up yet
 
-    """
-    user = models.ForeignKey(User, null=False, unique=True)
-    night_before = models.BooleanField(null=False)
-    day_of = models.BooleanField(null=False)
+#     """
+#     user = models.ForeignKey(User, null=False, unique=True)
+#     night_before = models.BooleanField(null=False)
+#     day_of = models.BooleanField(null=False)
 
-    def __unicode__(self):
-        return "{}: [{}] Night before "\
-               "[{}] Day of".format(self.user,
-                                    "X" if self.night_before else " ",
-                                    "X" if self.day_of else " ")
+#     def __unicode__(self):
+#         return "{}: [{}] Night before "\
+#                "[{}] Day of".format(self.user,
+#                                     "X" if self.night_before else " ",
+#                                     "X" if self.day_of else " ")
 
 
 class EighthAbsence(models.Model):

@@ -9,9 +9,9 @@ from django.views.generic.base import View
 logger = logging.getLogger(__name__)
 
 
-def index_view(request, auth_form=None):
+def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() and not force_login:
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
@@ -45,7 +45,7 @@ class login_view(View):
 
     def get(self, request):
         """Redirect to the login page."""
-        return index_view(request)
+        return index_view(request, force_login=True)
 
 
 def logout_view(request):
