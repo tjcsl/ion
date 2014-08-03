@@ -101,12 +101,11 @@ class EighthBlockManager(models.Manager):
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
         try:
-            block_id = self.order_by("date", "block_letter") \
-                           .filter(date__gte=now)[0] \
-                           .id
+            block = self.order_by("date", "block_letter") \
+                        .filter(date__gte=now)[0]
         except IndexError:
-            block_id = None
-        return block_id
+            block = None
+        return block
 
     def get_current_blocks(self):
         try:
