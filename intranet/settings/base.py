@@ -203,7 +203,7 @@ INSTALLED_APPS = (
     "south",
     "rest_framework",
     # "intranet.apps",
-    # "intranet.apps.api",
+    "intranet.apps.api",
     "intranet.apps.users",
     # "intranet.apps.auth",
     # "intranet.apps.eighth",
