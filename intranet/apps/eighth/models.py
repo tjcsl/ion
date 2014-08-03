@@ -3,8 +3,6 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Q
-from django.http import Http404
-from django.forms import ModelForm
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -46,8 +44,7 @@ class EighthRoom(models.Model):
 
     """
     name = models.CharField(max_length=63)
-    # TODO: Capacity should be in ScheduledActivity
-    capacity = models.SmallIntegerField(null=False, default=-1)
+    capacity = models.SmallIntegerField(default=-1)
 
     unique_together = (("room_number", "name", "capacity"),)
 
@@ -205,7 +202,7 @@ class EighthScheduledActivity(models.Model):
 
     """
     block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthActivity, null=False, blank=False)
+    activity = models.ForeignKey(EighthActivity, null=False)
     members = models.ManyToManyField(User, through="EighthSignup")
 
     comment = models.CharField(max_length=255)
@@ -213,18 +210,13 @@ class EighthScheduledActivity(models.Model):
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor)
     rooms = models.ManyToManyField(EighthRoom)
+    capacity = models.SmallIntegerField(null=True)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
     def __unicode__(self):
         return "{} on {}".format(self.activity.name, self.block)
-
-
-class EighthScheduledActivityForm(ModelForm):
-    class Meta:
-        model = EighthScheduledActivity
-        fields = ['block', 'activity', 'comment', 'sponsors', 'rooms']
 
 
 class EighthSignup(models.Model):
