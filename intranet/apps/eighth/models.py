@@ -135,7 +135,7 @@ class EighthBlock(models.Model):
     block_letter = models.CharField(max_length=1)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
-                                        through="EighthScheduledActivity")
+                                        through="EighthScheduledActivity", blank=True)
 
     objects = EighthBlockManager()
 

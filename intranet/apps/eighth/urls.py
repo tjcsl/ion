@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from .views import routers, student_signup, teacher_attendance
-from .views.admin import general, activities
+from .views.admin import general, activities, blocks
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
@@ -20,6 +20,7 @@ eighth_admin_patterns = [
 
     url(r"^activities/add$", activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"^activities/edit/(?P<activity_id>\d+)$", activities.edit_activity_view, name="eighth_admin_edit_activity"),
+    url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
 
 
 

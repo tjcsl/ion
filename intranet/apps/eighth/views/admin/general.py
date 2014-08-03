@@ -22,6 +22,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
 
     forms = {
         "add_activity_form": activity_forms.QuickAddActivityForm,
+        "add_block_form": block_forms.QuickAddBlockForm
 
     }
 
