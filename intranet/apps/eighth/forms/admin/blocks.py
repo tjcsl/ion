@@ -6,7 +6,7 @@ class BlockSelectionForm(forms.Form):
     block = forms.ModelChoiceField(queryset=EighthBlock.objects.all(), empty_label="Select a block")
 
 
-class QuickAddBlockForm(forms.ModelForm):
+class QuickBlockForm(forms.ModelForm):
     class Meta:
         model = EighthBlock
         fields = ["date", "block_letter"]

@@ -14,7 +14,7 @@ class ActivitySelectionForm(forms.Form):
         self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, empty_label="Select an activity")
 
 
-class QuickAddActivityForm(forms.ModelForm):
+class QuickActivityForm(forms.ModelForm):
     class Meta:
         model = EighthActivity
         fields = ["name"]

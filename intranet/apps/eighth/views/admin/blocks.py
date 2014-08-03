@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin.blocks import QuickAddBlockForm, BlockForm
+from ...forms.admin.blocks import QuickBlockForm, BlockForm
 from ...models import EighthBlock
 from .general import eighth_admin_dashboard_view
 
@@ -10,7 +10,7 @@ from .general import eighth_admin_dashboard_view
 @eighth_admin_required
 def add_block_view(request):
     if request.method == "POST":
-        form = QuickAddBlockForm(request.POST)
+        form = QuickBlockForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Successfully added block.")

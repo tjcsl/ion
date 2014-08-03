@@ -21,8 +21,8 @@ def eighth_admin_dashboard_view(request, **kwargs):
     sponsors = EighthSponsor.objects.order_by("last_name", "first_name")
 
     forms = {
-        "add_activity_form": activity_forms.QuickAddActivityForm,
-        "add_block_form": block_forms.QuickAddBlockForm
+        "add_activity_form": activity_forms.QuickActivityForm,
+        "add_block_form": block_forms.QuickBlockForm
 
     }
 

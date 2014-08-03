@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin.activities import QuickAddActivityForm, ActivityForm
+from ...forms.admin.activities import QuickActivityForm, ActivityForm
 from ...models import EighthActivity
 from .general import eighth_admin_dashboard_view
 
@@ -10,7 +10,7 @@ from .general import eighth_admin_dashboard_view
 @eighth_admin_required
 def add_activity_view(request):
     if request.method == "POST":
-        form = QuickAddActivityForm(request.POST)
+        form = QuickActivityForm(request.POST)
         if form.is_valid():
             activity = form.save()
             messages.success(request, "Successfully added announcement.")
