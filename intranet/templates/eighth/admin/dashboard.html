@@ -1,5 +1,12 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 
+{% block js %}
+    <script type="text/javascript">
+        window.urlIDPlaceholder = "{{ url_id_placeholder }}";
+    </script>
+    {{ block.super }}
+{% endblock %}
+
 {% block admin_main %}
 <table class="admin-dashboard">
     <tr>
@@ -20,13 +27,13 @@
             </form>
 
             <h4>Edit Activity</h4>
-            <select placeholder="Select or search for an activity">
+            <select id="activity-select" class="selectize" placeholder="Select or search for an activity">
                 {% for activity in all_activities %}
                     <option value="{{ activity.id }}">{{ activity.id }}: {{ activity.name }}</option>
                 {% endfor %}
             </select>
             <div class="right-buttons">
-                <button>Edit</button>
+                <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_edit_activity' url_id_placeholder %}" class="button">Edit</a>
             </div>
         </td>
         <td class="admin-section">
@@ -40,7 +47,7 @@
             </form>
 
             <h4>Block Actions</h4>
-            <select placeholder="Select or search for a block">
+            <select class="selectize" placeholder="Select or search for a block">
                 {% for block in blocks_after_start_date %}
                     <option value="{{ block.id }}">{{ block.id }}: {{ block.date|date:"D., N j, Y" }} ({{ block.block_letter }})</option>
                 {% endfor %}
@@ -84,7 +91,7 @@
             </form>
 
             <h4>Regular Group Actions</h4>
-            <select placeholder="Select or search for a group">
+            <select class="selectize" placeholder="Select or search for a group">
                 {% for group in groups %}
                     <option value="{{ group.id }}">{{ group.name }}</option>
                 {% endfor %}
@@ -96,7 +103,7 @@
             </div>
 
             <h4>Class Group Actions</h4>
-            <select placeholder="Select or search for a group">
+            <select class="selectize" placeholder="Select or search for a group">
                 <option value="9">Freshmen</option>
                 <option value="10">Sophomores</option>
                 <option value="11">Juniors</option>
@@ -117,7 +124,7 @@
             </form>
 
             <h4>Room Actions</h4>
-            <select placeholder="Select or search for a room">
+            <select class="selectize" placeholder="Select or search for a room">
                 {% for room in rooms %}
                     <option value="{{ room.id }}">{{ room.name }} ({{ room.capacity }})</option>
                 {% endfor %}
@@ -148,7 +155,7 @@
             </form>
 
             <h4>Sponsor Actions</h4>
-            <select placeholder="Select or search for a sponsor">
+            <select class="selectize" placeholder="Select or search for a sponsor">
                 {% for sponsor in sponsors %}
                     <option value="{{ sponsor.id }}">{{ sponsor.first_name }} {{ sponsor.last_name }}{% if sponsor.user %} (User {{ sponsor.user.id }}){% endif %}</option>
                 {% endfor %}

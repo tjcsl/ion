@@ -65,9 +65,9 @@ class EighthActivity(models.Model):
     """
     # TODO: Add default capacity,
     name = models.CharField(max_length=63)
-    description = models.TextField()
-    sponsors = models.ManyToManyField(EighthSponsor)
-    rooms = models.ManyToManyField(EighthRoom)
+    description = models.TextField(blank=True)
+    sponsors = models.ManyToManyField(EighthSponsor, blank=True)
+    rooms = models.ManyToManyField(EighthRoom, blank=True)
 
     restricted = models.BooleanField(default=False)
     presign = models.BooleanField(default=False)

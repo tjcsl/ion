@@ -16,9 +16,14 @@ urlpatterns = [
 ]
 
 eighth_admin_patterns = [
-    url(r"^add_activity$", activities.add_activity_view, name="eighth_admin_add_activity"),
-
     url(r"^example$", general.EighthAdminExampleWizard.as_view(general.EighthAdminExampleWizard.FORMS), name="eighth_admin_form_example"),
+
+    url(r"^activities/add$", activities.add_activity_view, name="eighth_admin_add_activity"),
+    url(r"^activities/edit/(?P<activity_id>\d+)$", activities.edit_activity_view, name="eighth_admin_edit_activity"),
+
+
+
+
 ]
 
 urlpatterns += [
