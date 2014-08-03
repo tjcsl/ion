@@ -9,8 +9,12 @@ $(function() {
         var hrefPattern = $anchor.data("href-pattern");
 
         var update = function(e) {
-            var href = hrefPattern.replace(window.urlIDPlaceholder, $select.val());
-            $anchor.attr("href", href);
+            if ($select.val().length) {
+                var href = hrefPattern.replace(window.urlIDPlaceholder, $select.val());
+                $anchor.attr("href", href);
+            } else {
+                $anchor.removeAttr("href")
+            }
         }
 
         $select.on("change", update);
