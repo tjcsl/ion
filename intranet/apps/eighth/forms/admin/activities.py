@@ -21,5 +21,11 @@ class QuickActivityForm(forms.ModelForm):
 
 
 class ActivityForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ActivityForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ["sponsors", "rooms"]:
+            self.fields[fieldname].help_text = None
+
     class Meta:
         model = EighthActivity
