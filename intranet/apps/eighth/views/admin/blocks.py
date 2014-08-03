@@ -12,10 +12,9 @@ def add_block_view(request):
     if request.method == "POST":
         form = QuickAddBlockForm(request.POST)
         if form.is_valid():
-            block = form.save()
+            form.save()
             messages.success(request, "Successfully added block.")
-            return redirect("eighth_admin_edit_block",
-                            block_id=block.id)
+            return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")
             return eighth_admin_dashboard_view(request, add_block_form=form)
@@ -23,18 +22,18 @@ def add_block_view(request):
         return HttpResponseNotAllowed(["POST"])
 
 
-# @eighth_admin_required
-# def edit_activity_view(request, activity_id=None):
-#     activity = EighthActivity.objects.get(id=activity_id)
-#     if request.method == "POST":
-#         form = ActivityForm(request.POST, instance=activity)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, "Successfully edited announcement.")
-#             return redirect("eighth_admin_dashboard")
-#         else:
-#             messages.error(request, "Error adding announcement.")
-#     else:
-#         form = ActivityForm(instance=activity)
+@eighth_admin_required
+def edit_block_view(request, block_id=None):
+    # activity = EighthActivity.objects.get(id=activity_id)
+    # if request.method == "POST":
+    #     form = ActivityForm(request.POST, instance=activity)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.success(request, "Successfully edited announcement.")
+    #         return redirect("eighth_admin_dashboard")
+    #     else:
+    #         messages.error(request, "Error adding announcement.")
+    # else:
+    #     form = ActivityForm(instance=activity)
 
-#     return render(request, "eighth/admin/edit_activity.html", {"form": form})
+    return render(request, "eighth/admin/edit_activity.html", {"form": 123})
