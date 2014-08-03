@@ -1,10 +1,10 @@
+import cPickle
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
 from ...models import EighthBlock
-from .general import eighth_admin_dashboard_view
 
 
 @eighth_admin_required
@@ -17,9 +17,11 @@ def add_block_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")
-            return eighth_admin_dashboard_view(request, add_block_form=form)
+            request.session["add_block_form"] = cPickle.dumps(form)
+            return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+
 
 @eighth_admin_required
 def edit_block_view(request, block_id=None):

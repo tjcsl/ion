@@ -2,11 +2,9 @@ import cPickle
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.core.urlresolvers import resolve, reverse
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.rooms import RoomForm
 from ...models import EighthRoom
-from .general import eighth_admin_dashboard_view
 
 
 @eighth_admin_required

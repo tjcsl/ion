@@ -1,10 +1,10 @@
+import cPickle
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.groups import QuickGroupForm, GroupForm
-from .general import eighth_admin_dashboard_view
 
 
 @eighth_admin_required
@@ -17,7 +17,8 @@ def add_group_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding group.")
-            return eighth_admin_dashboard_view(request, add_block_form=form)
+            request.session["add_group_form"] = cPickle.dumps(form)
+            return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
 

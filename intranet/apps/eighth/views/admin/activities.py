@@ -1,10 +1,10 @@
+import cPickle
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import QuickActivityForm, ActivityForm
 from ...models import EighthActivity
-from .general import eighth_admin_dashboard_view
 
 
 @eighth_admin_required
@@ -18,7 +18,8 @@ def add_activity_view(request):
                             activity_id=activity.id)
         else:
             messages.error(request, "Error adding activity.")
-            return eighth_admin_dashboard_view(request, add_activity_form=form)
+            request.session["add_activity_form"] = cPickle.dumps(form)
+            return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
