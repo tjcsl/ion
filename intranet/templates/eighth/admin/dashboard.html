@@ -5,6 +5,11 @@
         window.urlIDPlaceholder = "{{ url_id_placeholder }}";
     </script>
     {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            $("#{{ scroll_to_id }}").each(function(){this.scrollIntoView()});
+        });
+    </script>
 {% endblock %}
 
 {% block admin_main %}
@@ -13,8 +18,8 @@
         <td class="admin-section">
             <h3>Activities</h3>
 
-            <h4>Add Activity</h4>
-            <form action="{% url 'eighth_admin_add_activity' %}" method="post">
+            <form id="add-activity-form" action="{% url 'eighth_admin_add_activity' %}" method="post">
+                <h4>Add Activity</h4>
                 {% csrf_token %}
                 <table>
                     {{ add_activity_form.as_table }}
@@ -39,8 +44,8 @@
         <td class="admin-section">
             <h3>Blocks</h3>
 
-            <h4>Add Block</h4>
-            <form action="{% url 'eighth_admin_add_block' %}" method="post">
+            <form id="add-block-form" action="{% url 'eighth_admin_add_block' %}" method="post">
+                <h4>Add Block</h4>
                 {% csrf_token %}
                 <table>
                     {{ add_block_form.as_table }}
@@ -91,8 +96,8 @@
         <td class="admin-section">
             <h3>Groups</h3>
 
-            <h4>Add Group</h4>
-            <form action="{% url 'eighth_admin_add_group' %}" method="post">
+            <form id="add-group-form" action="{% url 'eighth_admin_add_group' %}" method="post">
+                <h4>Add Group</h4>
                 {% csrf_token %}
                 <table>
                     {{ add_group_form.as_table }}
@@ -130,21 +135,27 @@
         <td class="admin-section">
             <h3>Rooms</h3>
 
-            <h4>Add Room</h4>
-            <form action="">
-                <input type="text" placeholder="Name">
-                <input type="text" placeholder="Capacity">
-                <button>Add</button>
+            <form id="add-room-form" action="{% url 'eighth_admin_add_room' %}" method="post">
+                <h4>Add Room</h4>
+                {% csrf_token %}
+                <table>
+                    {{ add_room_form.as_table }}
+                    <tr>
+                        <td class="right-buttons" colspan=2>
+                            <input type="submit" value="Add">
+                        </td>
+                    </tr>
+                </table>
             </form>
 
             <h4>Room Actions</h4>
-            <select placeholder="Select or search for a room">
+            <select id="room-select" placeholder="Select or search for a room">
                 {% for room in rooms %}
                     <option value="{{ room.id }}">{{ room.name }} ({{ room.capacity }})</option>
                 {% endfor %}
             </select>
             <div class="right-buttons">
-                <button>Edit Room</button>
+                <a class="dynamic-link button" data-select="room-select" data-href-pattern="{% url 'eighth_admin_edit_room' url_id_placeholder %}" class="button">Sign Up for Activity</a>
             </div>
 
             <ul class="fa-ul">
@@ -158,8 +169,8 @@
         <td class="admin-section">
             <h3>Sponsors</h3>
 
-            <h4>Add Sponsor</h4>
-            <form action="">
+            <form id="add-sponsor-form" action="">
+                <h4>Add Sponsor</h4>
                 <input type="text" placeholder="First Name">
                 <input type="text" placeholder="Last Name"><br>
                 <input type="text" placeholder="User ID"><br>

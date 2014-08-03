@@ -1,3 +1,4 @@
+import cPickle
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -20,13 +21,6 @@ def eighth_admin_dashboard_view(request, **kwargs):
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.order_by("last_name", "first_name")
 
-    forms = {
-        "add_activity_form": activity_forms.QuickActivityForm,
-        "add_block_form": block_forms.QuickBlockForm,
-        "add_group_form": group_forms.QuickGroupForm
-
-    }
-
     context = {
         "start_date": start_date,
         "all_activities": all_activities,
@@ -43,8 +37,26 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "url_id_placeholder": "734784857438457843756435654645642343465"
     }
 
+    forms = {
+        "add_activity_form": activity_forms.QuickActivityForm,
+        "add_block_form": block_forms.QuickBlockForm,
+        "add_group_form": group_forms.QuickGroupForm,
+        "add_room_form": room_forms.RoomForm
+
+    }
+
     for form_name, form_class in forms.items():
-        context[form_name] = kwargs.get(form_name, form_class())
+        form_css_id = form_name.replace("_", "-")
+
+        if form_name in kwargs:
+            context[form_name] = kwargs.get(form_name)
+            context["scroll_to_id"] = form_css_id
+        elif form_name in request.session:
+            pickled_form = request.session.pop(form_name)
+            context[form_name] = cPickle.loads(str(pickled_form))
+            context["scroll_to_id"] = form_css_id
+        else:
+            context[form_name] = form_class()
 
     return render(request, "eighth/admin/dashboard.html", context)
 
