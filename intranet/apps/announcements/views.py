@@ -18,7 +18,7 @@ def add_announcement_view(request):
             messages.success(request, "Successfully added announcement.")
             return redirect("index")
         else:
-            messages.error("Error adding announcement")
+            messages.error(request, "Error adding announcement")
     else:
         form = AnnouncementForm()
     return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
@@ -34,7 +34,7 @@ def modify_announcement_view(request, id=None):
             messages.success(request, "Successfully modified announcement.")
             return redirect("index")
         else:
-            messages.error("Error adding announcement")
+            messages.error(request, "Error adding announcement")
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
