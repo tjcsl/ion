@@ -4,8 +4,8 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin import (
-    activities as activity_forms, blocks as block_forms, rooms as room_forms,
-    sponsors as sponsor_forms)
+    activities as activity_forms, blocks as block_forms, groups as group_forms,
+    rooms as room_forms, sponsors as sponsor_forms)
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ...utils import get_start_date
 
@@ -22,7 +22,8 @@ def eighth_admin_dashboard_view(request, **kwargs):
 
     forms = {
         "add_activity_form": activity_forms.QuickActivityForm,
-        "add_block_form": block_forms.QuickBlockForm
+        "add_block_form": block_forms.QuickBlockForm,
+        "add_group_form": group_forms.QuickGroupForm
 
     }
 
