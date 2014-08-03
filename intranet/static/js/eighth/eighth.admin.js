@@ -1,6 +1,6 @@
 $(function() {
     $("select").selectize({});
-    $("input.datepicker").datepicker();
+    $("input.datepicker, input[name=date]").datepicker();
 
 
     $(".dynamic-link").each(function() {
