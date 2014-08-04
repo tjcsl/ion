@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.conf.urls import include, url
 from .views import routers, student_signup, teacher_attendance
-from .views.admin import general, activities, blocks, groups, rooms
+from .views.admin import general, activities, blocks, groups, rooms, sponsors
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
@@ -57,8 +57,8 @@ eighth_admin_patterns = [
 
 
     # Sponsors
-    url(r"^sponsors/add$", general.not_implemented_view, name="eighth_admin_add_sponsor"),
-    url(r"^sponsors/edit/(?P<sponsor_id>\d+)$", general.not_implemented_view, name="eighth_admin_edit_sponsor"),
+    url(r"^sponsors/add$", sponsors.add_sponsor_view, name="eighth_admin_add_sponsor"),
+    url(r"^sponsors/edit/(?P<sponsor_id>\d+)$", sponsors.edit_sponsor_view, name="eighth_admin_edit_sponsor"),
     url(r"^sponsors/schedule/(?P<sponsor_id>\d+)$", general.not_implemented_view, name="eighth_admin_sponsor_schedule"),
 
 ]
