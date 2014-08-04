@@ -61,19 +61,19 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
-        # if (not hasattr(_thread_locals, "ldap_conn")) \
-        #    or (_thread_locals.ldap_conn is None):
-        #     logger.info("Connecting to LDAP...")
-        #     _thread_locals.ldap_conn = ldap.ldapobject.ReconnectLDAPObject(settings.LDAP_SERVER, trace_stack_limit=None)
+        if (not hasattr(_thread_locals, "ldap_conn")) \
+           or (_thread_locals.ldap_conn is None):
+            logger.info("Connecting to LDAP...")
+            _thread_locals.ldap_conn = ldap.ldapobject.ReconnectLDAPObject(settings.LDAP_SERVER, trace_stack_limit=None)
 
-        #     try:
-        #         auth_tokens = ldap.sasl.gssapi()
-        #         _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-        #         logger.info("Successfully connected to LDAP.")
-        #     except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS):
-        #         _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-        #         logger.error("SASL bind failed - using simple bind")
-        #     # logger.debug(_thread_locals.ldap_conn.whoami_s())
+            try:
+                auth_tokens = ldap.sasl.gssapi()
+                _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
+                logger.info("Successfully connected to LDAP.")
+            except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS):
+                _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+                logger.error("SASL bind failed - using simple bind")
+            # logger.debug(_thread_locals.ldap_conn.whoami_s())
         pass
 
     @property
