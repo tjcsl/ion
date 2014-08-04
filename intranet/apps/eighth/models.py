@@ -6,6 +6,7 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,8 @@ class EighthSponsor(models.Model):
     user = models.ForeignKey(User, null=True)
     online_attendance = models.BooleanField(default=True)
 
-    unique_together = (("first_name", "last_name", "user", "online_attendance"),)
+    class Meta:
+        unique_together = (("first_name", "last_name", "user", "online_attendance"),)
 
     def __unicode__(self):
         try:
@@ -66,7 +68,7 @@ class EighthActivity(models.Model):
 
     """
 
-    name = models.CharField(max_length=63)
+    name = models.CharField(max_length=63, unique=True)
     description = models.TextField(blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
@@ -111,11 +113,12 @@ class EighthBlockManager(models.Manager):
 
     def get_current_blocks(self):
         try:
-            block = EighthBlock.objects \
-                               .prefetch_related("eighthscheduledactivity_set") \
-                               .get(id=self.get_first_upcoming_block().id)
+            first_upcoming_block = self.get_first_upcoming_block()
+            if first_upcoming_block is None:
+                raise EighthBlock.DoesNotExist()
+            block = self.prefetch_related("eighthscheduledactivity_set") \
+                        .get(id=first_upcoming_block.id)
         except EighthBlock.DoesNotExist:
-            # raise Http404
             return []
 
         return block.get_surrounding_blocks()
@@ -206,8 +209,8 @@ class EighthScheduledActivity(models.Model):
                        has been cancelled
 
     """
-    block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthActivity, null=False)
+    block = models.ForeignKey(EighthBlock)
+    activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup")
 
     comment = models.CharField(max_length=255)
@@ -219,6 +222,9 @@ class EighthScheduledActivity(models.Model):
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = (("block", "activity"),)
 
     def __unicode__(self):
         return "{} on {}".format(self.activity.name, self.block)
@@ -240,16 +246,21 @@ class EighthSignup(models.Model):
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
     after_deadline = models.BooleanField(default=False)
 
+    def validate_unique(self, *args, **kwargs):
+        super(EighthSignup, self).validate_unique(*args, **kwargs)
+
+        if self.__class__.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block):
+            raise ValidationError({
+                NON_FIELD_ERRORS: ("EighthSignup already exists for the User "
+                                   "and the EighthScheduledActivity's block",)
+            })
+
     def __unicode__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity.id)
 
-    # class Meta:
-        # unique_together = (("user", "block"),)
-        # index_together = [
-        #     ["user", "block"],
-        #     ["block", "activity"]
-        # ]
+    class Meta:
+        unique_together = (("user", "scheduled_activity"),)
 
 
 class EighthAbsence(models.Model):

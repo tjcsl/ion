@@ -11,9 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'EighthSponsor'
         db.create_table(u'eighth_eighthsponsor', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.User'], null=True)),
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=63, null=True)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=63, null=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.User'], null=True)),
             ('online_attendance', self.gf('django.db.models.fields.BooleanField')(default=True)),
         ))
         db.send_create_signal(u'eighth', ['EighthSponsor'])
@@ -30,7 +30,7 @@ class Migration(SchemaMigration):
         db.create_table(u'eighth_eighthactivity', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=63)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
+            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('restricted', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('presign', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('one_a_day', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -76,6 +76,7 @@ class Migration(SchemaMigration):
             ('block', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eighth.EighthBlock'])),
             ('activity', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['eighth.EighthActivity'])),
             ('comment', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('capacity', self.gf('django.db.models.fields.SmallIntegerField')(null=True)),
             ('attendance_taken', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('cancelled', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
@@ -183,7 +184,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'eighth.eighthabsence': {
-            'Meta': {'unique_together': "(('block', 'user'),)", 'object_name': 'EighthAbsence'},
+            'Meta': {'unique_together': "((u'block', u'user'),)", 'object_name': 'EighthAbsence'},
             'block': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['eighth.EighthBlock']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.User']"})
@@ -191,20 +192,20 @@ class Migration(SchemaMigration):
         u'eighth.eighthactivity': {
             'Meta': {'object_name': 'EighthActivity'},
             'both_blocks': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'description': ('django.db.models.fields.TextField', [], {}),
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '63'}),
             'one_a_day': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'presign': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'restricted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'rooms': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthRoom']", 'symmetrical': 'False'}),
+            'rooms': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthRoom']", 'symmetrical': 'False', 'blank': 'True'}),
             'special': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'sponsors': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthSponsor']", 'symmetrical': 'False'}),
+            'sponsors': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthSponsor']", 'symmetrical': 'False', 'blank': 'True'}),
             'sticky': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         u'eighth.eighthblock': {
-            'Meta': {'unique_together': "(('date', 'block_letter'),)", 'object_name': 'EighthBlock'},
-            'activities': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthActivity']", 'through': u"orm['eighth.EighthScheduledActivity']", 'symmetrical': 'False'}),
+            'Meta': {'unique_together': "((u'date', u'block_letter'),)", 'object_name': 'EighthBlock'},
+            'activities': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['eighth.EighthActivity']", 'symmetrical': 'False', 'through': u"orm['eighth.EighthScheduledActivity']", 'blank': 'True'}),
             'block_letter': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'date': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -222,6 +223,7 @@ class Migration(SchemaMigration):
             'attendance_taken': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'block': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['eighth.EighthBlock']"}),
             'cancelled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'capacity': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
             'comment': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'members': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['users.User']", 'through': u"orm['eighth.EighthSignup']", 'symmetrical': 'False'}),
