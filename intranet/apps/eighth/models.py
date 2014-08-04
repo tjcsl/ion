@@ -22,10 +22,12 @@ class EighthSponsor(models.Model):
         - name -- The name of the sponsor
 
     """
-    user = models.ForeignKey(User, null=True)
     first_name = models.CharField(null=True, max_length=63)
     last_name = models.CharField(null=True, max_length=63)
+    user = models.ForeignKey(User, null=True)
     online_attendance = models.BooleanField(default=True)
+
+    unique_together = (("first_name", "last_name", "user", "online_attendance"),)
 
     def __unicode__(self):
         try:
@@ -49,7 +51,7 @@ class EighthRoom(models.Model):
     name = models.CharField(max_length=63)
     capacity = models.SmallIntegerField(default=-1)
 
-    unique_together = (("room_number", "name", "capacity"),)
+    unique_together = (("name", "capacity"),)
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
@@ -63,7 +65,7 @@ class EighthActivity(models.Model):
         - sponsors -- The :class:`EighthSponsor`s for the activity.
 
     """
-    # TODO: Add default capacity,
+
     name = models.CharField(max_length=63)
     description = models.TextField(blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
