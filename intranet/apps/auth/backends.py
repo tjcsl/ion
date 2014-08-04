@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import pexpect
 import uuid
 import os
@@ -22,11 +25,13 @@ class KerberosAuthenticationBackend(object):
         """
 
         cache = "/tmp/ion-" + str(uuid.uuid4())
+        # username = unicode(username)
+        # password = unicode(password)
 
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
-        kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
+        kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
         kinit.expect("{}@{}'s Password:".format(username, settings.CSL_REALM))
         kinit.sendline(password)
         kinit.expect(pexpect.EOF)
@@ -35,18 +40,18 @@ class KerberosAuthenticationBackend(object):
         exitstatus = kinit.exitstatus
         realm = settings.CSL_REALM
 
-        if exitstatus != 0:
-            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
-            kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
-            kinit.sendline(password)
-            kinit.expect(pexpect.EOF)
-            kinit.close()
-            exitstatus = kinit.exitstatus
-            realm = settings.AD_REALM
+        # if exitstatus != 0:
+        #     kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
+        #     kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
+        #     kinit.sendline(password)
+        #     kinit.expect(pexpect.EOF)
+        #     kinit.close()
+        #     exitstatus = kinit.exitstatus
+        #     realm = settings.AD_REALM
 
         if exitstatus == 0:
             logger.info("Kerberos authorized {}@{}".format(username, realm))
-            kgetcred = pexpect.spawn("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
+            kgetcred = pexpect.spawnu("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
             kgetcred.expect(pexpect.EOF)
             kgetcred.close()
 

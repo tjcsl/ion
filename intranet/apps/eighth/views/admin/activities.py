@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import cPickle
+import logging
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -6,11 +10,14 @@ from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import QuickActivityForm, ActivityForm
 from ...models import EighthActivity
 
+logger = logging.getLogger(__name__)
+
 
 @eighth_admin_required
 def add_activity_view(request):
     if request.method == "POST":
         form = QuickActivityForm(request.POST)
+        logger.error("{}".format(request.POST["name"]))
         if form.is_valid():
             activity = form.save()
             messages.success(request, "Successfully added activity.")
