@@ -74,7 +74,6 @@ class LDAPConnection(object):
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.error("SASL bind failed - using simple bind")
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
-        pass
 
     @property
     def raw_connection(self):
@@ -106,6 +105,10 @@ class LDAPConnection(object):
         """
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
+
+        # tip-toe around unicode bugs
+        attributes = [str(attr) for attr in attributes]
+
         return _thread_locals.ldap_conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                                  filter, attributes)
 

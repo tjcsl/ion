@@ -40,14 +40,14 @@ class KerberosAuthenticationBackend(object):
         exitstatus = kinit.exitstatus
         realm = settings.CSL_REALM
 
-        # if exitstatus != 0:
-        #     kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
-        #     kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
-        #     kinit.sendline(password)
-        #     kinit.expect(pexpect.EOF)
-        #     kinit.close()
-        #     exitstatus = kinit.exitstatus
-        #     realm = settings.AD_REALM
+        if exitstatus != 0:
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
+            kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
+            kinit.sendline(password)
+            kinit.expect(pexpect.EOF)
+            kinit.close()
+            exitstatus = kinit.exitstatus
+            realm = settings.AD_REALM
 
         if exitstatus == 0:
             logger.info("Kerberos authorized {}@{}".format(username, realm))
@@ -92,6 +92,7 @@ class KerberosAuthenticationBackend(object):
                 user.id = user.ion_id
                 user.set_unusable_password()
                 user.save()
+
             return user
 
     def get_user(self, user_id):

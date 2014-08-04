@@ -44,7 +44,7 @@ class login_view(View):
             return redirect(next)
         else:
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
-            return index_view(request, auth_form=form)  # Modified to show errors
+            return index_view(request, auth_form=form)
 
     def get(self, request):
         """Redirect to the login page."""
