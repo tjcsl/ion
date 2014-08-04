@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from icalendar import Calendar, Event
 from datetime import datetime
 #from intranet.apps.schedule.models import *

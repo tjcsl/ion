@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from cStringIO import StringIO
 from functools import wraps
 import io

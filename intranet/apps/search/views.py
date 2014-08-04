@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import elasticsearch
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render

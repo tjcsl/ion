@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.conf.urls import include, url
 from .views import routers, student_signup, teacher_attendance
 from .views.admin import general, activities, blocks, groups, rooms

@@ -1,4 +1,6 @@
-from __future__ import with_statement
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, with_statement
+
 from fabric.api import *
 from fabric.contrib.console import confirm
 import os

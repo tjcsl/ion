@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.conf.urls import url
 from ..eighth.views import api as eighth_api
 from .views import api_root

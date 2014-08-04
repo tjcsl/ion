@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.core.management.base import BaseCommand, CommandError
 from intranet.apps.schedule.models import *
 from icalendar import Calendar, Event
@@ -12,7 +15,7 @@ class Command(BaseCommand):
             resp = urllib2.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
             ical = resp.read()
             return ical
-        
+
         def parse(ical):
             cal = Calendar.from_ical(ical)
             map = {}
