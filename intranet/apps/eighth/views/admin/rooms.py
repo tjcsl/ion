@@ -44,4 +44,8 @@ def edit_room_view(request, room_id=None):
     else:
         form = RoomForm(instance=room)
 
-    return render(request, "eighth/admin/edit_form.html", {"form": form})
+    context = {
+        "form": form,
+        "admin_page_title": "Edit Room"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)

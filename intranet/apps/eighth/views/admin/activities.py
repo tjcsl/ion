@@ -49,4 +49,8 @@ def edit_activity_view(request, activity_id=None):
     else:
         form = ActivityForm(instance=activity)
 
-    return render(request, "eighth/admin/edit_form.html", {"form": form})
+    context = {
+        "form": form,
+        "admin_page_title": "Edit Activity"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)

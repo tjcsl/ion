@@ -44,4 +44,8 @@ def edit_block_view(request, block_id=None):
     else:
         form = BlockForm(instance=block)
 
-    return render(request, "eighth/admin/edit_form.html", {"form": form})
+    context = {
+        "form": form,
+        "admin_page_title": "Edit Block"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)

@@ -44,4 +44,8 @@ def edit_sponsor_view(request, sponsor_id=None):
     else:
         form = SponsorForm(instance=sponsor)
 
-    return render(request, "eighth/admin/edit_form.html", {"form": form})
+    context = {
+        "form": form,
+        "admin_page_title": "Edit Sponsor"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)

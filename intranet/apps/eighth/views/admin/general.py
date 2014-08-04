@@ -32,10 +32,12 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "rooms": rooms,
         "sponsors": sponsors,
 
+        "admin_page_title": "Eighth Period Admin",
+
         # Used in place of IDs in data-href-pattern tags of .dynamic-links
         # to reverse single-ID urls in Javascript. It's rather hacky, but
         # not unlike boundaries of multipart/form-data requests, so it's
-        # not completely invalid. If there's a better way to do this,
+        # not completely bad. If there's a better way to do this,
         # please implement it.
         "url_id_placeholder": "734784857438457843756435654645642343465"
     }

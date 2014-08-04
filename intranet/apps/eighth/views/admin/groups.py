@@ -45,4 +45,8 @@ def edit_group_view(request, group_id=None):
     else:
         form = GroupForm(instance=group)
 
-    return render(request, "eighth/admin/edit_form.html", {"form": form})
+    context = {
+        "form": form,
+        "admin_page_title": "Edit Group"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)
