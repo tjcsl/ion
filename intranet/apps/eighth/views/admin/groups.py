@@ -15,9 +15,10 @@ def add_group_view(request):
     if request.method == "POST":
         form = QuickGroupForm(request.POST)
         if form.is_valid():
-            form.save()
+            group = form.save()
             messages.success(request, "Successfully added group.")
-            return redirect("eighth_admin_dashboard")
+            return redirect("eighth_admin_edit_group",
+                            group_id=group.id)
         else:
             messages.error(request, "Error adding group.")
             request.session["add_group_form"] = cPickle.dumps(form)
@@ -44,4 +45,4 @@ def edit_group_view(request, group_id=None):
     else:
         form = GroupForm(instance=group)
 
-    return render(request, "eighth/admin/edit_group.html", {"form": form})
+    return render(request, "eighth/admin/edit_form.html", {"form": form})

@@ -49,4 +49,4 @@ def edit_activity_view(request, activity_id=None):
     else:
         form = ActivityForm(instance=activity)
 
-    return render(request, "eighth/admin/edit_activity.html", {"form": form})
+    return render(request, "eighth/admin/edit_form.html", {"form": form})

@@ -169,14 +169,17 @@
         <td class="admin-section">
             <h3>Sponsors</h3>
 
-            <form id="add-sponsor-form" action="">
+            <form id="add-sponsor-form" action="{% url 'eighth_admin_add_sponsor' %}" method="post" autocomplete="off">
                 <h4>Add Sponsor</h4>
-                <input type="text" placeholder="First Name">
-                <input type="text" placeholder="Last Name"><br>
-                <input type="text" placeholder="User ID"><br>
-                <input type="checkbox" id="online-attendance" checked>
-                <label for="online-attendance">Online Attendance</label><br>
-                <button>Add</button>
+                {% csrf_token %}
+                <table>
+                    {{ add_sponsor_form.as_table }}
+                    <tr>
+                        <td class="right-buttons" colspan=2>
+                            <input type="submit" value="Add">
+                        </td>
+                    </tr>
+                </table>
             </form>
 
             <h4>Sponsor Actions</h4>

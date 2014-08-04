@@ -15,10 +15,9 @@ def add_room_view(request):
     if request.method == "POST":
         form = RoomForm(request.POST)
         if form.is_valid():
-            room = form.save()
+            form.save()
             messages.success(request, "Successfully added room.")
-            return redirect("eighth_admin_edit_room",
-                            room_id=room.id)
+            return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding room.")
             request.session["add_room_form"] = cPickle.dumps(form)
@@ -45,4 +44,4 @@ def edit_room_view(request, room_id=None):
     else:
         form = RoomForm(instance=room)
 
-    return render(request, "eighth/admin/edit_room.html", {"form": form})
+    return render(request, "eighth/admin/edit_form.html", {"form": form})
