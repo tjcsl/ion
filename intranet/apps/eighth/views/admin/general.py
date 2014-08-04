@@ -61,6 +61,11 @@ def eighth_admin_dashboard_view(request, **kwargs):
     return render(request, "eighth/admin/dashboard.html", context)
 
 
+@eighth_admin_required
+def not_implemented_view(request, *args, **kwargs):
+    raise NotImplementedError("This view has not been implemented yet.")
+
+
 class EighthAdminExampleWizard(SessionWizardView):
     FORMS = [
         ("block", block_forms.BlockSelectionForm),

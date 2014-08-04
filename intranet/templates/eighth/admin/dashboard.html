@@ -65,7 +65,7 @@
                 {% endfor %}
             </select>
             <div class="right-buttons">
-                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Print Rosters</a>
+                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_print_block_rosters' url_id_placeholder %}" class="button">Print Rosters</a>
                 <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Edit Block</a>
             </div>
         </td>
@@ -74,21 +74,21 @@
         <td class="admin-section">
             <h3>Scheduling</h3>
             <ul class="fa-ul">
-                <li><a href=""><i class="fa-li fa fa-eye"></i>View scheduled activity</a></li>
-                <li><a href=""><i class="fa-li fa fa-list-alt"></i>Schedule an activity</a></li>
-                <li><a href=""><i class="fa-li fa fa-calendar"></i>View when an activity is scheduled</a></li>
-                <li><a href=""><i class="fa-li fa fa-share"></i>Move students from one scheduled activity to another</a></li>
+                <li><a href="{% url 'eighth_admin_view_scheduled_activity' %}"><i class="fa-li fa fa-eye"></i>View scheduled activity</a></li>
+                <li><a href="{% url 'eighth_admin_schedule_activity' %}"><i class="fa-li fa fa-list-alt"></i>Schedule an activity</a></li>
+                <li><a href="{% url 'eighth_admin_view_activity_schedule' %}"><i class="fa-li fa fa-calendar"></i>View when an activity is scheduled</a></li>
+                <li><a href="{% url 'eighth_admin_transfer_students' %}"><i class="fa-li fa fa-share"></i>Transfer students from one scheduled activity to another</a></li>
             </ul>
         </td>
         <td class="admin-section">
             <h3>Attendance</h3>
             <ul class="fa-ul">
-                <li><a href=""><i class="fa-li fa fa-check-square"></i>View/take attendance</a></li>
-                <li><a href=""><i class="fa-li fa fa-gavel"></i>View delinquent students</a></li>
-                <li><a href=""><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
-                <li><a href=""><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
-                <li><a href=""><i class="fa-li fa fa-ban"></i>Reject all outstanding passes</a></li>
-                <li><a href=""><i class="fa-li fa fa-building-o"></i>Export out-of-building schedules</a></li>
+                <li><a href="{% url 'eighth_admin_take_attendance' %}"><i class="fa-li fa fa-check-square"></i>View/take attendance</a></li>
+                <li><a href="{% url 'eighth_admin_view_delinquent_students' %}"><i class="fa-li fa fa-gavel"></i>View delinquent students</a></li>
+                <li><a href="{% url 'eighth_admin_view_after_deadline_signups' %}"><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
+                <li><a href="{% url 'eighth_admin_view_activities_without_attendance' %}"><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
+                <li><a href="{% url 'eighth_admin_reject_outstanding_passes' %}"><i class="fa-li fa fa-ban"></i>Reject all outstanding passes</a></li>
+                <li><a href="{% url 'eighth_admin_export_out_of_building_schedules' %}"><i class="fa-li fa fa-building-o"></i>Export out-of-building schedules</a></li>
             </ul>
         </td>
     </tr>
@@ -155,13 +155,13 @@
                 {% endfor %}
             </select>
             <div class="right-buttons">
-                <a class="dynamic-link button" data-select="room-select" data-href-pattern="{% url 'eighth_admin_edit_room' url_id_placeholder %}" class="button">Sign Up for Activity</a>
+                <a class="dynamic-link button" data-select="room-select" data-href-pattern="{% url 'eighth_admin_edit_room' url_id_placeholder %}" class="button">Edit Room</a>
             </div>
 
             <ul class="fa-ul">
-                <li><a href=""><i class="fa-li fa fa-check-square-o"></i>Room sanity check</a></li>
-                <li><a href=""><i class="fa-li fa fa-map-marker"></i>View utilization of rooms for block</a></li>
-                <li><a href=""><i class="fa-li fa fa-arrows-h"></i>View utilization of given room in block range</a></li>
+                <li><a href="{% url 'eighth_admin_room_sanity_check' %}"><i class="fa-li fa fa-check-square-o"></i>Room sanity check</a></li>
+                <li><a href="{% url 'eighth_admin_room_utilization_for_block' %}"><i class="fa-li fa fa-map-marker"></i>View utilization of rooms for block</a></li>
+                <li><a href="{% url 'eighth_admin_room_utilization_for_block_range' %}"><i class="fa-li fa fa-arrows-h"></i>View utilization of room in block range</a></li>
             </ul>
         </td>
     </tr>
@@ -180,14 +180,14 @@
             </form>
 
             <h4>Sponsor Actions</h4>
-            <select placeholder="Select or search for a sponsor">
+            <select id="sponsor-select" placeholder="Select or search for a sponsor">
                 {% for sponsor in sponsors %}
                     <option value="{{ sponsor.id }}">{{ sponsor.first_name }} {{ sponsor.last_name }}{% if sponsor.user %} (User {{ sponsor.user.id }}){% endif %}</option>
                 {% endfor %}
             </select>
             <div class="right-buttons">
-                <button>View Schedule</button>
-                <button>Edit Sponsor</button>
+                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_sponsor_schedule' url_id_placeholder %}" class="button">View Schedule</a>
+                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_edit_sponsor' url_id_placeholder %}" class="button">Edit Sponsor</a>
             </div>
         </td>
     </tr>
