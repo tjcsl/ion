@@ -95,7 +95,8 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
-    "intranet.context_processors.nav_categorizer"
+    "intranet.apps.context_processors.nav_categorizer",
+    "intranet.apps.eighth.context_processors.start_date"
 )
 
 MIDDLEWARE_CLASSES = (
