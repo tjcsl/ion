@@ -84,6 +84,9 @@ class EighthActivity(models.Model):
 
     # Single students allowed
 
+    class Meta:
+        verbose_name_plural = "eighth activities"
+
     def __unicode__(self):
         return self.name
 
@@ -225,6 +228,7 @@ class EighthScheduledActivity(models.Model):
 
     class Meta:
         unique_together = (("block", "activity"),)
+        verbose_name_plural = "eighth scheduled activities"
 
     def __unicode__(self):
         return "{} on {}".format(self.activity.name, self.block)
