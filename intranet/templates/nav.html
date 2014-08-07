@@ -1,42 +1,57 @@
 <ul class="nav">
     {% block nav %}
-        <li {% if nav_category = "dashboard" %}class="selected"{% endif %}>
-            <a href="/">
+        <li {% if nav_category == "dashboard" %}class="selected"{% endif %}>
+            <a href="{% url 'index' %}">
                 <i class="nav-icon dashboard-icon"></i>
                 Dashboard
             </a>
         </li>
 
-        <li {% if nav_category = "eighth" %}class="selected"{% endif %}>
-            <a href="/eighth">
-                <i class="nav-icon eighth-icon"></i>
-                Eighth
-            </a>
-        </li>
+        {% if request.user.is_eighth_admin and request.user.is_student %}
+            <li {% if nav_category == "eighth" %}class="selected"{% endif %}>
+                <a href="{% url 'eighth_signup' %}">
+                    <i class="nav-icon eighth-icon"></i>
+                    Signup
+                </a>
+            </li>
+            <li {% if nav_category == "eighth_admin" %}class="selected"{% endif %}>
+                <a href="{% url 'eighth_admin_dashboard' %}">
+                    <i class="nav-icon eighth-icon"></i>
+                    Admin
+                </a>
+            </li>
+        {% else %}
+            <li {% if nav_category == "eighth" or nav_category == "eighth_admin" %}class="selected"{% endif %}>
+                <a href="{% if request.user.is_eighth_admin %}{% url 'eighth_admin_dashboard' %}{% else %}{% url 'eighth_redirect' %}{% endif %}">
+                    <i class="nav-icon eighth-icon"></i>
+                    Eighth
+                </a>
+            </li>
+        {% endif %}
 
-        <li {% if nav_category = "events" %}class="selected"{% endif %}>
-            <a href="/events">
+        <li {% if nav_category == "events" %}class="selected"{% endif %}>
+            <a href="{% url 'events' %}">
                 <i class="nav-icon events-icon"></i>
                 Events
             </a>
         </li>
 
-        <li {% if nav_category = "groups" %}class="selected"{% endif %}>
-            <a href="/groups">
+        <li {% if nav_category == "groups" %}class="selected"{% endif %}>
+            <a href="{% url 'groups' %}">
                 <i class="nav-icon groups-icon"></i>
                 Groups
             </a>
         </li>
 
-        <li {% if nav_category = "polls" %}class="selected"{% endif %}>
-            <a href="/polls">
+        <li {% if nav_category == "polls" %}class="selected"{% endif %}>
+            <a href="{% url 'polls' %}">
                 <i class="nav-icon polls-icon"></i>
                 Polls
             </a>
         </li>
 
-        <li {% if nav_category = "files" %}class="selected"{% endif %}>
-            <a href="/files">
+        <li {% if nav_category == "files" %}class="selected"{% endif %}>
+            <a href="{% url 'files' %}">
                 <i class="nav-icon files-icon"></i>
                 Files
             </a>

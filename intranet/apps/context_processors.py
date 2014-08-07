@@ -12,6 +12,7 @@ def nav_categorizer(request):
     categories = [
         (r"^/$", "dashboard"),
         (r"^/announcements", "dashboard"),
+        (r"^/eighth/admin", "eighth_admin"),
         (r"^/eighth", "eighth"),
         (r"^/events", "events"),
         (r"^/files", "files"),
