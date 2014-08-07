@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import cPickle
+from urllib import unquote
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -74,7 +75,12 @@ def edit_start_date_view(request):
             new_start_date = form.cleaned_data["date"]
             set_start_date(request, new_start_date)
             messages.success(request, "Successfully changed start date")
-            return redirect("eighth_admin_dashboard")
+
+            redirect_destination = "eighth_admin_dashboard"
+            if "next_page" in request.GET:
+                redirect_destination = unquote(request.GET["next_page"])
+
+            return redirect(redirect_destination)
         else:
             messages.error(request, "Error changing start date.")
     else:
