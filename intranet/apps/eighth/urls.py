@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 
 from django.conf.urls import include, url
 from .views import routers, student_signup, teacher_attendance
-from .views.admin import general, activities, blocks, groups, rooms, sponsors
+from .views.admin import (
+    general, activities, blocks, groups, rooms, sponsors, scheduling)
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
@@ -32,7 +33,7 @@ eighth_admin_patterns = [
 
     # Scheduling
     url(r"^scheduling/activity$", general.not_implemented_view, name="eighth_admin_view_scheduled_activity"),
-    url(r"^scheduling/schedule$", general.not_implemented_view, name="eighth_admin_schedule_activity"),
+    url(r"^scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
     url(r"^scheduling/activity_schedule$", general.not_implemented_view, name="eighth_admin_view_activity_schedule"),
     url(r"^scheduling/transfer_students$", general.not_implemented_view, name="eighth_admin_transfer_students"),
 
@@ -60,6 +61,8 @@ eighth_admin_patterns = [
     url(r"^sponsors/add$", sponsors.add_sponsor_view, name="eighth_admin_add_sponsor"),
     url(r"^sponsors/edit/(?P<sponsor_id>\d+)$", sponsors.edit_sponsor_view, name="eighth_admin_edit_sponsor"),
     url(r"^sponsors/schedule/(?P<sponsor_id>\d+)$", general.not_implemented_view, name="eighth_admin_sponsor_schedule"),
+
+    url(r"^startdate$", general.edit_start_date_view, name="eighth_admin_edit_start_date"),
 
 ]
 

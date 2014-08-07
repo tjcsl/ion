@@ -9,9 +9,9 @@ from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin import (
     activities as activity_forms, blocks as block_forms, groups as group_forms,
-    rooms as room_forms, sponsors as sponsor_forms)
+    rooms as room_forms, sponsors as sponsor_forms, general as general_forms)
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
-from ...utils import get_start_date
+from ...utils import get_start_date, set_start_date
 
 
 @eighth_admin_required
@@ -64,6 +64,30 @@ def eighth_admin_dashboard_view(request, **kwargs):
             context[form_name] = form_class()
 
     return render(request, "eighth/admin/dashboard.html", context)
+
+
+@eighth_admin_required
+def edit_start_date_view(request):
+    if request.method == "POST":
+        form = general_forms.StartDateForm(request.POST)
+        if form.is_valid():
+            new_start_date = form.cleaned_data["date"]
+            set_start_date(request, new_start_date)
+            messages.success(request, "Successfully changed start date")
+            return redirect("eighth_admin_dashboard")
+        else:
+            messages.error(request, "Error changing start date.")
+    else:
+        initial_data = {
+            "date": get_start_date(request)
+        }
+        form = general_forms.StartDateForm(initial=initial_data)
+
+    context = {
+        "form": form,
+        "admin_page_title": "Change Start Date"
+    }
+    return render(request, "eighth/admin/edit_form.html", context)
 
 
 @eighth_admin_required
