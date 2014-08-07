@@ -9,6 +9,14 @@ def start_date(request):
     """
 
     if request.user.is_authenticated() and request.user.is_eighth_admin:
-        return {"start_date": get_start_date(request)}
+        return {
+            "start_date": get_start_date(request)
+        }
 
     return {}
+
+
+def get_current_path(request):
+    return {
+        "current_path": request.get_full_path()
+    }
