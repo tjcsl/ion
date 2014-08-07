@@ -8,7 +8,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
-ADD_SLASHES = False
+APPEND_SLASH = False
 
 ADMINS = (
     # ("Your Name", "your_email@example.com"),
@@ -100,6 +100,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
