@@ -8,7 +8,7 @@ def start_date(request):
     """Add the start date to the context for eighth admin views
     """
 
-    if request.user.is_eighth_admin:
+    if request.user.is_authenticated() and request.user.is_eighth_admin:
         return {"start_date": get_start_date(request)}
 
     return {}
