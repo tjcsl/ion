@@ -1,0 +1,64 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_page_title %}Schedule an Activity{% endblock %}
+
+{% block admin_main %}
+
+<h4>Select an Activity:</h4>
+
+<select class="schedule-activity-select" placeholder="Select or search for an activity">
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name }}</option>
+    {% endfor %}
+</select>
+
+{% if activity %}
+    <form method="post" action="{% url 'eighth_admin_schedule_activity' %}">
+        {% csrf_token %}
+
+        <div>
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+
+        {{ formset.management_form }}
+
+        <table class="schedule-activity-grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>Block</th>
+                    <th>Rooms</th>
+                    <th>Capacity</th>
+                    <th>Sponsors</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                    <tr>
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        <td><input type="checkbox"></td>
+                        <td>{{ form.block.value }}</td>
+                        {% for field in form.visible_fields %}
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div>
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+    </form>
+{% endif %}
+
+{% endblock %}
