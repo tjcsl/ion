@@ -56,6 +56,8 @@ def schedule_activity_view(request):
             initial_formset_data.append(initial_form_data)
 
         ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
-        context["formset"] = ScheduledActivityFormset(initial=initial_formset_data)
+        formset = ScheduledActivityFormset(initial=initial_formset_data)
+        context["formset"] = formset
+        context["rows"] = zip(blocks, formset)
 
     return render(request, "eighth/admin/schedule_activity.html", context)

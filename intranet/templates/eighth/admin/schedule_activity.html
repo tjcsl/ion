@@ -32,23 +32,25 @@
                     <th>Capacity</th>
                     <th>Sponsors</th>
                     <th>Comments</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for form in formset %}
+                {% for block, form in rows %}
                     <tr>
                         {% for hidden in form.hidden_fields %}
                             {{ hidden }}
                         {% endfor %}
 
                         <td><input type="checkbox"></td>
-                        <td>{{ form.block.value }}</td>
+                        <td>{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
                         {% for field in form.visible_fields %}
                             <td>
                                 {{ field.errors }}
                                 {{ field }}
                             </td>
                         {% endfor %}
+                        <td><input type="submit" name="save-{{ forloop.counter0 }}" value="Save"></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -56,7 +58,7 @@
 
         <div>
             <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-            <input type="submit" value="Save">
+            <input type="submit" name="save-all" value="Save">
         </div>
     </form>
 {% endif %}
