@@ -3,6 +3,7 @@ $(function() {
     $("input.datepicker, input[name=date]").datepicker();
 
 
+    // Set up dashboard links dependent on the status of <select> inputs
     $(".dynamic-link").each(function() {
         var $anchor = $(this);
         var $select = $("#" + $anchor.data("select"));
@@ -22,6 +23,7 @@ $(function() {
     });
 
 
+    // Utility functions for manipulating GET parameters
     var getParams = function(url) {
         var params = {};
 
@@ -49,6 +51,7 @@ $(function() {
         return url.split("?")[0] + "?" + $.param(params);
     }
 
+    //
     if (!("activity" in getParams(document.URL))) {
         $(".schedule-activity-select")[0].selectize.setValue(-1);
     }
@@ -57,5 +60,31 @@ $(function() {
         var url = updateParam(document.URL, "activity", $(this).val());
         location.href = url;
     })
+
+
+    // Set up checkboxes on activity scheduling page
+    var $selectAllBlocksCheckbox = $(".schedule-activity-grid thead input[type='checkbox']")
+    var $blockCheckboxes = $(".schedule-activity-grid tbody input[type='checkbox']");
+
+    var updateBlockCheckboxes = function() {
+        var numChecked = $blockCheckboxes.filter(":checked").length;
+        if (numChecked == $blockCheckboxes.length) {
+            $selectAllBlocksCheckbox.prop("checked", true);
+            $selectAllBlocksCheckbox.prop("indeterminate", false);
+        } else if (numChecked == 0) {
+            $selectAllBlocksCheckbox.prop("checked", false);
+        } else {
+            $selectAllBlocksCheckbox.prop("checked", false);
+            $selectAllBlocksCheckbox.prop("indeterminate", true);
+        }
+    }
+
+    var updateSelectAllCheckbox = function() {
+        $blockCheckboxes.prop("checked", $(this).prop("checked"));
+    }
+
+    $selectAllBlocksCheckbox.click(updateSelectAllCheckbox);
+    $blockCheckboxes.click(updateBlockCheckboxes);
+    updateBlockCheckboxes();
 
 });
