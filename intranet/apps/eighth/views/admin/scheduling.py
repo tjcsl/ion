@@ -22,14 +22,26 @@ def schedule_activity_view(request):
 
         if formset.is_valid():
             for form in formset:
+                block = form.cleaned_data["block"]
+                activity = form.cleaned_data["activity"]
+
                 if form["scheduled"].value():
-                    block = form.cleaned_data["block"]
-                    activity = form.cleaned_data["activity"]
                     instance, created = EighthScheduledActivity.objects.get_or_create(block=block, activity=activity)
+
+                    # TODO: Send notifications about room changes
+
                     fields = ["rooms", "capacity", "sponsors", "comments"]
                     for field_name in fields:
                         setattr(instance, field_name, form.cleaned_data[field_name])
+
+                    # Uncancel if this activity/block pairing was already
+                    # created and cancelled
+                    instance.cancelled = False
                     instance.save()
+                else:
+                    # Instead of deleting and messing up attendance,
+                    # cancel the scheduled activity if it was unscheduled
+                    EighthScheduledActivity.objects.filter(block=block, activity=activity).update(cancelled=True)
 
             messages.success(request, "Successfully updated schedule.")
 
@@ -69,7 +81,8 @@ def schedule_activity_view(request):
             try:
                 sched_act = EighthScheduledActivity.objects \
                                                    .get(activity=activity,
-                                                        block=block)
+                                                        block=block,
+                                                        cancelled=False)
 
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),

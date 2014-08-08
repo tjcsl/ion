@@ -21,12 +21,18 @@ class ScheduledActivityForm(forms.ModelForm):
             self.fields[fieldname].widget = forms.HiddenInput()
 
     def validate_unique(self):
-        # We'll handle this ourselves by updating if not unique
+        # We'll handle this ourselves by updating if already exists
         pass
 
     class Meta:
         model = EighthScheduledActivity
-        fields = ["scheduled", "block", "activity", "rooms", "capacity", "sponsors", "comments"]
+        fields = ["scheduled",
+                  "block",
+                  "activity",
+                  "rooms",
+                  "capacity",
+                  "sponsors",
+                  "comments"]
         widgets = {
             "capacity": forms.TextInput(),
             "comments": forms.Textarea(attrs={"rows": 2, "cols": 30})
