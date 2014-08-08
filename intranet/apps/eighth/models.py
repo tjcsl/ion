@@ -153,7 +153,8 @@ class EighthBlock(models.Model):
     block_letter = models.CharField(max_length=1)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
-                                        through="EighthScheduledActivity", blank=True)
+                                        through="EighthScheduledActivity",
+                                        blank=True)
 
     objects = EighthBlockManager()
 
@@ -227,7 +228,7 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup")
 
-    comments = models.CharField(max_length=255, null=True)
+    comments = models.TextField(blank=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor)
