@@ -71,8 +71,15 @@ $(function() {
 
         showDetail: function(e) {
             $(previousSelection).removeClass("selected");
-            $(e.target).addClass("selected");
-            previousSelection = e.target;
+
+            var $target = $(e.target);
+            console.log(e.target);
+            if (!$target.is("li")) {
+                $target = $target.parents("li");
+            }
+
+            $target.addClass("selected");
+            previousSelection = $target;
 
             activityDetailView = new eighth.ActivityDetailView({
                 model: this.model,
@@ -82,7 +89,6 @@ $(function() {
             $("#activity-detail").attr("data-aid", activityDetailView.model.id);
 
             activityDetailView.render();
-            console.log(activityDetailView);
             $("#signup-button").click(function(event) {
                 $(this).unbind(event);
                 var target = document.getElementById("signup-spinner");
