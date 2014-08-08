@@ -102,6 +102,8 @@ $(function() {
         }
     });
 
+    // Returns a function that filters rows based on whether
+    // they represent a block of the given type
     var blockTypeRowFilter = function(blockType) {
         return function(index, element) {
             var blockName = $(element).children(".block-name").text();
