@@ -52,6 +52,7 @@ $(function() {
     if (!("activity" in getParams(document.URL))) {
         $(".schedule-activity-select")[0].selectize.setValue(-1);
     }
+
     $(".schedule-activity-select").on("change", function() {
         var url = updateParam(document.URL, "activity", $(this).val());
         location.href = url;

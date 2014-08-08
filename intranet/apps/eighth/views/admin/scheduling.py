@@ -46,12 +46,14 @@ def schedule_activity_view(request):
                     "rooms": sched_act.rooms.all(),
                     "capacity": sched_act.capacity,
                     "sponsors": sched_act.sponsors.all(),
+                    "scheduled": True
                 })
             except EighthScheduledActivity.DoesNotExist:
                 initial_form_data.update({
                     "rooms": activity.rooms.all(),
                     "capacity": activity.capacity,
-                    "sponsors": activity.sponsors.all()
+                    "sponsors": activity.sponsors.all(),
+                    "scheduled": False
                 })
             initial_formset_data.append(initial_form_data)
 
