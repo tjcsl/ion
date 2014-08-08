@@ -84,6 +84,17 @@ class EighthActivity(models.Model):
 
     # Single students allowed
 
+    @property
+    def capacity(self):
+        all_rooms = self.rooms.all()
+        if len(all_rooms) == 0:
+            capacity = -1
+        else:
+            capacity = 0
+            for room in all_rooms:
+                capacity += room.capacity
+        return capacity
+
     class Meta:
         verbose_name_plural = "eighth activities"
 
@@ -200,7 +211,7 @@ class EighthScheduledActivity(models.Model):
         - activity -- the scheduled :class:`EighthActivity`
         - members -- the :class:`User<intranet.apps.users.models.User>`s\
                      who have signed up for an :class:`EighthBlock`
-        - comment -- notes for the Eighth Office
+        - comments -- notes for the Eighth Office
         - sponsors -- :class:`EighthSponsor`s that will override the \
                       :class:`EighthActivity`'s default sponsors
         - rooms -- :class:`EighthRoom`s that will override the \
@@ -216,7 +227,7 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup")
 
-    comment = models.CharField(max_length=255)
+    comments = models.CharField(max_length=255, null=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor)
