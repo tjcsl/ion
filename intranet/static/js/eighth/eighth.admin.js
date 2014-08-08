@@ -66,25 +66,59 @@ $(function() {
     var $selectAllBlocksCheckbox = $(".schedule-activity-grid thead input[type='checkbox']")
     var $blockCheckboxes = $(".schedule-activity-grid tbody input[type='checkbox']");
 
-    var updateBlockCheckboxes = function() {
+    var updateSelectAllCheckbox = function() {
         var numChecked = $blockCheckboxes.filter(":checked").length;
         if (numChecked == $blockCheckboxes.length) {
             $selectAllBlocksCheckbox.prop("checked", true);
             $selectAllBlocksCheckbox.prop("indeterminate", false);
         } else if (numChecked == 0) {
             $selectAllBlocksCheckbox.prop("checked", false);
+            $selectAllBlocksCheckbox.prop("indeterminate", false);
         } else {
             $selectAllBlocksCheckbox.prop("checked", false);
             $selectAllBlocksCheckbox.prop("indeterminate", true);
         }
     }
 
-    var updateSelectAllCheckbox = function() {
+    var updateBlockCheckboxes = function() {
         $blockCheckboxes.prop("checked", $(this).prop("checked"));
     }
 
-    $selectAllBlocksCheckbox.click(updateSelectAllCheckbox);
-    $blockCheckboxes.click(updateBlockCheckboxes);
-    updateBlockCheckboxes();
+    $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
+    $blockCheckboxes.click(updateSelectAllCheckbox);
+    updateSelectAllCheckbox();
+
+    // Set up select blocks popover
+    $(".select-blocks-popover-toggle").click(function() {
+        var $popover = $(".select-blocks-popover");
+        var $toggle = $(".select-blocks-popover-toggle");
+
+        $popover.toggleClass("closed");
+
+        if ($popover.hasClass("closed")) {
+            $toggle.html("Select All <i class=\"fa fa-caret-down\"></i>")
+        } else {
+           $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>")
+        }
+    });
+
+    var blockTypeRowFilter = function(blockType) {
+        return function(index, element) {
+            var blockName = $(element).children(".block-name").text();
+            return blockName.indexOf(blockType) == 0;
+        };
+    };
+
+    $(".select-blocks-popover a.block-type").click(function() {
+        var blockType = $(this).text();
+
+        var blockTypeFilter = blockTypeRowFilter(blockType);
+        $("tr.form-row").each(function() {
+            var $blocksOfType = $(this).filter(blockTypeFilter);
+            $blocksOfType.find("input[type='checkbox']").prop("checked", true);
+        })
+
+        updateSelectAllCheckbox();
+    });
 
 });

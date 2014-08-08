@@ -27,8 +27,17 @@
         <table class="schedule-activity-grid">
             <thead>
                 <tr>
-                    <th><input type="checkbox">Scheduled</th>
-                    <th>Block</th>
+                    <th><input type="checkbox"></th>
+                    <th>
+                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                        <div class="select-blocks-popover closed">
+                            <a href="" onclick="return false" class="block-type">Mon B</a>
+                            <a href="" onclick="return false" class="block-type">Wed A</a>
+                            <a href="" onclick="return false" class="block-type">Wed B</a>
+                            <a href="" onclick="return false" class="block-type">Fri A</a>
+                            <a href="" onclick="return false" class="block-type">Fri B</a>
+                        </div>
+                    </th>
                     <th>Rooms</th>
                     <th>Capacity</th>
                     <th>Sponsors</th>
@@ -43,7 +52,7 @@
                             <td colspan=6>{{ form.non_field_errors }}</td>
                         </tr>
                     {% endif %}
-                    <tr>
+                    <tr class="form-row">
                         {% for hidden in form.hidden_fields %}
                             {{ hidden }}
                         {% endfor %}
@@ -63,7 +72,7 @@
                             </td>
 
                             {% if field.name == "scheduled" %}
-                                <td>{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
+                                <td class="block-name">{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
                             {% endif %}
                         {% endfor %}
                     </tr>
