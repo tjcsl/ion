@@ -1,4 +1,27 @@
 $(function() {
+    $("select").selectize({});
+    $("input.datepicker, input[name=date]").datepicker();
+
+
+    $(".dynamic-link").each(function() {
+        var $anchor = $(this);
+        var $select = $("#" + $anchor.data("select"));
+        var hrefPattern = $anchor.data("href-pattern");
+
+        var update = function(e) {
+            if ($select.val().length) {
+                var href = hrefPattern.replace(window.urlIDPlaceholder, $select.val());
+                $anchor.attr("href", href);
+            } else {
+                $anchor.removeAttr("href")
+            }
+        }
+
+        $select.on("change", update);
+        update();
+    });
+
+
     var getParams = function(url) {
         var params = {};
 
@@ -26,29 +49,8 @@ $(function() {
         return url.split("?")[0] + "?" + $.param(params);
     }
 
-    $("select").selectize({});
-    $("input.datepicker, input[name=date]").datepicker();
 
-
-    $(".dynamic-link").each(function() {
-        var $anchor = $(this);
-        var $select = $("#" + $anchor.data("select"));
-        var hrefPattern = $anchor.data("href-pattern");
-
-        var update = function(e) {
-            if ($select.val().length) {
-                var href = hrefPattern.replace(window.urlIDPlaceholder, $select.val());
-                $anchor.attr("href", href);
-            } else {
-                $anchor.removeAttr("href")
-            }
-        }
-
-        $select.on("change", update);
-        update();
-    });
-
-
+    $(".schedule-activity-select")[0].selectize.setValue(-1);
     $(".schedule-activity-select").on("change", function() {
         var url = updateParam(document.URL, "activity", $(this).val());
         location.href = url;
