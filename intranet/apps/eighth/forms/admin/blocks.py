@@ -18,7 +18,7 @@ class QuickBlockForm(forms.ModelForm):
 
     class Meta:
         model = EighthBlock
-        fields = ["date"]
+        fields = ["date", "block_letter"]
 
 
 class BlockForm(forms.ModelForm):
