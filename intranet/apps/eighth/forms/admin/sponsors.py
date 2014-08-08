@@ -7,11 +7,15 @@ from ....users.models import User
 from ...models import EighthSponsor
 
 
-class AutoCreateUserField(forms.TypedChoiceField):
+class AutoCreateUserField(forms.ChoiceField):
     widget = forms.TextInput
 
     def clean(self, value):
-        print "hello-------------------"
+        value = self.to_python(value)
+        self.validate(value)
+        if value in self.empty_values:
+            return
+
         try:
             id_value = int(value)
         except (ValueError, TypeError):
@@ -40,7 +44,7 @@ class AutoCreateUserField(forms.TypedChoiceField):
 
 
 class SponsorForm(forms.ModelForm):
-    user = AutoCreateUserField()
+    user = AutoCreateUserField(required=False)
 
     class Meta:
         model = EighthSponsor
