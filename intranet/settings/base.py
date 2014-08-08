@@ -217,7 +217,8 @@ INSTALLED_APPS = (
     "intranet.apps.groups",
     "intranet.apps.schedule",
     "intranet.middleware.environment",
-    "debug_toolbar_line_profiler"
+    "debug_toolbar_line_profiler",
+    "widget_tweaks"
 )
 
 # A sample logging configuration. The only tangible logging

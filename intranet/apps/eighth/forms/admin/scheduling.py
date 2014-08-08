@@ -6,7 +6,10 @@ from ...models import EighthScheduledActivity
 
 
 class ScheduledActivityForm(forms.ModelForm):
-    scheduled = forms.BooleanField()
+    """Represents a row in the table activity scheduling admin page"""
+
+    # Whether the activity should actually scheduled for the block
+    scheduled = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(ScheduledActivityForm, self).__init__(*args, **kwargs)
@@ -16,6 +19,10 @@ class ScheduledActivityForm(forms.ModelForm):
 
         for fieldname in ["block", "activity"]:
             self.fields[fieldname].widget = forms.HiddenInput()
+
+    def validate_unique(self):
+        # We'll handle this ourselves by updating if not unique
+        pass
 
     class Meta:
         model = EighthScheduledActivity

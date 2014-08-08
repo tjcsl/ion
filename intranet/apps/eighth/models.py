@@ -231,9 +231,9 @@ class EighthScheduledActivity(models.Model):
     comments = models.TextField(blank=True)
 
     # Overridden attributes
-    sponsors = models.ManyToManyField(EighthSponsor)
-    rooms = models.ManyToManyField(EighthRoom)
-    capacity = models.SmallIntegerField(null=True)
+    sponsors = models.ManyToManyField(EighthSponsor, blank=True)
+    rooms = models.ManyToManyField(EighthRoom, blank=True)
+    capacity = models.SmallIntegerField(null=True, blank=True)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)

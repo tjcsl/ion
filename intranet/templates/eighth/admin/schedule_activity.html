@@ -1,4 +1,5 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load widget_tweaks %}
 
 {% block admin_page_title %}Schedule an Activity{% endblock %}
 
@@ -13,7 +14,7 @@
 </select>
 
 {% if activity %}
-    <form method="post" action="{% url 'eighth_admin_schedule_activity' %}">
+    <form method="post" action="">
         {% csrf_token %}
 
         <div>
@@ -26,17 +27,22 @@
         <table class="schedule-activity-grid">
             <thead>
                 <tr>
-                    <th><input type="checkbox"></th>
+                    <th><input type="checkbox">Scheduled</th>
                     <th>Block</th>
                     <th>Rooms</th>
                     <th>Capacity</th>
                     <th>Sponsors</th>
                     <th>Comments</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for block, form in rows %}
+                    {% if form.errors %}
+                        <tr>
+                            <td></td>
+                            <td colspan=6>{{ form.non_field_errors }}</td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         {% for hidden in form.hidden_fields %}
                             {{ hidden }}
@@ -45,22 +51,41 @@
                         {% for field in form.visible_fields %}
                             <td>
                                 {{ field.errors }}
-                                {{ field }}
+                                {% if field.name == "rooms" %}
+                                    {% render_field field placeholder=default_rooms %}
+                                {% elif field.name == "sponsors" %}
+                                    {% render_field field placeholder=default_sponsors %}
+                                {% elif field.name == "capacity" %}
+                                    {% render_field field placeholder=default_capacity %}
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
                             </td>
 
                             {% if field.name == "scheduled" %}
                                 <td>{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
                             {% endif %}
                         {% endfor %}
-                        <td><input type="submit" name="save-{{ forloop.counter0 }}" value="Save"></td>
                     </tr>
+
+                    {% if not forloop.last %}
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="divider">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
 
         <div>
             <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-            <input type="submit" name="save-all" value="Save">
+            <input type="submit" value="Save">
         </div>
     </form>
 {% endif %}
