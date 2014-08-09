@@ -59,6 +59,11 @@ class EighthRoom(models.Model):
         return "{} ({})".format(self.name, self.capacity)
 
 
+class EighthActivityExcludeDeletedManager(models.Manager):
+    def get_query_set(self):
+        return super(EighthActivityExcludeDeletedManager, self).get_query_set().exclude(deleted=True)
+
+
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
 
@@ -67,6 +72,8 @@ class EighthActivity(models.Model):
         - sponsors -- The :class:`EighthSponsor`s for the activity.
 
     """
+    objects = models.Manager()
+    undeleted_objects = EighthActivityExcludeDeletedManager()
 
     name = models.CharField(max_length=63, unique=True)
     description = models.CharField(max_length=255, blank=True)
@@ -151,14 +158,15 @@ class EighthBlock(models.Model):
                         :class:`EighthScheduledActivity`s for the block.
 
     """
+
+    objects = EighthBlockManager()
+
     date = models.DateField(null=False)
     block_letter = models.CharField(max_length=1)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity",
                                         blank=True)
-
-    objects = EighthBlockManager()
 
     def save(self, *args, **kwargs):
             letter = getattr(self, "block_letter", None)
