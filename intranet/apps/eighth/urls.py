@@ -34,7 +34,6 @@ eighth_admin_patterns = [
     url(r"blocks/edit/(?P<block_id>\d+)$", blocks.edit_block_view, name="eighth_admin_edit_block"),
 
     # Scheduling
-    url(r"scheduling/activity$", general.not_implemented_view, name="eighth_admin_view_scheduled_activity"),
     url(r"scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
     url(r"scheduling/activity_schedule$", general.not_implemented_view, name="eighth_admin_view_activity_schedule"),
     url(r"scheduling/transfer_students$", general.not_implemented_view, name="eighth_admin_transfer_students"),

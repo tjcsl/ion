@@ -183,6 +183,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
 
+        for scheduled_activity in scheduled_activities:
+            if scheduled_activity.capacity is not None:
+                capacity = scheduled_activity.capacity
+                sched_act_id = scheduled_activity.activity.id
+                activity_list[sched_act_id]["roster"]["capacity"] = capacity
+
         return activity_list
 
     class Meta:
