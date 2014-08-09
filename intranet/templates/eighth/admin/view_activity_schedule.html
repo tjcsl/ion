@@ -1,0 +1,20 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load widget_tweaks %}
+
+{% block admin_page_title %}View Activity Schedule{% endblock %}
+
+{% block admin_main %}
+
+<h4>Select an Activity:</h4>
+
+<select class="schedule-activity-select" placeholder="Select or search for an activity">
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name }}</option>
+    {% endfor %}
+</select>
+
+{% if activity %}
+
+{% endif %}
+
+{% endblock %}
