@@ -21,6 +21,7 @@
             <td>Rooms</td>
             <td>Sponsors</td>
             <td>Students Enrolled</td>
+            <td>Capacity</td>
         </thead>
         <tbody>
             {% for scheduled_activity in scheduled_activities %}
@@ -29,6 +30,7 @@
                     <td>{% for room in scheduled_activity.get_rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{% for sponsor in scheduled_activity.get_sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                    <td>{{ scheduled_activity.get_capacity }}</td>
                 </tr>
             {% endfor %}
         </tbody>

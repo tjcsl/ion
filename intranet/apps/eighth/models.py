@@ -256,7 +256,7 @@ class EighthScheduledActivity(models.Model):
         if self.capacity is not None:
             return self.capacity
         else:
-            return self.capacity
+            return self.activity.capacity
 
     class Meta:
         unique_together = (("block", "activity"),)
