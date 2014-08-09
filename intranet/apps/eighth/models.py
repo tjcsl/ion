@@ -23,8 +23,8 @@ class EighthSponsor(models.Model):
         - name -- The name of the sponsor
 
     """
-    first_name = models.CharField(null=True, max_length=63)
-    last_name = models.CharField(null=True, max_length=63)
+    first_name = models.CharField(max_length=63)
+    last_name = models.CharField(max_length=63)
     user = models.ForeignKey(User, null=True, blank=True)
     online_attendance = models.BooleanField(default=True)
 
@@ -69,7 +69,7 @@ class EighthActivity(models.Model):
     """
 
     name = models.CharField(max_length=63, unique=True)
-    description = models.TextField(blank=True)
+    description = models.CharField(max_length=255, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
 
@@ -80,9 +80,11 @@ class EighthActivity(models.Model):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
+    deleted = models.BooleanField(blank=True, default=False)
+
     # Groups allowed
 
-    # Single students allowed
+    # Individual students allowed
 
     @property
     def capacity(self):
@@ -228,7 +230,7 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup")
 
-    comments = models.TextField(blank=True)
+    comments = models.CharField(max_length=255, blank=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
@@ -238,21 +240,33 @@ class EighthScheduledActivity(models.Model):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
-    def get_sponsors(self):
+    def get_true_sponsors(self):
+        """Get the sponsors for the scheduled activity, taking into account
+        activity defaults and overrides.
+        """
+
         sponsors = self.sponsors.all()
         if len(sponsors) > 0:
             return sponsors
         else:
             return self.activity.sponsors.all()
 
-    def get_rooms(self):
+    def get_true_rooms(self):
+        """Get the rooms for the scheduled activity, taking into account
+        activity defaults and overrides.
+        """
+
         rooms = self.rooms.all()
         if len(rooms) > 0:
             return rooms
         else:
             return self.activity.rooms.all()
 
-    def get_capacity(self):
+    def get_true_capacity(self):
+        """Get the capacity for the scheduled activity, taking into
+        account activity defaults and overrides.
+        """
+
         if self.capacity is not None:
             return self.capacity
         else:
