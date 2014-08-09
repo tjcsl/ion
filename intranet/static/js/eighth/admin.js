@@ -51,9 +51,12 @@ $(function() {
         return url.split("?")[0] + "?" + $.param(params);
     }
 
-    //
+
     if (!("activity" in getParams(document.URL))) {
-        $(".schedule-activity-select")[0].selectize.setValue(-1);
+        var $selects = $(".schedule-activity-select");
+        if ($selects.length){
+            $selects[0].selectize.setValue(-1);
+        }
     }
 
     $(".schedule-activity-select").on("change", function() {
