@@ -238,6 +238,26 @@ class EighthScheduledActivity(models.Model):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
+    def get_sponsors(self):
+        sponsors = self.sponsors.all()
+        if len(sponsors) > 0:
+            return sponsors
+        else:
+            return self.activity.sponsors.all()
+
+    def get_rooms(self):
+        rooms = self.rooms.all()
+        if len(rooms) > 0:
+            return rooms
+        else:
+            return self.activity.rooms.all()
+
+    def get_capacity(self):
+        if self.capacity is not None:
+            return self.capacity
+        else:
+            return self.capacity
+
     class Meta:
         unique_together = (("block", "activity"),)
         verbose_name_plural = "eighth scheduled activities"

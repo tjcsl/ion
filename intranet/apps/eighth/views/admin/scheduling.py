@@ -107,3 +107,31 @@ def schedule_activity_view(request):
         context["default_capacity"] = activity.capacity
 
     return render(request, "eighth/admin/schedule_activity.html", context)
+
+
+@eighth_admin_required
+def show_activity_schedule_view(request):
+    activities = EighthActivity.objects.order_by("name")
+    activity_id = request.GET.get("activity", None)
+    activity = None
+
+    if activity_id is not None:
+        try:
+            activity = EighthActivity.objects.get(id=activity_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        "activities": activities,
+        "activity": activity
+    }
+
+    if activity is not None:
+        start_date = get_start_date(request)
+        scheduled_activities = activity.eighthscheduledactivity_set \
+                                       .filter(block__date__gte=start_date) \
+                                       .order_by("block__date",
+                                                 "block__block_letter")
+        context["scheduled_activities"] = scheduled_activities
+
+    return render(request, "eighth/admin/view_activity_schedule.html", context)

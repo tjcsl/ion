@@ -35,7 +35,7 @@ eighth_admin_patterns = [
 
     # Scheduling
     url(r"scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
-    url(r"scheduling/activity_schedule$", general.not_implemented_view, name="eighth_admin_view_activity_schedule"),
+    url(r"scheduling/activity_schedule$", scheduling.show_activity_schedule_view, name="eighth_admin_view_activity_schedule"),
     url(r"scheduling/transfer_students$", general.not_implemented_view, name="eighth_admin_transfer_students"),
 
     # Attendance
