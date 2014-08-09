@@ -67,6 +67,13 @@ $(function() {
 
 
     });
+
+
+    // Keep blocks highlighted while loading
+    $(".block").click(function() {
+        $(".active-block").removeClass("active-block");
+        $(this).addClass("active-block");
+    });
 });
 
 // Sticky headers for activity picker

@@ -41,7 +41,7 @@ $(function() {
         initialize: function(){
             _.bindAll(this, "render");
 
-            this.template = _.template($('#activity-details-template').html());
+            this.template = _.template($("#activity-details-template").html());
         },
 
         render: function(){

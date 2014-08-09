@@ -20,4 +20,15 @@ $(function() {
     $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").mouseup(function() {
         $(this).blur();
     });
+
+    $(".nav a").click(function() {
+        $(".nav .selected").removeClass("selected");
+        $(this).parent().addClass("selected");
+    });
+
+    $(".header h1").click(function() {
+        $(".nav .selected").removeClass("selected");
+        $(".nav li").slice(0,1).addClass("selected");
+    });
+
 });
