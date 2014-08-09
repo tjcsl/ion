@@ -10,7 +10,9 @@ block_letter_validator = RegexValidator(r"^[a-zA-Z]$", "Only single letters are 
 
 
 class BlockSelectionForm(forms.Form):
-    block = forms.ModelChoiceField(queryset=EighthBlock.objects.all(), empty_label="Select a block")
+    def __init__(self, label="Block", *args, **kwargs):
+        super(BlockSelectionForm, self).__init__(*args, **kwargs)
+        self.fields["block"] = forms.ModelChoiceField(queryset=EighthBlock.objects.all(), label=label, empty_label="Select a block")
 
 
 class QuickBlockForm(forms.ModelForm):

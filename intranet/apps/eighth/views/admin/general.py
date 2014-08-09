@@ -99,30 +99,3 @@ def edit_start_date_view(request):
 @eighth_admin_required
 def not_implemented_view(request, *args, **kwargs):
     raise NotImplementedError("This view has not been implemented yet.")
-
-
-class EighthAdminExampleWizard(SessionWizardView):
-    FORMS = [
-        ("block", block_forms.BlockSelectionForm),
-        ("activity", activity_forms.ActivitySelectionForm)
-    ]
-
-    TEMPLATES = {
-        "block": "eighth/admin/example_form.html",
-        "activity": "eighth/admin/example_form.html"
-    }
-
-    def get_template_names(self):
-        return [self.TEMPLATES[self.steps.current]]
-
-    def get_form_kwargs(self, step):
-        kwargs = {}
-        if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
-            kwargs.update({"block": block})
-        return kwargs
-
-    def done(self, form_list, **kwargs):
-        messages.info(self.request, "Successfully did something")
-
-        return redirect("eighth_admin_index")

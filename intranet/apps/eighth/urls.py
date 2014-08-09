@@ -22,8 +22,6 @@ urlpatterns = [
 eighth_admin_patterns = [
     # No leading slashes because these urls are included under /admin/
 
-    url(r"example$", general.EighthAdminExampleWizard.as_view(general.EighthAdminExampleWizard.FORMS), name="eighth_admin_form_example"),
-
     # Activities
     url(r"activities/add$", activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"activities/edit/(?P<activity_id>\d+)$", activities.edit_activity_view, name="eighth_admin_edit_activity"),
@@ -36,7 +34,7 @@ eighth_admin_patterns = [
     # Scheduling
     url(r"scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
     url(r"scheduling/activity_schedule$", scheduling.show_activity_schedule_view, name="eighth_admin_view_activity_schedule"),
-    url(r"scheduling/transfer_students$", general.not_implemented_view, name="eighth_admin_transfer_students"),
+    url(r"scheduling/transfer_students$", scheduling.EighthAdminTransferStudentsWizard.as_view(scheduling.EighthAdminTransferStudentsWizard.FORMS), name="eighth_admin_transfer_students"),
 
     # Attendance
     url(r"attendance/take_attendance$", general.not_implemented_view, name="eighth_admin_take_attendance"),

@@ -3,10 +3,13 @@ from __future__ import unicode_literals
 
 import logging
 from django.contrib import messages
+from django.contrib.formtools.wizard.views import SessionWizardView
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...models import EighthBlock, EighthActivity, EighthScheduledActivity
+from ...forms.admin.blocks import BlockSelectionForm
+from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
 from ...utils import get_start_date
 
@@ -135,3 +138,56 @@ def show_activity_schedule_view(request):
         context["scheduled_activities"] = scheduled_activities
 
     return render(request, "eighth/admin/view_activity_schedule.html", context)
+
+
+class EighthAdminTransferStudentsWizard(SessionWizardView):
+    FORMS = [
+        ("block_1", BlockSelectionForm),
+        ("activity_1", ActivitySelectionForm),
+        ("block_2", BlockSelectionForm),
+        ("activity_2", ActivitySelectionForm)
+    ]
+
+    TEMPLATES = {
+        "block_1": "eighth/admin/transfer_students.html",
+        "activity_1": "eighth/admin/transfer_students.html",
+        "block_2": "eighth/admin/transfer_students.html",
+        "activity_2": "eighth/admin/transfer_students.html"
+    }
+
+    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
+
+    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step == "activity_1":
+            block = self.get_cleaned_data_for_step("block_1")["block"]
+            kwargs.update({"block": block})
+        if step == "activity_2":
+            block = self.get_cleaned_data_for_step("block_2")["block"]
+            kwargs.update({"block": block})
+
+        labels = {
+            "block_1": "Select a block to move students from",
+            "activity_1": "Select an activity to move students from",
+            "block_2": "Select a block to move students to",
+            "activity_2": "Select an activity to move students to",
+        }
+
+        kwargs.update({"label": labels[step]})
+
+        return kwargs
+
+    def done(self, form_list, **kwargs):
+        source_block = form_list[0].cleaned_data["block"]
+        source_activity = form_list[1].cleaned_data["activity"]
+        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
+
+        dest_block = form_list[2].cleaned_data["block"]
+        dest_activity = form_list[3].cleaned_data["activity"]
+        dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
+
+        source_scheduled_activity.eighthsignup_set.update(scheduled_activity=dest_scheduled_activity)
+
+        messages.success(self.request, "Successfully transfered students.")
+        return redirect("eighth_admin_dashboard")

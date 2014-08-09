@@ -6,7 +6,7 @@ from ...models import EighthActivity
 
 
 class ActivitySelectionForm(forms.Form):
-    def __init__(self, block=None, *args, **kwargs):
+    def __init__(self, block=None, label="Activity", *args, **kwargs):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
         if block is None:
@@ -14,7 +14,7 @@ class ActivitySelectionForm(forms.Form):
         else:
             queryset = block.activities.all()
 
-        self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, empty_label="Select an activity")
+        self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, label=label, empty_label="Select an activity")
 
 
 class QuickActivityForm(forms.ModelForm):
