@@ -1,17 +1,29 @@
 // Scripts for initial layout, sticky headers, etc.
 
-function centerCurrentDay() {
-    var $activeBlock = $(".active-block");
-    var $day = $activeBlock.parents(".day");
+function centerCurrentDay(animate) {
+    var $day = $(".current-day");
     var dayWidth = $(".day:first").width() + 1;
     var numPrevDays = $day.prevAll().length;
     var containerWidth = $(".days-container").width();
     var scrollCenter =  numPrevDays * dayWidth - (containerWidth - dayWidth) / 2;
 
     // Scroll to day
-    $(".days-container").scrollLeft(scrollCenter);
+    if (animate) {
+        $(".days-container").animate({
+            scrollLeft: scrollCenter
+        }, {
+            duration: 150,
+            easing: "swing",
+        });
+    } else {
+        $(".days-container").scrollLeft();
+    }
+}
 
+function centerBlocks() {
     // Scroll to block if more than two blocks on the day
+
+    var $activeBlock = $(".active-block");
     $activeBlock.parents(".blocks.many-blocks").scrollTo($activeBlock);
 }
 
@@ -29,14 +41,20 @@ function updateDayNavButtonStatus() {
     if (scrollLeft == maxScrollLeft) {
         $(".later-days").attr("disabled", "disabled");
     }
+
+
 }
 
 
 $(function() {
+    $(".active-block").parents(".day").addClass("current-day");
+
     centerCurrentDay();
+    centerBlocks();
     updateDayNavButtonStatus();
 
     $(window).resize(function() {
+        centerCurrentDay();
         updateDayNavButtonStatus();
     });
 
@@ -46,26 +64,28 @@ $(function() {
 
 
     $(".day-picker-buttons button").click(function(e) {
-        var scrollLeft = ($(".day").width() + 1) + "px"
+        var scrollLeft = ($(".day").width() + 1) + "px";
+        var $currentDay = $(".current-day");
+
         if ($(e.target).parents().andSelf().hasClass("later-days")) {
             // Right button clicked
             scrollLeft = "+=" + scrollLeft;
+
+            var $nextCurrentDay = $currentDay.next();
+            $
         } else {
             // Left button clicked
             scrollLeft = "-=" + scrollLeft;
+            var $nextCurrentDay = $currentDay.prev();
         }
 
-        $(".days-container").animate({
-            scrollLeft: scrollLeft
-        }, {
-            duration: 150,
-            easing: "swing",
-            done: function() {
-                updateDayNavButtonStatus();
-            }
-        });
+        if ($nextCurrentDay.length != 0) {
+            $currentDay.removeClass("current-day")
+            $nextCurrentDay.addClass("current-day");
+        }
 
-
+        updateDayNavButtonStatus();
+        centerCurrentDay(true);
     });
 
 

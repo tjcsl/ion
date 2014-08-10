@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect
 from rest_framework.renderers import JSONRenderer
+from ...users.models import User
 from ..models import EighthBlock, EighthSignup
 from ..serializers import EighthBlockDetailSerializer
 
@@ -20,10 +21,11 @@ def eighth_signup_view(request, block_id=None):
         if next_block is not None:
             block_id = next_block.id
 
-    is_admin = request.user.is_eighth_admin
-
-    if "user" in request.GET and is_admin:
-        user = request.GET["user"]
+    if "user" in request.GET and request.user.is_eighth_admin:
+        try:
+            user = User.get_user(id=request.GET["user"])
+        except User.DoesNotExist:
+            raise Http404
     else:
         if request.user.is_student:
             user = request.user.id
@@ -71,7 +73,7 @@ def eighth_signup_view(request, block_id=None):
         "user": user,
         "block_info": block_info,
         "activities_list": JSONRenderer().render(block_info["activities"]),
-        "active_block": block,
+        "active_block": block
     }
 
     return render(request, "eighth/signup.html", context)

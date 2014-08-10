@@ -64,7 +64,7 @@
             <%}%>
 
             <div id="signup-section">
-                <button id="signup-button">
+                <button id="signup-button" data-user="{{ user.id }}">
                     Sign Up
                 </button>
                 <div id="signup-spinner-container">
@@ -94,7 +94,7 @@
                             </div>
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
-                                        <a href="{% url 'eighth_signup' b.id %}" data-bid="{{ b.id }}">
+                                        <a href="{% url 'eighth_signup' b.id %}?{{ request.GET.urlencode }}" data-bid="{{ b.id }}">
                                             <div class="block{% if active_block.id == b.id %} active-block{% endif %}">
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}

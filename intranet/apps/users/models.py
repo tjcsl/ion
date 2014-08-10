@@ -40,25 +40,23 @@ class UserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Django User model subclass with properties that fetch data
-    from LDAP
+    """Django User model subclass with properties that fetch data from
+    LDAP
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
     model will work with Django's built-in authorization functionality.
 
     The User model is primarily an abstraction of LDAP which has just
-    enough fields duplicated in the SQL database for Django to accept
-    it as a valid user model that can have relations to other models in
-    the database.
+    enough fields duplicated in the SQL database for Django to accept it
+    as a valid user model that can have relations to other models in the
+    database.
 
     When creating a user object to fetch LDAP data, use User.get_user().
     User() should only be used to add a user to the SQL database and
     User.objects.get() should not be used because users in LDAP are not
-    necessarily in the SQL database.
-
-    When fetching a username, do not use the "username" model field.
-    Instead, use ion_username, which pulls the username from LDAP
-    instead of the SQL database.
+    necessarily in the SQL database. If you need to retrieve a user
+    that you know exists in LDAP but might not be in the SQL db, use
+    User.get_and_propogate_user()
 
     """
 
@@ -89,12 +87,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             The User object if the user could be found in LDAP,
-            otherwise None
+            otherwise User.DoesNotExist is raised.
         """
         if dn is not None:
             try:
                 user = User(dn=dn)
                 user.id = user.ion_id
+                user.username = user.ion_username
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
@@ -102,14 +101,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
-                return User(dn=user_dn, id=id)
+                return User.get_user(dn=user_dn)
             else:
                 raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
         elif username is not None:
-            dn = User.dn_from_username(username)
-            return User.get_user(dn=dn)
+            user_dn = User.dn_from_username(username)
+            return User.get_user(dn=user_dn)
         else:
             raise TypeError("get_user() requires at least one argument.")
+
+    @classmethod
+    def get_and_propogate_user(cls, dn=None, id=None, username=None):
+        """Retrieve a user object from LDAP and save it to the SQL
+        database if necessary.
+
+        Args:
+            - dn -- The full LDAP Distinguished Name of a user.
+            - id -- The user ID of the user to return.
+            - username -- The username of the user to return.
+
+        Returns:
+            The User object if the user could be found in LDAP,
+            otherwise User.DoesNotExist is raised.
+
+        """
+
+        user = User.get_user(dn=dn, id=id, username=username)
+        user.set_unusable_password()
+        user.save()
+        return user
 
     @staticmethod
     def dn_from_id(id):

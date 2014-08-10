@@ -26,19 +26,13 @@ class AutoCreateUserField(forms.ChoiceField):
             )
 
         try:
-            user = User.objects.get(id=id_value)
+            user = User.get_and_propogate_user(id=id_value)
         except User.DoesNotExist:
-            try:
-                user = User.get_user(id=id_value)
-            except User.DoesNotExist:
-                raise ValidationError(
-                    self.error_messages["invalid_choice"],
-                    code="invalid_choice",
-                    params={"value": value}
-                )
-            user.username = user.ion_username
-            user.set_unusable_password()
-            user.save()
+            raise ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": value}
+            )
 
         return user
 
