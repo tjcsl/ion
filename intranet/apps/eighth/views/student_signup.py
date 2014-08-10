@@ -23,7 +23,7 @@ def eighth_signup_view(request, block_id=None):
 
     if "user" in request.GET and request.user.is_eighth_admin:
         try:
-            user = User.get_user(id=request.GET["user"])
+            user = User.get_and_propogate_user(id=request.GET["user"])
         except User.DoesNotExist:
             raise Http404
     else:
