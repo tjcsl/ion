@@ -51,9 +51,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activity_list = {}
         scheduled_activity_to_activity_map = {}
 
+        # Find all scheduled activities that haven't been cancelled and
+        # aren't for deleted activities
         scheduled_activities = block.eighthscheduledactivity_set \
-                                    .all() \
+                                    .exclude(cancelled=True) \
+                                    .exclude(activity__deleted=True) \
                                     .select_related("activity")
+
         for scheduled_activity in scheduled_activities:
             activity_info = {
                 "id": scheduled_activity.activity.id,
@@ -79,16 +83,19 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_list[scheduled_activity.activity.id] = \
                 activity_info
 
-        activities = EighthSignup.objects \
-                                 .filter(scheduled_activity__block=block) \
-                                 .values_list("scheduled_activity__activity_id") \
-                                 .annotate(user_count=Count("scheduled_activity"))
+        # Find the number of students signed up for every activity
+        # in this block
+        activities_with_signups = EighthSignup.objects \
+                                              .filter(scheduled_activity__block=block) \
+                                              .exclude(scheduled_activity__cancelled=True) \
+                                              .exclude(scheduled_activity__activity__deleted=True) \
+                                              .values_list("scheduled_activity__activity_id") \
+                                              .annotate(user_count=Count("scheduled_activity"))
 
-        for activity, user_count in activities:
+        for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects \
-                                     .all() \
                                      .values_list("id",
                                                   "user_id",
                                                   "first_name",
@@ -173,6 +180,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
             scheduled_activity_id = rooming.eighthscheduledactivity.id
+
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overidden:
                 activities_rooms_overidden.append(activity_id)

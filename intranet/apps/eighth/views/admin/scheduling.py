@@ -54,13 +54,13 @@ def schedule_activity_view(request):
         else:
             messages.error(request, "Error updating schedule.")
 
-    activities = EighthActivity.objects.order_by("name")
+    activities = EighthActivity.undeleted_objects.order_by("name")
     activity_id = request.GET.get("activity", None)
     activity = None
 
     if activity_id is not None:
         try:
-            activity = EighthActivity.objects.get(id=activity_id)
+            activity = EighthActivity.undeleted_objects.get(id=activity_id)
         except (EighthBlock.DoesNotExist, ValueError):
             pass
 
@@ -114,13 +114,13 @@ def schedule_activity_view(request):
 
 @eighth_admin_required
 def show_activity_schedule_view(request):
-    activities = EighthActivity.objects.order_by("name")
+    activities = EighthActivity.undeleted_objects.order_by("name")
     activity_id = request.GET.get("activity", None)
     activity = None
 
     if activity_id is not None:
         try:
-            activity = EighthActivity.objects.get(id=activity_id)
+            activity = EighthActivity.undeleted_objects.get(id=activity_id)
         except (EighthBlock.DoesNotExist, ValueError):
             pass
 

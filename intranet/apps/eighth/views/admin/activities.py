@@ -35,7 +35,7 @@ def add_activity_view(request):
 @eighth_admin_required
 def edit_activity_view(request, activity_id=None):
     try:
-        activity = EighthActivity.objects.get(id=activity_id)
+        activity = EighthActivity.undeleted_objects.get(id=activity_id)
     except EighthActivity.DoesNotExist:
         return http.HttpResponseNotFound()
 

@@ -10,9 +10,9 @@ class ActivitySelectionForm(forms.Form):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
         if block is None:
-            queryset = EighthActivity.objects.all()
+            queryset = EighthActivity.undeleted_objects.all()
         else:
-            queryset = block.activities.all()
+            queryset = block.get_activities()
 
         self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, label=label, empty_label="Select an activity")
 

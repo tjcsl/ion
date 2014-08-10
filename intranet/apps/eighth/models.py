@@ -108,7 +108,7 @@ class EighthActivity(models.Model):
         verbose_name_plural = "eighth activities"
 
     def __unicode__(self):
-        return self.name
+        return self.name + (" (Deleted)" if self.deleted else "")
 
 
 class EighthBlockManager(models.Manager):
@@ -167,6 +167,15 @@ class EighthBlock(models.Model):
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity",
                                         blank=True)
+
+    def get_activities(self):
+        """Get the activities scheduled for this block, excluding
+        deleted activities and cancelled :class:`EighthScheduledActivity`s.
+        """
+
+        return self.activities \
+                   .exclude(eighthscheduledactivity__cancelled=True) \
+                   .exclude(cancelled=True)
 
     def save(self, *args, **kwargs):
             letter = getattr(self, "block_letter", None)
@@ -285,7 +294,8 @@ class EighthScheduledActivity(models.Model):
         verbose_name_plural = "eighth scheduled activities"
 
     def __unicode__(self):
-        return "{} on {}".format(self.activity.name, self.block)
+        cancelled_str = " (Cancelled)" if self.cancelled else ""
+        return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
 
 class EighthSignup(models.Model):
@@ -315,7 +325,7 @@ class EighthSignup(models.Model):
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
-                               self.scheduled_activity.id)
+                               self.scheduled_activity)
 
     class Meta:
         unique_together = (("user", "scheduled_activity"),)

@@ -5,7 +5,6 @@ import cPickle
 from urllib import unquote
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin import (
@@ -18,9 +17,10 @@ from ...utils import get_start_date, set_start_date
 @eighth_admin_required
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
-    all_activities = EighthActivity.objects.order_by("name")
-    blocks_after_start_date = EighthBlock.objects.filter(date__gte=start_date)\
-                                                 .order_by("date")
+    all_activities = EighthActivity.undeleted_objects.order_by("name")
+    blocks_after_start_date = EighthBlock.objects \
+                                         .filter(date__gte=start_date)\
+                                         .order_by("date")
     groups = Group.objects.order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.order_by("last_name", "first_name")

@@ -11,14 +11,14 @@ from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer
 # class EighthActivityList(generics.ListAPIView):
 #     """API endpoint that allows viewing a list of eighth activities
 #     """
-#     queryset = EighthActivity.objects.all()
+#     queryset = EighthActivity.undeleted_objects.all()
 #     serializer_class = EighthActivityDetailSerializer
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
     """API endpoint that shows details of an eighth activity.
     """
-    queryset = EighthActivity.objects.all()
+    queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityDetailSerializer
 
 
