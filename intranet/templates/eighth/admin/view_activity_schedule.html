@@ -26,7 +26,7 @@
         <tbody>
             {% for scheduled_activity in scheduled_activities %}
                 <tr>
-                    <td>{{ scheduled_activity.block.date|date:"M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                    <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
                     <td>{% for room in scheduled_activity.get_true_rooms %}{{ room }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{% for sponsor in scheduled_activity.get_true_sponsors %}{{ sponsor }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
