@@ -28,7 +28,7 @@ def eighth_signup_view(request, block_id=None):
             raise Http404
     else:
         if request.user.is_student:
-            user = request.user.id
+            user = request.user
         else:
             return redirect("index")
 
