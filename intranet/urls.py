@@ -10,7 +10,7 @@ django.contrib.admin.autodiscover()
 
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
-    url(r"^api/", include("intranet.apps.api.urls"), name="api_root"),
+    url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 
     url(r"^", include("intranet.apps.auth.urls")),
