@@ -83,8 +83,6 @@ $(function() {
     });
 
     eighth.signUp = function(uid, bid, aid, callback) {
-        console.log(uid, bid, aid);
-
         $.ajax({
             url: $("#activity-detail").data("aid"),
             type: "POST",
@@ -95,7 +93,12 @@ $(function() {
             },
             success: function(response) {
                 var activity = activityModels.get(aid);
-                $(".current-day .blocks a[data-bid='" + bid + "'] .block span")[0].nextSibling.data = "\n\n" + activity.attributes.name;
+                var blockSpan = $(".current-day .blocks a[data-bid='" + bid + "'] .block span")[0];
+                if (blockSpan.nextSibling) {
+                    blockSpan.nextSibling.data = "\n\n" + activity.attributes.name;
+                } else {
+                    $(blockSpan).after("\n\n" + activity.attributes.name);
+                }
 
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
                 _.each(selectedActivity, function(a){

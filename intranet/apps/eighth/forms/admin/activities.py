@@ -12,7 +12,7 @@ class ActivitySelectionForm(forms.Form):
         if block is None:
             queryset = EighthActivity.undeleted_objects.all()
         else:
-            queryset = block.get_activities()
+            queryset = block.activities.all()
 
         self.fields["activity"] = forms.ModelChoiceField(queryset=queryset, label=label, empty_label="Select an activity")
 

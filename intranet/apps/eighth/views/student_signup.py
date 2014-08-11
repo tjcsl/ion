@@ -111,12 +111,17 @@ def eighth_signup_view(request, block_id=None):
         block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
         block_info["schedule"] = schedule
 
+        try:
+            active_block_current_signup = block_signup_map[int(block_id)].id
+        except KeyError:
+            active_block_current_signup = None
+
         context = {
             "user": user,
             "block_info": block_info,
             "activities_list": JSONRenderer().render(block_info["activities"]),
             "active_block": block,
-            "active_block_current_signup": block_signup_map[int(block_id)].id
+            "active_block_current_signup": active_block_current_signup
         }
 
         return render(request, "eighth/signup.html", context)

@@ -168,15 +168,6 @@ class EighthBlock(models.Model):
                                         through="EighthScheduledActivity",
                                         blank=True)
 
-    def get_activities(self):
-        """Get the activities scheduled for this block, excluding
-        deleted activities and cancelled :class:`EighthScheduledActivity`s.
-        """
-
-        return self.activities \
-                   .exclude(eighthscheduledactivity__cancelled=True) \
-                   .exclude(cancelled=True)
-
     def save(self, *args, **kwargs):
             letter = getattr(self, "block_letter", None)
             if letter:

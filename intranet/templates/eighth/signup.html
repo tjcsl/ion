@@ -23,7 +23,9 @@
             window.activityModels = new eighth.ActivityList();
             data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
             activityModels.reset(data);
-            activityModels.get({{ active_block_current_signup }}).attributes.selected = true;
+            {% if active_block_current_signup %}
+                activityModels.get({{ active_block_current_signup }}).attributes.selected = true;
+            {% endif %}
         }
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
@@ -173,7 +175,6 @@
                 <ul class="all-activities">
                     {% for id, b in block_info.activities.items %}
                         <li data-activity-id="{{ id }}">
-
                             <span class="activity-icons">
                                 <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
                             </span>

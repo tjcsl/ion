@@ -83,9 +83,9 @@ def schedule_activity_view(request):
             }
             try:
                 sched_act = EighthScheduledActivity.objects \
+                                                   .exclude(cancelled=True) \
                                                    .get(activity=activity,
-                                                        block=block,
-                                                        cancelled=False)
+                                                        block=block)
 
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),

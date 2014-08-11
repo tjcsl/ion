@@ -51,10 +51,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activity_list = {}
         scheduled_activity_to_activity_map = {}
 
-        # Find all scheduled activities that haven't been cancelled and
-        # aren't for deleted activities
+        # Find all scheduled activities that don't correspond to
+        # deleted activities
         scheduled_activities = block.eighthscheduledactivity_set \
-                                    .exclude(cancelled=True) \
                                     .exclude(activity__deleted=True) \
                                     .select_related("activity")
 
@@ -67,6 +66,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
+                "cancelled": scheduled_activity.cancelled,
                 "roster": {
                     "count": 0,
                     "capacity": 0,
@@ -87,7 +87,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         # in this block
         activities_with_signups = EighthSignup.objects \
                                               .filter(scheduled_activity__block=block) \
-                                              .exclude(scheduled_activity__cancelled=True) \
                                               .exclude(scheduled_activity__activity__deleted=True) \
                                               .values_list("scheduled_activity__activity_id") \
                                               .annotate(user_count=Count("scheduled_activity"))
