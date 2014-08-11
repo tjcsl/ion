@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 import logging
 from django import http
 from django.contrib.auth.decorators import login_required
@@ -45,6 +46,29 @@ def eighth_signup_view(request, block_id=None):
         except User.DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
+        # Check conditions for carrying out the signup
+        num_signed_up = EighthSignup.objects \
+                                    .filter(scheduled_activity=scheduled_activity) \
+                                    .count()
+        capacity = scheduled_activity.get_true_capacity()
+        if num_signed_up >= capacity:
+            return http.HttpResponseForbidden("This activity is full. You may "
+                                              "not sign up up for it at this "
+                                              "time.")
+        if scheduled_activity.block.locked:
+            return http.HttpResponseForbidden("This block has been locked.")
+
+        now = datetime.datetime.now()
+        activity_date = datetime.datetime \
+                                .combine(scheduled_activity.block.date,
+                                         datetime.time(00, 00, 00))
+        presign_period = datetime.timedelta(days=2)
+        if scheduled_activity.activity.presign and now < (activity_date - presign_period):
+            return http.HttpResponseForbidden("You may not sign up for this "
+                                              "activity more than two days "
+                                              "in advance.")
+
+        # Everything's good to go - complete the signup
         try:
             existing_signup = EighthSignup.objects \
                                           .get(user=user,
@@ -96,7 +120,8 @@ def eighth_signup_view(request, block_id=None):
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
-                "current_signup": block_signup_map.get(b.id, "")
+                "current_signup": block_signup_map.get(b.id, ""),
+                "locked": b.locked
             }
 
             if len(schedule) and schedule[-1]["date"] == b.date:

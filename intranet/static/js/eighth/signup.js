@@ -84,7 +84,7 @@ $(function() {
 
     eighth.signUp = function(uid, bid, aid, callback) {
         $.ajax({
-            url: $("#activity-detail").data("aid"),
+            url: $("#activity-detail").data("signup-endpoint"),
             type: "POST",
             data: {
                 "uid": uid,
@@ -95,9 +95,9 @@ $(function() {
                 var activity = activityModels.get(aid);
                 var blockSpan = $(".current-day .blocks a[data-bid='" + bid + "'] .block span")[0];
                 if (blockSpan.nextSibling) {
-                    blockSpan.nextSibling.data = "\n\n" + activity.attributes.name;
+                    blockSpan.nextSibling.data = activity.attributes.name;
                 } else {
-                    $(blockSpan).after("\n\n" + activity.attributes.name);
+                    $(blockSpan).after(activity.attributes.name);
                 }
 
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});

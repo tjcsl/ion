@@ -23,9 +23,11 @@
             window.activityModels = new eighth.ActivityList();
             data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
             activityModels.reset(data);
-            {% if active_block_current_signup %}
-                activityModels.get({{ active_block_current_signup }}).attributes.selected = true;
-            {% endif %}
+            _.each(activityModels.models, function(activity) {
+                activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup }}");
+            });
+
+            window.activeBlockLocked = "{{ active_block.locked }}" == "True";
         }
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
@@ -37,7 +39,7 @@
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
         <h3>
-            <%= name %>
+            <%= name + (cancelled ? " (CANCELLED)" : "") %>
         </h3>
         <dl>
             <dt>Rooms:</dt>
@@ -74,12 +76,22 @@
             <%}%>
 
             <div id="signup-section">
-                <button id="signup-button">
-                    Sign Up
-                </button>
-                <div id="signup-spinner-container">
-                    <div id="signup-spinner"></div>
-                </div>
+                <% if (!cancelled) {%>
+                    <% if (!selected) {%>
+                        <% if (roster.count < roster.capacity) {%>
+                            <button id="signup-button">
+                                Sign Up
+                            </button>
+                            <div id="signup-spinner-container">
+                                <div id="signup-spinner"></div>
+                            </div>
+                        <%} else { %>
+                            <strong>This activity is full.</strong>
+                        <%}%>
+                    <%} else {%>
+                        <strong>You are currently signed up for this activity.</strong>
+                    <%}%>
+                <%}%>
             </div>
         </dl>
         {% endverbatim %}
@@ -109,6 +121,9 @@
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}
                                                 </span>
+                                                {% if b.locked %}
+                                                    <i class="fa fa-lock"></i>
+                                                {% endif %}
                                                 {{ b.current_signup.name }}
                                             </div>
                                         </a>
@@ -123,7 +138,10 @@
         <div class="middle">
             <div class="block-title">
                 <h2>
-                    {{ block_info.date|date:"M d, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
+                    {% if active_block.locked %}
+                        <i class="fa fa-lock"></i>
+                    {% endif %}
+                    {{ block_info.date|date:"l, F d, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
                 </h2>
                 <h4>
                     {{ block_info.block_letter }} Block
@@ -173,13 +191,17 @@
                 -->
                 <h5 class="sticky-header">All</h5>
                 <ul class="all-activities">
-                    {% for id, b in block_info.activities.items %}
+                    {% for id, act in block_info.activities.items %}
                         <li data-activity-id="{{ id }}">
                             <span class="activity-icons">
-                                <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
+                                <span class="activity-icon fav"></span>
+                                {% if act.cancelled %}
+                                    <span class="activity-icon cancelled"></span>
+                                {% else %}
+                                    <span class="activity-icon pie-{{ act.roster.count|divide:act.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}"></span>
+                                {% endif %}
                             </span>
-                            <span class="activity-name">{{ b.name }}</span>
-                            <span class="sponsor-name"></span>
+                            <span class="activity-name">{{ act.name }}{% if act.cancelled %} (CANCELLED){% endif %}</span>
                         </li>
                     {% endfor %}
                 </ul>

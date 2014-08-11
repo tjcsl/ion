@@ -32,3 +32,4 @@ class ActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthActivity
+        exclude = ["deleted"]
