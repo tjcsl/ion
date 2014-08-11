@@ -23,6 +23,7 @@
             window.activityModels = new eighth.ActivityList();
             data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
             activityModels.reset(data);
+            activityModels.get({{ active_block_current_signup }}).attributes.selected = true;
         }
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
@@ -57,14 +58,21 @@
             </dd>
 
             <dt>Capacity:</dt><dd><% if (roster.capacity == -1 || roster.capacity == 0) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
-            <div><%= roster.count %> students have already signed up.</div>
+            <div>
+                <%= roster.count %>
+                <% if (roster.count == 1){ %>
+                    student has
+                <%} else {%>
+                    students have
+                <%}%> already signed up.
+            </div>
 
             <% if (description) {%>
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
 
             <div id="signup-section">
-                <button id="signup-button" data-user="{{ user.id }}">
+                <button id="signup-button">
                     Sign Up
                 </button>
                 <div id="signup-spinner-container">
@@ -94,12 +102,12 @@
                             </div>
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
-                                        <a href="{% url 'eighth_signup' b.id %}?{{ request.GET.urlencode }}" data-bid="{{ b.id }}">
+                                        <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
                                             <div class="block{% if active_block.id == b.id %} active-block{% endif %}">
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}
                                                 </span>
-                                                {{ b.current_signup }}
+                                                {{ b.current_signup.name }}
                                             </div>
                                         </a>
                                     {% endfor %}
@@ -175,7 +183,7 @@
                     {% endfor %}
                 </ul>
             </div>
-            <div id="activity-detail" data-bid="{{ block_info.id }}">
+            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
                 <h3 class="empty-state">
                     Select an activity
                 </h3>

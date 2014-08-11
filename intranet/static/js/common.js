@@ -15,11 +15,18 @@ $.ajaxSetup({
 });
 
 
+
+
 // UI Stuff
-$(function() {
+function initUIElementBehavior () {
+    // Call this function whenever relevant UI elements are dynamically added to the page
     $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").mouseup(function() {
         $(this).blur();
     });
+}
+
+$(function() {
+    initUIElementBehavior()
 
     $(".nav a").click(function() {
         $(".nav .selected").removeClass("selected");
