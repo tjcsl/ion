@@ -61,7 +61,7 @@ def schedule_activity_view(request):
     if activity_id is not None:
         try:
             activity = EighthActivity.undeleted_objects.get(id=activity_id)
-        except (EighthBlock.DoesNotExist, ValueError):
+        except (EighthActivity.DoesNotExist, ValueError):
             pass
 
     context = {
@@ -109,6 +109,7 @@ def schedule_activity_view(request):
         context["default_sponsors"] = ", ".join(map(str, activity.sponsors.all()))
         context["default_capacity"] = activity.capacity
 
+    context["admin_page_title"] = "Schedule an Activity"
     return render(request, "eighth/admin/schedule_activity.html", context)
 
 
@@ -121,7 +122,7 @@ def show_activity_schedule_view(request):
     if activity_id is not None:
         try:
             activity = EighthActivity.undeleted_objects.get(id=activity_id)
-        except (EighthBlock.DoesNotExist, ValueError):
+        except (EighthActivity.DoesNotExist, ValueError):
             pass
 
     context = {
@@ -137,6 +138,7 @@ def show_activity_schedule_view(request):
                                                  "block__block_letter")
         context["scheduled_activities"] = scheduled_activities
 
+    context["admin_page_title"] = "View Activity Schedule"
     return render(request, "eighth/admin/view_activity_schedule.html", context)
 
 
