@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from ..users.models import User
+from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -87,11 +88,9 @@ class EighthActivity(models.Model):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
+    # users_allowed = models.ManyToManyField(User, blank=True)
+
     deleted = models.BooleanField(blank=True, default=False)
-
-    # Groups allowed
-
-    # Individual students allowed
 
     @property
     def capacity(self):
@@ -279,6 +278,100 @@ class EighthScheduledActivity(models.Model):
             return self.capacity
         else:
             return self.activity.capacity
+
+    def is_full(self):
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up >= capacity
+        return False
+
+    def is_too_early_to_signup(self, now=None):
+        if now is None:
+            now = datetime.datetime.now()
+
+        activity_date = datetime.datetime \
+                                .combine(self.block.date,
+                                         datetime.time(0, 0, 0))
+        presign_period = datetime.timedelta(days=2)
+
+        return (now < (activity_date - presign_period))
+
+    def add_user(self, user, request=None, force=False):
+        """Sign up a user to this scheduled activity if possible.
+
+        Raises an exception if there's a problem signing the user up
+        unless the signup is forced.
+
+        """
+
+        if request is not None:
+            force = force or (("force" in request.GET) and
+                              request.user.is_eighth_admin)
+
+        if not force:
+            # Check if the user who sent the request has the permissions to
+            # change the target user's signups
+            if request is not None:
+                if user != request.user and not request.user.is_eighth_admin:
+                    raise eighth_exceptions.SignupForbidden()
+
+             # Check if the block has been locked
+            if self.block.locked:
+                raise eighth_exceptions.BlockLocked()
+
+            # Check if the scheduled activity has been cancelled
+            if self.cancelled:
+                raise eighth_exceptions.ScheduledActivityCancelled()
+
+            # Check if the activity has been deleted
+            if self.activity.deleted:
+                raise eighth_exceptions.ActivityDeleted()
+
+            # Check if the activity is full
+            if self.is_full():
+                raise eighth_exceptions.ActivityFull()
+
+            # Check if it's too early to sign up for the activity
+            if self.activity.presign:
+                if self.is_too_early_to_signup():
+                    raise eighth_exceptions.Presign()
+
+            # Check if the user is already stickied into an activity
+            in_a_stickie = self.eighthsignup_set \
+                               .filter(user=user,
+                                       scheduled_activity__activity__sticky=True) \
+                               .count() != 0
+            if in_a_stickie:
+                raise eighth_exceptions.Sticky()
+
+            # Check if signup would violate one-a-day constraint
+            if self.activity.one_a_day:
+                in_act = self.eighthsignup_set \
+                             .exclude(scheduled_activity__block=self.block) \
+                             .filter(user=user,
+                                     scheduled_activity__block__date=self.block.date,
+                                     scheduled_activity__activity=self.activity) \
+                             .count() != 0
+                if in_act:
+                    raise eighth_exceptions.OneADay()
+
+            # Check if user is allowed in the activity if restricted
+            # if self.activity.restricted:
+            #     allowed = self.activity.users_allowed
+
+
+        # Everything's good to go - complete the signup
+        try:
+            existing_signup = EighthSignup.objects \
+                                          .get(user=user,
+                                               scheduled_activity__block=self.block)
+            existing_signup.scheduled_activity = self
+            existing_signup.save()
+        except EighthSignup.DoesNotExist:
+            pass
+            EighthSignup.objects.create(user=user,
+                                        scheduled_activity=self)
 
     class Meta:
         unique_together = (("block", "activity"),)
