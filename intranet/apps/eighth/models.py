@@ -88,7 +88,7 @@ class EighthActivity(models.Model):
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
-    # users_allowed = models.ManyToManyField(User, blank=True)
+    users_allowed = models.ManyToManyField(User, blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
 
@@ -357,8 +357,8 @@ class EighthScheduledActivity(models.Model):
                     raise eighth_exceptions.OneADay()
 
             # Check if user is allowed in the activity if restricted
-            # if self.activity.restricted:
-            #     allowed = self.activity.users_allowed
+            if self.activity.restricted:
+                allowed = self.activity.users_allowed
 
 
         # Everything's good to go - complete the signup
