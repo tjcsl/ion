@@ -27,7 +27,7 @@ def add_block_view(request):
 
 
 @eighth_admin_required
-def edit_block_view(request, block_id=None):
+def edit_block_view(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
     except EighthBlock.DoesNotExist:

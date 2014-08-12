@@ -27,7 +27,7 @@ def add_room_view(request):
 
 
 @eighth_admin_required
-def edit_room_view(request, room_id=None):
+def edit_room_view(request, room_id):
     try:
         room = EighthRoom.objects.get(id=room_id)
     except EighthRoom.DoesNotExist:
