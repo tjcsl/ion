@@ -116,6 +116,36 @@ class EighthActivity(models.Model):
                 capacity += room.capacity
         return capacity
 
+    @classmethod
+    def restricted_activities_available_to_user(cls, user):
+        activities = list(user.restricted_activity_set
+                              .values_list("id", flat=True))
+
+        grade = user.grade.number()
+
+        if grade == 9:
+            activities += list(EighthActivity.objects
+                                             .filter(freshmen_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 10:
+            activities += list(EighthActivity.objects
+                                             .filter(sophomores_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 11:
+            activities += list(EighthActivity.objects
+                                             .filter(juniors_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 12:
+            activities += list(EighthActivity.objects
+                                             .filter(seniors_allowed=True)
+                                             .values_list("id", flat=True))
+
+        for group in user.groups.all():
+            activities += list(group.restricted_activity_set
+                                    .values_list("id", flat=True))
+
+        return activities
+
     class Meta:
         verbose_name_plural = "eighth activities"
 
@@ -323,27 +353,48 @@ class EighthScheduledActivity(models.Model):
                               request.user.is_eighth_admin)
 
         if not force:
-            # Check if the user who sent the request has the permissions to
-            # change the target user's signups
+            # Check if the user who sent the request has the permissions
+            # to change the target user's signups
             if request is not None:
                 if user != request.user and not request.user.is_eighth_admin:
                     raise eighth_exceptions.SignupForbidden()
 
-             # Check if the block has been locked
-            if self.block.locked:
-                raise eighth_exceptions.BlockLocked()
+            if self.activity.both_blocks:
+                # Find all schedulings of the same activity on the same day
+                all_sched_act = EighthScheduledActivity.objects \
+                                                       .filter(block__date=self.block.date,
+                                                               activity=self.activity)
+
+            # Check if the block has been locked
+            if not self.activity.both_blocks:
+                if self.block.locked:
+                    raise eighth_exceptions.BlockLocked()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.block.locked:
+                        raise eighth_exceptions.BlockLocked()
 
             # Check if the scheduled activity has been cancelled
-            if self.cancelled:
-                raise eighth_exceptions.ScheduledActivityCancelled()
+            if not self.activity.both_blocks:
+                if self.cancelled:
+                    raise eighth_exceptions.ScheduledActivityCancelled()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.cancelled:
+                        raise eighth_exceptions.ScheduledActivityCancelled()
 
             # Check if the activity has been deleted
             if self.activity.deleted:
                 raise eighth_exceptions.ActivityDeleted()
 
             # Check if the activity is full
-            if self.is_full():
-                raise eighth_exceptions.ActivityFull()
+            if not self.activity.both_blocks:
+                if self.is_full():
+                    raise eighth_exceptions.ActivityFull()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.is_full():
+                        raise eighth_exceptions.ActivityFull()
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
@@ -351,16 +402,24 @@ class EighthScheduledActivity(models.Model):
                     raise eighth_exceptions.Presign()
 
             # Check if the user is already stickied into an activity
-            in_a_stickie = self.eighthsignup_set \
-                               .filter(user=user,
-                                       scheduled_activity__activity__sticky=True) \
-                               .count() != 0
+            if not self.activity.both_blocks:
+                in_a_stickie = self.eighthsignup_set \
+                                   .filter(user=user,
+                                           scheduled_activity__activity__sticky=True) \
+                                   .exists()
+            else:
+                in_a_stickie = EighthSignup.objects \
+                                           .filter(user=user,
+                                                   scheduled_activity__activity__sticky=True,
+                                                   scheduled_activity__block__date=self.block.date,
+                                                   scheduled_activity__activity=self.activity) \
+                                           .exists()
             if in_a_stickie:
                 raise eighth_exceptions.Sticky()
 
             # Check if signup would violate one-a-day constraint
-            if self.activity.one_a_day:
-                in_act = self.eighthsignup_set \
+            if not self.activity.both_blocks and self.activity.one_a_day:
+                in_act = user.eighthsignup_set \
                              .exclude(scheduled_activity__block=self.block) \
                              .filter(user=user,
                                      scheduled_activity__block__date=self.block.date,
@@ -369,45 +428,42 @@ class EighthScheduledActivity(models.Model):
                 if in_act:
                     raise eighth_exceptions.OneADay()
 
-            # Check if user is allowed in the activity if restricted
+            # Check if user is allowed in the activity if it's restricted
             if self.activity.restricted:
-                allowed = user.restricted_activity_set \
-                              .filter(id=self.activity.id) \
-                              .exists()
-                if not allowed:
-                    grade = user.grade.number()
-
-                    if grade == 9:
-                        allowed |= self.activity.freshmen_allowed
-                    elif grade == 10:
-                        allowed |= self.activity.sophomores_allowed
-                    elif grade == 11:
-                        allowed |= self.activity.juniors_allowed
-                    elif grade == 12:
-                        allowed |= self.activity.seniors_allowed
-
-                    if not allowed:
-                        group_ids = self.activity \
-                                        .groups_allowed \
-                                        .values_list("id", flat=True)
-                        allowed |= user.groups \
-                                       .filter(id__in=group_ids) \
-                                       .exists()
-
-                        if not allowed:
-                            raise eighth_exceptions.Restricted()
+                acts = EighthActivity.restricted_activities_available_to_user(user)
+                if self.activity.id not in acts:
+                    raise eighth_exceptions.Restricted()
 
         # Everything's good to go - complete the signup
-        try:
-            existing_signup = EighthSignup.objects \
-                                          .get(user=user,
-                                               scheduled_activity__block=self.block)
-            existing_signup.scheduled_activity = self
-            existing_signup.save()
-        except EighthSignup.DoesNotExist:
-            pass
-            EighthSignup.objects.create(user=user,
-                                        scheduled_activity=self)
+        if not self.activity.both_blocks:
+            try:
+                existing_signup = EighthSignup.objects \
+                                              .get(user=user,
+                                                   scheduled_activity__block=self.block)
+                if not existing_signup.scheduled_activity.activity.both_blocks:
+                    existing_signup.scheduled_activity = self
+                    existing_signup.save()
+                else:
+                    # Clear out the other signups for this block if the user is
+                    # switching out of a both-blocks activity
+                    EighthSignup.objects \
+                                .filter(user=user,
+                                        scheduled_activity__block__date=self.block.date) \
+                                .delete()
+                    EighthSignup.objects.create(user=user,
+                                                scheduled_activity=self)
+            except EighthSignup.DoesNotExist:
+                EighthSignup.objects.create(user=user,
+                                            scheduled_activity=self)
+        else:
+            EighthSignup.objects \
+                        .filter(user=user,
+                                scheduled_activity__block__date=self.block.date) \
+                        .delete()
+
+            for sched_act in all_sched_act:
+                EighthSignup.objects.create(user=user,
+                                            scheduled_activity=sched_act)
 
     class Meta:
         unique_together = (("block", "activity"),)

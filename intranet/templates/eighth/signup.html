@@ -27,8 +27,9 @@
                 activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup }}");
             });
 
-            window.activeBlockLocked = "{{ active_block.locked }}" == "True";
+            window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
+        window.showForceButton = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
@@ -92,6 +93,9 @@
                         <strong>You are currently signed up for this activity.</strong>
                     <%}%>
                 <%}%>
+
+                <div class="error-feedback">
+                </div>
             </div>
         </dl>
         {% endverbatim %}
@@ -117,7 +121,7 @@
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
-                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}">
+                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} bothblocks{% endif %}">
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}
                                                 </span>

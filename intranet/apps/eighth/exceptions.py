@@ -4,7 +4,9 @@ from rest_framework import status
 
 class SignupException(Exception):
     def as_response(self):
-        return http.HttpResponse(self.message, status=self.status)
+        return http.HttpResponse(self.message,
+                                 content_type="text/plain",
+                                 status=self.status)
 
 
 class SignupForbidden(SignupException):

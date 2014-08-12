@@ -73,6 +73,7 @@ $(function() {
                 var aid = $("#activity-detail").data("aid");
                 var bid = $("#activity-detail").data("bid");
                 var uid = $("#activity-detail").data("uid");
+
                 eighth.signUp(uid, bid, aid, function() {
                     $("#signup-button").click(signupClickHandler);
                     spinner.spin(false);
@@ -83,8 +84,9 @@ $(function() {
     });
 
     eighth.signUp = function(uid, bid, aid, callback) {
+        var queryParams = $("#signup-button").hasClass("force") ? "?force" : "";
         $.ajax({
-            url: $("#activity-detail").data("signup-endpoint"),
+            url: $("#activity-detail").data("signup-endpoint") + queryParams,
             type: "POST",
             data: {
                 "uid": uid,
@@ -93,7 +95,15 @@ $(function() {
             },
             success: function(response) {
                 var activity = activityModels.get(aid);
-                var blockSpan = $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text(activity.attributes.name);
+                if (!activity.attributes.both_blocks) {
+                    $(".current-day .both-blocks .selected-activity").text("");
+                    $(".current-day .both-blocks").removeClass("both-blocks");
+
+                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text(activity.attributes.name);
+                } else {
+                    $(".current-day .selected-activity").text(activity.attributes.name);
+                    $(".current-day .block").addClass("both-blocks");
+                }
 
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
                 _.each(selectedActivity, function(a){
@@ -107,11 +117,16 @@ $(function() {
                 activityDetailView.render()
             },
             error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                // $("button").text("Error!");
-                // setTimeout(function() {
-                //     $(button).text("Delete Selected");
-                // }, 1000);
+                if (xhr.getResponseHeader("content-type") == "text/plain") {
+                    $(".error-feedback").html(xhr.responseText);
+                    if (showForceButton) {
+                        $("#signup-button").addClass("force");
+                        $("#signup-button").text("Force Sign Up");
+                    }
+                } else {
+                    $(".error-feedback").html("There was an error signing you up for this activity.")
+                    console.error(xhr.responseText);
+                }
             },
             complete: callback
         });
