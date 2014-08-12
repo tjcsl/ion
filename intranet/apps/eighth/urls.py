@@ -48,6 +48,8 @@ eighth_admin_patterns = [
     # Groups
     url(r"groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
     url(r"groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
+    url(r"groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
+
 
     # Rooms
     url(r"rooms/add$", rooms.add_room_view, name="eighth_admin_add_room"),

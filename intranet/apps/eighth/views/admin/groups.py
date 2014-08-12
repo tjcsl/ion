@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import cPickle
+import csv
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -28,7 +29,7 @@ def add_group_view(request):
 
 
 @eighth_admin_required
-def edit_group_view(request, group_id=None):
+def edit_group_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
@@ -50,3 +51,29 @@ def edit_group_view(request, group_id=None):
         "admin_page_title": "Edit Group"
     }
     return render(request, "eighth/admin/edit_form.html", context)
+
+
+@eighth_admin_required
+def download_group_csv_view(request, group_id):
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        raise http.Http404
+
+    response = http.HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=\"{}\"".format(group.name)
+
+    writer = csv.writer(response)
+    writer.writerow(["Last Name", "First Name", "Student ID", "Grade", "Email"])
+
+    for user in group.user_set.all():
+        row = []
+        row.append(user.last_name)
+        row.append(user.first_name)
+        row.append(user.student_id)
+        row.append(user.grade.number())
+        emails = user.emails
+        row.append(user.emails[0] if emails is not None and len(emails) else None)
+        writer.writerow(row)
+
+    return response

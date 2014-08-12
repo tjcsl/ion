@@ -726,13 +726,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         This is used to retrieve ldap fields that don't require special
         processing, e.g. email or graduation year. Fields names are
         mapped to more user friendly names to increase readability of
-        templates. When more complex processing is required or a
-        complex return type is required, (such as a datetime object for
-        a birthday), properties should be used instead.
+        templates. When more complex processing is required or a complex
+        return type is required, (such as a datetime object for a
+        birthday), properties should be used instead.
 
-        Note that __getattr__ is used instead of __getattribute__ so
-        the method is called after checking regular attributes instead
-        of before.
+        Note that __getattr__ is used instead of __getattribute__ so the
+        method is called after checking regular attributes instead of
+        before.
 
         Returns:
             Either a list of strings or a string, depending on
@@ -740,11 +740,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        # This map essentially turns camelcase names into
-        # Python-style attribute names. The second  elements of
-        # the tuples indicateds whether the piece of information
-        # is restricted in LDAP (false if not protected, else the
-        # name of the permission).
+        # This map essentially turns camelcase names into Python-style
+        # attribute names. The second  elements of the tuples indicateds
+        # whether the piece of information is restricted in LDAP (false
+        # if not protected, else the name of the permission).
         user_attributes = {
             "ion_id": {
                 "ldap_name": "iodineUidNumber",
@@ -753,6 +752,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
             "ion_username": {
                 "ldap_name": "iodineUid",
+                "perm": None,
+                "is_list": False
+            },
+            "student_id": {
+                "ldap_name": "tjhsstStudentId",
                 "perm": None,
                 "is_list": False
             },
