@@ -6,6 +6,7 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from ..users.models import User
 from . import exceptions as eighth_exceptions
@@ -62,7 +63,8 @@ class EighthRoom(models.Model):
 
 class EighthActivityExcludeDeletedManager(models.Manager):
     def get_query_set(self):
-        return super(EighthActivityExcludeDeletedManager, self).get_query_set().exclude(deleted=True)
+        return super(EighthActivityExcludeDeletedManager, self).get_query_set() \
+                                                               .exclude(deleted=True)
 
 
 class EighthActivity(models.Model):
@@ -89,6 +91,12 @@ class EighthActivity(models.Model):
     special = models.BooleanField(default=False)
 
     users_allowed = models.ManyToManyField(User, blank=True)
+    groups_allowed = models.ManyToManyField(Group, blank=True)
+
+    freshmen_allowed = models.BooleanField(default=False)
+    sophomores_allowed = models.BooleanField(default=False)
+    juniors_allowed = models.BooleanField(default=False)
+    seniors_allowed = models.BooleanField(default=False)
 
     deleted = models.BooleanField(blank=True, default=False)
 
@@ -359,6 +367,7 @@ class EighthScheduledActivity(models.Model):
             # Check if user is allowed in the activity if restricted
             if self.activity.restricted:
                 allowed = self.activity.users_allowed
+                # if user
 
 
         # Everything's good to go - complete the signup
