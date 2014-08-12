@@ -48,6 +48,7 @@ eighth_admin_patterns = [
     # Groups
     url(r"groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
     url(r"groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
+    url(r"groups/signup/(?P<group_id>\d+)$", groups.EighthAdminSignUpGroupWizard.as_view(groups.EighthAdminSignUpGroupWizard.FORMS), name="eighth_admin_signup_group"),
     url(r"groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
 
 
