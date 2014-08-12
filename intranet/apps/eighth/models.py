@@ -384,7 +384,7 @@ class EighthScheduledActivity(models.Model):
                     elif grade == 11:
                         allowed |= self.activity.juniors_allowed
                     elif grade == 12:
-                        allowed |= self.activity.juniors_allowed
+                        allowed |= self.activity.seniors_allowed
 
                     if not allowed:
                         group_ids = self.activity \
