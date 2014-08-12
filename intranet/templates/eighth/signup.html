@@ -72,9 +72,14 @@
                 <%}%> already signed up.
             </div>
 
+            <% if (both_blocks) {%>
+                <div>This activity runs both blocks.</div>
+            <%}%>
+
             <% if (description) {%>
                 <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
             <%}%>
+
 
             <div id="signup-section">
                 <% if (!cancelled) {%>
@@ -121,7 +126,7 @@
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
-                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} bothblocks{% endif %}">
+                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}">
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}
                                                 </span>
