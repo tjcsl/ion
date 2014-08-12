@@ -83,15 +83,20 @@ class EighthActivity(models.Model):
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
 
-    restricted = models.BooleanField(default=False)
     presign = models.BooleanField(default=False)
     one_a_day = models.BooleanField(default=False)
     both_blocks = models.BooleanField(default=False)
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
-    users_allowed = models.ManyToManyField(User, blank=True)
-    groups_allowed = models.ManyToManyField(Group, blank=True)
+    restricted = models.BooleanField(default=False)
+
+    users_allowed = models.ManyToManyField(User,
+                                           related_name="restricted_activity_set",
+                                           blank=True)
+    groups_allowed = models.ManyToManyField(Group,
+                                            related_name="restricted_activity_set",
+                                            blank=True)
 
     freshmen_allowed = models.BooleanField(default=False)
     sophomores_allowed = models.BooleanField(default=False)
@@ -366,9 +371,31 @@ class EighthScheduledActivity(models.Model):
 
             # Check if user is allowed in the activity if restricted
             if self.activity.restricted:
-                allowed = self.activity.users_allowed
-                # if user
+                allowed = user.restricted_activity_set \
+                              .filter(id=self.activity.id) \
+                              .exists()
+                if not allowed:
+                    grade = user.grade.number()
 
+                    if grade == 9:
+                        allowed |= self.activity.freshmen_allowed
+                    elif grade == 10:
+                        allowed |= self.activity.sophomores_allowed
+                    elif grade == 11:
+                        allowed |= self.activity.juniors_allowed
+                    elif grade == 12:
+                        allowed |= self.activity.juniors_allowed
+
+                    if not allowed:
+                        group_ids = self.activity \
+                                        .groups_allowed \
+                                        .values_list("id", flat=True)
+                        allowed |= user.groups \
+                                       .filter(id__in=group_ids) \
+                                       .exists()
+
+                        if not allowed:
+                            raise eighth_exceptions.Restricted()
 
         # Everything's good to go - complete the signup
         try:

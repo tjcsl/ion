@@ -8,7 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from rest_framework.renderers import JSONRenderer
 from ...users.models import User
-from ..models import EighthBlock, EighthSignup, EighthScheduledActivity
+from ..exceptions import SignupException
+from ..models import (
+    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
+)
 from ..serializers import EighthBlockDetailSerializer
 
 
@@ -27,9 +30,10 @@ def eighth_signup_view(request, block_id=None):
         bid = request.POST["bid"]
         aid = request.POST["aid"]
 
-        if uid != request.user.id and not request.user.is_eighth_admin:
-            return http.HttpResponseForbidden("You may not sign up this "
-                                              "student for activities.")
+        try:
+            user = User.get_and_propogate_user(id=uid)
+        except User.DoesNotExist:
+            return http.HttpResponseNotFound("Given user does not exist.")
 
         try:
             scheduled_activity = EighthScheduledActivity.objects \
@@ -37,48 +41,15 @@ def eighth_signup_view(request, block_id=None):
                                                         .exclude(cancelled=True) \
                                                         .get(block=bid,
                                                              activity=aid)
+
         except EighthScheduledActivity.DoesNotExist:
             return http.HttpResponseNotFound("Given activity not scheduled "
                                              "for given block.")
 
         try:
-            user = User.objects.get(id=uid)
-        except User.DoesNotExist:
-            return http.HttpResponseNotFound("Given user does not exist.")
-
-        # Check conditions for carrying out the signup
-        num_signed_up = EighthSignup.objects \
-                                    .filter(scheduled_activity=scheduled_activity) \
-                                    .count()
-        capacity = scheduled_activity.get_true_capacity()
-        if num_signed_up >= capacity:
-            return http.HttpResponseForbidden("This activity is full. You may "
-                                              "not sign up up for it at this "
-                                              "time.")
-        if scheduled_activity.block.locked:
-            return http.HttpResponseForbidden("This block has been locked.")
-
-        now = datetime.datetime.now()
-        activity_date = datetime.datetime \
-                                .combine(scheduled_activity.block.date,
-                                         datetime.time(00, 00, 00))
-        presign_period = datetime.timedelta(days=2)
-        if scheduled_activity.activity.presign and now < (activity_date - presign_period):
-            return http.HttpResponseForbidden("You may not sign up for this "
-                                              "activity more than two days "
-                                              "in advance.")
-
-        # Everything's good to go - complete the signup
-        try:
-            existing_signup = EighthSignup.objects \
-                                          .get(user=user,
-                                               scheduled_activity__block=bid)
-            existing_signup.scheduled_activity = scheduled_activity
-            existing_signup.save()
-        except EighthSignup.DoesNotExist:
-            pass
-            EighthSignup.objects.create(user=user,
-                                        scheduled_activity=scheduled_activity)
+            scheduled_activity.add_user(user, request)
+        except SignupException as e:
+            return e.as_response()
 
         return http.HttpResponse("Successfully signed up for activity.")
     else:

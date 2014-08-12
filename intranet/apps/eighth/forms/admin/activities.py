@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from ....users.models import User
 from ...models import EighthActivity
 
 
@@ -27,9 +28,20 @@ class ActivityForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActivityForm, self).__init__(*args, **kwargs)
 
-        for fieldname in ["sponsors", "rooms"]:
+        for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed"]:
             self.fields[fieldname].help_text = None
+
+        # Simple way to filter out teachers without hitting LDAP
+        # Warning: will break in approximately 1000 years or if the student
+        # username format ever changes
+        self.fields["users_allowed"].queryset = User.objects \
+                                                    .filter(username__startswith="2")
+
+        self.fields["presign"].label = "48 Hour"
 
     class Meta:
         model = EighthActivity
         exclude = ["deleted"]
+        widgets = {
+            "description": forms.TextInput()
+        }
