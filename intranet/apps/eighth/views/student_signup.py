@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
 import logging
 from django import http
 from django.contrib.auth.decorators import login_required
@@ -10,7 +9,7 @@ from rest_framework.renderers import JSONRenderer
 from ...users.models import User
 from ..exceptions import SignupException
 from ..models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
+    EighthBlock, EighthSignup, EighthScheduledActivity
 )
 from ..serializers import EighthBlockDetailSerializer
 
@@ -85,13 +84,14 @@ def eighth_signup_view(request, block_id=None):
         schedule = []
 
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
-        block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity.activity for s in signups}
+        block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
-                "current_signup": block_signup_map.get(b.id, ""),
+                "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
+                "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
                 "locked": b.locked
             }
 
@@ -108,7 +108,7 @@ def eighth_signup_view(request, block_id=None):
         block_info["schedule"] = schedule
 
         try:
-            active_block_current_signup = block_signup_map[int(block_id)].id
+            active_block_current_signup = block_signup_map[int(block_id)].activity.id
         except KeyError:
             active_block_current_signup = None
 

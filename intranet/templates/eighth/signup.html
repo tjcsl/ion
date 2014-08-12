@@ -39,7 +39,7 @@
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
         <h3>
-            <%= name + (cancelled ? " (CANCELLED)" : "") %>
+            <%= name + (cancelled ? " (Cancelled)" : "") %>
         </h3>
         <dl>
             <dt>Rooms:</dt>
@@ -76,7 +76,7 @@
             <%}%>
 
             <div id="signup-section">
-                <% if (true || !cancelled) {%>
+                <% if (!cancelled) {%>
                     <% if (!selected) {%>
                         <% if (roster.count < roster.capacity) {%>
                             <button id="signup-button">
@@ -117,14 +117,20 @@
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
-                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}">
+                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}">
                                                 <span class="block-letter">
                                                     {{ b.block_letter }}
                                                 </span>
-                                                {% if b.locked %}
-                                                    <i class="fa fa-lock"></i>
-                                                {% endif %}
-                                                {{ b.current_signup.name }}
+
+                                                <span class="selected-activity">
+                                                    {% if b.locked %}
+                                                        <i class="fa fa-lock"></i>
+                                                    {% endif %}
+                                                    {% if b.current_signup_cancelled %}
+                                                        <strong>Cancelled</strong> -
+                                                    {% endif %}
+                                                    {{ b.current_signup.name }}
+                                                </span>
                                             </div>
                                         </a>
                                     {% endfor %}
@@ -201,7 +207,7 @@
                                     <span class="activity-icon pie-{{ act.roster.count|divide:act.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}"></span>
                                 {% endif %}
                             </span>
-                            <span class="activity-name">{{ act.name }}{% if act.cancelled %} (CANCELLED){% endif %}</span>
+                            <span class="activity-name">{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}</span>
                         </li>
                     {% endfor %}
                 </ul>

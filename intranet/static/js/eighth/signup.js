@@ -93,12 +93,7 @@ $(function() {
             },
             success: function(response) {
                 var activity = activityModels.get(aid);
-                var blockSpan = $(".current-day .blocks a[data-bid='" + bid + "'] .block span")[0];
-                if (blockSpan.nextSibling) {
-                    blockSpan.nextSibling.data = activity.attributes.name;
-                } else {
-                    $(blockSpan).after(activity.attributes.name);
-                }
+                var blockSpan = $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text(activity.attributes.name);
 
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
                 _.each(selectedActivity, function(a){
