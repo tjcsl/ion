@@ -105,6 +105,8 @@ $(function() {
                     $(".current-day .block").addClass("both-blocks");
                 }
 
+                $(".block.cancelled").removeClass("cancelled");
+
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
                 _.each(selectedActivity, function(a){
                     a.attributes.selected = false;
