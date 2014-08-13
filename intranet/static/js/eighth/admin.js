@@ -51,16 +51,17 @@ $(function() {
         return url.split("?")[0] + "?" + $.param(params);
     }
 
-    $("select.url-param-selector").on("change", function() {
-        var url = updateParam(document.URL, $(this).data("param"), $(this).val());
-        location.href = url;
-    })
-
     $("select.url-param-selector").each(function(index, element) {
         if (!($(element).data("param") in getParams(document.URL))) {
             element.selectize.setValue(-1);
         }
     });
+
+    $("select.url-param-selector").on("change", function() {
+        var url = updateParam(document.URL, $(this).data("param"), $(this).val());
+        location.href = url;
+    })
+
 
     // Set up checkboxes on activity scheduling page
     var $selectAllBlocksCheckbox = $(".schedule-activity-grid thead input[type='checkbox']")
@@ -141,5 +142,9 @@ $(function() {
 
     $("#id_restricted").click(updateRestrictedFormFields);
     updateRestrictedFormFields()
+
+    $("#only-show-overbooked").click(function() {
+        $("tr.underbooked").toggle();
+    })
 
 });

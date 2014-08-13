@@ -339,6 +339,13 @@ class EighthScheduledActivity(models.Model):
             return num_signed_up >= capacity
         return False
 
+    def is_overbooked(self):
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up > capacity
+        return False
+
     def is_too_early_to_signup(self, now=None):
         if now is None:
             now = datetime.datetime.now()
