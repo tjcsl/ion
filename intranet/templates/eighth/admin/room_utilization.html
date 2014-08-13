@@ -1,19 +1,27 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 
 {% block admin_main %}
-    <h4>Select a Block:</h4>
-
-    <select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
-        {% for b in blocks %}
-            <option value="{{ b.id }}"{% if b == chosen_block %} selected{% endif %}>{{ b.id }}: {{ b.date }} ({{ b.block_letter}})</option>
-        {% endfor %}
-    </select>
-
-    {% if chosen_block %}
+    {% if not scheduled_activities %}
+        <form action="" method="post">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+            <br>
+            {{ wizard.form }}
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+            {% endif %}
+            {% if wizard.steps.next %}
+                <input type="submit" value="Next"/>
+            {% else %}
+                <input type="submit" value="Show Room Utilization"/>
+            {% endif %}
+        </form>
+    {% else %}
+        <strong>Start Block:</strong> {{ start_block.id }}: {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
         <br>
-        <input type="checkbox" id="only-show-overbooked">
-        <label for="only-show-overbooked">Only show overbooked</label>
+        <strong>End Block:</strong> {{ end_block.id }}: {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
         <br>
+
         <table class="fancy-table">
             <thead>
                 <tr>
@@ -27,7 +35,7 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr {% if not sched_act.is_overbooked %} class="underbooked"{% endif %}>
+                    <tr>
                         <td>{{ sched_act.get_true_rooms|join:", " }}</td>
                         <td>{{ sched_act.activity.id }}</td>
                         <td>{{ sched_act.activity.name_with_flags }}</td>
@@ -39,4 +47,5 @@
             </tbody>
         </table>
     {% endif %}
+
 {% endblock %}

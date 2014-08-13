@@ -112,10 +112,18 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         return kwargs
 
+    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminSignUpGroupWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({"admin_page_title": "Sign Up Group"})
+        return context
+
     def done(self, form_list, **kwargs):
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
-        scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
+        scheduled_activity = EighthScheduledActivity.objects \
+                                                    .get(block=block,
+                                                         activity=activity)
 
         try:
             group = Group.objects.get(id=kwargs["group_id"])

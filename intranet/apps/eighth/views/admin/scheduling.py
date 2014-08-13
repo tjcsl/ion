@@ -29,7 +29,9 @@ def schedule_activity_view(request):
                 activity = form.cleaned_data["activity"]
 
                 if form["scheduled"].value():
-                    instance, created = EighthScheduledActivity.objects.get_or_create(block=block, activity=activity)
+                    instance, created = EighthScheduledActivity.objects \
+                                                               .get_or_create(block=block,
+                                                                              activity=activity)
 
                     # TODO: Send notifications about room changes
 
@@ -44,7 +46,10 @@ def schedule_activity_view(request):
                 else:
                     # Instead of deleting and messing up attendance,
                     # cancel the scheduled activity if it was unscheduled
-                    EighthScheduledActivity.objects.filter(block=block, activity=activity).update(cancelled=True)
+                    EighthScheduledActivity.objects \
+                                           .filter(block=block,
+                                                   activity=activity) \
+                                           .update(cancelled=True)
 
             messages.success(request, "Successfully updated schedule.")
 
@@ -180,16 +185,27 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
 
         return kwargs
 
+    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminTransferStudentsWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({"admin_page_title": "Transfer Students"})
+        return context
+
     def done(self, form_list, **kwargs):
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
+        source_scheduled_activity = EighthScheduledActivity.objects \
+                                                           .get(block=source_block,
+                                                                activity=source_activity)
 
         dest_block = form_list[2].cleaned_data["block"]
         dest_activity = form_list[3].cleaned_data["activity"]
-        dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
+        dest_scheduled_activity = EighthScheduledActivity.objects \
+                                                         .get(block=dest_block,
+                                                              activity=dest_activity)
 
-        source_scheduled_activity.eighthsignup_set.update(scheduled_activity=dest_scheduled_activity)
+        source_scheduled_activity.eighthsignup_set \
+                                 .update(scheduled_activity=dest_scheduled_activity)
 
         messages.success(self.request, "Successfully transfered students.")
         return redirect("eighth_admin_dashboard")
