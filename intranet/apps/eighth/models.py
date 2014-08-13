@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.utils import formats
 from ..users.models import User
 from . import exceptions as eighth_exceptions
 
@@ -250,7 +251,7 @@ class EighthBlock(models.Model):
         return surrounding_blocks
 
     def __unicode__(self):
-        return "{}: {}".format(str(self.date), self.block_letter)
+        return "{} ({})".format(formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT"), self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)
