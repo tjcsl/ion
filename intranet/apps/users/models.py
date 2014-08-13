@@ -216,13 +216,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
+        if not hasattr(self, "_groups_cache"):
+            self._groups_cache = self.groups.values_list("name", flat=True)
 
-        if not isinstance(group, Group):
-            try:
-                group = Group.objects.get(name=group)
-            except Group.DoesNotExist:
-                return False
-        return group in self.groups.all()
+        if isinstance(group, Group):
+            group = group.name
+
+        return group in self._groups_cache
 
     def has_admin_permission(self, perm):
         """Returns whether a user has an admin permission (explicitly,
