@@ -129,12 +129,15 @@
 <div class="announcements primary-content">
     <div class="announcements-header">
         <h2>Announcements</h2>
-        <span class="announcements-icon-wrapper">
-            <a class="button announcement-add" href="{% url 'add_announcement' %}">
-                <i class="fa fa-plus"></i>
-                Add
-            </a>
-        </span>
+        {% if request.user.is_announcements_admin %}
+
+            <span class="announcements-icon-wrapper">
+                <a class="button announcement-add" href="{% url 'add_announcement' %}">
+                    <i class="fa fa-plus"></i>
+                    Add
+                </a>
+            </span>
+        {% endif %}
     </div>
     <div class="announcements-container">
     {% for announcement in announcements %}
@@ -160,11 +163,12 @@
         </div>
     {% endfor %}
     </div>
+    <!--
     <div class="content-center">
         <a href="/archive" class="button">
                 <i class="fa fa-archive"></i>
                 Archive
         </a>
-    </div>
+    </div>-->
 </div>
 {% endblock %}

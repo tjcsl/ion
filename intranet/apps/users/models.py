@@ -627,6 +627,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('eighth')
 
     @property
+    def is_announcements_admin(self):
+        """Checks if user is an announcements admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission("announcements")
+
+    @property
     def is_teacher(self):
         """Checks if user is a teacher.
 
