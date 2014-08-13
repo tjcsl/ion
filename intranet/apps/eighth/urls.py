@@ -2,18 +2,20 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import include, url
-from .views import routers, student_signup, teacher_attendance
+from .views import routers, signup, attendance
 from .views.admin import (
     general, activities, blocks, groups, rooms, sponsors, scheduling)
+from .views.admin import attendance as admin_attendance
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
 
     # Students
-    url(r"^/signup(?:/(?P<block_id>\d+))?$", student_signup.eighth_signup_view, name="eighth_signup"),
+    url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
 
     # Teachers
-    url(r"^/attendance$", teacher_attendance.eighth_teacher_attendance_view, name="eighth_teacher_attendance"),
+    url(r"^/attendance$", attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS), name="eighth_attendance_choose_scheduled_activity"),
+    url(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
@@ -38,7 +40,8 @@ eighth_admin_patterns = [
     url(r"scheduling/transfer_students$", scheduling.EighthAdminTransferStudentsWizard.as_view(scheduling.EighthAdminTransferStudentsWizard.FORMS), name="eighth_admin_transfer_students"),
 
     # Attendance
-    url(r"attendance/take_attendance$", general.not_implemented_view, name="eighth_admin_take_attendance"),
+    url(r"attendance$", attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS), name="eighth_admin_attendance_choose_scheduled_activity"),
+    url(r"attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_admin_take_attendance"),
     url(r"attendance/delinquent_students$", general.not_implemented_view, name="eighth_admin_view_delinquent_students"),
     url(r"attendance/after_deadline_signups$", general.not_implemented_view, name="eighth_admin_view_after_deadline_signups"),
     url(r"attendance/no_attendance$", general.not_implemented_view, name="eighth_admin_view_activities_without_attendance"),

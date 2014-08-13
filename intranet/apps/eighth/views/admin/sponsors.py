@@ -86,7 +86,7 @@ def sponsor_schedule_view(request, sponsor_id):
         return http.HttpResponseNotFound()
 
     sponsoring_filter = (Q(sponsors=sponsor) |
-                         Q(Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
     sched_acts = EighthScheduledActivity.objects \
                                         .exclude(activity__deleted=True) \
                                         .exclude(cancelled=True) \

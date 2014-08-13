@@ -10,14 +10,18 @@ block_letter_validator = RegexValidator(r"^[a-zA-Z]$", "Only single letters are 
 
 
 class BlockSelectionForm(forms.Form):
-    def __init__(self, label="Block", exclude_before_date=None, *args, **kwargs):
+    def __init__(self, label="Block", exclude_before_date=None, only_locked=False, *args, **kwargs):
         super(BlockSelectionForm, self).__init__(*args, **kwargs)
 
-        if exclude_before_date is None:
-            queryset = EighthBlock.objects.all()
-        else:
-            queryset = EighthBlock.objects \
-                                  .filter(date__gte=exclude_before_date)
+        filter_params = {}
+
+        if exclude_before_date is not None:
+            filter_params["date__gte"] = exclude_before_date
+
+        if only_locked:
+            filter_params["locked"] = True
+
+        queryset = EighthBlock.objects.filter(**filter_params)
 
         self.fields["block"] = forms.ModelChoiceField(queryset=queryset,
                                                       label=label,

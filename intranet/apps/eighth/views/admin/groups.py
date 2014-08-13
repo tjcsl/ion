@@ -104,8 +104,8 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
             kwargs.update({"block": block})
 
         labels = {
-            "block": "Select a block for which to sign up group",
-            "activity": "Select an activity for which to sign up group",
+            "block": "Select a block",
+            "activity": "Select an activity",
         }
 
         kwargs.update({"label": labels[step]})

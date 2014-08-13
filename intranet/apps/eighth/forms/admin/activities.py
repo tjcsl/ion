@@ -2,18 +2,34 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.db.models import Q
 from ....users.models import User
-from ...models import EighthActivity
+from ...models import EighthActivity, EighthScheduledActivity
 
 
 class ActivitySelectionForm(forms.Form):
-    def __init__(self, block=None, label="Activity", *args, **kwargs):
+    def __init__(self, label="Activity", block=None, sponsor=None, *args, **kwargs):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
-        if block is None:
-            queryset = EighthActivity.undeleted_objects.all()
+        if block is not None:
+            queryset = block.activities \
+                            .exclude(deleted=True) \
+                            .exclude(eighthscheduledactivity__cancelled=True)
+            if sponsor is not None:
+                sponsoring_filter = (Q(sponsors=sponsor) |
+                                     (Q(sponsors=None) &
+                                      Q(activity__sponsors=sponsor)))
+                activity_ids = EighthScheduledActivity.objects \
+                                                      .filter(block=block) \
+                                                      .filter(sponsoring_filter) \
+                                                      .values_list("id", flat=True)
+                queryset = EighthActivity.objects.filter(id__in=activity_ids)
         else:
-            queryset = block.activities.all()
+            if sponsor is not None:
+                queryset = EighthActivity.undeleted_objects \
+                                         .filter(sponsors=sponsor)
+            else:
+                queryset = EighthActivity.undeleted_objects.all()
 
         self.fields["activity"] = forms.ModelChoiceField(queryset=queryset,
                                                          label=label,

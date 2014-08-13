@@ -662,14 +662,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         """Checks if a user should have access to the Django Admin
-        interface.
+        interface. This has nothing to do with staff at TJ - `is_staff`
+        has to be overridden to make this a valid user model.
 
         Returns:
             Boolean
 
         """
 
-        return self.member_of("admin_all")
+        return self.is_superuser
 
     @property
     def is_attendance_user(self):
