@@ -116,5 +116,33 @@ def room_utilization_for_block_view(request):
                                                       .filter(block=block)
         context["scheduled_activities"] = scheduled_activities
 
-    context["admin_page_title"] = "Room Utilization"
+    context["admin_page_title"] = "Room Utilization for Block"
+    return render(request, "eighth/admin/room_utilization_for_block.html", context)
+
+
+@eighth_admin_required
+def room_utilization_for_block_range_view(request):
+    blocks = EighthBlock.objects.all()
+    block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        "blocks": blocks,
+        "chosen_block": block
+    }
+
+    if block is not None:
+        scheduled_activities = EighthScheduledActivity.objects \
+                                                      .exclude(activity__deleted=True) \
+                                                      .exclude(cancelled=True) \
+                                                      .filter(block=block)
+        context["scheduled_activities"] = scheduled_activities
+
+    context["admin_page_title"] = "Room Utilization for Block Range"
     return render(request, "eighth/admin/room_utilization_for_block.html", context)
