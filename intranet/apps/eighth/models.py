@@ -264,7 +264,7 @@ class EighthScheduledActivity(models.Model):
         - block -- the :class:`EighthBlock` during which an \
                    :class:`EighthActivity` has been scheduled
         - activity -- the scheduled :class:`EighthActivity`
-        - members -- the :class:`User<intranet.apps.users.models.User>`s\
+        - members -- the :class:`User<intranet.apps.users.models.User>`s \
                      who have signed up for an :class:`EighthBlock`
         - comments -- notes for the Eighth Office
         - sponsors -- :class:`EighthSponsor`s that will override the \

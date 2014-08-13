@@ -157,8 +157,7 @@ def contributors():
 def linecount():
     """Get a total line count of files with these types:"""
     with hide('running'):
-        local("cloc --exclude-ext json --exclude-dir intranet/static/lib,intranet/static/{css,js}/lib,docs .")
-
+        local("cloc --exclude-ext=json --exclude-dir=intranet/static/lib,intranet/static/{css,js}/lib,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
 
 def load_fixtures():
     """Clear and repopulate a database with data from fixtures."""
