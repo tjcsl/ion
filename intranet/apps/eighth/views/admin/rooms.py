@@ -164,7 +164,9 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
                                             .exclude(activity__deleted=True) \
                                             .exclude(cancelled=True) \
                                             .filter(block__date__gte=start_block.date,
-                                                    block__date__lte=end_block.date)
+                                                    block__date__lte=end_block.date) \
+                                            .order_by("block__date",
+                                                      "block__block_letter")
 
         context = {
             "scheduled_activities": sched_acts,
