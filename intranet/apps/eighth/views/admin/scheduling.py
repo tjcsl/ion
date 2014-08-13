@@ -76,8 +76,7 @@ def schedule_activity_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        blocks = EighthBlock.objects.filter(date__gte=start_date) \
-                                    .order_by("date")
+        blocks = EighthBlock.objects.filter(date__gte=start_date)
 
         initial_formset_data = []
 

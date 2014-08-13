@@ -254,6 +254,7 @@ class EighthBlock(models.Model):
 
     class Meta:
         unique_together = (("date", "block_letter"),)
+        ordering = ("date", "block_letter")
 
 
 class EighthScheduledActivity(models.Model):
