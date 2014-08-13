@@ -14,7 +14,10 @@ urlpatterns = [
     url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
 
     # Teachers
-    url(r"^/attendance$", attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS), name="eighth_attendance_choose_scheduled_activity"),
+    url(r"^/attendance$",
+        attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS,
+                                                                         condition_dict={"activity": attendance.should_show_activity_list}),
+        name="eighth_attendance_choose_scheduled_activity"),
     url(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
 
     # Admin
@@ -37,10 +40,15 @@ eighth_admin_patterns = [
     # Scheduling
     url(r"scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
     url(r"scheduling/activity_schedule$", scheduling.show_activity_schedule_view, name="eighth_admin_view_activity_schedule"),
-    url(r"scheduling/transfer_students$", scheduling.EighthAdminTransferStudentsWizard.as_view(scheduling.EighthAdminTransferStudentsWizard.FORMS), name="eighth_admin_transfer_students"),
+    url(r"scheduling/transfer_students$",
+        scheduling.EighthAdminTransferStudentsWizard.as_view(scheduling.EighthAdminTransferStudentsWizard.FORMS),
+        name="eighth_admin_transfer_students"),
 
     # Attendance
-    url(r"attendance$", attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS), name="eighth_admin_attendance_choose_scheduled_activity"),
+    url(r"attendance$",
+        attendance.EighthAttendanceSelectScheduledActivityWizard.as_view(attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS,
+                                                                         condition_dict={"activity": attendance.should_show_activity_list}),
+        name="eighth_admin_attendance_choose_scheduled_activity"),
     url(r"attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_admin_take_attendance"),
     url(r"attendance/delinquent_students$", general.not_implemented_view, name="eighth_admin_view_delinquent_students"),
     url(r"attendance/after_deadline_signups$", general.not_implemented_view, name="eighth_admin_view_after_deadline_signups"),
@@ -51,7 +59,9 @@ eighth_admin_patterns = [
     # Groups
     url(r"groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
     url(r"groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
-    url(r"groups/signup/(?P<group_id>\d+)$", groups.EighthAdminSignUpGroupWizard.as_view(groups.EighthAdminSignUpGroupWizard.FORMS), name="eighth_admin_signup_group"),
+    url(r"groups/signup/(?P<group_id>\d+)$",
+        groups.EighthAdminSignUpGroupWizard.as_view(groups.EighthAdminSignUpGroupWizard.FORMS),
+        name="eighth_admin_signup_group"),
     url(r"groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
 
 
@@ -60,7 +70,9 @@ eighth_admin_patterns = [
     url(r"rooms/edit/(?P<room_id>\d+)$", rooms.edit_room_view, name="eighth_admin_edit_room"),
     url(r"rooms/sanity_check$", rooms.room_sanity_check_view, name="eighth_admin_room_sanity_check"),
     url(r"rooms/block_utilization$", rooms.room_utilization_for_block_view, name="eighth_admin_room_utilization_for_block"),
-    url(r"rooms/utilization$", rooms.EighthAdminRoomUtilizationWizard.as_view(rooms.EighthAdminRoomUtilizationWizard.FORMS), name="eighth_admin_room_utilization"),
+    url(r"rooms/utilization$",
+        rooms.EighthAdminRoomUtilizationWizard.as_view(rooms.EighthAdminRoomUtilizationWizard.FORMS),
+        name="eighth_admin_room_utilization"),
 
 
     # Sponsors

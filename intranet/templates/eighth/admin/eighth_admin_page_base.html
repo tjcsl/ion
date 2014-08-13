@@ -6,6 +6,7 @@
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'lib/selectize.js-0.10.1/dist/css/selectize.default.css' %}">
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
 {% endblock %}
 
@@ -18,18 +19,12 @@
 
 {% block main %}
 <div class="primary-content">
-    <div class="eighth-admin-header">
+    <div class="eighth-header">
             <h2>
                 {% block admin_page_title %}{{ admin_page_title }}{% endblock %}
             </h2>
-            <div class="start-date">
-                <div>
-                    Start Date: {{ start_date|date:'D, N j, Y' }}
-                </div>
-                <div>
-                    <a href="{% url 'eighth_admin_edit_start_date' %}?next_page={{ request.get_full_path|urlencode }}">Change</a>
-                </div>
-            </div>
+
+            {% include "eighth/admin/start_date.html" %}
     </div>
     {% block admin_main %}{% endblock %}
 </div>

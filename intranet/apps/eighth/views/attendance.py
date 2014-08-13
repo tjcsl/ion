@@ -10,6 +10,23 @@ from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthScheduledActivity, EighthSponsor
 
 
+def should_show_activity_list(wizard):
+    if wizard.request.user.is_eighth_admin:
+        return True
+
+    cleaned_data = wizard.get_cleaned_data_for_step("block") or {}
+
+    if cleaned_data:
+        activities = wizard.get_form("activity").fields["activity"].queryset
+        if activities.count() == 1:
+            wizard.default_activity = activities[0]
+            return False
+        if activities.count() == 0:
+            wizard.no_activities = True
+            return False
+    return True
+
+
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     FORMS = [
         ("block", BlockSelectionForm),
@@ -17,8 +34,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     ]
 
     TEMPLATES = {
-        "block": "eighth/admin/attendance_select_scheduled_activity.html",
-        "activity": "eighth/admin/attendance_select_scheduled_activity.html",
+        "block": "eighth/admin/take_attendance.html",
+        "activity": "eighth/admin/take_attendance.html",
     }
 
     def get_template_names(self):
@@ -53,17 +70,28 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         kwargs.update({"label": labels[step]})
 
+        print kwargs
         return kwargs
 
     def get_context_data(self, form, **kwargs):
         context = super(EighthAttendanceSelectScheduledActivityWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
+
         return context
 
     def done(self, form_list, **kwargs):
+        if hasattr(self, "no_activities"):
+            response = redirect("eighth_attendance_choose_scheduled_activity")
+            response["Location"] += "?na=1"
+            return response
+
+        if hasattr(self, "default_activity"):
+            activity = self.default_activity
+        else:
+            activity = form_list[1].cleaned_data["activity"]
+
         block = form_list[0].cleaned_data["block"]
-        activity = form_list[1].cleaned_data["activity"]
         scheduled_activity = EighthScheduledActivity.objects \
                                                     .get(block=block,
                                                          activity=activity)

@@ -22,7 +22,8 @@ class ActivitySelectionForm(forms.Form):
                 activity_ids = EighthScheduledActivity.objects \
                                                       .filter(block=block) \
                                                       .filter(sponsoring_filter) \
-                                                      .values_list("id", flat=True)
+                                                      .values_list("activity__id", flat=True)
+                print activity_ids
                 queryset = EighthActivity.objects.filter(id__in=activity_ids)
         else:
             if sponsor is not None:
