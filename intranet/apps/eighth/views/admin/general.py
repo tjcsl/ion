@@ -93,7 +93,7 @@ def edit_start_date_view(request):
         "form": form,
         "admin_page_title": "Change Start Date"
     }
-    return render(request, "eighth/admin/edit_form.html", context)
+    return render(request, "eighth/admin/edit_start_date.html", context)
 
 
 @eighth_admin_required
