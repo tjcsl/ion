@@ -503,8 +503,8 @@ class EighthSignup(models.Model):
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True)
 
     after_deadline = models.BooleanField(default=False)
-    previous_activity_name = models.CharField(max_length=100, null=True)
-    previous_activity_sponsors = models.CharField(max_length=100, null=True)
+    previous_activity_name = models.CharField(max_length=100, blank=True)
+    previous_activity_sponsors = models.CharField(max_length=100, blank=True)
 
     with_pass = models.BooleanField(default=False)
     pass_accepted = models.BooleanField(default=False)
