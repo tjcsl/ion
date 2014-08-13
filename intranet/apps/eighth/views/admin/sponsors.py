@@ -5,10 +5,11 @@ import cPickle
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthSponsor
+from ...models import EighthSponsor, EighthScheduledActivity
 
 
 @eighth_admin_required
@@ -75,3 +76,28 @@ def delete_sponsor_view(request, sponsor_id):
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
+
+
+@eighth_admin_required
+def sponsor_schedule_view(request, sponsor_id):
+    try:
+        sponsor = EighthSponsor.objects.get(id=sponsor_id)
+    except EighthSponsor.DoesNotExist:
+        return http.HttpResponseNotFound()
+
+    sponsoring_filter = (Q(sponsors=sponsor) |
+                         Q(Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+    sched_acts = EighthScheduledActivity.objects \
+                                        .exclude(activity__deleted=True) \
+                                        .exclude(cancelled=True) \
+                                        .filter(sponsoring_filter) \
+                                        .order_by("block__date",
+                                                  "block__block_letter")
+
+    context = {
+        "scheduled_activities": sched_acts,
+        "admin_page_title": "Sponsor Schedule",
+        "sponsor": sponsor
+    }
+
+    return render(request, "eighth/admin/sponsor_schedule.html", context)
