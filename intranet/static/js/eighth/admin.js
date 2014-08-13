@@ -51,19 +51,16 @@ $(function() {
         return url.split("?")[0] + "?" + $.param(params);
     }
 
-
-    if (!("activity" in getParams(document.URL))) {
-        var $selects = $(".schedule-activity-select");
-        if ($selects.length){
-            $selects[0].selectize.setValue(-1);
-        }
-    }
-
-    $(".schedule-activity-select").on("change", function() {
-        var url = updateParam(document.URL, "activity", $(this).val());
+    $("select.url-param-selector").on("change", function() {
+        var url = updateParam(document.URL, $(this).data("param"), $(this).val());
         location.href = url;
     })
 
+    $("select.url-param-selector").each(function(index, element) {
+        if (!($(element).data("param") in getParams(document.URL))) {
+            element.selectize.setValue(-1);
+        }
+    });
 
     // Set up checkboxes on activity scheduling page
     var $selectAllBlocksCheckbox = $(".schedule-activity-grid thead input[type='checkbox']")

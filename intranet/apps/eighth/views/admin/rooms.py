@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.rooms import RoomForm
-from ...models import EighthRoom
+from ...models import EighthRoom, EighthBlock
 
 
 @eighth_admin_required
@@ -49,3 +49,27 @@ def edit_room_view(request, room_id):
         "admin_page_title": "Edit Room"
     }
     return render(request, "eighth/admin/edit_form.html", context)
+
+
+@eighth_admin_required
+def room_sanity_check_view(request):
+    blocks = EighthBlock.objects.all()
+    block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        "blocks": blocks,
+        "chosen_block": block
+    }
+
+    if block is not None:
+        pass
+
+    context["admin_page_title"] = "Room Assignment Sanity Check"
+    return render(request, "eighth/admin/room_sanity_check.html", context)

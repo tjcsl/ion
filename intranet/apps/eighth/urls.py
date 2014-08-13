@@ -55,7 +55,7 @@ eighth_admin_patterns = [
     # Rooms
     url(r"rooms/add$", rooms.add_room_view, name="eighth_admin_add_room"),
     url(r"rooms/edit/(?P<room_id>\d+)$", rooms.edit_room_view, name="eighth_admin_edit_room"),
-    url(r"rooms/sanity_check$", general.not_implemented_view, name="eighth_admin_room_sanity_check"),
+    url(r"rooms/sanity_check$", rooms.room_sanity_check_view, name="eighth_admin_room_sanity_check"),
     url(r"rooms/block_utilization$", general.not_implemented_view, name="eighth_admin_room_utilization_for_block"),
     url(r"rooms/block_range_utilization$", general.not_implemented_view, name="eighth_admin_room_utilization_for_block_range"),
 
