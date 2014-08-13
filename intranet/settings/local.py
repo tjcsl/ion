@@ -23,13 +23,24 @@ if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(os.path.dirname(PROJECT_ROOT),
+#                              "testing_database.db"),
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(os.path.dirname(PROJECT_ROOT),
-                             "testing_database.db"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "ion",
+        "USER": "",
+        "PASSWORD": "",
+        "HOST": "localhost"
     }
 }
+
 
 # Make this unique, and don"t share it with anybody.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"

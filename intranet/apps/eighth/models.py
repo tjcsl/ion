@@ -280,7 +280,7 @@ class EighthScheduledActivity(models.Model):
     """
     block = models.ForeignKey(EighthBlock)
     activity = models.ForeignKey(EighthActivity)
-    members = models.ManyToManyField(User, through="EighthSignup")
+    members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
 
     comments = models.CharField(max_length=255, blank=True)
 
@@ -495,14 +495,29 @@ class EighthSignup(models.Model):
         - after_deadline -- Whether the signup was after deadline.
 
     """
+    time = models.DateTimeField(auto_now=True)
+
     user = models.ForeignKey(User, null=False)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True)
+
     after_deadline = models.BooleanField(default=False)
+    previous_activity_name = models.CharField(max_length=100, null=True)
+    previous_activity_sponsors = models.CharField(max_length=100, null=True)
+
+    with_pass = models.BooleanField(default=False)
+    pass_accepted = models.BooleanField(default=False)
 
     def validate_unique(self, *args, **kwargs):
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
-        if self.__class__.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block):
+        not_unique = self.__class__ \
+                         .objects \
+                         .exclude(pk=self.pk) \
+                         .filter(user=self.user,
+                                 scheduled_activity__block=self.scheduled_activity.block) \
+                         .exists()
+
+        if not_unique:
             raise ValidationError({
                 NON_FIELD_ERRORS: ("EighthSignup already exists for the User "
                                    "and the EighthScheduledActivity's block",)

@@ -28,7 +28,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         kwargs = {}
         if step == "block":
             if not self.request.user.is_eighth_admin:
-                now = datetime.datetime.now().date().date()
+                now = datetime.datetime.now().date()
                 kwargs.update({"exclude_before_date": now})
             else:
                 start_date = get_start_date(self.request)

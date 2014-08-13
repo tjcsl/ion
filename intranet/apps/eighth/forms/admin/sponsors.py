@@ -11,8 +11,6 @@ class AutoCreateUserField(forms.ChoiceField):
     widget = forms.TextInput
 
     def clean(self, value):
-        value = self.to_python(value)
-        self.validate(value)
         if value in self.empty_values:
             return
 
@@ -38,10 +36,7 @@ class AutoCreateUserField(forms.ChoiceField):
 
 
 class SponsorForm(forms.ModelForm):
-    user = AutoCreateUserField(required=False)
+    user = AutoCreateUserField(label="User ID", required=False)
 
     class Meta:
         model = EighthSponsor
-        labels = {
-            "user": "User ID:"
-        }
