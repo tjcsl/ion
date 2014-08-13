@@ -116,6 +116,16 @@ class EighthActivity(models.Model):
                 capacity += room.capacity
         return capacity
 
+    @property
+    def name_with_flags(self):
+        name = "Special: " if self.special else ""
+        name += self.name
+        name += " (R)" if self.restricted else ""
+        name += " (BB)" if self.both_blocks else ""
+        name += " (S)" if self.sticky else ""
+        name += " (Deleted)" if self.deleted else ""
+        return name
+
     @classmethod
     def restricted_activities_available_to_user(cls, user):
         activities = list(user.restricted_activity_set
@@ -150,7 +160,7 @@ class EighthActivity(models.Model):
         verbose_name_plural = "eighth activities"
 
     def __unicode__(self):
-        return self.name + (" (Deleted)" if self.deleted else "")
+        return self.name_with_flags
 
 
 class EighthBlockManager(models.Manager):

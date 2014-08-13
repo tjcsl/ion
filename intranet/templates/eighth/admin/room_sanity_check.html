@@ -1,0 +1,32 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+<h4>Select an Block:</h4>
+
+<select class="block-select" placeholder="Select or search for a block">
+    {% for b in blocks %}
+        <option value="{{ b.id }}"{% if b == block %} selected{% endif %}>{{ b.id }}: {{ b.date }} ({{ b.block_letter}})</option>
+    {% endfor %}
+</select>
+
+{% if block %}
+    {% if not room_conflicts %}
+        No conflicts for this block
+    {% else %}
+        <ul>
+            {% for room in room_conflicts %}
+                <li>
+                    <strong>Conflicts for Room: {{ room.name }}</strong>
+                    <ul>
+                        {% for activity in room.activities %}
+                            <li><a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ activity.id }}">{{ activity.name_with_flags }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
