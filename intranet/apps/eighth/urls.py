@@ -41,7 +41,7 @@ eighth_admin_patterns = [
     url(r"attendance/take_attendance$", general.not_implemented_view, name="eighth_admin_take_attendance"),
     url(r"attendance/delinquent_students$", general.not_implemented_view, name="eighth_admin_view_delinquent_students"),
     url(r"attendance/after_deadline_signups$", general.not_implemented_view, name="eighth_admin_view_after_deadline_signups"),
-    url(r"attendance/untaken_attendance$", general.not_implemented_view, name="eighth_admin_view_activities_without_attendance"),
+    url(r"attendance/no_attendance$", general.not_implemented_view, name="eighth_admin_view_activities_without_attendance"),
     url(r"attendance/reject_outstanding_passes$", general.not_implemented_view, name="eighth_admin_reject_outstanding_passes"),
     url(r"attendance/export_out_of_building_schedules$", general.not_implemented_view, name="eighth_admin_export_out_of_building_schedules"),
 
@@ -63,6 +63,7 @@ eighth_admin_patterns = [
     # Sponsors
     url(r"sponsors/add$", sponsors.add_sponsor_view, name="eighth_admin_add_sponsor"),
     url(r"sponsors/edit/(?P<sponsor_id>\d+)$", sponsors.edit_sponsor_view, name="eighth_admin_edit_sponsor"),
+    url(r"sponsors/delete/(?P<sponsor_id>\d+)$", sponsors.delete_sponsor_view, name="eighth_admin_delete_sponsor"),
     url(r"sponsors/schedule/(?P<sponsor_id>\d+)$", general.not_implemented_view, name="eighth_admin_sponsor_schedule"),
 
     url(r"startdate$", general.edit_start_date_view, name="eighth_admin_edit_start_date"),

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import cPickle
 from django import http
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
@@ -27,7 +28,7 @@ def add_sponsor_view(request):
 
 
 @eighth_admin_required
-def edit_sponsor_view(request, sponsor_id=None):
+def edit_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
     except EighthSponsor.DoesNotExist:
@@ -46,6 +47,31 @@ def edit_sponsor_view(request, sponsor_id=None):
 
     context = {
         "form": form,
-        "admin_page_title": "Edit Sponsor"
+        "admin_page_title": "Edit Sponsor",
+        "delete_url": reverse("eighth_admin_delete_sponsor",
+                              args=[sponsor_id])
     }
     return render(request, "eighth/admin/edit_form.html", context)
+
+
+@eighth_admin_required
+def delete_sponsor_view(request, sponsor_id):
+    try:
+        sponsor = EighthSponsor.objects.get(id=sponsor_id)
+    except EighthSponsor.DoesNotExist:
+        return http.HttpResponseNotFound()
+
+    if request.method == "POST":
+        sponsor.delete()
+        messages.success(request, "Successfully deleted sponsor.")
+        return redirect("eighth_admin_dashboard")
+    else:
+        context = {
+            "admin_page_title": "Delete Sponsor",
+            "help_text": "Deleting this sponsor will remove all records "
+                         "of this user related to eighth period, but will "
+                         "not remove the actual associated user if "
+                         "there is one."
+        }
+
+        return render(request, "eighth/admin/delete_form.html", context)

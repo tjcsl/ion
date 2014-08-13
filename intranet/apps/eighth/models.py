@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class EighthSponsor(models.Model):
     """Represents a sponsor for an eighth period activity.
 
-    A sponsor could be an actual user or just a name.
+    A sponsor could be linked to an actual user or just a name.
 
     Attributes:
         - user -- A :class:`User<intranet.apps.users.models.User>`\
@@ -34,15 +34,7 @@ class EighthSponsor(models.Model):
         unique_together = (("first_name", "last_name", "user", "online_attendance"),)
 
     def __unicode__(self):
-        try:
-            l = self.last_name
-        except NameError:
-            l = ""
-        try:
-            f = self.first_name
-        except NameError:
-            f = ""
-        return "{}, {}".format(l, f)
+        return self.first_name + " " + self.last_name
 
 
 class EighthRoom(models.Model):
