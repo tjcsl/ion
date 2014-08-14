@@ -11,6 +11,5 @@ admin.site.register([
     EighthActivity,
     EighthBlock,
     EighthScheduledActivity,
-    EighthSignup,
-    EighthAbsence
+    EighthSignup
 ])

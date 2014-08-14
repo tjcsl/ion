@@ -502,12 +502,13 @@ class EighthSignup(models.Model):
     user = models.ForeignKey(User, null=False)
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True)
 
+    # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
     previous_activity_name = models.CharField(max_length=100, blank=True)
     previous_activity_sponsors = models.CharField(max_length=100, blank=True)
 
-    with_pass = models.BooleanField(default=False)
-    pass_accepted = models.BooleanField(default=False)
+    pass_accepted = models.BooleanField(default=False, blank=True)
+    was_absent = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
         super(EighthSignup, self).validate_unique(*args, **kwargs)
@@ -531,22 +532,3 @@ class EighthSignup(models.Model):
 
     class Meta:
         unique_together = (("user", "scheduled_activity"),)
-
-
-class EighthAbsence(models.Model):
-    """Represents a user's absence for an eighth period block.
-
-    Attributes:
-        - block -- The `EighthBlock` of the absence.
-        - user -- The :class:`User<intranet.apps.users.models.User>`\
-                  who was absent.
-
-    """
-    block = models.ForeignKey(EighthBlock)
-    user = models.ForeignKey(User)
-
-    def __unicode__(self):
-        return "{}: {}".format(self.user, self.block)
-
-    class Meta:
-        unique_together = (("block", "user"),)

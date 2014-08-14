@@ -37,17 +37,99 @@
             <br>
         {% endif %}
 
-        <form action="" method="post">{% csrf_token %}
-            {{ wizard.management_form }}
-            {{ wizard.form }}
-            {% if wizard.steps.prev %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
-            {% endif %}
-            {% if wizard.steps.next %}
-                <input type="submit" value="Next"/>
-            {% else %}
-                <input type="submit" value="Take Attendance"/>
-            {% endif %}
-        </form>
+        {% if wizard %}
+            <form action="" method="post">{% csrf_token %}
+                {{ wizard.management_form }}
+                {{ wizard.form }}
+                {% if wizard.steps.prev %}
+                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
+                {% endif %}
+                {% if wizard.steps.next %}
+                    <input type="submit" value="Next"/>
+                {% else %}
+                    <input type="submit" value="Take Attendance"/>
+                {% endif %}
+            </form>
+        {% else %}
+            <div class="attendance-container">
+                <table class="key-value-table activity-attributes">
+                    <tr>
+                        <th>Activity:</th>
+                        <td>{{ scheduled_activity.activity.name_with_flags }} ({{ scheduled_activity.activity.id }})</td>
+                    </tr>
+                    <tr>
+                        <th>Date:</th>
+                        <td>{{ scheduled_activity.block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                    </tr>
+                    <tr>
+                        <th>Rooms:</th>
+                        <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sponsors:</th>
+                        <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    </tr>
+                    <tr>
+                        <th>Signups:</th>
+                        {% with scheduled_activity.get_true_capacity as capacity %}
+                            <td>{{ members|length }}/{% if capacity == -1%}Unlimited{% else %}{{ capacity }}{% endif %} </td>
+                        {% endwith %}
+                    </tr>
+                </table>
+
+                {% if scheduled_activity.attendance_taken %}
+                <div class="attendance-taken">
+                    <i class="fa fa-check"></i> Attendance Taken
+                </div>
+                {% else %}
+                <div class="no-attendance">
+                    <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
+                </div>
+                {% endif %}
+                <form class="attendance-form" action="" method="post">
+                    <table class="take-attendance-roster">
+                        <thead>
+                            <tr>
+                                <td><input type="checkbox" class="">Present</td>
+                                <td>Student</td>
+                                <td>Grade</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                                <tr>
+                                    <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
+                                    <td>{{ member.name }}</td>
+                                    <td>{{ member.grade }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <input type="submit" class="save-button" value="Save">
+
+                </form>
+                {% if passes %}
+                    <h3>Passes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pass in passes %}
+                                <tr>
+                                    <td>
+                                        {{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.id }})
+                                    </td>
+                                    <td><a href="{% url 'eighth_accept_pass' pass.id %}">Accept</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" class="button accept-all-passes">Accept All</a>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

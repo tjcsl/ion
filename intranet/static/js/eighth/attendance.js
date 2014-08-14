@@ -3,28 +3,28 @@ $(function() {
     $("input.datepicker, input[name=date]").datepicker();
 
     // Set up checkboxes on attendance pages
-    // var $selectAllBlocksCheckbox = $(".schedule-activity-grid thead input[type='checkbox']")
-    // var $blockCheckboxes = $(".schedule-activity-grid tbody input[type='checkbox']");
+    var $selectAllMembersCheckbox = $(".take-attendance-roster thead input[type='checkbox']")
+    var $membersCheckboxes = $(".take-attendance-roster tbody input[type='checkbox']");
 
-    // var updateSelectAllCheckbox = function() {
-    //     var numChecked = $blockCheckboxes.filter(":checked").length;
-    //     if (numChecked == $blockCheckboxes.length) {
-    //         $selectAllBlocksCheckbox.prop("checked", true);
-    //         $selectAllBlocksCheckbox.prop("indeterminate", false);
-    //     } else if (numChecked == 0) {
-    //         $selectAllBlocksCheckbox.prop("checked", false);
-    //         $selectAllBlocksCheckbox.prop("indeterminate", false);
-    //     } else {
-    //         $selectAllBlocksCheckbox.prop("checked", false);
-    //         $selectAllBlocksCheckbox.prop("indeterminate", true);
-    //     }
-    // }
+    var updateSelectAllCheckbox = function() {
+        var numChecked = $membersCheckboxes.filter(":checked").length;
+        if (numChecked == $membersCheckboxes.length) {
+            $selectAllMembersCheckbox.prop("checked", true);
+            $selectAllMembersCheckbox.prop("indeterminate", false);
+        } else if (numChecked == 0) {
+            $selectAllMembersCheckbox.prop("checked", false);
+            $selectAllMembersCheckbox.prop("indeterminate", false);
+        } else {
+            $selectAllMembersCheckbox.prop("checked", false);
+            $selectAllMembersCheckbox.prop("indeterminate", true);
+        }
+    }
 
-    // var updateBlockCheckboxes = function() {
-    //     $blockCheckboxes.prop("checked", $(this).prop("checked"));
-    // }
+    var updateBlockCheckboxes = function() {
+        $membersCheckboxes.prop("checked", $(this).prop("checked"));
+    }
 
-    // $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
-    // $blockCheckboxes.click(updateSelectAllCheckbox);
-    // updateSelectAllCheckbox();
+    $selectAllMembersCheckbox.click(updateBlockCheckboxes);
+    $membersCheckboxes.click(updateSelectAllCheckbox);
+    updateSelectAllCheckbox();
 });

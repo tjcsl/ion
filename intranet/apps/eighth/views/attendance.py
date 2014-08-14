@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 import datetime
+from django import http
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import EighthScheduledActivity, EighthSponsor
+from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup
 
 
 def should_show_activity_list(wizard):
@@ -105,4 +106,82 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
 
 def take_attendance_view(request, scheduled_activity_id):
+    try:
+        scheduled_activity = EighthScheduledActivity.objects \
+                                                    .select_related("activity",
+                                                                    "block",
+                                                                    "sponsors",
+                                                                    "rooms",
+                                                                    "members") \
+                                                    .get(cancelled=False,
+                                                         activity__deleted=False,
+                                                         id=scheduled_activity_id)
+    except EighthScheduledActivity.DoesNotExist:
+        raise http.Http404
+
+    if request.method == "POST":
+        present_user_ids = request.POST.keys()
+        absent_signups = EighthSignup.objects \
+                                     .filter(scheduled_activity=scheduled_activity) \
+                                     .exclude(user__in=present_user_ids)
+        absent_signups.update(was_absent=True)
+
+        present_signups = EighthSignup.objects \
+                                      .filter(scheduled_activity=scheduled_activity,
+                                              user__in=present_user_ids)
+        present_signups.update(was_absent=False)
+
+        scheduled_activity.attendance_taken = True
+        scheduled_activity.save()
+
+    passes = EighthSignup.objects \
+                         .select_related("user") \
+                         .filter(scheduled_activity=scheduled_activity,
+                                 after_deadline=True,
+                                 pass_accepted=False)
+
+    users = scheduled_activity.members \
+                              .filter(eighthsignup__after_deadline=False)
+    members = []
+
+    absent_user_ids = EighthSignup.objects \
+                                  .select_related("user") \
+                                  .filter(scheduled_activity=scheduled_activity,
+                                          was_absent=True) \
+                                  .values_list("user__id", flat=True)
+
+    for user in users:
+        members.append({
+            "id": user.id,
+            "name": user.last_name + ", " + user.first_name,
+            "grade": user.grade.number(),
+            "present": (scheduled_activity.attendance_taken and
+                        (user.id not in absent_user_ids))
+        })
+
+    members.sort(key=lambda m: m["name"])
+
+    context = {
+        "scheduled_activity": scheduled_activity,
+        "passes": passes,
+        "members": members
+    }
+
+    return render(request, "eighth/admin/take_attendance.html", context)
+
+
+def accept_pass_view(request, signup_id):
+    try:
+        signup = EighthSignup.objects.get(id=signup_id)
+    except EighthSignup.DoesNotExist:
+        raise http.Http404
+
+    scheduled_activity = signup.scheduled_activity
+
+    if scheduled_activity.attendance_taken:
+        signup.was_absent = False
+
+
+
+def accept_all_passes_view(request, scheduled_activity_id):
     pass
