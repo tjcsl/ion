@@ -10,7 +10,7 @@ def start_date(request):
 
     if request.user.is_authenticated() and request.user.is_eighth_admin:
         return {
-            "start_date": get_start_date(request)
+            "admin_start_date": get_start_date(request)
         }
 
     return {}

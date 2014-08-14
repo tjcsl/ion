@@ -1,0 +1,53 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'lib/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+
+{% block admin_main %}
+
+    <form action="" method="get">
+        Results from <input type="text" class="datepicker" name="start" value="{{ start_date|date:'m/d/Y' }}" > to <input type="text" class="datepicker" name="end" value="{{ end_date|date:'m/d/Y' }}"> <input type="submit" value="Go">
+    </form>
+    <br>
+    <br>
+    {% if signups %}
+        Click on column titles to sort.
+        <table data-sortable>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Sponsor</th>
+                    <th>Student</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for signup in signups %}
+                    <tr>
+                        <td>{{ signup.time }}</td>
+                        <td>{{ signup.previous_activity_sponsors }}</td>
+                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }}</td>
+                        <td>{{ signup.previous_activity_name }}</td>
+                        <td>{{ signup.scheduled_activity.activity.name_with_flags }} ({{ signup.scheduled_activity.activity.id }})</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

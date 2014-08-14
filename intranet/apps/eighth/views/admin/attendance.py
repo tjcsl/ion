@@ -2,13 +2,14 @@
 from __future__ import unicode_literals
 
 import csv
-from datetime import date, MINYEAR, MAXYEAR, datetime
+from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
 from django.db.models import Count
 from django.shortcuts import render
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
 from ...models import EighthSignup
+from ...utils import get_start_date
 
 
 @eighth_admin_required
@@ -138,3 +139,34 @@ def delinquent_students_view(request, download_csv=None):
             writer.writerow(row)
 
         return response
+
+
+@eighth_admin_required
+def after_deadline_signup_view(request):
+    start_date = request.GET.get("start", "")
+    end_date = request.GET.get("end", "")
+
+    try:
+        start_date = datetime.strptime(start_date, "%m/%d/%Y")
+    except ValueError:
+        start_date = get_start_date(request)
+
+    try:
+        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+    except ValueError:
+        end_date = start_date + timedelta(days=7)
+
+    signups = EighthSignup.objects \
+                          .filter(after_deadline=True,
+                                  time__gte=start_date,
+                                  time__lte=end_date) \
+                          .order_by("time")
+
+    context = {
+        "admin_page_title": "After Deadline Signups",
+        "signups": signups,
+        "start_date": start_date,
+        "end_date": end_date
+    }
+
+    return render(request, "eighth/admin/after_deadline_signups.html", context)
