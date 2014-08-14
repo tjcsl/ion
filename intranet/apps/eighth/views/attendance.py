@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import datetime
 from django import http
+from django.db.models import Q
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
 from ..utils import get_start_date
@@ -131,43 +132,55 @@ def take_attendance_view(request, scheduled_activity_id):
                                               user__in=present_user_ids)
         present_signups.update(was_absent=False)
 
+        passes = EighthSignup.objects \
+                             .filter(scheduled_activity=scheduled_activity,
+                                     after_deadline=True,
+                                     pass_accepted=False) \
+                             .update(was_absent=True)
+
         scheduled_activity.attendance_taken = True
         scheduled_activity.save()
 
-    passes = EighthSignup.objects \
-                         .select_related("user") \
-                         .filter(scheduled_activity=scheduled_activity,
-                                 after_deadline=True,
-                                 pass_accepted=False)
+        if "admin" in request.path:
+            url_name = "eighth_admin_take_attendance"
+        else:
+            url_name = "eighth_take_attendance"
 
-    users = scheduled_activity.members \
-                              .filter(eighthsignup__after_deadline=False)
-    members = []
+        return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+    else:
+        passes = EighthSignup.objects \
+                             .select_related("user") \
+                             .filter(scheduled_activity=scheduled_activity,
+                                     after_deadline=True,
+                                     pass_accepted=False)
 
-    absent_user_ids = EighthSignup.objects \
-                                  .select_related("user") \
-                                  .filter(scheduled_activity=scheduled_activity,
-                                          was_absent=True) \
-                                  .values_list("user__id", flat=True)
+        users = scheduled_activity.members.exclude(eighthsignup__in=passes)
+        members = []
 
-    for user in users:
-        members.append({
-            "id": user.id,
-            "name": user.last_name + ", " + user.first_name,
-            "grade": user.grade.number(),
-            "present": (scheduled_activity.attendance_taken and
-                        (user.id not in absent_user_ids))
-        })
+        absent_user_ids = EighthSignup.objects \
+                                      .select_related("user") \
+                                      .filter(scheduled_activity=scheduled_activity,
+                                              was_absent=True) \
+                                      .values_list("user__id", flat=True)
 
-    members.sort(key=lambda m: m["name"])
+        for user in users:
+            members.append({
+                "id": user.id,
+                "name": user.last_name + ", " + user.first_name,
+                "grade": user.grade.number(),
+                "present": (scheduled_activity.attendance_taken and
+                            (user.id not in absent_user_ids))
+            })
 
-    context = {
-        "scheduled_activity": scheduled_activity,
-        "passes": passes,
-        "members": members
-    }
+        members.sort(key=lambda m: m["name"])
 
-    return render(request, "eighth/admin/take_attendance.html", context)
+        context = {
+            "scheduled_activity": scheduled_activity,
+            "passes": passes,
+            "members": members
+        }
+
+        return render(request, "eighth/admin/take_attendance.html", context)
 
 
 def accept_pass_view(request, signup_id):
@@ -177,10 +190,19 @@ def accept_pass_view(request, signup_id):
         raise http.Http404
 
     scheduled_activity = signup.scheduled_activity
-
     if scheduled_activity.attendance_taken:
         signup.was_absent = False
 
+    signup.pass_accepted = True
+    signup.save()
+
+    if "admin" in request.path:
+        url_name = "eighth_admin_take_attendance"
+    else:
+        url_name = "eighth_take_attendance"
+
+    return redirect(url_name,
+                    scheduled_activity_id=signup.scheduled_activity.id)
 
 
 def accept_all_passes_view(request, scheduled_activity_id):
