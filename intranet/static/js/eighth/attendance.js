@@ -27,4 +27,9 @@ $(function() {
     $selectAllMembersCheckbox.click(updateBlockCheckboxes);
     $membersCheckboxes.click(updateSelectAllCheckbox);
     updateSelectAllCheckbox();
+
+    // Set up accept pass links
+    $(".pass-form-submit-link").click(function() {
+        $("#" + $(this).data("form")).submit();
+    })
 });

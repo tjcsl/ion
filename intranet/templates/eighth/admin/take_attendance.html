@@ -122,12 +122,18 @@
                                     <td>
                                         {{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.id }})
                                     </td>
-                                    <td><a href="{% url 'eighth_accept_pass' pass.id %}">Accept</a></td>
+                                    <td>
+                                        <form id="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
+                                            <a href="#" onclick="return false" class="pass-form-submit-link" data-form="pass-form-{{ pass.id }}">Accept</a>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    <a href="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" class="button accept-all-passes">Accept All</a>
+                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post">
+                        <input type="submit" class="button accept-all-passes" value="Accept All">
+                    </form>
                 {% endif %}
             </div>
         {% endif %}

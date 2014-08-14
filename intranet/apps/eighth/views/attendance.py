@@ -184,15 +184,15 @@ def take_attendance_view(request, scheduled_activity_id):
 
 
 def accept_pass_view(request, signup_id):
+    if request.method != "POST":
+        return http.HttpResponseNotAllowed(["POST"])
+
     try:
         signup = EighthSignup.objects.get(id=signup_id)
     except EighthSignup.DoesNotExist:
         raise http.Http404
 
-    scheduled_activity = signup.scheduled_activity
-    if scheduled_activity.attendance_taken:
-        signup.was_absent = False
-
+    signup.was_absent = False
     signup.pass_accepted = True
     signup.save()
 
@@ -206,4 +206,25 @@ def accept_pass_view(request, signup_id):
 
 
 def accept_all_passes_view(request, scheduled_activity_id):
-    pass
+    if request.method != "POST":
+        return http.HttpResponseNotAllowed(["POST"])
+
+    try:
+        scheduled_activity = EighthScheduledActivity.objects \
+                                                    .get(id=scheduled_activity_id)
+    except EighthScheduledActivity.DoesNotExist:
+        raise http.Http404
+
+    EighthSignup.objects \
+                .filter(after_deadline=True,
+                        scheduled_activity=scheduled_activity) \
+                .update(pass_accepted=True,
+                        was_absent=False)
+
+    if "admin" in request.path:
+        url_name = "eighth_admin_take_attendance"
+    else:
+        url_name = "eighth_take_attendance"
+
+    return redirect(url_name,
+                    scheduled_activity_id=scheduled_activity.id)
