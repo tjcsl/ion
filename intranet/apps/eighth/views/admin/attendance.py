@@ -114,4 +114,27 @@ def delinquent_students_view(request, download_csv=None):
     if request.resolver_match.url_name == "eighth_admin_view_delinquent_students":
         context["admin_page_title"] = "Delinquent Students"
         return render(request, "eighth/admin/delinquent_students.html", context)
+    else:
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"delinquent_students.csv\""
 
+        writer = csv.writer(response)
+        writer.writerow(["Absences",
+                         "Last Name",
+                         "First Name",
+                         "Student ID",
+                         "Grade",
+                         "Counselor"])
+
+        for delinquent in delinquents:
+            row = []
+            row.append(delinquent["absences"])
+            row.append(delinquent["user"].last_name)
+            row.append(delinquent["user"].first_name)
+            row.append(delinquent["user"].student_id)
+            row.append(delinquent["user"].grade.number())
+            counselor = delinquent["user"].counselor
+            row.append(counselor.last_name if counselor else "")
+            writer.writerow(row)
+
+        return response
