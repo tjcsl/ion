@@ -22,7 +22,6 @@ urlpatterns = [
     url(r"^/attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
     url(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
 
-
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
 ]
