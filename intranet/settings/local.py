@@ -114,7 +114,6 @@ if SHOW_DEBUG_TOOLBAR:
 
 INSTALLED_APPS += (
     "django_extensions",
-    "django.contrib.admin",
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
