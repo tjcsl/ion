@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 import logging
-from intranet.apps.dashboard.views import dashboard_view
+from ..dashboard.views import dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
@@ -9,9 +12,9 @@ from django.views.generic.base import View
 logger = logging.getLogger(__name__)
 
 
-def index(request, auth_form=None):
+def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() and not force_login:
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
@@ -41,11 +44,11 @@ class login_view(View):
             return redirect(next)
         else:
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
-            return index(request, auth_form=form)  # Modified to show errors
+            return index_view(request, auth_form=form)
 
     def get(self, request):
         """Redirect to the login page."""
-        return index(request)
+        return index_view(request, force_login=True)
 
 
 def logout_view(request):

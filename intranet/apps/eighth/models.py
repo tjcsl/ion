@@ -1,10 +1,16 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from itertools import chain
 import logging
 import datetime
 from django.db import models
 from django.db.models import Q
-from django.forms import ModelForm
-from intranet.apps.users.models import User
+from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.utils import formats
+from ..users.models import User
+from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +18,7 @@ logger = logging.getLogger(__name__)
 class EighthSponsor(models.Model):
     """Represents a sponsor for an eighth period activity.
 
-    A sponsor could be an actual user or just a name.
+    A sponsor could be linked to an actual user or just a name.
 
     Attributes:
         - user -- A :class:`User<intranet.apps.users.models.User>`\
@@ -20,21 +26,17 @@ class EighthSponsor(models.Model):
         - name -- The name of the sponsor
 
     """
-    user = models.ForeignKey(User, null=True)
-    first_name = models.CharField(null=True, max_length=63)
-    last_name = models.CharField(null=True, max_length=63)
+    first_name = models.CharField(max_length=63)
+    last_name = models.CharField(max_length=63)
+    user = models.OneToOneField(User, null=True, blank=True)
     online_attendance = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = (("first_name", "last_name", "user", "online_attendance"),)
+
     def __unicode__(self):
-        try:
-            l = self.last_name
-        except NameError:
-            l = ""
-        try:
-            f = self.first_name
-        except NameError:
-            f = ""
-        return "{}, {}".format(l, f)
+        return self.first_name + " " + self.last_name
+
 
 class EighthRoom(models.Model):
     """Represents a room in which an eighth period activity can be held
@@ -44,13 +46,19 @@ class EighthRoom(models.Model):
 
     """
     name = models.CharField(max_length=63)
-    # TODO: Capacity should be in ScheduledActivity
-    capacity = models.SmallIntegerField(null=False, default=-1)
+    capacity = models.SmallIntegerField(default=-1)
 
-    unique_together = (("room_number", "name", "capacity"),)
+    unique_together = (("name", "capacity"),)
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
+
+
+class EighthActivityExcludeDeletedManager(models.Manager):
+    def get_query_set(self):
+        return super(EighthActivityExcludeDeletedManager, self).get_query_set() \
+                                                               .exclude(deleted=True)
+
 
 class EighthActivity(models.Model):
     """Represents an eighth period activity.
@@ -60,58 +68,129 @@ class EighthActivity(models.Model):
         - sponsors -- The :class:`EighthSponsor`s for the activity.
 
     """
-    # TODO: Add default capacity,
-    name = models.CharField(max_length=63)
-    description = models.TextField()
-    sponsors = models.ManyToManyField(EighthSponsor)
-    rooms = models.ManyToManyField(EighthRoom)
+    objects = models.Manager()
+    undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    restricted = models.BooleanField(default=False)
+    name = models.CharField(max_length=63, unique=True)
+    description = models.CharField(max_length=255, blank=True)
+    sponsors = models.ManyToManyField(EighthSponsor, blank=True)
+    rooms = models.ManyToManyField(EighthRoom, blank=True)
+
     presign = models.BooleanField(default=False)
     one_a_day = models.BooleanField(default=False)
     both_blocks = models.BooleanField(default=False)
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
-    # Groups allowed
+    restricted = models.BooleanField(default=False)
 
-    # Single students allowed
+    users_allowed = models.ManyToManyField(User,
+                                           related_name="restricted_activity_set",
+                                           blank=True)
+    groups_allowed = models.ManyToManyField(Group,
+                                            related_name="restricted_activity_set",
+                                            blank=True)
+
+    freshmen_allowed = models.BooleanField(default=False)
+    sophomores_allowed = models.BooleanField(default=False)
+    juniors_allowed = models.BooleanField(default=False)
+    seniors_allowed = models.BooleanField(default=False)
+
+    deleted = models.BooleanField(blank=True, default=False)
+
+    @property
+    def capacity(self):
+        all_rooms = self.rooms.all()
+        if len(all_rooms) == 0:
+            capacity = -1
+        else:
+            capacity = 0
+            for room in all_rooms:
+                capacity += room.capacity
+        return capacity
+
+    @property
+    def name_with_flags(self):
+        name = "Special: " if self.special else ""
+        name += self.name
+        name += " (R)" if self.restricted else ""
+        name += " (BB)" if self.both_blocks else ""
+        name += " (S)" if self.sticky else ""
+        name += " (Deleted)" if self.deleted else ""
+        return name
+
+    @classmethod
+    def restricted_activities_available_to_user(cls, user):
+        activities = list(user.restricted_activity_set
+                              .values_list("id", flat=True))
+
+        grade = user.grade.number()
+
+        if grade == 9:
+            activities += list(EighthActivity.objects
+                                             .filter(freshmen_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 10:
+            activities += list(EighthActivity.objects
+                                             .filter(sophomores_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 11:
+            activities += list(EighthActivity.objects
+                                             .filter(juniors_allowed=True)
+                                             .values_list("id", flat=True))
+        elif grade == 12:
+            activities += list(EighthActivity.objects
+                                             .filter(seniors_allowed=True)
+                                             .values_list("id", flat=True))
+
+        for group in user.groups.all():
+            activities += list(group.restricted_activity_set
+                                    .values_list("id", flat=True))
+
+        return activities
+
+    class Meta:
+        verbose_name_plural = "eighth activities"
 
     def __unicode__(self):
-        return self.name
+        return self.name_with_flags
 
 
 class EighthBlockManager(models.Manager):
-    def get_next_block(self):
-        """Gets the next block.
-           Returns: the block ID"""
+    def get_first_upcoming_block(self):
+        """Gets the first upcoming block (the first block that will
+        take place in the future). If there is no block in the future,
+        the most recent block will be returned
+
+        Returns: the `EighthBlock` object
+
+        """
+
         now = datetime.datetime.now()
 
         # Show same day if it's before 17:00
         if now.hour < 17:
-           now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
         try:
-            block_id = self \
-                                  .order_by("date", "block_letter") \
-                                  .filter(date__gte=now)[0] \
-                                  .id
+            block = self.order_by("date", "block_letter") \
+                        .filter(date__gte=now)[0]
         except IndexError:
-            block_id = self \
-                                  .order_by("-date", "-block_letter") \
-                                  .filter(date__lte=now)[0] \
-                                  .id
-        return block_id
+            block = None
+        return block
 
     def get_current_blocks(self):
         try:
-            block = EighthBlock.objects \
-                               .prefetch_related("eighthscheduledactivity_set") \
-                               .get(id=self.get_next_block())
+            first_upcoming_block = self.get_first_upcoming_block()
+            if first_upcoming_block is None:
+                raise EighthBlock.DoesNotExist()
+            block = self.prefetch_related("eighthscheduledactivity_set") \
+                        .get(id=first_upcoming_block.id)
         except EighthBlock.DoesNotExist:
-            raise Http404
+            return []
 
         return block.get_surrounding_blocks()
+
 
 class EighthBlock(models.Model):
     """Represents an eighth period block.
@@ -124,37 +203,46 @@ class EighthBlock(models.Model):
                         :class:`EighthScheduledActivity`s for the block.
 
     """
+
+    objects = EighthBlockManager()
+
     date = models.DateField(null=False)
     block_letter = models.CharField(max_length=1)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
-                                        through="EighthScheduledActivity")
+                                        through="EighthScheduledActivity",
+                                        blank=True)
 
-    objects = EighthBlockManager()
+    def save(self, *args, **kwargs):
+            letter = getattr(self, "block_letter", None)
+            if letter:
+                self.block_letter = letter.capitalize()
+
+            super(EighthBlock, self).save(*args, **kwargs)
+
     def next_blocks(self, quantity=-1):
-        blocks =  EighthBlock.objects \
-                             .order_by("date", "block_letter") \
-                             .filter(Q(date__gt=self.date)
-                              | (Q(date=self.date)
-                              & Q(block_letter__gt=self.block_letter)))
+        blocks = EighthBlock.objects \
+                            .order_by("date", "block_letter") \
+                            .filter(Q(date__gt=self.date)
+                                    | (Q(date=self.date)
+                                    & Q(block_letter__gt=self.block_letter)))
         if quantity == -1:
             return blocks
-        return blocks[:quantity]
+        return blocks[:quantity + 1]
 
     def previous_blocks(self, quantity=-1):
         blocks = EighthBlock.objects \
                             .order_by("-date", "-block_letter") \
                             .filter(Q(date__lt=self.date)
-                             | (Q(date=self.date)
-                             & Q(block_letter__lt=self.block_letter)))
+                                    | (Q(date=self.date)
+                                    & Q(block_letter__lt=self.block_letter)))
         if quantity == -1:
             return reversed(blocks)
-        return reversed(blocks[:quantity])
+        return reversed(blocks[:quantity + 1])
 
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.
            Returns: a list of all of those blocks."""
-        
 
         next = self.next_blocks()
         prev = self.previous_blocks()
@@ -163,10 +251,11 @@ class EighthBlock(models.Model):
         return surrounding_blocks
 
     def __unicode__(self):
-        return "{}: {}".format(str(self.date), self.block_letter)
+        return "{} ({})".format(formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT"), self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)
+        ordering = ("date", "block_letter")
 
 
 class EighthScheduledActivity(models.Model):
@@ -177,9 +266,9 @@ class EighthScheduledActivity(models.Model):
         - block -- the :class:`EighthBlock` during which an \
                    :class:`EighthActivity` has been scheduled
         - activity -- the scheduled :class:`EighthActivity`
-        - members -- the :class:`User<intranet.apps.users.models.User>`s\
+        - members -- the :class:`User<intranet.apps.users.models.User>`s \
                      who have signed up for an :class:`EighthBlock`
-        - comment -- notes for the Eighth Office
+        - comments -- notes for the Eighth Office
         - sponsors -- :class:`EighthSponsor`s that will override the \
                       :class:`EighthActivity`'s default sponsors
         - rooms -- :class:`EighthRoom`s that will override the \
@@ -191,26 +280,210 @@ class EighthScheduledActivity(models.Model):
                        has been cancelled
 
     """
-    block = models.ForeignKey(EighthBlock, null=False)
-    activity = models.ForeignKey(EighthActivity, null=False, blank=False)
-    members = models.ManyToManyField(User, through="EighthSignup")
+    block = models.ForeignKey(EighthBlock)
+    activity = models.ForeignKey(EighthActivity)
+    members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
 
-    comment = models.CharField(max_length=255)
+    comments = models.CharField(max_length=255, blank=True)
 
     # Overridden attributes
-    sponsors = models.ManyToManyField(EighthSponsor)
-    rooms = models.ManyToManyField(EighthRoom)
+    sponsors = models.ManyToManyField(EighthSponsor, blank=True)
+    rooms = models.ManyToManyField(EighthRoom, blank=True)
+    capacity = models.SmallIntegerField(null=True, blank=True)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return "{} on {}".format(self.activity.name, self.block)
+    def get_true_sponsors(self):
+        """Get the sponsors for the scheduled activity, taking into account
+        activity defaults and overrides.
+        """
 
-class EighthScheduledActivityForm(ModelForm):
+        sponsors = self.sponsors.all()
+        if len(sponsors) > 0:
+            return sponsors
+        else:
+            return self.activity.sponsors.all()
+
+    def get_true_rooms(self):
+        """Get the rooms for the scheduled activity, taking into account
+        activity defaults and overrides.
+        """
+
+        rooms = self.rooms.all()
+        if len(rooms) > 0:
+            return rooms
+        else:
+            return self.activity.rooms.all()
+
+    def get_true_capacity(self):
+        """Get the capacity for the scheduled activity, taking into
+        account activity defaults and overrides.
+        """
+
+        if self.capacity is not None:
+            return self.capacity
+        else:
+            return self.activity.capacity
+
+    def is_full(self):
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up >= capacity
+        return False
+
+    def is_overbooked(self):
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up > capacity
+        return False
+
+    def is_too_early_to_signup(self, now=None):
+        if now is None:
+            now = datetime.datetime.now()
+
+        activity_date = datetime.datetime \
+                                .combine(self.block.date,
+                                         datetime.time(0, 0, 0))
+        presign_period = datetime.timedelta(days=2)
+
+        return (now < (activity_date - presign_period))
+
+    def add_user(self, user, request=None, force=False):
+        """Sign up a user to this scheduled activity if possible.
+
+        Raises an exception if there's a problem signing the user up
+        unless the signup is forced.
+
+        """
+
+        if request is not None:
+            force = force or (("force" in request.GET) and
+                              request.user.is_eighth_admin)
+
+        if not force:
+            # Check if the user who sent the request has the permissions
+            # to change the target user's signups
+            if request is not None:
+                if user != request.user and not request.user.is_eighth_admin:
+                    raise eighth_exceptions.SignupForbidden()
+
+            if self.activity.both_blocks:
+                # Find all schedulings of the same activity on the same day
+                all_sched_act = EighthScheduledActivity.objects \
+                                                       .filter(block__date=self.block.date,
+                                                               activity=self.activity)
+
+            # Check if the block has been locked
+            if not self.activity.both_blocks:
+                if self.block.locked:
+                    raise eighth_exceptions.BlockLocked()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.block.locked:
+                        raise eighth_exceptions.BlockLocked()
+
+            # Check if the scheduled activity has been cancelled
+            if not self.activity.both_blocks:
+                if self.cancelled:
+                    raise eighth_exceptions.ScheduledActivityCancelled()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.cancelled:
+                        raise eighth_exceptions.ScheduledActivityCancelled()
+
+            # Check if the activity has been deleted
+            if self.activity.deleted:
+                raise eighth_exceptions.ActivityDeleted()
+
+            # Check if the activity is full
+            if not self.activity.both_blocks:
+                if self.is_full():
+                    raise eighth_exceptions.ActivityFull()
+            else:
+                for sched_act in all_sched_act:
+                    if sched_act.is_full():
+                        raise eighth_exceptions.ActivityFull()
+
+            # Check if it's too early to sign up for the activity
+            if self.activity.presign:
+                if self.is_too_early_to_signup():
+                    raise eighth_exceptions.Presign()
+
+            # Check if the user is already stickied into an activity
+            if not self.activity.both_blocks:
+                in_a_stickie = self.eighthsignup_set \
+                                   .filter(user=user,
+                                           scheduled_activity__activity__sticky=True) \
+                                   .exists()
+            else:
+                in_a_stickie = EighthSignup.objects \
+                                           .filter(user=user,
+                                                   scheduled_activity__activity__sticky=True,
+                                                   scheduled_activity__block__date=self.block.date,
+                                                   scheduled_activity__activity=self.activity) \
+                                           .exists()
+            if in_a_stickie:
+                raise eighth_exceptions.Sticky()
+
+            # Check if signup would violate one-a-day constraint
+            if not self.activity.both_blocks and self.activity.one_a_day:
+                in_act = user.eighthsignup_set \
+                             .exclude(scheduled_activity__block=self.block) \
+                             .filter(user=user,
+                                     scheduled_activity__block__date=self.block.date,
+                                     scheduled_activity__activity=self.activity) \
+                             .count() != 0
+                if in_act:
+                    raise eighth_exceptions.OneADay()
+
+            # Check if user is allowed in the activity if it's restricted
+            if self.activity.restricted:
+                acts = EighthActivity.restricted_activities_available_to_user(user)
+                if self.activity.id not in acts:
+                    raise eighth_exceptions.Restricted()
+
+        # Everything's good to go - complete the signup
+        if not self.activity.both_blocks:
+            try:
+                existing_signup = EighthSignup.objects \
+                                              .get(user=user,
+                                                   scheduled_activity__block=self.block)
+                if not existing_signup.scheduled_activity.activity.both_blocks:
+                    existing_signup.scheduled_activity = self
+                    existing_signup.save()
+                else:
+                    # Clear out the other signups for this block if the user is
+                    # switching out of a both-blocks activity
+                    EighthSignup.objects \
+                                .filter(user=user,
+                                        scheduled_activity__block__date=self.block.date) \
+                                .delete()
+                    EighthSignup.objects.create(user=user,
+                                                scheduled_activity=self)
+            except EighthSignup.DoesNotExist:
+                EighthSignup.objects.create(user=user,
+                                            scheduled_activity=self)
+        else:
+            EighthSignup.objects \
+                        .filter(user=user,
+                                scheduled_activity__block__date=self.block.date) \
+                        .delete()
+
+            for sched_act in all_sched_act:
+                EighthSignup.objects.create(user=user,
+                                            scheduled_activity=sched_act)
+
     class Meta:
-        model = EighthScheduledActivity
-        fields = ['block', 'activity', 'comment', 'sponsors', 'rooms']
+        unique_together = (("block", "activity"),)
+        verbose_name_plural = "eighth scheduled activities"
+
+    def __unicode__(self):
+        cancelled_str = " (Cancelled)" if self.cancelled else ""
+        return "{} on {}{}".format(self.activity, self.block, cancelled_str)
+
 
 class EighthSignup(models.Model):
     """Represents a signup/membership in an eighth period activity.
@@ -224,59 +497,38 @@ class EighthSignup(models.Model):
         - after_deadline -- Whether the signup was after deadline.
 
     """
+    time = models.DateTimeField(auto_now=True)
+
     user = models.ForeignKey(User, null=False)
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=False, db_index=True)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, related_name="eighthsignup_set", null=False, db_index=True)
+
+    # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
+    previous_activity_name = models.CharField(max_length=100, blank=True)
+    previous_activity_sponsors = models.CharField(max_length=100, blank=True)
+
+    pass_accepted = models.BooleanField(default=False, blank=True)
+    was_absent = models.BooleanField(default=False, blank=True)
+
+    def validate_unique(self, *args, **kwargs):
+        super(EighthSignup, self).validate_unique(*args, **kwargs)
+
+        not_unique = self.__class__ \
+                         .objects \
+                         .exclude(pk=self.pk) \
+                         .filter(user=self.user,
+                                 scheduled_activity__block=self.scheduled_activity.block) \
+                         .exists()
+
+        if not_unique:
+            raise ValidationError({
+                NON_FIELD_ERRORS: ("EighthSignup already exists for the User "
+                                   "and the EighthScheduledActivity's block",)
+            })
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
-                               self.scheduled_activity.id)
-
-    # class Meta:
-        # unique_together = (("user", "block"),)
-        # index_together = [
-        #     ["user", "block"],
-        #     ["block", "activity"]
-        # ]
-
-
-class SignupAlert(models.Model):
-
-    """Stores a user's preferences for signup alerts.
-
-    Attributes:
-        - user -- The :class:`User<intranet.apps.users.models.User>`.
-        - night_before -- (BOOL) Whether the user wants emails the \
-                          night before if he/she hasn't signed up yet
-        - day_of -- (BOOL) Whether the user wants emails the day of if \
-                    he/she hasn't signed up yet
-
-    """
-    user = models.ForeignKey(User, null=False, unique=True)
-    night_before = models.BooleanField(null=False)
-    day_of = models.BooleanField(null=False)
-
-    def __unicode__(self):
-        return "{}: [{}] Night before "\
-               "[{}] Day of".format(self.user,
-                                    "X" if self.night_before else " ",
-                                    "X" if self.day_of else " ")
-
-
-class EighthAbsence(models.Model):
-    """Represents a user's absence for an eighth period block.
-
-    Attributes:
-        - block -- The `EighthBlock` of the absence.
-        - user -- The :class:`User<intranet.apps.users.models.User>`\
-                  who was absent.
-
-    """
-    block = models.ForeignKey(EighthBlock)
-    user = models.ForeignKey(User)
-
-    def __unicode__(self):
-        return "{}: {}".format(self.user, self.block)
+                               self.scheduled_activity)
 
     class Meta:
-        unique_together = (("block", "user"),)
+        unique_together = (("user", "scheduled_activity"),)

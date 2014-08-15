@@ -5,17 +5,43 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.core.css' %}" />
-    <!--[if IE 7]>
-        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome-ie7.min.css">
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/messenger/build/css/messenger.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/messenger/build/css/messenger-theme-flat.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/jquery-ui-1.11.0.custom/jquery-ui.min.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/lib/jquery-ui-1.10.3.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/jquery-ui-1.11.0.custom/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/responsive.core.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/messenger/build/js/messenger.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/messenger/build/js/messenger-theme-flat.js' %}"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function() {
+            Messenger.options = {
+                extraClasses: "messenger-fixed messenger-on-bottom messenger-on-right",
+                theme: "flat",
+                messageDefaults: {
+                    hideAfter: 3,
+                    showCloseButton: true
+                }
+            };
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level >= 30 %}
+                        Messenger().error("{{ message|escapejs }}");
+                    {% elif message.level == 25 %}
+                        Messenger().success("{{ message|escapejs }}");
+                    {% else %}
+                        Messenger().info("{{ message|escapejs }}");
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+
+
+        $(function() {
             var time = 150;
 
             var clickInside = function(event) {
@@ -89,7 +115,7 @@
         <div class="left">
             <div class="dropdown-taparea">
                 <div class="dropdown-icon">
-                    <i class="icon-reorder"></i>
+                    <i class="fa fa-reorder"></i>
                 </div>
             </div>
             <a href="/" class="intranet-title">
@@ -103,15 +129,16 @@
             <form class="search" action="/search" method="get" autocomplete="off">
                     <input type="text" name="q" value="{{ search_query | default:'Search' }}" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}">
                     <button type="submit" class="search-button">
-                       <i class="icon-search"></i>
+                       <i class="fa fa-search"></i>
                     </button>
             </form>
         </div>
 
         <ul class="right">
+            <!--
             <li class="notifications has-dropdown">
                 <div class="dropdown-item-wrapper">
-                    <i class="icon-bell-alt"></i>
+                    <i class="fa fa-bell"></i>
                     <span class="notifications-badge-wrapper">
                         <span class="notifications-badge">
                             42
@@ -128,16 +155,17 @@
                     <li>foo foo foo foo foo</li>
                 </ul>
             </li>
+            -->
 
             <li class="username has-dropdown">
                 <div class="dropdown-item-wrapper">
-                    <i class="icon-user"></i> {{ request.user.first_name }} <i class="icon-caret-down"></i>
+                    <i class="fa fa-user"></i><span class="user-name">{{ request.user.first_name }}</span><i class="fa fa-caret-down"></i>
                 </div>
                     <ul class="dropdown-menu">
                         <div class="arrow"></div>
-                        <li><a href="/profile"><i class="icon-user"></i> My Profile</a></li>
-                        <li><a href="/profile/8889"><i class="icon-smile"></i> Angela William's Profile</a></li>
-                        <li><a href="/logout"><i class="icon-off"></i> Logout</a></li>
+                        <li><a href="{% url 'user_profile'%}"><i class="fa fa-user"></i> My Profile</a></li>
+                        <li><a href="{% url 'user_profile' 8889 %}"><i class="fa fa-smile-o"></i> Angela William's Profile</a></li>
+                        <li><a href="{% url 'logout'%}"><i class="fa fa-power-off"></i> Logout</a></li>
                     </ul>
             </li>
         </ul>

@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
-import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from intranet.apps.announcements.models import Announcement
+from ..announcements.models import Announcement
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +15,6 @@ def dashboard_view(request):
     announcements = Announcement.objects.order_by("-updated").all()[:10]
 
     context = {
-        "page": "dashboard",
         "announcements": announcements
     }
     return render(request, "dashboard/dashboard.html", context)

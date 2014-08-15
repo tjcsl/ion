@@ -1,0 +1,102 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load widget_tweaks %}
+
+{% block bodyclass %}{{ block.super}} schedule-activity-page{% endblock %}
+
+{% block admin_main %}
+
+<h4>Select an Activity:</h4>
+
+<select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+    {% endfor %}
+</select>
+
+{% if activity %}
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <div>
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+
+        {{ formset.management_form }}
+
+        <table class="schedule-activity-grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>
+                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                        <div class="select-blocks-popover closed">
+                            <a href="" onclick="return false" class="block-type">Mon B</a>
+                            <a href="" onclick="return false" class="block-type">Wed A</a>
+                            <a href="" onclick="return false" class="block-type">Wed B</a>
+                            <a href="" onclick="return false" class="block-type">Fri A</a>
+                            <a href="" onclick="return false" class="block-type">Fri B</a>
+                        </div>
+                    </th>
+                    <th>Rooms</th>
+                    <th>Capacity</th>
+                    <th>Sponsors</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block, form in rows %}
+                    {% if form.errors %}
+                        <tr>
+                            <td></td>
+                            <td colspan=6>{{ form.non_field_errors }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr class="form-row">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        {% for field in form.visible_fields %}
+                            <td>
+                                {{ field.errors }}
+                                {% if field.name == "rooms" %}
+                                    {% render_field field placeholder=default_rooms %}
+                                {% elif field.name == "sponsors" %}
+                                    {% render_field field placeholder=default_sponsors %}
+                                {% elif field.name == "capacity" %}
+                                    {% render_field field placeholder=default_capacity %}
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                            </td>
+
+                            {% if field.name == "scheduled" %}
+                                <td class="block-name">{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    {% if not forloop.last %}
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="divider">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div>
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+    </form>
+{% endif %}
+
+{% endblock %}

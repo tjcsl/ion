@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import pexpect
 import uuid
 import os
 import logging
 from intranet import settings
-from intranet.apps.users.models import User
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +25,13 @@ class KerberosAuthenticationBackend(object):
         """
 
         cache = "/tmp/ion-" + str(uuid.uuid4())
+        # username = unicode(username)
+        # password = unicode(password)
 
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
-        kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
+        kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
         kinit.expect("{}@{}'s Password:".format(username, settings.CSL_REALM))
         kinit.sendline(password)
         kinit.expect(pexpect.EOF)
@@ -36,7 +41,7 @@ class KerberosAuthenticationBackend(object):
         realm = settings.CSL_REALM
 
         if exitstatus != 0:
-            kinit = pexpect.spawn("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
             kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
             kinit.sendline(password)
             kinit.expect(pexpect.EOF)
@@ -45,13 +50,13 @@ class KerberosAuthenticationBackend(object):
             realm = settings.AD_REALM
 
         if exitstatus == 0:
-            logger.info("Kerberos authorized {}@{}".format(username, realm))
-            kgetcred = pexpect.spawn("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
+            logger.debug("Kerberos authorized {}@{}".format(username, realm))
+            kgetcred = pexpect.spawnu("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
             kgetcred.expect(pexpect.EOF)
             kgetcred.close()
 
             if kgetcred.exitstatus == 0:
-                logger.info("Kerberos got ticket for ldap service")
+                logger.debug("Kerberos got ticket for ldap service")
                 return True
             else:
                 logger.error("Kerberos failed to get ticket for LDAP service")
@@ -77,16 +82,15 @@ class KerberosAuthenticationBackend(object):
         if not self.get_kerberos_ticket(username, password):
             return None
         else:
-            logger.info("Authentication successful")
+            logger.debug("Authentication successful")
             try:
-                user = User.objects.get(username=username)
+                user = User.get_and_propogate_user(username=username)
             except User.DoesNotExist:
-                logger.info("First login - creating new user in sql database")
-                user = User()
-                user.username = username
-                user.id = user.ion_id
-                user.set_unusable_password()
-                user.save()
+                # Shouldn't happen
+                logger.error("User successfully authenticated but not found "
+                             "in LDAP.")
+                return None
+
             return user
 
     def get_user(self, user_id):

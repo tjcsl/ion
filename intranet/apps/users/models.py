@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from datetime import datetime
 import hashlib
 import logging
@@ -10,7 +13,6 @@ from django.core.cache import cache
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
-from intranet import settings
 from intranet.middleware import threadlocals
 from django.contrib.auth.models import Group
 logger = logging.getLogger(__name__)
@@ -37,28 +39,24 @@ class UserManager(UserManager):
         return None
 
 
-        
-
 class User(AbstractBaseUser, PermissionsMixin):
-    """Django User model subclass with properties that fetch data
-    from LDAP
+    """Django User model subclass with properties that fetch data from
+    LDAP
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
     model will work with Django's built-in authorization functionality.
 
     The User model is primarily an abstraction of LDAP which has just
-    enough fields duplicated in the SQL database for Django to accept
-    it as a valid user model that can have relations to other models in
-    the database.
+    enough fields duplicated in the SQL database for Django to accept it
+    as a valid user model that can have relations to other models in the
+    database.
 
     When creating a user object to fetch LDAP data, use User.get_user().
     User() should only be used to add a user to the SQL database and
     User.objects.get() should not be used because users in LDAP are not
-    necessarily in the SQL database.
-
-    When fetching a username, do not use the "username" model field.
-    Instead, use ion_username, which pulls the username from LDAP
-    instead of the SQL database.
+    necessarily in the SQL database. If you need to retrieve a user
+    that you know exists in LDAP but might not be in the SQL db, use
+    User.get_and_propogate_user()
 
     """
 
@@ -89,12 +87,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             The User object if the user could be found in LDAP,
-            otherwise None
+            otherwise User.DoesNotExist is raised.
         """
         if dn is not None:
             try:
                 user = User(dn=dn)
                 user.id = user.ion_id
+                user.username = user.ion_username
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
@@ -102,14 +101,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif id is not None:
             user_dn = User.dn_from_id(id)
             if user_dn is not None:
-                return User(dn=user_dn, id=id)
+                return User.get_user(dn=user_dn)
             else:
                 raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
         elif username is not None:
-            dn = User.dn_from_username(username)
-            return User.get_user(dn=dn)
+            user_dn = User.dn_from_username(username)
+            return User.get_user(dn=user_dn)
         else:
             raise TypeError("get_user() requires at least one argument.")
+
+    @classmethod
+    def get_and_propogate_user(cls, dn=None, id=None, username=None):
+        """Retrieve a user object from LDAP and save it to the SQL
+        database if necessary.
+
+        Args:
+            - dn -- The full LDAP Distinguished Name of a user.
+            - id -- The user ID of the user to return.
+            - username -- The username of the user to return.
+
+        Returns:
+            The User object if the user could be found in LDAP,
+            otherwise User.DoesNotExist is raised.
+
+        """
+
+        user = User.get_user(dn=dn, id=id, username=username)
+        user.set_unusable_password()
+        user.save()
+        return user
 
     @staticmethod
     def dn_from_id(id):
@@ -186,32 +206,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         hash.update(signed)
         return hash.hexdigest()
 
-    def member_of(self, group_name):
+    def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
+        Args:
+            - group: the name of a group (string) or a group object
+
         Returns:
             Boolean
 
         """
+        if not hasattr(self, "_groups_cache"):
+            self._groups_cache = self.groups.values_list("name", flat=True)
 
-        if isinstance(group_name, Group):
-            group = group_name
-        else:
-            try:
-                group = Group.objects.get(name=group_name)
-            except Group.DoesNotExist:
-                return False
-        return group in self.groups.all()
+        if isinstance(group, Group):
+            group = group.name
+
+        return group in self._groups_cache
 
     def has_admin_permission(self, perm):
-        """Returns whether a user is in the {perm}_all group
+        """Returns whether a user has an admin permission (explicitly,
+        or implied by being in the "admin_all" group)
 
         Returns:
             Boolean
 
         """
 
-        return self.member_of("admin_all") or self.member_of("admin_"+perm)
+        return self.member_of("admin_all") or self.member_of("admin_" + perm)
 
     @property
     def full_name(self):
@@ -605,6 +627,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('eighth')
 
     @property
+    def is_announcements_admin(self):
+        """Checks if user is an announcements admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission("announcements")
+
+    @property
     def is_teacher(self):
         """Checks if user is a teacher.
 
@@ -628,15 +661,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        """Checks if a user has django admin priveleges.
+        """Checks if a user should have access to the Django Admin
+        interface. This has nothing to do with staff at TJ - `is_staff`
+        has to be overridden to make this a valid user model.
 
         Returns:
             Boolean
 
         """
 
-        #return self.username in settings.ADMIN_USERS
-        return self.member_of("admin_all")
+        return self.is_superuser
 
     @property
     def is_attendance_user(self):
@@ -659,16 +693,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.user_type == "simpleUser"
-
-    def is_superuser(self):
-        """Checks if user should have superuser privileges
-
-        Returns:
-            Boolean
-
-        """
-
-        return self.member_of("admin_all")
 
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
@@ -714,13 +738,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         This is used to retrieve ldap fields that don't require special
         processing, e.g. email or graduation year. Fields names are
         mapped to more user friendly names to increase readability of
-        templates. When more complex processing is required or a
-        complex return type is required, (such as a datetime object for
-        a birthday), properties should be used instead.
+        templates. When more complex processing is required or a complex
+        return type is required, (such as a datetime object for a
+        birthday), properties should be used instead.
 
-        Note that __getattr__ is used instead of __getattribute__ so
-        the method is called after checking regular attributes instead
-        of before.
+        Note that __getattr__ is used instead of __getattribute__ so the
+        method is called after checking regular attributes instead of
+        before.
 
         Returns:
             Either a list of strings or a string, depending on
@@ -728,11 +752,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        # This map essentially turns camelcase names into
-        # Python-style attribute names. The second  elements of
-        # the tuples indicateds whether the piece of information
-        # is restricted in LDAP (false if not protected, else the
-        # name of the permission).
+        # This map essentially turns camelcase names into Python-style
+        # attribute names. The second  elements of the tuples indicateds
+        # whether the piece of information is restricted in LDAP (false
+        # if not protected, else the name of the permission).
         user_attributes = {
             "ion_id": {
                 "ldap_name": "iodineUidNumber",
@@ -741,6 +764,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
             "ion_username": {
                 "ldap_name": "iodineUid",
+                "perm": None,
+                "is_list": False
+            },
+            "student_id": {
+                "ldap_name": "tjhsstStudentId",
                 "perm": None,
                 "is_list": False
             },
@@ -835,10 +863,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "is_list": True
             },
         }
-
-        #if name == "is_staff" and self.username in settings.ADMIN_USERS:
-        #    return True
-
 
         if name not in user_attributes:
             raise AttributeError("'User' has no attribute '{}'".format(name))

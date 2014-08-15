@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms

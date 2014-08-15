@@ -1,0 +1,141 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - Take Attendance
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/selectize.js-0.10.1/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.attendance.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'lib/selectize.js-0.10.1/dist/js/standalone/selectize.min.js' %}"></script>
+    <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
+    <script type="text/javascript" src="{% static 'js/eighth/attendance.js' %}"></script>
+{% endblock %}
+
+
+{% block main %}
+    <div class="primary-content">
+        <div class="eighth-header">
+                <h2>
+                    Take Attendance
+                </h2>
+
+                {% if request.user.is_eighth_admin %}
+                    {% include "eighth/admin/start_date.html" %}
+                {% endif %}
+        </div>
+
+        {% if request.GET.na %}
+            <strong>You are not sponsoring any activities for the block you selected.</strong>
+            <br>
+        {% endif %}
+
+        {% if wizard %}
+            <form action="" method="post">{% csrf_token %}
+                {{ wizard.management_form }}
+                {{ wizard.form }}
+                {% if wizard.steps.prev %}
+                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
+                {% endif %}
+                {% if wizard.steps.next %}
+                    <input type="submit" value="Next"/>
+                {% else %}
+                    <input type="submit" value="Take Attendance"/>
+                {% endif %}
+            </form>
+        {% else %}
+            <div class="attendance-container">
+                <table class="key-value-table activity-attributes">
+                    <tr>
+                        <th>Activity:</th>
+                        <td>{{ scheduled_activity.activity.name_with_flags }} ({{ scheduled_activity.activity.id }})</td>
+                    </tr>
+                    <tr>
+                        <th>Date:</th>
+                        <td>{{ scheduled_activity.block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                    </tr>
+                    <tr>
+                        <th>Rooms:</th>
+                        <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sponsors:</th>
+                        <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    </tr>
+                    <tr>
+                        <th>Signups:</th>
+                        {% with scheduled_activity.get_true_capacity as capacity %}
+                            <td>{{ members|length }}/{% if capacity == -1%}Unlimited{% else %}{{ capacity }}{% endif %} </td>
+                        {% endwith %}
+                    </tr>
+                </table>
+
+                {% if scheduled_activity.attendance_taken %}
+                <div class="attendance-taken">
+                    <i class="fa fa-check"></i> Attendance Taken
+                </div>
+                {% else %}
+                <div class="no-attendance">
+                    <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
+                </div>
+                {% endif %}
+                <form class="attendance-form" action="" method="post">
+                    <table class="take-attendance-roster">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="">Present</th>
+                                <th>Student</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                                <tr>
+                                    <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
+                                    <td>{{ member.name }}</td>
+                                    <td>{{ member.grade }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <input type="submit" class="save-button" value="Save">
+
+                </form>
+                {% if passes %}
+                    <h3>Passes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pass in passes %}
+                                <tr>
+                                    <td>
+                                        {{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.id }})
+                                    </td>
+                                    <td>
+                                        <form id="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
+                                            <a href="#" onclick="return false" class="pass-form-submit-link" data-form="pass-form-{{ pass.id }}">Accept</a>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post">
+                        <input type="submit" class="button accept-all-passes" value="Accept All">
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

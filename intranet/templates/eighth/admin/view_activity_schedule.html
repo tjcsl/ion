@@ -1,0 +1,39 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+<h4>Select an Activity:</h4>
+
+<select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+    {% endfor %}
+</select>
+
+{% if activity %}
+    <h3>Schedule for {{ activity.name }}</h3>
+    <table class="fancy-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Rooms</th>
+                <th>Sponsors</th>
+                <th>Students Enrolled</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scheduled_activity in scheduled_activities %}
+                <tr>
+                    <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                    <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                    <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                    <td>{{ scheduled_activity.get_true_capacity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import urllib
 import urlparse
+
 
 def add_get_parameters(url, parameters, percent_encode=True):
     url_parts = list(urlparse.urlparse(url))
@@ -7,7 +11,7 @@ def add_get_parameters(url, parameters, percent_encode=True):
     query.update(parameters)
 
     if percent_encode:
-        url_parts[4] =urllib.urlencode(query)
+        url_parts[4] = urllib.urlencode(query)
     else:
         url_parts[4] = "&".join([key + "=" + value for key, value in query.items()])
 

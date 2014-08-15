@@ -1,46 +1,62 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
-from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render
+from django import http
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from ..auth.decorators import announcements_admin_required
 from .models import Announcement
 from .forms import AnnouncementForm
 
 logger = logging.getLogger(__name__)
 
 
-#@perm_req("announcement.add_announcement")
+@announcements_admin_required
 def add_announcement_view(request):
-    success = False
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AnnouncementForm(request.POST)
-        if form != None and form.is_valid():
+        if form.is_valid():
             form.save()
-            success = True
+            messages.success(request, "Successfully added announcement.")
+            return redirect("index")
+        else:
+            messages.error(request, "Error adding announcement")
     else:
         form = AnnouncementForm()
-    return render(request, 'announcements/addmodify.html', {"form": form, "action": "add", "success": success})
+    return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
 
 
-#@perm_req("announcement.modify_announcement")
+@announcements_admin_required
 def modify_announcement_view(request, id=None):
-    success = False
-    if request.method == 'POST':
+    if request.method == "POST":
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
-        if form != None and form.is_valid():
+        if form.is_valid():
             form.save()
-            success = True
+            messages.success(request, "Successfully modified announcement.")
+            return redirect("index")
+        else:
+            messages.error(request, "Error adding announcement")
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, 'announcements/addmodify.html', {"form": form, "action": "modify", "id": id, "success": success})
+    return render(request, "announcements/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
-@login_required
+@announcements_admin_required
 def delete_announcement_view(request):
-    post_id = None
-    try:
-        post_id = request.POST["id"]
-    except AttributeError:
+    if request.method == "POST":
         post_id = None
-    announcement = Announcement.objects.get(id=post_id).delete()
-    return render(request, "success.html", {})
+        try:
+            post_id = request.POST["id"]
+        except AttributeError:
+            post_id = None
+
+        # Silently fail if announcement with given id doesn't exist
+        # by using .filter instead of .get
+        Announcement.objects.filter(id=post_id).delete()
+
+        return http.HttpResponse(status=204)
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

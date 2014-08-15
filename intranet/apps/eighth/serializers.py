@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
 from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from .models import EighthBlock, EighthActivity, EighthSignup, EighthSponsor, EighthScheduledActivity
-from intranet.apps.users.models import User
-# from intranet.apps.users.serializers import UserSerializer
+from ..users.models import User
+from .models import (
+    EighthBlock, EighthActivity, EighthSignup,
+    EighthSponsor, EighthScheduledActivity)
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +30,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="eighth_block_detail")
+    url = serializers.HyperlinkedIdentityField(view_name="api_eighth_block_detail")
 
     class Meta:
         model = EighthBlock
@@ -46,23 +51,33 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activity_list = {}
         scheduled_activity_to_activity_map = {}
 
+        # Find all scheduled activities that don't correspond to
+        # deleted activities
         scheduled_activities = block.eighthscheduledactivity_set \
-                                    .all() \
+                                    .exclude(activity__deleted=True) \
                                     .select_related("activity")
+
         for scheduled_activity in scheduled_activities:
             activity_info = {
                 "id": scheduled_activity.activity.id,
                 "scheduled_activity": scheduled_activity.id,
-                "url": reverse("eighth_activity_detail", args=[scheduled_activity.activity.id], request=self.context["request"]),
+                "url": reverse("api_eighth_activity_detail",
+                               args=[scheduled_activity.activity.id],
+                               request=self.context["request"]),
                 "name": scheduled_activity.activity.name,
                 "description": scheduled_activity.activity.description,
+                "cancelled": scheduled_activity.cancelled,
                 "roster": {
                     "count": 0,
                     "capacity": 0,
-                    "url": reverse("eighth_scheduled_activity_signup_list", args=[scheduled_activity.id], request=self.context["request"])
+                    "url": reverse("api_eighth_scheduled_activity_signup_list",
+                                   args=[scheduled_activity.id],
+                                   request=self.context["request"])
                 },
                 "rooms": [],
-                "sponsors": []
+                "sponsors": [],
+                "restricted": scheduled_activity.activity.restricted,
+                "both_blocks": scheduled_activity.activity.both_blocks
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = \
                 scheduled_activity.activity.id
@@ -70,16 +85,18 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_list[scheduled_activity.activity.id] = \
                 activity_info
 
-        activities = EighthSignup.objects \
-                                 .filter(scheduled_activity__block=block) \
-                                 .values_list("scheduled_activity__activity_id") \
-                                 .annotate(user_count=Count("scheduled_activity"))
+        # Find the number of students signed up for every activity
+        # in this block
+        activities_with_signups = EighthSignup.objects \
+                                              .filter(scheduled_activity__block=block) \
+                                              .exclude(scheduled_activity__activity__deleted=True) \
+                                              .values_list("scheduled_activity__activity_id") \
+                                              .annotate(user_count=Count("scheduled_activity"))
 
-        for activity, user_count in activities:
+        for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
 
         sponsors_dict = EighthSponsor.objects \
-                                     .all() \
                                      .values_list("id",
                                                   "user_id",
                                                   "first_name",
@@ -164,6 +181,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
             scheduled_activity_id = rooming.eighthscheduledactivity.id
+
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overidden:
                 activities_rooms_overidden.append(activity_id)
@@ -173,6 +191,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_list[activity_id]["rooms"].append(room_name)
             activity_list[activity_id]["roster"]["capacity"] += \
                 rooming.eighthroom.capacity
+
+        for scheduled_activity in scheduled_activities:
+            if scheduled_activity.capacity is not None:
+                capacity = scheduled_activity.capacity
+                sched_act_id = scheduled_activity.activity.id
+                activity_list[sched_act_id]["roster"]["capacity"] = capacity
 
         return activity_list
 
@@ -191,7 +215,9 @@ class EighthSignupSerializer(serializers.ModelSerializer):
     def block_info(self, signup):
         return {
             "id": signup.scheduled_activity.block.id,
-            "url": reverse("eighth_block_detail", args=[signup.scheduled_activity.block.id], request=self.context["request"])
+            "url": reverse("api_eighth_block_detail",
+                           args=[signup.scheduled_activity.block.id],
+                           request=self.context["request"])
         }
 
     def activity_info(self, signup):

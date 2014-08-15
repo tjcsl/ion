@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
 import ldap
 import ldap.sasl
 from threading import local
-from django.contrib.auth import logout
 from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
 from django.dispatch import receiver
 from intranet import settings
-from intranet.middleware import threadlocals
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -26,7 +27,6 @@ class LDAPFilter(object):
     def or_filter(*conditions):
         return LDAPFilter.operator("|", *conditions)
 
-
     @staticmethod
     def attribute_in_list(attribute, values):
         """Returns a filter for selecting all entries for which a
@@ -41,7 +41,7 @@ class LDAPFilter(object):
         """
 
         user_object_classes = settings.LDAP_OBJECT_CLASSES.values()
-        return LDAPFilter.attribute_in_list("objectclass",user_object_classes)
+        return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
 
 
 class LDAPConnection(object):
@@ -63,17 +63,17 @@ class LDAPConnection(object):
         """
         if (not hasattr(_thread_locals, "ldap_conn")) \
            or (_thread_locals.ldap_conn is None):
-            logger.info("Connecting to LDAP.")
-            _thread_locals.ldap_conn = ldap.initialize(settings.LDAP_SERVER)
+            logger.info("Connecting to LDAP...")
+            _thread_locals.ldap_conn = ldap.ldapobject.ReconnectLDAPObject(settings.LDAP_SERVER, trace_stack_limit=None)
+
             try:
                 auth_tokens = ldap.sasl.gssapi()
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-                logger.info("Connected.")
-            except ldap.LOCAL_ERROR:
+                logger.info("Successfully connected to LDAP.")
+            except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS):
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.error("SASL bind failed - using simple bind")
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
-
 
     @property
     def raw_connection(self):
@@ -81,7 +81,6 @@ class LDAPConnection(object):
         """
 
         return _thread_locals.ldap_conn
-
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an LDAPResult.
@@ -106,6 +105,10 @@ class LDAPConnection(object):
         """
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
+
+        # tip-toe around unicode bugs
+        attributes = [str(attr) for attr in attributes]
+
         return _thread_locals.ldap_conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                                  filter, attributes)
 
@@ -197,6 +200,10 @@ def close_ldap_connection(sender, **kwargs):
     Listens for the request_finished signal from Django and upon
     receit, unbinds from the directory, terminates the current
     association, and frees resources.
+
+    It would be nice if we could leave the connections open in a pool,
+    but it looks like rebinding on an open connection isn't possible
+    with GSSAPI binds.
 
     """
     if hasattr(_thread_locals, 'ldap_conn'):

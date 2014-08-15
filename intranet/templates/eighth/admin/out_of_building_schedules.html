@@ -1,0 +1,38 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+<h4>Select a Block:</h4>
+
+<select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+    {% for block in blocks %}
+        <option value="{{ block.id }}"{% if block == chosen_block %} selected{% endif %}>{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }})</option>
+    {% endfor %}
+</select>
+
+{% if chosen_block %}
+    <strong>Out of building schedule for block {{ chosen_block.id }}: {{ chosen_block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ chosen_block.block_letter }}):</strong>
+    <br>
+    <a class="button" href="{% url 'eighth_admin_export_out_of_building_schedules_csv' chosen_block.id %}">Export CSV</a>
+    <br>
+    <table class="fancy-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Activity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for signup in signups %}
+                <tr>
+                    <td>{{ signup.user.last_name }}, {{ signup.user.first_name }}</td>
+                    <td>{{ signup.user.student_id }}</td>
+                    <td>{{ signup.scheduled_activity.activity.name_with_flags }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

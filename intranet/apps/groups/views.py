@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.http import HttpResponse
-from intranet.apps.users.models import User
+from ..users.models import User
 from .forms import GroupForm
 
 logger = logging.getLogger(__name__)
@@ -14,8 +17,8 @@ logger = logging.getLogger(__name__)
 # students can only add themselves to non-admin groups unless they are already an admin
 @login_required
 def groups_view(request):
-    context = {"page": "groups"}
-    return render(request, "groups/groups.html", context)
+    return render(request, "groups/groups.html")
+
 
 # Create individual views for each form action
 @login_required
@@ -24,18 +27,17 @@ def add_group_view(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         if form.is_valid():
-	    form.save()
-	    success = True
+            form.save()
+            success = True
     else:
         form = GroupForm()
 
     context = {
-        "page": "groups",
-	    "form": form,
-	    "action": "add",
-	    "success": success
-	}
-    return render(request, "groups/addmodify.html", context)	    
+        "form": form,
+        "action": "add",
+        "success": success
+    }
+    return render(request, "groups/addmodify.html", context)
 
 # success = False
 # if request.method == 'POST':

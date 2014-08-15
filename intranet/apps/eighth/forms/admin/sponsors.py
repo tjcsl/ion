@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django import forms
+from django.core.exceptions import ValidationError
+from ....users.models import User
+from ...models import EighthSponsor
+
+
+class AutoCreateUserField(forms.ChoiceField):
+    widget = forms.TextInput
+
+    def clean(self, value):
+        if value in self.empty_values:
+            return
+
+        try:
+            id_value = int(value)
+        except (ValueError, TypeError):
+            raise ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": value}
+            )
+
+        try:
+            user = User.get_and_propogate_user(id=id_value)
+        except User.DoesNotExist:
+            raise ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": value}
+            )
+
+        return user
+
+
+class SponsorForm(forms.ModelForm):
+    user = AutoCreateUserField(label="User ID", required=False)
+
+    class Meta:
+        model = EighthSponsor

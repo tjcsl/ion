@@ -1,35 +1,9 @@
 {% extends "page_with_header.html" %}
 
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(".nav a").click(function() {
-                $(".nav .selected").removeClass("selected");
-                $(this).parent().addClass("selected");
-            });
-
-            $(".header h1").click(function() {
-                $(".nav .selected").removeClass("selected");
-                $(".nav li").slice(0,1).addClass("selected");
-            });
-        });
-    </script>
-{% endblock %}
 
 {% block content %}
     {% include "nav.html" %}
-    {% block messages %}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-    {% endblock %}
     {% block main %}
     {% endblock %}
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+    <h4>Select a Block:</h4>
+
+    <select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+        {% for b in blocks %}
+            <option value="{{ b.id }}"{% if b == chosen_block %} selected{% endif %}>{{ b.id }}: {{ b.date }} ({{ b.block_letter}})</option>
+        {% endfor %}
+    </select>
+
+    {% if chosen_block %}
+        <br>
+        <input type="checkbox" id="only-show-overbooked">
+        <label for="only-show-overbooked">Only show overbooked</label>
+        <br>
+        <table class="fancy-table">
+            <thead>
+                <tr>
+                    <th>Room(s)</th>
+                    <th>Activity ID</th>
+                    <th>Activity Name</th>
+                    <th>Sponsor(s)</th>
+                    <th>Students Enrolled</th>
+                    <th>Capacity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sched_act in scheduled_activities %}
+                    <tr {% if not sched_act.is_overbooked %} class="underbooked"{% endif %}>
+                        <td>{{ sched_act.get_true_rooms|join:", " }}</td>
+                        <td>{{ sched_act.activity.id }}</td>
+                        <td>{{ sched_act.activity.name_with_flags }}</td>
+                        <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
+                        <td>{{ sched_act.members.count }}</td>
+                        <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

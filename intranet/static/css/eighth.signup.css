@@ -1,0 +1,445 @@
+.primary-content {
+    /* after this point (where body is 353px),
+       the UI is impossible to use and things
+       start overlapping
+    */
+    min-width: 273px;
+}
+
+.day-picker {
+    display: block;
+    position: relative;
+    left: 0;
+    right: 0;
+    height: 100px;
+    border: 1px solid rgb(216, 216, 216);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 5px;
+
+
+    /* The transform stuff is to fix a dumb webkit bug
+       http://stackoverflow.com/questions/10314207/webkit-not-respecting-overflowhidden-with-border-radius
+    */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.day-picker-buttons {
+    height: 100px;
+    width: 100%;
+}
+
+.day-picker-buttons button, .day-picker-buttons button:hover, .day-picker-buttons button:active {
+    position: absolute;
+    display: inline-block;
+    width: 30px;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+
+    border-color: rgb(216, 216, 216);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    z-index: 500;
+}
+
+.earlier-days {
+    border: none;
+    border-right: 1px solid rgb(216, 216, 216);
+}
+
+.later-days {
+    right: 0;
+    border: none;
+    border-left: 1px solid rgb(216, 216, 216);
+}
+
+
+.day-picker-buttons button i {
+    left: 50%;
+    top: 50%;
+}
+
+.day-picker .day {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px;
+    height: 100px;
+    margin: 0;
+    margin-right: 1px;
+    outline: 1px solid rgb(216, 216, 216);
+}
+
+.active-block {
+    background-color: rgb(228, 228, 228);
+}
+
+.active-block:not(:hover) .block-letter {
+    background-color: rgb(252,252,252);
+}
+
+.block .block-letter {
+    margin-right: 5px;
+}
+
+.block.cancelled .selected-activity {
+    color: rgb(255,72,72);
+}
+
+.error-feedback {
+    color: rgb(255, 72, 72);
+}
+
+.days-container {
+    padding: 0;
+    margin-left: 30px;
+    margin-right: 29px; /* Account for 1px margin-right on .day */
+    /* Replace overflow:hidden with this to enable mouse scrolling of blocks;
+       overflow-y: hidden;
+       overflow-x: scroll;
+    */
+    overflow: hidden;
+    text-align: center;
+}
+
+
+.day-picker .day-title {
+    height: 24px;
+    display: block;
+    font-size: 16px;
+    text-align: center;
+}
+
+.blocks {
+    height: 76px;
+}
+
+.block {
+    height: 32px;
+    line-height: 32px;
+    display: block;
+    padding: 3px;
+}
+
+.many-blocks {
+    overflow-y: scroll;
+}
+
+.many-blocks .block {
+    height: 25px;
+    line-height: 25px;
+}
+
+.block:hover {
+    background-color: rgb(252,252,252);
+}
+
+.day {
+    text-align: left;
+}
+
+.day a, .day a:hover {
+    text-decoration: none;
+    color: rgb(72,72,72);
+}
+
+.day a div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
+
+.middle {
+    margin: 10px 0;
+    height: 50px;
+}
+
+.middle > .block-title {
+    float: left;
+    margin-left: 5px;
+}
+
+.controls {
+    float: right;
+}
+
+.controls button {
+    display: inline-block;
+    margin-top: 9px;
+}
+
+.middle h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.middle h4 {
+    font-size: 16px;
+    margin: 0;
+}
+
+#activity-picker {
+    display: block;
+    position: relative;
+    left: 0;
+    right: 0;
+    height: 500px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(216, 216, 216);
+    overflow: hidden;
+
+    /* The transform stuff is to fix a dumb webkit bug
+       http://stackoverflow.com/questions/10314207/webkit-not-respecting-overflowhidden-with-border-radius
+    */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+
+}
+
+.search-wrapper {
+    position: relative;
+    margin-right: 451px;
+    z-index: 999;
+    background-color: rgb(242,242,244);
+    border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+
+.search-wrapper span {
+    display: block;
+    overflow: hidden;
+}
+
+#activity-picker .fa-search {
+    margin-left: 5px;
+    line-height: 30px;
+    float: left;
+}
+
+#activity-picker input[type="text"] {
+    font-size: 14px;
+    background: none;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    height: 30px;
+    margin: 0;
+    /*margin-top: -10px;*/
+    padding: 0 4px;
+    width: 100%;
+}
+
+#activity-list {
+    float: left;
+    left: 0;
+    right: 450px;
+    top: 31px;
+    bottom: 0;
+    display: block;
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: auto;
+}
+
+#activity-detail {
+    display: block;
+    position: absolute;
+    float: right;
+    width: 430px;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    border-left: 1px solid rgb(216, 216, 216);
+    padding: 10px;
+    /*margin-right: -451px;*/
+    background-color: rgb(242,242,244);
+    z-index: 999;
+}
+
+
+h3 {
+    font-size: 20px;
+}
+
+#activity-detail h3.empty-state {
+    color: rgb(170, 170, 170);
+    text-align: center;
+}
+
+#activity-list ul {
+    padding: 0;
+    list-style: none;
+    cursor: pointer;
+}
+
+#activity-detail dt {
+    float: left;
+    padding-right: 5px;
+}
+
+#activity-detail dd, #activity-detail dt {
+    font-size: 15px;
+}
+
+#signup-section {
+    margin-top: 1em;
+}
+
+#signup-spinner-container {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+dt.description {
+    margin-top: 1em;
+    float: none;
+}
+
+dd.description {
+    margin-top: 1em;
+}
+
+h5 {
+    background-color: rgb(252,252,252);
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    padding: 0 10px;
+    outline: 1px solid rgb(216, 216, 216);
+}
+
+h5.stuck {
+    position: absolute;
+    top: 31px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    margin-right: 451px;
+}
+
+h5.hidden {
+    display: none;
+}
+
+#activity-list li {
+    height: 26px;
+    line-height: 26px;
+    padding: 0 10px;
+}
+
+#activity-list li:nth-child(odd) {
+    background-color: rgba(0,0,0,0.05);
+}
+
+#activity-list li.selected {
+    background-color: rgb(213, 213, 213);
+    font-weight: bold;
+}
+
+#activity-list li.signed-up:before,
+#activity-list li.signed-up::before {
+    content: "\F00C";
+    font-family: FontAwesome;
+    padding: 0px 0 0 5px;
+    font-size: 13px;
+    color: green;
+    margin-left: -24px;
+    padding-right: 3px;
+}
+
+/* eighth icons (ripped from iodine) */
+.activity-icons {
+    margin-right: 3px;
+}
+.activity-icon {
+    background-image: url(/static/img/Eighth-Icons.svg);
+    background-size: auto 20px;
+    background-repeat: no-repeat;
+    display: block;
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin-top: 3px;
+}
+
+.no-svg .activity-icon {
+    background-image: url(/static/img/Eighth-Icons@2x.png);
+}
+
+.activity-icon.pie-10 {
+    background-position: -200px 0px;
+}
+
+.activity-icon.pie-9 {
+    background-position: -180 0px;
+}
+
+.activity-icon.pie-8 {
+    background-position: -160 0px;
+}
+
+.activity-icon.pie-7 {
+    background-position: -140 0px;
+}
+
+.activity-icon.pie-6 {
+    background-position: -120px 0px;
+}
+
+.activity-icon.pie-5 {
+    background-position: -100px 0px;
+}
+
+.activity-icon.pie-4 {
+    background-position: -80px 0px;
+}
+
+.activity-icon.pie-3 {
+    background-position: -60px 0px;
+}
+
+.activity-icon.pie-2 {
+    background-position: -40px 0px;
+}
+
+.activity-icon.pie-1 {
+    background-position: -20px 0px;
+}
+
+.activity-icon.pie-0 {
+    background-position: 0px 0px;
+}
+
+.activity-icon.cancelled {
+    background-position: -220px 0px;
+}
+
+.activity-icon.restricted {
+    background-position: -220px 0px;
+}
+
+.activity-icon.fav {
+    background-position: -260px 0px;
+}
+
+.activity-icon.fav.fav-sel {
+    background-position: -240px 0px;
+}
+
+
+.primary-content .middle .controls .overflow-icon {
+    display: none;
+}

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -5,7 +8,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
-ADD_SLASHES = False
+APPEND_SLASH = False
 
 ADMINS = (
     # ("Your Name", "your_email@example.com"),
@@ -91,9 +94,13 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+    "intranet.apps.context_processors.nav_categorizer",
+    "intranet.apps.eighth.context_processors.start_date"
 )
 
 MIDDLEWARE_CLASSES = (
+    "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -207,10 +214,14 @@ INSTALLED_APPS = (
     "intranet.apps.eighth",
     "intranet.apps.announcements",
     "intranet.apps.search",
-    #"intranet.apps.groups",
+    "intranet.apps.groups",
     "intranet.apps.schedule",
-    "intranet.middleware.environment"
+    "intranet.middleware.environment",
+    "debug_toolbar_line_profiler",
+    "widget_tweaks"
 )
+
+EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -246,6 +257,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple"
+            ""
         },
     },
     "loggers": {

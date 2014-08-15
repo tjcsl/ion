@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib import admin
-from intranet.apps.schedule.models import Day, Time, Block, DayType, CodeName
+from .models import Day, Time, Block, DayType, CodeName
+
+
 admin.site.register([
     Day, Time, Block, DayType, CodeName
 ])

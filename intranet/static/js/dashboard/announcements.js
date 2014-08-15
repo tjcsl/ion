@@ -6,20 +6,16 @@ $(document).ready(function() {
         var announcement_id = $(this).attr("data-id"),
             announcement_title = $(".announcement[data-id=" + announcement_id + "] > h3")[0].textContent.trim();
 
-        if(!confirm("Delete announcement \"" + announcement_title + "\"")) return;
+        if(!confirm("Delete announcement \"" + announcement_title + "\"?")) return;
 
-        // TODO: Possibly POST to /api
-        post("/announcements/delete",
-             {"id": announcement_id},
-             function(d) {
+        $.post("/announcements/delete", {"id": announcement_id})
+            .done(function(data) {
                 $(".announcement[data-id=" + announcement_id + "]").slideUp();
-                $(".ajax-message").html("Successfully deleted announcement.")
-                                  .click(function() {
-                                    $(this).slideUp();
-                                  })
-                                  .slideDown();
-            }
-        );
+                Messenger().success("Successfully deleted announcement.");
+            })
+            .fail;(function(data) {
+                Messenger().error("Error deleting announcement.");
+        });
     });
 
     $('div[data-placeholder]').on('keydown keypress input', function() {
@@ -28,9 +24,5 @@ $(document).ready(function() {
         } else {
             delete(this.dataset.divPlaceholderContent);
         }
-    });
-
-    $(".announcement-add").click(function() {
-        location.href = "/announcements/add";
     });
 });

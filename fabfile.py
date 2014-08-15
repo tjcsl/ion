@@ -1,4 +1,6 @@
-from __future__ import with_statement
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, with_statement
+
 from fabric.api import *
 from fabric.contrib.console import confirm
 import os
@@ -153,38 +155,9 @@ def contributors():
 
 
 def linecount():
-    """Get a total line count of files with these types:
-        - Python
-        - HTML
-        - CSS
-        - Javascript
-        - reST documentation
-
-    """
+    """Get a total line count of files with these types:"""
     with hide('running'):
-        extensions = [("py", "Python"),
-                      ("html", "HTML"),
-                      ("css", "CSS"),
-                      ("js", "Javascript"),
-                      ("rst", "reST documentation")]
-        count = [0] * len(extensions)
-
-        for i, e in enumerate(extensions):
-            count[i] = int(local("find . -not -iwholename '*.git*' -not "
-                                 "-iwholename '*_build*' -name '*.{}' "
-                                 "| xargs wc -l | tail -1 | "
-                                 "awk '{{print $1;}}'".format(e[0]),
-                                 capture=True))
-        puts("")
-
-        total = sum(count)
-
-        for i, c in enumerate(count):
-            puts("{}{} lines of {} ({:.2f}%)".format(" " * (7 + 8 - len(str(c))), c, extensions[i][1], 100.0 * c / total))
-
-        puts("-" * 52)
-        puts("Total: {}{}".format(" " * (8 - len(str(total))), total))
-
+        local("cloc --exclude-ext=json --exclude-dir=intranet/static/lib,intranet/static/{css,js}/lib,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
 
 def load_fixtures():
     """Clear and repopulate a database with data from fixtures."""
@@ -215,6 +188,7 @@ def load_fixtures():
                  "intranet/apps/announcements/fixtures/announcements.json"]
         for json_file in files:
             local("./manage.py loaddata {}".format(json_file))
+
 
 def deploy():
     """Deploy to production."""

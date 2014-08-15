@@ -34,7 +34,7 @@
                 Upcoming Eighth Periods
             </h2>
             <div class="info warning">
-                <i class="icon-warning-sign"></i>
+                <i class="fa fa-warning-sign"></i>
                 15 Minutes Left to Sign Up
             </div>
         </div>
@@ -50,12 +50,12 @@
 
                 <div class="eighth-activities">
                         <div class="eighth-activity">
-                            <i class="icon-circle"></i>
+                            <i class="fa fa-circle"></i>
                             Basket Weaving
                             <span class='info'>Agee &bull; 123</span>
                         </div>
                         <div class="eighth-activity selected">
-                            <i class="icon-ok"></i>
+                            <i class="fa fa-check"></i>
                             Dormancy Club
                             <span class='info'>William &bull; 456</span>
                         </div>
@@ -73,18 +73,18 @@
 
                 <div class="eighth-activities">
                         <div class="eighth-activity">
-                            <i class="icon-circle"></i>
+                            <i class="fa fa-circle"></i>
                             Basket Weaving
                             <span class='info'>Agee &bull; 123</span>
                         </div>
                         <div class="eighth-activity selected">
-                            <i class="icon-ok"></i>
+                            <i class="fa fa-check"></i>
                             Dormancy Club
                             <span class='info'>William &bull; 456</span>
                         </div>
                         {% for i in "123456789"|make_list %}
                         <div class="eighth-activity">
-                            <i class="icon-circle-blank"></i>
+                            <i class="fa fa-circle-o"></i>
                             Sys Op Administrators
                             <span class='info'>Hamilton &bull; 115</span>
                         </div>
@@ -103,18 +103,18 @@
 
                 <div class="eighth-activities">
                         <div class="eighth-activity">
-                            <i class="icon-circle"></i>
+                            <i class="fa fa-circle"></i>
                             Basket Weaving
                             <span class='info'>Agee &bull; 123</span>
                         </div>
                         <div class="eighth-activity selected">
-                            <i class="icon-ok"></i>
+                            <i class="fa fa-check"></i>
                             Dormancy Club
                             <span class='info'>William &bull; 456</span>
                         </div>
                         {% for i in "12"|make_list %}
                         <div class="eighth-activity">
-                            <i class="icon-circle-blank"></i>
+                            <i class="fa fa-circle-o"></i>
                             Sys Op Administrators
                             <span class='info'>Hamilton &bull; 115</span>
                         </div>
@@ -127,27 +127,29 @@
 
 
 <div class="announcements primary-content">
-    <div class="message ajax-message"></div>
-    <h2>
-        Announcements
-        <span class="announcements-icon-wrapper">
-            <div class="button announcement-add">
-                <i class="icon-plus"></i>
-                Add
-            </div>
-        </span>
-    </h2>
+    <div class="announcements-header">
+        <h2>Announcements</h2>
+        {% if request.user.is_announcements_admin %}
+
+            <span class="announcements-icon-wrapper">
+                <a class="button announcement-add" href="{% url 'add_announcement' %}">
+                    <i class="fa fa-plus"></i>
+                    Add
+                </a>
+            </span>
+        {% endif %}
+    </div>
     <div class="announcements-container">
     {% for announcement in announcements %}
         <div class="announcement" data-id="{{ announcement.id }}">
             <h3>
                 {{ announcement.name }} {# TODO: add admin_news check against groups before letting users edit/delete #}
                 <div class="announcement-icon-wrapper">
-                    <a href="/announcements/modify/{{ announcement.id }}">
-                        <i class="announcement-icon icon-pencil" href="/announcements/modify/{{ announcement.id }}"></i>
+                    <a href="{% url 'modify_announcement' announcement.id %}">
+                        <i class="announcement-icon fa fa-pencil"></i>
                     </a>
-                    <a href="" onclick="return false">
-                        <i class="announcement-icon icon-trash announcement-delete" data-id="{{ announcement.id }}"></i>
+                    <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                        <i class="announcement-icon fa fa-trash-o"></i>
                     </a>
                 </div>
             </h3>
@@ -161,13 +163,12 @@
         </div>
     {% endfor %}
     </div>
+    <!--
     <div class="content-center">
-        <a href="/archive">
-            <div class="button">
-                <i class="icon-archive"></i>
+        <a href="/archive" class="button">
+                <i class="fa fa-archive"></i>
                 Archive
-            </div>
         </a>
-    </div>
+    </div>-->
 </div>
 {% endblock %}

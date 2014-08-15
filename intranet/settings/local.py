@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from fnmatch import fnmatch
 import logging
 import traceback
@@ -20,13 +23,24 @@ if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(os.path.dirname(PROJECT_ROOT),
+#                              "testing_database.db"),
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(os.path.dirname(PROJECT_ROOT),
-                             "testing_database.db"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "ion",
+        "USER": "",
+        "PASSWORD": "",
+        "HOST": "localhost"
     }
 }
+
 
 # Make this unique, and don"t share it with anybody.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
@@ -77,6 +91,7 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.panels.versions.VersionsPanel",
         "debug_toolbar.panels.timer.TimerPanel",
         # "debug_toolbar.panels.profiling.ProfilingPanel",
+        "debug_toolbar_line_profiler.panel.ProfilingPanel",
         "debug_toolbar.panels.settings.SettingsPanel",
         "debug_toolbar.panels.headers.HeadersPanel",
         "debug_toolbar.panels.request.RequestPanel",
