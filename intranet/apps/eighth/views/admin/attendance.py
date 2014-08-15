@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.shortcuts import render
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
-from ...models import EighthSignup
+from ...models import EighthSignup, EighthBlock
 from ...utils import get_start_date
 
 
@@ -170,3 +170,32 @@ def after_deadline_signup_view(request):
     }
 
     return render(request, "eighth/admin/after_deadline_signups.html", context)
+
+
+@eighth_admin_required
+def activities_without_attendance_view(request):
+    blocks = EighthBlock.objects.filter(date__gte=get_start_date(request))
+    block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        "blocks": blocks,
+        "chosen_block": block
+    }
+
+    if block is not None:
+        start_date = get_start_date(request)
+        scheduled_activities = block.eighthscheduledactivity_set \
+                                    .filter(block__date__gte=start_date,
+                                            attendance_taken=False)
+
+        context["scheduled_activities"] = scheduled_activities
+
+    context["admin_page_title"] = "Activities That Haven't Taken Attendance"
+    return render(request, "eighth/admin/activities_without_attendance.html", context)

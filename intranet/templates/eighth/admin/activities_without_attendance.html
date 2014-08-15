@@ -1,0 +1,32 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+<h4>Select a Block:</h4>
+
+<select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+    {% for block in blocks %}
+        <option value="{{ block.id }}"{% if block == chosen_block %} selected{% endif %}>{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }})</option>
+    {% endfor %}
+</select>
+
+{% if chosen_block %}
+    <table class="fancy-table">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Sponsors</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scheduled_activity in scheduled_activities %}
+                <tr>
+                    <td>{{ scheduled_activity.activity.name_with_flags }}</td>
+                    <td>{{ scheduled_activity.get_true_sponsors|join:", "}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}
