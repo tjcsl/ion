@@ -36,8 +36,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     ]
 
     TEMPLATES = {
-        "block": "eighth/admin/take_attendance.html",
-        "activity": "eighth/admin/take_attendance.html",
+        "block": "eighth/take_attendance.html",
+        "activity": "eighth/take_attendance.html",
     }
 
     def get_template_names(self):
@@ -180,7 +180,7 @@ def take_attendance_view(request, scheduled_activity_id):
             "members": members
         }
 
-        return render(request, "eighth/admin/take_attendance.html", context)
+        return render(request, "eighth/take_attendance.html", context)
 
 
 def accept_pass_view(request, signup_id):

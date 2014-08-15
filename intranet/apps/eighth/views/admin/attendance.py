@@ -5,10 +5,11 @@ import csv
 from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
 from django.db.models import Count
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
-from ...models import EighthSignup, EighthBlock
+from ...models import EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity
 from ...utils import get_start_date
 
 
@@ -199,3 +200,47 @@ def activities_without_attendance_view(request):
 
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
     return render(request, "eighth/admin/activities_without_attendance.html", context)
+
+
+@eighth_admin_required
+def reject_outstanding_passes_view(request):
+    if request.method == "POST":
+        try:
+            block_id = request.POST.get("block", None)
+            block = EighthBlock.objects.get(id=block_id)
+        except EighthBlock.DoesNotExist:
+            raise http.Http404
+
+        activity, created = EighthActivity.objects \
+                                          .get_or_create(name="8th Period Pass Not Received")
+        activity.restricted = True
+        activity.sticky = True
+
+        if not activity.description:
+            activity.description = "Pass received from the 8th period " \
+                                   "office was not turned in."
+
+        activity.save()
+
+        pass_not_received, created = EighthScheduledActivity.objects \
+                                                            .get_or_create(block=block,
+                                                                           activity=activity)
+
+        EighthSignup.objects \
+                    .filter(scheduled_activity__block=block,
+                            after_deadline=True,
+                            pass_accepted=False) \
+                    .update(scheduled_activity=pass_not_received)
+
+        messages.success(request, "Successfully rejected outstanding passes.")
+
+        return redirect("eighth_admin_dashboard")
+    else:
+        blocks = EighthBlock.objects.filter(date__gte=get_start_date(request))
+
+        context = {
+            "admin_page_title": "Reject Outstanding Passes",
+            "blocks": blocks
+        }
+
+        return render(request, "eighth/admin/reject_outstanding_passes.html", context)
