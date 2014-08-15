@@ -27,8 +27,6 @@ urlpatterns = [
 ]
 
 eighth_admin_patterns = [
-    # No leading slashes because these urls are included under /admin/
-
     # Activities
     url(r"^activities/add$", activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"^activities/edit/(?P<activity_id>\d+)$", activities.edit_activity_view, name="eighth_admin_edit_activity"),
@@ -59,7 +57,8 @@ eighth_admin_patterns = [
     url(r"^attendance/after_deadline_signups$", admin_attendance.after_deadline_signup_view, name="eighth_admin_view_after_deadline_signups"),
     url(r"^attendance/no_attendance$", admin_attendance.activities_without_attendance_view, name="eighth_admin_view_activities_without_attendance"),
     url(r"^attendance/reject_outstanding_passes$", admin_attendance.reject_outstanding_passes_view, name="eighth_admin_reject_outstanding_passes"),
-    url(r"^attendance/export_out_of_building_schedules$", general.not_implemented_view, name="eighth_admin_export_out_of_building_schedules"),
+    url(r"^attendance/export_out_of_building_schedules$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules"),
+    url(r"^attendance/export_out_of_building_schedules/csv/(?P<block_id>\d+)$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules_csv"),
 
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),

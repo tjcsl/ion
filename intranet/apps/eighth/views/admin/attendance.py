@@ -4,17 +4,19 @@ from __future__ import unicode_literals
 import csv
 from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
-from ...models import EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity
+from ...models import (
+    EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity,
+    EighthRoom)
 from ...utils import get_start_date
 
 
 @eighth_admin_required
-def delinquent_students_view(request, download_csv=None):
+def delinquent_students_view(request):
     lower_absence_limit = request.GET.get("lower", "")
     upper_absence_limit = request.GET.get("upper", "")
 
@@ -212,7 +214,8 @@ def reject_outstanding_passes_view(request):
             raise http.Http404
 
         activity, created = EighthActivity.objects \
-                                          .get_or_create(name="8th Period Pass Not Received")
+                                          .get_or_create(name="Z - 8th Period Pass Not Received",
+                                                         deleted=False)
         activity.restricted = True
         activity.sticky = True
 
@@ -244,3 +247,63 @@ def reject_outstanding_passes_view(request):
         }
 
         return render(request, "eighth/admin/reject_outstanding_passes.html", context)
+
+
+@eighth_admin_required
+def out_of_building_schedules_view(request, block_id=None):
+    blocks = EighthBlock.objects.filter(date__gte=get_start_date(request))
+    if block_id is None:
+        block_id = request.GET.get("block", None)
+    block = None
+
+    if block_id is not None:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+        except (EighthBlock.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        "blocks": blocks,
+        "chosen_block": block
+    }
+
+    if block is not None:
+        room = EighthRoom.objects.filter(name__icontains="out of building")
+
+        if len(room) == 1:
+            room = room[0]
+            signups = EighthSignup.objects \
+                                  .filter(scheduled_activity__block=block) \
+                                  .filter(Q(scheduled_activity__rooms=room) |
+                                          (Q(scheduled_activity__rooms=None) &
+                                           Q(scheduled_activity__activity__rooms=room))) \
+                                  .distinct() \
+                                  .order_by("scheduled_activity__activity")
+            context["signups"] = signups
+
+    if request.resolver_match.url_name == "eighth_admin_export_out_of_building_schedules":
+        context["admin_page_title"] = "Export Out of Building Schedules"
+        return render(request, "eighth/admin/out_of_building_schedules.html", context)
+    else:
+        response = http.HttpResponse(content_type="text/csv")
+        date = datetime.strftime(block.date, "%m_%d_%Y")
+        response["Content-Disposition"] = \
+            "attachment; filename=\"out_of_building_schedules_{}.csv\"".format(date)
+
+        writer = csv.writer(response)
+        writer.writerow(["Last Name",
+                         "First Name",
+                         "Student ID",
+                         "Activity ID",
+                         "Activity Name"])
+
+        for signup in signups:
+            row = []
+            row.append(signup.user.last_name)
+            row.append(signup.user.first_name)
+            row.append(signup.user.student_id)
+            row.append(signup.scheduled_activity.activity.id)
+            row.append(signup.scheduled_activity.activity.name)
+            writer.writerow(row)
+
+        return response
