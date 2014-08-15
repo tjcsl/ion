@@ -109,6 +109,7 @@ if SHOW_DEBUG_TOOLBAR:
 
     INSTALLED_APPS += (
         "debug_toolbar",
+        "debug_toolbar_line_profiler",
     )
 
 INSTALLED_APPS += (
