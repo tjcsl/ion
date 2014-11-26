@@ -56,6 +56,10 @@ def eighth_signup_view(request, block_id=None):
             next_block = EighthBlock.objects.get_first_upcoming_block()
             if next_block is not None:
                 block_id = next_block.id
+            else:
+                last_block = EighthBlock.objects.order_by("date").last()
+                if last_block is not None:
+                    block_id = last_block.id
 
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
