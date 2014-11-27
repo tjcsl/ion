@@ -1,5 +1,9 @@
 // Scripts for initial layout, sticky headers, etc.
 
+function calcMaxScrollLeft() {
+    return $(".days-container")[0].scrollWidth - $(".days-container").width();
+}
+
 function centerCurrentDay(animate) {
     var $day = $(".current-day");
     var dayWidth = $(".day:first").width() + 1;
@@ -16,19 +20,20 @@ function centerCurrentDay(animate) {
             easing: "swing",
         });
     } else {
-        $(".days-container").scrollLeft();
+        $(".days-container").scrollLeft(scrollCenter);
     }
 }
 
 function centerBlocks() {
-    // Scroll to block if more than two blocks on the day
-
+    // Scroll to block if there are more than two blocks on any given day
     var $activeBlock = $(".active-block");
     $activeBlock.parents(".blocks.many-blocks").scrollTo($activeBlock);
 }
 
 function updateDayNavButtonStatus() {
-    var maxScrollLeft = $(".days-container")[0].scrollWidth - $(".days-container").width();
+    // Update the state of buttons to reflect whether it is possible to
+    // move left or right
+    var maxScrollLeft = calcMaxScrollLeft();
     var scrollLeft = $(".days-container").scrollLeft();
 
     $(".earlier-days").removeAttr("disabled");
@@ -38,11 +43,48 @@ function updateDayNavButtonStatus() {
         $(".earlier-days").attr("disabled", "disabled");
     }
 
-    if (scrollLeft == maxScrollLeft) {
+    if (Math.abs(scrollLeft - maxScrollLeft) <= 1) {
+        // Weird stuff sometimes happens when resizing/zooming window
+        // so sometimes these scrollLeft and maxScrollLeft get off by a pixel
+        // when they are supposed to be equal
         $(".later-days").attr("disabled", "disabled");
     }
 
 
+}
+
+function scrollBlockChooser(dir) {
+    // The left and right arrows are used to select which day should be centered
+    // in the block chooser, but sometimes adjacent blocks at the far left and right
+    // can not be centered. In this case, the user still expects the arrows to slide
+    // the blocks left and right, so we keep selecting the next/previous block until
+    // the block chooser is able to scroll and center the selected block
+    var $daysContainer = $(".days-container");
+    var initialScrollLeft = $daysContainer.scrollLeft();
+    var tries = 10;
+
+
+    while(tries-- && $daysContainer.scrollLeft() == initialScrollLeft) {
+        var $currentDay = $(".current-day");
+        var $nextCurrentDay = $currentDay[dir]();
+        if ($nextCurrentDay.length != 0) {
+            $currentDay.removeClass("current-day")
+            $nextCurrentDay.addClass("current-day");
+        }
+
+        centerCurrentDay(false);
+    }
+
+    var newScrollLeft = $daysContainer.scrollLeft();
+    $daysContainer.scrollLeft(initialScrollLeft);
+
+    $(".days-container").animate({
+        scrollLeft: newScrollLeft
+    }, {
+        duration: 150,
+        easing: "swing",
+        done: updateDayNavButtonStatus
+    });
 }
 
 
@@ -58,34 +100,16 @@ $(function() {
         updateDayNavButtonStatus();
     });
 
-    $(".days-container").scroll(function() {
-        updateDayNavButtonStatus();
-    })
-
-
     $(".day-picker-buttons button").click(function(e) {
-        var scrollLeft = ($(".day").width() + 1) + "px";
         var $currentDay = $(".current-day");
 
         if ($(e.target).parents().andSelf().hasClass("later-days")) {
             // Right button clicked
-            scrollLeft = "+=" + scrollLeft;
-
-            var $nextCurrentDay = $currentDay.next();
-            $
+            scrollBlockChooser("next");
         } else {
             // Left button clicked
-            scrollLeft = "-=" + scrollLeft;
-            var $nextCurrentDay = $currentDay.prev();
+            scrollBlockChooser("prev");
         }
-
-        if ($nextCurrentDay.length != 0) {
-            $currentDay.removeClass("current-day")
-            $nextCurrentDay.addClass("current-day");
-        }
-
-        updateDayNavButtonStatus();
-        centerCurrentDay(true);
     });
 
 
