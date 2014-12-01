@@ -64,7 +64,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "url": reverse("api_eighth_activity_detail",
                                args=[scheduled_activity.activity.id],
                                request=self.context["request"]),
-                "name": scheduled_activity.activity.name,
+                "name": scheduled_activity.activity.name_with_flags,
                 "description": scheduled_activity.activity.description,
                 "cancelled": scheduled_activity.cancelled,
                 "roster": {
