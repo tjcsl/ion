@@ -225,7 +225,8 @@ class EighthBlock(models.Model):
                             .order_by("date", "block_letter") \
                             .filter(Q(date__gt=self.date)
                                     | (Q(date=self.date)
-                                    & Q(block_letter__gt=self.block_letter)))
+                                       & Q(block_letter__gt=self.block_letter))
+                                    )
         if quantity == -1:
             return blocks
         return blocks[:quantity + 1]
@@ -235,7 +236,8 @@ class EighthBlock(models.Model):
                             .order_by("-date", "-block_letter") \
                             .filter(Q(date__lt=self.date)
                                     | (Q(date=self.date)
-                                    & Q(block_letter__lt=self.block_letter)))
+                                       & Q(block_letter__lt=self.block_letter))
+                                    )
         if quantity == -1:
             return reversed(blocks)
         return reversed(blocks[:quantity + 1])
@@ -414,18 +416,19 @@ class EighthScheduledActivity(models.Model):
 
             # Check if the user is already stickied into an activity
             if not self.activity.both_blocks:
-                in_a_stickie = self.eighthsignup_set \
-                                   .filter(user=user,
-                                           scheduled_activity__activity__sticky=True) \
-                                   .exists()
+                in_stickie = EighthSignup.objects \
+                                         .filter(user=user,
+                                                 scheduled_activity__activity__sticky=True,
+                                                 scheduled_activity__block=self.block) \
+                                         .exists()
             else:
-                in_a_stickie = EighthSignup.objects \
-                                           .filter(user=user,
-                                                   scheduled_activity__activity__sticky=True,
-                                                   scheduled_activity__block__date=self.block.date,
-                                                   scheduled_activity__activity=self.activity) \
-                                           .exists()
-            if in_a_stickie:
+                in_stickie = EighthSignup.objects \
+                                         .filter(user=user,
+                                                 scheduled_activity__activity__sticky=True,
+                                                 scheduled_activity__block__date=self.block.date,
+                                                 scheduled_activity__activity=self.activity) \
+                                         .exists()
+            if in_stickie:
                 raise eighth_exceptions.Sticky()
 
             # Check if signup would violate one-a-day constraint
