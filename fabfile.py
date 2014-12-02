@@ -69,6 +69,7 @@ def kill_server(port):
         abort("Invalid port number.")
     local("ps au | grep virtualenvs | grep {} | grep -v grep | cut -d' ' -f2 | xargs kill -9".format(port))
 
+
 def _require_root():
     """Check if running as root."""
     with hide('running'):
@@ -140,7 +141,7 @@ def clear_cache(input=None):
     else:
         n = _choose_from_list(["Production cache",
                                "Sandbox cache"],
-                               "Which cache would you like to clear?")
+                              "Which cache would you like to clear?")
 
     if n == 0:
         local("redis-cli -n {} FLUSHDB".format(REDIS_PRODUCTION_CACHE_DB))
@@ -159,12 +160,13 @@ def linecount():
     with hide('running'):
         local("cloc --exclude-ext=json --exclude-dir=intranet/static/lib,intranet/static/{css,js}/lib,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
 
+
 def load_fixtures():
     """Clear and repopulate a database with data from fixtures."""
 
     n = _choose_from_list(["Production database (PostgreSQL)",
                            "Sandbox database (SQLite3)"],
-                           "Which database would you like to clear and repopulate?")
+                          "Which database would you like to clear and repopulate?")
     if n == 0:
         if not confirm("Are you sure you want to clear the production database?"):
             return 0
