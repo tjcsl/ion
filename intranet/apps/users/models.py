@@ -127,7 +127,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         user = User.get_user(dn=dn, id=id, username=username)
-        user.set_unusable_password()
+        if user.has_usable_password():
+            user.set_unusable_password()
         user.save()
         return user
 
