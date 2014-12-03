@@ -190,6 +190,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         user's name separate from his or her address so the two can not
         be associated).
 
+        This effectively makes sure non-root users on the production
+        server can't access private data from the cache.
+
         Args:
             - identifier -- The plaintext identifier (generally of the \
                             form "<dn>.<attribute>" for the cached data).
@@ -203,8 +206,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return identifier
         signer = Signer()
         signed = signer.sign(identifier)
-        hash = hashlib.sha1()
-        hash.update(signed)
+        hash = hashlib.sha1(signed)
         return hash.hexdigest()
 
     def member_of(self, group):
