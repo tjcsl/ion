@@ -176,3 +176,9 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         }
 
         return render(self.request, "eighth/admin/room_utilization.html", context)
+
+room_utilization_view = eighth_admin_required(
+    EighthAdminRoomUtilizationWizard.as_view(
+        EighthAdminRoomUtilizationWizard.FORMS
+    )
+)

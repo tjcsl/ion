@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 import datetime
 from django import http
-from django.db.models import Q
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
+from ...auth.decorators import eighth_admin_required, attendance_taker_required
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
@@ -72,7 +72,6 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         kwargs.update({"label": labels[step]})
 
-        print kwargs
         return kwargs
 
     def get_context_data(self, form, **kwargs):
@@ -105,7 +104,20 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
+_unsafe_choose_scheduled_activity_view = \
+    EighthAttendanceSelectScheduledActivityWizard.as_view(
+        EighthAttendanceSelectScheduledActivityWizard.FORMS,
+        condition_dict={"activity": should_show_activity_list}
+    )
 
+teacher_choose_scheduled_activity_view = \
+    attendance_taker_required(_unsafe_choose_scheduled_activity_view)
+
+admin_choose_scheduled_activity_view = \
+    eighth_admin_required(_unsafe_choose_scheduled_activity_view)
+
+
+@attendance_taker_required
 def take_attendance_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects \
@@ -183,6 +195,7 @@ def take_attendance_view(request, scheduled_activity_id):
         return render(request, "eighth/take_attendance.html", context)
 
 
+@attendance_taker_required
 def accept_pass_view(request, signup_id):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"])
@@ -205,6 +218,7 @@ def accept_pass_view(request, signup_id):
                     scheduled_activity_id=signup.scheduled_activity.id)
 
 
+@attendance_taker_required
 def accept_all_passes_view(request, scheduled_activity_id):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"])

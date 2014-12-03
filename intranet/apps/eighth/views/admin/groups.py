@@ -156,3 +156,9 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         messages.success(self.request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
+
+eighth_admin_signup_group = eighth_admin_required(
+    EighthAdminSignUpGroupWizard.as_view(
+        EighthAdminSignUpGroupWizard.FORMS
+    )
+)

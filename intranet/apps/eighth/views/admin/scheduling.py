@@ -208,3 +208,9 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
 
         messages.success(self.request, "Successfully transfered students.")
         return redirect("eighth_admin_dashboard")
+
+transfer_students_view = eighth_admin_required(
+    EighthAdminTransferStudentsWizard.as_view(
+        EighthAdminTransferStudentsWizard.FORMS
+    )
+)
