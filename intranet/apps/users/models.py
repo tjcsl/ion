@@ -697,6 +697,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.user_type == "simpleUser"
 
+    @property
+    def is_attendance_taker(self):
+        """Checks if user can take attendance for an eighth activity.
+
+        Returns:
+            Boolean
+
+        """
+        return (self.is_eighth_admin or
+                self.is_teacher or
+                self.is_attendance_user)
+
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
 
