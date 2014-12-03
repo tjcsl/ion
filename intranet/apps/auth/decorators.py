@@ -11,9 +11,7 @@ def admin_required(group):
 
     """
     def in_admin_group(user):
-        if user.is_authenticated():
-            return user.has_admin_permission(group)
-        return False
+        return user.is_authenticated() and user.has_admin_permission(group)
 
     return user_passes_test(in_admin_group)
 
@@ -21,3 +19,4 @@ def admin_required(group):
 # Convenience decorators for some of the apps
 eighth_admin_required = admin_required("eighth")
 announcements_admin_required = admin_required("announcements")
+attendance_taker_required = user_passes_test(lambda u: u.is_attendance_taker)
