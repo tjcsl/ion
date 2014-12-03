@@ -52,12 +52,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     as a valid user model that can have relations to other models in the
     database.
 
-    When creating a user object to fetch LDAP data, use User.get_user().
-    User() should only be used to add a user to the SQL database and
+    When creating a user object always use, use User.get_user(). User()
+    should only be used to add a user to the SQL database and
     User.objects.get() should not be used because users in LDAP are not
-    necessarily in the SQL database. If you need to retrieve a user
-    that you know exists in LDAP but might not be in the SQL db, use
-    User.get_and_propogate_user()
+    necessarily in the SQL database.
 
     """
 
@@ -76,11 +74,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     def get_user(cls, dn=None, id=None, username=None):
-        """Retrieve a user object from LDAP
+        """Retrieve a user object from LDAP and save it to the SQL
+        database if necessary.
 
         Creates a User object from a dn, user id, or a username based on
         data in the LDAP database. If the user also exists in the SQL
-        database, it is linked up with that model.
+        database, it is linked up with that model. If it does not exist,
+        then it is created.
 
         Args:
             - dn -- The full LDAP Distinguished Name of a user.
@@ -91,7 +91,25 @@ class User(AbstractBaseUser, PermissionsMixin):
             The User object if the user could be found in LDAP,
             otherwise User.DoesNotExist is raised.
         """
-        if dn is not None:
+        if id is not None:
+            try:
+                user = User.objects.get(id=id)
+            except User.DoesNotExist:
+                user_dn = User.dn_from_id(id)
+                if user_dn is not None:
+                    user = User.get_user(dn=user_dn)
+                else:
+                    raise User.DoesNotExist(
+                        "`User` with ID {} does not exist.".format(id)
+                    )
+
+        elif username is not None:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user_dn = User.dn_from_username(username)
+                user = User.get_user(dn=user_dn)
+        elif dn is not None:
             try:
                 user = User(dn=dn)
                 user.id = user.ion_id
@@ -101,41 +119,17 @@ class User(AbstractBaseUser, PermissionsMixin):
                 except User.DoesNotExist:
                     user.username = user.ion_username
 
-                return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
-                raise User.DoesNotExist("`User` with DN '{}' does not exist.".format(dn))
-        elif id is not None:
-            user_dn = User.dn_from_id(id)
-            if user_dn is not None:
-                return User.get_user(dn=user_dn)
-            else:
-                raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
-        elif username is not None:
-            user_dn = User.dn_from_username(username)
-            return User.get_user(dn=user_dn)
+                raise User.DoesNotExist(
+                    "`User` with DN '{}' does not exist.".format(dn)
+                )
         else:
             raise TypeError("get_user() requires at least one argument.")
 
-    @classmethod
-    def get_and_propogate_user(cls, dn=None, id=None, username=None):
-        """Retrieve a user object from LDAP and save it to the SQL
-        database if necessary.
-
-        Args:
-            - dn -- The full LDAP Distinguished Name of a user.
-            - id -- The user ID of the user to return.
-            - username -- The username of the user to return.
-
-        Returns:
-            The User object if the user could be found in LDAP,
-            otherwise User.DoesNotExist is raised.
-
-        """
-
-        user = User.get_user(dn=dn, id=id, username=username)
         if user.has_usable_password():
             user.set_unusable_password()
         user.save()
+
         return user
 
     @staticmethod

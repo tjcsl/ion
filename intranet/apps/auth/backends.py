@@ -84,7 +84,7 @@ class KerberosAuthenticationBackend(object):
         else:
             logger.debug("Authentication successful")
             try:
-                user = User.get_and_propogate_user(username=username)
+                user = User.get_user(username=username)
             except User.DoesNotExist:
                 # Shouldn't happen
                 logger.error("User successfully authenticated but not found "

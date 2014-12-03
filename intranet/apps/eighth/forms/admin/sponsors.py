@@ -24,7 +24,7 @@ class AutoCreateUserField(forms.ChoiceField):
             )
 
         try:
-            user = User.get_and_propogate_user(id=id_value)
+            user = User.get_user(id=id_value)
         except User.DoesNotExist:
             raise ValidationError(
                 self.error_messages["invalid_choice"],
