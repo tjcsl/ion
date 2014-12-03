@@ -119,7 +119,8 @@ $(function() {
                 activityDetailView.render()
             },
             error: function(xhr, status, error) {
-                if (xhr.getResponseHeader("content-type") == "text/plain") {
+                var content_type = xhr.getResponseHeader("content-type");
+                if (content_type == "text/plain" || content_type == "text/html") {
                     $(".error-feedback").html(xhr.responseText);
                     if (showForceButton) {
                         $("#signup-button").addClass("force");

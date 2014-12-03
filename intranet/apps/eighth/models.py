@@ -32,7 +32,10 @@ class EighthSponsor(models.Model):
     online_attendance = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = (("first_name", "last_name", "user", "online_attendance"),)
+        unique_together = (("first_name",
+                            "last_name",
+                            "user",
+                            "online_attendance"),)
 
     def __unicode__(self):
         return self.first_name + " " + self.last_name
@@ -365,12 +368,15 @@ class EighthScheduledActivity(models.Model):
             force = force or (("force" in request.GET) and
                               request.user.is_eighth_admin)
 
+        exception = eighth_exceptions.SignupException()
+
         if not force:
             # Check if the user who sent the request has the permissions
             # to change the target user's signups
             if request is not None:
                 if user != request.user and not request.user.is_eighth_admin:
-                    raise eighth_exceptions.SignupForbidden()
+                    exception.SignupForbidden = True
+                    raise exception
 
             if self.activity.both_blocks:
                 # Find all schedulings of the same activity on the same day
@@ -381,38 +387,38 @@ class EighthScheduledActivity(models.Model):
             # Check if the block has been locked
             if not self.activity.both_blocks:
                 if self.block.locked:
-                    raise eighth_exceptions.BlockLocked()
+                    exception.BlockLocked = True
             else:
                 for sched_act in all_sched_act:
                     if sched_act.block.locked:
-                        raise eighth_exceptions.BlockLocked()
+                        exception.BlockLocked = True
 
             # Check if the scheduled activity has been cancelled
             if not self.activity.both_blocks:
                 if self.cancelled:
-                    raise eighth_exceptions.ScheduledActivityCancelled()
+                    exception.ScheduledActivityCancelled = True
             else:
                 for sched_act in all_sched_act:
                     if sched_act.cancelled:
-                        raise eighth_exceptions.ScheduledActivityCancelled()
+                        exception.ScheduledActivityCancelled = True
 
             # Check if the activity has been deleted
             if self.activity.deleted:
-                raise eighth_exceptions.ActivityDeleted()
+                exception.ActivityDeleted = True
 
             # Check if the activity is full
             if not self.activity.both_blocks:
                 if self.is_full():
-                    raise eighth_exceptions.ActivityFull()
+                    exception.ActivityFull = True
             else:
                 for sched_act in all_sched_act:
                     if sched_act.is_full():
-                        raise eighth_exceptions.ActivityFull()
+                        exception.ActivityFull = True
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
                 if self.is_too_early_to_signup():
-                    raise eighth_exceptions.Presign()
+                    exception.Presign = True
 
             # Check if the user is already stickied into an activity
             if not self.activity.both_blocks:
@@ -429,7 +435,7 @@ class EighthScheduledActivity(models.Model):
                                                  scheduled_activity__activity=self.activity) \
                                          .exists()
             if in_stickie:
-                raise eighth_exceptions.Sticky()
+                exception.Sticky = True
 
             # Check if signup would violate one-a-day constraint
             if not self.activity.both_blocks and self.activity.one_a_day:
@@ -440,13 +446,18 @@ class EighthScheduledActivity(models.Model):
                                      scheduled_activity__activity=self.activity) \
                              .count() != 0
                 if in_act:
-                    raise eighth_exceptions.OneADay()
+                    exception.OneADay = True
 
             # Check if user is allowed in the activity if it's restricted
             if self.activity.restricted:
                 acts = EighthActivity.restricted_activities_available_to_user(user)
                 if self.activity.id not in acts:
-                    raise eighth_exceptions.Restricted()
+                    exception.Restricted = True
+
+        # If we've collected any errors, raise the exception and abort
+        # the signup attempt
+        if exception.errors:
+            raise exception
 
         # Everything's good to go - complete the signup
         if not self.activity.both_blocks:
