@@ -10,7 +10,8 @@ from django.db import models
 from django import template
 from django.conf import settings
 from django.core.cache import cache
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser, PermissionsMixin, UserManager)
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection
 from intranet.middleware import threadlocals
@@ -78,7 +79,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Retrieve a user object from LDAP
 
         Creates a User object from a dn, user id, or a username based on
-        data in the LDAP database.
+        data in the LDAP database. If the user also exists in the SQL
+        database, it is linked up with that model.
 
         Args:
             - dn -- The full LDAP Distinguished Name of a user.
@@ -93,7 +95,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 user = User(dn=dn)
                 user.id = user.ion_id
-                user.username = user.ion_username
+
+                try:
+                    user = User.objects.get(id=user.id)
+                except User.DoesNotExist:
+                    user.username = user.ion_username
 
                 return user
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
