@@ -21,3 +21,6 @@ class Announcement(models.Model):
     author = models.CharField(max_length=63)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return self.name
