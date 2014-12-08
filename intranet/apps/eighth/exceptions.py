@@ -1,48 +1,67 @@
 from django import http
 from rest_framework import status
+from collections import namedtuple
+
+m = namedtuple("Message", ["regular", "admin"])
 
 
 class SignupException(Exception):
     _messages = {
-        "SignupForbidden": "You may not sign this student up for activities.",
-        "ScheduledActivityCancelled": "This activity has been cancelled for this block.",
-        "ActivityDeleted": "This activity has been deleted.",
-        "ActivityFull": "This actity is full. You may not sign up for it at this time.",
-        "BlockLocked": "This block has been locked. Signup is not allowed at this time.",
-        "Presign": "You may not sign up for this activity more than two days in advance.",
-        "Sticky": "You may not switch out of a sticky activity.",
-        "OneADay": "You may only sign up for this activity once per day.",
-        "Restricted": "You may not sign up for this restricted activity."
+        "SignupForbidden": m("You may not sign this student up for activities.",
+                             "You may not sign this student up for activities. This should not be happening - "
+                             "contact an Intranet administrator."),
+        "ScheduledActivityCancelled": m("This activity has been cancelled for this block.",
+                                        "This activity has been cancelled for this block."),
+        "ActivityDeleted": m("This activity has been deleted.",
+                             "This activity has been deleted."),
+        "ActivityFull": m("This activity is full. You may not sign up for it at this time.",
+                          "This activity is full."),
+        "BlockLocked": m("This block has been locked. Signup is not allowed at this time.",
+                         "This block has been locked."),
+        "Presign": m("You may not sign up for this activity more than two days in advance.",
+                     "This activity can't be signed up for more two days in advance."),
+        "Sticky": m("You may not switch out of a sticky activity.",
+                    "This student is already in a sticky activity."),
+        "OneADay": m("You may only sign up for this activity once per day.",
+                     "This is a one-a-day activity."),
+        "Restricted": m("You may not sign up for this restricted activity.",
+                        "This activity is restricted for this student.")
     }
 
     def __init__(self):
         self.errors = set()
 
+    def __repr__(self):
+        return "SignupException(" + ", ".join(self.errors) + ")"
+
     def __setattr__(self, name, value):
         if name in SignupException._messages:
             if value:
                 self.errors.add(name)
-            else:
-                if name in self.errors:
+            elif name in self.errors:
                     self.errors.remove(name)
         super(SignupException, self).__setattr__(name, value)
 
-    @property
-    def messages(self):
-        return [SignupException._messages[e] for e in self.errors]
+    def messages(self, admin=False):
+        if admin:
+            a = "admin"
+        else:
+            a = "regular"
 
-    def as_response(self, html=True):
+        return [getattr(SignupException._messages[e], a) for e in self.errors]
+
+    def as_response(self, html=True, admin=False):
         if len(self.errors) <= 1:
             html = False
 
         if html:
             response = "<ul>"
-            for message in self.messages:
+            for message in self.messages(admin=admin):
                 response += "<li>" + message + "</li>"
             response += "</ul>"
             content_type = "text/html"
         else:
-            response = "\n".join(self.messages)
+            response = "\n".join(self.messages(admin=admin))
             content_type = "text/plain"
 
         return http.HttpResponse(response,

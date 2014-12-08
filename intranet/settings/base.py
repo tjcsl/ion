@@ -80,7 +80,7 @@ STATICFILES_FINDERS = (
 
 AUTHENTICATION_BACKENDS = (
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
-    "django.contrib.auth.backends.ModelBackend",
+    "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend"
 )
 
 AUTH_USER_MODEL = "users.User"

@@ -48,7 +48,9 @@ def eighth_signup_view(request, block_id=None):
         try:
             scheduled_activity.add_user(user, request)
         except SignupException as e:
-            return e.as_response()
+            show_admin_messages = (request.user.is_eighth_admin and
+                                   not request.user.is_student)
+            return e.as_response(admin=show_admin_messages)
 
         return http.HttpResponse("Successfully signed up for activity.")
     else:

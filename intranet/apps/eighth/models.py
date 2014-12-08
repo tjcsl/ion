@@ -367,7 +367,6 @@ class EighthScheduledActivity(models.Model):
         if request is not None:
             force = force or (("force" in request.GET) and
                               request.user.is_eighth_admin)
-
         exception = eighth_exceptions.SignupException()
 
         if not force:
