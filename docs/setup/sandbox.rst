@@ -6,7 +6,7 @@ Setting up Your Sandbox
 Virtualenv
 ----------
 
-SSH into Ion.
+SSH into Ion. You will need a CSL principal and to be added to the ion group.
 
 Navigate to ``/usr/local/virtualenvs``:
 
@@ -33,11 +33,11 @@ Return to an unprivileged user, navigate to your home directory, and activate yo
 Codebase
 --------
 
-While still in your home directory, clone the shared Git repository.
+While still in your home directory, clone the Git repository.
 
 .. code-block:: bash
 
-    $ git clone /shared/git/intranet3.git
+    $ git clone https://github.com/<Github username>/ion.git
 
 Checkout a local copy of the ``dev`` branch.
 
@@ -49,4 +49,4 @@ Install the requirements for a testing version of Intranet.
 
 .. code-block:: bash
 
-    $ pip install -r intranet3/requirements/local.py
+    $ pip install -r requirements/local.txt
