@@ -1,0 +1,18 @@
+# http://docs.travis-ci.com/user/build-configuration/
+
+language: python
+
+python:
+  - "2.7"
+
+env:
+  - PRODUCTION=TRUE
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - cp intranet/settings/travis_secret.py intranet/settings/secret.py
+
+script:
+  - ./manage test
