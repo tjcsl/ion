@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+Decorators that restrict views to certain types of users.
+
+"""
+
 from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import user_passes_test
@@ -16,7 +21,11 @@ def admin_required(group):
     return user_passes_test(in_admin_group)
 
 
-# Convenience decorators for some of the apps
+#: Restrict the wrapped view to eighth admins
 eighth_admin_required = admin_required("eighth")
+
+#: Restrict the wrapped view to announcements admins
 announcements_admin_required = admin_required("announcements")
+
+#: Restrict the wrapped view to users who can take attendance
 attendance_taker_required = user_passes_test(lambda u: u.is_attendance_taker)

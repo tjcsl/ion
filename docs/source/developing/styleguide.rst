@@ -6,18 +6,15 @@ Follow `PEP8 <http://www.python.org/dev/peps/pep-0008/>`_ (the official style gu
 
 Main points:
 
-- Use 4 spaces per indentation level
-
-- Separate top-level functions and class definitions with two blank lines
-
-- Separate method definitions inside a class with a single blank line
-
-- Use two spaces before inline comment and one space between the pound sign and comment
-
-- Use a plugin for your text editor to check for/remind you of PEP8 conventions
-
-- Capitalize and punctuate comments and git commit messages properly
-
+- Indent using 4 spaces.
+- Use underscores in favor of camel case for all names except the naems of classes.
+- Limit all lines to a maximum of 79 characters.
+- Limit the line length of docstrings or comments to 72 characters.
+- Separate top-level functions and class definitions with two blank lines.
+- Separate method definitions inside a class with a single blank line.
+- Use two spaces before inline comment and one space between the pound sign and comment/
+- Use a plugin for your text editor to check for/remind you of PEP8 conventions.
+- Capitalize and punctuate comments and git commit messages properly.
 
 Imports
 =======
@@ -74,7 +71,7 @@ Implicit relative imports
 
 
 Good:
- 
+
 .. code-block:: python
 
     from .models import SomeModel  # explicit relative import
@@ -85,27 +82,6 @@ Bad:
 .. code-block:: python
 
     from currentapp.models import MyModel  # implicit relative import
-
-
-
-Performance Guidelines
-======================
-
-Index everything you want to query on and only query with indexes.
-
-
-        "Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."
-        --John Woods comp.lang.c++
-
-.. "First, solve the problem. Then, write the code."
-.. --John Johnson
-
-.. “ Any fool can write code that a computer can understand. Good programmers write code that humans can understand. ”
-.. --Martin Fowler
-
-.. “Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it. ”
-.. --Brian Kernighan
-
 
 
 Reference

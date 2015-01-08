@@ -9,6 +9,15 @@ Auth App
     :undoc-members:
     :show-inheritance:
 
+:mod:`decorators` Module
+------------------------
+
+.. automodule:: intranet.apps.auth.decorators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 :mod:`forms` Module
 -------------------
 
@@ -17,21 +26,6 @@ Auth App
     :undoc-members:
     :show-inheritance:
 
-:mod:`models` Module
---------------------
-
-.. automodule:: intranet.apps.auth.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`tests` Module
--------------------
-
-.. automodule:: intranet.apps.auth.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 :mod:`views` Module
 -------------------

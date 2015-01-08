@@ -45,9 +45,9 @@ Developing for Intranet
 
 Source Code Documentation
 -------------------------
-Yay! referencing django docs! :django:setting:`ROOT_URLCONF` setting.
+Demo Django docs :django:setting:`ROOT_URLCONF` setting.
 
-and python docs! :class:`threading.Thread`
+and python docs :class:`threading.Thread`
 
 Go to the :doc:`Source Code Documentation<sourcedoc/intranet>`
 

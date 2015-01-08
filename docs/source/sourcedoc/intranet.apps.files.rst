@@ -1,10 +1,10 @@
-Filecenter App
-==============
+Files App
+=========
 
 :mod:`models` Module
 --------------------
 
-.. automodule:: intranet.apps.filecenter.models
+.. automodule:: intranet.apps.files.models
     :members:
     :undoc-members:
     :show-inheritance:
@@ -12,7 +12,7 @@ Filecenter App
 :mod:`views` Module
 -------------------
 
-.. automodule:: intranet.apps.filecenter.views
+.. automodule:: intranet.apps.files.views
     :members:
     :undoc-members:
     :show-inheritance:

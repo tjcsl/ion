@@ -1,14 +1,6 @@
 Dashboard App
 =============
 
-:mod:`models` Module
---------------------
-
-.. automodule:: intranet.apps.dashboard.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`views` Module
 -------------------
 
