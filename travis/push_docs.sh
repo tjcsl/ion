@@ -1,7 +1,7 @@
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo "Pushing docs to Github Pages"
 
-  git config --global user.email "<>"
+  git config --global user.email "ahamilto+ion@tjhsst.edu"
   git config --global user.name "Travis"
 
   cp -R docs/build/html $HOME/html_docs
