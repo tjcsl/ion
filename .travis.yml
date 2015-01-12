@@ -1,18 +1,27 @@
-# http://docs.travis-ci.com/user/build-configuration/
-
 language: python
 
 python:
-  - "2.7"
+  - '2.7'
+
+services:
+  - postgresql
 
 env:
-  - PRODUCTION=TRUE
+  matrix:
+    - PRODUCTION=TRUE
+  global:
+    secure: ZnhULER+g/NwgbNvGvqJOuO1LuQNKRvkK0tcRkjwbGKcwmD4kaOFQfJzIleDMN1cGd8SVKqw+Cij5Mz1URXnu9r18eS9PKuCfjP4GbSrwTzBpWZh1Ab6UeGhbo8W1jteLWybXYZoVBpDHvHMvl+/LtQEJ6TJ/OkdVWlOTNjyKCo=
 
 install:
   - pip install -r requirements.txt
 
 before_script:
   - cp intranet/settings/travis_secret.py intranet/settings/secret.py
+  - psql -c 'create database ion;' -U postgres
 
 script:
   - ./manage.py test
+  - ./travis/build_docs.sh
+
+after_success:
+  - ./travis/push_docs.sh
