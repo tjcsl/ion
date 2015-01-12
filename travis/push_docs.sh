@@ -8,7 +8,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   cd gh-pages
   cp -R $HOME/html_docs/* .
   git add -A .
-  git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
+  git commit --author "Travis <>" -m "Travis build $TRAVIS_BUILD_NUMBER"
   git push -f origin gh-pages
   push_status=$?
 
