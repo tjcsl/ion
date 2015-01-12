@@ -10,6 +10,13 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git add -A .
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
   git push -f origin gh-pages
+  push_status=$?
 
-  echo "Pushed docs to Github Pages"
+  if [ $push_status -ne 0 ]; then
+      echo "Pushed docs to Github Pages"
+  else
+      echo "Failed to push docs to Github Pages"
+  fi
+
+  exit $push_status
 fi
