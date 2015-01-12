@@ -10,6 +10,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   rm -rf gh-pages/*
   cd gh-pages
   cp -R $HOME/html_docs/* .
+  touch .nojekyll
   git add -A .
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
   git push -f origin gh-pages && echo "Pushed docs to Github Pages" || echo "Failed to push docs to Github Pages"
