@@ -11,19 +11,25 @@ def setup_host
     if `uname -s`.chomp == "Darwin"
       exit if !system("sudo route add 198.38.24.0/21 198.38.22.126")
     else
-      exit if !system("sudo route add 198.38.24.0/21 gw 198.38.22.126")
+      exit if !system("sudo route add -net 198.38.24.0 gw 198.38.22.126 netmask 255.255.248.0")
     end
   end
 end
 
 # Make sure the host computer is set up every time a vagrant command is run
-setup_host
+#setup_host
 
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+
   config.vm.provision "shell", path: "provision.sh"
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 end

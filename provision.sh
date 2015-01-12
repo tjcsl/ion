@@ -10,6 +10,12 @@ sudo apt-get install python-pip
 sudo pip install virtualenv
 sudo pip install virtualenvwrapper
 
+
+# Shell
+sudo cp /vagrant/config/bash_completion.d/fab /etc/bash_completion.d/fab
+grep "ion_env_setup.sh" ~/.bashrc || (echo "source .ion_env_setup.sh" >> ~/.bashrc)
+cp /vagrant/ion_env_setup.sh ~/.ion_env_setup.sh
+
 # PostsgreSQL
 sudo apt-get install postgresql postgresql-contrib
 
