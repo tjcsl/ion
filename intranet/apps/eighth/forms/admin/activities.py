@@ -63,5 +63,5 @@ class ActivityForm(forms.ModelForm):
         model = EighthActivity
         exclude = ["deleted"]
         widgets = {
-            "description": forms.TextInput()
+            "description": forms.CharField(widget=forms.Textarea)
         }
