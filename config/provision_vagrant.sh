@@ -1,7 +1,11 @@
 #!/bin/bash
 
 function devconfig() {
-    python3 -c "import json; f = open('/home/vagrant/intranet/config/devconfig.json', 'r'); print(json.load(f)['$1']); f.close();"
+    python3 -c "
+import json
+f = open('/home/vagrant/intranet/config/devconfig.json', 'r')
+print(json.load(f)['$1'])
+f.close()"
 }
 
 apt-get update
