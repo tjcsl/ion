@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+from secret import *
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -166,7 +167,7 @@ LDAP_REALM = "CSL.TJHSST.EDU"
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
 
 AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
-AUTHUSER_PASSWORD = "0.2nartd"
+# AUTHUSER_PASSWORD
 
 # LDAP schema config
 BASE_DN = "dc=tjhsst,dc=edu"

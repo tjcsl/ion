@@ -35,14 +35,12 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "ion",
-        "USER": "",
-        "PASSWORD": "",
+        "USER": "ion",
+        "PASSWORD": "pwd",
         "HOST": "localhost"
     }
 }
 
-
-# Make this unique, and don"t share it with anybody.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 CACHES["default"]["OPTIONS"]["DB"] = 2
@@ -116,4 +114,4 @@ INSTALLED_APPS += (
     "django_extensions",
 )
 
-STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'intranet/static/')
+STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "intranet/static/")

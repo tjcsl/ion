@@ -33,14 +33,14 @@ def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
 
-def runserver(port=None,
+def runserver(port=8080,
               debug_toolbar="yes",
               werkzeug="no",
               dummy_cache="no",
               short_cache="no",
               warn_invalid_template_vars="no"):
     """Clear compiled python files and start the Django dev server."""
-    if not port or not port.isdigit():
+    if not port or (not isinstance(port, int) and not port.isdigit()):
         abort("You must specify a port.")
 
     clean_pyc()

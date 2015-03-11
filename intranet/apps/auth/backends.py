@@ -38,7 +38,7 @@ class KerberosAuthenticationBackend(object):
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
         kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
-        kinit.expect("{}@{}'s Password:".format(username, settings.CSL_REALM))
+        kinit.expect(":")
         kinit.sendline(password)
         kinit.expect(pexpect.EOF)
         kinit.close()
@@ -48,7 +48,7 @@ class KerberosAuthenticationBackend(object):
 
         if exitstatus != 0:
             kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
-            kinit.expect("{}@{}'s Password:".format(username, settings.AD_REALM))
+            kinit.expect(":")
             kinit.sendline(password)
             kinit.expect(pexpect.EOF)
             kinit.close()
