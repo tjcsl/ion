@@ -70,9 +70,10 @@ class LDAPConnection(object):
                 auth_tokens = ldap.sasl.gssapi()
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
                 logger.info("Successfully connected to LDAP.")
-            except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS):
+            except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS) as e:
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.error("SASL bind failed - using simple bind")
+                logger.error(e)
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
     @property
@@ -134,7 +135,7 @@ class LDAPConnection(object):
 
         try:
             r = self.search(dn, filter, attributes)
-        except ldap.NO_SUCH_OBJECT as e:
+        except ldap.NO_SUCH_OBJECT:
             logger.error("No such user " + dn)
             raise
         return LDAPResult(r)

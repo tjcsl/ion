@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 require "json"
+require "time"
 
 devconfig = JSON.parse(File.read("config/devconfig.json"))
 
