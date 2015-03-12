@@ -19,7 +19,7 @@ MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["ion.tjhsst.edu"]
+ALLOWED_HOSTS = ["ion.tjhsst.edu", "localhost", "127.0.0.1"]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -52,6 +52,8 @@ MEDIA_ROOT = ""
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ""
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Absolute path to the directory static files should be collected to.
 # Don"t put anything in this directory yourself; store your static files
@@ -106,8 +108,8 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "intranet.middleware.environment.KerberosCacheMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -208,7 +210,6 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "south",
     "rest_framework",
     "intranet.apps",
     "intranet.apps.api",

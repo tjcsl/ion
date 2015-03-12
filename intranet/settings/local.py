@@ -71,12 +71,12 @@ class glob_list(list):
 
 INTERNAL_IPS = glob_list([
     "127.0.0.1",
-    "192.168.1.*",
+    "192.*.*.*",
+    "10.*.*.*",
     "198.38.*.*"
 ])
 
-SHOW_DEBUG_TOOLBAR = True if os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES" \
-    else False
+SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
 
 if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
