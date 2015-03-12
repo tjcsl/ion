@@ -10,6 +10,9 @@ f.close()"
 
 apt-get update
 
+# Timezone
+timedatectl set-timezone America/New_York
+
 # Kerberos
 DEBIAN_FRONTEND=noninteractive apt-get -y install krb5-user
 cp intranet/config/krb5.conf /etc/krb5.conf
@@ -22,6 +25,7 @@ pip install virtualenvwrapper
 apt-get -y install python-dev
 
 # LDAP
+apt-get -y install ldap-utils
 apt-get -y install libldap2-dev
 apt-get -y install libsasl2-dev
 apt-get -y install libssl-dev
@@ -74,7 +78,9 @@ service elasticsearch restart
 rm elasticsearch-0.90.7.deb
 
 # Ion
-echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" > intranet/intranet/settings/secret.py
+echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
+echo "MASTER_PASSWORD = \"swordfish\"" >> intranet/intranet/settings/secret.py
+
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
     mkvirtualenv ion && workon ion &&
@@ -82,7 +88,7 @@ sudo -i -u vagrant bash -c "
 "
 source .virtualenvs/ion/bin/activate
 cd intranet
-./manage.py syncdb
+./manage.py syncdb --noinput
 ./manage.py migrate
 cd ..
 chown -R vagrant: /home/vagrant

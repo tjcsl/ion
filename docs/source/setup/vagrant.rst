@@ -15,8 +15,8 @@ With Vagrant and Virtualbox installed, clone the Ion repository onto the host co
 
 In the ``config`` directory, copy the file ``devconfig.json.sample`` to ``devconfig.json`` and edit the properties in ``devconfig.json`` as appropriate. Ensure ``ssh_key`` is set to the same SSH key registered with GitHub (e.g. ``id_rsa``). Obtain the proper value for ``ldap_simple_bind_password`` from another Intranet developer of from the ``ion.tjhsst.edu`` VM.
 
-Run ``vagrant up && vagrant halt && vagrant up`` and wait while the development environment is set up. Once it is complete, run ``vagrant ssh`` to log in to the development box.
+Run ``vagrant up`` and wait while the development environment is set up. Once it is complete, run ``vagrant ssh`` to log in to the development box.
 
-Move into the ``intranet`` directory and run ``workon ion`` to load the dependencies. ``workon ion`` should always be the first thing you run after you SSH into the development box.
+Move into the ``intranet`` directory and run ``workon ion`` to load the Python dependencies. ``workon ion`` should always be the first thing you run after you SSH into the development box.
 
 The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
