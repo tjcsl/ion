@@ -157,39 +157,28 @@ def contributors():
 
 def linecount():
     """Get a total line count of files with these types:"""
-    with hide('running'):
+    with hide("running"):
         local("cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
 
 
 def load_fixtures():
-    """Clear and repopulate a database with data from fixtures."""
+    """Populate a database with data from fixtures."""
 
-    n = _choose_from_list(["Production database (PostgreSQL)",
-                           "Sandbox database (SQLite3)"],
-                          "Which database would you like to clear and repopulate?")
-    if n == 0:
-        if not confirm("Are you sure you want to clear the production database?"):
-            return 0
-        production = "TRUE"
-        local("dropdb ion")
-        local("createdb ion")
-    else:
-        production = "FALSE"
-        with settings(warn_only=True):
-            local("rm testing_database.db")
+    if local("pwd", capture=True) == PRODUCTION_DOCUMENT_ROOT:
+        abort("Refusing to automatically load "
+              "fixtures into production database")
 
-    with shell_env(PRODUCTION=production):
-        local("./manage.py syncdb")
-        files = ["intranet/apps/users/fixtures/users.json",
-                 "intranet/apps/eighth/fixtures/sponsors.json",
-                 "intranet/apps/eighth/fixtures/rooms.json",
-                 "intranet/apps/eighth/fixtures/blocks.json",
-                 "intranet/apps/eighth/fixtures/activities.json",
-                 "intranet/apps/eighth/fixtures/scheduled_activities.json",
-                 "intranet/apps/eighth/fixtures/signups_0.json",
-                 "intranet/apps/announcements/fixtures/announcements.json"]
-        for json_file in files:
-            local("./manage.py loaddata {}".format(json_file))
+    files = ["fixtures/users.json",
+             "fixtures/sponsors.json",
+             "fixtures/rooms.json",
+             "fixtures/blocks.json",
+             "fixtures/activities.json",
+             "fixtures/scheduled_activities.json",
+             "fixtures/signups.json",
+             "fixtures/announcements/announcements.json"]
+
+    for f in files:
+        local("./manage.py loaddata " + f)
 
 
 def deploy():
