@@ -16,11 +16,11 @@ class Announcement(models.Model):
             - updated -- The most recent date the announcement was updated
 
     """
-    name = models.CharField(max_length=127)
+    title = models.CharField(max_length=127)
     content = models.TextField()
     author = models.CharField(max_length=63)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return self.name
+        return self.title
