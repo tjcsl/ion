@@ -168,13 +168,13 @@ def load_fixtures():
         abort("Refusing to automatically load "
               "fixtures into production database")
 
-    files = ["fixtures/users.json",
-             "fixtures/sponsors.json",
-             "fixtures/rooms.json",
-             "fixtures/blocks.json",
-             "fixtures/activities.json",
-             "fixtures/scheduled_activities.json",
-             "fixtures/signups.json",
+    files = ["fixtures/users/users.json",
+             "fixtures/eighth/sponsors.json",
+             "fixtures/eighth/rooms.json",
+             "fixtures/eighth/blocks.json",
+             "fixtures/eighth/activities.json",
+             "fixtures/eighth/scheduled_activities.json",
+             "fixtures/eighth/signups.json",
              "fixtures/announcements/announcements.json"]
 
     for f in files:
