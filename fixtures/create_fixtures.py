@@ -117,6 +117,9 @@ for row in rows:
     sponsor_pks.append(pk)
 
     user_pk = row[4]
+    # Fix for old Lauducci ID number
+    if user_pk == 1009:
+        user_pk = 492
     if user_pk not in user_pks:
         username = user_attrs(user_pk, "iodineUid")
         obj = {
