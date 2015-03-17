@@ -100,11 +100,14 @@ rows = cur.fetchall()
 
 for row in rows:
     pk = row[0]
+    uid = row[4]
+    if uid in [0, 2, 3, 138, 501, 910, 7004]:
+        uid = None
     obj = {
         "pk": pk,
         "model": "eighth.EighthSponsor",
         "fields": {
-            "user": row[4] if row[4] not in (0, 2, 3, 138, 501, 910) else None,
+            "user": uid,
             "first_name": row[1],
             "last_name": row[2],
             "online_attendance": row[3] == "onlin"

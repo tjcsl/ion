@@ -28,7 +28,7 @@ class EighthSponsor(models.Model):
     """
     first_name = models.CharField(max_length=63)
     last_name = models.CharField(max_length=63)
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True)
     online_attendance = models.BooleanField(default=True)
 
     class Meta:
