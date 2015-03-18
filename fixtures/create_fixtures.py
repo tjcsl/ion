@@ -9,7 +9,6 @@ import ldap
 import ldap.sasl
 import sys
 import os
-from random import shuffle
 
 # Run this on iodine.tjhsst.edu
 
@@ -97,12 +96,21 @@ print("Blocks complete")
 ########## SPONSORS ##########
 cur.execute("SELECT * FROM eighth_sponsors;")
 rows = cur.fetchall()
+seen_uids = set()
 
 for row in rows:
     pk = row[0]
     uid = row[4]
-    if uid in [0, 2, 3, 138, 501, 910, 7004]:
+
+    # Fix for old Lauducci ID number
+    if uid == 1009:
+        uid = 492
+
+    if uid in [0, 2, 3, 138, 501, 910, 1009, 7004] or uid in seen_uids:
         uid = None
+    else:
+        seen_uids.add(uid)
+
     obj = {
         "pk": pk,
         "model": "eighth.EighthSponsor",
@@ -116,11 +124,8 @@ for row in rows:
     eighth_objects.append(obj)
     sponsor_pks.append(pk)
 
-    user_pk = row[4]
-    # Fix for old Lauducci ID number
-    if user_pk == 1009:
-        user_pk = 492
-    if user_pk not in user_pks:
+    user_pk = uid
+    if (user_pk is not None) and (user_pk not in user_pks):
         username = user_attrs(user_pk, "iodineUid")
         obj = {
             "pk": user_pk,
@@ -130,10 +135,10 @@ for row in rows:
                 "password": "!"
             }
         }
-    if username != "":
-        # print (row[1][:1] + row[2])[:15], user_pk
-        user_objects.append(obj)
-        user_pks.append(user_pk)
+        if username != "":
+            # print (row[1][:1] + row[2])[:15], user_pk
+            user_objects.append(obj)
+            user_pks.append(user_pk)
 
 json.dump(eighth_objects, f_sponsors)
 eighth_objects = []
@@ -167,7 +172,7 @@ rows = cur.fetchall()
 
 for row in rows:
     try:
-        rooms = [int(i) for i in row[3].split(",") if i in room_pks]
+        rooms = [int(i) for i in row[3].split(",") if int(i) in room_pks]
     except ValueError:
         rooms = []
 
@@ -204,7 +209,7 @@ rows = cur.fetchall()
 
 for pk, row in enumerate(rows):
     try:
-        rooms = [int(i) for i in row[3].split(",")]
+        rooms = [int(i) for i in row[3].split(",") if int(i) in room_pks]
     except ValueError:
         rooms = []
 
@@ -226,6 +231,7 @@ for pk, row in enumerate(rows):
             "comments": row[7],
         }
     }
+
     if row[0] in block_pks:
         eighth_objects.append(obj)
     else:
@@ -291,6 +297,7 @@ news = []
 for row in rows:
     date = row[4].strftime("%Y-%m-%d")
     author = user_attrs(row[3], "cn")
+
     obj = {
         "pk": row[0],
         "model": "announcements.Announcement",
