@@ -127,7 +127,7 @@
             </a>
 
             <form class="search" action="/search" method="get" autocomplete="off">
-                    <input type="text" name="q" value="{{ search_query | default:'Search' }}" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}">
+                    <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}">
                     <button type="submit" class="search-button">
                        <i class="fa fa-search"></i>
                     </button>
