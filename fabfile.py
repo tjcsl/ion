@@ -94,15 +94,15 @@ def restart_production_gunicorn(skip=False):
         local("supervisorctl restart ion")
 
 
-def clear_sessions(input=None):
+def clear_sessions(venv=None):
     """Clear all sessions for all sandboxes or for production."""
     if "VIRTUAL_ENV" in os.environ:
         ve = os.path.basename(os.environ["VIRTUAL_ENV"])
     else:
         ve = ""
 
-    if input is not None:
-        ve = input
+    if venv is not None:
+        ve = venv
     else:
         ve = prompt("Enter the name of the "
                     "sandbox whose sessions you would like to delete, or "
