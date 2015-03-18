@@ -168,6 +168,11 @@ def load_fixtures():
         abort("Refusing to automatically load "
               "fixtures into production database")
 
+    if not confirm("Are you sure you want to load all fixtures? This could "
+                   "have unintended consequences if the database "
+                   "is not empty."):
+            abort("Aborted.")
+
     files = ["fixtures/users/users.json",
              "fixtures/eighth/sponsors.json",
              "fixtures/eighth/rooms.json",
