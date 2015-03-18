@@ -9,6 +9,7 @@ import ldap
 import ldap.sasl
 import sys
 import os
+import datetime
 
 # Run this on iodine.tjhsst.edu
 
@@ -258,9 +259,10 @@ for pk, row in enumerate(rows):
             "pk": pk + 1,
             "model": "eighth.EighthSignup",
             "fields": {
+                "time": str(datetime.datetime.now()),
                 "user": row[2],
-                "activity": scheduled_activity,
-                "has_pass": row[3] == 1
+                "scheduled_activity": scheduled_activity,
+                "after_deadline": row[3] == 1
             }
         }
         if scheduled_activity not in bad_sa:
