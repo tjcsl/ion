@@ -57,18 +57,9 @@ class KerberosAuthenticationBackend(object):
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
-            kgetcred = pexpect.spawnu("/usr/bin/kgetcred ldap/{}@{}".format(settings.HOST, settings.LDAP_REALM))
-            kgetcred.expect(pexpect.EOF)
-            kgetcred.close()
-
-            if kgetcred.exitstatus == 0:
-                logger.debug("Kerberos got ticket for ldap service")
-                return True
-            else:
-                logger.error("Kerberos failed to get ticket for LDAP service")
-                os.system("/usr/bin/kdestroy")
-                return False
+            return True
         else:
+            logger.debug("Kerberos failed to authorize {}".format(username))
             os.system("/usr/bin/kdestroy")
             return False
 
