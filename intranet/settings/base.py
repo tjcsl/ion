@@ -232,6 +232,9 @@ EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOG_LEVEL = "DEBUG" if os.getenv("PRODUCTION", "FALSE") == "FALSE" else "INFO"
+_log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+if os.getenv("LOG_LEVEL", None) in _log_levels:
+    LOG_LEVEL = os.environ["LOG_LEVEL"]
 
 LOGGING = {
     "version": 1,
