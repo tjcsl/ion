@@ -289,7 +289,7 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
 
-    comments = models.CharField(max_length=100, blank=True)
+    comments = models.CharField(max_length=1000, blank=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
