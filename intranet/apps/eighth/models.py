@@ -26,8 +26,8 @@ class EighthSponsor(models.Model):
         - name -- The name of the sponsor
 
     """
-    first_name = models.CharField(max_length=63)
-    last_name = models.CharField(max_length=63)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True)
     online_attendance = models.BooleanField(default=True)
 
@@ -48,7 +48,7 @@ class EighthRoom(models.Model):
         - Attribute -- Description.
 
     """
-    name = models.CharField(max_length=63)
+    name = models.CharField(max_length=100)
     capacity = models.SmallIntegerField(default=-1)
 
     unique_together = (("name", "capacity"),)
@@ -74,8 +74,8 @@ class EighthActivity(models.Model):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    name = models.CharField(max_length=63, unique=True)
-    description = models.CharField(max_length=500, blank=True)
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
 
@@ -289,7 +289,7 @@ class EighthScheduledActivity(models.Model):
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(User, through="EighthSignup", related_name="eighthscheduledactivity_set")
 
-    comments = models.CharField(max_length=500, blank=True)
+    comments = models.CharField(max_length=100, blank=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
@@ -518,7 +518,7 @@ class EighthSignup(models.Model):
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
     previous_activity_name = models.CharField(max_length=100, blank=True)
-    previous_activity_sponsors = models.CharField(max_length=100, blank=True)
+    previous_activity_sponsors = models.CharField(max_length=200, blank=True)
 
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
