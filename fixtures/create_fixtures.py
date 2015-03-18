@@ -223,7 +223,6 @@ for pk, row in enumerate(rows):
             "rooms": rooms,
             "attendance_taken": row[4] == 1,
             "cancelled": row[5] == 1,
-            "room_changed": row[6] == 1,
             "comments": row[7],
         }
     }
