@@ -42,7 +42,7 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EighthBlockDetailSerializer(serializers.Serializer):
-    id = serializers.Field()
+    id = serializers.ReadOnlyField()
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=1)
@@ -166,10 +166,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             EighthScheduledActivity.rooms \
                                    .through \
                                    .objects \
-                                   .filter(eighthscheduledactivity_id__in=
-                                           scheduled_activity_ids) \
-                                   .select_related("eighthroom",
-                                                   "eighthscheduledactivity")
+                                   .filter(eighthscheduledactivity_id__in=scheduled_activity_ids) \
+                                   .select_related("eighthroom", "eighthscheduledactivity")
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
