@@ -74,7 +74,7 @@ class EighthActivity(models.Model):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
