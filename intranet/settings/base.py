@@ -192,6 +192,11 @@ ELASTICSEARCH_USER_DOC_TYPE = "user"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "USE_ABSOLUTE_URLS": True,
+
+    # Return native `Date` and `Time` objects in `serializer.data`
+    "DATETIME_FORMAT": None,
+    "DATE_FORMAT": None,
+    "TIME_FORMAT": None,
 }
 
 TEMPLATE_DIRS = (
