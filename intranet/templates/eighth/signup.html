@@ -132,14 +132,20 @@
                                                     {{ b.block_letter }}
                                                 </span>
 
-                                                <span class="selected-activity" title="{{ b.current_signup.name_with_flags }}">
+                                                <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags }}{% endif %}">
                                                     {% if b.locked %}
                                                         <i class="fa fa-lock"></i>
                                                     {% endif %}
                                                     {% if b.current_signup_cancelled %}
                                                         <strong>Cancelled</strong> -
                                                     {% endif %}
-                                                    {{ b.current_signup.name_with_flags }}
+                                                    {% if b.current_signup %}
+                                                        {{ b.current_signup.name_with_flags }}
+                                                    {% else %}
+                                                        <span class="no-activity-selected">
+                                                            No activity selected
+                                                        </span>
+                                                    {% endif %}
                                                 </span>
                                             </div>
                                         </a>
