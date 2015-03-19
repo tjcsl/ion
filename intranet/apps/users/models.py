@@ -182,7 +182,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         introduces an inherent security risk. To prevent human retrieval
         of a value from the cache, the plaintext key is first signed
         with the secret key and then hashed using the SHA1 algorithm.
-        That way, one would need the secret key to query for a specifi
+        That way, one would need the secret key to query for a specific
         cached value and an existing key would indicate nothing about
         the relevance of the cooresponding value. For maximum
         effectiveness, cache attributes of an object separately so the
