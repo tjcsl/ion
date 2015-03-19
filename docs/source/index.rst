@@ -25,7 +25,7 @@ Setup
 -----
 
 - :doc:`Setting up the server<setup/server>`
-- :doc:`Setting up a sandbox<setup/sandbox>`
+- :doc:`Setting up a the Vagrant development environment<setup/vagrant>`
 
 
 Architecture
