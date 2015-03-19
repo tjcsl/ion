@@ -13,6 +13,9 @@ apt-get update
 # Timezone
 timedatectl set-timezone America/New_York
 
+# DNS
+echo 198.38.16.8 iodine-ldap.tjhsst.edu >> /etc/hosts
+
 # Kerberos
 DEBIAN_FRONTEND=noninteractive apt-get -y install krb5-user
 cp intranet/config/krb5.conf /etc/krb5.conf
