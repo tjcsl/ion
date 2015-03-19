@@ -20,3 +20,5 @@ Run ``vagrant up && vagrant halt && vagrant up`` and wait while the development 
 Move into the ``intranet`` directory and run ``workon ion`` to load the Python dependencies. ``workon ion`` should always be the first thing you run after you SSH into the development box.
 
 The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
+
+If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet directory``.
