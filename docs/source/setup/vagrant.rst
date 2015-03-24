@@ -21,4 +21,4 @@ Move into the ``intranet`` directory and run ``workon ion`` to load the Python d
 
 The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
 
-If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet directory``.
+If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet`` directory.
