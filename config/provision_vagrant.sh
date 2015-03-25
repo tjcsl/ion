@@ -57,6 +57,8 @@ sqlcmd(){
 sqlcmd "CREATE DATABASE ion;"
 sqlcmd "CREATE USER ion;"
 sqlcmd "ALTER USER ion WITH PASSWORD 'pwd';"
+sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.3/main/pg_hba.conf
+service postgresql restart
 
 # Redis
 wget http://download.redis.io/redis-stable.tar.gz
