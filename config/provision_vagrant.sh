@@ -84,8 +84,9 @@ service elasticsearch restart
 rm elasticsearch-0.90.7.deb
 
 # Ion
-echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
-echo "MASTER_PASSWORD = \"swordfish\"" >> intranet/intranet/settings/secret.py
+
+grep AUTHUSER_PASSWORD intranet/settings/secret.py > /dev/null || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
+grep MASTER_PASSWORD intranet/settings/secret.py > /dev/null || echo "MASTER_PASSWORD = \"swordfish\"" >> intranet/intranet/settings/secret.py
 
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
