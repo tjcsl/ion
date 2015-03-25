@@ -52,17 +52,18 @@ class LDAPConnection(object):
         conn: The singleton LDAP connection.
 
     """
-    def __init__(self):
-        """Initialize a singleton LDAPConnection object.
+
+    @property
+    def conn(self):
+        """Lazily load and return the raw connection from threadlocals.
 
         Connect to the LDAP server specified in settings and bind
         using the GSSAPI protocol. The requisite KRB5CCNAME
         environmental variable should have already been set by the
         SetKerberosCache middleware.
-
         """
-        if (not hasattr(_thread_locals, "ldap_conn")) \
-           or (_thread_locals.ldap_conn is None):
+
+        if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP...")
             _thread_locals.ldap_conn = ldap.ldapobject.ReconnectLDAPObject(settings.LDAP_SERVER, trace_stack_limit=None)
 
@@ -75,11 +76,6 @@ class LDAPConnection(object):
                 logger.error("SASL bind failed - using simple bind")
                 logger.error(e)
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
-
-    @property
-    def raw_connection(self):
-        """Return the raw connection from threadlocals
-        """
 
         return _thread_locals.ldap_conn
 
@@ -110,7 +106,7 @@ class LDAPConnection(object):
         # tip-toe around unicode bugs
         attributes = [str(attr) for attr in attributes]
 
-        return _thread_locals.ldap_conn.search_s(dn, ldap.SCOPE_SUBTREE,
+        return self.conn.search_s(dn, ldap.SCOPE_SUBTREE,
                                                  filter, attributes)
 
     def user_attributes(self, dn, attributes):
