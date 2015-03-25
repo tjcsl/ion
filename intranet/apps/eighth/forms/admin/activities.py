@@ -63,5 +63,5 @@ class ActivityForm(forms.ModelForm):
         model = EighthActivity
         exclude = ["deleted"]
         widgets = {
-            "description": forms.CharField(widget=forms.Textarea)
+            "description": forms.Textarea(attrs={"rows": 5, "cols": 46})
         }
