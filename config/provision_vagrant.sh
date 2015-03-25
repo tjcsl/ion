@@ -45,6 +45,7 @@ if ! grep "ion_env_setup.sh" /etc/bash.bashrc > /dev/null; then
     echo "source /etc/ion_env_setup.sh" >> /etc/bash.bashrc
 fi
 cp intranet/config/ion_env_setup.sh /etc/ion_env_setup.sh
+touch .bash_history
 
 # PostsgreSQL
 apt-get -y install postgresql
