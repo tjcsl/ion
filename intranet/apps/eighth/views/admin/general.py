@@ -18,9 +18,9 @@ from ...utils import get_start_date, set_start_date
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
     all_activities = EighthActivity.undeleted_objects.order_by("name")
-    blocks_after_start_date = EighthBlock.objects \
-                                         .filter(date__gte=start_date)\
-                                         .order_by("date")
+    blocks_after_start_date = (EighthBlock.objects
+                                          .filter(date__gte=start_date)
+                                          .order_by("date"))
     groups = Group.objects.order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.order_by("last_name", "first_name")

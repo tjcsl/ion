@@ -112,10 +112,10 @@ def room_utilization_for_block_view(request):
     }
 
     if block is not None:
-        scheduled_activities = EighthScheduledActivity.objects \
-                                                      .exclude(activity__deleted=True) \
-                                                      .exclude(cancelled=True) \
-                                                      .filter(block=block)
+        scheduled_activities = (EighthScheduledActivity.objects
+                                                       .exclude(activity__deleted=True)
+                                                       .exclude(cancelled=True)
+                                                       .filter(block=block))
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "Room Utilization for Block"
@@ -160,13 +160,13 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
-        sched_acts = EighthScheduledActivity.objects \
-                                            .exclude(activity__deleted=True) \
-                                            .exclude(cancelled=True) \
-                                            .filter(block__date__gte=start_block.date,
-                                                    block__date__lte=end_block.date) \
-                                            .order_by("block__date",
-                                                      "block__block_letter")
+        sched_acts = (EighthScheduledActivity.objects
+                                             .exclude(activity__deleted=True)
+                                             .exclude(cancelled=True)
+                                             .filter(block__date__gte=start_block.date,
+                                                     block__date__lte=end_block.date)
+                                             .order_by("block__date",
+                                                       "block__block_letter"))
 
         context = {
             "scheduled_activities": sched_acts,

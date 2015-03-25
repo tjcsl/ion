@@ -14,8 +14,10 @@ class AuthenticateForm(AuthenticationForm):
     """Implements a login form.
 
     Attributes:
-        - username -- The username text field.
-        - password -- The password text field.
+        username
+            The username text field.
+        password
+            The password text field.
 
     """
     username = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder": "Username"}), error_messages={"required": "Invalid username"})

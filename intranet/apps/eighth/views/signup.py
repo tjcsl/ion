@@ -35,11 +35,11 @@ def eighth_signup_view(request, block_id=None):
             return http.HttpResponseNotFound("Given user does not exist.")
 
         try:
-            scheduled_activity = EighthScheduledActivity.objects \
-                                                        .exclude(activity__deleted=True) \
-                                                        .exclude(cancelled=True) \
-                                                        .get(block=bid,
-                                                             activity=aid)
+            scheduled_activity = (EighthScheduledActivity.objects
+                                                         .exclude(activity__deleted=True)
+                                                         .exclude(cancelled=True)
+                                                         .get(block=bid,
+                                                              activity=aid))
 
         except EighthScheduledActivity.DoesNotExist:
             return http.HttpResponseNotFound("Given activity not scheduled "
@@ -75,9 +75,9 @@ def eighth_signup_view(request, block_id=None):
                 return redirect("index")
 
         try:
-            block = EighthBlock.objects \
-                               .prefetch_related("eighthscheduledactivity_set") \
-                               .get(id=block_id)
+            block = (EighthBlock.objects
+                                .prefetch_related("eighthscheduledactivity_set")
+                                .get(id=block_id))
         except EighthBlock.DoesNotExist:
             if EighthBlock.objects.count() == 0:
                 # No blocks have been added yet

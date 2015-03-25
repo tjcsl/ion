@@ -12,23 +12,22 @@ class ActivitySelectionForm(forms.Form):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
         if block is not None:
-            queryset = block.activities \
-                            .exclude(deleted=True) \
-                            .exclude(eighthscheduledactivity__cancelled=True)
+            queryset = (block.activities
+                             .exclude(deleted=True)
+                             .exclude(eighthscheduledactivity__cancelled=True))
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) |
                                      (Q(sponsors=None) &
                                       Q(activity__sponsors=sponsor)))
-                activity_ids = EighthScheduledActivity.objects \
-                                                      .filter(block=block) \
-                                                      .filter(sponsoring_filter) \
-                                                      .values_list("activity__id", flat=True)
-                print activity_ids
+                activity_ids = (EighthScheduledActivity.objects
+                                                       .filter(block=block)
+                                                       .filter(sponsoring_filter)
+                                                       .values_list("activity__id", flat=True))
                 queryset = EighthActivity.objects.filter(id__in=activity_ids)
         else:
             if sponsor is not None:
-                queryset = EighthActivity.undeleted_objects \
-                                         .filter(sponsors=sponsor)
+                queryset = (EighthActivity.undeleted_objects
+                                          .filter(sponsors=sponsor))
             else:
                 queryset = EighthActivity.undeleted_objects.all()
 
@@ -54,8 +53,8 @@ class ActivityForm(forms.ModelForm):
         # shouldn't be a problem unless TJ hires a teacher who loves
         # math so much that their name starts with the number 2. Even if
         # that does happen the consequences are not significant.
-        self.fields["users_allowed"].queryset = User.objects \
-                                                    .filter(username__startswith="2")
+        self.fields["users_allowed"].queryset = (User.objects
+                                                     .filter(username__startswith="2"))
 
         self.fields["presign"].label = "48 Hour"
 

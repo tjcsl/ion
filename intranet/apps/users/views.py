@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from cStringIO import StringIO
-from functools import wraps
 import io
 import logging
 import os
@@ -20,8 +19,9 @@ def profile_view(request, user_id=None):
     """Displays a view of a user's profile.
 
     Args:
-        - user_id -- the ID of the user whose profile is being viewed.
-                     If not specified, show the user's own profile.
+        user_id
+            The ID of the user whose profile is being viewed. If not
+            specified, show the user's own profile.
 
     """
     if user_id is not None:
@@ -39,10 +39,11 @@ def picture_view(request, user_id, year=None):
     """Displays a view of a user's picture.
 
     Args:
-        - user_id -- the ID of the user whose picture is being
-                     fetched.
-        - year -- the user's picture from this year is fetched.
-                  If not specified, use the preferred picture.
+        user_id
+            The ID of the user whose picture is being fetched.
+        year
+            The user's picture from this year is fetched. If not
+            specified, use the preferred picture.
 
     """
     user = User.get_user(id=user_id)

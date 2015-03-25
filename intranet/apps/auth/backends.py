@@ -24,8 +24,10 @@ class KerberosAuthenticationBackend(object):
         """Attempts to create a Kerberos ticket for a user.
 
         Args:
-            - username -- The username.
-            - password -- The password.
+            username
+                The username.
+            password
+                The password.
 
         Returns:
             Boolean indicating success or failure of ticket creation
@@ -69,8 +71,10 @@ class KerberosAuthenticationBackend(object):
         Creates a new user if one is not already in the database.
 
         Args:
-            - username -- The username of the `User` to authenticate.
-            - password -- The password of the `User` to authenticate.
+            username
+                The username of the `User` to authenticate.
+            password
+                The password of the `User` to authenticate.
 
         Returns:
             `User`
@@ -95,7 +99,8 @@ class KerberosAuthenticationBackend(object):
         custom authentication backend.
 
         Args:
-            - user_id -- The user id of the user to fetch.
+            user_id
+                The user id of the user to fetch.
 
         Returns:
             User or None
@@ -120,8 +125,10 @@ class MasterPasswordAuthenticationBackend(object):
         Creates a new user if one is not already in the database.
 
         Args:
-            - username -- The username of the `User` to authenticate.
-            - password -- The master password.
+            username
+                The username of the `User` to authenticate.
+            password
+                The master password.
 
         Returns:
             `User`
@@ -145,7 +152,8 @@ class MasterPasswordAuthenticationBackend(object):
         custom authentication backend.
 
         Args:
-            - user_id -- The user id of the user to fetch.
+            user_id
+                The user id of the user to fetch.
 
         Returns:
             User or None

@@ -81,16 +81,16 @@ def delinquent_students_view(request):
                     "end"]
 
     if set(request.GET.keys()).intersection(set(query_params)):
-        delinquents = EighthSignup.objects \
-                                  .filter(was_absent=True,
-                                          scheduled_activity__block__date__gte=start_date_filter,
-                                          scheduled_activity__block__date__lte=end_date_filter) \
-                                  .values("user") \
-                                  .annotate(absences=Count("user")) \
-                                  .filter(absences__gte=lower_absence_limit_filter,
-                                          absences__lte=upper_absence_limit_filter) \
-                                  .values("user", "absences") \
-                                  .order_by("user")
+        delinquents = (EighthSignup.objects
+                                   .filter(was_absent=True,
+                                           scheduled_activity__block__date__gte=start_date_filter,
+                                           scheduled_activity__block__date__lte=end_date_filter)
+                                   .values("user")
+                                   .annotate(absences=Count("user"))
+                                   .filter(absences__gte=lower_absence_limit_filter,
+                                           absences__lte=upper_absence_limit_filter)
+                                   .values("user", "absences")
+                                   .order_by("user"))
 
         user_ids = [d["user"] for d in delinquents]
         delinquent_users = User.objects.filter(id__in=user_ids).order_by("id")
@@ -159,11 +159,11 @@ def after_deadline_signup_view(request):
     except ValueError:
         end_date = start_date + timedelta(days=7)
 
-    signups = EighthSignup.objects \
-                          .filter(after_deadline=True,
-                                  time__gte=start_date,
-                                  time__lte=end_date) \
-                          .order_by("time")
+    signups = (EighthSignup.objects
+                           .filter(after_deadline=True,
+                                   time__gte=start_date,
+                                   time__lte=end_date)
+                           .order_by("time"))
 
     context = {
         "admin_page_title": "After Deadline Signups",
@@ -194,9 +194,9 @@ def activities_without_attendance_view(request):
 
     if block is not None:
         start_date = get_start_date(request)
-        scheduled_activities = block.eighthscheduledactivity_set \
-                                    .filter(block__date__gte=start_date,
-                                            attendance_taken=False)
+        scheduled_activities = (block.eighthscheduledactivity_set
+                                     .filter(block__date__gte=start_date,
+                                             attendance_taken=False))
 
         context["scheduled_activities"] = scheduled_activities
 
@@ -213,27 +213,27 @@ def reject_outstanding_passes_view(request):
         except EighthBlock.DoesNotExist:
             raise http.Http404
 
-        activity, created = EighthActivity.objects \
-                                          .get_or_create(name="Z - 8th Period Pass Not Received",
-                                                         deleted=False)
+        activity, created = (EighthActivity.objects
+                                           .get_or_create(name="Z - 8th Period Pass Not Received",
+                                                          deleted=False))
         activity.restricted = True
         activity.sticky = True
 
         if not activity.description:
-            activity.description = "Pass received from the 8th period " \
-                                   "office was not turned in."
+            activity.description = ("Pass received from the 8th period "
+                                    "office was not turned in.")
 
         activity.save()
 
-        pass_not_received, created = EighthScheduledActivity.objects \
-                                                            .get_or_create(block=block,
-                                                                           activity=activity)
+        pass_not_received, created = (EighthScheduledActivity.objects
+                                                             .get_or_create(block=block,
+                                                                            activity=activity))
 
-        EighthSignup.objects \
-                    .filter(scheduled_activity__block=block,
-                            after_deadline=True,
-                            pass_accepted=False) \
-                    .update(scheduled_activity=pass_not_received)
+        EighthSignup.objects.filter(
+                scheduled_activity__block=block,
+                after_deadline=True,
+                pass_accepted=False
+            ).update(scheduled_activity=pass_not_received)
 
         messages.success(request, "Successfully rejected outstanding passes.")
 
@@ -272,13 +272,13 @@ def out_of_building_schedules_view(request, block_id=None):
 
         if len(room) == 1:
             room = room[0]
-            signups = EighthSignup.objects \
-                                  .filter(scheduled_activity__block=block) \
-                                  .filter(Q(scheduled_activity__rooms=room) |
-                                          (Q(scheduled_activity__rooms=None) &
-                                           Q(scheduled_activity__activity__rooms=room))) \
-                                  .distinct() \
-                                  .order_by("scheduled_activity__activity")
+            signups = (EighthSignup.objects
+                                   .filter(scheduled_activity__block=block)
+                                   .filter(Q(scheduled_activity__rooms=room) |
+                                           (Q(scheduled_activity__rooms=None) &
+                                            Q(scheduled_activity__activity__rooms=room)))
+                                   .distinct()
+                                   .order_by("scheduled_activity__activity"))
             context["signups"] = signups
 
     if request.resolver_match.url_name == "eighth_admin_export_out_of_building_schedules":
@@ -287,8 +287,8 @@ def out_of_building_schedules_view(request, block_id=None):
     else:
         response = http.HttpResponse(content_type="text/csv")
         date = datetime.strftime(block.date, "%m_%d_%Y")
-        response["Content-Disposition"] = \
-            "attachment; filename=\"out_of_building_schedules_{}.csv\"".format(date)
+        filename = "\"out_of_building_schedules_{}.csv\"".format(date)
+        response["Content-Disposition"] = "attachment; filename=" + filename
 
         writer = csv.writer(response)
         writer.writerow(["Last Name",

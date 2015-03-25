@@ -53,9 +53,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         # Find all scheduled activities that don't correspond to
         # deleted activities
-        scheduled_activities = block.eighthscheduledactivity_set \
-                                    .exclude(activity__deleted=True) \
-                                    .select_related("activity")
+        scheduled_activities = (block.eighthscheduledactivity_set
+                                     .exclude(activity__deleted=True)
+                                     .select_related("activity"))
 
         for scheduled_activity in scheduled_activities:
             activity_info = {
@@ -79,48 +79,43 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "restricted": scheduled_activity.activity.restricted,
                 "both_blocks": scheduled_activity.activity.both_blocks
             }
-            scheduled_activity_to_activity_map[scheduled_activity.id] = \
-                scheduled_activity.activity.id
+            scheduled_activity_to_activity_map[scheduled_activity.id] = scheduled_activity.activity.id
 
-            activity_list[scheduled_activity.activity.id] = \
-                activity_info
+            activity_list[scheduled_activity.activity.id] = activity_info
 
         # Find the number of students signed up for every activity
         # in this block
-        activities_with_signups = EighthSignup.objects \
-                                              .filter(scheduled_activity__block=block) \
-                                              .exclude(scheduled_activity__activity__deleted=True) \
-                                              .values_list("scheduled_activity__activity_id") \
-                                              .annotate(user_count=Count("scheduled_activity"))
+        activities_with_signups = (EighthSignup.objects
+                                               .filter(scheduled_activity__block=block)
+                                               .exclude(scheduled_activity__activity__deleted=True)
+                                               .values_list("scheduled_activity__activity_id")
+                                               .annotate(user_count=Count("scheduled_activity")))
 
         for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
 
-        sponsors_dict = EighthSponsor.objects \
-                                     .values_list("id",
-                                                  "user_id",
-                                                  "first_name",
-                                                  "last_name")
+        sponsors_dict = (EighthSponsor.objects
+                                      .values_list("id",
+                                                   "user_id",
+                                                   "first_name",
+                                                   "last_name"))
 
         all_sponsors = dict((sponsor[0],
                              {"user_id": sponsor[1],
                               "name": sponsor[3]}) for sponsor in sponsors_dict)
 
         activity_ids = scheduled_activities.values_list("activity__id")
-        sponsorships = EighthActivity.sponsors \
-                                     .through \
-                                     .objects \
-                                     .filter(eighthactivity_id__in=activity_ids) \
-                                     .select_related("sponsors") \
-                                     .values("eighthactivity", "eighthsponsor")
+        sponsorships = (EighthActivity.sponsors
+                                      .through
+                                      .objects
+                                      .filter(eighthactivity_id__in=activity_ids)
+                                      .select_related("sponsors")
+                                      .values("eighthactivity", "eighthsponsor"))
 
         scheduled_activity_ids = scheduled_activities.values_list("id", flat=True)
-        overidden_sponsorships = \
-            EighthScheduledActivity.sponsors \
-            .through \
-            .objects \
-            .filter(eighthscheduledactivity_id__in=scheduled_activity_ids) \
-            .values("eighthscheduledactivity", "eighthsponsor")
+        overidden_sponsorships = (EighthScheduledActivity.sponsors.through.objects
+                                                         .filter(eighthscheduledactivity_id__in=scheduled_activity_ids)
+                                                         .values("eighthscheduledactivity", "eighthsponsor"))
 
         for sponsorship in sponsorships:
             activity_id = int(sponsorship["eighthactivity"])
@@ -136,8 +131,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 name = None
 
-            activity_list[activity_id]["sponsors"] \
-                .append(sponsor["name"] or name)
+            activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
 
         for sponsorship in overidden_sponsorships:
             scheduled_activity_id = sponsorship["eighthscheduledactivity"]
@@ -154,27 +148,22 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 name = None
 
-            activity_list[activity_id]["sponsors"] \
-                .append(sponsor["name"] or name)
+            activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
 
-        roomings = EighthActivity.rooms \
-                                 .through \
-                                 .objects \
-                                 .filter(eighthactivity_id__in=activity_ids) \
-                                 .select_related("eighthroom", "eighthactivity")
-        overidden_roomings = \
-            EighthScheduledActivity.rooms \
-                                   .through \
-                                   .objects \
-                                   .filter(eighthscheduledactivity_id__in=scheduled_activity_ids) \
-                                   .select_related("eighthroom", "eighthscheduledactivity")
+        roomings = (EighthActivity.rooms.through.objects
+                                  .filter(eighthactivity_id__in=activity_ids)
+                                  .select_related("eighthroom", "eighthactivity"))
+        overidden_roomings = (EighthScheduledActivity.rooms
+                                                     .through
+                                                     .objects
+                                                     .filter(eighthscheduledactivity_id__in=scheduled_activity_ids)
+                                                     .select_related("eighthroom", "eighthscheduledactivity"))
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
-            activity_list[activity_id]["roster"]["capacity"] += \
-                rooming.eighthroom.capacity
+            activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
@@ -187,8 +176,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 activity_list[activity_id]["roster"]["capacity"] = 0
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
-            activity_list[activity_id]["roster"]["capacity"] += \
-                rooming.eighthroom.capacity
+            activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
         for scheduled_activity in scheduled_activities:
             if scheduled_activity.capacity is not None:

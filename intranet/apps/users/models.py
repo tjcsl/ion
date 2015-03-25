@@ -83,9 +83,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         then it is created.
 
         Args:
-            - dn -- The full LDAP Distinguished Name of a user.
-            - id -- The user ID of the user to return.
-            - username -- The username of the user to return.
+            dn
+                The full LDAP Distinguished Name of a user.
+            id
+                The user ID of the user to return.
+            username
+                The username of the user to return.
 
         Returns:
             The User object if the user could be found in LDAP,
@@ -137,10 +140,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Get a dn, given an ID.
 
         Args:
-            - id -- the ID of the user.
+            id
+                the ID of the user.
 
         Returns:
-            - String if dn was found, otherwise None
+            String if dn was found, otherwise None
 
         """
         logger.debug("Fetching DN of User with ID {}.".format(id))
@@ -194,8 +198,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         server can't access private data from the cache.
 
         Args:
-            - identifier -- The plaintext identifier (generally of the \
-                            form "<dn>.<attribute>" for the cached data).
+            identifier
+                The plaintext identifier (generally of the form
+                "<dn>.<attribute>" for the cached data).
 
         Returns:
             String
@@ -213,7 +218,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns whether a user is a member of a certain group.
 
         Args:
-            - group: the name of a group (string) or a group object
+            group
+                The name of a group (string) or a group object
 
         Returns:
             Boolean
@@ -546,8 +552,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                 perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
 
             if "perm-showpictures-self" in default:
-                perms["self"]["default"] = \
-                    (default["perm-showpictures-self"][0] == "TRUE")
+                perms["self"]["default"] = (
+                        default["perm-showpictures-self"][0] == "TRUE"
+                    )
 
             photos_result = c.search(self.dn,
                                      "(objectclass=iodinePhoto)",
@@ -733,7 +740,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Checks if an attribute is visible to the public.
 
         Args:
-            - ldap_perm_name -- the name of the permission to check.
+            ldap_perm_name
+                The name of the permission to check.
 
         Returns:
             Boolean
@@ -937,8 +945,10 @@ class Class(object):
     to LDAP classes.
 
     Attributes:
-        - dn -- The DN of the cooresponding tjhsstClass in LDAP
-        - section_id -- The section ID of the class
+        dn
+            The DN of the cooresponding tjhsstClass in LDAP
+        section_id
+            The section ID of the class
 
     """
 
@@ -946,7 +956,8 @@ class Class(object):
         """Initialize the Class object.
 
         Args:
-            - dn -- The full DN of the class.
+            dn
+                The full DN of the class.
 
         """
         self.dn = dn
@@ -1037,7 +1048,8 @@ class Class(object):
         getattr() to fetch an attribute.
 
         Args:
-            - name -- The string name of the attribute.
+            name
+                The string name of the attribute.
 
         Returns:
             Either a list of strings or a string, depending on the attribute fetched.
@@ -1106,10 +1118,14 @@ class Address(object):
     """Represents a user's address.
 
     Attributes:
-        - street -- The street name of the address.
-        - city -- The city name of the address.
-        - state -- The state name of the address.
-        - postal_code -- The zip code of the address.
+        street
+            The street name of the address.
+        city
+            The city name of the address.
+        state
+            The state name of the address.
+        postal_code
+            The zip code of the address.
 
     """
 
@@ -1135,7 +1151,8 @@ class Grade(object):
         """Initialize the Grade object.
 
         Args:
-            - graduation_year -- The numerical graduation year of the user
+            graduation_year
+                The numerical graduation year of the user
         """
         self._year = int(graduation_year)
         today = datetime.now()

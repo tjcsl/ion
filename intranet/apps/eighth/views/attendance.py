@@ -93,9 +93,10 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             activity = form_list[1].cleaned_data["activity"]
 
         block = form_list[0].cleaned_data["block"]
-        scheduled_activity = EighthScheduledActivity.objects \
-                                                    .get(block=block,
-                                                         activity=activity)
+        scheduled_activity = EighthScheduledActivity.objects.get(
+                                    block=block,
+                                    activity=activity
+                                )
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
@@ -104,51 +105,51 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
-_unsafe_choose_scheduled_activity_view = \
-    EighthAttendanceSelectScheduledActivityWizard.as_view(
-        EighthAttendanceSelectScheduledActivityWizard.FORMS,
-        condition_dict={"activity": should_show_activity_list}
+_unsafe_choose_scheduled_activity_view = (
+        EighthAttendanceSelectScheduledActivityWizard.as_view(
+            EighthAttendanceSelectScheduledActivityWizard.FORMS,
+            condition_dict={"activity": should_show_activity_list}
+        )
     )
-
-teacher_choose_scheduled_activity_view = \
-    attendance_taker_required(_unsafe_choose_scheduled_activity_view)
-
-admin_choose_scheduled_activity_view = \
-    eighth_admin_required(_unsafe_choose_scheduled_activity_view)
+teacher_choose_scheduled_activity_view = (
+        attendance_taker_required(_unsafe_choose_scheduled_activity_view)
+    )
+admin_choose_scheduled_activity_view = (
+        eighth_admin_required(_unsafe_choose_scheduled_activity_view)
+    )
 
 
 @attendance_taker_required
 def take_attendance_view(request, scheduled_activity_id):
     try:
-        scheduled_activity = EighthScheduledActivity.objects \
-                                                    .select_related("activity",
-                                                                    "block",
-                                                                    "sponsors",
-                                                                    "rooms",
-                                                                    "members") \
-                                                    .get(cancelled=False,
-                                                         activity__deleted=False,
-                                                         id=scheduled_activity_id)
+        scheduled_activity = (EighthScheduledActivity.objects
+                                                     .select_related("activity",
+                                                                     "block",
+                                                                     "sponsors",
+                                                                     "rooms",
+                                                                     "members")
+                                                     .get(cancelled=False,
+                                                          activity__deleted=False,
+                                                          id=scheduled_activity_id))
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
     if request.method == "POST":
         present_user_ids = request.POST.keys()
-        absent_signups = EighthSignup.objects \
-                                     .filter(scheduled_activity=scheduled_activity) \
-                                     .exclude(user__in=present_user_ids)
+        absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
+                                      .exclude(user__in=present_user_ids))
         absent_signups.update(was_absent=True)
 
-        present_signups = EighthSignup.objects \
-                                      .filter(scheduled_activity=scheduled_activity,
-                                              user__in=present_user_ids)
+        present_signups = (EighthSignup.objects
+                                       .filter(scheduled_activity=scheduled_activity,
+                                               user__in=present_user_ids))
         present_signups.update(was_absent=False)
 
-        passes = EighthSignup.objects \
-                             .filter(scheduled_activity=scheduled_activity,
-                                     after_deadline=True,
-                                     pass_accepted=False) \
-                             .update(was_absent=True)
+        passes = (EighthSignup.objects
+                              .filter(scheduled_activity=scheduled_activity,
+                                      after_deadline=True,
+                                      pass_accepted=False)
+                              .update(was_absent=True))
 
         scheduled_activity.attendance_taken = True
         scheduled_activity.save()
@@ -160,20 +161,20 @@ def take_attendance_view(request, scheduled_activity_id):
 
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
     else:
-        passes = EighthSignup.objects \
-                             .select_related("user") \
-                             .filter(scheduled_activity=scheduled_activity,
-                                     after_deadline=True,
-                                     pass_accepted=False)
+        passes = (EighthSignup.objects
+                              .select_related("user")
+                              .filter(scheduled_activity=scheduled_activity,
+                                      after_deadline=True,
+                                      pass_accepted=False))
 
         users = scheduled_activity.members.exclude(eighthsignup__in=passes)
         members = []
 
-        absent_user_ids = EighthSignup.objects \
-                                      .select_related("user") \
-                                      .filter(scheduled_activity=scheduled_activity,
-                                              was_absent=True) \
-                                      .values_list("user__id", flat=True)
+        absent_user_ids = (EighthSignup.objects
+                                       .select_related("user")
+                                       .filter(scheduled_activity=scheduled_activity,
+                                               was_absent=True)
+                                       .values_list("user__id", flat=True))
 
         for user in users:
             members.append({
@@ -224,16 +225,19 @@ def accept_all_passes_view(request, scheduled_activity_id):
         return http.HttpResponseNotAllowed(["POST"])
 
     try:
-        scheduled_activity = EighthScheduledActivity.objects \
-                                                    .get(id=scheduled_activity_id)
+        scheduled_activity = EighthScheduledActivity.objects.get(
+                                    id=scheduled_activity_id
+                                )
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
-    EighthSignup.objects \
-                .filter(after_deadline=True,
-                        scheduled_activity=scheduled_activity) \
-                .update(pass_accepted=True,
-                        was_absent=False)
+    EighthSignup.objects.filter(
+            after_deadline=True,
+            scheduled_activity=scheduled_activity
+        ).update(
+            pass_accepted=True,
+            was_absent=False
+        )
 
     if "admin" in request.path:
         url_name = "eighth_admin_take_attendance"
