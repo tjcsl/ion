@@ -138,16 +138,18 @@ SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
 SESSION_COOKIE_AGE = 60 * 60 * 2
 SESSION_SAVE_EVERY_REQUEST = True
 
+months = 60 * 60 * 24 * 30
 CACHE_AGE = {
-    "dn_id_mapping": 60 * 60 * 24 * 30 * 12,
-    "user_attribute": 60 * 60 * 24 * 30 * 2,
-    "user_classes": 60 * 60 * 24 * 30 * 6,
-    "user_photo": 60 * 60 * 24 * 30 * 6,
-    "user_grade": 60 * 60 * 24 * 30 * 10,
-    "class_teacher": 60 * 60 * 24 * 30 * 6,
-    "class_attribute": 60 * 60 * 24 * 30 * 6,
-    "ldap_permissions": 60 * 60 * 24 * 30 * 2,
+    "dn_id_mapping": 12 * months,
+    "user_attribute": 2 * months,
+    "user_classes": 6 * months,
+    "user_photo": 6 * months,
+    "user_grade": 10 * months,
+    "class_teacher": 6 * months,
+    "class_attribute": 6 * months,
+    "ldap_permissions": int(0.5 * months),
 }
+del months
 
 
 CACHES = {
