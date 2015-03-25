@@ -16,6 +16,10 @@ def setup_host
     end
     puts cmd
     exit if !system(cmd)
+
+    if !system("ping -c1 198.38.27.6")
+      exit "Can not reach KDC for LOCAL.TJHSST.EDU realm. Try toggling VPN and deleting and re-adding the route."
+    end
   end
 end
 
