@@ -522,7 +522,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if cached:
             logger.debug("Photo permissions of user {} loaded "
                          "from cache.".format(self.id))
-            logger.debug(cached)
             return cached
         else:
             c = LDAPConnection()
@@ -721,8 +720,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         try:
-            return (str(threadlocals.request().user.id) == str(self.id))
-        except AttributeError:
+            requesting_user_id = threadlocals.request().user.id
+            auth_backend = threadlocals.request().session["_auth_user_backend"]
+            master_pwd_backend = "MasterPasswordAuthenticationBackend"
+
+            return (str(requesting_user_id) == str(self.id) and
+                    not auth_backend.endswith(master_pwd_backend))
+        except (AttributeError, KeyError):
             return False
 
     def attribute_is_visible(self, ldap_perm_name):
