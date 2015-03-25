@@ -137,7 +137,7 @@ class MasterPasswordAuthenticationBackend(object):
 
             logger.debug("Authentication with master password successful")
             return user
-
+        logger.debug("Master password authentication failed")
         return None
 
     def get_user(self, user_id):

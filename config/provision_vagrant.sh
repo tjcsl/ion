@@ -86,7 +86,9 @@ rm elasticsearch-0.90.7.deb
 # Ion
 
 grep AUTHUSER_PASSWORD intranet/settings/secret.py > /dev/null || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
-grep MASTER_PASSWORD intranet/settings/secret.py > /dev/null || echo "MASTER_PASSWORD = \"swordfish\"" >> intranet/intranet/settings/secret.py
+master_pwd='swordfish'
+master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
+grep MASTER_PASSWORD intranet/settings/secret.py > /dev/null || echo "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
 
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
