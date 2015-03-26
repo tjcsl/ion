@@ -1,8 +1,9 @@
 $(function() {
-    $("select[multiple=multiple]").selectize({
+    // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
+    $("select[multiple=multiple]").each(function(i, el){$(e).selectize({
         plugins: ["remove_button"],
-    });
-    $("select[multiple!=multiple]").selectize({});
+    })});
+    $("select[multiple!=multiple]").each(function(i, el){$(el).selectize({})})
     $(".selectize-loading").remove()
     $("input.datepicker, input[name=date]").datepicker();
 
