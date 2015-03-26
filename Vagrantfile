@@ -7,7 +7,7 @@ require "time"
 devconfig = JSON.parse(File.read("config/devconfig.json"))
 
 def setup_host
-  if !(`netstat -nr`.include? "198.38.24/21")
+  if !(`netstat -nr`.include? "198.38.24/21") and ["up", "resume", "ssh", "reload"].include? ARGV[0]
     puts "Adding routes to host computer..."
     if `uname -s`.chomp == "Darwin"
       cmd = "sudo route add 198.38.24.0/21 198.38.22.126"
@@ -18,7 +18,8 @@ def setup_host
     exit if !system(cmd)
 
     if !system("ping -c1 198.38.27.6")
-      exit "Can not reach KDC for LOCAL.TJHSST.EDU realm. Try toggling VPN and deleting and re-adding the route."
+      puts "Can not reach KDC for LOCAL.TJHSST.EDU realm. Try toggling VPN and deleting and re-adding the route."
+      exit
     end
   end
 end
