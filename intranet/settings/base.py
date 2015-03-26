@@ -114,7 +114,7 @@ MIDDLEWARE_CLASSES = (
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
-    # "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
+    "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
 )
 
 ROOT_URLCONF = "intranet.urls"
