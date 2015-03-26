@@ -1,6 +1,6 @@
 $(function() {
     // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
-    $("select[multiple=multiple]").each(function(i, el){$(e).selectize({
+    $("select[multiple=multiple]").each(function(i, el){$(el).selectize({
         plugins: ["remove_button"],
     })});
     $("select[multiple!=multiple]").each(function(i, el){$(el).selectize({})})
