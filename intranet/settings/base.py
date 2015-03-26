@@ -113,8 +113,7 @@ MIDDLEWARE_CLASSES = (
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    # Uncomment the next line for simple clickjacking protection:
-    # "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
 )
 
 ROOT_URLCONF = "intranet.urls"

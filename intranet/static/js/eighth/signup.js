@@ -120,41 +120,29 @@ $(function() {
             },
             error: function(xhr, status, error) {
                 var content_type = xhr.getResponseHeader("content-type");
-                if (content_type == "text/plain" || content_type == "text/html") {
+                if (xhr.status == 403 &&
+                    (content_type == "text/plain" ||
+                     content_type.indexOf("text/plain;") == 0 ||
+                     content_type == "text/html" ||
+                     content_type.indexOf("text/html;") == 0)) {
+
                     $(".error-feedback").html(xhr.responseText);
                     if (showForceButton) {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }
                 } else {
-                    $(".error-feedback").html("There was an error signing you up for this activity.")
                     console.error(xhr.responseText);
+                    if (xhr.status == 401) {
+                        $(".error-feedback").html("You must log in to sign up for this activity.")
+                        window.location.replace("/login?next=" + window.location.pathname)
+                    } else {
+                        $(".error-feedback").html("There was an error signing you up for this activity.")
+                    }
                 }
             },
             complete: callback
         });
-
-        // $.post("/eighth/signup", {
-        //     "uid": uid,
-        //     "bid": bid,
-        //     "aid": aid
-        // }, function(response) {
-        //     if(d.trim() == "success") {
-        //         console.log("Successfully signed up for "+aid+" on "+bid);
-                // $d = $("#activity-detail[data-aid="+aid+"]");
-                // $c = $("li.day>a[data-bid="+bid+"]>div");
-                // // Replace the text on the day selector
-                // $c.html($c.html().replace(
-                //     $c.html().split("</span>")[1].trim(),
-                //     $("h3", $d).html().trim()
-                // ));
-        //         $("#activity-list li.signed-up").removeClass("signed-up");
-        //         $("#activity-list li[data-activity-id="+aid+"]").addClass("signed-up");
-        //         $("#signup-spinner-container")
-        //             .html("<i class='icon-ok' style='color: green; zoom: 1.5' />")
-        //             .css("margin-left","2px");
-        //     } else alert(d);
-        // });
     };
 
     $("#activity-list li").each(function(index) {
