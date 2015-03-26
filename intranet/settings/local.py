@@ -103,7 +103,9 @@ if SHOW_DEBUG_TOOLBAR:
 
     MIDDLEWARE_CLASSES = (
         "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ) + MIDDLEWARE_CLASSES
+    ) + MIDDLEWARE_CLASSES + (
+        "intranet.middleware.templates.StripNewlinesMiddleware",
+    )
 
     INSTALLED_APPS += (
         "debug_toolbar",
