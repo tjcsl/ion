@@ -19,6 +19,6 @@ class StripNewlinesMiddleware(object):
         is_html = (response["Content-Type"] == "text/html" or
                    response["Content-Type"].startswith("text/html;"))
         if is_html and settings.DEBUG:
-            response.content = re.sub(r'\n(\s*)\n', '\n', response.content)
-            response.content = re.sub(r'^(\s*)\n', '', response.content)
+            response.content = re.sub(ur'\n(\s*)\n', '\n', response.content.decode("utf-8"))
+            response.content = re.sub(ur'^(\s*)\n', '', response.content.decode("utf-8"))
         return response
