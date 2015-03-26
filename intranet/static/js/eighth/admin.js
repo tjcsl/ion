@@ -1,7 +1,8 @@
 $(function() {
-    $("select").selectize({
-        plugins: ['remove_button'],
+    $("select[multiple=multiple]").selectize({
+        plugins: ["remove_button"],
     });
+    $("select[multiple!=multiple]").selectize({});
     $("input.datepicker, input[name=date]").datepicker();
 
 
