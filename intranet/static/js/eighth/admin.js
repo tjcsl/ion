@@ -1,5 +1,7 @@
 $(function() {
-    $("select").selectize({});
+    $("select").selectize({
+        plugins: ["remove_button"],
+    });
     $("input.datepicker, input[name=date]").datepicker();
 
 
