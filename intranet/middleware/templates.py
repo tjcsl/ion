@@ -44,7 +44,4 @@ class AdminSelectizeLoadingIndicatorMiddleware(object):
                 </div>
                 """
             response.content = re.sub(r'</select>', replacement, response.content.decode("utf-8"))
-            return response
-
-
-
+        return response
