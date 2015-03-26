@@ -19,6 +19,32 @@ class StripNewlinesMiddleware(object):
         is_html = (response["Content-Type"] == "text/html" or
                    response["Content-Type"].startswith("text/html;"))
         if is_html and settings.DEBUG:
-            response.content = re.sub(ur'\n(\s*)\n', '\n', response.content.decode("utf-8"))
-            response.content = re.sub(ur'^(\s*)\n', '', response.content.decode("utf-8"))
+            response.content = re.sub(r'\n(\s*)\n', '\n', response.content.decode("utf-8"))
+            response.content = re.sub(r'^(\s*)\n', '', response.content.decode("utf-8"))
         return response
+
+
+class AdminSelectizeLoadingIndicatorMiddleware(object):
+
+    """Automatically add a loading placeholder for Selectize inputs
+    in admin templates.
+
+    This is probably not a good practice, but it really needs to be done
+    server-side for the loading indicators to show up instantly.
+
+    """
+
+    def process_response(self, request, response):
+        if request.path.startswith("/eighth/admin"):
+            replacement = """</select>
+                <div class="selectize-control selectize-loading">
+                    <div class="selectize-input disabled">
+                        <input type="text" value="Loading..." disabled>
+                    </div>
+                </div>
+                """
+            response.content = re.sub(r'</select>', replacement, response.content.decode("utf-8"))
+            return response
+
+
+

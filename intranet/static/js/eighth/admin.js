@@ -3,6 +3,7 @@ $(function() {
         plugins: ["remove_button"],
     });
     $("select[multiple!=multiple]").selectize({});
+    $(".selectize-loading").remove()
     $("input.datepicker, input[name=date]").datepicker();
 
 

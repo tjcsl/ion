@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 import os
@@ -114,6 +114,7 @@ MIDDLEWARE_CLASSES = (
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
+    "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
 )
 
 ROOT_URLCONF = "intranet.urls"
