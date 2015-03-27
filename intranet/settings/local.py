@@ -116,4 +116,8 @@ INSTALLED_APPS += (
     "django_extensions",
 )
 
+TEMPLATE_CONTEXT_PROCESSORS += [
+    "django.core.context_processors.debug"
+]
+
 STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "intranet/static/")
