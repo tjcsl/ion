@@ -152,6 +152,12 @@
                                     {% endfor %}
                                 </div>
                         </li>
+                    {% empty %}
+                        
+                            <div class="day-title">
+                            There are no eighth period blocks scheduled at this time.
+                            </div>
+                        
                     {% endfor %}
                 {% endspaceless %}
             </ul>
@@ -166,7 +172,9 @@
                     {{ block_info.date|date:"l, F d, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
                 </h2>
                 <h4>
-                    {{ block_info.block_letter }} Block
+                    {% if block_info.block_letter %}
+                        {{ block_info.block_letter }} Block
+                    {% endif %}
                 </h4>
             </div>
 
@@ -225,6 +233,10 @@
                             </span>
                             <span class="activity-name">{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}</span>
                         </li>
+                    {% empty %}
+                    <li>
+                        There are no activities scheduled at this time.
+                    </li>
                     {% endfor %}
                 </ul>
             </div>
