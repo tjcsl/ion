@@ -13,6 +13,7 @@ $(document).ready(function() {
     $("#activity-list .backbtn").click(function() {
         $("#activity-detail").removeClass("visible");
         $("#activity-list").removeClass("hidden");
+        $("#activity-list li[data-activity-id]").removeClass("selected");
     })
 
     eighthResize = function() {
