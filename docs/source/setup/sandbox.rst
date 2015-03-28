@@ -1,9 +1,9 @@
-***********************
-Setting up Your Sandbox
-***********************
+********************************
+Setting up Your Sandbox Manually
+********************************
 
 
-**Sandboxes are deprecated.** Instead, :doc:`use Vagrant<vagrant>` to manage your development environment.
+**Manual creation of sandboxes is deprecated.** Instead, :doc:`use Vagrant<vagrant>` to manage your development environment.
 
 ----------
 Virtualenv
