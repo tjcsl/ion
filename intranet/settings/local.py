@@ -112,8 +112,4 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar_line_profiler",
     )
 
-INSTALLED_APPS += (
-    "django_extensions",
-)
-
 STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "intranet/static/")

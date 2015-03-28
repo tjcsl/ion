@@ -226,7 +226,8 @@ INSTALLED_APPS = (
     "intranet.apps.groups",
     "intranet.apps.schedule",
     "intranet.middleware.environment",
-    "widget_tweaks"
+    "widget_tweaks",
+    "django_extensions",
 )
 
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
