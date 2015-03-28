@@ -45,11 +45,16 @@ $(function() {
         },
 
         showDetail: function(e) {
+
             $(previousSelection).removeClass("selected");
 
             var $target = $(e.target);
             if (!$target.is("li")) {
                 $target = $target.parents("li");
+            }
+
+            if(!$target.attr("data-activity-id")) {
+                return;
             }
 
             $target.addClass("selected");

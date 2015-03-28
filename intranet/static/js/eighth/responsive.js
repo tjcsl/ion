@@ -3,7 +3,7 @@ $(document).ready(function() {
         return $("#activity-detail").css("right").split("px")[0] < 0;
     }
 
-    $("#activity-list li").click(function() {
+    $("#activity-list li[data-activity-id]").click(function() {
         if(is_small()) {
             $("#activity-detail").addClass("visible");
             $("#activity-list").addClass("hidden");
@@ -13,6 +13,7 @@ $(document).ready(function() {
     $("#activity-list .backbtn").click(function() {
         $("#activity-detail").removeClass("visible");
         $("#activity-list").removeClass("hidden");
+        $("#activity-list li[data-activity-id]").removeClass("selected");
     })
 
     eighthResize = function() {
