@@ -199,22 +199,18 @@ def deploy():
 
     if obnoxious_mode:
         # TODO: ensure the build is green
+        if not confirm("This will apply any available migrations to the database. Has the database been backed up?"):
+            abort("Aborted.")
         if not confirm("Are you sure you want to deploy?"):
-            abort("Aborted.")
-        if not confirm("This will kill all active sessions. Are you still sure?"):
-            abort("Aborted.")
-        if not confirm("Has the database been migrated?"):
-            abort("Aborted.")
-        if not confirm("Are you absolutely sure you want to deploy? This is your last chance to stop the deployment"):
             abort("Aborted.")
 
     with lcd(PRODUCTION_DOCUMENT_ROOT):
         with shell_env(PRODUCTION="TRUE"):
             local("git pull")
-            clear_sessions("ion")
-            clear_cache(0)
+            local("pip install --upgrade -r requirements.txt")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
                 local("./manage.py collectstatic")
+                local("./manage.py migrate")
             restart_production_gunicorn(True)
 
-    puts("Deploy complete!")
+    puts("Deploy complete.")
