@@ -26,4 +26,6 @@ To create and add yourself to the global administrator group, run the following 
     >>> user = User.objects.get(username="YOURUSERNAME")
     >>> group = Group.objects.create(name="admin_all")
     >>> user.groups.add(group)
+    >>> user.is_superuser = True
+    >>> user.save()
 
