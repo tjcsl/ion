@@ -49,7 +49,8 @@ class LDAPConnection(object):
     queries.
 
     Attributes:
-        conn: The singleton LDAP connection.
+        conn
+            The singleton LDAP connection.
 
     """
 
@@ -80,21 +81,23 @@ class LDAPConnection(object):
         return _thread_locals.ldap_conn
 
     def search(self, dn, filter, attributes):
-        """Search LDAP and return an LDAPResult.
+        """Search LDAP and return an :class:`LDAPResult`.
 
         Search LDAP with the given dn and filter and return the given
-        attributes in an LDAPResult object.
+        attributes in an :class:`LDAPResult` object.
 
         Args:
-            dn: The string representation of the distinguished name
+            dn
+                The string representation of the distinguished name
                 (DN) of the entry at which to start the search.
-            filter: The string representation of the filter to apply to
+            filter
+                The string representation of the filter to apply to
                 the search.
-            attributes: A list of LDAP attributes (as strings)
-                to retrieve.
+            attributes
+                A list of LDAP attributes (as strings) to retrieve.
 
         Returns:
-            An LDAPResult object.
+            An :class:`LDAPResult` object.
 
         Raises:
             Should raise stuff but it doesn't yet
@@ -106,22 +109,23 @@ class LDAPConnection(object):
         # tip-toe around unicode bugs
         attributes = [str(attr) for attr in attributes]
 
-        return self.conn.search_s(dn, ldap.SCOPE_SUBTREE,
-                                                 filter, attributes)
+        return self.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
 
     def user_attributes(self, dn, attributes):
         """Fetch a list of attributes of the specified user.
 
         Fetch LDAP attributes of a tjhsstStudent or a tjhsstTeacher. The
-        LDAPResult will contain an empty set of results if the user does
-        not exist.
+        :class:`LDAPResult` will contain an empty set of results if the
+        user does not exist.
 
         Args:
-            dn: The full DN of the user
-            attributes: A list of the LDAP fields to fetch (strings)
+            dn
+                The full DN of the user
+            attributes
+                A list of the LDAP fields to fetch (strings)
 
         Returns:
-            LDAPResult object (empty if no results)
+            :class:`LDAPResult` object (empty if no results)
 
         """
         logger.debug("Fetching attributes '{}' of user "
@@ -139,15 +143,18 @@ class LDAPConnection(object):
     def class_attributes(self, dn, attributes):
         """Fetch a list of attributes of the specified class.
 
-        Fetch LDAP attributes of a tjhsstClass. The LDAPResult will
-        contain an empty set of results if the class does not exist.
+        Fetch LDAP attributes of a tjhsstClass. The :class:`LDAPResult`
+        will contain an empty set of results if the class does not
+        exist.
 
         Args:
-            dn: The full DN of the class
-            attributes: A list of the LDAP fields to fetch (strings)
+            dn
+                The full DN of the class
+            attributes
+                A list of the LDAP fields to fetch (strings)
 
         Returns:
-            LDAPResult object (empty if no results)
+            :class:`LDAPResult` object (empty if no results)
 
         """
         logger.debug("Fetching attributes '" + str(attributes) +
@@ -169,7 +176,8 @@ class LDAPResult(object):
     the results in various ways.
 
     Attributes:
-        result: the raw result of an LDAP query
+        result
+            The raw result of an LDAP query
 
     """
 
