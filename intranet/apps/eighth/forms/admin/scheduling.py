@@ -27,13 +27,15 @@ class ScheduledActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthScheduledActivity
-        fields = ["scheduled",
-                  "block",
-                  "activity",
-                  "rooms",
-                  "capacity",
-                  "sponsors",
-                  "comments"]
+        fields = [
+            "scheduled",
+            "block",
+            "activity",
+            "rooms",
+            "capacity",
+            "sponsors",
+            "comments"
+        ]
         widgets = {
             "capacity": forms.TextInput(),
             "comments": forms.Textarea(attrs={"rows": 2, "cols": 30})

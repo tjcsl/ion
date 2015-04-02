@@ -5,8 +5,8 @@ from collections import defaultdict
 import cPickle
 from django import http
 from django.contrib import messages
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import redirect, render
+from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.rooms import RoomForm

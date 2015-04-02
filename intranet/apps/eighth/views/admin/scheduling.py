@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 import logging
 from django.contrib import messages
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
+from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
 from ...models import EighthBlock, EighthActivity, EighthScheduledActivity
 from ...forms.admin.blocks import BlockSelectionForm

@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import datetime
 from django import http
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render, redirect
+from formtools.wizard.views import SessionWizardView
 from ...auth.decorators import eighth_admin_required, attendance_taker_required
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm

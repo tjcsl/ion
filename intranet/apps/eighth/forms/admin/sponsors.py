@@ -40,3 +40,9 @@ class SponsorForm(forms.ModelForm):
 
     class Meta:
         model = EighthSponsor
+        fields = [
+            "first_name",
+            "last_name",
+            "user",
+            "online_attendance"
+        ]

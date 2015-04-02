@@ -3,14 +3,12 @@ from __future__ import unicode_literals
 
 from fnmatch import fnmatch
 import logging
-import traceback
 from .base import *
 
 
 logger = logging.getLogger(__name__)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     class InvalidString(str):
@@ -20,16 +18,8 @@ if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
         def __mod__(self, other):
             logger.warning("Undefined variable or unknown value for: \"%s\"" % other)
             return ""
-    TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
 
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(os.path.dirname(PROJECT_ROOT),
-#                              "testing_database.db"),
-#     }
-# }
+    TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = InvalidString("%s")
 
 DATABASES = {
     "default": {
@@ -111,9 +101,5 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar",
         "debug_toolbar_line_profiler",
     )
-
-TEMPLATE_CONTEXT_PROCESSORS += [
-    "django.core.context_processors.debug"
-]
 
 STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "intranet/static/")

@@ -60,7 +60,24 @@ class ActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthActivity
-        exclude = ["deleted"]
+        fields = [
+            "name",
+            "description",
+            "sponsors",
+            "rooms",
+            "presign",
+            "one_a_day",
+            "both_blocks",
+            "sticky",
+            "special",
+            "restricted",
+            "users_allowed",
+            "groups_allowed",
+            "freshmen_allowed",
+            "sophomores_allowed",
+            "juniors_allowed",
+            "seniors_allowed"
+        ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5, "cols": 46})
         }

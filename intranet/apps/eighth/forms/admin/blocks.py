@@ -41,4 +41,8 @@ class BlockForm(forms.ModelForm):
 
     class Meta:
         model = EighthBlock
-        exclude = ["activities"]
+        fields = [
+            "date",
+            "block_letter",
+            "locked"
+        ]
