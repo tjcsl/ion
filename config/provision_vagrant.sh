@@ -17,7 +17,6 @@ timedatectl set-timezone America/New_York
 echo 198.38.16.8 iodine-ldap.tjhsst.edu >> /etc/hosts
 
 # Kerberos
-DEBIAN_FRONTEND=noninteractive apt-get -y install krb5-user
 cp intranet/config/krb5.conf /etc/krb5.conf
 apt-get -y install heimdal-clients
 
@@ -61,7 +60,7 @@ sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.3/main/pg_hba.co
 service postgresql restart
 
 # Redis
-wget http://download.redis.io/redis-stable.tar.gz
+wget --progress dot:giga http://download.redis.io/redis-stable.tar.gz
 tar xvzf redis-stable.tar.gz
 cd redis-stable
 make install
@@ -76,7 +75,7 @@ apt-get update
 echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
 echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 apt-get -y install oracle-java7-installer
-wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.7.deb
+wget --progress dot:giga https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.7.deb
 dpkg -i elasticsearch-0.90.7.deb
 echo "network.bind_host: localhost" >> /etc/elasticsearch/elasticsearch.yml
 echo "script.disable_dynamic: true" >> /etc/elasticsearch/elasticsearch.yml
@@ -85,10 +84,10 @@ rm elasticsearch-0.90.7.deb
 
 # Ion
 
-grep AUTHUSER_PASSWORD intranet/settings/secret.py > /dev/null || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
+grep -qs AUTHUSER_PASSWORD intranet/intranet/settings/secret.py || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
 master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
-grep MASTER_PASSWORD intranet/settings/secret.py > /dev/null || echo "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
+grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
 
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
