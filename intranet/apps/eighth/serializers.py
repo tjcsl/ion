@@ -123,9 +123,13 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             sponsor = all_sponsors[sponsor_id]
 
             if sponsor["user_id"]:
-                user = User.get_user(id=sponsor["user_id"])
-                if user is not None:
-                    name = user.last_name
+                # We're not using User.get_user() here since we only want
+                # a value from LDAP that is probably already cached.
+                # This eliminates several hundred SQL queries on some
+                # pages.
+                dn = User.dn_from_id(sponsor["user_id"])
+                if dn is not None:
+                    name = User(dn=dn).last_name
                 else:
                     name = None
             else:
@@ -140,9 +144,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             sponsor = all_sponsors[sponsor_id]
 
             if sponsor["user_id"]:
-                user = User.get_user(id=sponsor["user_id"])
-                if user is not None:
-                    name = user.last_name
+                # See a few lines up for why we're not using User.get_user()
+                dn = User.dn_from_id(sponsor["user_id"])
+                if dn is not None:
+                    name = User(dn=dn).last_name
                 else:
                     name = None
             else:
