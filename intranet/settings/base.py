@@ -457,7 +457,7 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.versions.VersionsPanel", False),
         ("debug_toolbar.panels.timer.TimerPanel", True),
         # ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
+        # FIXME: broken in python3 ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
         ("debug_toolbar.panels.settings.SettingsPanel", False),
         ("debug_toolbar.panels.headers.HeadersPanel", False),
         ("debug_toolbar.panels.request.RequestPanel", False),
