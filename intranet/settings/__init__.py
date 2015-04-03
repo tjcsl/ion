@@ -5,6 +5,6 @@ import os
 import sys
 
 if os.getenv("PRODUCTION", "FALSE") == "TRUE":
-    from production import *
+    from .production import *
 else:
-    from local import *
+    from .local import *

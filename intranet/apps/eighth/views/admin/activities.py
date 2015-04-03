@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import cPickle
+from six.moves import cPickle as pickle
 import logging
 from django import http
 from django.contrib import messages
@@ -26,7 +26,7 @@ def add_activity_view(request):
                             activity_id=activity.id)
         else:
             messages.error(request, "Error adding activity.")
-            request.session["add_activity_form"] = cPickle.dumps(form)
+            request.session["add_activity_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

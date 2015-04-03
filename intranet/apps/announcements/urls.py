@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import url
-import views
+from . import views
 
 urlpatterns = [
     url(r"^/add$", views.add_announcement_view, name="add_announcement"),

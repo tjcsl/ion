@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import urllib
-import urlparse
+from six.moves import urllib.parse
 
 
 def add_get_parameters(url, parameters, percent_encode=True):
@@ -18,13 +17,13 @@ def add_get_parameters(url, parameters, percent_encode=True):
         The updated URL.
 
     """
-    url_parts = list(urlparse.urlparse(url))
-    query = dict(urlparse.parse_qs(url_parts[4]))
+    url_parts = list(urllib.parse.urlparse(url))
+    query = dict(urllib.parse.parse_qs(url_parts[4]))
     query.update(parameters)
 
     if percent_encode:
-        url_parts[4] = urllib.urlencode(query)
+        url_parts[4] = urllib.parse.urlencode(query)
     else:
         url_parts[4] = "&".join([key + "=" + value for key, value in query.items()])
 
-    return urlparse.urlunparse(url_parts)
+    return urllib.parse.urlunparse(url_parts)

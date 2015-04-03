@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from collections import defaultdict
-import cPickle
+from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -23,7 +23,7 @@ def add_room_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding room.")
-            request.session["add_room_form"] = cPickle.dumps(form)
+            request.session["add_room_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

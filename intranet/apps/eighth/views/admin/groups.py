@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import cPickle
+from six.moves import cPickle as pickle
 import csv
 from django import http
 from django.contrib import messages
@@ -26,7 +26,7 @@ def add_group_view(request):
                             group_id=group.id)
         else:
             messages.error(request, "Error adding group.")
-            request.session["add_group_form"] = cPickle.dumps(form)
+            request.session["add_group_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")

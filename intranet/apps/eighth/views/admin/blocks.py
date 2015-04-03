@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import cPickle
+from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -20,7 +20,7 @@ def add_block_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")
-            request.session["add_block_form"] = cPickle.dumps(form)
+            request.session["add_block_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")

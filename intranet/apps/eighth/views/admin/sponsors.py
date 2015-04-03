@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import cPickle
+from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -22,7 +22,7 @@ def add_sponsor_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding sponsor.")
-            request.session["add_sponsor_form"] = cPickle.dumps(form)
+            request.session["add_sponsor_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
