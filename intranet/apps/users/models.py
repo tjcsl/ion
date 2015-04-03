@@ -94,6 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             The User object if the user could be found in LDAP,
             otherwise User.DoesNotExist is raised.
         """
+
         if id is not None:
             try:
                 user = User.objects.get(id=id)
@@ -122,16 +123,16 @@ class User(AbstractBaseUser, PermissionsMixin):
                 except User.DoesNotExist:
                     user.username = user.ion_username
 
+                    user.set_unusable_password()
+                    user.last_login = datetime(9999, 1, 1)
+
+                    user.save()
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
                 raise User.DoesNotExist(
                     "`User` with DN '{}' does not exist.".format(dn)
                 )
         else:
             raise TypeError("get_user() requires at least one argument.")
-
-        if user.has_usable_password():
-            user.set_unusable_password()
-        user.save()
 
         return user
 
@@ -911,7 +912,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded "
-                         "from cache.".format(name, self.id))
+                         "from cache.".format(name, self.id or self.dn))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
