@@ -5,7 +5,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from ldap.filter import escape_filter_chars
+from ldap3.utils.conv import escape_filter_chars
 from intranet.db.ldap_db import LDAPConnection
 from ..announcements.models import Announcement
 from ..events.models import Event

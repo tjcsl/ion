@@ -5,8 +5,8 @@ import MySQLdb as mdb
 import json
 import re
 import pexpect
-import ldap
-import ldap.sasl
+import ldap3
+import ldap3.protocols.sasl
 import sys
 import os
 import datetime
@@ -30,16 +30,20 @@ if kgetcred.exitstatus:
 
 print("Successfully authorized to LDAP service")
 
-l = ldap.initialize(ldap_server)
-auth_tokens = ldap.sasl.gssapi()
-l.sasl_interactive_bind_s('', auth_tokens)
-print("Successfully bound to LDAP with " + l.whoami_s())
+server = ldap3.Server(ldap_server)
+# FIXME: add gssapi support to ldap3
+auth_tokens = ldap3.protocols.sasl.gssapi()
+connection = ldap3.Connection(server, authentication=ldap3.SASL,
+        sasl_mechanism='GSSAPI', sasl_credentials=auth_tokens, raise_exceptions=True)
+connection.do_sasl_bind()
+print("Successfully bound to LDAP with " + connection.extend.standard.who_am_i())
 
 
 def user_attrs(uid, attr):
     sfilter = '(iodineUidNumber=' + str(uid) + ')'
     try:
-        ri = l.search_s(base_dn, ldap.SCOPE_SUBTREE, sfilter)
+        ri = connection.search_s(base_dn, sfilter)
+        # FIXME: make sure this still works
         r = ri[0][1]
     except IndexError:
         return ""
