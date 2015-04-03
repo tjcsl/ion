@@ -107,7 +107,7 @@ def schedule_activity_view(request):
             # There must be an error in the form if this is reached
             formset = ScheduledActivityFormset(initial=initial_formset_data)
         context["formset"] = formset
-        context["rows"] = zip(blocks, formset)
+        context["rows"] = list(zip(blocks, formset))
 
         context["default_rooms"] = ", ".join(map(str, activity.rooms.all()))
         context["default_sponsors"] = ", ".join(map(str, activity.sponsors.all()))

@@ -5,14 +5,15 @@ from django.core.management.base import BaseCommand, CommandError
 from intranet.apps.schedule.models import *
 from icalendar import Calendar, Event
 from datetime import datetime
-import urllib2
+from six import text_type, iteritems
+from six.moves.urllib import request
 
 class Command(BaseCommand):
     args = ''
     help = 'Adds schedule entries from iCal to the database.'
     def handle(self, *args, **options):
         def get_ical():
-            resp = urllib2.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
+            resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
             ical = resp.read()
             return ical
 
@@ -24,13 +25,13 @@ class Command(BaseCommand):
                 summary = event.get('summary')
                 categories = event.get('categories')
                 if categories in ['Blue Day','Red Day','Anchor Day']:
-                    print "{} {} {}".format(date.to_ical(), summary, categories)
-                    map[date.to_ical()] = unicode(summary)
+                    print("{} {} {}".format(date.to_ical(), summary, categories))
+                    map[date.to_ical()] = text_type(summary)
             return map
 
-        # FIXME i"M BROKEN
+        # FIXME I'M BROKEN
         def add(map):
-            for date, type in map.iteritems():
+            for date, type in iteritems(map):
                 # type: codename
                 cns = CodeName.objects.filter(name=type)
                 if len(cns) < 1:
@@ -50,9 +51,9 @@ class Command(BaseCommand):
                 do = Day.objects.filter(date=day)
                 if len(do) < 1:
                     daydate = Day.objects.create(date=day, type=dt)
-                    print daydate
+                    print(daydate)
                 else:
-                    print "{} already exists".format(unicode(daydate))
+                    print("{} already exists".format(text_type(daydate)))
         map = parse(get_ical())
-        print map
+        print(map)
         # add(map)

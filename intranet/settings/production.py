@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import urllib.parse
+from six.moves.urllib import parse
 from .base import *
 
 """In production, add a file called secret.py to the settings package that
@@ -17,8 +17,8 @@ SHOW_DEBUG_TOOLBAR = False
 
 CACHES['default']['OPTIONS']['DB'] = 1
 
-urllib.parse.uses_netloc.append("postgres")
-url = urllib.parse.urlparse(DATABASE_URL)
+parse.uses_netloc.append("postgres")
+url = parse.urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {

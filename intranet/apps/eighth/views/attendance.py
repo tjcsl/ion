@@ -135,7 +135,7 @@ def take_attendance_view(request, scheduled_activity_id):
         raise http.Http404
 
     if request.method == "POST":
-        present_user_ids = request.POST.keys()
+        present_user_ids = list(request.POST.keys())
         absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
                                       .exclude(user__in=present_user_ids))
         absent_signups.update(was_absent=True)

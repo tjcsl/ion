@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import StringIO
+from six.moves import cStringIO as StringIO
 import io
 import logging
 import os

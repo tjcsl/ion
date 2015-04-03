@@ -110,7 +110,7 @@ def delinquent_students_view(request):
                 include |= (grade == 12)
             return include
 
-        delinquents = filter(filter_by_grade, delinquents)
+        delinquents = list(filter(filter_by_grade, delinquents))
         context["delinquents"] = delinquents
     else:
         delinquents = []

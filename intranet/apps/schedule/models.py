@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from six import text_type
 from django.db import models
 
 class Time(models.Model):
@@ -39,4 +40,4 @@ class Day(models.Model):
     type = models.ForeignKey('DayType')
 
     def __unicode__(self):
-        return "{}: {}".format(unicode(self.date), self.type)
+        return "{}: {}".format(text_type(self.date), self.type)

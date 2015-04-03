@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from six import iteritems
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.utils.html import strip_tags
@@ -27,7 +28,7 @@ class AuthenticateForm(AuthenticationForm):
         """Validates the username and password in the form"""
         form = super(AuthenticateForm, self).is_valid()
 
-        for f, error in self.errors.iteritems():
+        for f, error in iteritems(self.errors):
             if f != "__all__":
                 self.fields[f].widget.attrs.update({"class": "error", "placeholder": strip_tags(error)})
             else:
