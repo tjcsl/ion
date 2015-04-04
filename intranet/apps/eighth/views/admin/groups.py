@@ -61,6 +61,28 @@ def edit_group_view(request, group_id):
 
 
 @eighth_admin_required
+def delete_group_view(request, group_id):
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        return http.HttpResponseNotFound()
+
+    if request.method == "POST":
+        group.delete()
+        messages.success(request, "Successfully deleted group.")
+        return redirect("eighth_admin_dashboard")
+    else:
+        context = {
+            "admin_page_title": "Delete Group",
+            "item_name": group.name,
+            "help_text": "Deleting this group will remove all records "
+                         "of this group related to eighth period."
+        }
+
+        return render(request, "eighth/admin/delete_form.html", context)
+
+
+@eighth_admin_required
 def download_group_csv_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
