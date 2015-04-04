@@ -21,10 +21,9 @@ cp intranet/config/krb5.conf /etc/krb5.conf
 apt-get -y install heimdal-clients
 
 # Python
-apt-get -y install python-pip
-pip install virtualenv
-pip install virtualenvwrapper
-apt-get -y install python-dev
+apt-get -y install python3-pip
+pip3 install virtualenvwrapper
+apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
 
 # LDAP
