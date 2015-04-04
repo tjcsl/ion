@@ -339,8 +339,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @staticmethod
     def username_from_dn(dn):
         # logger.debug("Fetching username of User with ID {}.".format(id))
-        # FIXME: figure out ldap3 equivalent
-        return ldap.dn.str2dn(dn)[0][0][1]
+        return ldap3.utils.dn.parse_dn(dn)[0][1]
 
     @staticmethod
     def create_secure_cache_key(identifier):
@@ -1563,8 +1562,7 @@ class Class(object):
         """
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
-    # FIXME: find ldap3 equivalent
-    section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
+    section_id = property(lambda c: ldap3.utils.dn.parse_dn(c.dn)[0][1])
     pk = section_id
 
     @property

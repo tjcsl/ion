@@ -34,6 +34,9 @@ apt-get -y install libsasl2-dev
 apt-get -y install libssl-dev
 apt-get -y install libsasl2-modules-gssapi-mit
 
+# LDAP-GSSAPI
+apt-get -y install libkrb5-dev
+
 # Git
 apt-get -y install git
 sudo -i -u vagrant git config --global user.name "$(devconfig name)"

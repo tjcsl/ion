@@ -6,11 +6,15 @@ import json
 import re
 import pexpect
 import ldap3
-import ldap3.protocols.sasl
 import sys
 import os
+import os.path
 import datetime
 from six.moves import input
+
+# FIXME: Hack to allow sibling imports
+sys.path.append(os.path.dirname(__file__) + '/..')
+from intranet.db import gssapi_ldap
 
 # Run this on iodine.tjhsst.edu
 start_date = "2015-09-01"
@@ -31,20 +35,16 @@ if kgetcred.exitstatus:
 print("Successfully authorized to LDAP service")
 
 server = ldap3.Server(ldap_server)
-# FIXME: add gssapi support to ldap3
-auth_tokens = ldap3.protocols.sasl.gssapi()
-connection = ldap3.Connection(server, authentication=ldap3.SASL,
-        sasl_mechanism='GSSAPI', sasl_credentials=auth_tokens, raise_exceptions=True)
-connection.do_sasl_bind()
+connection = gssapi_ldap.GSSAPIConnection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
+connection.bind()
 print("Successfully bound to LDAP with " + connection.extend.standard.who_am_i())
 
 
 def user_attrs(uid, attr):
     sfilter = '(iodineUidNumber=' + str(uid) + ')'
     try:
-        ri = connection.search_s(base_dn, sfilter)
-        # FIXME: make sure this still works
-        r = ri[0][1]
+        ri = connection.search(base_dn, sfilter)
+        r = ri[0]['attributes']
     except IndexError:
         return ""
     return r[attr][0]
