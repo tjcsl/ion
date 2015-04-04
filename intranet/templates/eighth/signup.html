@@ -153,11 +153,11 @@
                                 </div>
                         </li>
                     {% empty %}
-                        
+
                             <div class="day-title">
                             There are no eighth period blocks scheduled at this time.
                             </div>
-                        
+
                     {% endfor %}
                 {% endspaceless %}
             </ul>
@@ -231,7 +231,7 @@
                                     <span class="activity-icon pie-{{ act.roster.count|divide:act.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}"></span>
                                 {% endif %}
                             </span>
-                            <span class="activity-name">{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}</span>
+                            <span class="activity-name" title="{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}">{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}</span>
                         </li>
                     {% empty %}
                     <li>
