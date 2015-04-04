@@ -5,6 +5,7 @@ from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
@@ -49,9 +50,33 @@ def edit_room_view(request, room_id):
 
     context = {
         "form": form,
+        "delete_url": reverse("eighth_admin_delete_room",
+                              args=[room_id]),
         "admin_page_title": "Edit Room"
     }
     return render(request, "eighth/admin/edit_form.html", context)
+
+
+@eighth_admin_required
+def delete_room_view(request, room_id):
+    try:
+        room = EighthRoom.objects.get(id=room_id)
+    except EighthRoom.DoesNotExist:
+        raise http.Http404
+
+    if request.method == "POST":
+        room.delete()
+        messages.success(request, "Successfully deleted room.")
+        return redirect("eighth_admin_dashboard")
+    else:
+        context = {
+            "admin_page_title": "Delete Room",
+            "item_name": str(room),
+            "help_text": "Deleting this room will remove all records "
+                         "of it related to eighth period."
+        }
+
+        return render(request, "eighth/admin/delete_form.html", context)
 
 
 @eighth_admin_required
