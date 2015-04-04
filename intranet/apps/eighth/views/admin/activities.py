@@ -75,6 +75,7 @@ def delete_activity_view(request, activity_id=None):
     else:
         context = {
             "admin_page_title": "Delete Activity",
+            "item_name": activity.name,
             "help_text": "Deleting will not destroy past attendance data for this "
                          "activity. The activity will just be marked as deleted "
                          "and hidden from non-attendance views."

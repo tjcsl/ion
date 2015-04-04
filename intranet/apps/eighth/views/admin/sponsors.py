@@ -69,10 +69,11 @@ def delete_sponsor_view(request, sponsor_id):
     else:
         context = {
             "admin_page_title": "Delete Sponsor",
+            "item_name": str(sponsor),
             "help_text": "Deleting this sponsor will remove all records "
                          "of this user related to eighth period, but will "
-                         "not remove the actual associated user if "
-                         "there is one."
+                         "not remove the user account associated with it (if "
+                         "there is one)."
         }
 
         return render(request, "eighth/admin/delete_form.html", context)

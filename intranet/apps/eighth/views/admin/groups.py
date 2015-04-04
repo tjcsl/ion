@@ -6,6 +6,7 @@ import csv
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
@@ -52,7 +53,9 @@ def edit_group_view(request, group_id):
 
     context = {
         "form": form,
-        "admin_page_title": "Edit Group"
+        "admin_page_title": "Edit Group",
+        "delete_url": reverse("eighth_admin_delete_group",
+                              args=[group_id])
     }
     return render(request, "eighth/admin/edit_form.html", context)
 
