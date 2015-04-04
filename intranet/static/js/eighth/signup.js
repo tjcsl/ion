@@ -32,7 +32,7 @@ $(function() {
         tagName: "li",
 
         events: {
-          "click": "showDetail"
+            "click": "showDetail"
         },
 
         initialize: function(){
@@ -45,7 +45,6 @@ $(function() {
         },
 
         showDetail: function(e) {
-
             $(previousSelection).removeClass("selected");
 
             var $target = $(e.target);

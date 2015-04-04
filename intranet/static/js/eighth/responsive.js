@@ -6,7 +6,9 @@ $(document).ready(function() {
     $("#activity-list li[data-activity-id]").click(function() {
         if(is_small()) {
             $("#activity-detail").addClass("visible");
-            $("#activity-list").addClass("hidden");
+            setTimeout(function() {
+                $("#activity-list").addClass("hidden");
+            }, 100);
         }
     })
 
