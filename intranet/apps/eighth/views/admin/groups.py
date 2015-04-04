@@ -65,7 +65,7 @@ def delete_group_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         group.delete()
