@@ -74,9 +74,9 @@ def delete_group_view(request, group_id):
     else:
         context = {
             "admin_page_title": "Delete Group",
-            "item_name": group.name,
+            "item_name": str(group),
             "help_text": "Deleting this group will remove all records "
-                         "of this group related to eighth period."
+                         "of it related to eighth period."
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
