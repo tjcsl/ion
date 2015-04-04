@@ -40,7 +40,12 @@
 
             Modernizr.load({
                 test: Modernizr.touch,
-                yep: "//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.2/fastclick.min.js"
+                yep: "//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.2/fastclick.min.js",
+                complete: function() {
+                    if (Modernizr.touch) {
+                        FastClick.attach(document.body);
+                    }
+                }
             });
 
 
@@ -48,7 +53,7 @@
             {% block modernizr %}
             {% endblock %}
 
-            $(document).ready(function() {
+            $(function() {
                 $("body").removeClass("notransition");
             });
         </script>
