@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import os
 import logging
-import pexpect
-from django.contrib.auth import logout
 
 logger = logging.getLogger(__name__)
 

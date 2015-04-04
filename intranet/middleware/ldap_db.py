@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import ldap
 import logging
 import os
 from django.contrib.auth import logout
@@ -14,20 +13,21 @@ logger = logging.getLogger(__name__)
 
 class CheckLDAPBindMiddleware:
 
-    def process_request(self, request):
+    def process_response(self, request, response):
         if not request.user.is_authenticated():
             # Nothing to check if user isn't already logged in
-            return
-        try:
-            c = LDAPConnection()
-        except ldap.LOCAL_ERROR:
-            logger.critical("Unable to bind to LDAP")
+            return response
+
+        auth_backend = request.session["_auth_user_backend"]
+        master_pwd_backend = "MasterPasswordAuthenticationBackend"
+        if (LDAPConnection().did_use_simple_bind() and
+                not auth_backend.endswith(master_pwd_backend)):
+            logger.info("Destroying kerberos cache and logging out")
             try:
                 kerberos_cache = request.session["KRB5CCNAME"]
                 os.system("/usr/bin/kdestroy -c " + kerberos_cache)
             except KeyError:
                 pass
-            logger.info("Destroying kerberos cache and logging out")
             logout(request)
 
             response = redirect("login")
@@ -35,3 +35,5 @@ class CheckLDAPBindMiddleware:
             response["Location"] = urls.add_get_parameters(
                 url, {"next": request.path}, percent_encode=False)
             return response
+
+        return response

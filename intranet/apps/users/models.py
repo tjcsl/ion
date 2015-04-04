@@ -472,6 +472,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Binary data
 
         """
+
         identifier = ":".join([self.dn, "photo", photo_year])
         key = identifier  # User.create_secure_cache_key(identifier)
 
@@ -728,8 +729,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         try:
-            requesting_user_id = threadlocals.request().user.id
-            auth_backend = threadlocals.request().session["_auth_user_backend"]
+            # threadlocals is a module, not an actual thread locals object
+            request = threadlocals.request()
+            requesting_user_id = request.user.id
+            auth_backend = request.session["_auth_user_backend"]
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
             return (str(requesting_user_id) == str(self.id) and

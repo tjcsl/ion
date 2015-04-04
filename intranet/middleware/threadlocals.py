@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 
 from threading import local
+import logging
 
+
+logger = logging.getLogger(__name__)
 _thread_locals = local()
 
 
@@ -24,7 +27,6 @@ class ThreadLocalsMiddleware(object):
     """
 
     def process_request(self, request):
-        """
-            Processes the request.
-        """
-        _thread_locals.request = request #getattr(request, "user", None)
+        """Adds the request to thread locals"""
+
+        _thread_locals.request = request

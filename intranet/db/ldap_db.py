@@ -62,6 +62,7 @@ class LDAPConnection(object):
         using the GSSAPI protocol. The requisite KRB5CCNAME
         environmental variable should have already been set by the
         SetKerberosCache middleware.
+
         """
 
         if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
@@ -72,13 +73,24 @@ class LDAPConnection(object):
                 auth_tokens = ldap.sasl.gssapi()
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
                 logger.info("Successfully connected to LDAP.")
+                _thread_locals.simple_bind = False
             except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS) as e:
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.error("SASL bind failed - using simple bind")
                 logger.error(e)
+                _thread_locals.simple_bind = True
+
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
 
         return _thread_locals.ldap_conn
+
+    def did_use_simple_bind(self):
+        """Returns whether a simple bind was used, or ``False`` for an
+        uninitialized connection.
+
+        """
+
+        return getattr(_thread_locals, "simple_bind", False)
 
     def search(self, dn, filter, attributes):
         """Search LDAP and return an :class:`LDAPResult`.
@@ -200,10 +212,10 @@ class LDAPResult(object):
           dispatch_uid="close_ldap_connection",
           sender=WSGIHandler)
 def close_ldap_connection(sender, **kwargs):
-    """Closes the request's LDAP connection.
+    """Closes the request's LDAP connection and clears up thread locals.
 
     Listens for the request_finished signal from Django and upon
-    receit, unbinds from the directory, terminates the current
+    receipt, unbinds from the directory, terminates the current
     association, and frees resources.
 
     It would be nice if we could leave the connections open in a pool,
@@ -211,8 +223,10 @@ def close_ldap_connection(sender, **kwargs):
     with GSSAPI binds.
 
     """
-    if hasattr(_thread_locals, 'ldap_conn'):
+    if hasattr(_thread_locals, "ldap_conn"):
         if _thread_locals.ldap_conn is not None:
             _thread_locals.ldap_conn.unbind_s()
             _thread_locals.ldap_conn = None
             logger.info("LDAP connection closed.")
+    if hasattr(_thread_locals, "simple_bind"):
+        del _thread_locals.simple_bind

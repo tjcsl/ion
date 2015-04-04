@@ -38,7 +38,8 @@ class login_view(View):
         if form.is_valid():
             login(request, form.get_user())
             # Initial load into session
-            request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
+            if "KRB5CCNAME" in os.environ:
+                request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
             logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
             next = request.GET.get("next", "/")
             return redirect(next)

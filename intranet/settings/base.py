@@ -108,6 +108,7 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE_CLASSES = (
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -115,7 +116,6 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
