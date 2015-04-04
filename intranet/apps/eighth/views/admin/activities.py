@@ -37,7 +37,7 @@ def edit_activity_view(request, activity_id):
     try:
         activity = EighthActivity.undeleted_objects.get(id=activity_id)
     except EighthActivity.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         form = ActivityForm(request.POST, instance=activity)
@@ -65,7 +65,7 @@ def delete_activity_view(request, activity_id=None):
     try:
         activity = EighthActivity.objects.get(id=activity_id)
     except EighthActivity.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         activity.deleted = True

@@ -33,7 +33,7 @@ def edit_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
     except EighthSponsor.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         form = SponsorForm(request.POST, instance=sponsor)
@@ -60,7 +60,7 @@ def delete_sponsor_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
     except EighthSponsor.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         sponsor.delete()
@@ -83,7 +83,7 @@ def sponsor_schedule_view(request, sponsor_id):
     try:
         sponsor = EighthSponsor.objects.get(id=sponsor_id)
     except EighthSponsor.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     sponsoring_filter = (Q(sponsors=sponsor) |
                          (Q(sponsors=None) & Q(activity__sponsors=sponsor)))

@@ -31,7 +31,7 @@ def edit_block_view(request, block_id):
     try:
         block = EighthBlock.objects.get(id=block_id)
     except EighthBlock.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         form = BlockForm(request.POST, instance=block)

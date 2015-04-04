@@ -34,7 +34,7 @@ def edit_room_view(request, room_id):
     try:
         room = EighthRoom.objects.get(id=room_id)
     except EighthRoom.DoesNotExist:
-        return http.HttpResponseNotFound()
+        raise http.Http404
 
     if request.method == "POST":
         form = RoomForm(request.POST, instance=room)
