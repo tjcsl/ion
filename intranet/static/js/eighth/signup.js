@@ -21,15 +21,19 @@ $(function() {
 
         render: function(){
             var container = this.options.viewContainer,
-                activity = this.model,
                 renderedContent = this.template(this.model.toJSON());
             container.html(renderedContent);
             return this;
         }
     });
 
-    eighth.ActivityView = Backbone.View.extend({
+    eighth.ActivityListRowView = Backbone.View.extend({
         tagName: "li",
+        attributes: function(){
+            return {
+                "data-activity-id": this.model.id
+            }
+        },
 
         events: {
             "click": "showDetail"
@@ -37,10 +41,12 @@ $(function() {
 
         initialize: function(){
           _.bindAll(this, "render", "showDetail");
+
+          this.template = _.template($("#activity-list-row-template").html());
         },
 
         render: function(){
-            $(this.el).html(this.model.get("name"));
+            this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
 
@@ -149,15 +155,6 @@ $(function() {
         });
     };
 
-    $("#activity-list li").each(function(index) {
-        var id = $(this).data("activity-id");
-        var view = new eighth.ActivityView({
-            el: this,
-            model: activityModels.get(id)
-        });
-    })
-
-
     eighth.ActivityListView = Backbone.View.extend({
         el: $("#activity-list"),
 
@@ -168,16 +165,28 @@ $(function() {
         },
 
         render: function() {
-            var self = this;
-            _(this.activityList.models).each(function(activity){
-                var activityView = new eighth.ActivityView({
-                    model: activity
-                });
+            var renderActivitiesInContainer = function(activities, $container) {
+                _(activities).each(function(activity){
+                    var ActivityListRowView = new eighth.ActivityListRowView({
+                        model: activity
+                    });
 
-                $("ul", this.el).append(activityView.render().el);
-            }, this);
+                    $container.append(ActivityListRowView.render().el);
+                }, this);
+            }
+
+            renderActivitiesInContainer(this.activityList.models, $(".all-activities", this.el))
+
+            var favorites = _.filter(this.activityList.models, function(activity) {
+                return activity.attributes.name.indexOf("Lab") == 0;
+            });
+            renderActivitiesInContainer(favorites, $(".favorite-activities", this.el))
+
+
+            $(".search-wrapper input").removeAttr("disabled");
         }
     });
 
-    var activityListView = new eighth.ActivityListView();
+    window.activityListView = new eighth.ActivityListView();
+    activityListView.render()
 });

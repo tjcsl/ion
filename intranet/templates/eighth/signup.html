@@ -38,6 +38,22 @@
 {% endblock %}
 
 {% block main %}
+    <script type="text/template" id="activity-list-row-template">
+        {% verbatim %}
+            <span class="activity-icons">
+                <span class="activity-icon fav"></span>
+                <% if (cancelled) { %>
+                    <span class="activity-icon cancelled"></span>
+                <% } else { %>
+                    <% var pieNumber = Math.min(Math.round(roster.count / roster.capacity * 10), 10); %>
+                    <span class="activity-icon pie-<%= pieNumber %>"></span>
+                <% } %>
+            </span>
+            <% var full_name = cancelled ? name + " (Cancelled)" : name; %>
+            <span class="activity-name" title="<%= full_name %>"><%= full_name %></span>
+        {% endverbatim %}
+    </script>
+
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
         <h3>
@@ -106,6 +122,9 @@
         </dl>
         {% endverbatim %}
     </script>
+
+
+
     <div class="primary-content eighth-signup">
         <div class="day-picker">
             <span class="day-picker-buttons">
@@ -196,49 +215,17 @@
             <div class="search-wrapper">
                 <i class="fa fa-search"></i>
                 <span>
-                    <input type="text" placeholder="Search">
+                    <input type="text" placeholder="Search" disabled>
                 </span>
             </div>
             <div id="activity-list">
                 <div class="backbtn">
                     <i class="fa fa-chevron-left"></i>
                 </div>
-                <!--
                 <h5 class="sticky-header">Favorites</h5>
-                <ul class="favorite-activities">
-                    {% for id, b in block_info.activities.items %}
-                        {% if forloop.counter0 < 10 %}
-                            <li data-activity-id="{{ id }}">
-                                <span class="activity-icons">
-                                    <span class="activity-icon pie-{{ b.roster.count|divide:b.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}">&nbsp;</span>
-                                </span>
-                                <span class="activity-name">{{ b.name }}</span>
-                                <span class="sponsor-name"></span>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-                -->
+                <ul class="favorite-activities"></ul>
                 <h5 class="sticky-header">All</h5>
-                <ul class="all-activities">
-                    {% for id, act in block_info.activities.items %}
-                        <li data-activity-id="{{ id }}">
-                            <span class="activity-icons">
-                                <span class="activity-icon fav"></span>
-                                {% if act.cancelled %}
-                                    <span class="activity-icon cancelled"></span>
-                                {% else %}
-                                    <span class="activity-icon pie-{{ act.roster.count|divide:act.roster.capacity|multiply:10|round_num|to_int|minimum:10 }}"></span>
-                                {% endif %}
-                            </span>
-                            <span class="activity-name" title="{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}">{{ act.name }}{% if act.cancelled %} (Cancelled){% endif %}</span>
-                        </li>
-                    {% empty %}
-                    <li>
-                        There are no activities scheduled at this time.
-                    </li>
-                    {% endfor %}
-                </ul>
+                <ul class="all-activities"></ul>
             </div>
             <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
                 <h3 class="empty-state">
