@@ -8,7 +8,7 @@ $(document).ready(function() {
             $("#activity-detail").addClass("visible");
             setTimeout(function() {
                 $("#activity-list").addClass("hidden");
-            }, 100);
+            }, 200);
         }
     })
 
@@ -18,11 +18,20 @@ $(document).ready(function() {
         $("#activity-list li[data-activity-id]").removeClass("selected");
     })
 
+    $(".search-wrapper input").focus(function() {
+        if (is_small()) {
+            $("#activity-list li[data-activity-id]").removeClass("selected");
+        }
+        $("#activity-detail").removeClass("visible");
+        $("#activity-list").removeClass("hidden");
+    })
+
     eighthResize = function() {
         var height = document.documentElement.clientHeight;
         if(height < 650 && height - 90 > 250) {
             $("#activity-picker").css("height",  height - 90);
             $(".primary-content").addClass("viewing");
+
         }
     }
     $(document).bind("resize", eighthResize);
