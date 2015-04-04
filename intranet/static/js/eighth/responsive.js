@@ -1,6 +1,6 @@
 $(document).ready(function() {
     is_small = function() {
-        return $("#activity-detail").css("right").split("px")[0] < 0;
+        return $("#activity-detail").css("right").split(/[^\-\d]+/)[0] < 0;;
     }
 
     $("#activity-list li[data-activity-id]").click(function() {

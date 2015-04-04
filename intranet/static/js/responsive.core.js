@@ -3,7 +3,7 @@ $(document).ready(function() {
     $(".left > .dropdown-taparea").click(function() {
         $n = $(".main > .nav").eq(0);
         $g = $(".nav-g");
-        if($n.css('left') == "0px") { // hide
+        if($n.css('left').split(/[^\-\d]+/)[0] == 0) { // hide
             $n.animate({ left: "-202px" }, 200);
             $g.removeClass("close-l").fadeOut(200);
             $("body").removeClass("disable-scroll");
