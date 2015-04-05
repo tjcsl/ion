@@ -17,7 +17,7 @@ Contents
     setup/index
     architecture/index
     developing/index
-    sourcedoc/intranet
+    sourcedoc/modules
     administration/index
 
 

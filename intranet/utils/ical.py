@@ -5,7 +5,7 @@ from icalendar import Calendar, Event
 from datetime import datetime
 #from intranet.apps.schedule.models import *
 from six import text_type
-from six.urllib import request
+from six.moves.urllib import request
 
 def get_ical():
     resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
@@ -25,7 +25,6 @@ def parse(ical):
 
     return map
 
-
-
-map = parse(get_ical())
-print(map)
+if __name__ == '__main__':
+    map = parse(get_ical())
+    print(map)
