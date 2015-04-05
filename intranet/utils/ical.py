@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from icalendar import Calendar, Event
-from datetime import datetime
-#from intranet.apps.schedule.models import *
+from icalendar import Calendar
+# from intranet.apps.schedule.models import *
 from six import text_type
 from six.moves.urllib import request
 

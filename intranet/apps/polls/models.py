@@ -26,5 +26,5 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question)
-    #choice_info = models.CharField(max_length=500)
+    # choice_info = models.CharField(max_length=500)
     votes = models.IntegerField(default=0)

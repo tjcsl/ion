@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
+# from django.contrib.auth.models import Group
 from django.shortcuts import render
-from django.http import HttpResponse
-from ..users.models import User
+# from django.http import HttpResponse
+# from ..users.models import User
 from .forms import GroupForm
 
 logger = logging.getLogger(__name__)

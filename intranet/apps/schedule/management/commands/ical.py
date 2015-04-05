@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.core.management.base import BaseCommand, CommandError
-from intranet.apps.schedule.models import *
-from icalendar import Calendar, Event
+from django.core.management.base import BaseCommand
+from intranet.apps.schedule.models import CodeName, Day, DayType
+from icalendar import Calendar
 from datetime import datetime
 from six import text_type, iteritems
 from six.moves.urllib import request
@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 else:
                     dt = dts[0]
                 # day: ate
-                day = strptime(date, '%Y%m%d')
+                day = datetime.strptime(date, '%Y%m%d')
                 do = Day.objects.filter(date=day)
                 if len(do) < 1:
                     daydate = Day.objects.create(date=day, type=dt)
