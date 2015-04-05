@@ -158,10 +158,10 @@ function stickyHeaders(headers) {
 }
 
 $(function() {
-    var sh = new stickyHeaders($(".sticky-header"));
-    sh.load();
+    // var sh = new stickyHeaders($(".sticky-header"));
+    // sh.load();
 
-    $("#activity-list").on("scroll", function() {
-        sh.scroll();
-    });
+    // $("#activity-list").on("scroll", function() {
+    //     sh.scroll();
+    // });
 });
