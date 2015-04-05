@@ -7,7 +7,17 @@ $(function() {
     });
 
     eighth.ActivityList = Backbone.Collection.extend({
-        model: eighth.Activity
+        model: eighth.Activity,
+        comparator: function(a1, a2) {
+            if (a1.attributes.special && !a2.attributes.special) return -1;
+            if (!a1.attributes.special && a2.attributes.special) return 1;
+
+            var n1 = a1.attributes.name.toLowerCase(),
+                n2 = a2.attributes.name.toLowerCase();
+            if (n1 < n2) return -1;
+            if (n1 > n2) return 1;
+            return 0;
+        }
     });
 
     loadModels();
@@ -161,24 +171,25 @@ $(function() {
         initialize: function() {
             _.bindAll(this, "render");
 
-            this.activityList = activityModels;
+            this.activities = activityModels.sort();
         },
 
         render: function() {
-            var renderActivitiesInContainer = function(activities, $container) {
+            var renderActivitiesInContainer = function(models, $container) {
                 $container.html("");
-                _(activities).each(function(activity){
+                _.each(models, function(model){
                     var ActivityListRowView = new eighth.ActivityListRowView({
-                        model: activity
+                        model: model
                     });
 
                     $container.append(ActivityListRowView.render().el);
+                    // console.log(model.attributes.name);
                 }, this);
             }
 
-            renderActivitiesInContainer(this.activityList.models, $(".all-activities", this.el))
+            renderActivitiesInContainer(this.activities.models, $(".all-activities", this.el))
 
-            var favorites = _.filter(this.activityList.models, function(activity) {
+            var favorites = _.filter(this.activities.models, function(activity) {
                 return activity.attributes.favorited;
             });
             renderActivitiesInContainer(favorites, $(".favorite-activities", this.el))

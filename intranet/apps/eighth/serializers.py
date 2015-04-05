@@ -82,7 +82,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "rooms": [],
                 "sponsors": [],
                 "restricted": scheduled_activity.activity.restricted,
-                "both_blocks": scheduled_activity.activity.both_blocks
+                "both_blocks": scheduled_activity.activity.both_blocks,
+                "special": scheduled_activity.activity.special
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = scheduled_activity.activity.id
 
