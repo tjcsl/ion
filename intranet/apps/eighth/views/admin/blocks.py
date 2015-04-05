@@ -81,7 +81,7 @@ def delete_block_view(request, block_id):
 @eighth_admin_required
 def print_block_rosters_view(request, block_id):
     response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = "attachment; filename=\"block_{}_rosters.pdf\"".format(block_id)
+    response["Content-Disposition"] = "inline; filename=\"block_{}_rosters.pdf\"".format(block_id)
     sched_act_ids = (EighthScheduledActivity.objects
                                             .filter(block=block_id)
                                             .values_list("id", flat=True))
