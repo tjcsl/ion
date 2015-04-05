@@ -35,7 +35,9 @@ class AdminSelectizeLoadingIndicatorMiddleware(object):
     """
 
     def process_response(self, request, response):
-        if request.path.startswith("/eighth/admin"):
+        is_html = (response["Content-Type"] == "text/html" or
+                   response["Content-Type"].startswith("text/html;"))
+        if is_html and request.path.startswith("/eighth/admin"):
             replacement = """</select>
                 <div class="selectize-control selectize-loading">
                     <div class="selectize-input disabled">

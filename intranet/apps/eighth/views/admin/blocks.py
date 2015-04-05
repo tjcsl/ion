@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
 from django import http
+from django.http import HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
-from ...models import EighthBlock
+from ...models import EighthBlock, EighthScheduledActivity
+from ..attendance import generate_roster_pdf
 
 
 @eighth_admin_required
@@ -74,3 +76,17 @@ def delete_block_view(request, block_id):
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
+
+
+@eighth_admin_required
+def print_block_rosters_view(request, block_id):
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=\"block_{}_rosters.pdf\"".format(block_id)
+    sched_act_ids = (EighthScheduledActivity.objects
+                                            .filter(block=block_id)
+                                            .values_list("id", flat=True))
+
+    pdf_buffer = generate_roster_pdf(sched_act_ids, True)
+    response.write(pdf_buffer.getvalue())
+    pdf_buffer.close()
+    return response

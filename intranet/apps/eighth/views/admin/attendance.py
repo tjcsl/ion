@@ -307,3 +307,6 @@ def out_of_building_schedules_view(request, block_id=None):
             writer.writerow(row)
 
         return response
+
+
+

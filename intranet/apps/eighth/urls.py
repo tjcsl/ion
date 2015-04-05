@@ -31,7 +31,7 @@ eighth_admin_patterns = [
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
-    url(r"^blocks/print_rosters/(?P<block_id>\d+)$", general.not_implemented_view, name="eighth_admin_print_block_rosters"),
+    url(r"^blocks/print_rosters/(?P<block_id>\d+)$", blocks.print_block_rosters_view, name="eighth_admin_print_block_rosters"),
     url(r"^blocks/edit/(?P<block_id>\d+)$", blocks.edit_block_view, name="eighth_admin_edit_block"),
     url(r"^blocks/delete/(?P<block_id>\d+)$", blocks.delete_block_view, name="eighth_admin_delete_block"),
 

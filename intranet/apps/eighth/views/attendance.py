@@ -2,9 +2,18 @@
 from __future__ import unicode_literals
 
 import datetime
+from six import BytesIO
 from django import http
 from django.shortcuts import render, redirect
 from formtools.wizard.views import SessionWizardView
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+)
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 from ...auth.decorators import eighth_admin_required, attendance_taker_required
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
@@ -246,3 +255,97 @@ def accept_all_passes_view(request, scheduled_activity_id):
 
     return redirect(url_name,
                     scheduled_activity_id=scheduled_activity.id)
+
+
+def generate_roster_pdf(sched_act_ids, include_instructions):
+    """Generates a PDF roster for one or more
+    :class:`EighthScheduledActivity`\s.
+
+    Args
+        sched_act_ids
+            The list of IDs of the scheduled activities to show in the PDF.
+        include_instructions
+            Whether instructions should be printed at the bottom of the
+            roster(s).
+
+    Returns a BytesIO object for the PDF.
+
+    """
+
+    pdf_buffer = BytesIO()
+    h_margin = 1 * inch
+    v_margin = 0.5 * inch
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter,
+                            rightMargin=h_margin, leftMargin=h_margin,
+                            topMargin=v_margin, bottomMargin=v_margin)
+
+    elements = []
+
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name="Center", alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name="BlockLetter", fontSize=60, leading=72, alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name="ActivityAttribute", fontSize=15, leading=18, alignment=TA_RIGHT))
+
+    for i, said in enumerate(sched_act_ids):
+        sact = EighthScheduledActivity.objects.get(id=said)
+
+        sponsor_names = sact.get_true_sponsors().values_list("first_name",
+                                                             "last_name")
+        sponsors_str = "; ".join(l + ", " + f for f, l in sponsor_names)
+
+        room_names = sact.get_true_rooms().values_list("name", flat=True)
+        rooms_str = ", ".join("Room " + r for r in room_names)
+
+        header_data = [[
+            Paragraph("<b>Activity ID {}</b>".format(sact.activity.id), styles["Normal"]),
+            Paragraph("{}<br/>{}<br/>{}".format(sponsors_str,
+                                                rooms_str,
+                                                sact.block.date),
+                      styles["ActivityAttribute"]),
+            Paragraph("A", styles["BlockLetter"])
+        ]]
+        header_style = TableStyle([
+            ("VALIGN", (0, 0), (0, 0), "TOP"),
+            ("VALIGN", (1, 0), (2, 0), "MIDDLE"),
+            ("TOPPADDING", (0, 0), (0, 0), 15),
+            ("RIGHTPADDING", (1, 0), (1, 0), 0),
+        ])
+
+        elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, 1 * inch]))
+        elements.append(Spacer(0, 10))
+        elements.append(Paragraph(sact.activity.name, styles["Title"]))
+        elements.append(Paragraph("{} Students".format(sact.members.count()), styles["Center"]))
+        elements.append(Spacer(0, 5))
+
+        attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])]]
+        for member in sact.members.all():
+            row = ["_____________", "{} ({})".format(member.full_name, member.id), "12"]
+            attendance_data.append(row)
+
+        # Line commands are like this:
+        # op, start, stop, weight, colour, cap, dashes, join, linecount, linespacing
+        # For some reason, LINEBELOW doesn't work right, so the Present line is achieved
+        # with underscores... Not great but it works.
+        attendance_style = TableStyle([
+            ("LINEABOVE", (0, 1), (2, 1), 1, colors.black, None, None, None, 2, None),
+            # ("LINEBELOW", (0, 2), (0, len(attendance_data)), 1, colors.black, None, None, None, None, None),
+            ("TOPPADDING", (0, 1), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 1), (-1, -1), 0),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 5),
+        ])
+
+        elements.append(Table(attendance_data, style=attendance_style, colWidths=[1.3 * inch, None, 0.8 * inch]))
+        elements.append(Spacer(0, 15))
+        instructions = """Underline, highlight, or circle the names and ID numbers of the students who are <b>no-shows</b>.<br/>
+        Return the <b>roster</b> and <b>passes</b> to Eighth Period coordinator Joan Burch's mailbox
+        in the <b>main office</b>.<br/>
+        <u>Do not make any additions to the roster.</u><br/>
+        Students who need changes should report to the 8th period office.<br/>
+        For questions, please call extension 5046 or 5078. Thank you!<br/>"""
+        elements.append(Paragraph(instructions, styles["Normal"]))
+
+        if i != len(sched_act_ids) - 1:
+            elements.append(PageBreak())
+
+    doc.build(elements)
+    return pdf_buffer
