@@ -339,7 +339,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         instructions = """Underline, highlight, or circle the names and ID numbers of the students who are <b>no-shows</b>.<br/>
         Return the <b>roster</b> and <b>passes</b> to Eighth Period coordinator Joan Burch's mailbox
         in the <b>main office</b>.<br/>
-        <u>Do not make any additions to the roster.</u><br/>
+        <b>Do not make any additions to the roster.</b><br/>
         Students who need changes should report to the 8th period office.<br/>
         For questions, please call extension 5046 or 5078. Thank you!<br/>"""
         elements.append(Paragraph(instructions, styles["Normal"]))
