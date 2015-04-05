@@ -39,7 +39,7 @@ class SignupException(Exception):
             if value:
                 self.errors.add(name)
             elif name in self.errors:
-                    self.errors.remove(name)
+                self.errors.remove(name)
         super(SignupException, self).__setattr__(name, value)
 
     def messages(self, admin=False):

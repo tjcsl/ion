@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class EighthSponsor(models.Model):
+
     """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
@@ -47,6 +48,7 @@ class EighthSponsor(models.Model):
 
 
 class EighthRoom(models.Model):
+
     """Represents a room in which an eighth period activity can be held
 
     Attributes:
@@ -66,12 +68,14 @@ class EighthRoom(models.Model):
 
 
 class EighthActivityExcludeDeletedManager(models.Manager):
+
     def get_query_set(self):
         return (super(EighthActivityExcludeDeletedManager, self).get_query_set()
                                                                 .exclude(deleted=True))
 
 
 class EighthActivity(models.Model):
+
     """Represents an eighth period activity.
 
     Attributes:
@@ -174,6 +178,7 @@ class EighthActivity(models.Model):
 
 
 class EighthBlockManager(models.Manager):
+
     def get_first_upcoming_block(self):
         """Gets the first upcoming block (the first block that will
         take place in the future). If there is no block in the future,
@@ -210,6 +215,7 @@ class EighthBlockManager(models.Manager):
 
 
 class EighthBlock(models.Model):
+
     """Represents an eighth period block.
 
     Attributes:
@@ -234,11 +240,11 @@ class EighthBlock(models.Model):
                                         blank=True)
 
     def save(self, *args, **kwargs):
-            letter = getattr(self, "block_letter", None)
-            if letter:
-                self.block_letter = letter.capitalize()
+        letter = getattr(self, "block_letter", None)
+        if letter:
+            self.block_letter = letter.capitalize()
 
-            super(EighthBlock, self).save(*args, **kwargs)
+        super(EighthBlock, self).save(*args, **kwargs)
 
     def next_blocks(self, quantity=-1):
         blocks = (EighthBlock.objects
@@ -282,6 +288,7 @@ class EighthBlock(models.Model):
 
 
 class EighthScheduledActivity(models.Model):
+
     """Represents the relationship between an activity and a block in
     which it has been scheduled.
 
@@ -312,10 +319,10 @@ class EighthScheduledActivity(models.Model):
     block = models.ForeignKey(EighthBlock)
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(
-            User,
-            through="EighthSignup",
-            related_name="eighthscheduledactivity_set"
-        )
+        User,
+        through="EighthSignup",
+        related_name="eighthscheduledactivity_set"
+    )
 
     comments = models.CharField(max_length=1000, blank=True)
 
@@ -499,9 +506,9 @@ class EighthScheduledActivity(models.Model):
                     # Clear out the other signups for this block if the user is
                     # switching out of a both-blocks activity
                     EighthSignup.objects.filter(
-                            user=user,
-                            scheduled_activity__block__date=self.block.date
-                        ).delete()
+                        user=user,
+                        scheduled_activity__block__date=self.block.date
+                    ).delete()
                     EighthSignup.objects.create(user=user,
                                                 scheduled_activity=self)
             except EighthSignup.DoesNotExist:
@@ -509,9 +516,9 @@ class EighthScheduledActivity(models.Model):
                                             scheduled_activity=self)
         else:
             EighthSignup.objects.filter(
-                    user=user,
-                    scheduled_activity__block__date=self.block.date
-                ).delete()
+                user=user,
+                scheduled_activity__block__date=self.block.date
+            ).delete()
 
             for sched_act in all_sched_act:
                 EighthSignup.objects.create(user=user,
@@ -527,6 +534,7 @@ class EighthScheduledActivity(models.Model):
 
 
 class EighthSignup(models.Model):
+
     """Represents a signup/membership in an eighth period activity.
 
     Attributes:
@@ -544,11 +552,11 @@ class EighthSignup(models.Model):
 
     user = models.ForeignKey(User, null=False)
     scheduled_activity = models.ForeignKey(
-            EighthScheduledActivity,
-            related_name="eighthsignup_set",
-            null=False,
-            db_index=True
-        )
+        EighthScheduledActivity,
+        related_name="eighthsignup_set",
+        null=False,
+        db_index=True
+    )
 
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)

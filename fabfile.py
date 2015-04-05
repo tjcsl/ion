@@ -177,7 +177,7 @@ def load_fixtures():
     if not confirm("Are you sure you want to load all fixtures? This could "
                    "have unintended consequences if the database "
                    "is not empty."):
-            abort("Aborted.")
+        abort("Aborted.")
 
     files = ["fixtures/users/users.json",
              "fixtures/eighth/sponsors.json",

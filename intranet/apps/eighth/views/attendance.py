@@ -103,9 +103,9 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         block = form_list[0].cleaned_data["block"]
         scheduled_activity = EighthScheduledActivity.objects.get(
-                                    block=block,
-                                    activity=activity
-                                )
+            block=block,
+            activity=activity
+        )
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
@@ -115,17 +115,17 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
 _unsafe_choose_scheduled_activity_view = (
-        EighthAttendanceSelectScheduledActivityWizard.as_view(
-            EighthAttendanceSelectScheduledActivityWizard.FORMS,
-            condition_dict={"activity": should_show_activity_list}
-        )
+    EighthAttendanceSelectScheduledActivityWizard.as_view(
+        EighthAttendanceSelectScheduledActivityWizard.FORMS,
+        condition_dict={"activity": should_show_activity_list}
     )
+)
 teacher_choose_scheduled_activity_view = (
-        attendance_taker_required(_unsafe_choose_scheduled_activity_view)
-    )
+    attendance_taker_required(_unsafe_choose_scheduled_activity_view)
+)
 admin_choose_scheduled_activity_view = (
-        eighth_admin_required(_unsafe_choose_scheduled_activity_view)
-    )
+    eighth_admin_required(_unsafe_choose_scheduled_activity_view)
+)
 
 
 @attendance_taker_required
@@ -235,18 +235,18 @@ def accept_all_passes_view(request, scheduled_activity_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(
-                                    id=scheduled_activity_id
-                                )
+            id=scheduled_activity_id
+        )
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
     EighthSignup.objects.filter(
-            after_deadline=True,
-            scheduled_activity=scheduled_activity
-        ).update(
-            pass_accepted=True,
-            was_absent=False
-        )
+        after_deadline=True,
+        scheduled_activity=scheduled_activity
+    ).update(
+        pass_accepted=True,
+        was_absent=False
+    )
 
     if "admin" in request.path:
         url_name = "eighth_admin_take_attendance"

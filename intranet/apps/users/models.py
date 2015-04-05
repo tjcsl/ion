@@ -21,6 +21,7 @@ register = template.Library()
 
 
 class UserManager(UserManager):
+
     """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -28,6 +29,7 @@ class UserManager(UserManager):
     default User model manager.
 
     """
+
     def user_with_student_id(self, student_id):
         c = LDAPConnection()
 
@@ -41,6 +43,7 @@ class UserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
     """Django User model subclass with properties that fetch data from
     LDAP
 
@@ -555,8 +558,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             if "perm-showpictures-self" in default:
                 perms["self"]["default"] = (
-                        default["perm-showpictures-self"][0] == "TRUE"
-                    )
+                    default["perm-showpictures-self"][0] == "TRUE"
+                )
 
             photos_result = c.search(self.dn,
                                      "(objectclass=iodinePhoto)",

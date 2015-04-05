@@ -8,9 +8,11 @@ from datetime import datetime
 from six import text_type, iteritems
 from six.moves.urllib import request
 
+
 class Command(BaseCommand):
     args = ''
     help = 'Adds schedule entries from iCal to the database.'
+
     def handle(self, *args, **options):
         def get_ical():
             resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
@@ -24,7 +26,7 @@ class Command(BaseCommand):
                 date = event.get('dtstart')
                 summary = event.get('summary')
                 categories = event.get('categories')
-                if categories in ['Blue Day','Red Day','Anchor Day']:
+                if categories in ['Blue Day', 'Red Day', 'Anchor Day']:
                     print("{} {} {}".format(date.to_ical(), summary, categories))
                     map[date.to_ical()] = text_type(summary)
             return map

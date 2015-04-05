@@ -26,6 +26,7 @@ def index_view(request, auth_form=None, force_login=False):
 
 
 class login_view(View):
+
     """Log in and redirect a user."""
 
     def post(self, request):

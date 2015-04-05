@@ -60,4 +60,3 @@ def maximum(num1, num2):
     """Returns smaller of two numbers."""
 
     return max(num1, num2)
-

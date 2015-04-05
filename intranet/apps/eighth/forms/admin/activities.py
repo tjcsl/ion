@@ -8,6 +8,7 @@ from ...models import EighthActivity, EighthScheduledActivity
 
 
 class ActivitySelectionForm(forms.Form):
+
     def __init__(self, label="Activity", block=None, sponsor=None, *args, **kwargs):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
@@ -37,12 +38,14 @@ class ActivitySelectionForm(forms.Form):
 
 
 class QuickActivityForm(forms.ModelForm):
+
     class Meta:
         model = EighthActivity
         fields = ["name"]
 
 
 class ActivityForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super(ActivityForm, self).__init__(*args, **kwargs)
 

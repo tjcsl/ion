@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = EighthActivity
         fields = ("id",

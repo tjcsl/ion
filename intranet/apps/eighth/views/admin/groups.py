@@ -147,9 +147,9 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
         scheduled_activity = EighthScheduledActivity.objects.get(
-                                    block=block,
-                                    activity=activity
-                                )
+            block=block,
+            activity=activity
+        )
 
         try:
             group = Group.objects.get(id=kwargs["group_id"])
@@ -160,29 +160,29 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         if not activity.both_blocks:
             EighthSignup.objects.filter(
-                    user__in=users,
-                    scheduled_activity__block=block
-                ).delete()
+                user__in=users,
+                scheduled_activity__block=block
+            ).delete()
             for user in users:
                 EighthSignup.objects.create(
-                        user=user,
-                        scheduled_activity=scheduled_activity
-                    )
+                    user=user,
+                    scheduled_activity=scheduled_activity
+                )
         else:
             EighthSignup.objects.filter(
-                    user__in=users,
-                    scheduled_activity__block__date=block.date
-                )
+                user__in=users,
+                scheduled_activity__block__date=block.date
+            )
             for user in users:
                 all_sched_acts = EighthScheduledActivity.objects.filter(
-                                        block__date=block.date,
-                                        activity=activity
-                                    )
+                    block__date=block.date,
+                    activity=activity
+                )
                 for sched_act in all_sched_acts:
                     EighthSignup.objects.create(
-                            user=user,
-                            scheduled_activity=sched_act
-                        )
+                        user=user,
+                        scheduled_activity=sched_act
+                    )
 
         messages.success(self.request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")

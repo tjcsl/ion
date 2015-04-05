@@ -15,6 +15,7 @@ _thread_locals = local()
 
 
 class LDAPFilter(object):
+
     @staticmethod
     def operator(operator, *conditions):
         return "(" + operator + "".join(("(" + c + ")" for c in conditions)) + ")"
@@ -45,6 +46,7 @@ class LDAPFilter(object):
 
 
 class LDAPConnection(object):
+
     """Represents an LDAP connection with wrappers for the raw ldap
     queries.
 
@@ -182,6 +184,7 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
+
     """Represents the result of an LDAP query.
 
     LDAPResult stores the raw result of an LDAP query and can process

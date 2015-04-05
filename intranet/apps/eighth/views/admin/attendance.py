@@ -66,7 +66,7 @@ def delinquent_students_view(request):
         "include_freshmen": include_freshmen,
         "include_sophomores": include_sophomores,
         "include_juniors": include_juniors,
-        "include_seniors":  include_seniors,
+        "include_seniors": include_seniors,
         "start_date": start_date,
         "end_date": end_date,
     }
@@ -230,10 +230,10 @@ def reject_outstanding_passes_view(request):
                                                                             activity=activity))
 
         EighthSignup.objects.filter(
-                scheduled_activity__block=block,
-                after_deadline=True,
-                pass_accepted=False
-            ).update(scheduled_activity=pass_not_received)
+            scheduled_activity__block=block,
+            after_deadline=True,
+            pass_accepted=False
+        ).update(scheduled_activity=pass_not_received)
 
         messages.success(request, "Successfully rejected outstanding passes.")
 
@@ -307,6 +307,3 @@ def out_of_building_schedules_view(request, block_id=None):
             writer.writerow(row)
 
         return response
-
-
-

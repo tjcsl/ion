@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 
 class FixSlashes(object):
+
     def process_request(self, request):
         """Add or remove trailing slashes where needed.
 
