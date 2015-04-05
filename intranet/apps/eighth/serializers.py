@@ -57,6 +57,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                      .exclude(activity__deleted=True)
                                      .select_related("activity"))
 
+        favorited_activities = set(self.context["request"].user
+                                                          .favorited_activity_set
+                                                          .values_list("id", flat=True))
+
         for scheduled_activity in scheduled_activities:
             activity_info = {
                 "id": scheduled_activity.activity.id,
@@ -67,6 +71,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "name": scheduled_activity.activity.name_with_flags,
                 "description": scheduled_activity.activity.description,
                 "cancelled": scheduled_activity.cancelled,
+                "favorited": scheduled_activity.activity.id in favorited_activities,
                 "roster": {
                     "count": 0,
                     "capacity": 0,

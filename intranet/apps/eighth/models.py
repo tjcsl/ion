@@ -109,6 +109,10 @@ class EighthActivity(models.Model):
     juniors_allowed = models.BooleanField(default=False)
     seniors_allowed = models.BooleanField(default=False)
 
+    favorites = models.ManyToManyField(User,
+                                       related_name="favorited_activity_set",
+                                       blank=True)
+
     deleted = models.BooleanField(blank=True, default=False)
 
     @property

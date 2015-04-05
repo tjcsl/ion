@@ -166,6 +166,7 @@ $(function() {
 
         render: function() {
             var renderActivitiesInContainer = function(activities, $container) {
+                $container.html("");
                 _(activities).each(function(activity){
                     var ActivityListRowView = new eighth.ActivityListRowView({
                         model: activity
@@ -178,7 +179,7 @@ $(function() {
             renderActivitiesInContainer(this.activityList.models, $(".all-activities", this.el))
 
             var favorites = _.filter(this.activityList.models, function(activity) {
-                return activity.attributes.name.indexOf("Lab") == 0;
+                return activity.attributes.favorited;
             });
             renderActivitiesInContainer(favorites, $(".favorite-activities", this.el))
 
