@@ -1,19 +1,69 @@
-Announcements App
-=================
+intranet.apps.announcements package
+===================================
 
-:mod:`models` Module
---------------------
+Subpackages
+-----------
+
+.. toctree::
+
+    intranet.apps.announcements.migrations
+
+Submodules
+----------
+
+intranet.apps.announcements.admin module
+----------------------------------------
+
+.. automodule:: intranet.apps.announcements.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.announcements.forms module
+----------------------------------------
+
+.. automodule:: intranet.apps.announcements.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.announcements.models module
+-----------------------------------------
 
 .. automodule:: intranet.apps.announcements.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`views` Module
--------------------
+intranet.apps.announcements.tests module
+----------------------------------------
+
+.. automodule:: intranet.apps.announcements.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.announcements.urls module
+---------------------------------------
+
+.. automodule:: intranet.apps.announcements.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.announcements.views module
+----------------------------------------
 
 .. automodule:: intranet.apps.announcements.views
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: intranet.apps.announcements
+    :members:
+    :undoc-members:
+    :show-inheritance:

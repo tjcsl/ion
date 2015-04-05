@@ -1,19 +1,46 @@
-Files App
-=========
+intranet.apps.files package
+===========================
 
-:mod:`models` Module
---------------------
+Submodules
+----------
+
+intranet.apps.files.models module
+---------------------------------
 
 .. automodule:: intranet.apps.files.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`views` Module
--------------------
+intranet.apps.files.tests module
+--------------------------------
+
+.. automodule:: intranet.apps.files.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.files.urls module
+-------------------------------
+
+.. automodule:: intranet.apps.files.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.files.views module
+--------------------------------
 
 .. automodule:: intranet.apps.files.views
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: intranet.apps.files
+    :members:
+    :undoc-members:
+    :show-inheritance:

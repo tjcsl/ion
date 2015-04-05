@@ -1,8 +1,10 @@
-Source Code Documentation
-=========================
+intranet package
+================
+
+Subpackages
+-----------
 
 .. toctree::
-    :maxdepth: 3
 
     intranet.apps
     intranet.db
@@ -10,3 +12,30 @@ Source Code Documentation
     intranet.settings
     intranet.utils
 
+Submodules
+----------
+
+intranet.urls module
+--------------------
+
+.. automodule:: intranet.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.wsgi module
+--------------------
+
+.. automodule:: intranet.wsgi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: intranet
+    :members:
+    :undoc-members:
+    :show-inheritance:
