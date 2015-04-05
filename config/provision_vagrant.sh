@@ -25,6 +25,7 @@ apt-get -y install python3-pip
 pip3 install virtualenvwrapper
 apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
+apt-get -y install fabric
 
 # LDAP
 apt-get -y install ldap-utils
