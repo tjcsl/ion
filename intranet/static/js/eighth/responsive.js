@@ -7,14 +7,14 @@ $(document).ready(function() {
         if(is_small()) {
             $("#activity-detail").addClass("visible");
             setTimeout(function() {
-                $("#activity-list").addClass("hidden");
+                $("#activity-picker .backbtn").addClass("visible");
             }, 200);
         }
     })
 
-    $("#activity-list .backbtn").click(function() {
+    $("#activity-picker .backbtn").click(function() {
         $("#activity-detail").removeClass("visible");
-        $("#activity-list").removeClass("hidden");
+        $("#activity-picker .backbtn").removeClass("visible");
         $("#activity-list li[data-activity-id]").removeClass("selected");
     })
 
@@ -23,7 +23,7 @@ $(document).ready(function() {
             $("#activity-list li[data-activity-id]").removeClass("selected");
         }
         $("#activity-detail").removeClass("visible");
-        $("#activity-list").removeClass("hidden");
+        $("#activity-picker .backbtn").removeClass("hidden");
     })
 
     eighthResize = function() {

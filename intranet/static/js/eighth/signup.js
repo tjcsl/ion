@@ -183,6 +183,27 @@ $(function() {
             });
             renderActivitiesInContainer(favorites, $(".favorite-activities", this.el))
 
+            // if (!$("#activity-picker").hasClass("different-user")) {
+            //     $(".activity-icon.fav").click(function(event) {
+            //         var aid = $(this).parent().parent().data("activity-id");
+
+            //         $.ajax({
+            //             url: $("#activity-detail").data("signup-endpoint") + queryParams,
+            //             type: "POST",
+            //             data: {
+            //                 "aid": aid
+            //             },
+            //             success: function(response) {
+
+            //             },
+            //             error: function(xhr, status, error) {
+            //                 console.error(xhr.responseText);
+            //             }
+            //         });
+            //         event.stopPropagation();
+            //     })
+            // }
+
 
             $(".search-wrapper input").removeAttr("disabled");
         }
