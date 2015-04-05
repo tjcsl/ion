@@ -98,7 +98,7 @@ def delinquent_students_view(request):
             delinquents[index]["user"] = user
 
         def filter_by_grade(delinquent):
-            grade = delinquent["user"].grade.number()
+            grade = delinquent["user"].grade.number
             include = False
             if include_freshmen:
                 include |= (grade == 9)
@@ -136,7 +136,7 @@ def delinquent_students_view(request):
             row.append(delinquent["user"].last_name)
             row.append(delinquent["user"].first_name)
             row.append(delinquent["user"].student_id)
-            row.append(delinquent["user"].grade.number())
+            row.append(delinquent["user"].grade.number)
             counselor = delinquent["user"].counselor
             row.append(counselor.last_name if counselor else "")
             writer.writerow(row)

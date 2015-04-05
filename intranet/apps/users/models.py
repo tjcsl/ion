@@ -1172,11 +1172,12 @@ class Grade(object):
         else:
             self._name = None
 
+    @property
     def number(self):
         """Return the grade as a number (9-12).
 
         For use in templates since there is no nice integer casting.
-        In Python code, use int() on a Grade object instead.
+        In Python code you can also use int() on a Grade object.
 
         """
         return self._number

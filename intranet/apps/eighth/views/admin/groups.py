@@ -100,7 +100,7 @@ def download_group_csv_view(request, group_id):
         row.append(user.last_name)
         row.append(user.first_name)
         row.append(user.student_id)
-        row.append(user.grade.number())
+        row.append(user.grade.number)
         emails = user.emails
         row.append(user.emails[0] if emails is not None and len(emails) else None)
         writer.writerow(row)

@@ -180,7 +180,7 @@ def take_attendance_view(request, scheduled_activity_id):
             members.append({
                 "id": user.id,
                 "name": user.last_name + ", " + user.first_name,
-                "grade": user.grade.number(),
+                "grade": user.grade.number,
                 "present": (scheduled_activity.attendance_taken and
                             (user.id not in absent_user_ids))
             })
