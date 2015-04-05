@@ -318,8 +318,14 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Spacer(0, 5))
 
         attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])]]
+
+        members = []
         for member in sact.members.all():
-            row = ["_____________", "{} ({})".format(member.full_name, member.id), "12"]
+            members.append((member.last_name + ", " + member.first_name, member.id))
+        members = sorted(members)
+
+        for member_name, member_id in members:
+            row = ["_____________", "{} ({})".format(member_name, member_id), "12"]
             attendance_data.append(row)
 
         # Line commands are like this:
