@@ -1,3 +1,4 @@
 echo "Building docs..."
-sphinx-apidoc -f -o docs/source/sourcedoc intranet intranet/urls.py intranet/settings/production.py
+excludes="docs/source/sourcedoc intranet intranet/urls.py intranet/settings/production.py intranet/apps/api/urls.py intranet/apps/eighth/views/api.py"
+sphinx-apidoc -f -o $excludes
 make -C docs html
