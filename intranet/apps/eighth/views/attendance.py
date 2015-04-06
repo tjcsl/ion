@@ -133,10 +133,7 @@ def take_attendance_view(request, scheduled_activity_id):
     try:
         scheduled_activity = (EighthScheduledActivity.objects
                                                      .select_related("activity",
-                                                                     "block",
-                                                                     "sponsors",
-                                                                     "rooms",
-                                                                     "members")
+                                                                     "block")
                                                      .get(cancelled=False,
                                                           activity__deleted=False,
                                                           id=scheduled_activity_id))
