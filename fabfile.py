@@ -207,7 +207,7 @@ def deploy():
     with lcd(PRODUCTION_DOCUMENT_ROOT):
         with shell_env(PRODUCTION="TRUE"):
             local("git pull")
-            local("pip install --upgrade -r requirements.txt")
+            local("pip install -r requirements.txt")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
                 local("./manage.py collectstatic")
                 local("./manage.py migrate")
