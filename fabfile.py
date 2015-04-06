@@ -44,7 +44,7 @@ def runserver(port=8080,
     if not port or (not isinstance(port, int) and not port.isdigit()):
         abort("You must specify a port.")
 
-    clean_pyc()
+    # clean_pyc()
 
     yes_or_no = ("debug_toolbar",
                  "werkzeug",
