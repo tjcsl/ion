@@ -32,9 +32,9 @@
         }
         window.showForceButton = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
     </script>
+    <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -44,12 +44,14 @@
                 <span class="activity-icon fav <% if (favorited) { %>fav-sel<% } %>"></span>
                 <% if (cancelled) { %>
                     <span class="activity-icon cancelled"></span>
+                <% } else if (restricted_to_user) { %>
+                    <span class="activity-icon restricted"></span>
                 <% } else { %>
                     <% var pieNumber = Math.min(Math.round(roster.count / roster.capacity * 10), 10); %>
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
                 <% } %>
             </span>
-            <% var full_name = cancelled ? name + " (Cancelled)" : name; %>
+            <% var full_name = name_with_flags_for_user + (cancelled ?  + " (Cancelled)" : ""); %>
             <span class="activity-name" title="<%= full_name %>"><%= full_name %></span>
         {% endverbatim %}
     </script>
@@ -57,7 +59,7 @@
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
         <h3>
-            <%= name + (cancelled ? " (Cancelled)" : "") %>
+            <%= name_with_flags_for_user + (cancelled ? " (Cancelled)" : "") %>
         </h3>
         <dl>
             <dt>Rooms:</dt>
@@ -151,7 +153,7 @@
                                                     {{ b.block_letter }}
                                                 </span>
 
-                                                <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags }}{% endif %}">
+                                                <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags_no_restricted }}{% endif %}">
                                                     {% if b.locked %}
                                                         <i class="fa fa-lock"></i>
                                                     {% endif %}
@@ -159,7 +161,7 @@
                                                         <strong>Cancelled</strong> -
                                                     {% endif %}
                                                     {% if b.current_signup %}
-                                                        {{ b.current_signup.name_with_flags }}
+                                                        {{ b.current_signup.name_with_flags_no_restricted }}
                                                     {% else %}
                                                         <span class="no-activity-selected">
                                                             No activity selected

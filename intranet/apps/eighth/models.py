@@ -132,9 +132,17 @@ class EighthActivity(models.Model):
 
     @property
     def name_with_flags(self):
+        return self._name_with_flags(True)
+
+    @property
+    def name_with_flags_no_restricted(self):
+        return self._name_with_flags(False)
+
+    def _name_with_flags(self, include_restricted):
         name = "Special: " if self.special else ""
         name += self.name
-        name += " (R)" if self.restricted else ""
+        if include_restricted:
+            name += " (R)" if self.restricted else ""
         name += " (BB)" if self.both_blocks else ""
         name += " (S)" if self.sticky else ""
         name += " (Deleted)" if self.deleted else ""

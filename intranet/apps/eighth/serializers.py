@@ -58,21 +58,38 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                      .exclude(activity__deleted=True)
                                      .select_related("activity"))
 
-        favorited_activities = set(self.context["request"].user
-                                                          .favorited_activity_set
-                                                          .values_list("id", flat=True))
+        req_user = self.context["request"].user
+        favorited_activities = set(req_user.favorited_activity_set
+                                           .values_list("id", flat=True))
+        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(req_user)
 
         for scheduled_activity in scheduled_activities:
+            activity = scheduled_activity.activity
+            restricted_to_user = (req_user.is_eighth_admin or
+                                  (activity.restricted and
+                                   activity.id not in available_restricted_acts))
+            prefix = "Special: " if activity.special else ""
+            prefix += activity.name
+            middle = " (R)" if restricted_to_user else ""
+            suffix = " (BB)" if activity.both_blocks else ""
+            suffix += " (S)" if activity.sticky else ""
+            suffix += " (Deleted)" if activity.deleted else ""
+
+            name_with_flags = prefix + middle + suffix
+            name_with_flags_for_user = prefix + (middle if restricted_to_user else "") + suffix
+
             activity_info = {
-                "id": scheduled_activity.activity.id,
+                "id": activity.id,
                 "scheduled_activity": scheduled_activity.id,
                 "url": reverse("api_eighth_activity_detail",
-                               args=[scheduled_activity.activity.id],
+                               args=[activity.id],
                                request=self.context["request"]),
-                "name": scheduled_activity.activity.name_with_flags,
-                "description": scheduled_activity.activity.description,
+                "name": activity.name,
+                "name_with_flags": name_with_flags,
+                "name_with_flags_for_user": name_with_flags_for_user,
+                "description": activity.description,
                 "cancelled": scheduled_activity.cancelled,
-                "favorited": scheduled_activity.activity.id in favorited_activities,
+                "favorited": activity.id in favorited_activities,
                 "roster": {
                     "count": 0,
                     "capacity": 0,
@@ -82,13 +99,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 },
                 "rooms": [],
                 "sponsors": [],
-                "restricted": scheduled_activity.activity.restricted,
-                "both_blocks": scheduled_activity.activity.both_blocks,
-                "special": scheduled_activity.activity.special
+                "restricted": activity.restricted,
+                "restricted_to_user": restricted_to_user,
+                "both_blocks": activity.both_blocks,
+                "special": activity.special
             }
-            scheduled_activity_to_activity_map[scheduled_activity.id] = scheduled_activity.activity.id
+            scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
 
-            activity_list[scheduled_activity.activity.id] = activity_info
+            activity_list[activity.id] = activity_info
 
         # Find the number of students signed up for every activity
         # in this block
