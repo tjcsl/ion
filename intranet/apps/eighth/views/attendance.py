@@ -145,6 +145,11 @@ def take_attendance_view(request, scheduled_activity_id):
 
     if request.method == "POST":
         present_user_ids = list(request.POST.keys())
+
+        csrf = "csrfmiddlewaretoken"
+        if csrf in present_user_ids:
+            present_user_ids.remove(csrf)
+
         absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
                                       .exclude(user__in=present_user_ids))
         absent_signups.update(was_absent=True)
