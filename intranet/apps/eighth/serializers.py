@@ -65,8 +65,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for scheduled_activity in scheduled_activities:
             activity = scheduled_activity.activity
-            restricted_to_user = (req_user.is_eighth_admin or
-                                  (activity.restricted and
+            restricted_to_user = (activity.restricted and
+                                  (req_user.is_eighth_admin or
                                    activity.id not in available_restricted_acts))
             prefix = "Special: " if activity.special else ""
             prefix += activity.name
