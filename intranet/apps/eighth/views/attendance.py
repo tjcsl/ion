@@ -71,7 +71,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
             try:
                 sponsor = self.request.user.eighthsponsor
-            except EighthSponsor.DoesNotExist:
+            except (EighthSponsor.DoesNotExist, AttributeError):
                 sponsor = None
 
             if not (self.request.user.is_eighth_admin or (sponsor is None)):

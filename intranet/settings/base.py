@@ -100,7 +100,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
                 "intranet.apps.context_processors.nav_categorizer",
-                "intranet.apps.eighth.context_processors.start_date"
+                "intranet.apps.eighth.context_processors.start_date",
+                "intranet.apps.eighth.context_processors.absence_count"
             ),
             "debug": True  # Only enabled if DEBUG is true as well
         }

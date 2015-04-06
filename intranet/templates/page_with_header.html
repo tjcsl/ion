@@ -135,17 +135,18 @@
         </div>
 
         <ul class="right">
-            <li class="badged-item no-dropdown">
-                <a href="/" class="badge-link">
-                    <i class="fa fa-gavel"></i>
-                    <span class="badge-wrapper">
-                        <span class="badge">
-                            42
+            {% if request.user.is_student and eighth_absence_count > 0 %}
+                <li class="badged-item no-dropdown">
+                    <a href="/" class="badge-link">
+                        <i class="fa fa-gavel"></i>
+                        <span class="badge-wrapper">
+                            <span class="badge">
+                                {{ eighth_absence_count }}
+                            </span>
                         </span>
-                    </span>
-                </a>
-            </li>
-
+                    </a>
+                </li>
+            {% endif %}
             {% comment %}
             <li class="notifications badged-item has-dropdown">
                 <div class="dropdown-item-wrapper">
