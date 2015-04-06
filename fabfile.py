@@ -209,7 +209,7 @@ def deploy():
             local("git pull")
             local("pip install -r requirements.txt")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
-                local("./manage.py collectstatic")
+                local("./manage.py collectstatic --noinput")
                 local("./manage.py migrate")
             restart_production_gunicorn(True)
 
