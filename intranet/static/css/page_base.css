@@ -19,6 +19,10 @@ body {
     background: rgb(72, 72, 72);
 }
 
+.badge-link, .badge-link:active, .badge-link:visited {
+    color: white;
+}
+
 .header .right {
     -webkit-user-select: none;
     user-select: none;
@@ -110,14 +114,14 @@ h2 {
     outline: none;
 }
 
-.header .notifications {
+.header .badged-item {
     display: inline-block;
     position: relative;
     padding: 0 10px;
     line-height: normal;
 }
 
-.header .notifications i {
+.header .badged-item i {
     position: relative;
     display: inline-block;
     font-size: 17px;
@@ -128,12 +132,12 @@ h2 {
 }
 
 
-.header .notifications-badge-wrapper {
+.header .badge-wrapper {
     display: inline-block;
     line-height: normal;
 }
 
-.header .notifications-badge {
+.header .badge {
     color: white;
     display: inline-block;
     position: relative;
@@ -195,11 +199,12 @@ h2 {
     z-index: 999;
 }
 
-.header .has-dropdown {
+.header .badged-item, .username {
     cursor: pointer;
 }
 
-.header .dropdown-item-wrapper {
+.header .dropdown-item-wrapper,
+.badged-item:not(.has-dropdown) {
     height: 20px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -207,7 +212,9 @@ h2 {
     padding: 3px 5px;
 }
 
-.header .dropdown-open .dropdown-item-wrapper, .dropdown-item-wrapper:hover {
+.header .dropdown-open .dropdown-item-wrapper,
+.dropdown-item-wrapper:hover,
+.badged-item:not(.has-dropdown):hover {
     /*background-color: rgb(14,60,120);*/
     background-color: rgba(0, 0, 0, .2);
 }
