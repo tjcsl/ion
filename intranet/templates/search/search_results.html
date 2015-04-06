@@ -23,7 +23,9 @@
     <ul>
         {% for user in search_results %}
             <li>
-                <a href="{% url 'user_profile' user.ion_id %}">{{ user.display_name }} ({{ user.graduation_year }})</a>
+                <a href="{% url 'user_profile' user.ion_id %}">
+                    {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.first_name }} {{ user.last_name }}{% endif %} ({% if profile_user.graduation_year %}{{ profile_user.graduation_year }}{% else %}Staff{% endif %})
+                </a>
                 <br>
                 <img src="{% url 'profile_picture' user.ion_id %}">
             </li>

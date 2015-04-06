@@ -54,7 +54,7 @@ $(document).ready(function() {
             <div class="user-title">
                 <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">{{ profile_user.full_name }}</h2>
                 <h3>
-                {% if profile_user.user_type == "tjhsstStudent" %}
+                {% if profile_user.is_student %}
                     {% if profile_user.graduation_year %}
                         {{ profile_user.grade|capfirst }}
                         ({{ profile_user.graduation_year }})
@@ -69,10 +69,12 @@ $(document).ready(function() {
             <div class="user-container">
 
                 <table class="user-info-contact">
-                    <tr>
-                        <th>Full Name:</th>
-                        <td>{{ profile_user.display_name }}</td>
-                    </tr>
+                    {% if profile_user.display_name %}
+                        <tr>
+                            <th>Full Name:</th>
+                            <td>{{ profile_user.display_name }}</td>
+                        </tr>
+                    {% endif %}
                     {% if profile_user.birthday %}
                     <tr>
                         <th>Birthday</th>

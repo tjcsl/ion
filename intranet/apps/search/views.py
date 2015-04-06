@@ -28,6 +28,12 @@ def search_view(request):
             }
         })
         users = [r["_source"] for r in results["hits"]["hits"]]
-        return render(request, "search/search_results.html", {"search_query": q, "search_results": users})
+        context = {
+            "search_query": q,
+            "search_results": users  # Not actual user objects
+        }
     else:
-        return render(request, "search/search_results.html", {"search_results": None})
+        context = {
+            "search_results": None
+        }
+    return render(request, "search/search_results.html", context)
