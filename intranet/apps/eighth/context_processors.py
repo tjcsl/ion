@@ -26,3 +26,5 @@ def absence_count(request):
                              .count())
 
         return {"eighth_absence_count": count}
+
+    return {}
