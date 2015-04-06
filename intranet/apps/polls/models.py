@@ -2,6 +2,14 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from ..user.models import User
+
+class Group(models.Model): # poll audience
+    poll = models.ForeignKey(Poll)
+    name = models.CharField(max_length=100)
+    vote = models.BooleanField(default=True)
+    modify = models.BooleanField(default=True)
+    view = models.BooleanField(default=True)
 
 class Poll(models.Model):
     name = models.CharField(max_length=100)
@@ -9,13 +17,6 @@ class Poll(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
-
-class Group(models.Model): #poll audience
-    poll = models.ForeignKey(Poll)
-    name = models.CharField(max_length=100)
-    vote = models.BooleanField(default=True)
-    modify = models.BooleanField(default=True)
-    view = models.BooleanField(default=True)
 
 class Question(models.Model):
     poll = models.ForeignKey(Poll)
@@ -34,9 +35,9 @@ class Question(models.Model):
         (SHORT_RESP, 'Short response'),
         (STD_OTHER, 'Standard other'),
     )
-    type = models.CharField(max_length=3, choices=TYPE, default=std)
+    type = models.CharField(max_length=3, choices=TYPE, default=STD)
 
-class Choice(models.Model): #individual choices
+class Choice(models.Model): # individual choices
     question = models.ForeignKey(Question)
     info = models.CharField(max_length=100)
     std = models.BooleanField(default=False)
@@ -48,5 +49,5 @@ class Choice(models.Model): #individual choices
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     user = models.ManyToMany(User)
-    choice = models.ForeignKey(Choice) #determine field based on question type
+    choice = models.ForeignKey(Choice) # determine field based on question type
     votes = models.IntegerField(default=0)
