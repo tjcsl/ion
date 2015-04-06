@@ -1,5 +1,4 @@
 var eighth = {};
-var previousSelection = $("#activity-list li")[0];
 
 $(function() {
     eighth.Activity = Backbone.Model.extend({
@@ -61,8 +60,7 @@ $(function() {
         },
 
         showDetail: function(e) {
-            $(previousSelection).removeClass("selected");
-
+            $("#activity-list li[data-activity-id].selected").removeClass("selected");
             var $target = $(e.target);
             if (!$target.is("li")) {
                 $target = $target.parents("li");
@@ -73,7 +71,6 @@ $(function() {
             }
 
             $target.addClass("selected");
-            previousSelection = $target;
 
             activityDetailView = new eighth.ActivityDetailView({
                 model: this.model,
@@ -136,7 +133,8 @@ $(function() {
                 activity.attributes.selected = true;
                 activity.attributes.roster.count += 1;
 
-                activityDetailView.render()
+                activityDetailView.render();
+                activityListView.render();
             },
             error: function(xhr, status, error) {
                 var content_type = xhr.getResponseHeader("content-type");
@@ -175,6 +173,9 @@ $(function() {
         },
 
         render: function() {
+            var prevSelectedInFavorites = $("li[data-activity-id].selected").parent().hasClass("favorite-activities");
+            var prevSelectedAid = $("li[data-activity-id].selected").data("activity-id");
+
             var renderActivitiesInContainer = function(models, $container) {
                 $container.html("");
                 _.each(models, function(model){
@@ -229,6 +230,15 @@ $(function() {
 
 
             $(".search-wrapper input").removeAttr("disabled");
+            if (prevSelectedAid !== null) {
+                if (prevSelectedInFavorites) {
+                    $("#activity-list .favorite-activities li[data-activity-id=" + prevSelectedAid + "]").addClass("selected");
+                } else {
+                    $("#activity-list .all-activities li[data-activity-id=" + prevSelectedAid + "]").addClass("selected");
+                }
+            }
+
+            window.initEighthResponsive();
         }
     });
 
