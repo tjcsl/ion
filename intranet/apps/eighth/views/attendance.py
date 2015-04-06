@@ -190,13 +190,21 @@ def take_attendance_view(request, scheduled_activity_id):
                                                was_absent=True)
                                        .values_list("user__id", flat=True))
 
+        pass_users = (EighthSignup.objects
+                                  .select_related("user")
+                                  .filter(scheduled_activity=scheduled_activity,
+                                          after_deadline=True,
+                                          pass_accepted=True)
+                                  .values_list("user__id", flat=True))
+
         for user in users:
             members.append({
                 "id": user.id,
                 "name": user.last_name + ", " + user.first_name,
                 "grade": user.grade.number,
                 "present": (scheduled_activity.attendance_taken and
-                            (user.id not in absent_user_ids))
+                            (user.id not in absent_user_ids)),
+                "had_pass": user.id in pass_users
             })
 
         members.sort(key=lambda m: m["name"])
@@ -204,7 +212,8 @@ def take_attendance_view(request, scheduled_activity_id):
         context = {
             "scheduled_activity": scheduled_activity,
             "passes": passes,
-            "members": members
+            "members": members,
+            "p": pass_users
         }
 
         return render(request, "eighth/take_attendance.html", context)
