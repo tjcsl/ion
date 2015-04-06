@@ -20,6 +20,14 @@ intranet.settings.local module
     :undoc-members:
     :show-inheritance:
 
+intranet.settings.production module
+-----------------------------------
+
+.. automodule:: intranet.settings.production
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.settings.secret module
 -------------------------------
 

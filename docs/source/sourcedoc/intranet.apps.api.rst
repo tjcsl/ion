@@ -12,6 +12,14 @@ intranet.apps.api.tests module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.api.urls module
+-----------------------------
+
+.. automodule:: intranet.apps.api.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.api.views module
 ------------------------------
 

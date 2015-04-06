@@ -331,6 +331,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
 
 
+os.environ['BUILDING_SPHINX'] = "TRUE"
+
 def skip(app, what, name, obj, skip, options):
     """Methods to skip when generating documentation from docstrings."""
     if name in ("__weakref__", "__dict__", "base_fields", "media"):
