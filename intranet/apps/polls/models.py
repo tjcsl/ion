@@ -2,24 +2,20 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from ..users.models import User
-
-
-class Group(models.Model):
-    name = models.CharField(max_length=100)
-    vote = models.BooleanField(default=True)
-    modify = models.BooleanField(default=True)
-    view = models.BooleanField(default=True)
-
 
 class Poll(models.Model):
-    group = models.ForeignKey(Group)
     name = models.CharField(max_length=100)
     info = models.CharField(max_length=500)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
 
+class Group(models.Model): #poll audience
+    poll = models.ForeignKey(Poll)
+    name = models.CharField(max_length=100)
+    vote = models.BooleanField(default=True)
+    modify = models.BooleanField(default=True)
+    view = models.BooleanField(default=True)
 
 class Question(models.Model):
     poll = models.ForeignKey(Poll)
@@ -38,30 +34,19 @@ class Question(models.Model):
         (SHORT_RESP, 'Short response'),
         (STD_OTHER, 'Standard other'),
     )
-    type = models.CharField(max_length=3, choices=TYPE, default=STD)
+    type = models.CharField(max_length=3, choices=TYPE, default=std)
 
-
-class Choice(models.Model):
+class Choice(models.Model): #individual choices
     question = models.ForeignKey(Question)
-    info = models.CharField(max_length=500)
-    std = models.CharField(max_length=100)  # group types?
-    app = models.CharField(max_length=100)
-    # split_app = models.
+    info = models.CharField(max_length=100)
+    std = models.BooleanField(default=False)
+    app = models.BooleanField(default=False)
     free_resp = models.CharField(max_length=1000)
     short_resp = models.CharField(max_length=100)
     std_other = models.CharField(max_length=100)
 
-
-class Answer(models.Model):  # determine field based on question type
+class Answer(models.Model):
     question = models.ForeignKey(Question)
-    user = models.ForeignKey(User)
-    choice = models.ForeignKey(Choice)
-    std = models.CharField(max_length=100)  # group types? get values in final form from choice class?
-    app = models.CharField(max_length=100)
-    # split_app = models.
-    free_resp = models.CharField(max_length=1000)
-    short_resp = models.CharField(max_length=100)
-    std_other = models.CharField(max_length=100)
-    """def __unicode__( #plaintext?
-    )"""
-    # votes = models.IntegerField(default=0)
+    user = models.ManyToMany(User)
+    choice = models.ForeignKey(Choice) #determine field based on question type
+    votes = models.IntegerField(default=0)
