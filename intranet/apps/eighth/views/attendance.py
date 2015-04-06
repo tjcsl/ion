@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 
 import datetime
-from six import BytesIO
+try:
+    from io import BytesIO
+except ImportError:
+    from cStringIO import StringIO as BytesIO
 from django import http
 from django.shortcuts import render, redirect
 from formtools.wizard.views import SessionWizardView
