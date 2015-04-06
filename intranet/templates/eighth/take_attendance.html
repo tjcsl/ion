@@ -87,30 +87,6 @@
                     <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
                 </div>
                 {% endif %}
-                <form class="attendance-form" action="" method="post">
-                    {% csrf_token %}
-                    <table class="take-attendance-roster">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" class="">Present</th>
-                                <th>Student</th>
-                                <th>Grade</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for member in members %}
-                                <tr>
-                                    <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
-                                    <td>{{ member.name }}</td>
-                                    <td>{{ member.grade }}</td>
-                                    <td>{% if member.had_pass %}(Pass Accepted){% endif %}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <input type="submit" class="save-button" value="Save">
-                </form>
                 {% if passes %}
                     <h3>Passes</h3>
                     <table>
@@ -140,6 +116,31 @@
                         <input type="submit" class="button accept-all-passes" value="Accept All">
                     </form>
                 {% endif %}
+
+                <form class="attendance-form" action="" method="post">
+                    {% csrf_token %}
+                    <table class="take-attendance-roster">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="">Present</th>
+                                <th>Student</th>
+                                <th>Grade</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                                <tr>
+                                    <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
+                                    <td>{{ member.name }}</td>
+                                    <td>{{ member.grade }}</td>
+                                    <td>{% if member.had_pass %}(Pass Accepted){% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <input type="submit" class="save-button" value="Save">
+                </form>
             </div>
         {% endif %}
     </div>
