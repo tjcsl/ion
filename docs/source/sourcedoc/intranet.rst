@@ -15,14 +15,6 @@ Subpackages
 Submodules
 ----------
 
-intranet.urls module
---------------------
-
-.. automodule:: intranet.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.wsgi module
 --------------------
 

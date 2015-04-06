@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
 from six.moves.urllib import parse
 from .base import *
 
@@ -17,9 +16,6 @@ DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 SHOW_DEBUG_TOOLBAR = False
 
 CACHES['default']['OPTIONS']['DB'] = 1
-
-if 'BUILDING_SPHINX' in os.environ:
-    DATABASE_URL="invalid"
 
 parse.uses_netloc.append("postgres")
 url = parse.urlparse(DATABASE_URL)

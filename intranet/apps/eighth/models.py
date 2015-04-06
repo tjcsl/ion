@@ -202,11 +202,7 @@ class EighthBlockManager(models.Manager):
         if now.hour < 17:
             now = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        try:
-            block = (self.order_by("date", "block_letter")
-                         .filter(date__gte=now)[0])
-        except IndexError:
-            block = None
+        block = self.order_by("date", "block_letter").filter(date__gte=now).first()
         return block
 
     def get_current_blocks(self):

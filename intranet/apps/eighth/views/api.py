@@ -27,6 +27,7 @@ class EighthBlockList(generics.ListAPIView):
 
     """API endpoint that lists all eighth blocks
     """
+    # FIXME: this call throws sphinx for a loop
     queryset = EighthBlock.objects.get_current_blocks()
     serializer_class = EighthBlockListSerializer
 

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
 from django.conf import settings
 from django.conf.urls import url, include
 import django.contrib.admin
 from django.views.generic.base import RedirectView
+
+django.contrib.admin.autodiscover()
 
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
@@ -23,13 +24,8 @@ urlpatterns = [
     url(r"^search", include("intranet.apps.search.urls")),
     url(r"^profile", include("intranet.apps.users.urls")),
 
+    url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]
-
-if 'BUILDING_SPHINX' not in os.environ:
-    django.contrib.admin.autodiscover()
-    urlpatterns += [
-        url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
-    ]
 
 
 if settings.SHOW_DEBUG_TOOLBAR:
