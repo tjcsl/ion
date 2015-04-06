@@ -142,33 +142,33 @@ class EighthActivity(models.Model):
 
     @classmethod
     def restricted_activities_available_to_user(cls, user):
-        activities = list(user.restricted_activity_set
-                              .values_list("id", flat=True))
+        activities = set(user.restricted_activity_set
+                             .values_list("id", flat=True))
 
         grade = user.grade.number
 
         if grade == 9:
-            activities += list(EighthActivity.objects
-                                             .filter(freshmen_allowed=True)
-                                             .values_list("id", flat=True))
+            activities |= set(EighthActivity.objects
+                                            .filter(freshmen_allowed=True)
+                                            .values_list("id", flat=True))
         elif grade == 10:
-            activities += list(EighthActivity.objects
-                                             .filter(sophomores_allowed=True)
-                                             .values_list("id", flat=True))
+            activities |= set(EighthActivity.objects
+                                            .filter(sophomores_allowed=True)
+                                            .values_list("id", flat=True))
         elif grade == 11:
-            activities += list(EighthActivity.objects
-                                             .filter(juniors_allowed=True)
-                                             .values_list("id", flat=True))
+            activities |= set(EighthActivity.objects
+                                            .filter(juniors_allowed=True)
+                                            .values_list("id", flat=True))
         elif grade == 12:
-            activities += list(EighthActivity.objects
-                                             .filter(seniors_allowed=True)
-                                             .values_list("id", flat=True))
+            activities |= set(EighthActivity.objects
+                                            .filter(seniors_allowed=True)
+                                            .values_list("id", flat=True))
 
         for group in user.groups.all():
-            activities += list(group.restricted_activity_set
-                                    .values_list("id", flat=True))
+            activities |= set(group.restricted_activity_set
+                                   .values_list("id", flat=True))
 
-        return activities
+        return list(activities)
 
     class Meta:
         verbose_name_plural = "eighth activities"
