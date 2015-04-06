@@ -12,6 +12,7 @@ urlpatterns = [
 
     # Students
     url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
+    url(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
 
     # Teachers
     url(r"^/attendance$", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),

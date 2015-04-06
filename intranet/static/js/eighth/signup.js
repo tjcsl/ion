@@ -192,28 +192,40 @@ $(function() {
             var favorites = _.filter(this.activities.models, function(activity) {
                 return activity.attributes.favorited;
             });
-            renderActivitiesInContainer(favorites, $(".favorite-activities", this.el))
+            renderActivitiesInContainer(favorites, $(".favorite-activities", this.el));
+            if (favorites.length == 0) {
+                $(".favorites-header").addClass("hidden");
+            } else {
+                $(".favorites-header").removeClass("hidden");
+            }
 
-            // if (!$("#activity-picker").hasClass("different-user")) {
-            //     $(".activity-icon.fav").click(function(event) {
-            //         var aid = $(this).parent().parent().data("activity-id");
+            if (!$("#activity-picker").hasClass("different-user")) {
+                var view = this;
+                $(".activity-icon.fav").click(function(event) {
+                    var aid = $(this).parent().parent().data("activity-id");
+                    var $icon = $(this);
+                    var model = view.activities.get(aid);
 
-            //         $.ajax({
-            //             url: $("#activity-detail").data("signup-endpoint") + queryParams,
-            //             type: "POST",
-            //             data: {
-            //                 "aid": aid
-            //             },
-            //             success: function(response) {
+                    $("#activity-list").scrollTop($("#activity-list").scrollTop() + ($(this).hasClass("fav-sel") ? -26 : 26));
 
-            //             },
-            //             error: function(xhr, status, error) {
-            //                 console.error(xhr.responseText);
-            //             }
-            //         });
-            //         event.stopPropagation();
-            //     })
-            // }
+                    model.attributes.favorited = !model.attributes.favorited;
+                    view.render();
+
+                    $.ajax({
+                        url: $("#activity-list").data("toggle-favorite-endpoint"),
+                        type: "POST",
+                        data: {
+                            "aid": aid
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            model.attributes.favorited = !model.attributes.favorited;
+                            view.render();
+                        }
+                    });
+                    event.stopPropagation();
+                })
+            }
 
 
             $(".search-wrapper input").removeAttr("disabled");

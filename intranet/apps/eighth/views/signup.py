@@ -4,12 +4,12 @@ from __future__ import unicode_literals
 import logging
 from django import http
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.renderers import JSONRenderer
 from ...users.models import User
 from ..exceptions import SignupException
 from ..models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity
+    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
 )
 from ..serializers import EighthBlockDetailSerializer
 
@@ -127,3 +127,20 @@ def eighth_signup_view(request, block_id=None):
         }
 
         return render(request, "eighth/signup.html", context)
+
+
+@login_required
+def toggle_favorite_view(request):
+    if request.method != "POST":
+        return http.HttpResponseNotAllowed(["POST"])
+    if not ("aid" in request.POST and request.POST["aid"].isdigit()):
+        http.HttpResponseBadRequest("Must specify an integer aid")
+
+    aid = request.POST["aid"]
+    activity = get_object_or_404(EighthActivity, id=aid)
+    if activity.favorites.filter(id=request.user.id).exists():
+        activity.favorites.remove(request.user)
+        return http.HttpResponse("Unfavorited activity.")
+    else:
+        activity.favorites.add(request.user)
+        return http.HttpResponse("Favorited activity.")
