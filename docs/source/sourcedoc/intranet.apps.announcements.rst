@@ -1,13 +1,6 @@
 intranet.apps.announcements package
 ===================================
 
-Subpackages
------------
-
-.. toctree::
-
-    intranet.apps.announcements.migrations
-
 Submodules
 ----------
 

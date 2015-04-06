@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    intranet.apps.users.migrations
     intranet.apps.users.templatetags
 
 Submodules

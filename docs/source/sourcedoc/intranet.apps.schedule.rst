@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     intranet.apps.schedule.management
-    intranet.apps.schedule.migrations
 
 Submodules
 ----------

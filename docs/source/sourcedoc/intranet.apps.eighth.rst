@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     intranet.apps.eighth.forms
-    intranet.apps.eighth.migrations
     intranet.apps.eighth.views
 
 Submodules
