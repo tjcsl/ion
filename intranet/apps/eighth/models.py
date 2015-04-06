@@ -417,37 +417,27 @@ class EighthScheduledActivity(models.Model):
                 all_sched_act = (EighthScheduledActivity.objects
                                                         .filter(block__date=self.block.date,
                                                                 activity=self.activity))
+            else:
+                all_sched_act = [self]
 
             # Check if the block has been locked
-            if not self.activity.both_blocks:
-                if self.block.locked:
+            for sched_act in all_sched_act:
+                if sched_act.block.locked:
                     exception.BlockLocked = True
-            else:
-                for sched_act in all_sched_act:
-                    if sched_act.block.locked:
-                        exception.BlockLocked = True
 
             # Check if the scheduled activity has been cancelled
-            if not self.activity.both_blocks:
-                if self.cancelled:
+            for sched_act in all_sched_act:
+                if sched_act.cancelled:
                     exception.ScheduledActivityCancelled = True
-            else:
-                for sched_act in all_sched_act:
-                    if sched_act.cancelled:
-                        exception.ScheduledActivityCancelled = True
 
             # Check if the activity has been deleted
             if self.activity.deleted:
                 exception.ActivityDeleted = True
 
             # Check if the activity is full
-            if not self.activity.both_blocks:
-                if self.is_full():
+            for sched_act in all_sched_act:
+                if sched_act.is_full():
                     exception.ActivityFull = True
-            else:
-                for sched_act in all_sched_act:
-                    if sched_act.is_full():
-                        exception.ActivityFull = True
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
@@ -473,12 +463,11 @@ class EighthScheduledActivity(models.Model):
 
             # Check if signup would violate one-a-day constraint
             if not self.activity.both_blocks and self.activity.one_a_day:
-                in_act = (user.eighthsignup_set
-                              .exclude(scheduled_activity__block=self.block)
-                              .filter(user=user,
-                                      scheduled_activity__block__date=self.block.date,
-                                      scheduled_activity__activity=self.activity)
-                              .count() != 0)
+                in_act = (EighthSignup.exclude(scheduled_activity__block=self.block)
+                                      .filter(user=user,
+                                              scheduled_activity__block__date=self.block.date,
+                                              scheduled_activity__activity=self.activity)
+                                      .exists())
                 if in_act:
                     exception.OneADay = True
 
@@ -493,7 +482,10 @@ class EighthScheduledActivity(models.Model):
         if exception.errors:
             raise exception
 
-        # Everything's good to go - complete the signup
+        # Everything's good to go - complete the signup. If we've gotten to
+        # this point, the signup is either before deadline or performed by
+        # an eighth period admin, so previous absences and passes are cleared.
+        after_deadline = self.block.locked
         if not self.activity.both_blocks:
             try:
                 existing_signup = (EighthSignup.objects
@@ -501,6 +493,9 @@ class EighthScheduledActivity(models.Model):
                                                     scheduled_activity__block=self.block))
                 if not existing_signup.scheduled_activity.activity.both_blocks:
                     existing_signup.scheduled_activity = self
+                    existing_signup.after_deadline = after_deadline
+                    existing_signup.was_absent = False
+                    existing_signup.pass_accepted = False
                     existing_signup.save()
                 else:
                     # Clear out the other signups for this block if the user is
@@ -510,10 +505,12 @@ class EighthScheduledActivity(models.Model):
                         scheduled_activity__block__date=self.block.date
                     ).delete()
                     EighthSignup.objects.create(user=user,
-                                                scheduled_activity=self)
+                                                scheduled_activity=self,
+                                                after_deadline=after_deadline)
             except EighthSignup.DoesNotExist:
                 EighthSignup.objects.create(user=user,
-                                            scheduled_activity=self)
+                                            scheduled_activity=self,
+                                            after_deadline=after_deadline)
         else:
             EighthSignup.objects.filter(
                 user=user,
@@ -522,7 +519,8 @@ class EighthScheduledActivity(models.Model):
 
             for sched_act in all_sched_act:
                 EighthSignup.objects.create(user=user,
-                                            scheduled_activity=sched_act)
+                                            scheduled_activity=sched_act,
+                                            after_deadline=after_deadline)
 
     class Meta:
         unique_together = (("block", "activity"),)
