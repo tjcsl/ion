@@ -13,9 +13,6 @@ class ActivitySelectionForm(forms.Form):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
         if block is not None:
-            queryset = (block.activities
-                             .exclude(deleted=True)
-                             .exclude(eighthscheduledactivity__cancelled=True))
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) |
                                      (Q(sponsors=None) &
@@ -24,7 +21,13 @@ class ActivitySelectionForm(forms.Form):
                                                        .filter(block=block)
                                                        .filter(sponsoring_filter)
                                                        .values_list("activity__id", flat=True))
-                queryset = EighthActivity.objects.filter(id__in=activity_ids)
+            else:
+                activity_ids = (EighthScheduledActivity.objects
+                                                       .exclude(activity__deleted=True)
+                                                       .exclude(cancelled=True)
+                                                       .filter(block=block)
+                                                       .values_list("activity__id", flat=True))
+            queryset = EighthActivity.objects.filter(id__in=activity_ids)
         else:
             if sponsor is not None:
                 queryset = (EighthActivity.undeleted_objects
