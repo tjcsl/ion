@@ -41,7 +41,7 @@ class Question(models.Model):
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
 
 
-class Choice(models.Model):  # individual choices
+class Choice(models.Model):  # individual answer choices
     question = models.ForeignKey(Question)
     info = models.CharField(max_length=100)
     std = models.BooleanField(default=False)
@@ -51,8 +51,15 @@ class Choice(models.Model):  # individual choices
     std_other = models.CharField(max_length=100)
 
 
-class Answer(models.Model):
+class Answer(models.Model):  # individual answer choices selected
     question = models.ForeignKey(Question)
-    user = models.ManyToMany(User)
+    user = models.ForeignKey(User)
     choice = models.ForeignKey(Choice)  # determine field based on question type
-    votes = models.IntegerField(default=0)
+    weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
+
+
+class Answer_Votes(models.Model):  # record of total selection of a given answer choice
+    question = models.ForeignKey(Question)
+    users = models.ManyToMany(User)
+    choice = models.ForeignKey(Choice)
+    votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
