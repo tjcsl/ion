@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Day, Time, Block, DayType, CodeName
+from .models import Day, Block, DayType, CodeName
 
 
 admin.site.register([
-    Day, Time, Block, DayType, CodeName
+    Day, Block, DayType, CodeName
 ])

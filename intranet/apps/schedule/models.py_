@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models
+
+
+class Block(models.Model):
+    name = models.CharField(max_length=100)
+    start = models.TimeField('Time')
+    end = models.TimeField('Time')
+
+    def __unicode__(self):
+        return "{}: {} ({}-{})".format(self.period, self.name, self.start, self.end)
+
+class CodeName(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+
+class DayType(models.Model):
+    name = models.CharField(max_length=100)
+    codenames = models.ManyToManyField('CodeName', blank=True)
+    special = models.BooleanField(default=False)
+    blocks = models.ManyToManyField('Block', blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+class Day(models.Model):
+    date = models.DateField()
+    type = models.ForeignKey('DayType')
+
+    def __unicode__(self):
+        return "{}: {}".format(unicode(self.date), self.type)
