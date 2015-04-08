@@ -12,10 +12,6 @@ import os.path
 import datetime
 from six.moves import input
 
-# FIXME: Hack to allow sibling imports
-sys.path.append(os.path.dirname(__file__) + '/..')
-from intranet.db import gssapi_ldap
-
 # Run this on iodine.tjhsst.edu
 start_date = "2015-09-01"
 csl_realm = "CSL.TJHSST.EDU"
@@ -35,7 +31,7 @@ if kgetcred.exitstatus:
 print("Successfully authorized to LDAP service")
 
 server = ldap3.Server(ldap_server)
-connection = gssapi_ldap.GSSAPIConnection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
+connection = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
 connection.bind()
 print("Successfully bound to LDAP with " + connection.extend.standard.who_am_i())
 

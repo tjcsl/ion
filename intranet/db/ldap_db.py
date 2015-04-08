@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import gssapi
 import ldap3
 import ldap3.protocol.sasl
 import ldap3.utils.conv
@@ -10,7 +11,6 @@ from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
 from django.dispatch import receiver
 from intranet import settings
-from . import gssapi_ldap
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -76,18 +76,16 @@ class LDAPConnection(object):
         if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP...")
             server = ldap3.Server(settings.LDAP_SERVER)
-            _thread_locals.ldap_conn = gssapi_ldap.GSSAPIConnection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI',
-                                                                    client_strategy=ldap3.RESTARTABLE)
+            _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
 
             try:
                 _thread_locals.ldap_conn.bind()
                 _thread_locals.simple_bind = False
                 logger.info("Successfully connected to LDAP.")
-            except ldap3.LDAPExceptionError as e:
+            except (ldap3.LDAPExceptionError, gssapi.exceptions.GSSError) as e:
                 logger.warning("SASL bind failed - using simple bind")
                 logger.warning(e)
-                _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD,
-                                                            client_strategy=ldap3.RESTARTABLE, raise_exceptions=True)
+                _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 _thread_locals.ldap_conn.bind()
                 _thread_locals.simple_bind = True
 
