@@ -47,6 +47,9 @@ class Question(models.Model):
     )
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
 
+    def is_writing(self):
+        return (self.TYPE == FREE_RESP or self.TYPE == SHORT_RESP)
+
     def trunc_question(self):
         if len(self.question) > 15:
             return self.question[:12] + "..?"
@@ -67,6 +70,7 @@ class Choice(models.Model):  # individual answer choices
     free_resp = models.CharField(max_length=1000)
     short_resp = models.CharField(max_length=100)
     std_other = models.CharField(max_length=100)
+    is_writing = models.BooleanField(default=False)  # True if question.is_writing() or if last of STD_OTHER
 
     def trunc_info(self):
         if len(self.info) > 15:
@@ -94,6 +98,7 @@ class Answer_Votes(models.Model):  # record of total selection of a given answer
     users = models.ManyToMany(User)
     choice = models.ForeignKey(Choice)
     votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
+    is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers 
 
     def __unicode__(self):
         return self.choice
