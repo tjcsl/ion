@@ -4,7 +4,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; th
   git config --global user.email "ahamilto+ion@tjhsst.edu"
   git config --global user.name "Travis"
 
-  cp -R docs/build/html $HOME/html_docs
+  cp -R docs/build $HOME/html_docs
   cd $HOME
   git clone --branch=gh-pages https://${GH_TOKEN}@github.com/tjcsl/ion.git gh-pages
   rm -rf gh-pages/*
