@@ -8,6 +8,7 @@ from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.views.generic.base import View
+from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 

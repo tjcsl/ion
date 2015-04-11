@@ -23,6 +23,7 @@ urlpatterns = [
     url(r"^polls", include("intranet.apps.polls.urls")),
     url(r"^search", include("intranet.apps.search.urls")),
     url(r"^profile", include("intranet.apps.users.urls")),
+    url(r"^schedule", include("intranet.apps.schedule.urls")),
 
     url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]
