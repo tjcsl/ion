@@ -214,3 +214,11 @@ def deploy():
             restart_production_gunicorn(True)
 
     puts("Deploy complete.")
+
+def forcemigrate(app=None):
+    """Force migrations to apply for a given app."""
+    if app is None:
+        abort("No app name given.")
+    local("./manage.py migrate {} --fake".format(app))
+    local("./manage.py migrate {}".format(app))
+
