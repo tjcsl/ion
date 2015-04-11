@@ -10,7 +10,7 @@ class Time(models.Model):
     min = models.IntegerField()
 
     def __unicode__(self):
-        return "{}:{}".format(self.hour, self.min)
+        return "{}:{}".format(self.hour, "0"+str(self.min) if self.min < 10 else self.min)
 
 
 class Block(models.Model):
