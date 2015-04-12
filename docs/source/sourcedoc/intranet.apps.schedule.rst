@@ -35,6 +35,14 @@ intranet.apps.schedule.tests module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.schedule.urls module
+----------------------------------
+
+.. automodule:: intranet.apps.schedule.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.schedule.views module
 -----------------------------------
 

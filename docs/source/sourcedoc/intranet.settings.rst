@@ -20,14 +20,6 @@ intranet.settings.local module
     :undoc-members:
     :show-inheritance:
 
-intranet.settings.secret module
--------------------------------
-
-.. automodule:: intranet.settings.secret
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.settings.travis_secret module
 --------------------------------------
 

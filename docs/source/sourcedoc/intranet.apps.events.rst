@@ -4,6 +4,14 @@ intranet.apps.events package
 Submodules
 ----------
 
+intranet.apps.events.admin module
+---------------------------------
+
+.. automodule:: intranet.apps.events.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.events.models module
 ----------------------------------
 
