@@ -53,7 +53,7 @@ class Question(models.Model):
     def trunc_question(self):
         if len(self.question) > 15:
             return self.question[:12] + "..?"
-        else
+        else:
             return self.question
 
     def __unicode__(self):
