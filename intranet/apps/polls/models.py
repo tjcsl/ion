@@ -75,7 +75,7 @@ class Choice(models.Model):  # individual answer choices
     def trunc_info(self):
         if len(self.info) > 15:
             return self.info[:12] + "..."
-        else
+        else:
             return self.info
 
     def __unicode__(self):

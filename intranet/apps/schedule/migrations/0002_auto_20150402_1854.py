@@ -15,12 +15,20 @@ class Migration(migrations.Migration):
             model_name='block',
             name='period',
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='block',
+            name='end',
+        ),
+        migrations.AddField(
             model_name='block',
             name='end',
             field=models.TimeField(verbose_name='Time'),
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='block',
+            name='start',
+        ),
+        migrations.AddField(
             model_name='block',
             name='start',
             field=models.TimeField(verbose_name='Time'),
