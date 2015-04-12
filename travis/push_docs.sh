@@ -13,5 +13,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; th
   touch .nojekyll
   git add -A .
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
-  git push -f origin gh-pages && echo "Pushed docs to Github Pages" || echo "Failed to push docs to Github Pages"
+  git push -f origin gh-pages |& sed s/${GH_TOKEN}/[secure]/g
+  echo "Pushed docs to Github Pages"
 fi
