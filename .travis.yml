@@ -1,5 +1,9 @@
 language: python
 
+python:
+    - '2.7'
+    - '3.4'
+
 sudo: false
 
 cache:
@@ -11,8 +15,6 @@ before_cache:
     - rm -f $HOME/.cache/pip/log/debug.log
 
 matrix:
-    include:
-        python: '2.7'
     allow_failures:
         - python: '3.4'
 
@@ -27,7 +29,8 @@ env:
     - secure: "fQVrTJV4FyBcRihbrd+MSvWtYHVFLXeX1uTOINZx121k88k1yyH6Qnh2cYpouMfXdTFMc4negTr3ceNqtljVD1za8Q6jWKk0Ht6MWTuDMb/4mynTKn7qufGe0+scJDueofeBymXthEXbRzh1O+1qEmVkxZUwoKCYXIb6Uk2KSeU=" 
 
 install:
-  - pip install -U -r requirements.txt
+    # Hack to prevent setuptools being upgraded and screwing up the cache.
+    - pip install -U -r requirements.txt setuptools==$(pip show setuptools|sed -n "s#^Version. \(.*\)#\1#p")
 
 before_script:
   - cp intranet/settings/travis_secret.py intranet/settings/secret.py
