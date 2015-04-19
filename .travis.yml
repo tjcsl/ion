@@ -10,8 +10,11 @@ cache:
 before_cache:
     - rm -f $HOME/.cache/pip/log/debug.log
 
-python:
-  - '2.7'
+matrix:
+    include:
+        python: '2.7'
+    allow_failures:
+        - python: '3.4'
 
 services:
   - postgresql
