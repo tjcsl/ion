@@ -4,6 +4,8 @@ from __future__ import unicode_literals, with_statement
 from fabric.api import abort, env, hide, lcd, local, prefix, prompt, puts, shell_env
 from fabric.contrib.console import confirm
 import os
+import pkg_resources
+
 
 PRODUCTION_DOCUMENT_ROOT = "/usr/local/www/intranet3"
 REDIS_SESSION_DB = 0
@@ -207,7 +209,14 @@ def deploy():
     with lcd(PRODUCTION_DOCUMENT_ROOT):
         with shell_env(PRODUCTION="TRUE"):
             local("git pull")
-            local("pip install -r requirements.txt")
+            with open("requirements.txt", "r") as req_file:
+                requirements = req_file.read().strip().split()
+                try:
+                    pkg_resources.require(requirements)
+                except:
+                    local("pip install -r requirements.txt")
+                else:
+                    puts("Python requirements already satisfied.")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
                 local("./manage.py collectstatic --noinput")
                 local("./manage.py migrate")
