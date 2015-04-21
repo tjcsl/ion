@@ -12,7 +12,7 @@ LOGIN_REDIRECT_URL = "/"
 APPEND_SLASH = False
 
 ADMINS = (
-    # ("Your Name", "your_email@example.com"),
+    ("Ethan Lowman", "ethan+ion@ethanlowman.com"),
 )
 
 MANAGERS = ADMINS
