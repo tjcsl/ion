@@ -17,7 +17,7 @@ EMAIL_USE_TLS = True
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 
 ADMINS = (
-    ("Ethan Lowman", "ethan+ion@ethanlowman.com"),
+    ("Ethan Lowman", "2015elowman+ion@tjhsst.edu"),
 )
 
 MANAGERS = ADMINS
