@@ -55,10 +55,9 @@ class ActivityForm(forms.ModelForm):
         for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed"]:
             self.fields[fieldname].help_text = None
 
-        # Simple way to filter out teachers without hitting LDAP This
-        # shouldn't be a problem unless TJ hires a teacher who loves
-        # math so much that their name starts with the number 2. Even if
-        # that does happen the consequences are not significant.
+        # Simple way to filter out teachers without hitting LDAP. This
+        # shouldn't be a problem unless the username scheme changes and
+        # the consequences for error are not significant.
         self.fields["users_allowed"].queryset = (User.objects
                                                      .filter(username__startswith="2"))
 
