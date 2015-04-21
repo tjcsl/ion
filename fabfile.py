@@ -197,14 +197,11 @@ def load_fixtures():
 def deploy():
     """Deploy to production."""
     _require_root()
-    obnoxious_mode = True
 
-    if obnoxious_mode:
-        # TODO: ensure the build is green
-        if not confirm("This will apply any available migrations to the database. Has the database been backed up?"):
-            abort("Aborted.")
-        if not confirm("Are you sure you want to deploy?"):
-            abort("Aborted.")
+    if not confirm("This will apply any available migrations to the database. Has the database been backed up?"):
+        abort("Aborted.")
+    if not confirm("Are you sure you want to deploy?"):
+        abort("Aborted.")
 
     with lcd(PRODUCTION_DOCUMENT_ROOT):
         with shell_env(PRODUCTION="TRUE"):
@@ -224,10 +221,10 @@ def deploy():
 
     puts("Deploy complete.")
 
+
 def forcemigrate(app=None):
     """Force migrations to apply for a given app."""
     if app is None:
         abort("No app name given.")
     local("./manage.py migrate {} --fake".format(app))
     local("./manage.py migrate {}".format(app))
-
