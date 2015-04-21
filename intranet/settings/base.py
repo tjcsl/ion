@@ -11,6 +11,11 @@ LOGIN_REDIRECT_URL = "/"
 
 APPEND_SLASH = False
 
+EMAIL_HOST = "mail.tjhsst.edu"
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_SUBJECT_PREFIX = "[Ion] "
+
 ADMINS = (
     ("Ethan Lowman", "ethan+ion@ethanlowman.com"),
 )
@@ -266,7 +271,6 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple"
-            ""
         },
     },
     "loggers": {
