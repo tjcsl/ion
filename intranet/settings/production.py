@@ -13,6 +13,9 @@ DATABASE_URL should be of the following form:
 
 DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 SHOW_DEBUG_TOOLBAR = False
 
 CACHES['default']['OPTIONS']['DB'] = 1
