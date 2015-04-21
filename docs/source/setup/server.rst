@@ -321,5 +321,5 @@ Add the ElasticSearch service to the default runlevel.
 
 .. code-block:: bash
 
-    $ rc-update add supervisord default
+    $ rc-update add elasticsearch default
 
