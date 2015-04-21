@@ -47,7 +47,7 @@ def picture_view(request, user_id, year=None):
 
     """
     user = User.get_user(id=user_id)
-    default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/pig.jpg")
+    default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic@2x.png")
 
     if user is None:
         raise Http404
