@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 def date_format(date):
     return date.strftime("%Y-%m-%d")
 
+def decode_date(str):
+    return datetime.strptime(str, "%Y-%m-%d")
+
+
 def get_context(date=None):
     if date is None:
         date = datetime.now()
@@ -30,9 +34,11 @@ def get_context(date=None):
     }
 
 def schedule_view(request):
-
-    data = get_context()
-
+    if 'date' in request.GET:
+        date = decode_date(request.GET['date'])
+    else:
+        date = None
+    data = get_context(date)
     return render(request, "schedule/view.html", data)
 
 
