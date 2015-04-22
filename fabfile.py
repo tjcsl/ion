@@ -69,13 +69,13 @@ def runserver(port=8080,
         local("./manage.py runserver{} 0.0.0.0:{}".format("_plus" if werkzeug.lower() == "yes" else "", port))
 
 
-def kill_server(port):
+def killserver(port=8080):
     """Kill the Django development server currently running on a port."""
     try:
         int(port)
     except ValueError:
         abort("Invalid port number.")
-    local("ps au | grep virtualenvs | grep {} | grep -v grep | cut -d' ' -f2 | xargs kill -9".format(port))
+    local("ps aux | grep {} | grep runserver | sed -E 's/ +/ /g' | cut -d ' ' -f2 | xargs kill".format(port))
 
 
 def _require_root():
