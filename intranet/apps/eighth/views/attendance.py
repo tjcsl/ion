@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
+from datetime import datetime
 try:
     from io import BytesIO
 except ImportError:
@@ -59,7 +59,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         kwargs = {}
         if step == "block":
             if not self.request.user.is_eighth_admin:
-                now = datetime.datetime.now().date()
+                now = datetime.now().date()
                 kwargs.update({"exclude_before_date": now})
             else:
                 start_date = get_start_date(self.request)
@@ -314,7 +314,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
             Paragraph("<b>Activity ID {}</b>".format(sact.activity.id), styles["Normal"]),
             Paragraph("{}<br/>{}<br/>{}".format(sponsors_str,
                                                 rooms_str,
-                                                sact.block.date),
+                                                sact.block.date.strftime("%A, %B %-d")),
                       styles["ActivityAttribute"]),
             Paragraph("A", styles["BlockLetter"])
         ]]
