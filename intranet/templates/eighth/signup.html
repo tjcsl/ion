@@ -143,7 +143,7 @@
                     {% for day in block_info.schedule %}
                         <li class="day">
                             <div class="day-title">
-                                {{ day.date|date:"M d, Y" }}
+                                {{ day.date|date:"M j, Y" }}
                             </div>
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
@@ -187,7 +187,7 @@
                     {% if active_block.locked %}
                         <i class="fa fa-lock"></i>
                     {% endif %}
-                    {{ block_info.date|date:"l, F d, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
+                    {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
                 </h2>
                 <h4>
                     {% if block_info.block_letter %}
