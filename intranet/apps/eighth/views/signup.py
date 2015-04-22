@@ -110,7 +110,11 @@ def eighth_signup_view(request, block_id=None):
                 day["blocks"].append(info)
                 schedule.append(day)
 
-        block_info = EighthBlockDetailSerializer(block, context={"request": request}).data
+        serializer_context = {
+            "request": request,
+            "user": user
+        }
+        block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
         block_info["schedule"] = schedule
 
         try:

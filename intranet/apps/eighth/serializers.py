@@ -58,10 +58,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                      .exclude(activity__deleted=True)
                                      .select_related("activity"))
 
-        req_user = self.context["request"].user
-        favorited_activities = set(req_user.favorited_activity_set
-                                           .values_list("id", flat=True))
-        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(req_user)
+        user = self.context.get("user", self.context["request"].user)
+        favorited_activities = set(user.favorited_activity_set
+                                       .values_list("id", flat=True))
+        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         for scheduled_activity in scheduled_activities:
             activity = scheduled_activity.activity
