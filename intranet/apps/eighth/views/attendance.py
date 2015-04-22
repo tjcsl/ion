@@ -18,6 +18,7 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from ...auth.decorators import eighth_admin_required, attendance_taker_required
+from ...users.models import User
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
@@ -370,3 +371,27 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
     doc.build(elements)
     return pdf_buffer
+
+
+def eighth_absences_view(request):
+    if "user" in request.GET and request.user.is_eighth_admin:
+        try:
+            user = User.get_user(id=request.GET["user"])
+        except (User.DoesNotExist, ValueError):
+            raise http.Http404
+    else:
+        if request.user.is_student:
+            user = request.user
+        else:
+            return redirect("eighth_admin_dashboard")
+
+    absences = (EighthSignup.objects
+                            .filter(user=user,
+                                    was_absent=True)
+                            .select_related("scheduled_activity__block", "scheduled_activity__activity")
+                            .order_by("scheduled_activity__block"))
+    context = {
+        "absences": absences,
+        "user": user
+    }
+    return render(request, "eighth/absences.html", context)

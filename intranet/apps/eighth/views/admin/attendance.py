@@ -307,3 +307,19 @@ def out_of_building_schedules_view(request, block_id=None):
             writer.writerow(row)
 
         return response
+
+
+@eighth_admin_required
+def clear_absence_view(request, signup_id):
+    if request.method == "POST":
+        try:
+            signup = EighthSignup.objects.get(id=signup_id)
+        except (EighthSignup.DoesNotExist, ValueError):
+            raise http.Http404
+        signup.was_absent = False
+        signup.save()
+        if "next" in request.GET:
+            return redirect(request.GET["next"])
+        return redirect("eighth_admin_dashboard")
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

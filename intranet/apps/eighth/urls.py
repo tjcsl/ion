@@ -13,6 +13,7 @@ urlpatterns = [
     # Students
     url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
     url(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
+    url(r"^/absences$", attendance.eighth_absences_view, name="eighth_absences"),
 
     # Teachers
     url(r"^/attendance$", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),
@@ -51,6 +52,7 @@ eighth_admin_patterns = [
     url(r"^attendance/reject_outstanding_passes$", admin_attendance.reject_outstanding_passes_view, name="eighth_admin_reject_outstanding_passes"),
     url(r"^attendance/export_out_of_building_schedules$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules"),
     url(r"^attendance/export_out_of_building_schedules/csv/(?P<block_id>\d+)$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules_csv"),
+    url(r"^attendance/clear_absences/(?P<signup_id>\d+)$", admin_attendance.clear_absence_view, name="eighth_admin_clear_absence"),
 
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
