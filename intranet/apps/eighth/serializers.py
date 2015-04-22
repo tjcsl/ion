@@ -65,18 +65,18 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for scheduled_activity in scheduled_activities:
             activity = scheduled_activity.activity
-            restricted_to_user = (activity.restricted and
-                                  (req_user.is_eighth_admin or
-                                   activity.id not in available_restricted_acts))
+            restricted_for_user = (activity.restricted and
+                                   (req_user.is_eighth_admin or
+                                    activity.id not in available_restricted_acts))
             prefix = "Special: " if activity.special else ""
             prefix += activity.name
-            middle = " (R)" if restricted_to_user else ""
+            middle = " (R)" if restricted_for_user else ""
             suffix = " (BB)" if activity.both_blocks else ""
             suffix += " (S)" if activity.sticky else ""
             suffix += " (Deleted)" if activity.deleted else ""
 
             name_with_flags = prefix + middle + suffix
-            name_with_flags_for_user = prefix + (middle if restricted_to_user else "") + suffix
+            name_with_flags_for_user = prefix + (middle if restricted_for_user else "") + suffix
 
             activity_info = {
                 "id": activity.id,
@@ -100,7 +100,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "rooms": [],
                 "sponsors": [],
                 "restricted": activity.restricted,
-                "restricted_to_user": restricted_to_user,
+                "restricted_for_user": restricted_for_user,
                 "both_blocks": activity.both_blocks,
                 "special": activity.special
             }
