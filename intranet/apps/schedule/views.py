@@ -2,25 +2,36 @@
 from __future__ import unicode_literals
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Time, Block, CodeName, DayType, Day
 
 logger = logging.getLogger(__name__)
 
-def schedule_view(request):
-    date = datetime.now()
+def date_format(date):
+    return date.strftime("%Y-%m-%d")
+
+def get_context(date=None):
+    if date is None:
+        date = datetime.now()
+
+    logger.debug("schedule date", date)
     try:
         dayobj = Day.objects.get(date=date)
     except Day.DoesNotExist:
         dayobj = None
 
-    logger.debug("date", date)
-
-    data = {
-        "dayobj": dayobj
+    return {
+        "dayobj": dayobj,
+        "date": date,
+        "date_tomorrow": date_format(date+timedelta(days=1)),
+        "date_yesterday": date_format(date+timedelta(days=-1)),
     }
+
+def schedule_view(request):
+
+    data = get_context()
 
     return render(request, "schedule/view.html", data)
 

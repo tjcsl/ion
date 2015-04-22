@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import logging
 from ..dashboard.views import dashboard_view
+from ..schedule.views import get_context as schedule_context
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
@@ -20,10 +21,13 @@ def index_view(request, auth_form=None, force_login=False):
     else:
         auth_form = auth_form or AuthenticateForm()
         request.session.set_test_cookie()
-        return render(request, "auth/login.html", {
+        data = {
             "auth_form": auth_form,
             "request": request
-        })
+        }
+        schedule = schedule_context()
+        data.update(schedule)
+        return render(request, "auth/login.html", data)
 
 
 class login_view(View):

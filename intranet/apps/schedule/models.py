@@ -14,13 +14,12 @@ class Time(models.Model):
 
 
 class Block(models.Model):
-    period = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
     start = models.ForeignKey('Time', related_name='blockstart')
     end = models.ForeignKey('Time', related_name='blockend')
 
     def __unicode__(self):
-        return "{}: {} ({}-{})".format(self.period, self.name, self.start, self.end)
+        return "{}: {}-{}".format(self.name, self.start, self.end)
 
 
 class CodeName(models.Model):
