@@ -9,7 +9,7 @@ from intranet.db import ldap_db
 
 
 class Command(BaseCommand):
-    help = "Updates the ElasticSearch index with user, class, and eighth period data"
+    help = "Updates the ElasticSearch index with user data"
 
     def handle(self, **options):
         # Destroy kerberos tickets to force simple auth

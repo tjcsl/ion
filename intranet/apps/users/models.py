@@ -346,7 +346,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     class_object = Class(dn=dn)
 
                     # Temporarily pack the classes in tuples so we can
-                    # sort on an integer key instead of the period
+                    # sort on an integer key instead of the periods
                     # property to avoid tons of needless LDAP queries
                     #
                     sortvalue = class_object.sortvalue
@@ -1029,13 +1029,16 @@ class Class(object):
         """Returns the sort value of this class
 
         This can be derived from the following formula:
-            Period + Sum of values of quarters / 11
+            Minimum Period + Sum of values of quarters / 11
+
+        We divide by 11 because the maximum sum is 10 and we want the
+        quarters to be a secondary sort.
 
         Returns:
             A float value of the equation.
 
         """
-        return float(self.period) + (float(sum(self.quarters)) / 11)
+        return min(map(float, self.periods)) + (float(sum(self.quarters)) / 11)
 
     def __getattr__(self, name):
         """Return simple attributes of Class
@@ -1051,7 +1054,7 @@ class Class(object):
         the method is called after checking regular attributes instead
         of before.
 
-        This method should not be called manually - use dot notation or
+        This method should not be called directly - use dot notation or
         getattr() to fetch an attribute.
 
         Args:
@@ -1069,9 +1072,9 @@ class Class(object):
                 "ldap_name": "cn",
                 "is_list": False
             },
-            "period": {
+            "periods": {
                 "ldap_name": "classPeriod",
-                "is_list": False
+                "is_list": True  # Some classes run for two periods
             },
             "class_id": {
                 "ldap_name": "tjhsstClassId",
@@ -1112,6 +1115,8 @@ class Class(object):
             else:
                 if attr["is_list"]:
                     value = result
+                    if name == "periods":
+                        value = sorted(list(map(int, value)))
                 else:
                     value = result[0]
 

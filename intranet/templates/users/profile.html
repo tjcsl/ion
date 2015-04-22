@@ -187,14 +187,16 @@ $(document).ready(function() {
                         <table>
                             <thead>
                                 <th>Period</th>
-                                <th>Name (Teacher)</th>
+                                <th>Name</th>
+                                <th>Teacher</th>
                                 <th>Room</th>
                                 <th>Quarters</th>
                             </thead>
                         {% for class in profile_user.classes %}
                             <tr>
-                                <td>{{ class.period }} </td>
-                                <td>{{ class.name }} ({{ class.teacher.last_name }})</td>
+                                <td>{{ class.periods|join:", " }} </td>
+                                <td>{{ class.name }}</td>
+                                <td>{{ class.teacher.last_name }}</td>
                                 <td>{{ class.room_number }}</td>
                                 <td>
                                     {% if class.quarters|length == 4 %}
