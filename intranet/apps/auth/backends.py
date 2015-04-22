@@ -62,7 +62,8 @@ class KerberosAuthenticationBackend(object):
             return True
         else:
             logger.debug("Kerberos failed to authorize {}".format(username))
-            del os.environ["KRB5CCNAME"]
+            if "KRB5CCNAME" in os.environ:
+                del os.environ["KRB5CCNAME"]
             return False
 
     def authenticate(self, username=None, password=None):
