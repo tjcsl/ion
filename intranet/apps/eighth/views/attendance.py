@@ -7,6 +7,7 @@ try:
 except ImportError:
     from cStringIO import StringIO as BytesIO
 from django import http
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from formtools.wizard.views import SessionWizardView
 from reportlab.lib import colors
@@ -373,6 +374,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
     return pdf_buffer
 
 
+@login_required
 def eighth_absences_view(request):
     if "user" in request.GET and request.user.is_eighth_admin:
         try:
