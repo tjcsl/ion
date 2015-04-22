@@ -8,7 +8,7 @@ from .base import *
 
 logger = logging.getLogger(__name__)
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "TRUE") == "TRUE"
 
 if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     class InvalidString(str):
@@ -102,5 +102,3 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar",
         "debug_toolbar_line_profiler",
     )
-
-STATIC_DOC_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), "intranet/static/")
