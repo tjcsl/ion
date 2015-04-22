@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import url, include
 import django.contrib.admin
-from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.base import RedirectView
 from intranet.apps.error.views import handle_404_view, handle_500_view
 
 django.contrib.admin.autodiscover()
