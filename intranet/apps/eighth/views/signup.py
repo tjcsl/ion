@@ -72,7 +72,7 @@ def eighth_signup_view(request, block_id=None):
             if request.user.is_student:
                 user = request.user
             else:
-                return redirect("index")
+                return redirect("eighth_admin_dashboard")
 
         try:
             block = (EighthBlock.objects
