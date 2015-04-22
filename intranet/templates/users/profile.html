@@ -216,8 +216,8 @@ $(document).ready(function() {
                         {% endfor %}
                     </table>
                     {% else %}
-                        <h3>Schedule:</h3>
-                        <p>You do not have permission to view this user's schedule.</p>
+                        <!--<h3>Schedule:</h3>
+                        <p>You do not have permission to view this user's schedule.</p>-->
                     {% endif %}
                 </section>
 
@@ -226,7 +226,11 @@ $(document).ready(function() {
 
             <section class="user-info-eighth">
                 <h3>Eighth Period:</h3>
-                <p>-----</p>
+                <p>Preview of schedule will go here</p>
+                <br>
+                {% if request.user.is_eighth_admin and profile_user.is_student %}
+                    <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+                {% endif %}
             </section>
         </div>
     </div>
