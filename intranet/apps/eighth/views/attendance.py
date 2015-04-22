@@ -342,16 +342,14 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         members = sorted(members)
 
         for member_name, member_id in members:
-            row = ["_____________", "{} ({})".format(member_name, member_id), "12"]
+            row = ["", "{} ({})".format(member_name, member_id), "12"]
             attendance_data.append(row)
 
         # Line commands are like this:
         # op, start, stop, weight, colour, cap, dashes, join, linecount, linespacing
-        # For some reason, LINEBELOW doesn't work right, so the Present line is achieved
-        # with underscores... Not great but it works.
         attendance_style = TableStyle([
-            ("LINEABOVE", (0, 1), (2, 1), 1, colors.black, None, None, None, 2, None),
-            # ("LINEBELOW", (0, 2), (0, len(attendance_data)), 1, colors.black, None, None, None, None, None),
+            ("LINEABOVE", (0, 1), (2, 1), 1, colors.black, None, None, None, 2),
+            ("LINEBELOW", (0, 1), (0, len(attendance_data)), 1, colors.black),
             ("TOPPADDING", (0, 1), (-1, -1), 6),
             ("BOTTOMPADDING", (0, 1), (-1, -1), 0),
             ("BOTTOMPADDING", (0, 0), (-1, 0), 5),
