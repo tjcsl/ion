@@ -1190,6 +1190,12 @@ class Grade(object):
         """
         return self._number
 
+    @property
+    def name(self):
+        """Return the grade's name (e.g. senior)"""
+        return self._number
+
+
     def __int__(self):
         """Return the grade as a number (9-12)."""
         return self._number
