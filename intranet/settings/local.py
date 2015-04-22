@@ -73,7 +73,11 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
     DEBUG_TOOLBAR_CONFIG = {
-        "INTERCEPT_REDIRECTS": False
+        "INTERCEPT_REDIRECTS": False,
+        "DISABLE_PANELS": [
+            "debug_toolbar_line_profiler.panel.ProfilingPanel",
+            "debug_toolbar.panels.redirects.RedirectsPanel"
+        ]
     }
 
     DEBUG_TOOLBAR_PANELS = [
