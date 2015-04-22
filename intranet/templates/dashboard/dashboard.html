@@ -146,15 +146,17 @@
     {% for announcement in announcements %}
         <div class="announcement" data-id="{{ announcement.id }}">
             <h3>
-                {{ announcement.title }} {# TODO: add admin_news check against groups before letting users edit/delete #}
-                <div class="announcement-icon-wrapper">
-                    <a href="{% url 'modify_announcement' announcement.id %}">
-                        <i class="announcement-icon fa fa-pencil"></i>
-                    </a>
-                    <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
-                        <i class="announcement-icon fa fa-trash-o"></i>
-                    </a>
-                </div>
+                {{ announcement.title }}
+                {% if request.user.is_announcements_admin %}
+                    <div class="announcement-icon-wrapper">
+                        <a href="{% url 'modify_announcement' announcement.id %}">
+                            <i class="announcement-icon fa fa-pencil"></i>
+                        </a>
+                        <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                            <i class="announcement-icon fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                {% endif %}
             </h3>
 
             <div class="announcement-metadata">
