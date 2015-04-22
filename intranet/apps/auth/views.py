@@ -25,7 +25,7 @@ def index_view(request, auth_form=None, force_login=False):
             "auth_form": auth_form,
             "request": request
         }
-        schedule = schedule_context()
+        schedule = schedule_context(request)
         data.update(schedule)
         return render(request, "auth/login.html", data)
 

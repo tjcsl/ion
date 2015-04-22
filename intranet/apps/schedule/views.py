@@ -16,7 +16,11 @@ def decode_date(str):
     return datetime.strptime(str, "%Y-%m-%d")
 
 
-def get_context(date=None):
+def get_context(request=None, date=None):
+    if 'date' in request.GET:
+        date = decode_date(request.GET['date'])
+    else:
+        date = None
     if date is None:
         date = datetime.now()
 
@@ -34,11 +38,7 @@ def get_context(date=None):
     }
 
 def schedule_view(request):
-    if 'date' in request.GET:
-        date = decode_date(request.GET['date'])
-    else:
-        date = None
-    data = get_context(date)
+    data = get_context(request)
     return render(request, "schedule/view.html", data)
 
 
