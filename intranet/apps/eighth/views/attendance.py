@@ -328,7 +328,10 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, 1 * inch]))
         elements.append(Spacer(0, 10))
         elements.append(Paragraph(sact.activity.name, styles["Title"]))
-        elements.append(Paragraph("{} Students".format(sact.members.count()), styles["Center"]))
+
+        num_members = sact.members.count()
+        num_members_label = "{} Student{}".format(num_members, "s" if num_members != 1 else "")
+        elements.append(Paragraph(num_members_label, styles["Center"]))
         elements.append(Spacer(0, 5))
 
         attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])]]
