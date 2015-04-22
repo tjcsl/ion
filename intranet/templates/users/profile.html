@@ -209,10 +209,7 @@ $(document).ready(function() {
                                         {% endif %}
                                     {% else %}
                                         Quarter{{ class.quarters|pluralize }}
-                                        {% for quarter in class.quarters %}
-                                            {{ quarter }}
-                                            {% if not forloop.last %}, {% endif %}
-                                        {% endfor %}
+                                        {% class.quarters|join:", "}
                                     {% endif %}
                                 </td>
                             </tr>
