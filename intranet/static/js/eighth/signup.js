@@ -145,7 +145,7 @@ $(function() {
                      content_type.indexOf("text/html;") == 0)) {
 
                     $(".error-feedback").html(xhr.responseText);
-                    if (showForceButton) {
+                    if (isEighthAdmin) {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }

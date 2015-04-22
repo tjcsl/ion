@@ -30,7 +30,7 @@
 
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
-        window.showForceButton = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
@@ -103,7 +103,7 @@
             <div id="signup-section">
                 <% if (!cancelled) {%>
                     <% if (!selected) {%>
-                        <% if (roster.capacity == -1 || (roster.count < roster.capacity)) {%>
+                        <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
                             <button id="signup-button">
                                 Sign Up
                             </button>
