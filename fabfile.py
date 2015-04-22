@@ -41,7 +41,8 @@ def runserver(port=8080,
               dummy_cache="no",
               short_cache="no",
               warn_invalid_template_vars="no",
-              log_level="DEBUG"):
+              log_level="DEBUG",
+              insecure="no"):
     """Clear compiled python files and start the Django dev server."""
     if not port or (not isinstance(port, int) and not port.isdigit()):
         abort("You must specify a port.")
@@ -52,7 +53,8 @@ def runserver(port=8080,
                  "werkzeug",
                  "dummy_cache",
                  "short_cache",
-                 "warn_invalid_template_vars")
+                 "warn_invalid_template_vars",
+                 "insecure")
     for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
         if arg not in ("yes", "no"):
             abort("Specify 'yes' or 'no' for '" + name + "' option.")
@@ -66,7 +68,12 @@ def runserver(port=8080,
                    SHORT_CACHE=short_cache.upper(),
                    WARN_INVALID_TEMPLATE_VARS=warn_invalid_template_vars.upper(),
                    LOG_LEVEL=log_level):
-        local("./manage.py runserver{} 0.0.0.0:{}".format("_plus" if werkzeug.lower() == "yes" else "", port))
+        local("./manage.py runserver{} 0.0.0.0:{}{}".format(
+                "_plus" if werkzeug.lower() == "yes" else "",
+                port,
+                " --insecure" if insecure.lower() == "yes" else ""
+            )
+        )
 
 
 def killserver(port=8080):
