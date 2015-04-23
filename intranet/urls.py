@@ -4,13 +4,14 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import url, include
 import django.contrib.admin
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from intranet.apps.error.views import handle_404_view, handle_500_view
 
 django.contrib.admin.autodiscover()
 
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
+    url(r"^robots\.txt$", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots"),
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 
