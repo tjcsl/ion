@@ -222,6 +222,7 @@ $(function() {
                             console.error(xhr.responseText);
                             model.attributes.favorited = !model.attributes.favorited;
                             view.render();
+                            alert("There was an error favoriting this activity. Try reloading the page.")
                         }
                     });
                     event.stopPropagation();
