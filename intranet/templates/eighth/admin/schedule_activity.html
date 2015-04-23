@@ -1,5 +1,16 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load widget_tweaks %}
+{% load dictionaries %}
+{% load static %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript">
+        window.all_sponsors = _.values($.parseJSON("{{ sponsors_json|escapejs }}"));
+        window.all_rooms = _.values($.parseJSON("{{ rooms_json|escapejs }}"));
+    </script>
+{% endblock %}
 
 {% block bodyclass %}{{ block.super}} schedule-activity-page{% endblock %}
 
@@ -61,9 +72,25 @@
                             <td>
                                 {{ field.errors }}
                                 {% if field.name == "rooms" %}
-                                    {% render_field field placeholder=default_rooms %}
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{{ default_rooms|join:", " }}">
+                                        {% for val in field.value %}
+                                            <option value="{{ val }}" selected="selected">
+                                                {% with room=rooms|lookup:val %}
+                                                    {{ room.name }} ({{ room.capacity }})
+                                                {% endwith %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 {% elif field.name == "sponsors" %}
-                                    {% render_field field placeholder=default_sponsors %}
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{{ default_sponsors|join:", " }}">
+                                        {% for val in field.value %}
+                                            <option value="{{ val }}" selected="selected">
+                                                {% with sponsor=sponsors|lookup:val %}
+                                                    {{ sponsor.first_name }} {{ sponsor.last_name }}
+                                                {% endwith %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 {% elif field.name == "capacity" %}
                                     {% render_field field placeholder=default_capacity %}
                                 {% else %}

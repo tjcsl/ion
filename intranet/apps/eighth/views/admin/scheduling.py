@@ -5,9 +5,13 @@ import logging
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
+from rest_framework.renderers import JSONRenderer
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
-from ...models import EighthBlock, EighthActivity, EighthScheduledActivity
+from ...models import (
+    EighthBlock, EighthActivity, EighthScheduledActivity, EighthSponsor,
+    EighthRoom
+)
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
@@ -69,9 +73,22 @@ def schedule_activity_view(request):
         except (EighthActivity.DoesNotExist, ValueError):
             pass
 
+    all_sponsors = {s["id"]: s for s in EighthSponsor.objects.values()}
+    all_rooms = {r["id"]: r for r in EighthRoom.objects.values()}
+
+    for sid, sponsor in all_sponsors.items():
+        all_sponsors[sid]["full_name"] = sponsor["first_name"] + " " + sponsor["last_name"]
+
+    for rid, room in all_rooms.items():
+        all_rooms[rid]["description"] = room["name"] + " (" + str(room["capacity"]) + ")"
+
     context = {
         "activities": activities,
-        "activity": activity
+        "activity": activity,
+        "sponsors": all_sponsors,
+        "rooms": all_rooms,
+        "sponsors_json": JSONRenderer().render(all_sponsors),
+        "rooms_json": JSONRenderer().render(all_rooms)
     }
 
     if activity is not None:
@@ -109,8 +126,8 @@ def schedule_activity_view(request):
         context["formset"] = formset
         context["rows"] = list(zip(blocks, formset))
 
-        context["default_rooms"] = ", ".join(map(str, activity.rooms.all()))
-        context["default_sponsors"] = ", ".join(map(str, activity.sponsors.all()))
+        context["default_rooms"] = activity.rooms.all()
+        context["default_sponsors"] = activity.sponsors.all()
         context["default_capacity"] = activity.capacity
 
     context["admin_page_title"] = "Schedule an Activity"
