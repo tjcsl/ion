@@ -48,7 +48,7 @@
                     <td>{{ signup.scheduled_activity.block.block_letter }}</td>
                     <td>{{ signup.scheduled_activity.activity.name_with_flags }}</td>
                     <td>{{ signup.scheduled_activity.activity.id }}</td>
-                    <td>{{ signup.scheduled_activity.block.date }}</td>
+                    <td>{{ signup.scheduled_activity.get_true_sponsors|join:", " }}</td>
                     {% if request.user.is_eighth_admin %}
                         <td>
                             <form action="{% url 'eighth_admin_clear_absence' signup.id %}?next={{ request.get_full_path|urlencode }}" method="post">
