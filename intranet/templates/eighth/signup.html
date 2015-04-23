@@ -61,10 +61,32 @@
         <h3>
             <%= name %> - <%= comments %>
         </h3>
+
+        <% if (cancelled) { %>
+            <span class="badge red">Cancelled</span>
+        <% } %>
+
+        <% if (special) { %>
+            <span class="badge green">Special</span>
+        <% } %>
+
+        <% if (restricted_for_user) { %>
+            <span class="badge">Restricted</span>
+        <% } %>
+
+        <% if (sticky) { %>
+            <span class="badge">Sticky</span>
+        <% } %>
+
+        <% if (both_blocks) { %>
+            <span class="badge">Both Blocks</span>
+        <% } %>
+
         <dl>
-            <dt>Rooms:</dt>
+            <% rooms = _.uniq(rooms)%>
+            <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
             <dd>
-                <% rooms = _.uniq(rooms)%>
+
                 <% if (rooms.length != 0) {%>
                         <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
                 <%} else {%>
@@ -81,22 +103,15 @@
                 <%}%>
             </dd>
 
-            <dt>Capacity:</dt><dd><% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
-            <div>
-                <%= roster.count %>
-                <% if (roster.count == 1){ %>
-                    student has
-                <%} else {%>
-                    students have
-                <%}%> already signed up.
-            </div>
+            <dt>Signups:</dt><dd><%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
 
             <% if (both_blocks) {%>
                 <div>This activity runs both blocks.</div>
             <%}%>
 
             <% if (description) {%>
-                <dt class="description">Description:</dt><dd class="description"><%= description %></dd>
+                <br>
+                <div><%= description %></div>
             <%}%>
 
 
