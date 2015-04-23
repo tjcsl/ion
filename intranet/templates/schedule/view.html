@@ -1,4 +1,7 @@
-{% block schedule %}
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static "css/schedule.css" %}" />
+
 <div class="schedule">
     <a href="/?date={{ date_yesterday }}" class="chevron schedule-left"><i class="fa fa-chevron-left"></i></a>
     {{ date|date:"F j" }}
@@ -7,12 +10,15 @@
     {% if dayobj %}
         <h2>{{ dayobj.type.name }}</h2>
         <br>
+        <table class="bellschedule-table">
         {% for blk in dayobj.type.blocks.all %}
-            {{ blk.name }}: {{ blk.start }} - {{ blk.end }}<br>
+            <tr>
+                <th>{{ blk.name }}:</th>
+                <td> {{ blk.start }} - {{ blk.end }}</td>
+            </tr>
         {% endfor %}
+        </table>
     {% else %}
         No schedule information available.
     {% endif %}
 </div>
-
-{% endblock %}
