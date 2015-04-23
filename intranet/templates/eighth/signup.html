@@ -93,9 +93,10 @@
                     <br />
                 <%}%>
             </dd>
-            <dt>Sponsors:</dt>
+
+            <% sponsors = _.uniq(sponsors) %>
+            <dt>Sponsor<% if (sponsors.length > 1) { %>s<% } %>:</dt>
             <dd>
-                <% sponsors = _.uniq(sponsors) %>
                 <% if (sponsors.length != 0) {%>
                         <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
                 <%} else {%>
