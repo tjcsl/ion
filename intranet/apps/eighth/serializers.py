@@ -103,6 +103,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "restricted_for_user": restricted_for_user,
                 "both_blocks": activity.both_blocks,
                 "special": activity.special
+                "comments": scheduled_activity.comments
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
 
