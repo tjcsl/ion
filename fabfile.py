@@ -82,7 +82,7 @@ def killserver(port=8080):
         int(port)
     except ValueError:
         abort("Invalid port number.")
-    local("ps aux | grep {} | grep runserver | sed -E 's/ +/ /g' | cut -d ' ' -f2 | xargs kill".format(port))
+    local("ps aux | grep {} | grep runserver | sed -E 's/ +/ /g' | cut -d ' ' -f2 | xargs -L1 kill".format(port))
 
 
 def _require_root():
