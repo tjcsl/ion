@@ -78,6 +78,7 @@ $(function() {
             });
 
             $("#activity-detail").data("aid", activityDetailView.model.id);
+            $("#activity-detail").addClass("selected");
 
             activityDetailView.render();
 
