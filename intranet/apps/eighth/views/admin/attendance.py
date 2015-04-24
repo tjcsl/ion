@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import csv
+import logging
 from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
 from django.db.models import Count, Q
@@ -13,6 +14,9 @@ from ...models import (
     EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity,
     EighthRoom)
 from ...utils import get_start_date
+
+
+logger = logging.getLogger(__name__)
 
 
 @eighth_admin_required
@@ -268,15 +272,14 @@ def out_of_building_schedules_view(request, block_id=None):
     }
 
     if block is not None:
-        room = EighthRoom.objects.filter(name__icontains="out of building")
+        rooms = EighthRoom.objects.filter(name__icontains="out of building")
 
-        if len(room) == 1:
-            room = room[0]
+        if len(rooms) > 0:
             signups = (EighthSignup.objects
                                    .filter(scheduled_activity__block=block)
-                                   .filter(Q(scheduled_activity__rooms=room) |
+                                   .filter(Q(scheduled_activity__rooms__in=rooms) |
                                            (Q(scheduled_activity__rooms=None) &
-                                            Q(scheduled_activity__activity__rooms=room)))
+                                            Q(scheduled_activity__activity__rooms__in=rooms)))
                                    .distinct()
                                    .order_by("scheduled_activity__activity"))
             context["signups"] = signups
