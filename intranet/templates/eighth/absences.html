@@ -23,7 +23,7 @@
                 {% endif %}
         </div>
 
-        Absence information for {{ request.user.display_name }} ({{ request.user.graduation_year }}): {{ absences|length }} Absence{{ absences|pluralize }}
+        Absence information for {{ user.display_name }} ({{ user.graduation_year }}): {{ absences|length }} Absence{{ absences|pluralize }}
         <br><br>
         {% if request.user.is_student %}
             <p>
@@ -58,6 +58,10 @@
                         </td>
                     {% endif %}
                 </tr>
+            {% empty %}
+                <tfoot>
+                    <tr><td colspan=5>No absences</td></tr>
+                </tfoot>
             {% endfor %}
         </table>
     </div>
