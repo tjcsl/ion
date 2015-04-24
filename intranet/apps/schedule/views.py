@@ -50,6 +50,17 @@ def admin_home_view(request):
     }
     return render(request, "schedule/admin_home.html", data)
 
+def admin_daytype_view(request):
+    if 'id' in request.GET:
+        id = request.GET['id']
+    else:
+        id = None
+    daytype = DayType.objects.get(id=id)
+    data = {
+        "daytype": daytype
+    }
+    return render(request, "schedule/admin_daytype.html", data)
+
 def create_example():
     blocks = [
         Block.objects.create(period="1", name="Period 1",
