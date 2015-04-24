@@ -7,41 +7,80 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/schedule.css" %}" />
     <style type="text/css">
     .primary-content h2 {
         text-align: center;
     }
     .schedule-month {
-        width: 100%;
+        width: 875px
         height: 100%;
     }
 
-    .schedule-month th {
+    .schedule-month > tbody > tr > th {
         text-align: center;
     }
 
-    .schedule-month td {
+    .schedule-month > tbody > tr > td {
+        position: relative;
         height: 150px;
-        width: 150px;
+        width: 175px;
         border: 1px solid black;
         padding: 0;
     }
 
-    .schedule-month b {
+    .schedule-month > tbody > tr > td > b {
         display: inline-block;
         margin: 4px 8px;
     }
 
-    .schedule-month em.day {
-
+    .schedule-month > tbody > tr > td > em.day {
+        display: block;
+        margin-top: -22px; /* keep in line with day */
+        text-align: center;
+        font-weight: bold;
     }
+
+    .schedule-month .bellschedule-table th {
+        padding: 0 8px;
+    }
+
+    .schedule-month .bellschedule-table td {
+        padding: 0 8px;
+    }
+
+    .schedule-month > tbody > tr > td .buttons {
+        visibility: hidden;
+        position: absolute;
+        bottom: 0;
+        margin: 8px;
+    }
+
+    .schedule-month > tbody > tr > td .buttons .button {
+        padding: 4px 8px;
+        font-size: 18px;
+    }
+
+    .schedule-month > tbody > tr > td:hover .buttons,
+    .schedule-month > tbody > tr > td .buttons:hover,
+    .schedule-month > tbody > tr > td .buttons:focus,
+    .schedule-month > tbody > tr > td .buttons *:hover,
+    .schedule-month > tbody > tr > td .buttons *:focus {
+        visibility: visible;
+    }
+
     </style>
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
-    <h2>September</h2>
         <table class="schedule-month">
+        <tbody>
+        <tr>
+            <th colspan="5">
+            <h2>September</h2>
+            </th>
+        </tr>
         <tr>
             <th>Monday</th>
             <th>Tuesday</th>
@@ -55,10 +94,26 @@
             <td>
                 <b>{{ j }}.</b>
                 <em class="day day-blue">Blue Day</em>
-                <i class='fa fa-pencil' />
+                <table class="bellschedule-table">
+                {% for blk in dayobj.type.blocks.all %}
+                    <tr>
+                        <th>{{ blk.name }}:</th>
+                        <td> {{ blk.start }} - {{ blk.end }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+                <span class="buttons">
+                    <a class="button" title="Change Day Type">
+                        <i class='edit fa fa-exchange'></i>
+                    </a>
+                    <a class="button" title="Custom Schedule">
+                        <i class='edit fa fa-pencil'></i>
+                    </a>
+                </span>
             </td>
             {% endfor %}
         </tr>
         {% endfor %}
+        </tbody>
     </div>
 {% endblock %}
