@@ -1,0 +1,64 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Schedule
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content h2 {
+        text-align: center;
+    }
+    .schedule-month {
+        width: 100%;
+        height: 100%;
+    }
+
+    .schedule-month th {
+        text-align: center;
+    }
+
+    .schedule-month td {
+        height: 150px;
+        width: 150px;
+        border: 1px solid black;
+        padding: 0;
+    }
+
+    .schedule-month b {
+        display: inline-block;
+        margin: 4px 8px;
+    }
+
+    .schedule-month em.day {
+
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+    <h2>September</h2>
+        <table class="schedule-month">
+        <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+        </tr>
+        {% for i in "1234" %}
+        <tr>
+            {% for j in "12345" %}
+            <td>
+                <b>{{ j }}.</b>
+                <em class="day day-blue">Blue Day</em>
+                <i class='fa fa-pencil' />
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </div>
+{% endblock %}

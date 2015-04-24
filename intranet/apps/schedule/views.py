@@ -41,6 +41,13 @@ def schedule_view(request):
     data = get_context(request)
     return render(request, "schedule/view.html", data)
 
+def admin_home_view(request):
+    data = {
+        "days": Day.objects.all(),
+        "blocks": Block.objects.all(),
+        "daytypes": DayType.objects.all()
+    }
+    return render(request, "schedule/admin_home.html", data)
 
 def create_example():
     blocks = [
