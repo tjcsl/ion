@@ -881,16 +881,16 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "perm": None,
                 "is_list": True
             },
-            "google_talk": {
-                "ldap_name": "googleTalk",
-                "perm": None,
-                "is_list": False
-            },
-            "skype": {
-                "ldap_name": "skype",
-                "perm": None,
-                "is_list": False
-            },
+            # "google_talk": {
+            #     "ldap_name": "googleTalk",
+            #     "perm": None,
+            #     "is_list": False
+            # },
+            # "skype": {
+            #     "ldap_name": "skype",
+            #     "perm": None,
+            #     "is_list": False
+            # },
             "webpages": {
                 "ldap_name": "webpage",
                 "perm": None,

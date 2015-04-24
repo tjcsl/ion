@@ -9,20 +9,20 @@
 
 {% block css %}
     {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-<script type="text/javascript">
-$(document).ready(function() {
-    $('.preferred-user-picture').click(function() {
-        $('.user-pictures').slideToggle();
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('.preferred-user-picture').click(function() {
+            $('.user-pictures').slideToggle();
+        });
+        $('.user-pictures').click(function() {
+            $('.user-pictures').slideToggle();
+        });
     });
-    $('.user-pictures').click(function() {
-        $('.user-pictures').slideToggle();
-    });
-});
 </script>
 {% endblock %}
 
@@ -117,6 +117,8 @@ $(document).ready(function() {
                         </td>
                     </tr>
                     {% endif %}
+
+                    {% comment %}
                     {% if profile_user.skype or profile_user.google_talk %}
                     <tr>
                         <th>Social</th>
@@ -135,6 +137,8 @@ $(document).ready(function() {
                         </td>
                     </tr>
                     {% endif %}
+                    {% endcomment %}
+
                     {% if profile_user.home_phone %}
                     <tr>
                         <th>Home Phone</th>
