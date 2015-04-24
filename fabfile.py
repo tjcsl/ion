@@ -76,13 +76,9 @@ def runserver(port=8080,
         )
 
 
-def killserver(port=8080):
-    """Kill the Django development server currently running on a port."""
-    try:
-        int(port)
-    except ValueError:
-        abort("Invalid port number.")
-    local("ps aux | grep {} | grep runserver | sed -E 's/ +/ /g' | cut -d ' ' -f2 | xargs -L1 kill".format(port))
+def killserver():
+    """Kills all Django development servers."""
+    local("ps xf | grep runserver | grep -v grep | cut -d" " -f1 | xargs kill -9")
 
 
 def _require_root():
