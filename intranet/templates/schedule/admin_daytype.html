@@ -21,6 +21,11 @@
         font-size: 18px;
     }
 
+    .bellschedule-table thead th.special {
+        font-size: 12px;
+        text-align: right;
+    }
+
     .bellschedule-table #id_name {
         font-size: 20px;
         width: 100%;
@@ -67,12 +72,20 @@
         {% csrf_token %}
         <br /><br />
             <table class="bellschedule-table">
-            <tbody>
+            <thead>
                 <tr>
                     <th colspan="2">
                         <input id="id_name" name="name" placeholder="Day Name" />
                     </th>
                 </tr>
+                <tr>
+                    <th colspan="2" class="special">
+                        <label for="special">Special</label>
+                        <input type="checkbox" name="special" />
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr class="tpl">
                     <th>
                         <input type="text" name="block_name" value="" placeholder="Block Title" />

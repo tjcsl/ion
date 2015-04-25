@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import re
 from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -58,10 +59,26 @@ def admin_daytype_view(request):
         logger.debug(form)
         logger.debug(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Successfully added DayType.")
+            model = form.save()
+            """Add blocks"""
+            blocks = zip(request.POST['block_name'],
+                         [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_start')],
+                         [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_end')]
+            )
+            form.blocks = []
+            for blk in blocks:
+                obj = Block.objects.get_or_create(
+                        name=blk[0],
+                        start__hour=blk[1][0],
+                        start__min=blk[1][1],
+                        end__hour=blk[2][0],
+                        end__min=blk[2][1]
+                )
+                model.blocks.add(obj)
+            model.save()
+            messages.success(request, "Successfully added Day Type.")
         else:
-            messages.error(request, "Error adding announcement")
+            messages.error(request, "Error adding Day Type")
     else:
         form = DayTypeForm()
     return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": DayType.objects.all()[0]})
