@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 
 import logging
 from datetime import datetime, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Time, Block, CodeName, DayType, Day
+from .forms import DayTypeForm
 
 logger = logging.getLogger(__name__)
 
@@ -51,15 +53,18 @@ def admin_home_view(request):
     return render(request, "schedule/admin_home.html", data)
 
 def admin_daytype_view(request):
-    if 'id' in request.GET:
-        id = request.GET['id']
+    if request.method == "POST":
+        form = DayTypeForm(request.POST)
+        logger.debug(form)
+        logger.debug(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully added DayType.")
+        else:
+            messages.error(request, "Error adding announcement")
     else:
-        id = None
-    daytype = DayType.objects.get(id=id)
-    data = {
-        "daytype": daytype
-    }
-    return render(request, "schedule/admin_daytype.html", data)
+        form = DayTypeForm()
+    return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": DayType.objects.all()[0]})
 
 def create_example():
     blocks = [

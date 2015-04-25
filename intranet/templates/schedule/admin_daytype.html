@@ -21,30 +21,80 @@
         font-size: 18px;
     }
 
-    .bellschedule-table h2 {
+    .bellschedule-table #id_name {
+        font-size: 20px;
+        width: 100%;
         text-align: center;
+    }
+
+    .bellschedule-table td {
+        padding: 4px 0;
+    }
+
+    .bellschedule-table td.time {
+        font-size: 12px;
+        text-align: right;
+    }
+
+    .bellschedule-table td.submit > input {
+        width: 100%;
     }
 
     </style>
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        var bt = $(".bellschedule-table tr.tpl").clone();
+        bt.removeClass("tpl");
+        add_block = function() {
+            $(".bellschedule-table > tbody").append(bt.clone());
+        }
+
+    })
+    </script>
+{% endblock %}
+
 {% block main %}
     <div class="primary-content">
-        <h2>Day Type Edit</h2>
-
-        <form action="/schedule/type/modify">
+        <h2>Create Day Type</h2>
+        <table>
+        {{ form.as_table }}
+        </table>
+        <form action="/schedule/daytype" method="post">
+        {% csrf_token %}
+        <br /><br />
             <table class="bellschedule-table">
-            <tr>
-                <th colspan=2>
-                    <h2>{{ daytype.name }}</h2>
-                </th>
-            </tr>
-            {% for blk in daytype.blocks.all %}
+            <tbody>
                 <tr>
-                    <th>{{ blk.name }}:</th>
-                    <td> {{ blk.start }} - {{ blk.end }}</td>
+                    <th colspan="2">
+                        <input id="id_name" name="name" placeholder="Day Name" />
+                    </th>
                 </tr>
-            {% endfor %}
+                <tr class="tpl">
+                    <th>
+                        <input type="text" name="block_name" value="" placeholder="Block Title" />
+                    </th>
+                    <td class="time">
+                        Start: <input type="time" name="block_start" value="" size="5" /><br />
+                        End: <input type="time"name="block_end" value="" size="5" />
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="submit">
+                        <input type="submit" value="Create" class="button" />
+                    </td>
+                    <td class="add">
+                        <a class="button" onclick="add_block()">
+                            <i class="fa fa-plus"></i> Add Block
+                        </a>
+                    </td>
+                </tr>
+            </tfoot>
             </table>
         </form>
     </div>
