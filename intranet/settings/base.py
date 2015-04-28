@@ -18,6 +18,7 @@ EMAIL_SUBJECT_PREFIX = "[Ion] "
 
 ADMINS = (
     ("Ethan Lowman", "2015elowman+ion@tjhsst.edu"),
+    ("James Woglom", "2016jwoglom+ion@tjhsst.edu")
 )
 
 MANAGERS = ADMINS
