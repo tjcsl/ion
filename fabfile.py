@@ -78,7 +78,7 @@ def runserver(port=8080,
 
 def killserver():
     """Kills all Django development servers."""
-    local("ps xf | grep runserver | grep -v grep | cut -d" " -f1 | xargs kill -9")
+    local("ps xf | grep runserver | grep -v grep | cut -d' ' -f1 | xargs kill -9")
 
 
 def _require_root():
