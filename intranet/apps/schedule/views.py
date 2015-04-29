@@ -27,7 +27,7 @@ def get_context(request=None, date=None):
     if date is None:
         date = datetime.now()
 
-    logger.debug("schedule date", date)
+    logger.debug("schedule date %s", date)
     try:
         dayobj = Day.objects.get(date=date)
     except Day.DoesNotExist:
