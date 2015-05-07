@@ -12,23 +12,28 @@
     </script>
 {% endblock %}
 
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
+{% endblock %}
+
 {% block bodyclass %}{{ block.super}} schedule-activity-page{% endblock %}
 
 {% block admin_main %}
+<div class="schedule-activity-head">
+    <h4>Select an Activity:</h4>
 
-<h4>Select an Activity:</h4>
-
-<select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
-    {% for a in activities %}
-        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
-    {% endfor %}
-</select>
-
+    <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+        {% for a in activities %}
+            <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+        {% endfor %}
+    </select>
+</div>
 {% if activity %}
     <form method="post" action="">
         {% csrf_token %}
 
-        <div>
+        <div class="schedule-activity-buttons">
             <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
             <input type="submit" value="Save">
         </div>
@@ -99,7 +104,9 @@
                             </td>
 
                             {% if field.name == "scheduled" %}
-                                <td class="block-name">{{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
+                                <td class="block-name">
+                                <a href="{% url '"
+                                {{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}</td>
                             {% endif %}
                         {% endfor %}
                     </tr>
