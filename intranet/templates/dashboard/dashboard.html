@@ -29,100 +29,35 @@
 {% endblock %}
 
 {% block main %}
-<div class="widgets">
+<div class="widgets" style="visibility:visible">
     <div class="widget eighth-widget">
         <div class="widget-title">
             <h2>
                 Upcoming Eighth Periods
             </h2>
-            <div class="info warning">
+            <!--div class="info warning">
                 <i class="fa fa-warning-sign"></i>
                 15 Minutes Left to Sign Up
-            </div>
+            </div-->
         </div>
         <div class="widget-content">
+        {% for block in blocks %}
             <div class="eighth-block">
                 <div class="block-header">
                     <span class="block-letter">
-                        A
+                        {{ block.block_letter }}
                     </span>
-                    Thursday, June 12
-                    <a class="info" href="/">Choose from All Activities</a>
-                </div>
-
-                <div class="eighth-activities">
-                        <div class="eighth-activity">
-                            <i class="fa fa-circle"></i>
-                            Basket Weaving
-                            <span class='info'>Agee &bull; 123</span>
-                        </div>
-                        <div class="eighth-activity selected">
-                            <i class="fa fa-check"></i>
-                            Dormancy Club
-                            <span class='info'>William &bull; 456</span>
-                        </div>
+                    {{ block.date }}
+                    <a href="{% url 'eighth_signup' %}/{{ block.id }}">Sign Up</a>
                 </div>
             </div>
-
-            <div class="eighth-block open warning">
-                <div class="block-header">
-                    <span class="block-letter">
-                        B
-                    </span>
-                    Thursday, June 12
-                    <a class="info" href="/">Choose from All Activities</a>
-                </div>
-
-                <div class="eighth-activities">
-                        <div class="eighth-activity">
-                            <i class="fa fa-circle"></i>
-                            Basket Weaving
-                            <span class='info'>Agee &bull; 123</span>
-                        </div>
-                        <div class="eighth-activity selected">
-                            <i class="fa fa-check"></i>
-                            Dormancy Club
-                            <span class='info'>William &bull; 456</span>
-                        </div>
-                        {% for i in "123456789"|make_list %}
-                        <div class="eighth-activity">
-                            <i class="fa fa-circle-o"></i>
-                            Sys Op Administrators
-                            <span class='info'>Hamilton &bull; 115</span>
-                        </div>
-                        {% endfor %}
-                </div>
-            </div>
-
+        {% empty %}
             <div class="eighth-block">
                 <div class="block-header">
-                    <span class="block-letter">
-                        A
-                    </span>
-                    Thursday, June 12
-                    <a class="info" href="/">Choose from All Activities</a>
-                </div>
-
-                <div class="eighth-activities">
-                        <div class="eighth-activity">
-                            <i class="fa fa-circle"></i>
-                            Basket Weaving
-                            <span class='info'>Agee &bull; 123</span>
-                        </div>
-                        <div class="eighth-activity selected">
-                            <i class="fa fa-check"></i>
-                            Dormancy Club
-                            <span class='info'>William &bull; 456</span>
-                        </div>
-                        {% for i in "12"|make_list %}
-                        <div class="eighth-activity">
-                            <i class="fa fa-circle-o"></i>
-                            Sys Op Administrators
-                            <span class='info'>Hamilton &bull; 115</span>
-                        </div>
-                        {% endfor %}
+                There are no blocks available at this time.
                 </div>
             </div>
+        {% endfor %}
         </div>
     </div>
 </div>
@@ -170,12 +105,5 @@
     </div>
     {% endfor %}
     </div>
-    <!--
-    <div class="content-center">
-        <a href="/archive" class="button">
-                <i class="fa fa-archive"></i>
-                Archive
-        </a>
-    </div>-->
 </div>
 {% endblock %}
