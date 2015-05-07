@@ -41,16 +41,25 @@
             </div-->
         </div>
         <div class="widget-content">
-        {% for block in blocks %}
+        {% for sch in schedule %}
+            {% for block in sch.blocks %}
             <div class="eighth-block">
                 <div class="block-header">
                     <span class="block-letter">
                         {{ block.block_letter }}
                     </span>
-                    {{ block.date }}
-                    <a href="{% url 'eighth_signup' %}/{{ block.id }}">Sign Up</a>
+                    {{ sch.date }}
+                    {% if block.current_signup %}
+                    <span class="block-signup">
+                        {{ block.current_signup }}
+                    </span>
+                        <a href="{% url 'eighth_signup' %}/{{ block.id }}">Change</a>
+                    {% else %}
+                        <a href="{% url 'eighth_signup' %}/{{ block.id }}">Sign Up</a>
+                    {% endif %}
                 </div>
             </div>
+            {% endfor %}
         {% empty %}
             <div class="eighth-block">
                 <div class="block-header">
