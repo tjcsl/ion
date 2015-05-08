@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from ..announcements.models import Announcement
@@ -21,24 +22,25 @@ def dashboard_view(request):
     if block is None:
         schedule = None
     else:
-        surrounding_blocks = block.next_blocks()
+        surrounding_blocks = [block] + list(block.next_blocks())
         signups = EighthSignup.objects.filter(user=request.user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
+            today = ((date.today() - b.date) == timedelta(0))
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
                 "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
                 "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
-                "locked": b.locked
+                "locked": b.locked,
+                "date": b.date,
+                "flags": ("locked" if b.locked else "open" + (" warning" if today else ""))
             }
-            day = {}
-            day["date"] = b.date
-            day["blocks"] = []
-            day["blocks"].append(info)
-            schedule.append(day)
+            logger.debug(info)
+            schedule.append(info)
         
+    logger.debug(schedule)
     context = {
         "announcements": announcements,
         "schedule": schedule
