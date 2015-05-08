@@ -23,6 +23,13 @@
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
             data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
+
+            if(data.length < 1) {
+                console.log("Empty dataset")
+                $(function() {
+                    $("ul.all-activities").append("<p>There are no activities available for signup at this time.</p>");
+                });
+            }
             activityModels.reset(data);
             _.each(activityModels.models, function(activity) {
                 activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup }}");
