@@ -1,4 +1,12 @@
 $(document).ready(function() {
+    $(".block-header").click(function() {
+        console.log($("a.block-signup-change", $(this)));
+        location.href = $("a.block-signup-change", $(this)).attr("href");
+    });
+});
+
+/*
+$(document).ready(function() {
     var heights = $(".eighth-activities").map(function() {
         return $(this).children(".eighth-activity").length * 20;
     }).get();
@@ -40,3 +48,4 @@ $(document).ready(function() {
         });
     });
 });
+*/
