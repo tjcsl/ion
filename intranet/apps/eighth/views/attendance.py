@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from datetime import datetime
 try:
     from io import BytesIO
@@ -25,6 +26,7 @@ from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup
 
+logger = logging.getLogger(__name__)
 
 def should_show_activity_list(wizard):
     if wizard.request.user.is_eighth_admin:
@@ -96,6 +98,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        logger.debug("debug called in attendance")
         if hasattr(self, "no_activities"):
             response = redirect("eighth_attendance_choose_scheduled_activity")
             response["Location"] += "?na=1"
@@ -107,6 +110,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             activity = form_list[1].cleaned_data["activity"]
 
         block = form_list[0].cleaned_data["block"]
+        logger.debug(block)
         scheduled_activity = EighthScheduledActivity.objects.get(
             block=block,
             activity=activity
