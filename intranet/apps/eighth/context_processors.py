@@ -25,6 +25,13 @@ def absence_count(request):
                                      was_absent=True)
                              .count())
 
-        return {"eighth_absence_count": count}
+        notif = request.session.get('eighth_absence_notif_seen', False)
+        if not notif:
+            request.session['eighth_absence_notif_seen'] = True
+
+        return {
+            "eighth_absence_count": count,
+            "eighth_absence_notif": not notif
+        }
 
     return {}
