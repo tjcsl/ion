@@ -42,4 +42,15 @@ $(function() {
         $(".nav li").slice(0,1).addClass("selected");
     });
 
+
+    /* Fix submit button bug with Selectize.js where
+     * form will not submit if the enter button is pressed
+     * while a form field is selected. */
+/*
+    $(".selectize-control").each(function() {
+        $(this).parent().bind("keypress", function() {
+
+        });
+    });*/
+
 });
