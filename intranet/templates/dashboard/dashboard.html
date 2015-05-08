@@ -97,16 +97,26 @@
                         {{ block.block_letter }}
                     </span>
                     {{ block.date }}
-                    {% if block.current_signup %}
+                    {% if block.locked %}
+                        <span class="block-signup locked">
+                            <i class="fa fa-lock"></i>
+                            {% if block.current_signup %}
+                                {{ block.current_signup }}
+                            {% else %}
+                                No activity selected
+                            {% endif %}
+                        </span>
+                        <a href="{% url 'eighth_signup' block.id %}" class="block-signup-change">Locked</a>
+                    {% elif block.current_signup %}
                         <span class="block-signup">
                             {{ block.current_signup }}
                         </span>
-                        <a href="{% url 'eighth_signup' %}/{{ block.id }}" class="block-signup-change">Change</a>
+                        <a href="{% url 'eighth_signup' block.id %}" class="block-signup-change">Change</a>
                     {% else %}
                         <span class="block-signup no-activity-selected">
                             No activity selected
                         </span>
-                        <a href="{% url 'eighth_signup' %}/{{ block.id }}" class="block-signup-change">Sign Up</a>
+                        <a href="{% url 'eighth_signup' block.id %}" class="block-signup-change">Sign Up</a>
                     {% endif %}
                 </div>
             </div>

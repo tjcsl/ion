@@ -18,11 +18,13 @@ def dashboard_view(request):
 
     schedule = []
 
+    num_blocks = 5
+
     block = EighthBlock.objects.get_first_upcoming_block()
     if block is None:
         schedule = None
     else:
-        surrounding_blocks = [block] + list(block.next_blocks())
+        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks])
         signups = EighthSignup.objects.filter(user=request.user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
