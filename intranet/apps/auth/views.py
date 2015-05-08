@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import os
 import logging
+from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import get_context as schedule_context
 from .forms import AuthenticateForm
@@ -13,7 +14,6 @@ from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
-
 def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
@@ -23,7 +23,9 @@ def index_view(request, auth_form=None, force_login=False):
         request.session.set_test_cookie()
         data = {
             "auth_form": auth_form,
-            "request": request
+            "request": request,
+            "git_version": settings.base.get_current_commit(),
+            "git_date": settings.base.get_current_commit_date()
         }
         schedule = schedule_context(request)
         data.update(schedule)

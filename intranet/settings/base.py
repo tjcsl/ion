@@ -287,3 +287,11 @@ LOGGING = {
         },
     }
 }
+
+def get_current_commit():
+    import subprocess
+    return subprocess.check_output(["git","rev-parse","--short","HEAD"]).rstrip()
+
+def get_current_commit_date():
+    import subprocess
+    return subprocess.check_output(["git","show","-s","--format=%ci","HEAD"]).rstrip()
