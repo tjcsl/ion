@@ -111,7 +111,7 @@
 
 {% block body %}
     <div class="nav-g"></div>
-    <div class="header">
+    <div class="header{% if request.user.is_student and eighth_absence_count > 0 %} has-badge{% endif %}">
         <div class="left">
             <div class="dropdown-taparea">
                 <div class="dropdown-icon">
@@ -127,7 +127,7 @@
             </a>
 
             <form class="search" action="/search" method="get" autocomplete="off">
-                    <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% else %}Search{% endif %}" onclick="if(this.value=='Search'){this.value=''}" onblur="if(this.value==''){this.value='Search';}">
+                    <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search">
                     <button type="submit" class="search-button">
                        <i class="fa fa-search"></i>
                     </button>
