@@ -32,23 +32,32 @@
         {% if profile_user.user_type == "tjhsstStudent" %}
             <table>
                 <tr>
-                    <td><img class="freshman" src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture" /></td>
-                    <td><img class="sophomore" src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture" /></td>
-                    <td><img class="junior" src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture" /></td>
-                    <td><img class="senior" src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture" /></td>
+                    <td>
+                        <img class="freshman" src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture" />
+                        <br />Freshman
+                    </td>
+                    <td>
+                        <img class="sophomore" src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture" />
+                        <br />Sophomore
+                    </td>
+                    <td>
+                        <img class="junior" src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture" />
+                        <br />Junior
+                    </td>
+                    <td>
+                        <img class="senior" src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture" />
+                        <br />Senior
+                    </td>
                 </tr>
-                <tfoot>
-                    <td>Freshman</td>
-                    <td>Sophomore</td>
-                    <td>Junior</td>
-                    <td>Senior</td>
-                </tfoot>
             </table>
         {% else %}
             No other pictures are available.
         {% endif %}
         </div>
-        <img class="preferred-user-picture" src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" height="215" />
+        <div class="preferred-user-picture">
+            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" height="215" /><br />
+            View user pictures
+        </div>
 
 
         <div class="user-info">
