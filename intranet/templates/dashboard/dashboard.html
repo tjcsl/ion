@@ -29,52 +29,6 @@
 {% endblock %}
 
 {% block main %}
-<div class="announcements primary-content">
-    <div class="announcements-header">
-        <h2>Announcements</h2>
-        {% if request.user.is_announcements_admin %}
-
-            <span class="announcements-icon-wrapper">
-                <a class="button announcement-add" href="{% url 'add_announcement' %}">
-                    <i class="fa fa-plus"></i>
-                    Add
-                </a>
-            </span>
-        {% endif %}
-    </div>
-    <div class="announcements-container">
-    {% for announcement in announcements %}
-        <div class="announcement" data-id="{{ announcement.id }}">
-            <h3>
-                {{ announcement.title }}
-                {% if request.user.is_announcements_admin %}
-                    <div class="announcement-icon-wrapper">
-                        <a href="{% url 'modify_announcement' announcement.id %}">
-                            <i class="announcement-icon fa fa-pencil"></i>
-                        </a>
-                        <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
-                            <i class="announcement-icon fa fa-trash-o"></i>
-                        </a>
-                    </div>
-                {% endif %}
-            </h3>
-
-            <div class="announcement-metadata">
-                {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to all students
-            </div>
-            <div class="announcement-content">
-	            {{ announcement.content|safe }}
-            </div>
-        </div>
-    {% empty %}
-    <div class="announcement">
-        There are no announcements to display at this time.
-    </div>
-    {% endfor %}
-    </div>
-</div>
-
-
 <div class="widgets" style="visibility:visible">
     <div class="widget eighth-widget">
         <div class="widget-title">
@@ -127,7 +81,55 @@
                 </div>
             </div>
         {% endfor %}
+        </div>
     </div>
 </div>
+
+<div class="announcements primary-content">
+    <div class="announcements-header">
+        <h2>Announcements</h2>
+        {% if request.user.is_announcements_admin %}
+
+            <span class="announcements-icon-wrapper">
+                <a class="button announcement-add" href="{% url 'add_announcement' %}">
+                    <i class="fa fa-plus"></i>
+                    Add
+                </a>
+            </span>
+        {% endif %}
+    </div>
+    <div class="announcements-container">
+    {% for announcement in announcements %}
+        <div class="announcement" data-id="{{ announcement.id }}">
+            <h3>
+                {{ announcement.title }}
+                {% if request.user.is_announcements_admin %}
+                    <div class="announcement-icon-wrapper">
+                        <a href="{% url 'modify_announcement' announcement.id %}">
+                            <i class="announcement-icon fa fa-pencil"></i>
+                        </a>
+                        <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                            <i class="announcement-icon fa fa-trash-o"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </h3>
+
+            <div class="announcement-metadata">
+                {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to all students
+            </div>
+            <div class="announcement-content">
+                {{ announcement.content|safe }}
+            </div>
+        </div>
+    {% empty %}
+    <div class="announcement">
+        There are no announcements to display at this time.
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+
 
 {% endblock %}
