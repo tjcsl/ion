@@ -30,6 +30,7 @@
 
 {% block main %}
 <div class="widgets" style="visibility:visible">
+{% if request.user.is_student %}
     <div class="widget eighth-widget">
         <div class="widget-title">
             <h2>
@@ -83,6 +84,45 @@
         {% endfor %}
         </div>
     </div>
+{% endif %}
+{% if request.user.is_teacher or eighth_sponsor %}
+    <div class="widget sponsor-widget">
+        <div class="widget-title">
+            <h2>
+                Sponsored Activities
+            </h2>
+            <div class="info">
+                <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}">View more sponsorships</a>
+            </div>
+            <!--div class="info warning">
+                <i class="fa fa-warning-sign"></i>
+                15 Minutes Left to Sign Up
+            </div-->
+        </div>
+        <div class="widget-content">
+        {% for schact in sponsor_schedule %}
+            <div class="eighth-block">
+                <div class="block-header">
+                    <span class="block-letter">
+                        {{ schact.block.block_letter }}
+                    </span>
+                    {{ schact.block.date }}
+                    <span class="block-signup">
+                        {{ schact.activity }}
+                    </span>
+                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take">Take Attendance</a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="eighth-block">
+                <div class="block-header">
+                There were no activity sponsorships found.
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endif %}
 </div>
 
 <div class="announcements primary-content">

@@ -7,12 +7,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from ..announcements.models import Announcement
-from ..eighth.models import EighthBlock, EighthSignup
+from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor, EighthScheduledActivity
 
 logger = logging.getLogger(__name__)
 
-
 def get_visible_announcements(user):
+    """ Get a list of visible announcements for a given user (usually request.user).
+
+        These visible announcements will be those that either have no groups assigned
+        to them (and are therefore public) or those in which the user is a member.
+    """
     announcements = Announcement.objects.order_by("-updated").all()
     user_announcements = []
     user_groups = user.groups.all()
@@ -35,15 +39,11 @@ def get_visible_announcements(user):
 
     return user_announcements
 
-@login_required
-def dashboard_view(request):
-    """Process and show the dashboard."""
-    
-    if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
-        announcements = Announcement.objects.order_by("-updated").all()
-    else:
-        announcements = get_visible_announcements(request.user)
 
+def gen_schedule(user):
+    """ Generate a list of information about a block and a student's current activity
+        signup.
+    """
     schedule = []
 
     num_blocks = 5
@@ -53,7 +53,7 @@ def dashboard_view(request):
         schedule = None
     else:
         surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks])
-        signups = EighthSignup.objects.filter(user=request.user).select_related("scheduled_activity__block", "scheduled_activity__activity")
+        signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
@@ -67,12 +67,48 @@ def dashboard_view(request):
                 "date": b.date,
                 "flags": ("locked" if b.locked else "open" + (" warning" if today else ""))
             }
-            logger.debug(info)
             schedule.append(info)
         
     logger.debug(schedule)
+    return schedule
+
+
+def gen_sponsor_schedule(user):
+    """ Return a list of :class:`EighthScheduledActivity`\s in which the given user
+        is sponsoring.
+    """
+
+    sponsor_schedule = EighthScheduledActivity.objects.all()
+    return sponsor_schedule
+
+@login_required
+def dashboard_view(request):
+    """Process and show the dashboard."""
+
+    if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
+        """ Show all announcements if user has admin permissions and
+            the show_all GET argument is given. """
+        announcements = Announcement.objects.order_by("-updated").all()
+    else:
+        """ Only show announcements for groups that the user is enrolled in. """
+        announcements = get_visible_announcements(request.user)
+
+    student = request.user.is_student
+    eighth_sponsor = request.user.has_eighth_sponsor()
+
+    
+    if student:
+        schedule = gen_schedule(request.user)
+    else: schedule = None
+
+    if eighth_sponsor:
+        sponsor_schedule = gen_sponsor_schedule(request.user)
+    else: sponsor_schedule = None
+
     context = {
         "announcements": announcements,
-        "schedule": schedule
+        "schedule": schedule,
+        "sponsor_schedule": sponsor_schedule,
+        "eighth_sponsor": eighth_sponsor
     }
     return render(request, "dashboard/dashboard.html", context)
