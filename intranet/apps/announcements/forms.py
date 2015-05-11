@@ -12,5 +12,6 @@ class AnnouncementForm(ModelForm):
         fields = [
             "title",
             "author",
-            "content"
+            "content",
+            "groups"
         ]

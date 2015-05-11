@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from django.contrib.auth.models import Group
 
 class Announcement(models.Model):
 
@@ -26,6 +26,7 @@ class Announcement(models.Model):
     author = models.CharField(max_length=63)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    groups = models.ManyToManyField(Group)
 
     def __unicode__(self):
         return self.title
