@@ -940,6 +940,32 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    def has_eighth_sponsor(self):
+        """ Determine whether the given user is associated with an :class:`EighthSponsor`
+            and, therefore, should view activity sponsoring information.
+        """
+        from ..eighth.models import EighthSponsor
+
+        try:
+            sp = EighthSponsor.objects.get(user=self)
+        except EighthSponsor.DoesNotExist:
+            return False
+
+        return True
+
+    def get_eighth_sponsor(self):
+        """ Return the :class:`EighthSponsor` that a given user is associated with.
+        """
+        from ..eighth.models import EighthSponsor
+
+        try:
+            sp = EighthSponsor.objects.get(user=self)
+        except EighthSponsor.DoesNotExist:
+            return False
+
+        return sp
+
+
     def __unicode__(self):
         return self.username or self.ion_username or self.id
 
