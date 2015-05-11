@@ -5,7 +5,7 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
-# from django.http import HttpResponse
+from django.http import Http404
 # from ..users.models import User
 from .forms import GroupForm
 
@@ -38,5 +38,19 @@ def add_group_view(request):
         "form": form,
         "action": "add",
         "success": success
+    }
+    return render(request, "groups/addmodify.html", context)
+
+@login_required
+def edit_group_view(request):
+    if request.method == 'GET':
+        grp = Group(id=request.GET['id'])
+    else:
+        return Http404()
+    form = GroupForm(instance=grp)
+
+    context = {
+        "form": form,
+        "action": "edit"
     }
     return render(request, "groups/addmodify.html", context)
