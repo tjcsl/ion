@@ -116,7 +116,13 @@
             </h3>
 
             <div class="announcement-metadata">
-                {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to all students
+                {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
+                {% for grp in announcement.groups.all %}
+                    <a href="#{{ grp.id }}">{{ grp }}</a>
+                    {% if not forloop.last %},{% endif %}
+                {% empty %}
+                    everyone
+                {% endfor %}
             </div>
             <div class="announcement-content">
                 {{ announcement.content|safe }}

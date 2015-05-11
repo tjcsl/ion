@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.shortcuts import render
 from ..announcements.models import Announcement
 from ..eighth.models import EighthBlock, EighthSignup
@@ -11,10 +12,37 @@ from ..eighth.models import EighthBlock, EighthSignup
 logger = logging.getLogger(__name__)
 
 
+def get_visible_announcements(user):
+    announcements = Announcement.objects.order_by("-updated").all()
+    user_announcements = []
+    user_groups = user.groups.all()
+    for announcement in announcements:
+        ann_groups = announcement.groups.all()
+        add = False
+        for grp in ann_groups:
+            if grp in user_groups:
+                add = True
+        if len(ann_groups) == 0:
+            add = True
+
+        if add:
+            user_announcements.append(announcement)
+
+    logger.debug("All announcements:")
+    logger.debug(announcements)
+    logger.debug("User announcements:")
+    logger.debug(user_announcements)
+
+    return user_announcements
+
 @login_required
 def dashboard_view(request):
     """Process and show the dashboard."""
-    announcements = Announcement.objects.order_by("-updated").all()
+    
+    if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
+        announcements = Announcement.objects.order_by("-updated").all()
+    else:
+        announcements = get_visible_announcements(request.user)
 
     schedule = []
 
