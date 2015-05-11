@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group
 from django.shortcuts import render
 # from django.http import HttpResponse
 # from ..users.models import User
@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 # students can only add themselves to non-admin groups unless they are already an admin
 @login_required
 def groups_view(request):
-    return render(request, "groups/groups.html")
+    return render(request, "groups/groups.html", {
+        "all_groups": Group.objects.all()
+    })
 
 
 # Create individual views for each form action

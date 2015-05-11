@@ -6,6 +6,27 @@
     {{ block.super}} - {% if action == "modify" %} Modify {% elif action == "add" %} Add {% endif %} Group
 {% endblock %}
 
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/groups.css' %}" />
+    
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        var sel = false;
+        $("select#id_permissions").after(
+            $("<button>Select All</button>")
+            .click(function() {
+                $("select#id_permissions option").prop('selected', sel=!sel);
+            })
+        );
+    });
+    </script>
+{% endblock %}
+
 {% block main %}
 <div class="announcements primary-content">
     <h2>

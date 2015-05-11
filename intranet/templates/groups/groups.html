@@ -26,7 +26,20 @@
         You are in the following groups:
         <ul>
             {% for group in user.groups.all %}
-                <li>{{ group }}</li>
+                <li>
+                    <a href="#{{ group.id }}">{{ group }}</a>
+                </li>
+            {% empty %}
+                (no groups)
+            {% endfor %}
+        </ul>
+        <br />
+        The following groups exist:
+        <ul>
+            {% for group in all_groups %}
+                <li>
+                    <a href="#{{ group.id }}">{{ group }}</a>
+                </li>
             {% empty %}
                 (no groups)
             {% endfor %}
