@@ -6,6 +6,7 @@ import logging
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import get_context as schedule_context
+from ..eighth.views.admin.general import eighth_admin_dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
@@ -17,6 +18,11 @@ logger = logging.getLogger(__name__)
 def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
+        startpage = request.user.startpage
+        if startpage == "news":
+            """Default to eighth admin view (for eighthoffice)."""
+            return eighth_admin_dashboard_view(request)
+
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
