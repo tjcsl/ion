@@ -6,12 +6,10 @@ import logging
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import get_context as schedule_context
-from ..eighth.views.admin.general import eighth_admin_dashboard_view
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.views.generic.base import View
-from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +17,6 @@ logger = logging.getLogger(__name__)
 def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
-        startpage = request.user.startpage
-        if startpage == "eighth":
-            """Default to eighth admin view (for eighthoffice)."""
-            return eighth_admin_dashboard_view(request)
-
         return dashboard_view(request)
     else:
         auth_form = auth_form or AuthenticateForm()
@@ -57,8 +50,14 @@ class login_view(View):
             if "KRB5CCNAME" in os.environ:
                 request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
             logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
-            next = request.GET.get("next", "/")
-            return redirect(next)
+
+            default_next_page = "/"
+            if request.user.startpage == "eighth":
+                """Default to eighth admin view (for eighthoffice)."""
+                default_next_page = "eighth_admin_dashboard"
+
+            next_page = request.GET.get("next", default_next_page)
+            return redirect(next_page)
         else:
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
             return index_view(request, auth_form=form)
