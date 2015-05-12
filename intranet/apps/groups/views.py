@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 @login_required
 def groups_view(request):
     return render(request, "groups/groups.html", {
-        "all_groups": Group.objects.all()
+        "all_groups": Group.objects.all(),
+        "group_admin": request.user.has_admin_permission("groups")
     })
 
 
@@ -38,19 +39,5 @@ def add_group_view(request):
         "form": form,
         "action": "add",
         "success": success
-    }
-    return render(request, "groups/addmodify.html", context)
-
-@login_required
-def edit_group_view(request):
-    if request.method == 'GET':
-        grp = Group(id=request.GET['id'])
-    else:
-        return Http404()
-    form = GroupForm(instance=grp)
-
-    context = {
-        "form": form,
-        "action": "edit"
     }
     return render(request, "groups/addmodify.html", context)

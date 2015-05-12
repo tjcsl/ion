@@ -16,12 +16,14 @@
             <h2>
                 Groups
             </h2>
+            {% if group_admin %}
             <span class="groups-icon-wrapper">
-                <a class="button groups-add" href="{% url 'add_groups' %}">
+                <a class="button groups-add" href="{% url 'eighth_admin_dashboard' %}#add-group-form">
                     <i class="fa fa-plus"></i>
                     Add
                 </a>
             </span>
+            {% endif %}
         </div>
         You are in the following groups:
         <ul>
@@ -33,16 +35,18 @@
                 (no groups)
             {% endfor %}
         </ul>
-        <br />
-        The following groups exist:
-        <ul>
-            {% for group in all_groups %}
-                <li>
-                    <a href="#{{ group.id }}">{{ group }}</a>
-                </li>
-            {% empty %}
-                (no groups)
-            {% endfor %}
-        </ul>
+        {% if group_admin %}
+            <br />
+            The following groups exist:
+            <ul>
+                {% for group in all_groups %}
+                    <li>
+                        <a href="#{{ group.id }}">{{ group }}</a>
+                    </li>
+                {% empty %}
+                    (no groups)
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}

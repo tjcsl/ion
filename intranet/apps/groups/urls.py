@@ -7,6 +7,5 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.groups_view, name="groups"),
-    url(r"^/add$", views.add_group_view, name="add_groups"),
-    url(r"^/edit$", views.edit_group_view, name="edit_groups"),
+    url(r"^/add$", views.add_group_view, name="add_groups")
 ]
