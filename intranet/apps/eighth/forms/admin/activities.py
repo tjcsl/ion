@@ -57,7 +57,7 @@ class ActivityForm(forms.ModelForm):
 
         # Simple way to filter out teachers without hitting LDAP. This
         # shouldn't be a problem unless the username scheme changes and
-        # the consequences for error are not significant.
+        # the consequences of error are not significant.
         self.fields["users_allowed"].queryset = (User.objects
                                                      .filter(username__startswith="2"))
 

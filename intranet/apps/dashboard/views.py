@@ -3,11 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.shortcuts import render
 from ..announcements.models import Announcement
 from ..eighth.models import (
-    EighthBlock, EighthSignup, EighthSponsor, EighthScheduledActivity
+    EighthBlock, EighthSignup, EighthScheduledActivity
 )
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,10 @@ def get_visible_announcements(user):
     user is a member.
 
     """
-    announcements = Announcement.objects.order_by("-updated").all()
+    announcements = (Announcement.objects
+                                 .prefetch_related("groups")
+                                 .order_by("-updated")
+                                 .all())
     user_announcements = []
     user_groups = user.groups.all()
     for announcement in announcements:
@@ -87,7 +89,6 @@ def gen_sponsor_schedule(user, num_blocks=6):
     sponsor = user.get_eighth_sponsor()
 
     block = EighthBlock.objects.get_first_upcoming_block()
-
     activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor)\
         .filter(block__date__gt=block.date)
 
