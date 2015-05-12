@@ -4,7 +4,7 @@ $(document).ready(function() {
         location.href = $("a.block-signup-change", $(this)).attr("href");
     });
 
-    $(".attendance-widget .block-header").click(function() {
+    $(".sponsor-widget .block-header").click(function() {
         console.log($("a.block-attendance-take", $(this)));
         location.href = $("a.block-attendance-take", $(this)).attr("href");
     });
