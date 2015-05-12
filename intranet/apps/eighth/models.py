@@ -282,6 +282,10 @@ class EighthBlock(models.Model):
         surrounding_blocks = list(chain(prev, [self], next))
         return surrounding_blocks
 
+    def is_today(self):
+        """Does the block occur today?"""
+        return (datetime.date.today() - self.date) == datetime.timedelta(0)
+
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
         return "{} ({})".format(formatted_date, self.block_letter)

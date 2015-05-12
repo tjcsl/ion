@@ -110,7 +110,15 @@
                     <span class="block-sponsorship">
                         {{ schact.activity }}
                     </span>
-                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take">Modify</a>
+                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take">
+                    {% if schact.attendance_taken %}
+                        Modify
+                    {% elif schact.block.is_today %}
+                        Take
+                    {% else %}
+                        View
+                    {% endif %}
+                    </a>
                 </div>
             </div>
         {% empty %}

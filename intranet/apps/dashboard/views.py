@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
@@ -55,7 +54,6 @@ def gen_schedule(user, num_blocks=6):
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
-            today = ((date.today() - b.date) == timedelta(0))
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
@@ -63,7 +61,7 @@ def gen_schedule(user, num_blocks=6):
                 "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
                 "locked": b.locked,
                 "date": b.date,
-                "flags": ("locked" if b.locked else "open" + (" warning" if today else ""))
+                "flags": ("locked" if b.locked else "open" + (" warning" if block.is_today() else ""))
             }
             schedule.append(info)
         
