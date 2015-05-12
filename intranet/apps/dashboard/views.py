@@ -74,12 +74,36 @@ def gen_sponsor_schedule(user, num_blocks=6):
         is sponsoring.
     """
 
-    sponsor = user.get_eighth_sponsor()
-    overrid_acts = EighthScheduledActivity.objects.filter(sponsors=sponsor)
-    def_acts = EighthScheduledActivity.objects.filter(activity__sponsors=sponsor)
-    acts = list(overrid_acts) + list(def_acts)
+    acts = []
 
-    return acts[:num_blocks]
+    sponsor = user.get_eighth_sponsor()
+
+    block = EighthBlock.objects.get_first_upcoming_block()
+    if block is None:
+        schedule = None
+    else:
+        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
+        for b in surrounding_blocks:
+            num_added = 0
+
+            overrid_acts = EighthScheduledActivity.objects.filter(block=b, sponsors=sponsor)
+            for a in overrid_acts:
+                acts.append(a)
+                num_added += 1
+
+            def_acts = EighthScheduledActivity.objects.filter(block=b, activity__sponsors=sponsor)
+            for a in def_acts:
+                acts.append(a)
+                num_added += 1
+
+            if num_added == 0:
+                acts.append({
+                    "block": b,
+                    "id": None,
+                    "fake": True   
+                })
+
+    return acts
 
 @login_required
 def dashboard_view(request):
