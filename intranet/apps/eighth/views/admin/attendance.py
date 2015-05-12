@@ -72,7 +72,7 @@ def delinquent_students_view(request):
         "include_juniors": include_juniors,
         "include_seniors": include_seniors,
         "start_date": start_date,
-        "end_date": end_date,
+        "end_date": end_date
     }
 
     query_params = ["lower",
@@ -115,9 +115,10 @@ def delinquent_students_view(request):
             return include
 
         delinquents = list(filter(filter_by_grade, delinquents))
-        context["delinquents"] = delinquents
     else:
-        delinquents = []
+        delinquents = None
+
+    context["delinquents"] = delinquents
 
     if request.resolver_match.url_name == "eighth_admin_view_delinquent_students":
         context["admin_page_title"] = "Delinquent Students"

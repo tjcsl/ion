@@ -23,35 +23,35 @@
         <table>
             <tr>
                 <th>Lower Limit:</th>
-                <td><input type="text" name="lower" value="{{ lower_absence_limit }}"></td>
+                <td><input type="text" name="lower" value="{{ lower_absence_limit }}" placeholder="0" /></td>
             </tr>
             <tr>
                 <th>Upper Limit:</th>
-                <td><input type="text" name="upper" value="{{ upper_absence_limit }}"></td>
+                <td><input type="text" name="upper" value="{{ upper_absence_limit }}" placeholder="1000" /></td>
             </tr>
             <tr>
                 <th>Start Date</th>
-                <td><input type="text" class="datepicker" name="start" value="{{ start_date|date:'m/d/Y' }}"></td>
+                <td><input type="text" class="datepicker" name="start" value="{{ start_date|date:'m/d/Y' }}" /></td>
             </tr>
             <tr>
                 <th>End Date:</th>
-                <td><input type="text" class="datepicker" name="end" value="{{ end_date|date:'m/d/Y' }}"></td>
+                <td><input type="text" class="datepicker" name="end" value="{{ end_date|date:'m/d/Y' }}" /></td>
             </tr>
             <tr>
                 <th>Freshmen</th>
-                <td><input type="checkbox" name="freshmen" {% if include_freshmen %}checked{% endif %}></td>
+                <td><input type="checkbox" name="freshmen" {% if include_freshmen %}checked{% endif %} /></td>
             </tr>
             <tr>
                 <th>Sophomores</th>
-                <td><input type="checkbox" name="sophomores" {% if include_sophomores %}checked{% endif %}></td>
+                <td><input type="checkbox" name="sophomores" {% if include_sophomores %}checked{% endif %} /></td>
             </tr>
             <tr>
                 <th>Juniors</th>
-                <td><input type="checkbox" name="juniors" {% if include_juniors %}checked{% endif %}></td>
+                <td><input type="checkbox" name="juniors" {% if include_juniors %}checked{% endif %} /></td>
             </tr>
             <tr>
                 <th>Seniors</th>
-                <td><input type="checkbox" name="seniors" {% if include_seniors %}checked{% endif %}></td>
+                <td><input type="checkbox" name="seniors" {% if include_seniors %}checked{% endif %} /></td>
             </tr>
         </table>
 
@@ -59,7 +59,7 @@
     </form>
     <br>
     <br>
-    {% if delinquents %}
+    {% if delinquents != None %}
         Click on column titles to sort.
         <table data-sortable>
             <thead>
@@ -88,6 +88,11 @@
                             {{ delinquent.user.grade.number }}
                         </td>
                     </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">
+                        There were no results.
+                        </td>
                 {% endfor %}
             </tbody>
         </table>
