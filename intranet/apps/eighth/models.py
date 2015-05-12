@@ -587,6 +587,16 @@ class EighthSignup(models.Model):
             has signed up.
         after_deadline
             Whether the signup was after deadline.
+        previous_activity_name
+            The name of the activity the student was previously signed
+            up for (used for passes)
+        previous_activity_sponsors
+            The sponsors of the activity the student was previously
+            signed up for.
+        pass_accepted
+            Whether the pass was accepted
+        was_absent
+            Whether the student was absent.
         absence_acknowledged
             Whether the student has dismissed the absence notification.
 
