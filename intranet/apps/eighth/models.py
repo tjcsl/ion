@@ -337,6 +337,8 @@ class EighthScheduledActivity(models.Model):
             The :class:`User<intranet.apps.users.models.User>`\s who have
             signed up for an :class:`EighthBlock`
         comments
+            Notes for students
+        admin_comments
             Notes for the Eighth Office
         sponsors
             :class:`EighthSponsor`\s that will override the
@@ -364,6 +366,7 @@ class EighthScheduledActivity(models.Model):
         related_name="eighthscheduledactivity_set"
     )
 
+    admin_comments = models.CharField(max_length=1000, blank=True)
     comments = models.CharField(max_length=1000, blank=True)
 
     # Overridden attributes

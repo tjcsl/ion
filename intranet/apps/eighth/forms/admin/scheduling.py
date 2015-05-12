@@ -34,9 +34,11 @@ class ScheduledActivityForm(forms.ModelForm):
             "rooms",
             "capacity",
             "sponsors",
-            "comments"
+            "comments",
+            "admin_comments"
         ]
         widgets = {
             "capacity": forms.TextInput(),
-            "comments": forms.Textarea(attrs={"rows": 2, "cols": 30})
+            "comments": forms.Textarea(attrs={"rows": 2, "cols": 30}),
+            "admin_comments": forms.Textarea(attrs={"rows": 2, "cols": 30})
         }
