@@ -27,7 +27,11 @@ def add_group_view(request):
                             group_id=group.id)
         else:
             messages.error(request, "Error adding group.")
-            request.session["add_group_form"] = pickle.dumps(form)
+            try:
+                request.session["add_group_form"] = pickle.dumps(form)
+            except TypeError:
+                """ Prevent pickle errors """
+                pass
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
