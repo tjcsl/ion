@@ -9,11 +9,8 @@ def nav_categorizer(request):
     falls under
     """
 
-    cat = ""
-
     categories = [
         (r"^/$", "dashboard"),
-        (r"^/dashboard", "dashboard"),
         (r"^/announcements", "dashboard"),
         (r"^/eighth/admin", "eighth_admin"),
         (r"^/eighth", "eighth"),
@@ -26,9 +23,6 @@ def nav_categorizer(request):
     for pattern, category in categories:
         p = re.compile(pattern)
         if p.match(request.path):
-            cat = category
+            return {"nav_category": category}
 
-    if request.user.is_authenticated() and request.user.startpage == "eighth" and re.compile(r"^/$").match(request.path):
-        return {"custom_startpage": True, "nav_category": cat}
-
-    return {"nav_category": cat}
+    return {"nav_category": ""}
