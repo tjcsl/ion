@@ -117,7 +117,7 @@ $(function() {
                     $(".current-day .both-blocks .selected-activity").text("");
                     $(".current-day .both-blocks").removeClass("both-blocks");
 
-                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text(activity.attributes.name).attr("title", activity.attributes.name);
+                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + activity.attributes.name).attr("title", activity.attributes.name);
                 } else {
                     $(".current-day .selected-activity").text(activity.attributes.name).attr("title", activity.attributes.name);
                     $(".current-day .block").addClass("both-blocks");
