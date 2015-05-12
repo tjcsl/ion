@@ -9,7 +9,7 @@ class ScheduledActivityForm(forms.ModelForm):
 
     """Represents a row in the table activity scheduling admin page"""
 
-    # Whether the activity should actually scheduled for the block
+    # Whether the activity should actually be scheduled for the block
     scheduled = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -28,6 +28,7 @@ class ScheduledActivityForm(forms.ModelForm):
     class Meta:
         model = EighthScheduledActivity
         fields = [
+            "cancelled",
             "scheduled",
             "block",
             "activity",

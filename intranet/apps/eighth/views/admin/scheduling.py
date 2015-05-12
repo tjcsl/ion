@@ -110,7 +110,6 @@ def schedule_activity_view(request):
             }
             try:
                 sched_act = (EighthScheduledActivity.objects
-                                                    .exclude(cancelled=True)
                                                     .get(activity=activity,
                                                          block=block))
 
@@ -119,8 +118,9 @@ def schedule_activity_view(request):
                     "capacity": sched_act.capacity,
                     "sponsors": sched_act.sponsors.all(),
                     "comments": sched_act.comments,
-                    "scheduled": True
                     "admin_comments": sched_act.admin_comments,
+                    "scheduled": not sched_act.cancelled,
+                    "cancelled": sched_act.cancelled
                 })
             except EighthScheduledActivity.DoesNotExist:
                 pass

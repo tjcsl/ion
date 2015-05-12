@@ -59,9 +59,10 @@
                         </div>
                     </th>
                     <th>Rooms</th>
-                    <th>Capacity</th>
+                    <th>Signups/Capacity</th>
                     <th>Sponsors</th>
                     <th>Comments</th>
+                    <th>Admin Comments</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,49 +73,60 @@
                             <td colspan=6>{{ form.non_field_errors }}</td>
                         </tr>
                     {% endif %}
-                    <tr class="form-row">
+                    <tr class="form-row{% if form.scheduled.value %} scheduled{% endif %}">
                         {% for hidden in form.hidden_fields %}
                             {{ hidden }}
                         {% endfor %}
 
                         {% for field in form.visible_fields %}
-                            <td>
-                                {{ field.errors }}
-                                {% if field.name == "rooms" %}
-                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{{ default_rooms|join:", " }}">
-                                        {% for val in field.value %}
-                                            <option value="{{ val }}" selected="selected">
-                                                {% with room=rooms|lookup:val %}
-                                                    {{ room.name }} ({{ room.capacity }})
-                                                {% endwith %}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif field.name == "sponsors" %}
-                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{{ default_sponsors|join:", " }}">
-                                        {% for val in field.value %}
-                                            <option value="{{ val }}" selected="selected">
-                                                {% with sponsor=sponsors|lookup:val %}
-                                                    {{ sponsor.first_name }} {{ sponsor.last_name }}
-                                                {% endwith %}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                {% elif field.name == "capacity" %}
-                                    {% render_field field placeholder=default_capacity %}
-                                {% else %}
-                                    {{ field }}
-                                {% endif %}
-                            </td>
+                            {% if field.name != "cancelled" %}
+                                <td>
+                                    {{ field.errors }}
+                                    {% if field.name == "rooms" %}
+                                        <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{{ default_rooms|join:", " }}">
+                                            {% for val in field.value %}
+                                                <option value="{{ val }}" selected="selected">
+                                                    {% with room=rooms|lookup:val %}
+                                                        {{ room.name }} ({{ room.capacity }})
+                                                    {% endwith %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    {% elif field.name == "sponsors" %}
+                                        <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{{ default_sponsors|join:", " }}">
+                                            {% for val in field.value %}
+                                                <option value="{{ val }}" selected="selected">
+                                                    {% with sponsor=sponsors|lookup:val %}
+                                                        {{ sponsor.first_name }} {{ sponsor.last_name }}
+                                                    {% endwith %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    {% elif field.name == "capacity" %}
+                                        4 / {% render_field field placeholder=default_capacity %}
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
 
                             {% if field.name == "scheduled" %}
                                 <td class="block-name">
                                     <a href="{% url 'eighth_admin_edit_block' block.id %}" class="ui-link">
                                         {{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}
                                     </a>
+                                    {% if form.cancelled.value %}
+                                        <br>
+                                        <b class="cancelled">Cancelled</b>
+                                    {% endif %}
                                 </td>
                             {% endif %}
                         {% endfor %}
+                        {% if form.cancelled.value %}
+                            <td>
+                                <button>Unschedule</button>
+                            </td>
+                        {% endif %}
                     </tr>
 
                     {% if not forloop.last %}
