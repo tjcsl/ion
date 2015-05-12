@@ -1,11 +1,15 @@
 $(document).ready(function() {
     $(".eighth-widget .block-header").click(function() {
-        console.log($("a.block-signup-change", $(this)));
-        location.href = $("a.block-signup-change", $(this)).attr("href");
+        var link = $("a.block-signup-change", $(this));
+        if(link.length > 0) {
+            location.href = link.attr("href");
+        }
     });
 
     $(".sponsor-widget .block-header").click(function() {
-        console.log($("a.block-attendance-take", $(this)));
-        location.href = $("a.block-attendance-take", $(this)).attr("href");
+        var link = $("a.block-attendance-take", $(this));
+        if(link.length > 0) {
+            location.href = link.attr("href");
+        }
     });
 });
