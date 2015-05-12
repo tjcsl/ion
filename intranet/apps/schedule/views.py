@@ -13,10 +13,18 @@ from .forms import DayTypeForm
 logger = logging.getLogger(__name__)
 
 def date_format(date):
-    return date.strftime("%Y-%m-%d")
+    try:
+        d = date.strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+    return d
 
 def decode_date(str):
-    return datetime.strptime(str, "%Y-%m-%d")
+    try:
+        d = datetime.strptime(str, "%Y-%m-%d")
+    except ValueError:
+        return None
+    return d
 
 
 def get_context(request=None, date=None):
