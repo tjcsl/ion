@@ -40,19 +40,17 @@ def get_visible_announcements(user):
     return user_announcements
 
 
-def gen_schedule(user):
+def gen_schedule(user, num_blocks=6):
     """ Generate a list of information about a block and a student's current activity
         signup.
     """
     schedule = []
 
-    num_blocks = 5
-
     block = EighthBlock.objects.get_first_upcoming_block()
     if block is None:
         schedule = None
     else:
-        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks])
+        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
@@ -73,13 +71,17 @@ def gen_schedule(user):
     return schedule
 
 
-def gen_sponsor_schedule(user):
+def gen_sponsor_schedule(user, num_blocks=6):
     """ Return a list of :class:`EighthScheduledActivity`\s in which the given user
         is sponsoring.
     """
 
-    sponsor_schedule = EighthScheduledActivity.objects.all()
-    return sponsor_schedule
+    sponsor = user.get_eighth_sponsor()
+    overrid_acts = EighthScheduledActivity.objects.filter(sponsors=sponsor)
+    def_acts = EighthScheduledActivity.objects.filter(activity__sponsors=sponsor)
+    acts = list(overrid_acts) + list(def_acts)
+
+    return acts[:num_blocks]
 
 @login_required
 def dashboard_view(request):
