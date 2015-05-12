@@ -39,7 +39,13 @@ def schedule_activity_view(request):
 
                     # TODO: Send notifications about room changes
 
-                    fields = ["rooms", "capacity", "sponsors", "comments"]
+                    fields = [
+                        "rooms",
+                        "capacity",
+                        "sponsors",
+                        "comments",
+                        "admin_comments"
+                    ]
                     for field_name in fields:
                         setattr(instance, field_name, form.cleaned_data[field_name])
 
@@ -114,6 +120,7 @@ def schedule_activity_view(request):
                     "sponsors": sched_act.sponsors.all(),
                     "comments": sched_act.comments,
                     "scheduled": True
+                    "admin_comments": sched_act.admin_comments,
                 })
             except EighthScheduledActivity.DoesNotExist:
                 pass
