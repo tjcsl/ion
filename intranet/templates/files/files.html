@@ -8,10 +8,59 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+    .primary-content {
+        max-width: 500px;
+    }
+
+    .primary-content ul li {
+        margin-bottom: 10px;
+    }
+
+    .primary-content img {
+        margin-top: 10px;
+        zoom: 0.7;
+    }
+
+    .primary-content i {
+        font-family: monospace;
+    }
+    </style>
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
-        Files coming soon.
+        <h2>Accessing your school files from home</h2>
+        <ul>
+            <li>
+                <a href="https://filezilla-project.org/download.php">Download and install FileZilla Client</a>.
+            </li>
+            <li>
+                Open the application, and press the icon in the top left corner to open <i>Server Manager</i>.
+                <br />
+                <img src="{% static 'img/files/step1.png' %}" />
+            </li>
+            <li>
+                In the dialog, press New Site. For the host, enter <i>tj03.local.tjhsst.edu</i> or, to access your Computer Systems Lab filesystem, <i>remote.tjhsst.edu</i>. Select <i>SFTP</i> along with your TJ credentials, and press <i>Connect</i>.
+                <br />
+                <img src="{% static 'img/files/step2.png' %}" />
+            </li>
+            <li>
+                Accept the Unknown host key warning if it appears.
+                <br />
+                <img src="{% static 'img/files/step3.png' %}" />
+            </li>
+            <li>
+                Navigate through the folder structure to find the files that you want. To access your local network drive, choose the correct folder for your class year. To access the common R drive, choose <i>R</i>.
+                <br />
+                <img src="{% static 'img/files/step4.png' %}" />
+            </li>
+            <li>
+                To upload a file, ensure that you have navigated to the correct locations on both the local (left) and remote (right) sides. Then, right click the file or folder on the left pane and select Upload.
+                <br />
+                <img src="{% static 'img/files/step5.png' %}" style="zoom: 0.5" />
+            </li>
+        </ul>
+
     </div>
 {% endblock %}
