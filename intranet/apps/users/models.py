@@ -896,6 +896,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "perm": None,
                 "is_list": True
             },
+            "startpage": {
+                "ldap_name": "startpage",
+                "perm": None,
+                "is_list": False
+            }
         }
 
         if name not in user_attributes:
