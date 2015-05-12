@@ -30,8 +30,8 @@
                 To clear an absence print this page. Have the teacher listed sign next to the activity to indicate that you were present. If you went to another activity, that teacher will need to sign as well as indicating what activity you attended as an alternative to the one that shows up in Intranet. Bring the signed page to the 8th Period Office within two weeks of an absence to clear it.
             </p>
         {% endif %}
-        <br>
-        <table class="zebra">
+        <br />
+        <table class="eighth-absences">
             <thead>
                 <th>Date</th>
                 <th>Block</th>
@@ -53,7 +53,7 @@
                         <td>
                             <form action="{% url 'eighth_admin_clear_absence' signup.id %}?next={{ request.get_full_path|urlencode }}" method="post">
                                 {% csrf_token %}
-                                <button type="submit">Remove</button>
+                                <button type="submit" class="print-hide">Remove</button>
                             </form>
                         </td>
                     {% endif %}
@@ -64,5 +64,7 @@
                 </tfoot>
             {% endfor %}
         </table>
+        <br />
+        <button onclick="window.print()" class="print-hide">Print</button>
     </div>
 {% endblock %}
