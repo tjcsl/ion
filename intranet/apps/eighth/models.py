@@ -584,6 +584,8 @@ class EighthSignup(models.Model):
             has signed up.
         after_deadline
             Whether the signup was after deadline.
+        absence_acknowledged
+            Whether the student has dismissed the absence notification.
 
     """
     time = models.DateTimeField(auto_now=True)
@@ -603,6 +605,7 @@ class EighthSignup(models.Model):
 
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
+    absence_acknowledged = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
         super(EighthSignup, self).validate_unique(*args, **kwargs)
