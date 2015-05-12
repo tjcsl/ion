@@ -288,9 +288,13 @@ LOGGING = {
     }
 }
 
-def get_current_commit():
+def get_current_commit_hash():
     import subprocess
     return subprocess.check_output(["git","rev-parse","--short","HEAD"]).rstrip()
+
+def get_current_commit():
+    import subprocess
+    return "\n".join(subprocess.check_output(["git","show","-s","--format=medium","HEAD"]).splitlines()[:3])
 
 def get_current_commit_date():
     import subprocess
