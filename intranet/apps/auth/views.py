@@ -19,7 +19,7 @@ def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
         startpage = request.user.startpage
-        if startpage == "news":
+        if startpage == "eighth":
             """Default to eighth admin view (for eighthoffice)."""
             return eighth_admin_dashboard_view(request)
 

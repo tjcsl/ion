@@ -28,7 +28,7 @@ def nav_categorizer(request):
         if p.match(request.path):
             cat = category
 
-    if request.user.startpage == "news" and re.compile(r"^/$").match(request.path):
+    if request.user.startpage == "eighth" and re.compile(r"^/$").match(request.path):
         return {"custom_startpage": True, "nav_category": cat}
 
     return {"nav_category": cat}
