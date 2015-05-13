@@ -284,7 +284,7 @@ class EighthBlock(models.Model):
 
     def is_today(self):
         """Does the block occur today?"""
-        return (datetime.date.today() - self.date) == datetime.timedelta(0)
+        return datetime.date.today() == self.date
 
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
@@ -305,7 +305,7 @@ class EighthScheduledActivityManager(Manager):
         """Return a QueryList of EighthScheduledActivities where the given
             EighthSponsor is sponsoring.
 
-            If a sponsorship is defined in an EighthActivity, it may be overridden 
+            If a sponsorship is defined in an EighthActivity, it may be overridden
             on a block by block basis in an EighthScheduledActivity. Sponsors from
             the EighthActivity do not carry over.
 
@@ -506,7 +506,8 @@ class EighthScheduledActivity(models.Model):
 
             # Check if signup would violate one-a-day constraint
             if not self.activity.both_blocks and self.activity.one_a_day:
-                in_act = (EighthSignup.exclude(scheduled_activity__block=self.block)
+                in_act = (EighthSignup.objects
+                                      .exclude(scheduled_activity__block=self.block)
                                       .filter(user=user,
                                               scheduled_activity__block__date=self.block.date,
                                               scheduled_activity__activity=self.activity)
