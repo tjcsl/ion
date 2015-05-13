@@ -16,8 +16,11 @@ logger = logging.getLogger(__name__)
 def add_announcement_view(request):
     if request.method == "POST":
         form = AnnouncementForm(request.POST)
+        logger.debug(form)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
             messages.success(request, "Successfully added announcement.")
             return redirect("index")
         else:
