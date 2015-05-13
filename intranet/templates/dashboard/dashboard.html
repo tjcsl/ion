@@ -92,7 +92,7 @@
                 Take Attendance
             </h2>
             <div class="info">
-                <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}">View My Activities</a>
+                <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="ui-link">More Blocks</a>
             </div>
             <!--div class="info warning">
                 <i class="fa fa-warning-sign"></i>
@@ -111,11 +111,11 @@
                         <span class="block-sponsorship">
                             {{ schact.activity }}
                         </span>
-                        <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take">
+                        <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
                         {% if schact.attendance_taken %}
                             Modify
-                        {% elif schact.block.is_today %}
-                            Take
+                        {% elif schact.block.locked %}
+                            Take Now
                         {% else %}
                             View
                         {% endif %}
