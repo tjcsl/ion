@@ -17,9 +17,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
 {% endblock %}
 
-{% block bodyclass %}{{ block.super}} schedule-activity-page{% endblock %}
+{% block bodyclass %}{{ block.super}} schedule-activity-page{% if activity %} floating{% endif %}{% endblock %}
 
 {% block admin_main %}
+
 <form method="post" action="">
 
 <div class="schedule-activity-head">
@@ -31,12 +32,12 @@
         {% endfor %}
     </select>
 
-    {% if activity %}
+    
     <div class="schedule-activity-buttons">
         <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
         <input type="submit" value="Save">
     </div>
-    {% endif %}
+    
 </div>
 {% if activity %}
         {% csrf_token %}
