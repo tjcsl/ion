@@ -84,7 +84,7 @@ $(function() {
     var blockTypeRowFilter = function(blockType) {
         return function(index, element) {
             var blockName = $(element).children(".block-name").text();
-            return blockName.indexOf(blockType) == 0;
+            return blockName.indexOf(blockType) != -1;
         };
     };
 
