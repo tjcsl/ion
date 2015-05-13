@@ -5,7 +5,7 @@ from itertools import chain
 import logging
 import datetime
 from django.db import models
-from django.db.models import Q
+from django.db.models import Manager, Q
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.utils import formats
@@ -295,6 +295,33 @@ class EighthBlock(models.Model):
         ordering = ("date", "block_letter")
 
 
+class EighthScheduledActivityManager(Manager):
+
+    """
+        Model Manager for EighthScheduledActivity
+    """
+
+    def for_sponsor(cls, sponsor):
+        """Return a QueryList of EighthScheduledActivities where the given
+            EighthSponsor is sponsoring.
+
+            If a sponsorship is defined in an EighthActivity, it may be overridden 
+            on a block by block basis in an EighthScheduledActivity. Sponsors from
+            the EighthActivity do not carry over.
+
+            EighthScheduledActivities that are deleted or cancelled are also not
+            counted.
+
+        """
+        sponsoring_filter = (Q(sponsors=sponsor) |
+                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+        sched_acts = (EighthScheduledActivity.objects
+                                             .exclude(activity__deleted=True)
+                                             .exclude(cancelled=True)
+                                             .filter(sponsoring_filter))
+        return sched_acts
+
+
 class EighthScheduledActivity(models.Model):
 
     """Represents the relationship between an activity and a block in
@@ -324,6 +351,11 @@ class EighthScheduledActivity(models.Model):
             whether the :class:`EighthScheduledActivity` has been cancelled
 
     """
+
+    # Use model manager
+    objects = EighthScheduledActivityManager()
+
+
     block = models.ForeignKey(EighthBlock)
     activity = models.ForeignKey(EighthActivity)
     members = models.ManyToManyField(
@@ -341,19 +373,6 @@ class EighthScheduledActivity(models.Model):
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
-
-    @classmethod
-    def for_sponsor(cls, sponsor):
-        """Return a QueryList of EighthScheduledActivities where the given
-            EighthSponsor is sponsoring.
-        """
-        sponsoring_filter = (Q(sponsors=sponsor) |
-                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
-        sched_acts = (EighthScheduledActivity.objects
-                                             .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
-                                             .filter(sponsoring_filter))
-        return sched_acts
 
     def get_true_sponsors(self):
         """Get the sponsors for the scheduled activity, taking into account

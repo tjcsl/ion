@@ -80,7 +80,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
 
     block = EighthBlock.objects.get_first_upcoming_block()
 
-    activities_sponsoring = EighthScheduledActivity.for_sponsor(sponsor)\
+    activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor)\
         .filter(block__date__gt=block.date)
 
     

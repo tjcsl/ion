@@ -86,7 +86,7 @@ def sponsor_schedule_view(request, sponsor_id):
     except EighthSponsor.DoesNotExist:
         raise http.Http404
 
-    sched_acts = EighthScheduledActivity.for_sponsor(sponsor)\
+    sched_acts = EighthScheduledActivity.objects.for_sponsor(sponsor)\
                         .order_by("block__date",
                                   "block__block_letter")
 
