@@ -11,12 +11,12 @@
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript">
-    $(function() {
-        $("select#id_groups").selectize({
-            plugins: ["remove_button"],
-            placeholder: "Everyone"
+        $(function() {
+            $("select#id_groups").selectize({
+                plugins: ["remove_button"],
+                placeholder: "Everyone"
+            });
         });
-    });
     </script>
 {% endblock %}
 
@@ -24,10 +24,13 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
     <style type="text/css">
-form input#id_title, form input#id_author {
-    width: 300px;
-}
+        form input#id_title, form input#id_author {
+            width: 300px;
+        }
 
+        div.cke_chrome {
+            margin: 10px 0;
+        }
     </style>
 {% endblock %}
 
@@ -45,7 +48,9 @@ form input#id_title, form input#id_author {
     </form>
 </div>
 <script type="text/javascript">
-// name of <textarea> is content
-CKEDITOR.replace("content");
+    // name of <textarea> is content
+    CKEDITOR.replace("content", {
+        width: "600px"
+    });
 </script>
 {% endblock %}
