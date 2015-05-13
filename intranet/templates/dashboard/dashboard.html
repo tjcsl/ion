@@ -56,7 +56,7 @@
                         <span class="block-signup locked">
                             <i class="fa fa-lock"></i>
                             {% if block.current_signup %}
-                                {{ block.current_signup }}
+                                {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                             {% else %}
                                 No activity selected
                             {% endif %}
@@ -64,7 +64,7 @@
                         <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Locked</a>
                     {% elif block.current_signup %}
                         <span class="block-signup">
-                            {{ block.current_signup }}
+                            {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                         </span>
                         <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Change</a>
                     {% else %}
@@ -153,40 +153,40 @@
         {% endif %}
     </div>
     <div class="announcements-container">
-    {% for announcement in announcements %}
-        <div class="announcement" data-id="{{ announcement.id }}">
-            <h3>
-                {{ announcement.title }}
-                {% if request.user.is_announcements_admin %}
-                    <div class="announcement-icon-wrapper">
-                        <a href="{% url 'modify_announcement' announcement.id %}">
-                            <i class="announcement-icon fa fa-pencil"></i>
-                        </a>
-                        <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
-                            <i class="announcement-icon fa fa-trash-o"></i>
-                        </a>
-                    </div>
-                {% endif %}
-            </h3>
+        {% for announcement in announcements %}
+            <div class="announcement" data-id="{{ announcement.id }}">
+                <h3>
+                    {{ announcement.title }}
+                    {% if request.user.is_announcements_admin %}
+                        <div class="announcement-icon-wrapper">
+                            <a href="{% url 'modify_announcement' announcement.id %}">
+                                <i class="announcement-icon fa fa-pencil"></i>
+                            </a>
+                            <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                                <i class="announcement-icon fa fa-trash-o"></i>
+                            </a>
+                        </div>
+                    {% endif %}
+                </h3>
 
-            <div class="announcement-metadata">
-                by {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
-                {% for group in announcement.groups.all %}
-                    {{ group }}
-                    {% if not forloop.last %},{% endif %}
-                {% empty %}
-                    everyone
-                {% endfor %}
+                <div class="announcement-metadata">
+                    by {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
+                    {% for group in announcement.groups.all %}
+                        {{ group }}
+                        {% if not forloop.last %},{% endif %}
+                    {% empty %}
+                        everyone
+                    {% endfor %}
+                </div>
+                <div class="announcement-content">
+                    {{ announcement.content|safe }}
+                </div>
             </div>
-            <div class="announcement-content">
-                {{ announcement.content|safe }}
+        {% empty %}
+            <div class="announcement">
+                There are no announcements to display at this time.
             </div>
-        </div>
-    {% empty %}
-    <div class="announcement">
-        There are no announcements to display at this time.
-    </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 </div>
 

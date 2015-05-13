@@ -28,14 +28,24 @@ def gen_schedule(user, num_blocks=6):
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
+            current_sched_act = block_signup_map.get(b.id, {})
+            current_signup = getattr(current_sched_act, "activity", None)
+            current_signup_cancelled = getattr(current_sched_act, "cancelled", False)
+
+            flags = "locked" if b.locked else "open"
+            if (b.is_today() and not current_signup) or current_signup_cancelled:
+                flags += " warning"
+            if current_signup_cancelled:
+                flags += " cancelled"
+
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
-                "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
-                "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
+                "current_signup": current_signup,
+                "current_signup_cancelled": current_signup_cancelled,
                 "locked": b.locked,
                 "date": b.date,
-                "flags": ("locked" if b.locked else "open" + (" warning" if block.is_today() else ""))
+                "flags": flags
             }
             schedule.append(info)
 
