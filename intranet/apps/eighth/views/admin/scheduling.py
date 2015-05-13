@@ -120,7 +120,7 @@ def schedule_activity_view(request):
             try:
                 sched_act = all_sched_acts[block.id]
 
-                all_signups[sched_act.block.id] = sched_act.members.count()
+                all_signups[block.id] = sched_act.members.count()
 
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),
@@ -131,9 +131,9 @@ def schedule_activity_view(request):
                     "scheduled": not sched_act.cancelled,
                     "cancelled": sched_act.cancelled
                 })
-            except EighthScheduledActivity.DoesNotExist:
+            except KeyError:
+                all_signups[block.id] = 0
                 pass
-
             initial_formset_data.append(initial_form_data)
 
         if request.method != "POST":
