@@ -37,8 +37,6 @@ def schedule_activity_view(request):
                                                                 .get_or_create(block=block,
                                                                                activity=activity))
 
-                    # TODO: Send notifications about room changes
-
                     fields = [
                         "rooms",
                         "capacity",
@@ -88,10 +86,13 @@ def schedule_activity_view(request):
     for rid, room in all_rooms.items():
         all_rooms[rid]["description"] = room["name"] + " (" + str(room["capacity"]) + ")"
 
+    all_signups = {}
+
     context = {
         "activities": activities,
         "activity": activity,
         "sponsors": all_sponsors,
+        "all_signups": all_signups,
         "rooms": all_rooms,
         "sponsors_json": JSONRenderer().render(all_sponsors),
         "rooms_json": JSONRenderer().render(all_rooms)
@@ -103,15 +104,23 @@ def schedule_activity_view(request):
 
         initial_formset_data = []
 
+        sched_act_queryset = (EighthScheduledActivity.objects
+                                                     .filter(activity=activity)
+                                                     .select_related("block")
+                                                     .prefetch_related("rooms",
+                                                                       "sponsors",
+                                                                       "members"))
+        all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
+
         for block in blocks:
             initial_form_data = {
                 "block": block,
                 "activity": activity
             }
             try:
-                sched_act = (EighthScheduledActivity.objects
-                                                    .get(activity=activity,
-                                                         block=block))
+                sched_act = all_sched_acts[block.id]
+
+                all_signups[sched_act.block.id] = sched_act.members.count()
 
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),

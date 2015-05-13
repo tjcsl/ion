@@ -296,25 +296,22 @@ class EighthBlock(models.Model):
 
 
 class EighthScheduledActivityManager(Manager):
-
-    """
-        Model Manager for EighthScheduledActivity
-    """
+    """Model Manager for EighthScheduledActivity"""
 
     def for_sponsor(cls, sponsor):
         """Return a QueryList of EighthScheduledActivities where the given
-            EighthSponsor is sponsoring.
+        EighthSponsor is sponsoring.
 
-            If a sponsorship is defined in an EighthActivity, it may be overridden
-            on a block by block basis in an EighthScheduledActivity. Sponsors from
-            the EighthActivity do not carry over.
+        If a sponsorship is defined in an EighthActivity, it may be overridden
+        on a block by block basis in an EighthScheduledActivity. Sponsors from
+        the EighthActivity do not carry over.
 
-            EighthScheduledActivities that are deleted or cancelled are also not
-            counted.
+        EighthScheduledActivities that are deleted or cancelled are also not
+        counted.
 
         """
         sponsoring_filter = (Q(sponsors=sponsor) |
-                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+                             (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
                                              .exclude(cancelled=True)
@@ -356,7 +353,6 @@ class EighthScheduledActivity(models.Model):
 
     # Use model manager
     objects = EighthScheduledActivityManager()
-
 
     block = models.ForeignKey(EighthBlock)
     activity = models.ForeignKey(EighthActivity)
