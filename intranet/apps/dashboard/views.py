@@ -79,29 +79,26 @@ def gen_sponsor_schedule(user, num_blocks=6):
     sponsor = user.get_eighth_sponsor()
 
     block = EighthBlock.objects.get_first_upcoming_block()
-    if block is None:
-        schedule = None
-    else:
-        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
-        for b in surrounding_blocks:
-            num_added = 0
 
-            overrid_acts = EighthScheduledActivity.objects.filter(block=b, sponsors=sponsor)
-            for a in overrid_acts:
-                acts.append(a)
-                num_added += 1
+    activities_sponsoring = EighthScheduledActivity.for_sponsor(sponsor)\
+        .filter(block__date__gt=block.date)
 
-            def_acts = EighthScheduledActivity.objects.filter(block=b, activity__sponsors=sponsor)
-            for a in def_acts:
-                acts.append(a)
-                num_added += 1
+    
+    surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
+    for b in surrounding_blocks:
+        num_added = 0
 
-            if num_added == 0:
-                acts.append({
-                    "block": b,
-                    "id": None,
-                    "fake": True   
-                })
+        sponsored_for_block = activities_sponsoring.filter(block=b)
+        for schact in sponsored_for_block:
+            acts.append(schact)
+            num_added += 1
+
+        if num_added == 0:
+            acts.append({
+                "block": b,
+                "id": None,
+                "fake": True   
+            })
 
     return acts
 

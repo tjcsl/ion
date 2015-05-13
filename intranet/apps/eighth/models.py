@@ -342,6 +342,19 @@ class EighthScheduledActivity(models.Model):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
+    @classmethod
+    def for_sponsor(cls, sponsor):
+        """Return a QueryList of EighthScheduledActivities where the given
+            EighthSponsor is sponsoring.
+        """
+        sponsoring_filter = (Q(sponsors=sponsor) |
+                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+        sched_acts = (EighthScheduledActivity.objects
+                                             .exclude(activity__deleted=True)
+                                             .exclude(cancelled=True)
+                                             .filter(sponsoring_filter))
+        return sched_acts
+
     def get_true_sponsors(self):
         """Get the sponsors for the scheduled activity, taking into account
         activity defaults and overrides.

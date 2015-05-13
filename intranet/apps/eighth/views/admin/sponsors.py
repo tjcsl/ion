@@ -86,14 +86,9 @@ def sponsor_schedule_view(request, sponsor_id):
     except EighthSponsor.DoesNotExist:
         raise http.Http404
 
-    sponsoring_filter = (Q(sponsors=sponsor) |
-                         (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
-    sched_acts = (EighthScheduledActivity.objects
-                                         .exclude(activity__deleted=True)
-                                         .exclude(cancelled=True)
-                                         .filter(sponsoring_filter)
-                                         .order_by("block__date",
-                                                   "block__block_letter"))
+    sched_acts = EighthScheduledActivity.for_sponsor(sponsor)\
+                        .order_by("block__date",
+                                  "block__block_letter")
 
     context = {
         "scheduled_activities": sched_acts,
