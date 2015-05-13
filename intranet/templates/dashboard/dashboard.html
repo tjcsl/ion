@@ -171,8 +171,8 @@
 
             <div class="announcement-metadata">
                 by {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
-                {% for grp in announcement.groups.all %}
-                    <a href="#{{ grp.id }}">{{ grp }}</a>
+                {% for group in announcement.groups.all %}
+                    {{ group }}
                     {% if not forloop.last %},{% endif %}
                 {% empty %}
                     everyone
