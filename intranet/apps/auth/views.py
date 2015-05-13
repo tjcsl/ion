@@ -24,9 +24,7 @@ def index_view(request, auth_form=None, force_login=False):
         data = {
             "auth_form": auth_form,
             "request": request,
-            "git_version": settings.base.get_current_commit_hash(),
-            "git_date": settings.base.get_current_commit_date(),
-            "git_detail": settings.base.get_current_commit()
+            "git_info": settings.GIT
         }
         schedule = schedule_context(request)
         data.update(schedule)

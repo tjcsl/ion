@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import subprocess
 from .secret import *
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -288,14 +289,36 @@ LOGGING = {
     }
 }
 
-def get_current_commit_hash():
-    import subprocess
-    return subprocess.check_output(["git","rev-parse","--short","HEAD"]).rstrip()
 
-def get_current_commit():
-    import subprocess
-    return "\n".join(subprocess.check_output(["git","show","-s","--format=medium","HEAD"]).splitlines()[:3])
+def _get_current_commit_short_hash():
+    cmd = "git rev-parse --short HEAD"
+    return subprocess.check_output(cmd, shell=True).rstrip()
 
-def get_current_commit_date():
-    import subprocess
-    return subprocess.check_output(["git","show","-s","--format=%ci","HEAD"]).rstrip()
+
+def _get_current_commit_long_hash():
+    cmd = "git rev-parse HEAD"
+    return subprocess.check_output(cmd, shell=True).rstrip()
+
+
+def _get_current_commit_info():
+    cmd = "git show -s --format=medium HEAD"
+    lines = subprocess.check_output(cmd, shell=True).splitlines()
+    return "\n".join([lines[0][:14].title(), lines[2]]).replace("   ", " ")
+
+
+def _get_current_commit_date():
+    cmd = "git show -s --format=%ci HEAD"
+    return subprocess.check_output(cmd, shell=True).rstrip()
+
+
+def _get_current_commit_github_url():
+    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash())
+
+
+GIT = {
+    "commit_short_hash": _get_current_commit_short_hash(),
+    "commit_long_hash": _get_current_commit_long_hash(),
+    "commit_info": _get_current_commit_info(),
+    "commit_date": _get_current_commit_date(),
+    "commit_github_url": _get_current_commit_github_url()
+}
