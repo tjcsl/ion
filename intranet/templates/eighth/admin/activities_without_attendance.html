@@ -16,6 +16,7 @@
             <tr>
                 <th>Activity</th>
                 <th>Sponsors</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
                 <tr>
                     <td>{{ scheduled_activity.activity.name_with_flags }}</td>
                     <td>{{ scheduled_activity.get_true_sponsors|join:", "}}</td>
+                    <td>
+                        <a class="button" href="{% url 'eighth_admin_take_attendance' scheduled_activity.id %}">Take Attendance</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
