@@ -12,41 +12,6 @@ from ..eighth.models import (
 logger = logging.getLogger(__name__)
 
 
-def get_visible_announcements(user):
-    """Get a list of visible announcements for a given user (usually
-    request.user).
-
-    These visible announcements will be those that either have no groups
-    assigned to them (and are therefore public) or those in which the
-    user is a member.
-
-    """
-    announcements = (Announcement.objects
-                                 .prefetch_related("groups")
-                                 .order_by("-updated")
-                                 .all())
-    user_announcements = []
-    user_groups = user.groups.all()
-    for announcement in announcements:
-        ann_groups = announcement.groups.all()
-        add = False
-        for grp in ann_groups:
-            if grp in user_groups:
-                add = True
-        if len(ann_groups) == 0:
-            add = True
-
-        if add:
-            user_announcements.append(announcement)
-
-    logger.debug("All announcements:")
-    logger.debug(announcements)
-    logger.debug("User announcements:")
-    logger.debug(user_announcements)
-
-    return user_announcements
-
-
 def gen_schedule(user, num_blocks=6):
     """Generate a list of information about a block and a student's
     current activity signup.
@@ -118,15 +83,17 @@ def dashboard_view(request):
     if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = Announcement.objects.order_by("-updated").all()
+        announcements = Announcement.objects.all()
     else:
         # Only show announcements for groups that the user is enrolled in.
-        announcements = get_visible_announcements(request.user)
+        announcements = (Announcement.objects
+                                     .visible_to_user(request.user)
+                                     .prefetch_related("groups"))
 
-    student = request.user.is_student
+    is_student = request.user.is_student
     eighth_sponsor = request.user.has_eighth_sponsor()
 
-    if student:
+    if is_student:
         schedule = gen_schedule(request.user)
     else:
         schedule = None
