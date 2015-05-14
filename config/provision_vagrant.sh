@@ -70,20 +70,14 @@ cd ../..
 rm -rf redis-stable redis-stable.tar.gz
 
 # Elasticsearch
-add-apt-repository -y ppa:webupd8team/java
-apt-get update
-echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
-apt-get -y install oracle-java7-installer
-wget --progress dot:giga https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.7.deb
-dpkg -i elasticsearch-0.90.7.deb
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb http://packages.elastic.co/elasticsearch/1.4/debian stable main" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update && sudo apt-get install elasticsearch
 echo "network.bind_host: localhost" >> /etc/elasticsearch/elasticsearch.yml
 echo "script.disable_dynamic: true" >> /etc/elasticsearch/elasticsearch.yml
 service elasticsearch restart
-rm elasticsearch-0.90.7.deb
 
 # Ion
-
 grep -qs AUTHUSER_PASSWORD intranet/intranet/settings/secret.py || echo "AUTHUSER_PASSWORD = \"$(devconfig ldap_simple_bind_password)\"" >> intranet/intranet/settings/secret.py
 master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
