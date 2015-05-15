@@ -13,12 +13,12 @@ $(document).ready(function() {
                 $(".announcement[data-id=" + announcement_id + "]").slideUp();
                 Messenger().success("Successfully deleted announcement.");
             })
-            .fail;(function(data) {
+            .fail(function(data) {
                 Messenger().error("Error deleting announcement.");
-        });
+            });
     });
 
-    $('div[data-placeholder]').on('keydown keypress input', function() {
+    $("div[data-placeholder]").on("keydown keypress input", function() {
         if(this.textContent) {
             this.dataset.divPlaceholderContent = 'true';
         } else {
