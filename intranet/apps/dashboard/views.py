@@ -49,7 +49,6 @@ def gen_schedule(user, num_blocks=6):
             }
             schedule.append(info)
 
-    logger.debug(schedule)
     return schedule
 
 

@@ -32,7 +32,14 @@ def schedule_activity_view(request):
                 block = form.cleaned_data["block"]
                 activity = form.cleaned_data["activity"]
 
-                if form["scheduled"].value():
+                # Save changes to cancelled activities and scheduled activities
+                cancelled = (EighthScheduledActivity.objects
+                                                    .filter(block=block,
+                                                            activity=activity,
+                                                            cancelled=True)
+                                                    .exists())
+
+                if form["scheduled"].value() or cancelled:
                     instance, created = (EighthScheduledActivity.objects
                                                                 .get_or_create(block=block,
                                                                                activity=activity))
@@ -49,7 +56,7 @@ def schedule_activity_view(request):
 
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
-                    instance.cancelled = False
+                    instance.cancelled = not form["scheduled"].value()
                     instance.save()
                 else:
                     # Instead of deleting and messing up attendance,
