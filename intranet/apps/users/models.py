@@ -366,6 +366,66 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     @property
+    def taught_classes(self):
+        """Return a list of class objects that a teacher teaches.
+
+        Returns:
+            List of Class objects
+
+        """
+
+        identifier = ":".join([self.dn, "taught_classes"])
+        key = User.create_secure_cache_key(identifier)
+
+        cached = cache.get(key)
+        visible = True # all teachers' schedules are public
+
+        if cached and visible:
+            logger.debug("Attribute 'taught_classes' of user {} loaded "
+                         "from cache.".format(self.id))
+            schedule = []
+            for dn in cached:
+                class_object = Class(dn=dn)
+                schedule.append(class_object)
+
+            return schedule
+        elif not cached and visible:
+            c = LDAPConnection()
+            try:
+                schedule_dn = "ou=schedule,dc=tjhsst,dc=edu"
+                tch_qry = "(&(objectClass=tjhsstClass)(sponsorDn={}))".format(self.dn)
+                classes = c.search(schedule_dn, tch_qry, ["tjhsstSectionId"])
+                
+                logger.debug("Classes: {}".format(classes))
+            except KeyError:
+                return None
+            else:
+                schedule = []
+                for row in classes:
+                    dn, data = row
+                    class_object = Class(dn=dn)
+
+                    # Temporarily pack the classes in tuples so we can
+                    # sort on an integer key instead of the periods
+                    # property to avoid tons of needless LDAP queries
+                    #
+                    sortvalue = class_object.sortvalue
+                    schedule.append((sortvalue, class_object, dn))
+
+                ordered_schedule = sorted(schedule, key=lambda e: e[0])
+
+                # Prepare a list of DNs for caching
+                # (pickling a Class class loads all properties
+                # recursively and quickly reaches the maximum
+                # recursion depth)
+                dn_list = list(zip(*ordered_schedule)[2])
+                cache.set(key, dn_list,
+                          timeout=settings.CACHE_AGE['user_classes'])
+                return list(zip(*ordered_schedule)[1])  # Unpacked class list
+        else:
+            return None
+
+    @property
     def counselor(self):
         """Returns a user's counselor as a User object.
 
@@ -628,21 +688,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             cache.set(key, perms,
                       timeout=settings.CACHE_AGE['ldap_permissions'])
             return perms
-
-    @property
-    def taught_classes(self):
-        c = LDAPConnection()
-        schedule_dn = "ou=schedule,dc=tjhsst,dc=edu"
-        tch_qry = "(&(objectClass=tjhsstClass)(sponsorDn={}))"
-        res = c.search(schedule_dn, tch_qry.format(self.dn), [])
-
-        classes = []
-        for cl in res:
-            dn = cl[0]
-            obj = Class(dn)
-            classes.append(obj)
-
-        return classes
 
     @property
     def is_eighth_admin(self):
