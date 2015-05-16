@@ -233,10 +233,43 @@
                             </tr>
                         {% endfor %}
                     </table>
-                    {% else %}
-                        <!--<h3>Schedule</h3>
-                        <p>You do not have permission to view this user's schedule.</p>-->
                     {% endif %}
+
+                    {% if profile_user.is_teacher and profile_user.taught_classes %}
+                        <h3>Schedule</h3>
+                        <table>
+                            <thead>
+                                <th>Period</th>
+                                <th>Name</th>
+                                <th>Teacher</th>
+                                <th>Room</th>
+                                <th>Quarters</th>
+                            </thead>
+                        {% for class in profile_user.taught_classes %}
+                            <tr>
+                                <td>{{ class.periods|join:", " }} </td>
+                                <td>{{ class.name }}</td>
+                                <td>{{ class.teacher.last_name }}</td>
+                                <td>{{ class.room_number }}</td>
+                                <td>
+                                    {% if class.quarters|length == 4 %}
+                                        Full Year
+                                    {% elif class.quarters|length == 2 %}
+                                        {% if 1 in class.quarters and 2 in class.quarters %}
+                                            First Semester
+                                        {% else %}
+                                            Second Semester
+                                        {% endif %}
+                                    {% else %}
+                                        Quarter{{ class.quarters|pluralize }}
+                                        {% class.quarters|join:", "}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    {% endif %}
+
                 </section>
 
 
