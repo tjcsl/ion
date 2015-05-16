@@ -55,145 +55,149 @@
         {% endif %}
         </div>
         <div class="preferred-user-picture">
-            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" height="215" /><br />
-            View user pictures
+            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" height="215" />
+            <span>
+                View user pictures
+            </span>
         </div>
 
 
         <div class="user-info">
-            <div class="user-title">
-                <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">{{ profile_user.full_name }}</h2>
-                <h3>
-                {% if profile_user.is_student %}
-                    {% if profile_user.graduation_year %}
-                        {{ profile_user.grade|capfirst }}
-                        ({{ profile_user.graduation_year }})
-                    {% else %}
-                        Student
-                    {% endif %}
-                {% else %}
-                    Staff
-                {% endif %}
-                </h3>
-            </div>
             <div class="user-container">
+                <div class="user-info-left">
 
-                <table class="user-info-contact">
-                    {% if profile_user.display_name %}
+                    <div class="user-title">
+                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">{{ profile_user.full_name }}</h2>
+                        <h3>
+                        {% if profile_user.is_student %}
+                            {% if profile_user.graduation_year %}
+                                {{ profile_user.grade|capfirst }}
+                                ({{ profile_user.graduation_year }})
+                            {% else %}
+                                Student
+                            {% endif %}
+                        {% else %}
+                            Staff
+                        {% endif %}
+                        </h3>
+                    </div>
+                    <table class="user-info-contact">
+                        {% if profile_user.display_name %}
+                            <tr>
+                                <th>Full Name</th>
+                                <td>{{ profile_user.display_name }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if profile_user.birthday %}
                         <tr>
-                            <th>Full Name</th>
-                            <td>{{ profile_user.display_name }}</td>
+                            <th>Birthday</th>
+                            <td>{{ profile_user.birthday|date:"F d, Y" }}</td>
                         </tr>
-                    {% endif %}
-                    {% if profile_user.birthday %}
-                    <tr>
-                        <th>Birthday</th>
-                        <td>{{ profile_user.birthday|date:"F d, Y" }}</td>
-                    </tr>
-                    {% endif %}
-                    {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
+                        {% endif %}
+                        {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
+                            <tr>
+                                <th>Counselor</th>
+                                <td> {{ profile_user.counselor.last_name }} </td>
+                            </div>
+                        {% endif %}
+                        {% if profile_user.emails %}
                         <tr>
-                            <th>Counselor</th>
-                            <td> {{ profile_user.counselor.last_name }} </td>
-                        </div>
-                    {% endif %}
-                    {% if profile_user.emails %}
-                    <tr>
-                        <th>
-                            Email{{ profile_user.emails|pluralize }}
-                        </th>
-                        <td>
-                            {% for email in profile_user.emails %}
-                                <a href="mailto:{{ email }}">
-                                    {{ email }}
-                                </a>
-                                {% if not forloop.last %}<br />{% endif %}
-                            {% endfor %}
-                        </td>
-
-                    </tr>
-                    {% endif %}
-                    {% if profile_user.webpages %}
-                    <tr>
-                        <th>
-                            Web
-                        </th>
-                        <td>
-                            {% for url in profile_user.webpages %}
-                            <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
-                            {% if not forloop.last %}<br />{% endif %}
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    {% endif %}
-
-                    {% comment %}
-                    {% if profile_user.skype or profile_user.google_talk %}
-                    <tr>
-                        <th>Social</th>
-                        <td>
-                            {% if profile_user.skype %}
-                                    <a href="skype:{{ profile_user.skype }}">
-                                        {{ profile_user.skype }} (Skype)
+                            <th>
+                                Email{{ profile_user.emails|pluralize }}
+                            </th>
+                            <td>
+                                {% for email in profile_user.emails %}
+                                    <a href="mailto:{{ email }}">
+                                        {{ email }}
                                     </a>
-                                    {% if profile_user.google_talk %}<br />{% endif %}
-                            {% endif %}
-                            {% if profile_user.google_talk %}
-                                <a href="gtalk:{{ profile_user.google_talk }}">
-                                    {{ profile_user.google_talk }} (Google Talk)
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% endcomment %}
+                                    {% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </td>
 
-                    {% if profile_user.home_phone %}
-                    <tr>
-                        <th>Home Phone</th>
-                        <td>
-                            <a href="tel:{{ profile_user.home_phone }}">
-                                {{ profile_user.home_phone|dashes }}
-                            </a>
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% if profile_user.mobile_phone %}
-                    <tr>
-                        <th>Cell Phone</th>
-                        <td>
-                            <a href="tel:{{ profile_user.home_phone }}">
-                                {{ profile_user.mobile_phone|dashes }}
-                            </a>
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% if profile_user.other_phones %}
-                    <tr>
-                        <th>
-                            Other Phone{{ profile_user.other_phones|pluralize }}
-                        </th>
-                        <td>
-                            {% for phone in profile_user.other_phones %}
-                                <a href="tel:{{ phone }}">
-                                    {{ phone|dashes }}
-                                </a>
-                                <br />
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                    {% if profile_user.address %}
-                    <tr>
-                        <th>Address</th>
-                        <td>
-                            <a href="//maps.google.com/?q={{ profile_user.address|urlencode }}" title="Google Maps link">
-                                {{ profile_user.address|linebreaksbr }}
-                            </a></td>
-                    </tr>
-                    {% endif %}
+                        </tr>
+                        {% endif %}
+                        {% if profile_user.webpages %}
+                        <tr>
+                            <th>
+                                Web
+                            </th>
+                            <td>
+                                {% for url in profile_user.webpages %}
+                                <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
 
-                </table>
+                        {% comment %}
+                        {% if profile_user.skype or profile_user.google_talk %}
+                        <tr>
+                            <th>Social</th>
+                            <td>
+                                {% if profile_user.skype %}
+                                        <a href="skype:{{ profile_user.skype }}">
+                                            {{ profile_user.skype }} (Skype)
+                                        </a>
+                                        {% if profile_user.google_talk %}<br />{% endif %}
+                                {% endif %}
+                                {% if profile_user.google_talk %}
+                                    <a href="gtalk:{{ profile_user.google_talk }}">
+                                        {{ profile_user.google_talk }} (Google Talk)
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endcomment %}
+
+                        {% if profile_user.home_phone %}
+                        <tr>
+                            <th>Home Phone</th>
+                            <td>
+                                <a href="tel:{{ profile_user.home_phone }}">
+                                    {{ profile_user.home_phone|dashes }}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if profile_user.mobile_phone %}
+                        <tr>
+                            <th>Cell Phone</th>
+                            <td>
+                                <a href="tel:{{ profile_user.home_phone }}">
+                                    {{ profile_user.mobile_phone|dashes }}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if profile_user.other_phones %}
+                        <tr>
+                            <th>
+                                Other Phone{{ profile_user.other_phones|pluralize }}
+                            </th>
+                            <td>
+                                {% for phone in profile_user.other_phones %}
+                                    <a href="tel:{{ phone }}">
+                                        {{ phone|dashes }}
+                                    </a>
+                                    <br />
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if profile_user.address %}
+                        <tr>
+                            <th>Address</th>
+                            <td>
+                                <a href="//maps.google.com/?q={{ profile_user.address|urlencode }}" title="Google Maps link">
+                                    {{ profile_user.address|linebreaksbr }}
+                                </a></td>
+                        </tr>
+                        {% endif %}
+
+                    </table>
+                </div>
 
                 <section class="user-info-schedule">
                     {% if profile_user.classes %}
