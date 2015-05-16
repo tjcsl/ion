@@ -630,6 +630,21 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
+    def taught_classes(self):
+        c = LDAPConnection()
+        schedule_dn = "ou=schedule,dc=tjhsst,dc=edu"
+        tch_qry = "(&(objectClass=tjhsstClass)(sponsorDn={}))"
+        res = c.search(schedule_dn, tch_qry.format(self.dn), [])
+
+        classes = []
+        for cl in res:
+            dn = cl[0]
+            obj = Class(dn)
+            classes.append(obj)
+
+        return classes
+
+    @property
     def is_eighth_admin(self):
         """Checks if user is an eighth period admin.
 
@@ -1184,6 +1199,9 @@ class Class(object):
                 cache.set(key, value,
                           timeout=settings.CACHE_AGE['class_attribute'])
                 return value
+
+    def __unicode__(self):
+        return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
 
 
 class Address(object):
