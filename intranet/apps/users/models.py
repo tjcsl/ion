@@ -900,6 +900,11 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "ldap_name": "startpage",
                 "perm": None,
                 "is_list": False
+            },
+            "admin_comments": {
+                "ldap_name": "eighthoffice-comments",
+                "perm": None,
+                "is_list": False
             }
         }
 
@@ -1001,6 +1006,31 @@ class Class(object):
         self.dn = dn
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
+
+    @property
+    def students(self):
+        """Returns a list of students in the class.
+        This may not always return all of the actual students if you do
+        not have permission to view that information.
+
+        Returns:
+            List of user objects
+
+        """
+        c = LDAPConnection()
+        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), [])
+
+        users = []
+        for row in students:
+            dn = row[0]
+            try:
+                user = User(dn=dn)
+            except NO_SUCH_OBJECT:
+                continue
+            users.append(user)
+
+        return users
+
 
     @property
     def teacher(self):
