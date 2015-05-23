@@ -31,11 +31,15 @@ class EighthSponsor(models.Model):
             linked to the sponsor.
         online_attendance
             Whether the sponsor takes attendance online.
+        show_full_name
+            Whether to always show the sponsor's full name
+            (e.x. because there are two teachers named Lewis)
     """
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True)
     online_attendance = models.BooleanField(default=True)
+    show_full_name = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (("first_name",
@@ -45,6 +49,14 @@ class EighthSponsor(models.Model):
 
     def __unicode__(self):
         return self.first_name + " " + self.last_name
+
+    @property
+    def name(self):
+        if self.show_full_name:
+            return self.first_name + " " + self.last_name
+        else:
+            return self.last_name
+    
 
 
 class EighthRoom(models.Model):
