@@ -572,6 +572,11 @@ class EighthScheduledActivity(BaseModel):
                                             scheduled_activity=self,
                                             after_deadline=after_deadline)
         else:
+
+            all_sched_act = (EighthScheduledActivity.objects
+                                                        .filter(block__date=self.block.date,
+                                                                activity=self.activity))
+            
             EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__date=self.block.date
