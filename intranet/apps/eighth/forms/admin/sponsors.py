@@ -44,5 +44,6 @@ class SponsorForm(forms.ModelForm):
             "first_name",
             "last_name",
             "user",
-            "online_attendance"
+            "online_attendance",
+            "show_full_name"
         ]

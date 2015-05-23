@@ -130,11 +130,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                       .values_list("id",
                                                    "user_id",
                                                    "first_name",
-                                                   "last_name"))
+                                                   "last_name",
+                                                   "show_full_name"))
 
         all_sponsors = dict((sponsor[0],
                              {"user_id": sponsor[1],
-                              "name": sponsor[3]}) for sponsor in sponsors_dict)
+                              "name": sponsor[2]+" "+sponsor[3] if sponsor[4] else sponsor[3]}) for sponsor in sponsors_dict)
 
         activity_ids = scheduled_activities.values_list("activity__id")
         sponsorships = (EighthActivity.sponsors
