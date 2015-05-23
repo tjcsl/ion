@@ -14,8 +14,14 @@ from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
+class BaseModel(models.Model):
+    created_time = models.DateTimeField(auto_now_add=True, null=True)
+    last_modified_time = models.DateTimeField(auto_now=True, null=True)
 
-class EighthSponsor(models.Model):
+    class Meta:
+        abstract = True
+
+class EighthSponsor(BaseModel):
 
     """Represents a sponsor for an eighth period activity.
 
@@ -59,7 +65,7 @@ class EighthSponsor(models.Model):
     
 
 
-class EighthRoom(models.Model):
+class EighthRoom(BaseModel):
 
     """Represents a room in which an eighth period activity can be held
 
@@ -86,7 +92,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
                                                                 .exclude(deleted=True))
 
 
-class EighthActivity(models.Model):
+class EighthActivity(BaseModel):
 
     """Represents an eighth period activity.
 
@@ -232,7 +238,7 @@ class EighthBlockManager(models.Manager):
         return block.get_surrounding_blocks()
 
 
-class EighthBlock(models.Model):
+class EighthBlock(BaseModel):
 
     """Represents an eighth period block.
 
@@ -333,7 +339,7 @@ class EighthScheduledActivityManager(Manager):
         return sched_acts
 
 
-class EighthScheduledActivity(models.Model):
+class EighthScheduledActivity(BaseModel):
 
     """Represents the relationship between an activity and a block in
     which it has been scheduled.
@@ -585,7 +591,7 @@ class EighthScheduledActivity(models.Model):
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
 
-class EighthSignup(models.Model):
+class EighthSignup(BaseModel):
 
     """Represents a signup/membership in an eighth period activity.
 
