@@ -22,6 +22,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                   "url",
                   "name",
                   "description",
+                  "administrative",
                   "restricted",
                   "presign",
                   "one_a_day",
@@ -74,6 +75,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 prefix += " - " + scheduled_activity.comments
             middle = " (R)" if restricted_for_user else ""
             suffix = " (BB)" if activity.both_blocks else ""
+            suffix += " (A)" if activity.administrative else ""
             suffix += " (S)" if activity.sticky else ""
             suffix += " (Deleted)" if activity.deleted else ""
 
@@ -105,6 +107,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "restricted_for_user": restricted_for_user,
                 "both_blocks": activity.both_blocks,
                 "special": activity.special,
+                "administrative": activity.administrative,
                 "sticky": activity.sticky,
                 "comments": scheduled_activity.comments
             }

@@ -145,6 +145,7 @@ class EighthActivity(models.Model):
         if include_restricted:
             name += " (R)" if self.restricted else ""
         name += " (BB)" if self.both_blocks else ""
+        name += " (A)" if self.administrative else ""
         name += " (S)" if self.sticky else ""
         name += " (Deleted)" if self.deleted else ""
         return name

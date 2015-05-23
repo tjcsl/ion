@@ -75,6 +75,7 @@ class ActivityForm(forms.ModelForm):
             "both_blocks",
             "sticky",
             "special",
+            "administrative",
             "restricted",
             "users_allowed",
             "groups_allowed",
