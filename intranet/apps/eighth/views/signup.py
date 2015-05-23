@@ -40,7 +40,7 @@ def eighth_signup_view(request, block_id=None):
                                                          .exclude(cancelled=True)
                                                          .get(block=bid,
                                                               activity=aid))
-            if not request.is_eighth_admin():
+            if not request.user.is_eighth_admin:
                 scheduled_activity = scheduled_activity.exclude(activity__administrative=True)
 
         except EighthScheduledActivity.DoesNotExist:
