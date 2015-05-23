@@ -54,6 +54,8 @@ def schedule_view(request):
 
 def get_weeks_data(dateobj):
     firstmon = dateobj + timedelta(days=(7 - dateobj.weekday()))
+    if firstmon.day > 7:
+        firstmon = firstmon + timedelta(days=-7)
     curdate = firstmon
     weeks = []
 
@@ -75,21 +77,21 @@ def get_day_data(curdate):
     }
 
 def admin_home_view(request):
-    data = {
-        "days": Day.objects.all(),
-        "blocks": Block.objects.all(),
-        "daytypes": DayType.objects.all(),
-        "dayobj": get_context(request)["dayobj"]
-    }
-
     if "month" in request.GET:
         month = request.GET.get("month")
     else:
         month = datetime.now().strftime("%Y-%m")
 
     dateobj = datetime.strptime(month, "%Y-%m")
-    data["month_name"] = dateobj.strftime("%B")
-    data["weeks"] = get_weeks_data(dateobj)
+    month_name = dateobj.strftime("%B")
+    weeks = get_weeks_data(dateobj)
+
+    data = {
+        "month_name": month_name,
+        "last_month": (dateobj+timedelta(days=-1)).strftime("%Y-%m"),
+        "next_month": (dateobj+timedelta(days=31)).strftime("%Y-%m"),
+        "weeks": weeks
+    }
 
     return render(request, "schedule/admin_home.html", data)
 
