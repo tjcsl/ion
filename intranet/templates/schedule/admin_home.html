@@ -77,9 +77,21 @@
         <table class="schedule-month">
         <tbody>
         <tr>
-            <th colspan="5">
-            <h2>September</h2>
+            <th></th>
+            <th>
+                <a class="button" title="Last month">
+                <i class="fa fa-arrow-left"></i>
+                </a>
             </th>
+            <th colspan="1">
+                <h2>{{ month_name }}</h2>
+            </th>
+            <th>
+                <a class="button" title="Next month">
+                <i class="fa fa-arrow-right"></i>
+                </a>
+            </th>
+            <th></th>
         </tr>
         <tr>
             <th>Monday</th>
@@ -88,11 +100,11 @@
             <th>Thursday</th>
             <th>Friday</th>
         </tr>
-        {% for i in "1234" %}
+        {% for week in weeks %}        
         <tr>
-            {% for j in "12345" %}
+            {% for day in week %}
             <td>
-                <b>{{ j }}.</b>
+                <b>{{ day.date.day }}.</b>
                 <em class="day day-blue">Blue Day</em>
                 <table class="bellschedule-table">
                 {% for blk in dayobj.type.blocks.all %}

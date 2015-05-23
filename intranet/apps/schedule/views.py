@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -52,6 +52,28 @@ def schedule_view(request):
     data = get_context(request)
     return render(request, "schedule/view.html", data)
 
+def get_weeks_data(dateobj):
+    firstmon = dateobj + timedelta(days=(7 - dateobj.weekday()))
+    curdate = firstmon
+    weeks = []
+
+    while curdate.month == firstmon.month:
+        week = []
+        for i in range(5):
+            week.append(get_day_data(curdate))
+            curdate += timedelta(days=1)
+        # skip weekend
+        curdate += timedelta(days=2)
+        weeks.append(week)
+
+    return weeks
+
+
+def get_day_data(curdate):
+    return {
+        "date": curdate
+    }
+
 def admin_home_view(request):
     data = {
         "days": Day.objects.all(),
@@ -59,6 +81,16 @@ def admin_home_view(request):
         "daytypes": DayType.objects.all(),
         "dayobj": get_context(request)["dayobj"]
     }
+
+    if "month" in request.GET:
+        month = request.GET.get("month")
+    else:
+        month = datetime.now().strftime("%Y-%m")
+
+    dateobj = datetime.strptime(month, "%Y-%m")
+    data["month_name"] = dateobj.strftime("%B")
+    data["weeks"] = get_weeks_data(dateobj)
+
     return render(request, "schedule/admin_home.html", data)
 
 def admin_daytype_view(request):
