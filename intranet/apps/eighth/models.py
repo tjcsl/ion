@@ -55,11 +55,11 @@ class EighthRoom(models.Model):
         name
             The name of the room.
         capacity
-            The maximum capacity of the room (-1 for unlimited)
+            The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
 
     """
     name = models.CharField(max_length=100)
-    capacity = models.SmallIntegerField(default=-1)
+    capacity = models.SmallIntegerField(default=28)
 
     unique_together = (("name", "capacity"),)
 
