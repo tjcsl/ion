@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.forms import ModelForm
-from .models import DayType
+from .models import Day, DayType
 
 class DayTypeForm(ModelForm):
 
@@ -13,4 +13,13 @@ class DayTypeForm(ModelForm):
             "special",
             "codenames",
             "blocks"
+        ]
+
+class DayForm(ModelForm):
+
+    class Meta:
+        model = Day
+        fields = [
+            "date",
+            "type"
         ]

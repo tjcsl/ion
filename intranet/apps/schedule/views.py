@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Time, Block, CodeName, DayType, Day
-from .forms import DayTypeForm
+from .forms import DayTypeForm, DayForm
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ def get_context(request=None, date=None):
         "dayobj": dayobj,
         "date": date,
         "date_tomorrow": date_format(date+timedelta(days=1)),
-        "date_yesterday": date_format(date+timedelta(days=-1)),
+        "date_yesterday": date_format(date+timedelta(days=-1))
     }
 
 def schedule_view(request):
@@ -58,11 +58,12 @@ def get_day_data(firstday, daynum):
     if daynum == 0:
         return {"empty": True}
 
+    date = firstday + timedelta(days=daynum-1)
     data = {
         "day": daynum,
+        "formatted_date": date_format(date),
+        "date": date
     }
-    date = firstday + timedelta(days=daynum-1)
-    data["date"] = date
     
     try:
         dayobj = Day.objects.get(date=date)
@@ -99,6 +100,19 @@ def admin_home_view(request):
     }
 
     return render(request, "schedule/admin_home.html", data)
+
+def admin_add_view(request):
+    if request.method == "POST":
+        form = DayForm(request.POST)
+        if form.is_valid():
+            model = form.save()
+    else:
+        form = DayForm()
+
+    context = {
+        "form": form
+    }
+    return render(request, "schedule/admin_add.html", context)
 
 def admin_daytype_view(request):
     if request.method == "POST":

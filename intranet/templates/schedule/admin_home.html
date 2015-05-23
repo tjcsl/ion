@@ -53,7 +53,11 @@
         visibility: hidden;
         position: absolute;
         bottom: 0;
-        margin: 8px;
+        margin: 8px -40px;
+        text-align: center;
+        left: 50%;
+        width: 80px;
+        height: 30px;
     }
 
     .schedule-month > tbody > tr > td .buttons .button {
@@ -122,22 +126,15 @@
                         </tr>
                     {% endfor %}
                     </table>
-                    <span class="buttons">
-                        <a class="button" title="Change Day Type">
-                            <i class='edit fa fa-exchange'></i>
-                        </a>
-                        <a class="button" title="Custom Schedule">
-                            <i class='edit fa fa-pencil'></i>
-                        </a>
-                    </span>
-                {% else %}
-                    <span class="button-center">
-                        <a class="button" title="Create Day">
-                            <i class='add fa fa-plus'></i>
-                            Create Day
-                        </a>
-                    </span>
                 {% endif %}
+                <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
+                    <a class="button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
+                        <i class='edit fa fa-exchange'></i>
+                    </a>
+                    <a class="button" title="Custom Schedule">
+                        <i class='edit fa fa-pencil'></i>
+                    </a>
+                </span>
                 
             {% endif %}
             </td>
