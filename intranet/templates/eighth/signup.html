@@ -71,6 +71,11 @@
             </span>
             <% var full_name = name_with_flags_for_user + (cancelled ? " (Cancelled)" : ""); %>
             <span class="activity-name" title="<%= full_name %>"><%= full_name %></span>
+            <% var sponsors_all = ""; %>
+            <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
+            <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
+            <span class="activity-sponsors" title="<%= sponsors_all %>"><%= sponsors_all %></span>
+            
         {% endverbatim %}
     </script>
 
