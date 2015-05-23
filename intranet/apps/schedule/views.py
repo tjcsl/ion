@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 import re
 from datetime import date, datetime, timedelta
+import calendar
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -52,29 +53,25 @@ def schedule_view(request):
     data = get_context(request)
     return render(request, "schedule/view.html", data)
 
-def get_weeks_data(dateobj):
-    firstmon = dateobj + timedelta(days=(7 - dateobj.weekday()))
-    if firstmon.day > 7:
-        firstmon = firstmon + timedelta(days=-7)
-    curdate = firstmon
-    weeks = []
 
-    while curdate.month == firstmon.month:
-        week = []
-        for i in range(5):
-            week.append(get_day_data(curdate))
-            curdate += timedelta(days=1)
-        # skip weekend
-        curdate += timedelta(days=2)
-        weeks.append(week)
+def get_day_data(firstday, daynum):
+    if daynum == 0:
+        return {"empty": True}
 
-    return weeks
-
-
-def get_day_data(curdate):
-    return {
-        "date": curdate
+    data = {
+        "day": daynum,
     }
+    date = firstday + timedelta(days=daynum-1)
+    data["date"] = date
+    
+    try:
+        dayobj = Day.objects.get(date=date)
+        data["schedule"] = dayobj.type
+    except Day.DoesNotExist:
+        data["schedule"] = None
+
+
+    return data
 
 def admin_home_view(request):
     if "month" in request.GET:
@@ -82,15 +79,23 @@ def admin_home_view(request):
     else:
         month = datetime.now().strftime("%Y-%m")
 
-    dateobj = datetime.strptime(month, "%Y-%m")
-    month_name = dateobj.strftime("%B")
-    weeks = get_weeks_data(dateobj)
+    firstday = datetime.strptime(month, "%Y-%m")
+    month_name = firstday.strftime("%B")
+
+    yr, mn = month.split("-")
+    cal = calendar.monthcalendar(int(yr), int(mn))
+    sch = []
+    for w in cal:
+        week = []
+        for d in w:
+            week.append(get_day_data(firstday, d))
+        sch.append(week)
+
+
 
     data = {
         "month_name": month_name,
-        "last_month": (dateobj+timedelta(days=-1)).strftime("%Y-%m"),
-        "next_month": (dateobj+timedelta(days=31)).strftime("%Y-%m"),
-        "weeks": weeks
+        "sch": sch
     }
 
     return render(request, "schedule/admin_home.html", data)

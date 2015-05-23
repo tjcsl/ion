@@ -69,6 +69,10 @@
         visibility: visible;
     }
 
+    .weekend {
+        display: none;
+    }
+
     </style>
 {% endblock %}
 
@@ -99,29 +103,43 @@
             <th>Wednesday</th>
             <th>Thursday</th>
             <th>Friday</th>
+            <th class="weekend">Saturday</th>
+            <th class="weekend">Sunday</th>
         </tr>
-        {% for week in weeks %}        
+        {% for week in sch %}        
         <tr>
             {% for day in week %}
-            <td>
-                <b>{{ day.date.day }}.</b>
-                <em class="day day-blue">Blue Day</em>
-                <table class="bellschedule-table">
-                {% for blk in dayobj.type.blocks.all %}
-                    <tr>
-                        <th>{{ blk.name }}:</th>
-                        <td> {{ blk.start }} - {{ blk.end }}</td>
-                    </tr>
-                {% endfor %}
-                </table>
-                <span class="buttons">
-                    <a class="button" title="Change Day Type">
-                        <i class='edit fa fa-exchange'></i>
-                    </a>
-                    <a class="button" title="Custom Schedule">
-                        <i class='edit fa fa-pencil'></i>
-                    </a>
-                </span>
+            <td{% if forloop.counter == 6 or forloop.counter == 7 %} class="weekend"{% endif %}>
+            {% if not day.empty %}
+                <b>{{ day.day }}.</b>
+                {% if day.schedule %}
+                    <em class="day {{ day.schedule.class }}">{{ day.schedule.name }}</em>
+                    <table class="bellschedule-table">
+                    {% for blk in day.schedule.blocks %}
+                        <tr>
+                            <th>{{ blk.name }}:</th>
+                            <td> {{ blk.start }} - {{ blk.end }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    <span class="buttons">
+                        <a class="button" title="Change Day Type">
+                            <i class='edit fa fa-exchange'></i>
+                        </a>
+                        <a class="button" title="Custom Schedule">
+                            <i class='edit fa fa-pencil'></i>
+                        </a>
+                    </span>
+                {% else %}
+                    <span class="button-center">
+                        <a class="button" title="Create Day">
+                            <i class='add fa fa-plus'></i>
+                            Create Day
+                        </a>
+                    </span>
+                {% endif %}
+                
+            {% endif %}
             </td>
             {% endfor %}
         </tr>
