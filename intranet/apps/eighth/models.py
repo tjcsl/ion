@@ -98,6 +98,7 @@ class EighthActivity(models.Model):
     both_blocks = models.BooleanField(default=False)
     sticky = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
+    administrative = models.BooleanField(default=False)
 
     restricted = models.BooleanField(default=False)
 
