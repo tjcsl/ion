@@ -54,10 +54,24 @@ def schedule_activity_view(request):
                 else:
                     # Instead of deleting and messing up attendance,
                     # cancel the scheduled activity if it was unscheduled
-                    EighthScheduledActivity.objects.filter(
+                    schact = EighthScheduledActivity.objects.filter(
                         block=block,
                         activity=activity
-                    ).update(cancelled=True)
+                    )
+                    logger.debug(block)
+                    logger.debug(activity)
+                    logger.debug(schact)
+                    # If a both blocks activity, unschedule the other
+                    # scheduled activities of it on the same day.
+                    if schact and activity.both_blocks:
+                        all_sched_act = (EighthScheduledActivity.objects
+                                            .filter(block__date=block.date, activity=activity))
+                        logger.debug(all_sched_act)
+                        for s in all_sched_act:
+                            s.cancelled=True
+                            s.save()
+                    else:
+                        schact.update(cancelled=True)
 
             messages.success(request, "Successfully updated schedule.")
 
