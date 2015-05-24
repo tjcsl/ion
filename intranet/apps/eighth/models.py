@@ -404,6 +404,21 @@ class EighthScheduledActivity(BaseModel):
         else:
             return self.activity.sponsors.all()
 
+    def user_is_sponsor(self, user):
+        """Return whether the given user is a sponsor of the activity.
+
+        Returns:
+            Boolean
+        """
+        sponsors = self.get_true_sponsors()
+        for sponsor in sponsors:
+            sp_user = sponsor.user
+            if sp_user == user:
+                return True
+
+        return False
+
+
     def get_true_rooms(self):
         """Get the rooms for the scheduled activity, taking into account
         activity defaults and overrides.
