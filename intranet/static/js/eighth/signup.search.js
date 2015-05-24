@@ -18,13 +18,25 @@ $(document).ready(function() {
 
             for(sp in searchSplit) {
                 var search = searchSplit[sp];
-                var show = false;
+
                 // blank entry
                 if(search.length < 1) {
                     show = true;
                     results.push(aid);
                     continue; // skip
                 }
+
+                // - = inverse
+                if(search.substring(0, 1) == "-") {
+                    console.log("INVERSE");
+                    search = search.substring(1);
+                    var inv = true;
+                } else {
+                    var inv = false;
+                }
+
+                var show = false;
+                
                 // aids
                 if(parseInt(search) == parseInt(aid)) {
                     show = true;
@@ -49,7 +61,7 @@ $(document).ready(function() {
                 var cmd = search.split(":");
                 if(cmd.length > 1) {
                     // not: = inverse
-                    var fl = (cmd[0] == "not" ? false : true);
+                    var fl = ((cmd[0] == "not" || (cmd[0] == "is" && inv)) ? false : true);
                     // restricted
                     if(cmd[1].substring(0,1) == "r" && activity.restricted == fl) {
                         show = true;
@@ -90,6 +102,8 @@ $(document).ready(function() {
                     if(cmd[1].substring(0,2) == "se" && activity.selected == fl) {
                         show = true;
                     }
+                } else if(inv) {
+                    show = !show;
                 }
 
                 if(search == "and") {
