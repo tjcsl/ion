@@ -230,8 +230,6 @@ $(function() {
                 })
             }
 
-
-            $(".search-wrapper input").removeAttr("disabled");
             if (prevSelectedAid !== null) {
                 if (prevSelectedInFavorites) {
                     $("#activity-list .favorite-activities li[data-activity-id=" + prevSelectedAid + "]").addClass("selected");
