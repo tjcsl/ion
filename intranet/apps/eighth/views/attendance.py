@@ -149,6 +149,14 @@ def take_attendance_view(request, scheduled_activity_id):
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
+    if request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user):
+        logger.debug("User has permission to edit")
+    else:
+        logger.debug("User does not have permission to edit")
+        return render(request, "error/403.html", {
+            "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
+        })
+
     if request.method == "POST":
         present_user_ids = list(request.POST.keys())
 
