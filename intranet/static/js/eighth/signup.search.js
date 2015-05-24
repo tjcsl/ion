@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     eighthSearch = function() {
+        var _st = +new Date();
         var searchStr = $(this).val().toLowerCase();
         var searchSplit = searchStr.split(" ");
 
@@ -17,27 +18,28 @@ $(document).ready(function() {
 
             for(sp in searchSplit) {
                 var search = searchSplit[sp];
-
                 var show = false;
-
+                // blank entry
                 if(search.length < 1) {
                     show = true;
+                    results.push(aid);
+                    continue; // skip
                 }
-
+                // aids
                 if(parseInt(search) == parseInt(aid)) {
                     show = true;
                 }
-
+                // name + comments
                 if(activity.name_with_flags_for_user.toLowerCase().indexOf(search) != -1) {
                     show = true;
                 }
-
+                // sponsors
                 for(sp in activity.sponsors) {
                     if(activity.sponsors[sp].toLowerCase().indexOf(search) != -1) {
                         show = true;
                     }
                 }
-
+                // rooms
                 for(rm in activity.rooms) {
                     if(activity.rooms[rm].toLowerCase().indexOf(search) != -1) {
                         show = true;
@@ -46,50 +48,48 @@ $(document).ready(function() {
 
                 var cmd = search.split(":");
                 if(cmd.length > 1) {
-
+                    // not: = inverse
                     var fl = (cmd[0] == "not" ? false : true);
-
+                    // restricted
                     if(cmd[1].substring(0,1) == "r" && activity.restricted == fl) {
                         show = true;
                     }
-
+                    // cancelled
                     if(cmd[1].substring(0,1) == "c" && activity.cancelled == fl) {
                         show = true;
                     }
-
+                    // bothblocks
                     if(cmd[1].substring(0,1) == "b" && activity.both_blocks == fl) {
                         show = true;
                     }
-
+                    // favorite
                     if(cmd[1].substring(0,1) == "f" && activity.favorited == fl) {
                         show = true;
                     }
-
+                    // special
                     if(cmd[1].substring(0,2) == "sp" && activity.special == fl) {
                         show = true;
                     }
-
+                    // admin
                     if(cmd[1].substring(0,1) == "a" && activity.administrative == fl) {
                         show = true;
                     }
-
+                    // sticky
                     if(cmd[1].substring(0,2) == "st" && activity.sticky == fl) {
                         show = true;
                     }
-
+                    // full
                     if(cmd[1].substring(0,1) == "f" && (activity.roster.capacity >= activity.roster.count) == fl) {
                         show = true;
                     }
-
-                    if(cmd[1].substring(0,1) == "o" && (activity.roster.capacity < activity.roster.count) == fl) {
+                    // open
+                    if(cmd[1].substring(0,1) == "o" && (activity.roster.count < activity.roster.capacity) == fl) {
                         show = true;
                     }
-
+                    // selected
                     if(cmd[1].substring(0,2) == "se" && activity.selected == fl) {
                         show = true;
                     }
-
-
                 }
 
                 if(search == "and") {
@@ -138,6 +138,8 @@ $(document).ready(function() {
             }
 
         });
+
+        console.debug("time:", +new Date - _st);
 
     }
 
