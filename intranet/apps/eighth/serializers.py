@@ -170,12 +170,17 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
             activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
 
+        activities_sponsors_overidden = []
         for sponsorship in overidden_sponsorships:
             scheduled_activity_id = sponsorship["eighthscheduledactivity"]
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             sponsor_id = sponsorship["eighthsponsor"]
             sponsor = all_sponsors[sponsor_id]
 
+            if activity_id not in activities_sponsors_overidden:
+                activities_sponsors_overidden.append(activity_id)
+                del activity_list[activity_id]["sponsors"][:]
+            
             if sponsor["user_id"]:
                 # See a few lines up for why we're not using User.get_user()
                 dn = User.dn_from_id(sponsor["user_id"])
@@ -185,7 +190,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                     name = None
             else:
                 name = None
-
             activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
 
         roomings = (EighthActivity.rooms.through.objects
