@@ -10,6 +10,13 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
+    {% if not user.is_eighth_admin %}
+    <style type="text/css">
+    #activity-list li[data-administrative=true] {
+        display: none;
+    }
+    </style>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
@@ -22,7 +29,9 @@
     <script type="text/javascript">
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
-            data = _.values($.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}"));
+            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list|escapejs }}{% endif %}");
+
+            data = _.values(jsonData);
 
             if(data.length < 1) {
                 console.log("Empty dataset")
