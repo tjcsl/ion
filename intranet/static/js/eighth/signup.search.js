@@ -4,7 +4,7 @@ $(document).ready(function() {
         var searchStr = $(this).val().toLowerCase();
         var searchSplit = searchStr.split(" ");
 
-        console.debug("query:", searchStr);
+        console.log("query:", searchStr);
 
         var results = [];
         var activities = window.activityModels._byId;
@@ -12,10 +12,13 @@ $(document).ready(function() {
         $("#activity-list li").each(function() {
             var aid = $(this).data("activity-id");
             var activity = activities[aid].attributes;
-            var show = false;
+
+            var shows = [];
 
             for(sp in searchSplit) {
                 var search = searchSplit[sp];
+
+                var show = false;
 
                 if(search.length < 1) {
                     show = true;
@@ -87,6 +90,36 @@ $(document).ready(function() {
                     }
 
 
+                }
+
+                if(search == "and") {
+                    shows.push(search);
+                } else {
+                    shows.push(show);
+                }
+            }
+            var show = false;
+
+            console.debug("activity", aid, shows);
+            if(shows.indexOf("and") != -1) {
+                var nshows = [];
+                for(i in shows) {
+                    if(shows[i] == "and") {
+                        console.debug("AND:", i);
+                        i = parseInt(i);
+                        if(i-1 >= 0 && i+1 < shows.length) {
+                            console.debug("andqs:", shows[i-1], shows[i+1])
+                            nshows.push(shows[i-1] && shows[i+1]);
+                        }
+                    }
+                }
+                show = true;
+                for(i in nshows) {
+                    if(!nshows[i]) show = false;
+                }
+            } else {
+                for(i in shows) {
+                    if(shows[i]) show = true;
                 }
             }
 
