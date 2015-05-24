@@ -124,6 +124,7 @@ def eighth_signup_view(request, block_id=None):
 
         context = {
             "user": user,
+            "real_user": request.user,
             "block_info": block_info,
             "activities_list": JSONRenderer().render(block_info["activities"]),
             "active_block": block,
