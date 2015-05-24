@@ -40,7 +40,13 @@ $(function() {
         tagName: "li",
         attributes: function(){
             return {
-                "data-activity-id": this.model.id
+                "data-activity-id": this.model.id,
+                "data-scheduled-activity-id": this.model.scheduled_activity,
+                "data-user-restricted": this.model.attributes.restricted_for_user,
+                "data-administrative": this.model.attributes.administrative,
+                "data-cancelled": this.model.attributes.cancelled,
+                "data-favorited": this.model.attributes.favorited,
+                "data-sticky": this.model.attributes.sticky
             }
         },
 
