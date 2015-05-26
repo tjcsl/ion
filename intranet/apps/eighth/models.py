@@ -85,6 +85,9 @@ class EighthRoom(AbstractBaseEighthModel):
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
 
+    class Meta:
+        ordering = ("name",)
+
 
 class EighthActivityExcludeDeletedManager(models.Manager):
 
@@ -418,7 +421,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 return True
 
         return False
-
 
     def get_true_rooms(self):
         """Get the rooms for the scheduled activity, taking into account
