@@ -40,7 +40,7 @@ def runserver(port=8080,
               werkzeug="no",
               dummy_cache="no",
               short_cache="no",
-              warn_invalid_template_vars="no",
+              template_warnings="no",
               log_level="DEBUG",
               insecure="no"):
     """Clear compiled python files and start the Django dev server."""
@@ -53,7 +53,7 @@ def runserver(port=8080,
                  "werkzeug",
                  "dummy_cache",
                  "short_cache",
-                 "warn_invalid_template_vars",
+                 "template_warnings",
                  "insecure")
     for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
         if arg not in ("yes", "no"):
@@ -66,7 +66,7 @@ def runserver(port=8080,
     with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(),
                    DUMMY_CACHE=dummy_cache.upper(),
                    SHORT_CACHE=short_cache.upper(),
-                   WARN_INVALID_TEMPLATE_VARS=warn_invalid_template_vars.upper(),
+                   WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(),
                    LOG_LEVEL=log_level):
         local("./manage.py runserver{} 0.0.0.0:{}{}".format(
                 "_plus" if werkzeug.lower() == "yes" else "",
