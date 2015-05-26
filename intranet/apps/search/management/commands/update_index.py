@@ -58,11 +58,13 @@ class Command(BaseCommand):
                     "fname": get_attr(user, "givenName"),
                     "first_name": get_attr(user, "givenName"),
                     "middlename": get_attr(user, "middlename"),
+                    "mname": get_attr(user, "middlename"),
                     "middle_name": get_attr(user, "middlename"),
                     "lastname": get_attr(user, "sn"),
                     "lname": get_attr(user, "sn"),
                     "last_name": get_attr(user, "sn"),
                     "nickname": get_attr(user, "nickname"),
+                    "nick": get_attr(user, "nickname"),
                     "sex": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
                     "gender": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
                     "graduation_year": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None,
@@ -72,7 +74,7 @@ class Command(BaseCommand):
                     "zip": get_attr(user, "postalCode"),
                     "city": get_attr(user, "l"),
                     "address": get_attr(user, "street"),
-                    "email": user[1].get("emails", [None])
+                    "email": None if user[1].get("emails", None) is None else " ".join(user[1].get("emails", [None]))
                 }
             )
             i += 1
