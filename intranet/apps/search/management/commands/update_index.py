@@ -85,6 +85,7 @@ class Command(BaseCommand):
                     "name": name,
                     "common_name": get_attr(user, "cn"),
                     "display_name": get_attr(user, "displayName"),
+                    "full_name": get_attr(user, "displayName"),
 
                     "first": get_attr(user, "givenName"),
                     "firstname": get_attr(user, "givenName"),
