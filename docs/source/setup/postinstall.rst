@@ -18,7 +18,7 @@ To create and add yourself to the global administrator group, run the following 
 
 .. code-block:: bash
 
-    $ python manage.py shell_plus
+    $ ./manage.py shell_plus
     Python 2.7.6 (default, Mar 22 2014, 22:59:56)
     (InteractiveConsole)
     >>> user = User.get_user(username="YOURUSERNAME")
@@ -34,4 +34,5 @@ Populating the Search Index
 Run the following command to populate the Elasticsearch index with users.
 
 .. code-block:: bash
+
     $ ./manage.py update_index

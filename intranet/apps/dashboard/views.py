@@ -17,6 +17,7 @@ def gen_schedule(user, num_blocks=6):
     current activity signup.
 
     """
+
     schedule = []
 
     block = EighthBlock.objects.get_first_upcoming_block()
