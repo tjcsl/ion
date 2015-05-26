@@ -172,12 +172,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     def dn_from_username(username):
-        logger.debug("Fetching DN of User with username {}.".format(username))
+        # logger.debug("Fetching DN of User with username {}.".format(username))
         return "iodineUid=" + ldap.dn.escape_dn_chars(username) + "," + settings.USER_DN
 
     @staticmethod
     def username_from_dn(dn):
-        logger.debug("Fetching username of User with ID {}.".format(id))
+        # logger.debug("Fetching username of User with ID {}.".format(id))
         return ldap.dn.str2dn(dn)[0][0][1]
 
     @staticmethod

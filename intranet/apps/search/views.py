@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 def search_view(request):
     q = request.GET.get("q", "").strip()
     query_error = False
+    is_admin = request.user.is_teacher and request.user.is_eighth_admin
 
     if q:
 
@@ -51,7 +52,7 @@ def search_view(request):
         }
 
         results = search(query)
-        logger.debug(results)
+        # logger.debug(results)
 
         if results["hits"]["total"] == 0:
             fuzzy_like_this_query = {
@@ -89,6 +90,10 @@ def search_view(request):
             return redirect("user_profile", user_id=user_id)
 
         users = [r["_source"] for r in results["hits"]["hits"]]
+
+        if is_admin:
+            users = sorted(users, key=lambda u: (u["last"], u["first"]))
+
         context = {
             "query_error": query_error,
             "search_query": q,
@@ -98,4 +103,5 @@ def search_view(request):
         context = {
             "search_results": None
         }
+    context["is_admin"] = is_admin
     return render(request, "search/search_results.html", context)
