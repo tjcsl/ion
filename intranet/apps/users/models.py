@@ -367,7 +367,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     schedule.append((sortvalue, class_object, dn))
 
                 ordered_schedule = sorted(schedule, key=lambda e: e[0])
-
+                if not ordered_schedule:
+                    return None
                 # Prepare a list of DNs for caching
                 # (pickling a Class class loads all properties
                 # recursively and quickly reaches the maximum
