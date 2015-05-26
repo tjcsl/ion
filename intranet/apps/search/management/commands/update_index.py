@@ -49,7 +49,7 @@ class Command(BaseCommand):
                     "middle_name": get_attr(user, "middlename"),
                     "last_name": get_attr(user, "sn"),
                     "nickname": get_attr(user, "nickname"),
-                    "gender": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
+                    "sex": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
                     "graduation_year": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None
                 }
             )

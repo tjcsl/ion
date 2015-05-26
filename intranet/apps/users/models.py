@@ -901,7 +901,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "perm": None,
                 "is_list": False
             },
-            "gender": {
+            "sex": {
                 "ldap_name": "gender",
                 "perm": None,
                 "is_list": False
