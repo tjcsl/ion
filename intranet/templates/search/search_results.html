@@ -14,7 +14,7 @@
 {% block main %}
 <div class="primary-content">
     <h2>Search Results</h2>
-    <form class="search" action="/search" method="get" autocomplete="off">
+    <form class="search" action="{% url 'search' %}" method="get" autocomplete="off">
             <input type="text" name="q" value="{{ search_query }}">
             <button type="submit">
                <i class="fa fa-search"></i>
@@ -34,6 +34,111 @@
         </ul>
     {% elif search_query %}
         <b>No results.</b>
+    {% endif %}
+    {% if query_error %}
+        <br>
+        There was an error in your query syntax.
+        <br>
+        <br>
+    {% endif %}
+
+
+    {% if "tips" in request.GET or query_error %}
+        <h3>Advanced Search Tips</h3>
+        <p>
+            <b>Operators</b>
+            <table>
+                <tr>
+                    <td><em>&amp;&amp;</em></td>
+                    <td>signifies AND operation</td>
+                </tr>
+                <tr>
+                    <td><em>||</em></td>
+                    <td>signifies OR operation</td>
+                </tr>
+                <tr>
+                    <td><em>!</em></td>
+                    <td>negates a single expression</td>
+                </tr>
+                <tr>
+                    <td><em>+</em></td>
+                    <td>indicates a term must be present</td>
+                </tr>
+                <tr>
+                    <td><em>-</em></td>
+                    <td>indicates a term must not be present</td>
+                </tr>
+                <tr>
+                    <td><em>"..."</em></td>
+                    <td>wraps a number of tokens to signify a phrase for searching (e.g. <em>"my search"</em>)</td>
+                </tr>
+                <tr>
+                    <td><em>(...)</em></td>
+                    <td>signifies precedence</td>
+                </tr>
+                <tr>
+                    <td><em>~N</em></td>
+                    <td>after a word signifies edit distance (fuzziness)</td>
+                </tr>
+                <tr>
+                    <td><em>~N</em></td>
+                    <td>after a phrase signifies slop amount</td>
+                </tr>
+                <tr>
+                    <td><em>/.../</em></td>
+                    <td>indicates a regular expression is enclosed between the slashes (leading wildcards not allowed)</td>
+                </tr>
+                <tr>
+                    <td><em>[... TO ...]</em></td>
+                    <td>indicates a range of numbers (e.g. <em>[2015 TO 2017]</em>)</td>
+                </tr>
+            </table>
+        </p>
+        <p>
+            <b>Searchable Fields</b>
+            <ul>
+                <li><em>first_name</em></li>
+                <li><em>last_name</em></li>
+                <li><em>middle_name</em></li>
+                <li><em>ion_id</em></li>
+                <li><em>ion_username</em> (e.g. 2015elowman)</li>
+                <li><em>graduation_year</em></li>
+            </ul>
+        </p>
+        <p>
+            <b>Examples</b>
+            <ul>
+                <li>
+                    To find all members of the class of 2015:
+                    <br>
+                    <em class="search-example">graduation_year:2015</em>
+                </li>
+                <li>
+                    To find all females:
+                    <br>
+                    <em class="search-example">sex:female</em>
+                </li>
+                <li>
+                    To find all males in the class of 2015:
+                    <br>
+                    <em class="search-example">graduation_year:2015 &amp;&amp; sex:male</em>
+                </li>
+                <li>
+                    To find all people without an "e" in their last name but not in their first name who graduate between 2015 and 2017:
+                    <br>
+                    <em class="search-example">first_name:/[^e]+/ &amp;&amp; !(last_name:/[^e]+/) &amp;&amp; graduation_year:[2015 TO 2017]</em>
+                </li>
+                <li>
+                    To find people with username collisions:
+                    <br>
+                    <em class="search-example">ion_username:/[0-9]{4}[a-z]+[0-9]/</em>
+                </li>
+            </ul>
+        </p>
+
+    {% else %}
+        <br><br>
+        <a href="{% url 'search' %}?tips">Advanced Search Tips</a>
     {% endif %}
 </div>
 {% endblock %}
