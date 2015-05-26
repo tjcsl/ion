@@ -27,3 +27,11 @@ To create and add yourself to the global administrator group, run the following 
     >>> user.is_superuser = True
     >>> user.save()
 
+
+Populating the Search Index
+===========================
+
+Run the following command to populate the Elasticsearch index with users.
+
+.. code-block:: bash
+    $ ./manage.py update_index
