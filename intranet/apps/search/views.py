@@ -40,7 +40,7 @@ def search_view(request):
                         "graduation_year",
                         "common_name"
                     ],
-                    "type": "phrase",
+                    "type": "phrase_prefix",
                     "lenient": True
                 }
             }
@@ -48,6 +48,7 @@ def search_view(request):
 
         results = search(query)
         num_results = results["hits"]["total"]
+        logger.debug(results)
 
         if num_results == 0:
             logger.debug("Trying fuzzy")
@@ -60,7 +61,8 @@ def search_view(request):
                 }
             }
             if re.match(r"^[A-Za-z0-9 ]+$", q):
-                results = search(fuzzy_like_this_query)
+                query = fuzzy_like_this_query
+                results = search(query)
             else:
                 query = {
                     "query": {
@@ -76,7 +78,8 @@ def search_view(request):
                 except Exception as e:
                     logger.debug(e)
                     query_error = True
-                    results = search(fuzzy_like_this_query)
+                    query = fuzzy_like_this_query
+                    results = search(query)
 
             num_results = results["hits"]["total"]
 
