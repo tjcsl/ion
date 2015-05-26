@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 from itertools import chain
@@ -14,14 +14,16 @@ from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
-class BaseModel(models.Model):
+
+class AbstractBaseEighthModel(models.Model):
     created_time = models.DateTimeField(auto_now_add=True, null=True)
     last_modified_time = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         abstract = True
 
-class EighthSponsor(BaseModel):
+
+class EighthSponsor(AbstractBaseEighthModel):
 
     """Represents a sponsor for an eighth period activity.
 
@@ -62,10 +64,9 @@ class EighthSponsor(BaseModel):
             return self.first_name + " " + self.last_name
         else:
             return self.last_name
-    
 
 
-class EighthRoom(BaseModel):
+class EighthRoom(AbstractBaseEighthModel):
 
     """Represents a room in which an eighth period activity can be held
 
@@ -92,7 +93,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
                                                                 .exclude(deleted=True))
 
 
-class EighthActivity(BaseModel):
+class EighthActivity(AbstractBaseEighthModel):
 
     """Represents an eighth period activity.
 
@@ -238,7 +239,7 @@ class EighthBlockManager(models.Manager):
         return block.get_surrounding_blocks()
 
 
-class EighthBlock(BaseModel):
+class EighthBlock(AbstractBaseEighthModel):
 
     """Represents an eighth period block.
 
@@ -339,7 +340,7 @@ class EighthScheduledActivityManager(Manager):
         return sched_acts
 
 
-class EighthScheduledActivity(BaseModel):
+class EighthScheduledActivity(AbstractBaseEighthModel):
 
     """Represents the relationship between an activity and a block in
     which it has been scheduled.
@@ -591,7 +592,7 @@ class EighthScheduledActivity(BaseModel):
             all_sched_act = (EighthScheduledActivity.objects
                                                         .filter(block__date=self.block.date,
                                                                 activity=self.activity))
-            
+
             EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__date=self.block.date
@@ -611,7 +612,7 @@ class EighthScheduledActivity(BaseModel):
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
 
-class EighthSignup(BaseModel):
+class EighthSignup(AbstractBaseEighthModel):
 
     """Represents a signup/membership in an eighth period activity.
 

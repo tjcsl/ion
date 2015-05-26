@@ -100,7 +100,7 @@ def dashboard_view(request):
                                      .prefetch_related("groups"))
 
     is_student = request.user.is_student
-    eighth_sponsor = request.user.has_eighth_sponsor()
+    eighth_sponsor = request.user.is_eighth_sponsor
 
     if is_student:
         schedule = gen_schedule(request.user)
