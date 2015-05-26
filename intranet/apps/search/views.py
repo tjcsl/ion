@@ -47,11 +47,9 @@ def search_view(request):
         }
 
         results = search(query)
-        num_results = results["hits"]["total"]
         logger.debug(results)
 
-        if num_results == 0:
-            logger.debug("Trying fuzzy")
+        if results["hits"]["total"] == 0:
             fuzzy_like_this_query = {
                 "query": {
                     "fuzzy_like_this": {
@@ -81,11 +79,8 @@ def search_view(request):
                     query = fuzzy_like_this_query
                     results = search(query)
 
-            num_results = results["hits"]["total"]
-
         logger.debug(query)
-        logger.debug("{} results".format(num_results))
-        if num_results == 1:
+        if results["hits"]["total"] == 1:
             user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
             return redirect("user_profile", user_id=user_id)
 

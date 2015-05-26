@@ -3,9 +3,9 @@ $(document).ready(function() {
     eighthSearch = function() {
         var _st = +new Date();
         var searchStr = $(this).val().toLowerCase();
-        var searchSplit = searchStr.split(" ");
+        var searchSplit = $.trim(searchStr).split(" ");
 
-        console.log("query:", searchStr);
+        // console.log("query:", searchStr);
 
         var results = [];
         var activities = window.activityModels._byId;
@@ -36,7 +36,7 @@ $(document).ready(function() {
                 }
 
                 var show = false;
-                
+
                 // aids
                 if(parseInt(search) == parseInt(aid)) {
                     show = true;
@@ -140,7 +140,7 @@ $(document).ready(function() {
             if(show) results.push(aid);
         });
 
-        console.log("results:", results);
+        // console.log("results:", results);
 
         $("#activity-list li").each(function() {
             var aid = $(this).data("activity-id");
