@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import elasticsearch
+import re
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -37,6 +38,7 @@ def search_view(request):
                         "graduation_year",
                         "common_name"
                     ],
+                    "type": "phrase",
                     "lenient": True
                 }
             }
@@ -46,14 +48,39 @@ def search_view(request):
         num_results = results["hits"]["total"]
 
         if num_results == 0:
-            query = {
-                "query": {
-                    "fuzzy_like_this": {
-                        "like_text": q
+            if re.match(r"^[A-Za-z0-9 ]+$", q):
+                query = {
+                    "query": {
+                        "fuzzy_like_this": {
+                            "like_text": q,
+                            "fuzziness": 0.8
+                        }
                     }
                 }
-            }
-            results = search(query)
+                results = search(query)
+            else:
+                query = {
+                    "query": {
+                        "query_string": {
+                            "query": q,
+                            "lenient": True
+                        }
+                    }
+                }
+                try:
+                    results = search(query)
+                except:
+                    query = {
+                        "query": {
+                            "simple_query_string": {
+                                "query": q,
+                                "lenient": True
+                            }
+                        }
+                    }
+                    results = search(query)
+
+        logger.debug(query)
         if num_results == 1:
             user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
             return redirect("user_profile", user_id=user_id)
