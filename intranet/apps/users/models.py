@@ -7,7 +7,6 @@ import logging
 import ldap
 import os
 from django.db import models
-from django import template
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import (
@@ -17,7 +16,6 @@ from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
 
 logger = logging.getLogger(__name__)
-register = template.Library()
 
 
 class UserManager(UserManager):

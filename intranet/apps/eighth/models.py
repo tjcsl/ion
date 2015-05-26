@@ -593,8 +593,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
 
             all_sched_act = (EighthScheduledActivity.objects
-                                                        .filter(block__date=self.block.date,
-                                                                activity=self.activity))
+                                                    .filter(block__date=self.block.date,
+                                                            activity=self.activity))
 
             EighthSignup.objects.filter(
                 user=user,
