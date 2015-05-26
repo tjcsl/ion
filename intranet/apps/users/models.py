@@ -11,11 +11,11 @@ from django import template
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, UserManager)
+    AbstractBaseUser, PermissionsMixin, UserManager, Group)
 from django.core.signing import Signer
-from intranet.db.ldap_db import LDAPConnection
+from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
-from django.contrib.auth.models import Group
+
 logger = logging.getLogger(__name__)
 register = template.Library()
 
@@ -317,11 +317,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             List of Class objects
 
         """
+        is_student = self.is_student
+
         identifier = ":".join([self.dn, "classes"])
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
-        visible = self.attribute_is_visible("showschedule")
+        if is_student:
+            visible = self.attribute_is_visible("showschedule")
+        else:
+            visible = True
 
         if cached and visible:
             logger.debug("Attribute 'classes' of user {} loaded "
@@ -335,74 +340,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif not cached and visible:
             c = LDAPConnection()
             try:
-                results = c.user_attributes(self.dn, ['enrolledclass'])
-                classes = results.first_result()["enrolledclass"]
+                if is_student:
+                    results = c.user_attributes(self.dn, ['enrolledclass'])
+                    classes = results.first_result()["enrolledclass"]
+                else:
+                    query = LDAPFilter.and_filter(
+                        "objectClass=tjhsstClass",
+                        "sponsorDn=" + self.dn
+                    )
+                    results = c.search(settings.CLASS_DN, query, ["dn"])
+                    classes = [r[0] for r in results]
+
                 logger.debug("Classes: {}".format(classes))
             except KeyError:
                 return None
             else:
                 schedule = []
                 for dn in classes:
-                    class_object = Class(dn=dn)
-
-                    # Temporarily pack the classes in tuples so we can
-                    # sort on an integer key instead of the periods
-                    # property to avoid tons of needless LDAP queries
-                    #
-                    sortvalue = class_object.sortvalue
-                    schedule.append((sortvalue, class_object, dn))
-
-                ordered_schedule = sorted(schedule, key=lambda e: e[0])
-
-                # Prepare a list of DNs for caching
-                # (pickling a Class class loads all properties
-                # recursively and quickly reaches the maximum
-                # recursion depth)
-                dn_list = list(zip(*ordered_schedule)[2])
-                cache.set(key, dn_list,
-                          timeout=settings.CACHE_AGE['user_classes'])
-                return list(zip(*ordered_schedule)[1])  # Unpacked class list
-        else:
-            return None
-
-    @property
-    def taught_classes(self):
-        """Return a list of class objects that a teacher teaches.
-
-        Returns:
-            List of Class objects
-
-        """
-
-        identifier = ":".join([self.dn, "taught_classes"])
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-        visible = True # all teachers' schedules are public
-
-        if cached and visible:
-            logger.debug("Attribute 'taught_classes' of user {} loaded "
-                         "from cache.".format(self.id))
-            schedule = []
-            for dn in cached:
-                class_object = Class(dn=dn)
-                schedule.append(class_object)
-
-            return schedule
-        elif not cached and visible:
-            c = LDAPConnection()
-            try:
-                schedule_dn = "ou=schedule,dc=tjhsst,dc=edu"
-                tch_qry = "(&(objectClass=tjhsstClass)(sponsorDn={}))".format(self.dn)
-                classes = c.search(schedule_dn, tch_qry, ["tjhsstSectionId"])
-                
-                logger.debug("Classes: {}".format(classes))
-            except KeyError:
-                return None
-            else:
-                schedule = []
-                for row in classes:
-                    dn, data = row
                     class_object = Class(dn=dn)
 
                     # Temporarily pack the classes in tuples so we can
@@ -1010,22 +964,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
-    def has_eighth_sponsor(self):
-        """ Determine whether the given user is associated with an :class:`EighthSponsor`
-            and, therefore, should view activity sponsoring information.
+    @property
+    def is_eighth_sponsor(self):
+        """Determine whether the given user is associated with an
+        :class:`EighthSponsor` and, therefore, should view activity
+        sponsoring information.
+
         """
+
         from ..eighth.models import EighthSponsor
 
-        try:
-            sp = EighthSponsor.objects.get(user=self)
-        except EighthSponsor.DoesNotExist:
-            return False
-
-        return True
+        return EighthSponsor.objects.filter(user=self).exists()
 
     def get_eighth_sponsor(self):
-        """ Return the :class:`EighthSponsor` that a given user is associated with.
+        """Return the :class:`EighthSponsor` that a given user is
+        associated with.
+
         """
+
         from ..eighth.models import EighthSponsor
 
         try:
@@ -1035,13 +991,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return sp
 
-
     def __unicode__(self):
         return self.username or self.ion_username or self.id
 
 
 class Class(object):
-
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
 
     Note that this is not a Django model, but rather an interface
@@ -1084,13 +1038,12 @@ class Class(object):
         for row in students:
             dn = row[0]
             try:
-                user = User(dn=dn)
-            except NO_SUCH_OBJECT:
+                user = User.get_user(dn=dn)
+            except User.DoesNotExist:
                 continue
             users.append(user)
 
         return users
-
 
     @property
     def teacher(self):
@@ -1159,6 +1112,7 @@ class Class(object):
             A float value of the equation.
 
         """
+        logger.debug(self.periods, self.quarters)
         return min(map(float, self.periods)) + (float(sum(self.quarters)) / 11)
 
     def __getattr__(self, name):
@@ -1281,7 +1235,7 @@ class Address(object):
 class Grade(object):
 
     """Represents a user's grade."""
-    names = ["freshman", "sophomore", "junior", "senior", "graduate"]
+    names = ["freshman", "sophomore", "junior", "senior"]
 
     def __init__(self, graduation_year):
         """Initialize the Grade object.
@@ -1299,10 +1253,10 @@ class Grade(object):
 
         self._number = current_senior_year - self._year + 12
 
-        if self._number in range(9, 14):
+        if 9 <= self._number <= 12:
             self._name = Grade.names[self._number - 9]
         else:
-            self._name = None
+            self._name = "graduate"
 
     @property
     def number(self):
@@ -1318,7 +1272,6 @@ class Grade(object):
     def name(self):
         """Return the grade's name (e.g. senior)"""
         return self._number
-
 
     def __int__(self):
         """Return the grade as a number (9-12)."""
