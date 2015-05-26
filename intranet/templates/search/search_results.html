@@ -27,7 +27,7 @@
             {% for user in search_results %}
                 <li>
                     <a href="{% url 'user_profile' user.ion_id %}">
-                        {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.first_name }} {{ user.last_name }}{% endif %} ({% if user.graduation_year %}{{ user.graduation_year }}{% else %}Staff{% endif %})
+                        {% if user.fullname %}{{ user.fullname }}{% else %}{{ user.firstname }} {{ user.lastname }}{% endif %} ({% if user.gradyear %}{{ user.gradyear }}{% else %}Staff{% endif %})
                     </a>
                 </li>
             {% endfor %}
@@ -43,7 +43,7 @@
     {% endif %}
 
 
-    {% if "tips" in request.GET or query_error or search_query == "" or search_query == None %}
+    {% if "tips" in request.GET or query_error or not search_query %}
         <h3>Advanced Search Tips</h3>
         <p>
             <b>Operators</b>
@@ -97,12 +97,15 @@
         <p>
             <b>Searchable Fields</b>
             <ul>
-                <li><em>first_name</em></li>
-                <li><em>last_name</em></li>
-                <li><em>middle_name</em></li>
-                <li><em>ion_id</em></li>
-                <li><em>ion_username</em> (e.g. 2015elowman)</li>
-                <li><em>graduation_year</em></li>
+                <li><em>name</em></li>
+                <li><em>firstname</em></li>
+                <li><em>lastname</em></li>
+                <li><em>middlename</em></li>
+                <li><em>nickname</em></li>
+                <li><em>id</em> (e.g. 31863)</li>
+                <li><em>username</em> (e.g. 2015elowman)</li>
+                <li><em>gradyear</em> (e.g. 2015)</li>
+                <li><em>sex</em></li>
             </ul>
         </p>
         <p>
@@ -111,7 +114,7 @@
                 <li>
                     To find all members of the class of 2015:
                     <br>
-                    <em class="search-example">graduation_year:2015</em>
+                    <em class="search-example">gradyear:2015</em>
                 </li>
                 <li>
                     To find all females:
@@ -121,17 +124,17 @@
                 <li>
                     To find all males in the class of 2015:
                     <br>
-                    <em class="search-example">graduation_year:2015 &amp;&amp; sex:male</em>
+                    <em class="search-example">gradyear:2015 &amp;&amp; sex:male</em>
                 </li>
                 <li>
                     To find all people without an "e" in their last name but not in their first name who graduate between 2015 and 2017:
                     <br>
-                    <em class="search-example">first_name:/[^e]+/ &amp;&amp; !(last_name:/[^e]+/) &amp;&amp; graduation_year:[2015 TO 2017]</em>
+                    <em class="search-example">firstname:/[^e]+/ &amp;&amp; !(lastname:/[^e]+/) &amp;&amp; gradyear:[2015 TO 2017]</em>
                 </li>
                 <li>
                     To find people with username collisions:
                     <br>
-                    <em class="search-example">ion_username:/[0-9]{4}[a-z]+[0-9]/</em>
+                    <em class="search-example">username:/[0-9]{4}[a-z]+[0-9]/</em>
                 </li>
             </ul>
         </p>

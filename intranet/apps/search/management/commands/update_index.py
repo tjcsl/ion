@@ -24,7 +24,13 @@ class Command(BaseCommand):
                       "sn",
                       "nickname",
                       "gender",
-                      "graduationYear"]
+                      "graduationYear",
+                      "mobile",
+                      "homePhone",
+                      "postalCode",
+                      "l",
+                      "street",
+                      "emails"]
 
         l = ldap_db.LDAPConnection()
         users = l.user_attributes(settings.USER_DN, attributes).results_array()
@@ -41,23 +47,30 @@ class Command(BaseCommand):
                 doc_type=settings.ELASTICSEARCH_USER_DOC_TYPE,
                 id=int(user[1]["iodineUidNumber"][0]),
                 body={
-                    "ionid": get_attr(user, "iodineUidNumber"),
+                    "ion_id": get_attr(user, "iodineUidNumber"),
                     "id": get_attr(user, "iodineUidNumber"),
-                    "ionusername": get_attr(user, "iodineUid"),
+                    "ion_username": get_attr(user, "iodineUid"),
                     "username": get_attr(user, "iodineUid"),
                     "name": get_attr(user, "cn") if "displayName" not in user[1] else get_attr(user, "display_name"),
                     "commonname": get_attr(user, "cn"),
                     "displayname": get_attr(user, "displayName"),
                     "firstname": get_attr(user, "givenName"),
-                    "fname": get_attr(user, "givenName"),
+                    "first_name": get_attr(user, "givenName"),
                     "middlename": get_attr(user, "middlename"),
-                    "mname": get_attr(user, "middlename"),
+                    "middle_name": get_attr(user, "middlename"),
                     "lastname": get_attr(user, "sn"),
-                    "lname": get_attr(user, "sn"),
+                    "last_name": get_attr(user, "sn"),
                     "nickname": get_attr(user, "nickname"),
                     "sex": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
-                    "graduationyear": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None,
-                    "gradyear": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None
+                    "gender": None if "gender" not in user[1] else "female" if user[1]["gender"][0] == "F" else "male",
+                    "graduation_year": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None,
+                    "gradyear": int(user[1]["graduationYear"][0]) if "graduationYear" in user[1] else None,
+                    "phone": get_attr(user, "mobile"),
+                    "homephone": get_attr(user, "homePhone"),
+                    "zip": get_attr(user, "postalCode"),
+                    "city": get_attr(user, "l"),
+                    "address": get_attr(user, "street"),
+                    "email": user[1].get("emails", [None])
                 }
             )
             i += 1
