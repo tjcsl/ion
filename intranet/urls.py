@@ -17,7 +17,6 @@ urlpatterns = [
 
     url(r"^", include("intranet.apps.auth.urls")),
 
-    url(r"^dashboard", include("intranet.apps.dashboard.urls")),
     url(r"^announcements", include("intranet.apps.announcements.urls")),
     url(r"^eighth", include("intranet.apps.eighth.urls")),
     url(r"^events", include("intranet.apps.events.urls")),
