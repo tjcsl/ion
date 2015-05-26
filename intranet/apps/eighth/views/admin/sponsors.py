@@ -10,6 +10,7 @@ from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
 from ...models import EighthSponsor, EighthScheduledActivity
+from ...utils import get_start_date
 
 
 @eighth_admin_required
@@ -86,9 +87,11 @@ def sponsor_schedule_view(request, sponsor_id):
     except EighthSponsor.DoesNotExist:
         raise http.Http404
 
-    sched_acts = EighthScheduledActivity.objects.for_sponsor(sponsor)\
-                        .order_by("block__date",
-                                  "block__block_letter")
+    start_date = get_start_date(request)
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                         .filter(block__date__gte=start_date)
+                                         .order_by("block__date",
+                                                   "block__block_letter"))
 
     context = {
         "scheduled_activities": sched_acts,
