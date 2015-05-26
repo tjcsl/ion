@@ -15,8 +15,10 @@ logger = logging.getLogger(__name__)
 @login_required
 def search_view(request):
     q = request.GET.get("q", "").strip()
+    query_error = False
 
     if q:
+
         if q.isdigit():
             # Match exact student ID if the input looks like an ID
             u = User.objects.user_with_student_id(q)
@@ -48,37 +50,32 @@ def search_view(request):
         num_results = results["hits"]["total"]
 
         if num_results == 0:
-            if re.match(r"^[A-Za-z0-9 ]+$", q):
-                query = {
-                    "query": {
-                        "fuzzy_like_this": {
-                            "like_text": q,
-                            "fuzziness": 0.8
-                        }
+            fuzzy_like_this_query = {
+                "query": {
+                    "fuzzy_like_this": {
+                        "like_text": q,
+                        "fuzziness": 0.8
                     }
                 }
-                results = search(query)
+            }
+            if re.match(r"^[A-Za-z0-9 ]+$", q):
+                results = search(fuzzy_like_this_query)
             else:
                 query = {
                     "query": {
                         "query_string": {
                             "query": q,
-                            "lenient": True
+                            "lenient": True,
+                            "allow_leading_wildcard": False
                         }
                     }
                 }
                 try:
                     results = search(query)
-                except:
-                    query = {
-                        "query": {
-                            "simple_query_string": {
-                                "query": q,
-                                "lenient": True
-                            }
-                        }
-                    }
-                    results = search(query)
+                except Exception as e:
+                    logger.debug(e)
+                    query_error = True
+                    results = search(fuzzy_like_this_query)
 
         logger.debug(query)
         if num_results == 1:
@@ -87,6 +84,7 @@ def search_view(request):
 
         users = [r["_source"] for r in results["hits"]["hits"]]
         context = {
+            "query_error": query_error,
             "search_query": q,
             "search_results": users  # Not actual user objects
         }
