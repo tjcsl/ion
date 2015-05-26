@@ -70,9 +70,9 @@ cd ../..
 rm -rf redis-stable redis-stable.tar.gz
 
 # Elasticsearch
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 echo "deb http://packages.elastic.co/elasticsearch/1.4/debian stable main" | sudo tee -a /etc/apt/sources.list
-sudo apt-get update && sudo apt-get install elasticsearch
+apt-get update && apt-get install elasticsearch
 echo "network.bind_host: localhost" >> /etc/elasticsearch/elasticsearch.yml
 echo "script.disable_dynamic: true" >> /etc/elasticsearch/elasticsearch.yml
 service elasticsearch restart
