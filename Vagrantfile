@@ -44,6 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "public_network", bridge: devconfig["network_interface"]
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
+  config.ssh.forward_agent = true
+
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
