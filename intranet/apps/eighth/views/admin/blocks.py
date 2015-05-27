@@ -49,12 +49,20 @@ def add_multiple_blocks_view(request):
 
         if "blocks" in request.POST:
             letters = request.POST.getlist("blocks")
+            current_letters = []
+            blocks_day = EighthBlock.objects.filter(date=fmtdate)
+            for day in blocks_day:
+                current_letters.append(day.block_letter)
             logger.debug(letters)
-            for letter in letters:
-                try:
-                    obj = EighthBlock.objects.get(date=fmtdate, block_letter=letter)
-                except EighthBlock.DoesNotExist:
-                    EighthBlock.objects.create(date=fmtdate, block_letter=letter)
+            logger.debug(current_letters)
+            for l in letters:
+                if l not in current_letters:
+                    EighthBlock.objects.create(date=fmtdate, block_letter=l)
+                    messages.success(request, "Successfully added {} Block on {}".format(l, fmtdate))
+            for l in current_letters:
+                if l not in letters:
+                    EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
+                    messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
 
 
 
