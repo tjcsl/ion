@@ -36,6 +36,7 @@ eighth_admin_patterns = [
     url(r"^blocks/print_rosters/(?P<block_id>\d+)$", blocks.print_block_rosters_view, name="eighth_admin_print_block_rosters"),
     url(r"^blocks/edit/(?P<block_id>\d+)$", blocks.edit_block_view, name="eighth_admin_edit_block"),
     url(r"^blocks/delete/(?P<block_id>\d+)$", blocks.delete_block_view, name="eighth_admin_delete_block"),
+    url(r"^blocks/add_multiple$", blocks.add_multiple_blocks_view, name="eighth_admin_add_multiple_blocks"),
 
     # Scheduling
     url(r"^scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),

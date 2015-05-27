@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from six.moves import cPickle as pickle
 from django import http
 from django.http import HttpResponse
@@ -11,7 +12,9 @@ from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
 from ...models import EighthBlock, EighthScheduledActivity
 from ..attendance import generate_roster_pdf
+from ...serializers import EighthBlockDetailSerializer
 
+logger = logging.getLogger(__name__)
 
 @eighth_admin_required
 def add_block_view(request):
@@ -27,6 +30,33 @@ def add_block_view(request):
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+
+@eighth_admin_required
+def add_multiple_blocks_view(request):
+    if "date" in request.POST:
+        date = request.POST.get("date")
+        show_letters = True
+    else:
+        date = None
+        show_letters = False
+
+    letters = []
+    onday = EighthBlock.objects.filter(date=date)
+    for l in "ABCDEFGH":
+        exists = onday.filter(block_letter=l)
+        letters.append({
+            "letter": l,
+            "exists": exists
+        })
+
+
+    context = {
+        "date": date,
+        "letters": letters,
+        "show_letters": show_letters
+    }
+
+    return render(request, "eighth/admin/add_multiple_blocks.html", context)
 
 
 @eighth_admin_required

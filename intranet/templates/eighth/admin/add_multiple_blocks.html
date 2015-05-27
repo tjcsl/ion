@@ -1,0 +1,50 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+<h3>Add Block</h3>
+<form id="add-block-form" action="{% url 'eighth_admin_add_multiple_blocks' %}" method="post" autocomplete="off">
+    
+
+                    {% for day in schedule %}
+                    {{ obj.date }}
+                    {% endfor %}
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th><label for="id_date">Date:</label></th>
+            <td><input id="id_date" name="date" type="text" value="{% if date %}{{ date }}{% endif %}" /></td>
+        </tr>
+        {% if show_letters %}
+        <tr>
+            <th><label for="blocks">Block letters:</label></th>
+            <td>
+                <table>
+                <tr>
+                {% for letter in letters %}
+                    <td>
+                    <input type="checkbox" name="blocks" value="{{ letter.name }}" {% if letter.exists %}checked{% endif %}/> {{ letter.name }}
+                    </td>
+                    {% if forloop.counter|divisibleby:4 %}</tr><tr>{% endif %}
+                {% endfor %}
+                </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="right-buttons" colspan=2>
+                <input type="submit" value="Add">
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <script type="text/javascript">
+    $("#id_date").on("change", function(d) {
+        console.debug($(this).val());
+        document.forms["add-block-form"].submit();
+    })
+    </script>
+</form>
+
+{% endblock %}
