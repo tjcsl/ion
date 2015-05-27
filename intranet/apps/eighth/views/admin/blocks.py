@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import re
 import logging
 from six.moves import cPickle as pickle
 from django import http
@@ -35,19 +36,24 @@ def add_block_view(request):
 def add_multiple_blocks_view(request):
     if "date" in request.POST:
         date = request.POST.get("date")
+        logger.debug(date)
         show_letters = True
     else:
         date = None
         show_letters = False
 
     letters = []
-    onday = EighthBlock.objects.filter(date=date)
-    for l in "ABCDEFGH":
-        exists = onday.filter(block_letter=l)
-        letters.append({
-            "letter": l,
-            "exists": exists
-        })
+    if show_letters:
+        date_format = re.compile(r'([0-9]{2})\/([0-9]{2})\/([0-9]{4})')
+        fmtdate = date_format.sub(r'\3-\1-\2', date)
+        logger.debug(fmtdate)
+        onday = EighthBlock.objects.filter(date=fmtdate)
+        for l in "ABCDEFGH":
+            exists = onday.filter(block_letter=l)
+            letters.append({
+                "name": l,
+                "exists": exists
+            })
 
 
     context = {
