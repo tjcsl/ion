@@ -31,7 +31,7 @@
                 </table>
             </form>
 
-            <h4>Edit Activity</h4>
+            <h4>Edit/Schedule Activity</h4>
             <select id="activity-select" placeholder="Select or search for an activity">
                 <option value="">Select or search for an activity</option>
                 {% for activity in all_activities %}
@@ -39,6 +39,9 @@
                 {% endfor %}
             </select>
             <div class="right-buttons">
+
+                <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_schedule_activity' %}?activity={{ url_id_placeholder }}" class="button">Schedule Activity</a>
+
                 <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_edit_activity' url_id_placeholder %}" class="button">Edit Activity</a>
             </div>
         </td>
