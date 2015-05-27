@@ -34,19 +34,32 @@ def add_block_view(request):
 
 @eighth_admin_required
 def add_multiple_blocks_view(request):
+    date = None
+    show_letters = None
+
+    if "date" in request.GET:
+        date = request.GET.get("date")
     if "date" in request.POST:
         date = request.POST.get("date")
-        logger.debug(date)
-        show_letters = True
-    else:
-        date = None
-        show_letters = False
-
-    letters = []
-    if show_letters:
+    if date:
         date_format = re.compile(r'([0-9]{2})\/([0-9]{2})\/([0-9]{4})')
         fmtdate = date_format.sub(r'\3-\1-\2', date)
         logger.debug(fmtdate)
+        show_letters = True
+
+        if "blocks" in request.POST:
+            letters = request.POST.getlist("blocks")
+            logger.debug(letters)
+            for letter in letters:
+                try:
+                    obj = EighthBlock.objects.get(date=fmtdate, block_letter=letter)
+                except EighthBlock.DoesNotExist:
+                    EighthBlock.objects.create(date=fmtdate, block_letter=letter)
+
+
+
+    letters = []
+    if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
         for l in "ABCDEFGH":
             exists = onday.filter(block_letter=l)
