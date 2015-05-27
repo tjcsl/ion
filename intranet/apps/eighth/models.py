@@ -147,7 +147,7 @@ class EighthActivity(AbstractBaseEighthModel):
     def capacity(self):
         all_rooms = self.rooms.all()
         if len(all_rooms) == 0:
-            capacity = -1
+            capacity = 0 # If there are no rooms, there is a capacity of 0
         else:
             capacity = 0
             for room in all_rooms:
