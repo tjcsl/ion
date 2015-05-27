@@ -27,6 +27,10 @@ def search_view(request):
 
         es = elasticsearch.Elasticsearch()
 
+        # Convert "[123 to 345]" to "[123 TO 345]"
+        q = re.sub(r'\[(\d+|\*) +([Tt][Oo]) +(\d+|\*)\]', r'[\1 TO \3]', q.rstrip())
+
+
         def search(query):
             return es.search(index="ion", body=query, size=99999)
 
