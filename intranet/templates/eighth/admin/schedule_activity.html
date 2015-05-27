@@ -10,6 +10,40 @@
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json|escapejs }}"));
         window.all_rooms = _.values($.parseJSON("{{ rooms_json|escapejs }}"));
     </script>
+
+    <script type="text/javascript">
+    $(function() {
+        toggleRow = function(tr) {
+            var i = 0;
+            var cb = $("input[type=checkbox]", tr);
+            var checked = cb.prop("checked");
+            $("td", tr).each(function() {
+                if(i > 1) {
+                    if(checked) {
+                        $(this).css("opacity", 1);
+                        $(tr).data("hidden", false);
+                    } else {
+                        $(this).css("opacity", 0.5);
+                        $(tr).data("hidden", true);
+                    }
+                }
+                i++;
+            });
+        }
+        $(".schedule-activity-grid tbody tr.form-row").each(function() {
+            var cb = $("input[type=checkbox]", this);
+            var checked = cb.prop("checked");
+            var bt = $("td.block-name a", this).text().trim();
+            if(!checked) {
+                toggleRow($(this));
+            }
+            $(cb).click(function() {
+                toggleRow($(this).parent().parent());
+            });
+        });
+    });
+
+    </script>
 {% endblock %}
 
 {% block css %}
