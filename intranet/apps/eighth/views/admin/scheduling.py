@@ -165,7 +165,12 @@ def schedule_activity_view(request):
 
         context["default_rooms"] = activity.rooms.all()
         context["default_sponsors"] = activity.sponsors.all()
-        context["default_capacity"] = activity.capacity
+
+        capacity = 0
+        for room in activity.rooms.all():
+            capacity += room.capacity
+
+        context["default_capacity"] = capacity #activity.capacity
 
     context["admin_page_title"] = "Schedule an Activity"
     return render(request, "eighth/admin/schedule_activity.html", context)
