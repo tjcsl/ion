@@ -43,6 +43,7 @@ class EighthSponsor(AbstractBaseEighthModel):
             Whether to always show the sponsor's full name
             (e.x. because there are two teachers named Lewis)
     """
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True)
@@ -146,13 +147,7 @@ class EighthActivity(AbstractBaseEighthModel):
     @property
     def capacity(self):
         all_rooms = self.rooms.all()
-        if len(all_rooms) == 0:
-            capacity = 0 # If there are no rooms, there is a capacity of 0
-        else:
-            capacity = 0
-            for room in all_rooms:
-                capacity += room.capacity
-        return capacity
+        return sum(room.capacity for room in all_rooms)
 
     @property
     def name_with_flags(self):
