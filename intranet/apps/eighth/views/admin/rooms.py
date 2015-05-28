@@ -12,6 +12,7 @@ from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.rooms import RoomForm
 from ...models import EighthRoom, EighthBlock, EighthScheduledActivity
+from ...utils import get_start_date
 
 
 @eighth_admin_required
@@ -90,6 +91,8 @@ def room_sanity_check_view(request):
             block = EighthBlock.objects.get(id=block_id)
         except (EighthBlock.DoesNotExist, ValueError):
             pass
+    else:
+        blocks = blocks.filter(date__gte=get_start_date(request))
 
     context = {
         "blocks": blocks,
@@ -130,6 +133,8 @@ def room_utilization_for_block_view(request):
             block = EighthBlock.objects.get(id=block_id)
         except (EighthBlock.DoesNotExist, ValueError):
             pass
+    else:
+        blocks = blocks.filter(date__gte=get_start_date(request))
 
     context = {
         "blocks": blocks,
@@ -163,6 +168,10 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
 
     def get_form_kwargs(self, step):
         kwargs = {}
+        if step == "start_block":
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
         if step == "end_block":
             block = self.get_cleaned_data_for_step("start_block")["block"]
             kwargs.update({"exclude_before_date": block.date})

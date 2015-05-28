@@ -206,6 +206,7 @@ eighth_admin_signup_group = eighth_admin_required(
     )
 )
 
+
 class EighthAdminDistributeGroupWizard(SessionWizardView):
     FORMS = [
         ("block", BlockSelectionForm),
@@ -223,6 +224,11 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
 
     def get_form_kwargs(self, step):
         kwargs = {}
+
+        if step == "block":
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
         if step == "activity":
             block = self.get_cleaned_data_for_step("block")["block"]
             kwargs.update({"block": block})
