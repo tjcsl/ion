@@ -263,6 +263,12 @@ eighth_admin_distribute_group = eighth_admin_required(
     )
 )
 
+eighth_admin_distribute_unsigned = eighth_admin_required(
+    EighthAdminDistributeGroupWizard.as_view(
+        EighthAdminDistributeGroupWizard.FORMS
+    )
+)
+
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
     if "users" in request.POST:
