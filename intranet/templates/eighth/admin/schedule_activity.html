@@ -8,7 +8,8 @@
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript">
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json|escapejs }}"));
-        window.all_rooms = _.values($.parseJSON("{{ rooms_json|escapejs }}"));
+        window.all_rooms_lookup = $.parseJSON("{{ rooms_json|escapejs }}");
+        window.all_rooms = _.values(all_rooms_lookup);
     </script>
 
     <script type="text/javascript">
@@ -42,6 +43,22 @@
             $(cb).click(function() {
                 toggleRow($(this).parent().parent());
             });
+        });
+
+        $("select.remote-rooms").change(function(e) {
+            var $select = $(e.target);
+
+            var capacitySum = 0;
+            $select.val().forEach(function(roomID) {
+                var c = all_rooms_lookup[roomID].capacity;
+                if (c == -1) c = Infinity;
+                capacitySum += c;
+            });
+
+            if (capacitySum == Infinity) capacitySum = -1;
+            var $capacityInput = $("input.capacity", $select.parent().parent());
+            var defaultCapacity = $capacityInput.data("default-capacity");
+            $capacityInput.attr("placeholder", capacitySum == 0 ? defaultCapacity : capacitySum);
         });
     });
 
@@ -139,7 +156,9 @@
                                         {% endfor %}
                                     </select>
                                 {% elif field.name == "capacity" %}
-                                    {{ all_signups|lookup:form.block.value }} / {% render_field field placeholder=default_capacities|lookup:form.block.value class='capacity' %}
+                                    {% with bid=form.block.value %}
+                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
+                                    {% endwith %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
