@@ -68,6 +68,8 @@
                     <th>Student ID</th>
                     <th>Absences</th>
                     <th>Grade</th>
+                    <th>TJ Email</th>
+                    <th>Other Email</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,6 +88,15 @@
                         </td>
                         <td>
                             {{ delinquent.user.grade.number }}
+                        </td>
+                        <td>
+                            <a href="mailto:{{ delinquent.user.username }}@tjhsst.edu">
+                                {{ delinquent.user.username }}@tjhsst.edu
+                            </a>
+                        <td>
+                            <a href="mailto:{{ delinquent.user.emails.0 }}">
+                                {{ delinquent.user.emails.0 }}
+                            </a>
                         </td>
                     </tr>
                 {% empty %}
