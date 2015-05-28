@@ -71,7 +71,10 @@
                 <div class="user-info-left">
 
                     <div class="user-title">
-                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">{{ profile_user.full_name }}</h2>
+                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                            {{ profile_user.full_name }}
+                            {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+                        </h2>
                         <h3>
                         {% if profile_user.is_student %}
                             {% if profile_user.graduation_year %}
