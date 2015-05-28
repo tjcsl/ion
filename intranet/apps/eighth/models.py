@@ -58,7 +58,7 @@ class EighthSponsor(AbstractBaseEighthModel):
         ordering = ("last_name", "first_name",)
 
     def __unicode__(self):
-        return self.first_name + " " + self.last_name
+        return self.last_name + ", " + self.first_name
 
     @property
     def name(self):
