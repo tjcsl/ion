@@ -772,11 +772,23 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
+
+        if ldap_perm_name == "specialPerm_studentID":
+            try:
+                # threadlocals is a module, not an actual thread locals object
+                requesting_user = threadlocals.request().user
+                return (requesting_user.is_teacher or
+                        requesting_user.is_simple_user)
+            except (AttributeError, KeyError):
+                return False
+            return False
+
         perms = self.permissions
 
         if self.is_http_request_sender():
             return True
         else:
+
             public = True
             if ldap_perm_name in perms["parent"]:
                 public = perms["parent"][ldap_perm_name]
@@ -821,7 +833,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             },
             "student_id": {
                 "ldap_name": "tjhsstStudentId",
-                "perm": None,
+                "perm": "specialPerm_studentID",
                 "is_list": False
             },
             "common_name": {
