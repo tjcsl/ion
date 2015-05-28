@@ -14,22 +14,24 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('.preferred-user-picture').click(function() {
-            $('.user-pictures').slideToggle();
-        });
-        $('.user-pictures').click(function() {
-            $('.user-pictures').slideToggle();
-        });
-    });
-</script>
+    {% if profile_user.is_student %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.preferred-user-picture').click(function() {
+                    $('.user-pictures').slideToggle();
+                });
+                $('.user-pictures').click(function() {
+                    $('.user-pictures').slideToggle();
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
         <div class="user-pictures">
-        {% if profile_user.user_type == "tjhsstStudent" %}
+        {% if profile_user.is_student %}
             <table>
                 <tr>
                     <td>
@@ -54,11 +56,13 @@
             No other pictures are available.
         {% endif %}
         </div>
-        <div class="preferred-user-picture">
+        <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
             <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172" height="215" />
-            <span>
-                View user pictures
-            </span>
+            {% if profile_user.is_student %}
+                <span>
+                    View all pictures
+                </span>
+            {% endif %}
         </div>
 
 
