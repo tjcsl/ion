@@ -15,7 +15,7 @@ from ....users.models import User
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm
-from ...models import EighthScheduledActivity, EighthSignup
+from ...models import EighthScheduledActivity, EighthSignup, EighthBlock
 
 logger = logging.getLogger(__name__)
 
@@ -313,7 +313,7 @@ def eighth_admin_distribute_action(request):
                                                           activity__id=act)
                 schacts.append(sch)
             except EighthScheduledActivity.DoesNotExist:
-                messages.error(request, "An eighth scheduled activity for {} on {} did not exist.".format(act, block))
+                messages.error(request, "An eighth scheduled activity for {} on {} did not exist.".format(act, EighthBlock.objects.get(id=blockid)))
 
         users = []
         if "group" in request.GET:
@@ -324,9 +324,8 @@ def eighth_admin_distribute_action(request):
 
             students = User.objects.filter(username__startswith="2")
             for student in students:
-                try:
-                    su = EighthSignup.objects.get(user=student, scheduled_activity__block__id=blockid)
-                except EighthSignup.DoesNotExist:
+                su = EighthSignup.objects.filter(user=student, scheduled_activity__block__id=blockid)
+                if len(su) == 0:
                     unsigned.append(student)
 
             users = unsigned
