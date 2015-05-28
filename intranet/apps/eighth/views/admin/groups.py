@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render, render_to_response
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
+from ....users.models import User
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm
@@ -242,31 +243,16 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         logger.debug(block)
         logger.debug(activities)
 
-        schacts = []
-        for act in activities:
-            try:
-                sch = EighthScheduledActivity.objects.get(block=block,
-                                                          activity=act)
-                schacts.append(sch)
-            except EighthScheduledActivity.DoesNotExist:
-                messages.error(self.request, "An eighth scheduled activity for {} on {} did not exist.".format(act, block))
-            
 
-        try:
-            group = Group.objects.get(id=kwargs["group_id"])
-        except Group.DoesNotExist:
-            raise http.Http404
+        gid = kwargs["group_id"]
 
-        users = group.user_set.all()
+        args = "block={}".format(block.id)
+        for a in activities:
+            args += "&activity={}".format(a.id)
 
-        context = super(EighthAdminDistributeGroupWizard,
-                        self).get_context_data(form=form_list[1], **kwargs)
+        args += "&group={}".format(gid)
 
-        context["schacts"] = schacts
-        context["users"] = users
-        context["show_selection"] = True
-
-        return render(self.request, self.TEMPLATES["choose"], context)
+        return redirect("/eighth/admin/groups/distribute_action?{}".format(args))
 
 eighth_admin_distribute_group = eighth_admin_required(
     EighthAdminDistributeGroupWizard.as_view(
@@ -276,7 +262,71 @@ eighth_admin_distribute_group = eighth_admin_required(
 
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
-    raise http.Http404
+    if "users" in request.POST:
+        logger.debug(request.POST)
+        activity_user_map = {}
+        for item in request.POST:
+            if item[:6] == "schact":
+                try:
+                    sid = int(item[6:])
+                    schact = EighthScheduledActivity.objects.get(id=sid)
+                except EighthScheduledActivity.DoesNotExist:
+                    messages.error(request, "ScheduledActivity does not exist with id {}".format(sid))
+
+                userids = request.POST.getlist(item)
+                activity_user_map[schact] = userids
+
+        changes = 0
+        logger.debug(activity_user_map)
+        for schact, userids in activity_user_map.items():
+            EighthSignup.objects.filter(
+                user__id__in=userids,
+                scheduled_activity__block=schact.block
+            ).delete()
+            for uid in userids:
+                changes += 1
+                EighthSignup.objects.create(
+                    user=User.objects.get(id=int(uid)),
+                    scheduled_activity=schact
+                )
+
+        messages.success(request, "Successfully signed up users for {} activities.".format(changes))
+
+        return redirect("eighth_admin_dashboard")
+    elif "activity" in request.GET and "block" in request.GET:
+        blockid = request.GET.get("block")
+        activityids = request.GET.getlist("activity")
+
+        schacts = []
+        for act in activityids:
+            try:
+                sch = EighthScheduledActivity.objects.get(block__id=blockid,
+                                                          activity__id=act)
+                schacts.append(sch)
+            except EighthScheduledActivity.DoesNotExist:
+                messages.error(request, "An eighth scheduled activity for {} on {} did not exist.".format(act, block))
+
+        users = []
+        if "group" in request.GET:
+            group = Group.objects.get(id=request.GET.get("group"))
+            users = group.user_set.all()
+        elif "unsigned" in request.GET:
+            pass
+
+
+
+        context = {
+            "schacts": schacts,
+            "users": users,
+            "show_selection": True
+        }
+
+        return render(request, "eighth/admin/distribute_group.html", context)
+    else:
+        return redirect("eighth_admin_dashboard")
+            
+
+
 
 
 

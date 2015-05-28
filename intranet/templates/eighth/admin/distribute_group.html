@@ -7,9 +7,10 @@
 {% endblock %}
 
 {% block admin_main %}
-    
+    <h2>User Signup</h2>
     {% if show_selection %}
     <form action="{% url 'eighth_admin_distribute_action' %}" method="post" class="schedule-activity-grid">
+        <input type="hidden" name="users" value="true" />
         {% csrf_token %}
         <table class="schedule-activity-grid">
             <thead>
@@ -29,13 +30,15 @@
                 <td>{{ user }}</td>
                 {% for sch in schacts %}
                 <td>
-                    <input type="checkbox" name="{{ sch.activity.id }}" value="{{ user.id }}" />
+                    <input type="checkbox" name="schact{{ sch.id }}" value="{{ user.id }}" />
                 </td>
                 {% endfor %}
             </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <input type="submit" value="Finish" />
     {% else %}
     <form method="post">{% csrf_token %}
         {{ wizard.management_form }}
