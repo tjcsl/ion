@@ -46,6 +46,13 @@ class QuickActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = ["name"]
 
+class QuickActivityMultiSelectForm(forms.Form):
+    activities = forms.ModelMultipleChoiceField(queryset=None)
+
+    def __init__(self, label="Activities", block=None, *args, **kwargs):
+        super(QuickActivityMultiSelectForm, self).__init__(*args, **kwargs)
+        self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
+
 
 class ActivityForm(forms.ModelForm):
 
