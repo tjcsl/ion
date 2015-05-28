@@ -83,9 +83,7 @@ def get_search_results(q):
 @login_required
 def search_view(request):
     q = request.GET.get("q", "").strip()
-    is_admin = (not request.user.is_teacher and
-                not request.user.is_student
-                and request.user.is_eighth_admin)
+    is_admin = (not request.user.is_student and request.user.is_eighth_admin)
 
     if q:
         if q.isdigit() and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
