@@ -266,7 +266,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         context["users"] = users
         context["show_selection"] = True
 
-        return render_to_response(self.TEMPLATES["choose"], context)
+        return render(self.request, self.TEMPLATES["choose"], context)
 
 eighth_admin_distribute_group = eighth_admin_required(
     EighthAdminDistributeGroupWizard.as_view(
