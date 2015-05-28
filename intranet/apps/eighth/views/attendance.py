@@ -163,6 +163,7 @@ def take_attendance_view(request, scheduled_activity_id):
             return render(request, "error/403.html", {
                 "reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."
             }, status=403)
+
         present_user_ids = list(request.POST.keys())
 
         csrf = "csrfmiddlewaretoken"
@@ -248,6 +249,18 @@ def accept_pass_view(request, signup_id):
     except EighthSignup.DoesNotExist:
         raise http.Http404
 
+    sponsor = request.user.get_eighth_sponsor()
+    can_accept = (
+        signup.scheduled_activity.block.locked and
+        (sponsor and (sponsor in signup.scheduled_activity.get_true_sponsors()) or
+            request.user.is_eighth_admin)
+    )
+
+    if not can_accept:
+        return render(request, "error/403.html", {
+            "reason": "You do not have permission to take accept this pass."
+        }, status=403)
+
     signup.was_absent = False
     signup.pass_accepted = True
     signup.save()
@@ -272,6 +285,18 @@ def accept_all_passes_view(request, scheduled_activity_id):
         )
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
+
+    sponsor = request.user.get_eighth_sponsor()
+    can_accept = (
+        scheduled_activity.block.locked and
+        (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or
+            request.user.is_eighth_admin)
+    )
+
+    if not can_accept:
+        return render(request, "error/403.html", {
+            "reason": "You do not have permission to take accept these passes."
+        }, status=403)
 
     EighthSignup.objects.filter(
         after_deadline=True,

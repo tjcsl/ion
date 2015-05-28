@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.locked %}Take Attendance{% else %}View Roster{% endif %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
 {% endblock %}
 
 {% block css %}
@@ -25,7 +25,7 @@
     <div class="primary-content">
         <div class="eighth-header">
                 <h2>
-                    {% if scheduled_activity.locked %}
+                    {% if scheduled_activity.block.locked %}
                         Take Attendance
                     {% else %}
                         View Roster
@@ -93,12 +93,12 @@
                     <div class="attendance-taken">
                         <i class="fa fa-check"></i> Attendance Taken
                     </div>
-                {% elif scheduled_activity.locked %}
+                {% elif scheduled_activity.block.locked %}
                     <div class="no-attendance">
                         <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
                     </div>
                 {% endif %}
-                {% if passes %}
+                {% if passes and scheduled_activity.block.locked %}
                     <h3>Passes</h3>
                     <table>
                         <thead>
@@ -126,6 +126,9 @@
                         {% csrf_token %}
                         <input type="submit" class="button accept-all-passes" value="Accept All">
                     </form>
+                    <br />
+                    <br />
+                    <br />
                 {% endif %}
 
                 <form class="attendance-form" action="" method="post">
@@ -133,7 +136,7 @@
                     <table class="take-attendance-roster">
                         <thead>
                             <tr>
-                                {% if scheduled_activity.locked %}
+                                {% if scheduled_activity.block.locked %}
                                     <th><input type="checkbox" class="">Present</th>
                                 {% endif %}
                                 <th>Student</th>
@@ -144,7 +147,7 @@
                         <tbody>
                             {% for member in members %}
                                 <tr>
-                                    {% if scheduled_activity.locked %}
+                                    {% if scheduled_activity.block.locked %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
                                     {% endif %}
                                     <td>{{ member.name }}</td>
@@ -160,7 +163,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    {% if not scheduled_activity.locked %}
+                    {% if not scheduled_activity.block.locked %}
                         <br />
                         <br />
                         <b>You may not take attendance for this activity - signups are not yet locked.</b>

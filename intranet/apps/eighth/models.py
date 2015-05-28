@@ -591,6 +591,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     existing_signup.scheduled_activity = self
                     existing_signup.after_deadline = after_deadline
                     existing_signup.was_absent = False
+                    existing_signup.absence_acknowledged = False
                     existing_signup.pass_accepted = False
                     existing_signup.previous_activity_name = previous_activity_name
                     existing_signup.previous_activity_sponsors = previous_activity_sponsors
