@@ -10,13 +10,15 @@
     
     {% if show_selection %}
     <form action="{% url 'eighth_admin_distribute_action' %}" method="post">{% csrf_token %}
-        <p>Signing up students on {{ block }}</p>
         <table class="schedule-activity-grid">
             <thead>
                 <tr>
                     <th>User</th>
-                    {% for activity in activities %}
-                    <th>{{ activity }}</th>
+                    {% for sch in schacts %}
+                    <th>
+                        {{ sch.activity }}<br />
+                        on {{ sch.block }}
+                    </th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -24,6 +26,11 @@
             {% for user in users %}
             <tr>
                 <td>{{ user }}</td>
+                {% for sch in schacts %}
+                <td>
+                    <input type="checkbox" name="{{ sch.activity.id }}" value="{{ user.id }}" />
+                </td>
+                {% endfor %}
             </tr>
             {% endfor %}
             </tbody>

@@ -241,7 +241,16 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         
         logger.debug(block)
         logger.debug(activities)
-        
+
+        schacts = []
+        for act in activities:
+            try:
+                sch = EighthScheduledActivity.objects.get(block=block,
+                                                          activity=act)
+                schacts.append(sch)
+            except EighthScheduledActivity.DoesNotExist:
+                messages.error(self.request, "An eighth scheduled activity for {} on {} did not exist.".format(act, block))
+            
 
         try:
             group = Group.objects.get(id=kwargs["group_id"])
@@ -253,8 +262,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         context = super(EighthAdminDistributeGroupWizard,
                         self).get_context_data(form=form_list[1], **kwargs)
 
-        context["activities"] = activities
-        context["block"] = block
+        context["schacts"] = schacts
         context["users"] = users
         context["show_selection"] = True
 
