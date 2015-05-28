@@ -8,7 +8,8 @@
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript">
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json|escapejs }}"));
-        window.all_rooms = _.values($.parseJSON("{{ rooms_json|escapejs }}"));
+        window.all_rooms_lookup = $.parseJSON("{{ rooms_json|escapejs }}");
+        window.all_rooms = _.values(all_rooms_lookup);
     </script>
 
     <script type="text/javascript">
@@ -43,6 +44,22 @@
                 toggleRow($(this).parent().parent());
             });
         });
+
+        $("select.remote-rooms").change(function(e) {
+            var $select = $(e.target);
+
+            var capacitySum = 0;
+            $select.val().forEach(function(roomID) {
+                var c = all_rooms_lookup[roomID].capacity;
+                if (c == -1) c = Infinity;
+                capacitySum += c;
+            });
+
+            if (capacitySum == Infinity) capacitySum = -1;
+            var $capacityInput = $("input.capacity", $select.parent().parent());
+            var defaultCapacity = $capacityInput.data("default-capacity");
+            $capacityInput.attr("placeholder", capacitySum == 0 ? defaultCapacity : capacitySum);
+        });
     });
 
     </script>
@@ -58,66 +75,65 @@
 {% block admin_main %}
 
 <form method="post" action="" class="schedule-form">
+    <div class="schedule-activity-head">
+        <h4>Select an Activity:</h4>
 
-<div class="schedule-activity-head">
-    <h4>Select an Activity:</h4>
+        <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+            {% for a in activities %}
+                <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+            {% endfor %}
+        </select>
 
-    <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
-        {% for a in activities %}
-            <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
-        {% endfor %}
-    </select>
+        {% if activity %}
+            <div class="schedule-activity-buttons">
+                <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+                <input type="submit" value="Save">
+            </div>
+        {% endif %}
 
+    </div>
     {% if activity %}
-        <div class="schedule-activity-buttons">
-            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-            <input type="submit" value="Save">
-        </div>
-    {% endif %}
+        {% csrf_token %}
 
-</div>
-{% if activity %}
-    {% csrf_token %}
+        {{ formset.management_form }}
 
-    {{ formset.management_form }}
+        <table class="schedule-activity-grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>
+                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                        <div class="select-blocks-popover closed">
+                            <a href="" onclick="return false" class="block-type">Mon B</a>
+                            <a href="" onclick="return false" class="block-type">Wed A</a>
+                            <a href="" onclick="return false" class="block-type">Wed B</a>
+                            <a href="" onclick="return false" class="block-type">Fri A</a>
+                            <a href="" onclick="return false" class="block-type">Fri B</a>
+                        </div>
+                    </th>
+                    <th>Rooms</th>
+                    <th>Signups/Capacity</th>
+                    <th>Sponsors</th>
+                    <th>Comments</th>
+                    <th>Admin Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block, form in rows %}
+                    {% if form.errors %}
+                        <tr>
+                            <td></td>
+                            <td colspan=6>{{ form.non_field_errors }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr class="form-row{% if form.scheduled.value %} scheduled{% endif %}">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
 
-    <table class="schedule-activity-grid">
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th>
-                    <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
-                    <div class="select-blocks-popover closed">
-                        <a href="" onclick="return false" class="block-type">Mon B</a>
-                        <a href="" onclick="return false" class="block-type">Wed A</a>
-                        <a href="" onclick="return false" class="block-type">Wed B</a>
-                        <a href="" onclick="return false" class="block-type">Fri A</a>
-                        <a href="" onclick="return false" class="block-type">Fri B</a>
-                    </div>
-                </th>
-                <th>Rooms</th>
-                <th>Signups/Capacity</th>
-                <th>Sponsors</th>
-                <th>Comments</th>
-                <th>Admin Comments</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for block, form in rows %}
-                {% if form.errors %}
-                    <tr>
-                        <td></td>
-                        <td colspan=6>{{ form.non_field_errors }}</td>
-                    </tr>
-                {% endif %}
-                <tr class="form-row{% if form.scheduled.value %} scheduled{% endif %}">
-                    {% for hidden in form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-
-                    {% for field in form.visible_fields %}
-                        {% if field.name != "cancelled" %}
-                            <td>
+                        {% for field in form.visible_fields %}
+                            {% if field.name != "cancelled" %}
+                                <td>
                                 {{ field.errors }}
                                 {% if field.name == "rooms" %}
                                     <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{{ default_rooms|join:", " }}">
@@ -140,52 +156,53 @@
                                         {% endfor %}
                                     </select>
                                 {% elif field.name == "capacity" %}
-                                    {{ all_signups|lookup:form.block.value }} / {% render_field field placeholder=default_capacity class='capacity' %}
-
+                                    {% with bid=form.block.value %}
+                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
+                                    {% endwith %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
-                            </td>
-                        {% endif %}
+                                </td>
+                            {% endif %}
 
-                        {% if field.name == "scheduled" %}
-                            <td class="block-name">
-                                <a href="{% url 'eighth_admin_edit_block' block.id %}" class="ui-link">
-                                    {{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}
-                                </a>
-                                {% if form.cancelled.value %}
-                                    <br>
-                                    <b class="cancelled">Cancelled</b>
-                                {% endif %}
+                            {% if field.name == "scheduled" %}
+                                <td class="block-name">
+                                    <a href="{% url 'eighth_admin_edit_block' block.id %}" class="ui-link">
+                                        {{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}
+                                    </a>
+                                    {% if form.cancelled.value %}
+                                        <br>
+                                        <b class="cancelled">Cancelled</b>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.cancelled.value %}
+                            <td>
+                                <button>Unschedule</button>
                             </td>
                         {% endif %}
-                    {% endfor %}
-                    {% if form.cancelled.value %}
-                        <td>
-                            <button>Unschedule</button>
-                        </td>
+                    </tr>
+
+                    {% if not forloop.last %}
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="divider">
+                            <td colspan=7></td>
+                        </tr>
+                        <tr class="spacer">
+                            <td colspan=7></td>
+                        </tr>
                     {% endif %}
-                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-                {% if not forloop.last %}
-                    <tr class="spacer">
-                        <td colspan=7></td>
-                    </tr>
-                    <tr class="divider">
-                        <td colspan=7></td>
-                    </tr>
-                    <tr class="spacer">
-                        <td colspan=7></td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div>
-        <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-        <input type="submit" value="Save">
-    </div>
-{% endif %}
+        <div class="footer-buttons">
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+    {% endif %}
 </form>
 {% endblock %}

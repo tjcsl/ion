@@ -7,7 +7,6 @@ import logging
 import ldap
 import os
 from django.db import models
-from django import template
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import (
@@ -17,7 +16,6 @@ from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
 
 logger = logging.getLogger(__name__)
-register = template.Library()
 
 
 class UserManager(UserManager):
@@ -174,12 +172,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     def dn_from_username(username):
-        logger.debug("Fetching DN of User with username {}.".format(username))
+        # logger.debug("Fetching DN of User with username {}.".format(username))
         return "iodineUid=" + ldap.dn.escape_dn_chars(username) + "," + settings.USER_DN
 
     @staticmethod
     def username_from_dn(dn):
-        logger.debug("Fetching username of User with ID {}.".format(id))
+        # logger.debug("Fetching username of User with ID {}.".format(id))
         return ldap.dn.str2dn(dn)[0][0][1]
 
     @staticmethod

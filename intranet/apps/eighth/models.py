@@ -43,6 +43,7 @@ class EighthSponsor(AbstractBaseEighthModel):
             Whether to always show the sponsor's full name
             (e.x. because there are two teachers named Lewis)
     """
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, null=True, blank=True)
@@ -82,6 +83,17 @@ class EighthRoom(AbstractBaseEighthModel):
     capacity = models.SmallIntegerField(default=28)
 
     unique_together = (("name", "capacity"),)
+
+    @classmethod
+    def total_capacity_of_rooms(cls, rooms):
+        capacity = 0
+        for r in rooms:
+            c = r.capacity
+            if c == -1:
+                return -1
+            else:
+                capacity += c
+        return capacity
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
@@ -143,22 +155,16 @@ class EighthActivity(AbstractBaseEighthModel):
 
     deleted = models.BooleanField(blank=True, default=False)
 
-    @property
     def capacity(self):
-        all_rooms = self.rooms.all()
-        if len(all_rooms) == 0:
-            capacity = 0 # If there are no rooms, there is a capacity of 0
-        else:
-            capacity = 0
-            for room in all_rooms:
-                capacity += room.capacity
-        return capacity
+        # Note that this is the default capacity if the
+        # rooms/capacityare not overridden for a particular block.
 
-    @property
+        rooms = self.rooms.all()
+        return EighthRoom.total_capacity_of_rooms(rooms)
+
     def name_with_flags(self):
         return self._name_with_flags(True)
 
-    @property
     def name_with_flags_no_restricted(self):
         return self._name_with_flags(False)
 
@@ -207,7 +213,7 @@ class EighthActivity(AbstractBaseEighthModel):
         verbose_name_plural = "eighth activities"
 
     def __unicode__(self):
-        return self.name_with_flags
+        return self.name_with_flags()
 
 
 class EighthBlockManager(models.Manager):
@@ -426,6 +432,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_true_rooms(self):
         """Get the rooms for the scheduled activity, taking into account
         activity defaults and overrides.
+
         """
 
         rooms = self.rooms.all()
@@ -437,12 +444,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_true_capacity(self):
         """Get the capacity for the scheduled activity, taking into
         account activity defaults and overrides.
+
         """
 
-        if self.capacity is not None:
-            return self.capacity
+        c = self.capacity
+        if c is not None:
+            return c
         else:
-            return self.activity.capacity
+            rooms = self.get_true_rooms()
+            return EighthRoom.total_capacity_of_rooms(rooms)
 
     def is_full(self):
         capacity = self.get_true_capacity()
@@ -593,8 +603,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
 
             all_sched_act = (EighthScheduledActivity.objects
-                                                        .filter(block__date=self.block.date,
-                                                                activity=self.activity))
+                                                    .filter(block__date=self.block.date,
+                                                            activity=self.activity))
 
             EighthSignup.objects.filter(
                 user=user,

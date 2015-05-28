@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import os
@@ -303,7 +303,7 @@ def _get_current_commit_long_hash():
 def _get_current_commit_info():
     cmd = "git show -s --format=medium HEAD"
     lines = subprocess.check_output(cmd, shell=True).decode().splitlines()
-    return "\n".join([lines[0][:14].title(), lines[2]]).replace("   ", " ")
+    return "\n".join([lines[0][:14].capitalize(), lines[2][8:]]).replace("   ", " ")
 
 
 def _get_current_commit_date():

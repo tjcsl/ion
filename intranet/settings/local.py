@@ -72,29 +72,29 @@ SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
 if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+    # Boolean value defines whether enabled by default
+    _panels = [
+        ("debug_toolbar.panels.versions.VersionsPanel", False),
+        ("debug_toolbar.panels.timer.TimerPanel", True),
+        # ("debug_toolbar.panels.profiling.ProfilingPanel", False),
+        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
+        ("debug_toolbar.panels.settings.SettingsPanel", False),
+        ("debug_toolbar.panels.headers.HeadersPanel", False),
+        ("debug_toolbar.panels.request.RequestPanel", False),
+        ("debug_toolbar.panels.sql.SQLPanel", True),
+        ("debug_toolbar.panels.staticfiles.StaticFilesPanel", False),
+        ("debug_toolbar.panels.templates.TemplatesPanel", False),
+        ("debug_toolbar.panels.signals.SignalsPanel", False),
+        ("debug_toolbar.panels.logging.LoggingPanel", True),
+        ("debug_toolbar.panels.redirects.RedirectsPanel", False),
+    ]
+
     DEBUG_TOOLBAR_CONFIG = {
         "INTERCEPT_REDIRECTS": False,
-        "DISABLE_PANELS": [
-            "debug_toolbar_line_profiler.panel.ProfilingPanel",
-            "debug_toolbar.panels.redirects.RedirectsPanel"
-        ]
+        "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]
     }
 
-    DEBUG_TOOLBAR_PANELS = [
-        "debug_toolbar.panels.versions.VersionsPanel",
-        "debug_toolbar.panels.timer.TimerPanel",
-        # "debug_toolbar.panels.profiling.ProfilingPanel",
-        "debug_toolbar_line_profiler.panel.ProfilingPanel",
-        "debug_toolbar.panels.settings.SettingsPanel",
-        "debug_toolbar.panels.headers.HeadersPanel",
-        "debug_toolbar.panels.request.RequestPanel",
-        "debug_toolbar.panels.sql.SQLPanel",
-        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-        "debug_toolbar.panels.templates.TemplatesPanel",
-        "debug_toolbar.panels.signals.SignalsPanel",
-        "debug_toolbar.panels.logging.LoggingPanel",
-        "debug_toolbar.panels.redirects.RedirectsPanel",
-    ]
+    DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
     MIDDLEWARE_CLASSES = (
         "debug_toolbar.middleware.DebugToolbarMiddleware",

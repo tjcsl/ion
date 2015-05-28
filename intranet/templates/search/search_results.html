@@ -1,5 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load grades %}
+{% load users %}
 
 {% block title %}
     {{ block.super}} - Search{% if search_query %} - {{ search_query }}{% endif %}
@@ -23,15 +25,35 @@
     <br>
     {% if search_results %}
         {{ search_results|length }} result{{ search_results|pluralize }}
-        <ul>
+        <table class="list-table">
             {% for user in search_results %}
-                <li>
-                    <a href="{% url 'user_profile' user.ion_id %}">
-                        {% if user.full_name %}{{ user.full_name }}{% else %}{{ user.firstname }} {{ user.lastname }}{% endif %} ({% if user.gradyear %}{{ user.gradyear }}{% else %}Staff{% endif %})
-                    </a>
-                </li>
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'user_profile' user.ion_id %}">
+                            {% if is_admin %}
+                                {{ user.lastname }}, {{ user.firstname }}
+                            {% else %}
+                                {% if user.full_name %}
+                                    {{ user.full_name }}
+                                {% else %}
+                                    {{ user.firstname }} {{ user.lastname }}
+                                {% endif %}
+                            {% endif %}
+                            {% if user.nickname %}({{ user.nickname }}){% endif %}
+                        </a>
+                    </td>
+
+                    {% if is_admin %}
+                        <td>
+                            {{ user.username|user_attr:"student_id" }}
+                        </td>
+                    {% endif %}
+                    <td>
+                        {% if user.gradyear %}Grade {{ user.gradyear|to_grade_number }}{% else %}Staff{% endif %}
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
     {% elif search_query %}
         <b>No results.</b>
     {% endif %}

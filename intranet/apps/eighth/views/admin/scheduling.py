@@ -108,6 +108,7 @@ def schedule_activity_view(request):
         all_rooms[rid]["description"] = room["name"] + " (" + str(room["capacity"]) + ")"
 
     all_signups = {}
+    all_default_capacities = {}
 
     context = {
         "activities": activities,
@@ -142,7 +143,7 @@ def schedule_activity_view(request):
                 sched_act = all_sched_acts[block.id]
 
                 all_signups[block.id] = sched_act.members.count()
-
+                all_default_capacities[block.id] = sched_act.get_true_capacity()
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),
                     "capacity": sched_act.capacity,
@@ -154,6 +155,7 @@ def schedule_activity_view(request):
                 })
             except KeyError:
                 all_signups[block.id] = 0
+                all_default_capacities[block.id] = activity.capacity()
                 pass
             initial_formset_data.append(initial_form_data)
 
@@ -165,12 +167,7 @@ def schedule_activity_view(request):
 
         context["default_rooms"] = activity.rooms.all()
         context["default_sponsors"] = activity.sponsors.all()
-
-        capacity = 0
-        for room in activity.rooms.all():
-            capacity += room.capacity
-
-        context["default_capacity"] = capacity #activity.capacity
+        context["default_capacities"] = all_default_capacities
 
     context["admin_page_title"] = "Schedule an Activity"
     return render(request, "eighth/admin/schedule_activity.html", context)
