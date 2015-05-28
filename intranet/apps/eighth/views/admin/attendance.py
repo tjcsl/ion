@@ -168,7 +168,7 @@ def after_deadline_signup_view(request):
                            .filter(after_deadline=True,
                                    time__gte=start_date,
                                    time__lte=end_date)
-                           .order_by("time"))
+                           .order_by("-time"))
 
     context = {
         "admin_page_title": "After Deadline Signups",
