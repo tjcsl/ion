@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from django import forms
 from django.db.models import Q
 from ....users.models import User
 from ...models import EighthActivity, EighthScheduledActivity
 
+logger = logging.getLogger(__name__)
 
 class ActivitySelectionForm(forms.Form):
 
@@ -46,12 +48,32 @@ class QuickActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = ["name"]
 
-class QuickActivityMultiSelectForm(forms.Form):
+class ActivityMultiSelectForm(forms.Form):
+    activities = forms.ModelMultipleChoiceField(queryset=None)
+
+    def __init__(self, label="Activities", *args, **kwargs):
+        super(ActivityMultiSelectForm, self).__init__(*args, **kwargs)
+        self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
+
+class ScheduledActivityMultiSelectForm(forms.Form):
     activities = forms.ModelMultipleChoiceField(queryset=None)
 
     def __init__(self, label="Activities", block=None, *args, **kwargs):
-        super(QuickActivityMultiSelectForm, self).__init__(*args, **kwargs)
-        self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
+        super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
+        logger.debug(block)
+        if block is not None:
+            activity_ids = (EighthScheduledActivity.objects
+                                                   .exclude(activity__deleted=True)
+                                                   .exclude(cancelled=True)
+                                                   .filter(block=block)
+                                                   .values_list("activity__id", flat=True))
+            queryset = EighthActivity.objects.filter(id__in=activity_ids)
+        else:
+            queryset = EighthActivity.undeleted_objects.all()
+
+        logger.debug(queryset)
+        self.fields["activities"].queryset = queryset
+
 
 
 class ActivityForm(forms.ModelForm):

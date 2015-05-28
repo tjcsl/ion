@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render, render_to_response
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin.activities import ActivitySelectionForm, QuickActivityMultiSelectForm
+from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm
 from ...models import EighthScheduledActivity, EighthSignup
@@ -202,7 +202,7 @@ eighth_admin_signup_group = eighth_admin_required(
 class EighthAdminDistributeGroupWizard(SessionWizardView):
     FORMS = [
         ("block", BlockSelectionForm),
-        ("activity", QuickActivityMultiSelectForm),
+        ("activity", ScheduledActivityMultiSelectForm),
     ]
 
     TEMPLATES = {
@@ -277,3 +277,6 @@ eighth_admin_distribute_group = eighth_admin_required(
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
     raise http.Http404
+
+
+
