@@ -23,7 +23,7 @@
                 {% endif %}
         </div>
 
-        Absence information for {{ user.display_name }} ({{ user.graduation_year }}): {{ absences|length }} Absence{{ absences|pluralize }}
+        Absence information for <a href="{% url 'user_profile' user.id %}">{{ user.display_name }} (Grade {{ user.grade.number }})</a>: <b>{{ absences|length }} Absence{{ absences|pluralize }}</b>
         <br><br>
         {% if request.user.is_student %}
             <p>
@@ -60,7 +60,7 @@
                 </tr>
             {% empty %}
                 <tfoot>
-                    <tr><td colspan="5">You have no absences.</td></tr>
+                    <tr><td colspan="5">{% if request.user == user %}You have no absences.{% else %}No absences.{% endif %}</td></tr>
                 </tfoot>
             {% endfor %}
         </table>

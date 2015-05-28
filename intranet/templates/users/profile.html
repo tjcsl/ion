@@ -253,6 +253,13 @@
 
             <section class="user-info-eighth">
                 <h3>Eighth Period</h3>
+                {% with absence_count=profile_user.absence_count %}
+                    {% if absence_count %}
+                        <b class="absences">{{ absence_count }} Absence{{ absence_count|pluralize }}</b> - <a href="{% url 'eighth_absences' %}?user={{ profile_user.id }}">View</a>
+                    {% else %}
+                        <b>No absences</b>
+                    {% endif %}
+                {% endwith %}
                 <p>Preview of schedule will go here</p>
                 <br>
                 {% if request.user.is_eighth_admin and profile_user.is_student %}

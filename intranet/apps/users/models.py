@@ -990,6 +990,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return sp
 
+    def absence_count(self):
+        from ..eighth.models import EighthSignup
+
+        return EighthSignup.objects.filter(user=self, was_absent=True).count()
+
     def __unicode__(self):
         return self.username or self.ion_username or self.id
 
