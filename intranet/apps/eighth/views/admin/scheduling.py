@@ -204,6 +204,11 @@ def show_activity_schedule_view(request):
     context["admin_page_title"] = "View Activity Schedule"
     return render(request, "eighth/admin/view_activity_schedule.html", context)
 
+@eighth_admin_required
+def distribute_students_view(request):
+    context = {}
+    return render(request, "eighth/admin/distribute_students.html", context)
+
 
 class EighthAdminTransferStudentsWizard(SessionWizardView):
     FORMS = [

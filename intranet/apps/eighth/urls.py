@@ -42,6 +42,8 @@ eighth_admin_patterns = [
     url(r"^scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
     url(r"^scheduling/activity_schedule$", scheduling.show_activity_schedule_view, name="eighth_admin_view_activity_schedule"),
     url(r"^scheduling/transfer_students$", scheduling.transfer_students_view, name="eighth_admin_transfer_students"),
+    url(r"^scheduling/distribute_students$", scheduling.distribute_students_view, name="eighth_admin_distribute_students"),
+    
 
     # Attendance
     url(r"^attendance$", attendance.admin_choose_scheduled_activity_view, name="eighth_admin_attendance_choose_scheduled_activity"),
@@ -60,6 +62,8 @@ eighth_admin_patterns = [
     url(r"^groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
     url(r"^groups/delete/(?P<group_id>\d+)$", groups.delete_group_view, name="eighth_admin_delete_group"),
     url(r"^groups/signup/(?P<group_id>\d+)$", groups.eighth_admin_signup_group, name="eighth_admin_signup_group"),
+    url(r"^groups/distribute/(?P<group_id>\d+)$", groups.eighth_admin_distribute_group, name="eighth_admin_distribute_group"),
+    url(r"^groups/distribute_action$", groups.eighth_admin_distribute_action, name="eighth_admin_distribute_action"),
     url(r"^groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
 
 

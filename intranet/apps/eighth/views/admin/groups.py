@@ -3,18 +3,20 @@ from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
 import csv
+import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, render_to_response
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin.activities import ActivitySelectionForm
+from ...forms.admin.activities import ActivitySelectionForm, QuickActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm
 from ...models import EighthScheduledActivity, EighthSignup
 
+logger = logging.getLogger(__name__)
 
 @eighth_admin_required
 def add_group_view(request):
@@ -196,3 +198,74 @@ eighth_admin_signup_group = eighth_admin_required(
         EighthAdminSignUpGroupWizard.FORMS
     )
 )
+
+class EighthAdminDistributeGroupWizard(SessionWizardView):
+    FORMS = [
+        ("block", BlockSelectionForm),
+        ("activity", QuickActivityMultiSelectForm),
+    ]
+
+    TEMPLATES = {
+        "block": "eighth/admin/distribute_group.html",
+        "activity": "eighth/admin/distribute_group.html",
+        "choose": "eighth/admin/distribute_group.html",
+    }
+
+    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
+
+    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step == "activity":
+            block = self.get_cleaned_data_for_step("block")["block"]
+            kwargs.update({"block": block})
+
+        labels = {
+            "block": "Select a block",
+            "activity": "Select multiple activities",
+        }
+
+        kwargs.update({"label": labels[step]})
+
+        return kwargs
+
+    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminDistributeGroupWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({"admin_page_title": "Distribute Group"})
+        return context
+
+    def done(self, form_list, **kwargs):
+        block = form_list[0].cleaned_data["block"]
+        activities = form_list[1].cleaned_data["activities"]
+        
+        logger.debug(block)
+        logger.debug(activities)
+        
+
+        try:
+            group = Group.objects.get(id=kwargs["group_id"])
+        except Group.DoesNotExist:
+            raise http.Http404
+
+        users = group.user_set.all()
+
+        context = super(EighthAdminDistributeGroupWizard,
+                        self).get_context_data(form=form_list[1], **kwargs)
+
+        context["activities"] = activities
+        context["block"] = block
+        context["users"] = users
+        context["show_selection"] = True
+
+        return render_to_response(self.TEMPLATES["choose"], context)
+
+eighth_admin_distribute_group = eighth_admin_required(
+    EighthAdminDistributeGroupWizard.as_view(
+        EighthAdminDistributeGroupWizard.FORMS
+    )
+)
+
+@eighth_admin_required
+def eighth_admin_distribute_action(request):
+    raise http.Http404
