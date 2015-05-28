@@ -210,7 +210,7 @@ def activities_without_attendance_view(request):
 
 
 @eighth_admin_required
-def reject_outstanding_passes_view(request):
+def migrate_outstanding_passes_view(request):
     if request.method == "POST":
         try:
             block_id = request.POST.get("block", None)
@@ -240,18 +240,18 @@ def reject_outstanding_passes_view(request):
             pass_accepted=False
         ).update(scheduled_activity=pass_not_received)
 
-        messages.success(request, "Successfully rejected outstanding passes.")
+        messages.success(request, "Successfully migrated outstanding passes.")
 
         return redirect("eighth_admin_dashboard")
     else:
         blocks = EighthBlock.objects.filter(date__gte=get_start_date(request))
 
         context = {
-            "admin_page_title": "Reject Outstanding Passes",
+            "admin_page_title": "Migrate Outstanding Passes",
             "blocks": blocks
         }
 
-        return render(request, "eighth/admin/reject_outstanding_passes.html", context)
+        return render(request, "eighth/admin/migrate_outstanding_passes.html", context)
 
 
 @eighth_admin_required
