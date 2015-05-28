@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from .models import User, Grade
+from ..eighth.models import EighthBlock, EighthSignup
 from intranet import settings
 
 logger = logging.getLogger(__name__)
@@ -31,7 +32,25 @@ def profile_view(request, user_id=None):
     else:
         profile_user = request.user
 
-    return render(request, "users/profile.html", {"profile_user": profile_user})
+    eighth_schedule = []
+    start_block = EighthBlock.objects.get_first_upcoming_block()
+    blocks = [start_block] + list(start_block.next_blocks(5))
+
+    for block in blocks:
+        sch = {}
+        sch["block"] = block
+        try:
+            sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
+        except EighthSignup.DoesNotExist:
+            sch["signup"] = None
+        eighth_schedule.append(sch)
+
+
+    context = {
+        "profile_user": profile_user,
+        "eighth_schedule": eighth_schedule
+    }
+    return render(request, "users/profile.html", context)
 
 
 @login_required

@@ -258,15 +258,41 @@
             </div>
 
             <section class="user-info-eighth">
+            <form action="{% url 'eighth_signup' %}" method="GET">
+
+                <input type="hidden" name="user" value="{{ profile_user.id }}" />
                 <h3>Eighth Period</h3>
-                {% with absence_count=profile_user.absence_count %}
-                    {% if absence_count %}
-                        <b class="absences">{{ absence_count }} Absence{{ absence_count|pluralize }}</b> - <a href="{% url 'eighth_absences' %}?user={{ profile_user.id }}">View</a>
+                <table>
+                <tr>
+                    <th></th>
+                    <th>Block</th>
+                    <th>Activity</th>
+                    <th></th>
+                </tr>
+                {% for sch in eighth_schedule %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
+                    </td>
+                    <th>
+                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_edit_block' sch.block.id %}">{% endif %}
+                            {{ sch.block }}
+                        {% if request.user.is_eighth_admin %}</a>{% endif %}
+                    </th>
+                    <td>
+                    {% if sch.signup %}
+                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ sch.signup.scheduled_activity.activity.id }}">{% endif %}
+                            {{ sch.signup.scheduled_activity.activity }}
+                        {% if request.user.is_eighth_admin %}</a>{% endif %}
                     {% else %}
-                        <b>No absences</b>
+                        <span class="no-activity-selected">No activity selected</span>
                     {% endif %}
-                {% endwith %}
-                <p>Preview of schedule will go here</p>
+                    </td>
+                </tr>
+                {% endfor %}
+                </table>
+                <input type="submit" value="Modify Schedule" />
+            </form>
                 <br>
                 {% if request.user.is_eighth_admin and profile_user.is_student %}
                     <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>

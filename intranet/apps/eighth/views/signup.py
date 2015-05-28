@@ -19,6 +19,13 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def eighth_signup_view(request, block_id=None):
+
+    if block_id is None and "block" in request.GET:
+        block_id = request.GET.get("block")
+        if "user" in request.GET:
+            args = "user={}".format(request.GET.get("user"))
+        return redirect("/eighth/signup/{}?{}".format(block_id, args))
+
     if request.method == "POST":
         for field in ("uid", "bid", "aid"):
             if not (field in request.POST and request.POST[field].isdigit()):

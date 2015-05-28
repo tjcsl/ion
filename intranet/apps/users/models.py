@@ -281,6 +281,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             # self.username = ldap.dn.str2dn(dn)[0][0][1]
 
     @property
+    def tj_email(self):
+        return "{}@tjhsst.edu".format(self.username)
+    
+
+    @property
     def grade(self):
         """Returns the grade of a user.
 
