@@ -3,12 +3,7 @@
 {% block admin_main %}
 
 <h3>Add Block</h3>
-<form id="add-block-form" action="{% url 'eighth_admin_add_multiple_blocks' %}" method="post" autocomplete="off">
-    
-
-                    {% for day in schedule %}
-                    {{ obj.date }}
-                    {% endfor %}
+<form id="add-block-form" action="{% url 'eighth_admin_add_multiple_blocks' %}" method="post" autocomplete="off" onsubmit="return check_submit(this)">
     {% csrf_token %}
     <table>
         <tr>
@@ -16,6 +11,7 @@
             <td><input id="id_date" name="date" type="text" value="{% if date %}{{ date }}{% endif %}" /></td>
         </tr>
         {% if show_letters %}
+        <input type="hidden" name="modify_blocks" value="true" />
         <tr>
             <th><label for="blocks">Block letters:</label></th>
             <td>
@@ -33,17 +29,51 @@
         </tr>
         <tr>
             <td class="right-buttons" colspan=2>
-                <input type="submit" value="Add">
+                <input type="submit" value="Add" />
             </td>
         </tr>
         {% endif %}
     </table>
 
     <script type="text/javascript">
+$(function() {
     $("#id_date").on("change", function(d) {
         console.debug($(this).val());
         location.search = "date=" + $(this).val();
-    })
+    });
+});
+
+{% if show_letters %}
+var original_letters = {
+    {% for letter in letters %}
+    "{{ letter.name }}": {% if letter.exists %}true{% else %}false{% endif%}
+    {% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+var current_letters = {};
+for(i in original_letters) current_letters[i] = original_letters[i];
+$(function() {
+    $("input[name=blocks]").click(function() {
+        console.debug($(this).val(), $(this).prop("checked"));
+        current_letters[$(this).val()] = $(this).prop("checked");
+    });
+});
+check_submit = function() {
+    var txt = "";
+    var date = $("#id_date").val();
+    for(ltr in current_letters) {
+        if(current_letters[ltr] != original_letters[ltr]) {
+            txt += (current_letters[ltr] ? "Add" : "Remove") + " block "+ltr+"\n";
+        }
+    }
+    console.debug(txt);
+    if(txt.length > 0) {
+        return confirm("The following changes are about to be made for "+date+".\n\n"+txt+"\nShould these actions be completed?");
+    }
+    return true;
+}
+{% endif %}
+
     </script>
 </form>
 

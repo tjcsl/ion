@@ -47,7 +47,7 @@ def add_multiple_blocks_view(request):
         logger.debug(fmtdate)
         show_letters = True
 
-        if "blocks" in request.POST:
+        if "modify_blocks" in request.POST:
             letters = request.POST.getlist("blocks")
             current_letters = []
             blocks_day = EighthBlock.objects.filter(date=fmtdate)
