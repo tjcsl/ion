@@ -120,12 +120,12 @@ $(function() {
             success: function(response) {
                 var activity = activityModels.get(aid);
                 if (!activity.attributes.both_blocks) {
-                    $(".current-day .both-blocks .selected-activity").text("");
+                    $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                     $(".current-day .both-blocks").removeClass("both-blocks");
 
                     $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + activity.attributes.name_with_flags_for_user).attr("title", activity.attributes.name_with_flags_for_user);
                 } else {
-                    $(".current-day .selected-activity").text(activity.attributes.name_with_flags_for_user).attr("title", activity.attributes.name_with_flags_for_user);
+                    $(".current-day .selected-activity").text("\n" + activity.attributes.name_with_flags_for_user).attr("title", activity.attributes.name_with_flags_for_user);
                     $(".current-day .block").addClass("both-blocks");
                 }
 
