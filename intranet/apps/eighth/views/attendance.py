@@ -28,6 +28,7 @@ from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup
 
 logger = logging.getLogger(__name__)
 
+
 def should_show_activity_list(wizard):
     if wizard.request.user.is_eighth_admin:
         return True
@@ -155,9 +156,13 @@ def take_attendance_view(request, scheduled_activity_id):
         logger.debug("User does not have permission to edit")
         return render(request, "error/403.html", {
             "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
-        })
+        }, status=403)
 
     if request.method == "POST":
+        if not scheduled_activity.block.locked:
+            return render(request, "error/403.html", {
+                "reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."
+            }, status=403)
         present_user_ids = list(request.POST.keys())
 
         csrf = "csrfmiddlewaretoken"

@@ -215,7 +215,7 @@ class EighthActivity(AbstractBaseEighthModel):
         verbose_name_plural = "eighth activities"
 
     def __unicode__(self):
-        return self.name_with_flags()
+        return self.name_with_flags
 
 
 class EighthBlockManager(models.Manager):
