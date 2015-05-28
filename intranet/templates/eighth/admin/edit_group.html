@@ -5,10 +5,27 @@
 
 <form action="" method="post" autocomplete="off">
     {% csrf_token %}
-    {{ edit_form.name.label_tag }} {{ edit_form.name }} <input type="submit" value="Save">
+    <label for="id_name"><b>Edit Name</b></label>
+    <br />
+    {{ edit_form.name }} <input type="submit" value="Save">
 </form>
 <br />
-hk
+
+<form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
+    {% csrf_token %}
+    <label for="student-id"><b>Add user by student ID</b></label>
+    <p class="error-color">
+        {% if request.GET.error == "s" %}
+            Invalid student ID
+        {% elif request.GET.error == "n" %}
+            No user exists with that student ID.
+        {% endif %}
+    </p>
+    <input type="text" name="student_id" id="student-id"> <input type="submit" value="Add">
+</form>
+
+
+<br />
 <br />
 <table class="fancy-table">
     <thead>
@@ -21,12 +38,17 @@ hk
     </thead>
     <tbody>
         {% for member in members %}
-            <tr>
+            <tr style="{% if member.student_id and request.GET.added == member.student_id %}font-weight: bold;{% endif %}">
                 <td><a href="{% url 'user_profile' member.id %}">{{ member.last_name }}, {{ member.first_name }}</a></td>
                 <td>{% firstof member.student_id "" %}</td>
                 <td>{% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
                 <td>{{ member.grade }}</td>
-                <td>Remove</td>
+                <td>
+                    <form action="{% url 'eighth_admin_remove_member_from_group' group.id member.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Remove">
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

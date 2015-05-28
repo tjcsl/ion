@@ -369,9 +369,51 @@ def eighth_admin_distribute_action(request):
         return redirect("eighth_admin_dashboard")
 
 
-# @eighth_admin_required
-# def add_member_to_group_view(request):
+@eighth_admin_required
+def add_member_to_group_view(request, group_id):
+    if request.method != "POST":
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        raise http.Http404
+
+    next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
+
+    if "student_id" not in request.POST or not request.POST["student_id"].isdigit():
+        return redirect(next_url + "?error=s")
+
+    student_id = request.POST["student_id"]
+    user = User.objects.user_with_student_id(student_id)
+    if user is None:
+        return redirect(next_url + "?error=n")
+    user.groups.add(group)
+    user.save()
+    messages.success(request, "Successfully added user \"{}\" to the group.".format(user.full_name))
+    return redirect(next_url + "?added=" + str(student_id))
 
 
+@eighth_admin_required
+def remove_member_from_group_view(request, group_id, user_id):
+    if request.method != "POST":
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        raise http.Http404
 
+    next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
+
+    try:
+        user = User.get_user(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, "There was an error removing this user.")
+        return redirect(next_url, status=400)
+
+    group.user_set.remove(user)
+    group.save()
+    messages.success(request, "Successfully removed user \"{}\" from the group.".format(user.full_name))
+
+    return redirect(next_url)

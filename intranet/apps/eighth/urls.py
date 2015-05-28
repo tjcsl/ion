@@ -59,6 +59,8 @@ eighth_admin_patterns = [
 
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
+    url(r"^groups/add_member/(?P<group_id>\d+)$", groups.add_member_to_group_view, name="eighth_admin_add_member_to_group"),
+    url(r"^groups/remove_member/(?P<group_id>\d+)/(?P<user_id>\d+)$", groups.remove_member_from_group_view, name="eighth_admin_remove_member_from_group"),
     url(r"^groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
     url(r"^groups/delete/(?P<group_id>\d+)$", groups.delete_group_view, name="eighth_admin_delete_group"),
     url(r"^groups/signup/(?P<group_id>\d+)$", groups.eighth_admin_signup_group, name="eighth_admin_signup_group"),
