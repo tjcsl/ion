@@ -26,24 +26,28 @@
     <br>
     {% if signups %}
         Click on column titles to sort.
-        <table data-sortable>
+        <table data-sortable class="zebra">
             <thead>
                 <tr>
                     <th>Time</th>
-                    <th>Sponsor</th>
+                    <th>Block</th>
                     <th>Student</th>
-                    <th>From</th>
-                    <th>To</th>
+                    <th>From Activity</th>
+                    <th>From Sponsor</th>
+                    <th>To Activity</th>
+                    <th>To Sponsor</th>
                 </tr>
             </thead>
             <tbody>
                 {% for signup in signups %}
                     <tr>
                         <td data-value={{ signup.time|date:"U" }}>{{ signup.time }}</td>
-                        <td>{{ signup.previous_activity_sponsors }}</td>
-                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }}</td>
+                        <td>{{ signup.scheduled_activity.block }}</td>
+                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }} ({{ signup.user.student_id }})</td>
                         <td>{{ signup.previous_activity_name }}</td>
+                        <td>{{ signup.previous_activity_sponsors }}</td>
                         <td>{{ signup.scheduled_activity.activity.name_with_flags }} ({{ signup.scheduled_activity.activity.id }})</td>
+                        <td>{{ signup.scheduled_activity.get_true_sponsors|join:", " }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

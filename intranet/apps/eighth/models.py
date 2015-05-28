@@ -162,9 +162,11 @@ class EighthActivity(AbstractBaseEighthModel):
         rooms = self.rooms.all()
         return EighthRoom.total_capacity_of_rooms(rooms)
 
+    @property
     def name_with_flags(self):
         return self._name_with_flags(True)
 
+    @property
     def name_with_flags_no_restricted(self):
         return self._name_with_flags(False)
 
@@ -580,11 +582,18 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 existing_signup = (EighthSignup.objects
                                                .get(user=user,
                                                     scheduled_activity__block=self.block))
+
+                previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
+                prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
+                previous_activity_sponsors = ", ".join(map(str, prev_sponsors))
+
                 if not existing_signup.scheduled_activity.activity.both_blocks:
                     existing_signup.scheduled_activity = self
                     existing_signup.after_deadline = after_deadline
                     existing_signup.was_absent = False
                     existing_signup.pass_accepted = False
+                    existing_signup.previous_activity_name = previous_activity_name
+                    existing_signup.previous_activity_sponsors = previous_activity_sponsors
                     existing_signup.save()
                 else:
                     # Clear out the other signups for this block if the user is
@@ -595,7 +604,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     ).delete()
                     EighthSignup.objects.create(user=user,
                                                 scheduled_activity=self,
-                                                after_deadline=after_deadline)
+                                                after_deadline=after_deadline,
+                                                previous_activity_name=previous_activity_name,
+                                                previous_activity_sponsors=previous_activity_sponsors)
             except EighthSignup.DoesNotExist:
                 EighthSignup.objects.create(user=user,
                                             scheduled_activity=self,
@@ -606,15 +617,37 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                     .filter(block__date=self.block.date,
                                                             activity=self.activity))
 
-            EighthSignup.objects.filter(
+            existing_signups = EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__date=self.block.date
-            ).delete()
+            )
+
+            prev_data = {}
+            for signup in existing_signups:
+                prev_sponsors = signup.scheduled_activity.get_true_sponsors()
+                prev_data[signup.scheduled_activity.block.block_letter] = {
+                    "name": signup.scheduled_activity.activity.name_with_flags,
+                    "sponsors": ", ".join(map(str, prev_sponsors))
+                }
+            existing_signups.delete()
 
             for sched_act in all_sched_act:
+                letter = sched_act.block.block_letter
+                if letter in prev_data:
+                    previous_activity_name = prev_data[letter]["name"]
+                    previous_activity_sponsors = prev_data[letter]["sponsors"]
+                else:
+                    previous_activity_name = None
+                    previous_activity_sponsors = None
+
                 EighthSignup.objects.create(user=user,
                                             scheduled_activity=sched_act,
-                                            after_deadline=after_deadline)
+                                            after_deadline=after_deadline,
+                                            previous_activity_name=previous_activity_name,
+                                            previous_activity_sponsors=previous_activity_sponsors)
+
+                # signup.previous_activity_name = signup.activity.name_with_flags
+                # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
 
     class Meta:
         unique_together = (("block", "activity"),)
@@ -664,8 +697,8 @@ class EighthSignup(AbstractBaseEighthModel):
 
     # An after-deadline signup is assumed to be a pass
     after_deadline = models.BooleanField(default=False)
-    previous_activity_name = models.CharField(max_length=100, blank=True)
-    previous_activity_sponsors = models.CharField(max_length=200, blank=True)
+    previous_activity_name = models.CharField(max_length=200, blank=True, null=True, default=None)
+    previous_activity_sponsors = models.CharField(max_length=10000, blank=True, null=True, default=None)
 
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
