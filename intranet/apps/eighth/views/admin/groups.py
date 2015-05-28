@@ -8,7 +8,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
@@ -60,13 +60,29 @@ def edit_group_view(request, group_id):
     else:
         form = GroupForm(instance=group)
 
+    users = group.user_set.all()
+    members = []
+    for user in users:
+        grade = user.grade
+        emails = user.emails
+        members.append({
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "student_id": user.student_id,
+            "email": emails[0] if emails else "",
+            "grade": grade.number if user.grade else "Staff"
+        })
+    members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
     context = {
-        "form": form,
+        "group": group,
+        "members": members,
+        "edit_form": form,
         "admin_page_title": "Edit Group",
         "delete_url": reverse("eighth_admin_delete_group",
                               args=[group_id])
     }
-    return render(request, "eighth/admin/edit_form.html", context)
+    return render(request, "eighth/admin/edit_group.html", context)
 
 
 @eighth_admin_required
@@ -109,9 +125,10 @@ def download_group_csv_view(request, group_id):
         row.append(user.last_name)
         row.append(user.first_name)
         row.append(user.student_id)
-        row.append(user.grade.number)
+        grade = user.grade
+        row.append(grade.number if grade else "Staff")
         emails = user.emails
-        row.append(user.emails[0] if emails is not None and len(emails) else None)
+        row.append(emails[0] if emails else None)
         writer.writerow(row)
 
     return response
@@ -255,8 +272,6 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         logger.debug(block)
         logger.debug(activities)
 
-
-
         args = "block={}".format(block.id)
         for a in activities:
             args += "&activity={}".format(a.id)
@@ -280,6 +295,7 @@ eighth_admin_distribute_unsigned = eighth_admin_required(
         EighthAdminDistributeGroupWizard.FORMS
     )
 )
+
 
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
@@ -342,8 +358,6 @@ def eighth_admin_distribute_action(request):
 
             users = unsigned
 
-
-
         context = {
             "schacts": schacts,
             "users": users,
@@ -355,6 +369,8 @@ def eighth_admin_distribute_action(request):
         return redirect("eighth_admin_dashboard")
 
 
+# @eighth_admin_required
+# def add_member_to_group_view(request):
 
 
 

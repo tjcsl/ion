@@ -1,0 +1,43 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+
+<form action="" method="post" autocomplete="off">
+    {% csrf_token %}
+    {{ edit_form.name.label_tag }} {{ edit_form.name }} <input type="submit" value="Save">
+</form>
+<br />
+hk
+<br />
+<table class="fancy-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Student ID</th>
+            <th>Email</th>
+            <th>Grade</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in members %}
+            <tr>
+                <td><a href="{% url 'user_profile' member.id %}">{{ member.last_name }}, {{ member.first_name }}</a></td>
+                <td>{% firstof member.student_id "" %}</td>
+                <td>{% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
+                <td>{{ member.grade }}</td>
+                <td>Remove</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br />
+<a href="{% url 'eighth_admin_download_group_csv' group.id %}" class="button">Download as CSV</a>
+<br />
+<br />
+<a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+{% if delete_url %}
+    <a class="button" href="{{ delete_url }}">Delete</a>
+{% endif %}
+
+{% endblock %}
