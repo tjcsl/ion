@@ -244,13 +244,16 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         logger.debug(activities)
 
 
-        gid = kwargs["group_id"]
 
         args = "block={}".format(block.id)
         for a in activities:
             args += "&activity={}".format(a.id)
 
-        args += "&group={}".format(gid)
+        if "group_id" in kwargs:
+            gid = kwargs["group_id"]
+            args += "&group={}".format(gid)
+        else:
+            args += "&unsigned=1"
 
         return redirect("/eighth/admin/groups/distribute_action?{}".format(args))
 
@@ -311,7 +314,16 @@ def eighth_admin_distribute_action(request):
             group = Group.objects.get(id=request.GET.get("group"))
             users = group.user_set.all()
         elif "unsigned" in request.GET:
-            pass
+            unsigned = []
+
+            students = User.objects.filter(username__startswith="2")
+            for student in students:
+                try:
+                    su = EighthSignup.objects.get(user=student, scheduled_activity__block__id=blockid)
+                except EighthSignup.DoesNotExist:
+                    unsigned.append(student)
+
+            users = unsigned
 
 
 
