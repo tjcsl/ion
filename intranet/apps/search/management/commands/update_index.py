@@ -107,7 +107,7 @@ class Command(BaseCommand):
 
                     "gradyear": grad_year,
                     "graduation_year": grad_year,
-                    "grade": Grade(grad_year).number
+                    "grade": None if grad_year is None or Grade(grad_year) is None else Grade(grad_year).number,
 
                     "phone": phones,
                     "telephone": phones,
