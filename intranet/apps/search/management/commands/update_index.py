@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 import elasticsearch
 from intranet import settings
 from intranet.db import ldap_db
+from intranet.apps.users.models import Grade
 
 
 class Command(BaseCommand):
@@ -106,6 +107,7 @@ class Command(BaseCommand):
 
                     "gradyear": grad_year,
                     "graduation_year": grad_year,
+                    "grade": Grade(grad_year).number
 
                     "phone": phones,
                     "telephone": phones,
