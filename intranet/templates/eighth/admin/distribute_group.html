@@ -1,0 +1,47 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
+{% endblock %}
+
+{% block admin_main %}
+    
+    {% if show_selection %}
+    <form action="{% url 'eighth_admin_distribute_action' %}" method="post">{% csrf_token %}
+        <p>Signing up students on {{ block }}</p>
+        <table class="schedule-activity-grid">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    {% for activity in activities %}
+                    <th>{{ activity }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <form method="post">{% csrf_token %}
+        {{ wizard.management_form }}
+        <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+        <br>
+        {{ wizard.form }}
+        {% if wizard.steps.prev %}
+            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+        {% endif %}
+        {% if wizard.steps.next %}
+            <input type="submit" value="Next"/>
+        {% else %}
+            <input type="submit" value="Distribute Group"/>
+        {% endif %}
+    {% endif %}
+    </form>
+{% endblock %}
