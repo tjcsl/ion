@@ -16,8 +16,10 @@ from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMu
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm
 from ...models import EighthScheduledActivity, EighthSignup, EighthBlock
+from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
+
 
 @eighth_admin_required
 def add_group_view(request):
@@ -131,6 +133,10 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
     def get_form_kwargs(self, step):
         kwargs = {}
+        if step == "block":
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
         if step == "activity":
             block = self.get_cleaned_data_for_step("block")["block"]
             kwargs.update({"block": block})
@@ -239,7 +245,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         block = form_list[0].cleaned_data["block"]
         activities = form_list[1].cleaned_data["activities"]
-        
+
         logger.debug(block)
         logger.debug(activities)
 
@@ -341,7 +347,7 @@ def eighth_admin_distribute_action(request):
         return render(request, "eighth/admin/distribute_group.html", context)
     else:
         return redirect("eighth_admin_dashboard")
-            
+
 
 
 

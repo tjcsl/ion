@@ -12,7 +12,9 @@ def get_start_date(request):
         date = request.session["start_date"]
         return datetime.strptime(date, DATE_FORMAT)
     else:
-        return datetime.now().date()
+        now = datetime.now().date()
+        set_start_date(request, now)
+        return now
 
 
 def set_start_date(request, start_date):

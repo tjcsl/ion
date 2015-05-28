@@ -72,10 +72,10 @@ def schedule_activity_view(request):
                     # scheduled activities of it on the same day.
                     if schact and activity.both_blocks:
                         all_sched_act = (EighthScheduledActivity.objects
-                                            .filter(block__date=block.date, activity=activity))
+                                                                .filter(block__date=block.date, activity=activity))
                         logger.debug(all_sched_act)
                         for s in all_sched_act:
-                            s.cancelled=True
+                            s.cancelled = True
                             s.save()
                     else:
                         schact.update(cancelled=True)
@@ -201,6 +201,7 @@ def show_activity_schedule_view(request):
     context["admin_page_title"] = "View Activity Schedule"
     return render(request, "eighth/admin/view_activity_schedule.html", context)
 
+
 @eighth_admin_required
 def distribute_students_view(request):
     context = {}
@@ -227,6 +228,10 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
 
     def get_form_kwargs(self, step):
         kwargs = {}
+        if step in ("block_1", "block_2"):
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
         if step == "activity_1":
             block = self.get_cleaned_data_for_step("block_1")["block"]
             kwargs.update({"block": block})
