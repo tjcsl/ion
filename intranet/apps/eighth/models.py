@@ -84,6 +84,17 @@ class EighthRoom(AbstractBaseEighthModel):
 
     unique_together = (("name", "capacity"),)
 
+    @classmethod
+    def total_capacity_of_rooms(cls, rooms):
+        capacity = 0
+        for r in rooms:
+            c = r.capacity
+            if c == -1:
+                return -1
+            else:
+                capacity += c
+        return capacity
+
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
 
@@ -145,11 +156,11 @@ class EighthActivity(AbstractBaseEighthModel):
     deleted = models.BooleanField(blank=True, default=False)
 
     def capacity(self):
-        # Note this is the default capacity if the rooms/capacity are
-        # not overridden for a particular block.
-        # This is not very useful and it is probably not correct to use it.
-        all_rooms = self.rooms.all()
-        return sum(room.capacity for room in all_rooms)
+        # Note that this is the default capacity if the
+        # rooms/capacityare not overridden for a particular block.
+
+        rooms = self.rooms.all()
+        return EighthRoom.total_capacity_of_rooms(rooms)
 
     def name_with_flags(self):
         return self._name_with_flags(True)
@@ -421,6 +432,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_true_rooms(self):
         """Get the rooms for the scheduled activity, taking into account
         activity defaults and overrides.
+
         """
 
         rooms = self.rooms.all()
@@ -440,7 +452,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return c
         else:
             rooms = self.get_true_rooms()
-            return sum(r.capacity for r in rooms)
+            return EighthRoom.total_capacity_of_rooms(rooms)
 
     def is_full(self):
         capacity = self.get_true_capacity()
