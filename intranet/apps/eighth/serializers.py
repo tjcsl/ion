@@ -180,7 +180,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             if activity_id not in activities_sponsors_overidden:
                 activities_sponsors_overidden.append(activity_id)
                 del activity_list[activity_id]["sponsors"][:]
-            
+
             if sponsor["user_id"]:
                 # See a few lines up for why we're not using User.get_user()
                 dn = User.dn_from_id(sponsor["user_id"])
