@@ -31,6 +31,10 @@ def search_view(request):
         # Convert "[123 to 345]" to "[123 TO 345]"
         q = re.sub(r'\[(\d+|\*) +([Tt][Oo]) +(\d+|\*)\]', r'[\1 TO \3]', q.rstrip())
 
+        q = re.compile(' and ', re.IGNORECASE).sub(' && ', q)
+        q = re.compile(' or ', re.IGNORECASE).sub(' || ', q)
+        q = re.compile('not ', re.IGNORECASE).sub(' !', q)
+
 
         def search(query):
             return es.search(index="ion", body=query, size=99999)
