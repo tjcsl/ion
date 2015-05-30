@@ -68,6 +68,7 @@
                     <th>Student ID</th>
                     <th>Absences</th>
                     <th>Grade</th>
+                    <th>Counselor</th>
                     <th>TJ Email</th>
                     <th>Other Email</th>
                 </tr>
@@ -90,13 +91,18 @@
                             {{ delinquent.user.grade.number }}
                         </td>
                         <td>
+                            {{ delinquent.user.counselor.last_name }}
+                        </td>
+                        <td>
                             <a href="mailto:{{ delinquent.user.username }}@tjhsst.edu">
                                 {{ delinquent.user.username }}@tjhsst.edu
                             </a>
                         <td>
+                            {% if delinquent.user.emails.0 %}
                             <a href="mailto:{{ delinquent.user.emails.0 }}">
                                 {{ delinquent.user.emails.0 }}
                             </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}
