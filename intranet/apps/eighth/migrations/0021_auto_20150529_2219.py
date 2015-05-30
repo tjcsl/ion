@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eighth', '0019_auto_20150528_0015'),
+        ('eighth', '0020_eighthblock_override_blocks'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='eighthblock',
-            name='overrides_blocks',
-            field=models.ManyToManyField(to='eighth.EighthBlock', blank=True),
+            name='block_letter',
+            field=models.CharField(max_length=10),
         ),
     ]

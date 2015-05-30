@@ -25,7 +25,11 @@ class SignupException(Exception):
         "OneADay": m("You may only sign up for this activity once per day.",
                      "This is a one-a-day activity."),
         "Restricted": m("You may not sign up for this restricted activity.",
-                        "This activity is restricted for this student.")
+                        "This activity is restricted for this student."),
+        "OverrideBlockLocked": m("An override block ({}) has been locked. Signup is not allowed at this time.",
+                                 "An override block ({}) has been locked."),
+        "OverrideBlockPermissions": m("Your signup ({}) on an override block ({}) cannot be changed out of. Signup is not allowed at this time.",
+                                      "Your signup ({}) on an override block ({}) cannot be changed out of.")
     }
 
     def __init__(self):
@@ -36,7 +40,9 @@ class SignupException(Exception):
 
     def __setattr__(self, name, value):
         if name in SignupException._messages:
-            if value:
+            if type(value) == "list":
+                self.errors.add(name.format(*value))
+            elif value:
                 self.errors.add(name)
             elif name in self.errors:
                 self.errors.remove(name)

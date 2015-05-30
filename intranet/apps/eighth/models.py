@@ -259,7 +259,8 @@ class EighthBlock(AbstractBaseEighthModel):
         date
             The date of the block.
         block_letter
-            The block letter (e.g. A, B).
+            The block letter (e.g. A, B, A1, A2, SOL).
+            Despite its name, it can now be more than just a letter.
         locked
             Whether signups are closed.
         activities
@@ -278,7 +279,7 @@ class EighthBlock(AbstractBaseEighthModel):
     objects = EighthBlockManager()
 
     date = models.DateField(null=False)
-    block_letter = models.CharField(max_length=1)
+    block_letter = models.CharField(max_length=10)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity",
@@ -492,6 +493,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return (now < (activity_date - presign_period))
 
+    def can_add_user(self, user, request=None, force=False):
+        
+
+        # If we've collected any errors
+        if exception.errors:
+            return False, exception
+
+        return True, exception
+
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
 
@@ -499,7 +509,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         unless the signup is forced.
 
         """
-
         if request is not None:
             force = force or (("force" in request.GET) and
                               request.user.is_eighth_admin)
@@ -524,7 +533,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Check if the block has been locked
             for sched_act in all_sched_act:
                 if sched_act.block.locked:
-                    exception.BlockLocked = True
+                    exception.BlockLocked = True            
 
             # Check if the scheduled activity has been cancelled
             for sched_act in all_sched_act:
@@ -578,6 +587,42 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 acts = EighthActivity.restricted_activities_available_to_user(user)
                 if self.activity.id not in acts:
                     exception.Restricted = True
+
+
+        final_remove_signups = []
+
+        # Check if the block overrides signups on other blocks
+        if len(self.block.override_blocks) > 0:
+            override_blocks = self.block.override_blocks
+            can_change_out = True
+
+            for block in override_blocks:
+                # If block is locked, can't change out of
+                if block.locked and not force:
+                    exception.OverrideBlockLocked = [block]
+                    can_change_out = False
+                    break
+
+                # If signed up for activity is locked, can't change out of
+                ovr_signups = EighthSignup.objects.filter(block=block, user=user)
+                for ovr_signup in ovr_signup:
+                    if ovr_signup.scheduled_activity.activity.sticky and not force:
+                        exception.OverrideActivitySticky = [ovr_signup.scheduled_activity.activity, block]
+                        can_change_out = False
+                        break
+
+            # Going to change out of dependent activities at the end
+            if can_change_out:
+                for block in override_blocks:
+                    ovr_signups = EighthSignup.objects.filter(block=block, user=user)
+                    for signup in ovr_signups:
+                        logger.debug("Need to remove signup for {}".format(signup))
+                        final_remove_signups.append(signup)
+                
+
+
+
+
 
         # If we've collected any errors, raise the exception and abort
         # the signup attempt
@@ -660,6 +705,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                 # signup.previous_activity_name = signup.activity.name_with_flags
                 # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
+
+
+        # See "If block overrides signup on other blocks" check
+        # If there are EighthSignups that need to be removed, do them at the end
+        for signup in final_remove_signups:
+            signup.delete()
+
 
     class Meta:
         unique_together = (("block", "activity"),)
