@@ -42,6 +42,7 @@ def gen_schedule(user, num_blocks=6):
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
+                "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "current_signup": current_signup,
                 "current_signup_cancelled": current_signup_cancelled,
                 "locked": b.locked,
@@ -79,6 +80,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
         if num_added == 0:
             acts.append({
                 "block": b,
+                "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "id": None,
                 "fake": True
             })

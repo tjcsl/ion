@@ -48,7 +48,7 @@
         {% for block in schedule %}
             <div class="eighth-block clickable {{ block.flags }}">
                 <div class="block-header">
-                    <span class="block-letter">
+                    <span class="block-letter"{% if block.block_letter_width %} style="width: {{ block.block_letter_width }}px"{% endif %}>
                         {{ block.block_letter }}
                     </span>
                     {{ block.date|date:"D, N j" }}
@@ -99,7 +99,7 @@
         {% for schact in sponsor_schedule %}
             <div class="eighth-block">
                 <div class="block-header{% if schact.activity %} clickable{% endif %}">
-                    <span class="block-letter">
+                    <span class="block-letter"{% if schact.block_letter_width %} style="width: {{ schact.block_letter_width }}px"{% endif %}>
                         {{ schact.block.block_letter }}
                     </span>
                     {{ schact.block.date|date:"D, N j" }}
