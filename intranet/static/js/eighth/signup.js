@@ -129,6 +129,36 @@ $(function() {
                     $(".current-day .block").addClass("both-blocks");
                 }
 
+                var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
+                if(changed_activities != null) {
+                    for(var i=0; i<changed_activities.length; i++) {
+                        try {
+                            var evnt = changed_activities[i];
+                            console.debug(evnt);
+                            var act = evnt.split('Your signup for ')[1].split(' on ');
+                            var blk = act[1].split(' was removed');
+                            act = act[0];
+                            blk = blk[0];
+                            console.info(act, blk);
+                            $(".days-container .day .block").each(function() {
+                                var sa_blk = $(this).attr("title");
+                                var sa_act = $(".selected-activity", $(this)).attr("title");
+                                console.debug(sa_blk, sa_act);
+                                if(sa_blk == blk && sa_act == act) {
+                                    console.log("Found changed activity:", blk, act);
+                                    $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
+                                }
+
+                            });
+                        } catch(e) {
+                            console.error("An error occurred updating your current signups.");
+                            console.error(e);
+                        }
+                    }
+
+                }
+
+
                 $(".active-block.cancelled").removeClass("cancelled");
 
                 var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
@@ -139,9 +169,12 @@ $(function() {
 
                 activity.attributes.selected = true;
                 activity.attributes.roster.count += 1;
+                activity.attributes.display_text = response.replace(new RegExp('\r?\n', 'g'), '<br />');
 
                 activityDetailView.render();
                 activityListView.render();
+
+
             },
             error: function(xhr, status, error) {
                 var content_type = xhr.getResponseHeader("content-type");
