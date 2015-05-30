@@ -30,6 +30,9 @@ $(function() {
 
     // Set up accept pass links
     $(".pass-form-submit-link").click(function() {
-        $("#" + $(this).data("form")).submit();
+        var form = document.forms[$(this).data("form")];
+        form.status.value = $(this).data("status");
+
+        if(confirm()) form.submit();
     })
 });
