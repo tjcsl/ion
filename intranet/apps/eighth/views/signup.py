@@ -103,6 +103,7 @@ def eighth_signup_view(request, block_id=None):
             info = {
                 "id": b.id,
                 "block_letter": b.block_letter,
+                "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
                 "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
                 "locked": b.locked
