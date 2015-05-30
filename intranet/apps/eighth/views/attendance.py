@@ -7,6 +7,7 @@ try:
     from io import BytesIO
 except ImportError:
     from cStringIO import StringIO as BytesIO
+import csv
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -236,7 +237,40 @@ def take_attendance_view(request, scheduled_activity_id):
             "p": pass_users
         }
 
-        return render(request, "eighth/take_attendance.html", context)
+        if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
+            response = http.HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = "attachment; filename=\"attendance.csv\""
+
+            writer = csv.writer(response)
+            writer.writerow(["Activity",
+                             "Block",
+                             "Rooms",
+                             "Sponsors",
+                             "Present",
+                             "Had Pass",
+                             "Name",
+                             "Student ID",
+                             "Grade"])
+            for member in members:
+                row = []
+                logger.debug(member)
+                row.append(str(scheduled_activity.activity))
+                row.append(str(scheduled_activity.block))
+                rooms = scheduled_activity.get_true_rooms()
+                row.append(", ".join(["{} ({})".format(room.name, room.capacity) for room in rooms]))
+                sponsors = scheduled_activity.get_true_sponsors()
+                row.append(" ,".join([sponsor.name for sponsor in sponsors]))
+                row.append(member["present"])
+
+                row.append(member["had_pass"])
+                row.append(member["name"])
+                row.append(member["id"])
+                row.append(member["grade"])
+                writer.writerow(row)
+
+            return response
+        else:
+            return render(request, "eighth/take_attendance.html", context)
 
 
 @attendance_taker_required
