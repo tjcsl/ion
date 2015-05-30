@@ -71,8 +71,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                    and (activity.id not in available_restricted_acts))
             prefix = "Special: " if activity.special else ""
             prefix += activity.name
-            if scheduled_activity.comments:
-                prefix += " - " + scheduled_activity.comments
+            if scheduled_activity.title:
+                prefix += " - " + scheduled_activity.title
             middle = " (R)" if restricted_for_user else ""
             suffix = " (BB)" if activity.both_blocks else ""
             suffix += " (A)" if activity.administrative else ""
@@ -109,7 +109,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "special": activity.special,
                 "administrative": activity.administrative,
                 "sticky": activity.sticky,
-                "comments": scheduled_activity.comments
+                "title": scheduled_activity.title,
+                "display_text": ""
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
 

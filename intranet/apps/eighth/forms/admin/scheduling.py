@@ -35,7 +35,7 @@ class ScheduledActivityForm(forms.ModelForm):
             "rooms",
             "capacity",
             "sponsors",
-            "comments",
+            "title",
             "admin_comments"
         ]
         widgets = {
