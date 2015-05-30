@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import include, url
-from .views import routers, signup, attendance
+from .views import routers, signup, attendance, profile
 from .views.admin import (
     general, activities, blocks, groups, rooms, sponsors, scheduling)
 from .views.admin import attendance as admin_attendance
@@ -20,6 +20,10 @@ urlpatterns = [
     url(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
     url(r"^/attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
     url(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
+
+
+    # Profile
+    url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
