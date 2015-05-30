@@ -28,20 +28,21 @@ class SignupException(Exception):
                         "This activity is restricted for this student."),
         "OverrideBlockLocked": m("An override block ({}) has been locked. Signup is not allowed at this time.",
                                  "An override block ({}) has been locked."),
-        "OverrideBlockPermissions": m("Your signup ({}) on an override block ({}) cannot be changed out of. Signup is not allowed at this time.",
+        "OverrideBlockPermissions": m("Your signup ({}) on an override block ({}) cannot be changed out of. You will be unable to sign up for any activities on this block.",
                                       "Your signup ({}) on an override block ({}) cannot be changed out of.")
     }
 
     def __init__(self):
         self.errors = set()
+        self.desc_errors = []
 
     def __repr__(self):
         return "SignupException(" + ", ".join(self.errors) + ")"
 
     def __setattr__(self, name, value):
         if name in SignupException._messages:
-            if type(value) == "list":
-                self.errors.add(name.format(*value))
+            if type(value) == list:
+                self.desc_errors.append([name, value])
             elif value:
                 self.errors.add(name)
             elif name in self.errors:
@@ -54,7 +55,13 @@ class SignupException(Exception):
         else:
             a = "regular"
 
-        return [getattr(SignupException._messages[e], a) for e in self.errors]
+        msgs = [getattr(SignupException._messages[e], a) for e in self.errors]
+        for obj in self.desc_errors:
+            name, value = obj
+            msg = SignupException._messages[name]
+            msgs.append((msg.admin if admin else msg.regular).format(*value))
+
+        return msgs
 
     def as_response(self, html=True, admin=False):
         if len(self.errors) <= 1:
