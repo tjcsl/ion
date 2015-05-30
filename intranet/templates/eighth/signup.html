@@ -250,7 +250,7 @@
                     {% if active_block.locked %}
                         <i class="fa fa-lock"></i>
                     {% endif %}
-                    {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - {{ user.full_name }} ({{ user.graduation_year }}){% endif %}
+                    {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                 </h2>
                 <h4>
                     {% if block_info.block_letter %}

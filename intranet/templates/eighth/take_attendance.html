@@ -98,24 +98,38 @@
                         <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
                     </div>
                 {% endif %}
+
+                <div class="pass-container">
                 {% if passes and scheduled_activity.block.locked %}
                     <h3>Passes</h3>
-                    <table>
+                    <table class="take-passes">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Student</th>
+                                <th>Student ID</th>
+                                <th>Grade</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for pass in passes %}
                                 <tr>
                                     <td>
-                                        {{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.id }})
+                                        {{ pass.user.last_name }}, {{ pass.user.first_name }}
+                                    </td>
+                                    <td>
+                                        {% if pass.user.student_id %}
+                                            {{ pass.user.student_id }}
+                                        {% else %}
+                                            (Ion {{ pass.user.id }})
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ pass.user.grade.number }}
                                     </td>
                                     <td>
                                         <form id="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
                                             {% csrf_token %}
-                                            <a href="#" onclick="return false" class="pass-form-submit-link" data-form="pass-form-{{ pass.id }}">Accept</a>
+                                            <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}">Accept</a>
                                         </form>
                                     </td>
                                 </tr>
@@ -129,7 +143,10 @@
                     <br />
                     <br />
                     <br />
+                {% else %}
+                    There are no passes to accept.
                 {% endif %}
+                </div>
 
                 <form class="attendance-form" action="" method="post">
                     {% csrf_token %}
@@ -140,6 +157,7 @@
                                     <th><input type="checkbox" class="">Present</th>
                                 {% endif %}
                                 <th>Student</th>
+                                <th>Student ID</th>
                                 <th>Grade</th>
                                 <th></th>
                             </tr>
@@ -151,6 +169,11 @@
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
                                     {% endif %}
                                     <td>{{ member.name }}</td>
+                                    <td>{% if member.student_id %}
+                                        {{ member.student_id }}
+                                    {% else %}
+                                        (Ion {{ member.id }})
+                                    {% endif %}</td>
                                     <td>{{ member.grade }}</td>
                                     <td>{% if member.had_pass %}(Pass Accepted){% endif %}</td>
                                 </tr>
@@ -162,15 +185,21 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                {% if not scheduled_activity.block.locked %}
+                                    <br />
+                                    <br />
+                                    <b>You may not take attendance for this activity - signups are not yet locked.</b>
+                                    <br />
+                                {% else %}
+                                    <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
+                                {% endif %}
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
-                    {% if not scheduled_activity.block.locked %}
-                        <br />
-                        <br />
-                        <b>You may not take attendance for this activity - signups are not yet locked.</b>
-                        <br />
-                    {% else %}
-                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
-                    {% endif %}
                 </form>
             </div>
         {% endif %}
