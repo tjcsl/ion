@@ -302,6 +302,8 @@ def out_of_building_schedules_view(request, block_id=None):
         writer.writerow(["Last Name",
                          "First Name",
                          "Student ID",
+                         "Date",
+                         "Block",
                          "Activity ID",
                          "Activity Name"])
 
@@ -310,8 +312,10 @@ def out_of_building_schedules_view(request, block_id=None):
             row.append(signup.user.last_name)
             row.append(signup.user.first_name)
             row.append(signup.user.student_id)
+            row.append(signup.scheduled_activity.block.date)
+            row.append(signup.scheduled_activity.block.block_letter)
             row.append(signup.scheduled_activity.activity.id)
-            row.append(signup.scheduled_activity.activity.name)
+            row.append(signup.scheduled_activity.title_with_flags)
             writer.writerow(row)
 
         return response
