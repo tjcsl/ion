@@ -34,7 +34,7 @@ class SignupException(Exception):
 
     def __init__(self):
         self.errors = set()
-        self.desc_errors = []
+        self.desc_errors = {}
 
     def __repr__(self):
         return "SignupException(" + ", ".join(self.errors) + ")"
@@ -42,7 +42,8 @@ class SignupException(Exception):
     def __setattr__(self, name, value):
         if name in SignupException._messages:
             if type(value) == list:
-                self.desc_errors.append([name, value])
+                self.errors.add(name)
+                self.desc_errors[name] = value
             elif value:
                 self.errors.add(name)
             elif name in self.errors:
@@ -55,11 +56,13 @@ class SignupException(Exception):
         else:
             a = "regular"
 
-        msgs = [getattr(SignupException._messages[e], a) for e in self.errors]
-        for obj in self.desc_errors:
-            name, value = obj
-            msg = SignupException._messages[name]
-            msgs.append((msg.admin if admin else msg.regular).format(*value))
+        msgs = []
+        for e in self.errors:
+            exc = SignupException._messages[e]
+            if e in self.desc_errors:
+                msgs.append(getattr(exc, a).format(*self.desc_errors[e]))
+            else:
+                msgs.append(getattr(exc, a))
 
         return msgs
 
