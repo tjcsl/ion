@@ -45,5 +45,6 @@ class BlockForm(forms.ModelForm):
         fields = [
             "date",
             "block_letter",
-            "locked"
+            "locked",
+            "override_blocks"
         ]

@@ -264,6 +264,14 @@ class EighthBlock(AbstractBaseEighthModel):
             Whether signups are closed.
         activities
             List of :class:`EighthScheduledActivity`\s for the block.
+        override_blocks
+            List of :class:`EighthBlock`\s that the block overrides.
+
+            This allows the half-blocks used during Techlab visits to be
+            easily managed. If a student should only be allowed to sign up
+            for either only block A or both blocks A1 and A2, then block A
+            would override blocks A1 and A2, and blocks A1 and A2 would
+            override block A.
 
     """
 
@@ -275,6 +283,9 @@ class EighthBlock(AbstractBaseEighthModel):
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity",
                                         blank=True)
+
+    override_blocks = models.ManyToManyField("EighthBlock",
+                                              blank=True)
 
     def save(self, *args, **kwargs):
         letter = getattr(self, "block_letter", None)
