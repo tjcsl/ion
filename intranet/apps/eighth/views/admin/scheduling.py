@@ -48,7 +48,7 @@ def schedule_activity_view(request):
                         "rooms",
                         "capacity",
                         "sponsors",
-                        "comments",
+                        "title",
                         "admin_comments"
                     ]
                     for field_name in fields:
@@ -148,7 +148,7 @@ def schedule_activity_view(request):
                     "rooms": sched_act.rooms.all(),
                     "capacity": sched_act.capacity,
                     "sponsors": sched_act.sponsors.all(),
-                    "comments": sched_act.comments,
+                    "title": sched_act.title,
                     "admin_comments": sched_act.admin_comments,
                     "scheduled": not sched_act.cancelled,
                     "cancelled": sched_act.cancelled

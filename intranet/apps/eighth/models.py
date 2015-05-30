@@ -418,6 +418,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
+    def get_true_title(self):
+        """Gets the title for the activity, appending the title of the
+        scheduled activity as needed.
+        """
+
+        return self.activity.title if not self.title else "{} - {}".format(self.activity.title, self.title)
+
     def get_true_sponsors(self):
         """Get the sponsors for the scheduled activity, taking into account
         activity defaults and overrides.
