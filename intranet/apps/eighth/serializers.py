@@ -110,6 +110,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "administrative": activity.administrative,
                 "sticky": activity.sticky,
                 "title": scheduled_activity.title,
+                "comments": scheduled_activity.comments,
                 "display_text": ""
             }
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id

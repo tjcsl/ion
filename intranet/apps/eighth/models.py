@@ -408,7 +408,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     )
 
     admin_comments = models.CharField(max_length=1000, blank=True)
-    title = models.CharField(max_length=1000, blank=True)
+    title = models.CharField(max_length=100, blank=True)
+    comments = models.CharField(max_length=1000, blank=True)
 
     # Overridden attributes
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
