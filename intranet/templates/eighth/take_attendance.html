@@ -108,38 +108,51 @@
                                 <th>Student</th>
                                 <th>Student ID</th>
                                 <th>Grade</th>
+                                <th>Accept/Reject</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for pass in passes %}
-                                <tr>
-                                    <td>
-                                        {{ pass.user.last_name }}, {{ pass.user.first_name }}
-                                    </td>
-                                    <td>
-                                        {% if pass.user.student_id %}
-                                            {{ pass.user.student_id }}
-                                        {% else %}
-                                            (Ion {{ pass.user.id }})
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ pass.user.grade.number }}
-                                    </td>
-                                    <td>
-                                        <form id="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
-                                            {% csrf_token %}
-                                            <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}">Accept</a>
-                                        </form>
-                                    </td>
-                                </tr>
+                            <tr class="pass-student">
+                                <td>
+                                    {{ pass.user.last_name }}, {{ pass.user.first_name }}
+                                </td>
+                                <td>
+                                    {% if pass.user.student_id %}
+                                        {{ pass.user.student_id }}
+                                    {% else %}
+                                        (Ion {{ pass.user.id }})
+                                    {% endif %}
+                                </td>
+                                <td style="text-align: center">
+                                    {{ pass.user.grade.number }}
+                                </td>
+                                <td class="form">
+                                    <form name="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="" />
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="accept"><i class="fa fa-check"></i></a> 
+                                         &nbsp; 
+
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="reject"><i class="fa fa-times"></i></a>
+                                    </form>
+                                </td>
+                            </tr>
                             {% endfor %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" class="button accept-all-passes" value="Accept All">
+                                    </form>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
-                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" class="button accept-all-passes" value="Accept All">
-                    </form>
+                    
                     <br />
                     <br />
                     <br />
@@ -174,8 +187,8 @@
                                     {% else %}
                                         (Ion {{ member.id }})
                                     {% endif %}</td>
-                                    <td>{{ member.grade }}</td>
-                                    <td>{% if member.had_pass %}(Pass Accepted){% endif %}</td>
+                                    <td style="text-align: center">{{ member.grade }}</td>
+                                    <td>{% if member.had_pass %}(Had Pass){% endif %}</td>
                                 </tr>
                             {% empty %}
                                 <tr>

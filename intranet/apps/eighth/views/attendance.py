@@ -261,8 +261,15 @@ def accept_pass_view(request, signup_id):
             "reason": "You do not have permission to take accept this pass."
         }, status=403)
 
-    signup.was_absent = False
-    signup.pass_accepted = True
+    status = request.POST.get("status")
+
+    if status == "accept":
+        signup.was_absent = False
+        signup.pass_accepted = True
+    elif status == "reject":
+        signup.was_absent = True
+        signup.pass_accepted = True
+
     signup.save()
 
     if "admin" in request.path:
