@@ -128,7 +128,9 @@ def delinquent_students_view(request):
         response["Content-Disposition"] = "attachment; filename=\"delinquent_students.csv\""
 
         writer = csv.writer(response)
-        writer.writerow(["Absences",
+        writer.writerow(["Start Date",
+                         "End Date",
+                         "Absences",
                          "Last Name",
                          "First Name",
                          "Student ID",
@@ -139,6 +141,8 @@ def delinquent_students_view(request):
 
         for delinquent in delinquents:
             row = []
+            row.append(str(start_date).split(" ")[0])
+            row.append(str(end_date).split(" ")[0])
             row.append(delinquent["absences"])
             row.append(delinquent["user"].last_name)
             row.append(delinquent["user"].first_name)
