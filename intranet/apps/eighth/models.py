@@ -592,8 +592,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         final_remove_signups = []
 
         # Check if the block overrides signups on other blocks
-        if len(self.block.override_blocks) > 0:
-            override_blocks = self.block.override_blocks
+        if len(self.block.override_blocks.all()) > 0:
+            override_blocks = self.block.override_blocks.all()
             can_change_out = True
 
             for block in override_blocks:
@@ -604,8 +604,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     break
 
                 # If signed up for activity is locked, can't change out of
-                ovr_signups = EighthSignup.objects.filter(block=block, user=user)
-                for ovr_signup in ovr_signup:
+                ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
+                for ovr_signup in ovr_signups:
                     if ovr_signup.scheduled_activity.activity.sticky and not force:
                         exception.OverrideActivitySticky = [ovr_signup.scheduled_activity.activity, block]
                         can_change_out = False
@@ -614,7 +614,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Going to change out of dependent activities at the end
             if can_change_out:
                 for block in override_blocks:
-                    ovr_signups = EighthSignup.objects.filter(block=block, user=user)
+                    ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
                     for signup in ovr_signups:
                         logger.debug("Need to remove signup for {}".format(signup))
                         final_remove_signups.append(signup)

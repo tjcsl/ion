@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 from ...models import EighthBlock
 
 
-block_letter_validator = RegexValidator(r"^[a-zA-Z]$", "Only single letters are allowed.")
+block_letter_validator = RegexValidator(r"^[a-zA-Z0-9]{1,10}$", "Only alphanumeric characters less than 10 characters long are allowed.")
 
 
 class BlockSelectionForm(forms.Form):
@@ -30,7 +30,7 @@ class BlockSelectionForm(forms.Form):
 
 
 class QuickBlockForm(forms.ModelForm):
-    block_letter = forms.CharField(max_length=1, validators=[block_letter_validator])
+    block_letter = forms.CharField(max_length=10, validators=[block_letter_validator])
 
     class Meta:
         model = EighthBlock
@@ -38,7 +38,7 @@ class QuickBlockForm(forms.ModelForm):
 
 
 class BlockForm(forms.ModelForm):
-    block_letter = forms.CharField(max_length=1, validators=[block_letter_validator])
+    block_letter = forms.CharField(max_length=10, validators=[block_letter_validator])
 
     class Meta:
         model = EighthBlock
