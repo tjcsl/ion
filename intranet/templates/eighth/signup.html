@@ -168,7 +168,11 @@
                             <strong>This activity is full.</strong>
                         <%}%>
                     <%} else {%>
-                        <strong>You are currently signed up for this activity.</strong>
+                        <% if (display_text !== "undefined") {%>
+                            <strong><%= display_text %></strong><br />
+                        <% }else{ %>
+                            <strong>You are currently signed up for this activity.</strong>
+                        <% } %>
                     <%}%>
                 <%}%>
 
@@ -202,7 +206,7 @@
                                 <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
                                     {% for b in day.blocks %}
                                         <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
-                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}">
+                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
                                                 <span class="block-letter"{% if b.block_letter_width %} style="width: {{ b.block_letter_width }}px"{% endif %}>
                                                     {{ b.block_letter }}
                                                 </span>
