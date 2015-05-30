@@ -53,13 +53,13 @@ def eighth_signup_view(request, block_id=None):
                                              "for given block.")
 
         try:
-            scheduled_activity.add_user(user, request)
+            success_message = scheduled_activity.add_user(user, request)
         except SignupException as e:
             show_admin_messages = (request.user.is_eighth_admin and
                                    not request.user.is_student)
             return e.as_response(admin=show_admin_messages)
 
-        return http.HttpResponse("Successfully signed up for activity.")
+        return http.HttpResponse(success_message)
     else:
         if block_id is None:
             next_block = EighthBlock.objects.get_first_upcoming_block()

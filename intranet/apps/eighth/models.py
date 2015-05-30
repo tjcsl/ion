@@ -493,15 +493,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return (now < (activity_date - presign_period))
 
-    def can_add_user(self, user, request=None, force=False):
-        
-
-        # If we've collected any errors
-        if exception.errors:
-            return False, exception
-
-        return True, exception
-
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
 
@@ -588,7 +579,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if self.activity.id not in acts:
                     exception.Restricted = True
 
-
+        success_message = "Successfully signed up for activity. "
         final_remove_signups = []
 
         # Check if the block overrides signups on other blocks
@@ -603,13 +594,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     can_change_out = False
                     break
 
-                # If signed up for activity is locked, can't change out of
-                ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
-                for ovr_signup in ovr_signups:
-                    if ovr_signup.scheduled_activity.activity.sticky and not force:
-                        exception.OverrideActivitySticky = [ovr_signup.scheduled_activity.activity, block]
-                        can_change_out = False
-                        break
+                signup_objs = (EighthSignup.objects
+                                          .filter(user=user,
+                                                  scheduled_activity__activity__sticky=True,
+                                                  scheduled_activity__block=block))
+                in_stickie = signup_objs.exists()
+                if in_stickie and not force:
+                    exception.OverrideBlockPermissions = [signup_objs[0].scheduled_activity.activity, block]
+                    can_change_out = False
+                    break
 
             # Going to change out of dependent activities at the end
             if can_change_out:
@@ -710,7 +703,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
         for signup in final_remove_signups:
+            success_message += "Your signup for {} on {} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
             signup.delete()
+
+
+        return success_message
 
 
     class Meta:
