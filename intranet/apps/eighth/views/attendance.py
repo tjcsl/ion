@@ -139,7 +139,6 @@ admin_choose_scheduled_activity_view = (
 
 
 def roster_view(request, scheduled_activity_id):
-
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
     except EighthScheduledActivity.DoesNotExist:
@@ -153,6 +152,21 @@ def roster_view(request, scheduled_activity_id):
     }
 
     return render(request, "eighth/roster.html", context)
+
+def raw_roster_view(request, scheduled_activity_id):
+    try:
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
+    except EighthScheduledActivity.DoesNotExist:
+        raise http.Http404
+
+    signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
+
+    context = {
+        "scheduled_activity": scheduled_activity,
+        "signups": signups
+    }
+
+    return render(request, "eighth/roster-list.html", context)
 
 @attendance_taker_required
 def take_attendance_view(request, scheduled_activity_id):

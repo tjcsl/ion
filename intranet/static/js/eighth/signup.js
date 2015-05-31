@@ -104,6 +104,10 @@ $(function() {
                 });
             };
             $("#signup-button").click(signupClickHandler);
+            $("#roster-button").click(function() {
+                var schact_id = activityDetailView.model.attributes.scheduled_activity;
+                location.href = "/eighth/roster/" + schact_id;
+            })
         }
     });
 
