@@ -103,8 +103,8 @@ $(function() {
                     spinner.spin(false);
                 });
             };
-            $("#signup-button").click(signupClickHandler);
-            $("#roster-button").click(function() {
+
+            var rosterClickHandler = function() {
                 var schact_id = activityDetailView.model.attributes.scheduled_activity;
                 console.debug("Load roster for scheduled activity", schact_id)
                 var endpoint = $(this).parent().data("endpoint");
@@ -112,7 +112,9 @@ $(function() {
                 $.get(endpoint + "/" + schact_id, {}, function(resp) {
                     container.html(resp);
                 });
-            })
+            }
+            $("#signup-button").click(signupClickHandler);
+            $("#roster-button").click(rosterClickHandler);
         }
     });
 
