@@ -9,6 +9,7 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
 {% endblock %}
 
@@ -260,47 +261,79 @@
 
             </div>
 
+            {% if profile_user.is_student and eighth_schedule %}
             <section class="user-info-eighth">
-            <form action="{% url 'eighth_signup' %}" method="GET">
-
-                <input type="hidden" name="user" value="{{ profile_user.id }}" />
                 <h3>Eighth Period</h3>
-                <table>
+                <table class="fancy-table">
+                <thead>
                 <tr>
-                    <th></th>
                     <th>Block</th>
                     <th>Activity</th>
-                    <th></th>
                 </tr>
+                </thead>
+                <tbody>
                 {% for sch in eighth_schedule %}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
-                    </td>
-                    <th>
-                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_edit_block' sch.block.id %}">{% endif %}
+                    <tr>
+                        <th>
                             {{ sch.block }}
-                        {% if request.user.is_eighth_admin %}</a>{% endif %}
-                    </th>
-                    <td>
-                    {% if sch.signup %}
-                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ sch.signup.scheduled_activity.activity.id }}">{% endif %}
-                            {{ sch.signup.scheduled_activity.activity }}
-                        {% if request.user.is_eighth_admin %}</a>{% endif %}
-                    {% else %}
-                        <span class="no-activity-selected">No activity selected</span>
-                    {% endif %}
-                    </td>
-                </tr>
+                        </th>
+                        <td>
+                        {% if sch.signup %}
+                            <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
+                                {{ sch.signup.scheduled_activity.activity }}
+                            </a>
+                        {% else %}
+                            <span class="no-activity-selected">No activity selected</span>
+                        {% endif %}
+                        </td>
+                    </tr>
                 {% endfor %}
+                </tbody>
                 </table>
-                <input type="submit" value="Modify Schedule" />
             </form>
-                <br>
+                <br />
+                {% if user == profile_user and profile_user.is_student %}
+                    <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
+                {% endif %}
+
                 {% if request.user.is_eighth_admin and profile_user.is_student %}
                     <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
                 {% endif %}
+
             </section>
+            {% endif %}
+            {% if profile_user.is_eighth_sponsor %}
+            <section class="user-info-eighth">
+                <h3>Eighth Period</h3>
+                <table class="fancy-table">
+                <thead>
+                <tr>
+                    <th>Block</th>
+                    <th>Activity Sponsoring</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sch in eighth_sponsor_schedule %}
+                    <tr>
+                        <th>
+                            {{ sch.block }}
+                        </th>
+                        <td>
+                        {% if sch.activity %}
+                            <a href="{% url 'eighth_roster' sch.id %}">
+                                {{ sch.activity }}
+                            </a>
+                        {% else %}
+                            <span class="no-activity-selected">None</span>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </form>
+            </section>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
