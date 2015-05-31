@@ -83,51 +83,126 @@
                             </tr>
 
                     </table>
+                    {% if request.user.is_eighth_admin and profile_user.is_student %}
+                        <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+                    {% endif %}
                 </div>
 
             </div>
 
+        <style type="text/css">
+
+table.eighth-table {
+    width: 100%;
+}
+
+.eighth-table tr {
+    line-height: 30px;
+}
+
+.eighth-table .button-left {
+    text-align: left;
+}
+
+.eighth-table .button-right {
+    text-align: right;
+}
+
+.eighth-table .button-center {
+    text-align: center;
+}
+
+.eighth-table .checkbox {
+    width: 80px;
+    text-align: center;
+}
+
+.eighth-table .button-row {
+    width: 70px;
+}
+
+
+
+        </style>
+
+
+        {% if eighth_schedule %}
             <section class="user-info-eighth">
             <form action="{% url 'eighth_signup' %}" method="GET">
 
                 <input type="hidden" name="user" value="{{ profile_user.id }}" />
                 <h3>Eighth Period</h3>
-                <table>
-                <tr>
-                    <th></th>
-                    <th>Block</th>
-                    <th>Activity</th>
-                    <th></th>
-                </tr>
+                <table class="eighth-table">
+                <thead>
+                    <tr>
+                        <td class="button-left" colspan="3">
+                            <a href="?date={{ date_previous }}" class="button">
+                                <i class="fa fa-arrow-left"></i> Back Two Weeks
+                            </a>
+                        </td>
+                        <td class="button-center">
+                            <input type="submit" value="Change Selected" />
+                        </td>
+                        <td class="button-right" colspan="3">
+                            <a href="?date={{ date_next }}" class="button">
+                                Forward Two Weeks <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="checkbox">
+                            <input type="checkbox" />Select All
+                        </th>
+                        <th>Date</th>
+                        <th>Block</th>
+                        <th>Activity</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th></th>
+                    </tr>
+                </thead>
                 {% for sch in eighth_schedule %}
                 <tr>
-                    <td>
+                    <td class="checkbox">
                         <input type="checkbox" name="block" value="{{ sch.block.id }}" />
                     </td>
-                    <th>
-                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_edit_block' sch.block.id %}">{% endif %}
-                            {{ sch.block }}
-                        {% if request.user.is_eighth_admin %}</a>{% endif %}
-                    </th>
                     <td>
+                        {{ sch.block.date|date:'D, N j, Y' }}
+                    </td>
+                    <td>
+                        {{ sch.block.block_letter }}
+                    </td>
                     {% if sch.signup %}
-                        {% if request.user.is_eighth_admin %}<a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ sch.signup.scheduled_activity.activity.id }}">{% endif %}
-                            {{ sch.signup.scheduled_activity.activity }}
-                        {% if request.user.is_eighth_admin %}</a>{% endif %}
+                    <td>
+                        {{ sch.signup.scheduled_activity.activity }}
+                    </td>
+                    <td>
+                        {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
+                    </td>
+                    <td>
+                        {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
+                    </td>
                     {% else %}
+                    <td colspan="3">
                         <span class="no-activity-selected">No activity selected</span>
+                    </td>
                     {% endif %}
+                    <td class="button-row">
+                        <a href="{% url 'eighth_signup' %}/{{ sch.signup.scheduled_activity.block.id }}?user={{ profile_user.id }}" class="button">
+                            {% if sch.signup %}
+                                Change
+                            {% else %}
+                                Sign Up
+                            {% endif %}
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
                 </table>
                 <input type="submit" value="Modify Schedule" />
             </form>
-                <br>
-                {% if request.user.is_eighth_admin and profile_user.is_student %}
-                    <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
-                {% endif %}
             </section>
+        {% endif %}
         </div>
     </div>
 {% endblock %}
