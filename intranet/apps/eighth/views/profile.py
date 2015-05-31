@@ -42,12 +42,11 @@ def profile_view(request, user_id=None):
     blocks = blocks_all.filter(date__lt=date_end)
 
     if len(blocks) == 0:
-        blocks = blocks_all[:6]
+        blocks = list(blocks_all)[:6]
         skipped_ahead = True
+        logger.debug(blocks)
         if len(blocks) > 0:
-            date_next = list(blocks)[-1].date
-        else:
-            eighth_schedule = ""
+            date_next = list(blocks)[-1].date + timedelta(days=1)
 
     for block in blocks:
         sch = {}
@@ -57,6 +56,8 @@ def profile_view(request, user_id=None):
         except EighthSignup.DoesNotExist:
             sch["signup"] = None
         eighth_schedule.append(sch)
+
+    logger.debug(eighth_schedule)
 
     context = {
         "profile_user": profile_user,
