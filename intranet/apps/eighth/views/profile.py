@@ -24,9 +24,11 @@ def profile_view(request, user_id=None):
     else:
         profile_user = request.user
 
+    custom_date_set = False
     if "date" in request.GET:
         date = request.GET.get("date")
         date = datetime.strptime(date, "%Y-%m-%d")
+        custom_date_set = True
     else:
         date = datetime.now()
 
@@ -67,6 +69,7 @@ def profile_view(request, user_id=None):
         "date_next": date_fmt(date_next),
         "date": date,
         "date_end": date_end,
-        "skipped_ahead": skipped_ahead
+        "skipped_ahead": skipped_ahead,
+        "custom_date_set": custom_date_set
     }
     return render(request, "eighth/profile.html", context)
