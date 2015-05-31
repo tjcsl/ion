@@ -26,6 +26,9 @@ urlpatterns = [
     url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
     url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
 
+    # Roster (for students)
+    url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
+
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
 ]

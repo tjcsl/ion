@@ -105,10 +105,14 @@
             </td>
             {% if sch.signup %}
             <td>
-                {{ sch.signup.scheduled_activity.activity }}
+            <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
+                {{ sch.signup.scheduled_activity.full_title }}
+            </a>
             </td>
             <td>
-                {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
+                {% for sponsor in sch.signup.scheduled_activity.get_true_sponsors %}
+                    {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             </td>
             <td>
                 {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
