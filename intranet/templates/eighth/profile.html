@@ -1,4 +1,4 @@
-{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% extends "page_with_nav.html" %}
 {% load phone_numbers %}
 {% load staticfiles %}
 
@@ -22,115 +22,120 @@
     {% endif %}
 {% endblock %}
 
-{% block admin_main %}
-    <div class="inner-content">
-            {% include "eighth/profile-header.html" %}
+{% block main %}
+<div class="primary-content">
 
-            <section class="user-info-eighth">
-            <form action="{% url 'eighth_signup' %}" method="GET">
-
-                <input type="hidden" name="user" value="{{ profile_user.id }}" />
-                <h3>
-                    Eighth Period - {{ date_now }}
-                </h3>
-                <table class="eighth-table">
-                <thead>
-                    <tr>
-                        <td class="button-container" colspan="7">
-                            <span class="button-left">
-                                <a href="?date={{ date_previous }}" class="button">
-                                    <i class="fa fa-arrow-left"></i> Back Two Weeks
-                                </a>
-                            </span>
-                            <span class="button-center">
-                                <input type="submit" value="Change Selected" />
-
-                                {% if custom_date_set %}
-                                    <a href="?" class="button">Reset Date</a>
-                                {% endif %}
-                            </span>
-                            <span class="button-right">
-                                <a href="?date={{ date_next }}" class="button">
-                                    Forward Two Weeks <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="desc">
-                        <th class="center checkbox">
-                            <input type="checkbox" />
-                        </th>
-                        <th>
-                            <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
-                            <div class="select-blocks-popover closed">
-                                <a href="" onclick="return false" class="block-type">Mon B</a>
-                                <a href="" onclick="return false" class="block-type">Wed A</a>
-                                <a href="" onclick="return false" class="block-type">Wed B</a>
-                                <a href="" onclick="return false" class="block-type">Fri A</a>
-                                <a href="" onclick="return false" class="block-type">Fri B</a>
-                            </div>
-                        </th>
-                        <th class="center">Block</th>
-                        <th>Activity</th>
-                        <th>Teacher</th>
-                        <th>Room</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                {% if skipped_ahead %}
-                    <tr>
-                    <td colspan="7">
-                        There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
-                    </td>
-                    </tr>
-                {% endif %}
-                {% for sch in eighth_schedule %}
-                <tr class="form-row">
-                    <td class="center checkbox">
-                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
-                    </td>
-                    <td>
-                        {{ sch.block.date|date:'D, N j, Y' }}
-                    </td>
-                    <td class="center">
-                        {{ sch.block.block_letter }}
-                    </td>
-                    {% if sch.signup %}
-                    <td>
-                        {{ sch.signup.scheduled_activity.activity }}
-                    </td>
-                    <td>
-                        {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
-                    </td>
-                    <td>
-                        {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
-                    </td>
-                    {% else %}
-                    <td colspan="3">
-                        <span class="no-activity-selected">No activity selected</span>
-                    </td>
-                    {% endif %}
-                    <td class="button-row">
-                        <a href="{% url 'eighth_signup' %}/{{ sch.block.id }}?user={{ profile_user.id }}" class="button">
-                            {% if sch.signup %}
-                                Change
-                            {% else %}
-                                Sign Up
-                            {% endif %}
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                    <tr>
-                    <td colspan="7">
-                        You have reached a point beyond the last eighth period block that has been created.
-                    </td>
-                    </tr>
-                {% endfor %}
-                </table>
-                <input type="submit" value="Modify Schedule" />
-            </form>
-            </section>
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header">
+            {% include "eighth/admin/start_date.html" %}
         </div>
-    </div>
+    {% endif %}
+    {% include "eighth/profile-header.html" %}
+
+    <section class="user-info-eighth">
+    <form action="{% url 'eighth_signup' %}" method="GET">
+
+        <input type="hidden" name="user" value="{{ profile_user.id }}" />
+        <h3>
+            Eighth Period - {{ date_now }}
+        </h3>
+        <table class="eighth-table">
+        <thead>
+            <tr>
+                <td class="button-container" colspan="7">
+                    <span class="button-left">
+                        <a href="?date={{ date_previous }}" class="button">
+                            <i class="fa fa-arrow-left"></i> Back Two Weeks
+                        </a>
+                    </span>
+                    <span class="button-center">
+                        <input type="submit" value="Change Selected" />
+
+                        {% if custom_date_set %}
+                            <a href="?" class="button">Reset Date</a>
+                        {% endif %}
+                    </span>
+                    <span class="button-right">
+                        <a href="?date={{ date_next }}" class="button">
+                            Forward Two Weeks <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+            <tr class="desc">
+                <th class="center checkbox">
+                    <input type="checkbox" />
+                </th>
+                <th>
+                    <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                    <div class="select-blocks-popover closed">
+                        <a href="" onclick="return false" class="block-type">Mon B</a>
+                        <a href="" onclick="return false" class="block-type">Wed A</a>
+                        <a href="" onclick="return false" class="block-type">Wed B</a>
+                        <a href="" onclick="return false" class="block-type">Fri A</a>
+                        <a href="" onclick="return false" class="block-type">Fri B</a>
+                    </div>
+                </th>
+                <th class="center">Block</th>
+                <th>Activity</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% if skipped_ahead %}
+            <tr>
+            <td colspan="7">
+                There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
+            </td>
+            </tr>
+        {% endif %}
+        {% for sch in eighth_schedule %}
+        <tr class="form-row">
+            <td class="center checkbox">
+                <input type="checkbox" name="block" value="{{ sch.block.id }}" />
+            </td>
+            <td>
+                {{ sch.block.date|date:'D, N j, Y' }}
+            </td>
+            <td class="center">
+                {{ sch.block.block_letter }}
+            </td>
+            {% if sch.signup %}
+            <td>
+                {{ sch.signup.scheduled_activity.activity }}
+            </td>
+            <td>
+                {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
+            </td>
+            <td>
+                {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
+            </td>
+            {% else %}
+            <td colspan="3">
+                <span class="no-activity-selected">No activity selected</span>
+            </td>
+            {% endif %}
+            <td class="button-row">
+                <a href="{% url 'eighth_signup' %}/{{ sch.block.id }}?user={{ profile_user.id }}" class="button">
+                    {% if sch.signup %}
+                        Change
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+            <tr>
+            <td colspan="7">
+                You have reached a point beyond the last eighth period block that has been created.
+            </td>
+            </tr>
+        {% endfor %}
+        </table>
+        <input type="submit" value="Modify Schedule" />
+    </form>
+    </section>
+</div>
 {% endblock %}
