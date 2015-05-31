@@ -106,7 +106,12 @@ $(function() {
             $("#signup-button").click(signupClickHandler);
             $("#roster-button").click(function() {
                 var schact_id = activityDetailView.model.attributes.scheduled_activity;
-                location.href = "/eighth/roster/" + schact_id;
+                console.debug("Load roster for scheduled activity", schact_id)
+                var endpoint = $(this).parent().data("endpoint");
+                var container = $(this).parent();
+                $.get(endpoint + "/" + schact_id, {}, function(resp) {
+                    container.html(resp);
+                });
             })
         }
     });
