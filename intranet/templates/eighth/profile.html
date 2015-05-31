@@ -2,9 +2,7 @@
 {% load phone_numbers %}
 {% load staticfiles %}
 
-{% block title %}
-    {{ block.super }} - Eighth Period - Profile - {{ profile_user.full_name }}
-{% endblock %}
+{% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
 
 
 {% block css %}
@@ -100,16 +98,19 @@ table.eighth-table {
     line-height: 30px;
 }
 
-.eighth-table .button-left {
-    text-align: left;
+.eighth-table .button-container {
+    position: relative;
 }
 
 .eighth-table .button-right {
-    text-align: right;
+    position: absolute;
+    right: 0;
 }
 
 .eighth-table .button-center {
-    text-align: center;
+    position: absolute;
+    left: 50%;
+    margin-left: -75px;
 }
 
 .eighth-table .checkbox {
@@ -126,32 +127,40 @@ table.eighth-table {
         </style>
 
 
-        {% if eighth_schedule %}
             <section class="user-info-eighth">
             <form action="{% url 'eighth_signup' %}" method="GET">
 
                 <input type="hidden" name="user" value="{{ profile_user.id }}" />
-                <h3>Eighth Period</h3>
+                <h3>Eighth Period - {{ date_now }}</h3>
                 <table class="eighth-table">
                 <thead>
                     <tr>
-                        <td class="button-left" colspan="3">
-                            <a href="?date={{ date_previous }}" class="button">
-                                <i class="fa fa-arrow-left"></i> Back Two Weeks
-                            </a>
-                        </td>
-                        <td class="button-center">
-                            <input type="submit" value="Change Selected" />
-                        </td>
-                        <td class="button-right" colspan="3">
-                            <a href="?date={{ date_next }}" class="button">
-                                Forward Two Weeks <i class="fa fa-arrow-right"></i>
-                            </a>
+                        <td class="button-container" colspan="7">
+                            <span class="button-left">
+                                <a href="?date={{ date_previous }}" class="button">
+                                    <i class="fa fa-arrow-left"></i> Back Two Weeks
+                                </a>
+                            </span>
+                            <span class="button-center">
+                                <input type="submit" value="Change Selected" />
+                            </span>
+                            <span class="button-right">
+                                <a href="?date={{ date_next }}" class="button">
+                                    Forward Two Weeks <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </span>
                         </td>
                     </tr>
                     <tr>
                         <th class="checkbox">
-                            <input type="checkbox" />Select All
+                            <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                            <div class="select-blocks-popover closed">
+                                <a href="" onclick="return false" class="block-type">Mon B</a>
+                                <a href="" onclick="return false" class="block-type">Wed A</a>
+                                <a href="" onclick="return false" class="block-type">Wed B</a>
+                                <a href="" onclick="return false" class="block-type">Fri A</a>
+                                <a href="" onclick="return false" class="block-type">Fri B</a>
+                            </div>
                         </th>
                         <th>Date</th>
                         <th>Block</th>
@@ -161,8 +170,15 @@ table.eighth-table {
                         <th></th>
                     </tr>
                 </thead>
+                {% if skipped_ahead %}
+                    <tr>
+                    <td colspan="7">
+                        There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
+                    </td>
+                    </tr>
+                {% endif %}
                 {% for sch in eighth_schedule %}
-                <tr>
+                <tr class="form-row">
                     <td class="checkbox">
                         <input type="checkbox" name="block" value="{{ sch.block.id }}" />
                     </td>
@@ -202,7 +218,6 @@ table.eighth-table {
                 <input type="submit" value="Modify Schedule" />
             </form>
             </section>
-        {% endif %}
         </div>
     </div>
 {% endblock %}
