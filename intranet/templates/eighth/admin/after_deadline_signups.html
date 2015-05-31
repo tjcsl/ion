@@ -22,8 +22,11 @@
     <form action="" method="get">
         Results from <input type="text" class="datepicker" name="start" value="{{ start_date|date:'m/d/Y' }}" > to <input type="text" class="datepicker" name="end" value="{{ end_date|date:'m/d/Y' }}"> <input type="submit" value="Go">
     </form>
-    <br>
-    <br>
+    <a href="javascript:;" onclick="location.href = location.href.replace('after_deadline_signups', 'after_deadline_signups/csv')" class="button">
+        Export CSV
+    </a>
+    <br />
+    <br />
     {% if signups %}
         Click on column titles to sort.
         <table data-sortable class="zebra">
@@ -43,7 +46,7 @@
                     <tr>
                         <td data-value={{ signup.time|date:"U" }}>{{ signup.time }}</td>
                         <td>{{ signup.scheduled_activity.block }}</td>
-                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }} ({{ signup.user.student_id }})</td>
+                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }} ({{ signup.user.student_id }}, {{ signup.user.grade.number }})</td>
                         <td>{{ signup.previous_activity_name }}</td>
                         <td>{{ signup.previous_activity_sponsors }}</td>
                         <td>{{ signup.scheduled_activity.activity.name_with_flags }} ({{ signup.scheduled_activity.activity.id }})</td>

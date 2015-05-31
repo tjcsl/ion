@@ -185,6 +185,44 @@ def after_deadline_signup_view(request):
         "end_date": end_date
     }
 
+    if request.resolver_match.url_name == "eighth_admin_download_after_deadline_signups_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"after_deadline_signups.csv\""
+
+        writer = csv.writer(response)
+        writer.writerow(["Start Date",
+                         "End Date",
+                         "Time",
+                         "Block",
+                         "Last Name",
+                         "First Name",
+                         "Student ID",
+                         "Grade",
+                         "From Activity",
+                         "From Sponsor",
+                         "To Activity ID",
+                         "To Activity",
+                         "To Sponsor"])
+
+        for signup in signups:
+            row = []
+            row.append(datetime.strftime(start_date, "%m/%d/%Y"))
+            row.append(datetime.strftime(end_date, "%m/%d/%Y"))
+            row.append(signup.time)
+            row.append(signup.scheduled_activity.block)
+            row.append(signup.user.last_name)
+            row.append(signup.user.first_name)
+            row.append(signup.user.student_id)
+            row.append(signup.user.grade.number)
+            row.append(signup.previous_activity_name)
+            row.append(signup.previous_activity_sponsors)
+            row.append(signup.scheduled_activity.activity.id)
+            row.append(signup.scheduled_activity.activity.name_with_flags)
+            row.append(" ,".join([str(sponsor) for sponsor in signup.scheduled_activity.get_true_sponsors()]))
+            writer.writerow(row)
+
+        return response
+
     return render(request, "eighth/admin/after_deadline_signups.html", context)
 
 

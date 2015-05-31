@@ -56,6 +56,7 @@ eighth_admin_patterns = [
     url(r"^attendance/delinquent_students$", admin_attendance.delinquent_students_view, name="eighth_admin_view_delinquent_students"),
     url(r"^attendance/delinquent_students/csv$", admin_attendance.delinquent_students_view, name="eighth_admin_download_delinquent_students_csv"),
     url(r"^attendance/after_deadline_signups$", admin_attendance.after_deadline_signup_view, name="eighth_admin_view_after_deadline_signups"),
+    url(r"^attendance/after_deadline_signups/csv$", admin_attendance.after_deadline_signup_view, name="eighth_admin_download_after_deadline_signups_csv"),
     url(r"^attendance/no_attendance$", admin_attendance.activities_without_attendance_view, name="eighth_admin_view_activities_without_attendance"),
     url(r"^attendance/migrate_outstanding_passes$", admin_attendance.migrate_outstanding_passes_view, name="eighth_admin_migrate_outstanding_passes"),
     url(r"^attendance/export_out_of_building_schedules$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules"),
