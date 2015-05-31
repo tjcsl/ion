@@ -22,8 +22,8 @@
     {% endif %}
 {% endblock %}
 
-{% block main %}
-    <div class="primary-content">
+{% block admin_main %}
+    <div class="inner-content">
         <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
             <img src="/profile/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View pictures" width="86" height="107.5" />
         </div>
@@ -81,51 +81,16 @@
                             </tr>
 
                     </table>
+                    <a href="/profile/{{ profile_user.id }}" class="button">View All Info</a> &nbsp;
+                    {% if request.user.is_eighth_admin %}
+                        <a href="/profile/edit/{{ profile_user.id }}" class="button">Edit Info</a> &nbsp;
+                    {% endif %}
                     {% if request.user.is_eighth_admin and profile_user.is_student %}
                         <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
                     {% endif %}
                 </div>
 
             </div>
-
-        <style type="text/css">
-
-table.eighth-table {
-    width: 100%;
-}
-
-.eighth-table tr {
-    line-height: 30px;
-}
-
-.eighth-table .button-container {
-    position: relative;
-}
-
-.eighth-table .button-right {
-    position: absolute;
-    right: 0;
-}
-
-.eighth-table .button-center {
-    position: absolute;
-    left: 50%;
-    margin-left: -75px;
-}
-
-.eighth-table .checkbox {
-    width: 80px;
-    text-align: center;
-}
-
-.eighth-table .button-row {
-    width: 70px;
-}
-
-
-
-        </style>
-
 
             <section class="user-info-eighth">
             <form action="{% url 'eighth_signup' %}" method="GET">
@@ -159,6 +124,9 @@ table.eighth-table {
                     </tr>
                     <tr>
                         <th class="checkbox">
+                            <input type="checkbox" />
+                        </th>
+                        <th>
                             <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
                             <div class="select-blocks-popover closed">
                                 <a href="" onclick="return false" class="block-type">Mon B</a>
@@ -168,7 +136,6 @@ table.eighth-table {
                                 <a href="" onclick="return false" class="block-type">Fri B</a>
                             </div>
                         </th>
-                        <th>Date</th>
                         <th>Block</th>
                         <th>Activity</th>
                         <th>Teacher</th>
