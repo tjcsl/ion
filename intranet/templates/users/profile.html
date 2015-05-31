@@ -9,8 +9,22 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    {% if profile_user.is_eighth_sponsor and profile_user.is_student %}
+    <style type="text/css">
+    .user-info-eighth.signups {
+        clear: left;
+        float: left;
+    }
+
+    .user-info-eighth.sponsor {
+        float: left;
+        clear: none;
+        margin-left: 20px;
+    }
+    </style>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
@@ -30,6 +44,9 @@
 {% endblock %}
 
 {% block main %}
+    {% if request.user.is_eighth_admin %}
+        <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 35px">View Eighth Profile</a>
+    {% endif %}
     <div class="primary-content">
         <div class="user-pictures">
         {% if profile_user.is_student %}
@@ -262,8 +279,8 @@
             </div>
 
             {% if profile_user.is_student and eighth_schedule %}
-            <section class="user-info-eighth">
-                <h3>Eighth Period</h3>
+            <section class="user-info-eighth signups">
+                <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Signups{% endif %}</h3>
                 <table class="fancy-table">
                 <thead>
                 <tr>
@@ -294,22 +311,24 @@
                 <br />
                 {% if user == profile_user and profile_user.is_student %}
                     <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
-                {% endif %}
+                {% else %}
 
-                {% if request.user.is_eighth_admin and profile_user.is_student %}
-                    <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+                    {% if request.user.is_eighth_admin and profile_user.is_student %}
+                        <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+                    {% endif %}
+
                 {% endif %}
 
             </section>
             {% endif %}
             {% if profile_user.is_eighth_sponsor %}
-            <section class="user-info-eighth">
-                <h3>Eighth Period</h3>
+            <section class="user-info-eighth sponsor">
+                <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsorships{% endif %}</h3>
                 <table class="fancy-table">
                 <thead>
                 <tr>
                     <th>Block</th>
-                    <th>Activity Sponsoring</th>
+                    <th>Activity</th>
                 </tr>
                 </thead>
                 <tbody>
