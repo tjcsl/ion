@@ -692,6 +692,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "tjhsstStudent"
 
     @property
+    def is_eighthoffice(self):
+        """Checks if user is an Eighth Period office user.
+        This is currently hardcoded, but is meant to be used instead
+        of user.id == 9999 or user.username == "eighthoffice".
+
+        Returns:
+            Boolean
+        """
+        return self.id == 9999
+    
+
+    @property
     def is_staff(self):
         """Checks if a user should have access to the Django Admin
         interface. This has nothing to do with staff at TJ - `is_staff`

@@ -7,7 +7,7 @@ import logging
 import os
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import User, Grade
 from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
 from intranet import settings
@@ -25,6 +25,9 @@ def profile_view(request, user_id=None):
             specified, show the user's own profile.
 
     """
+    if request.user.is_eighthoffice and not "full" in request.GET:
+        return redirect("eighth_profile", user_id=user_id)
+
     if user_id is not None:
         profile_user = User.get_user(id=user_id)
         if profile_user is None:
