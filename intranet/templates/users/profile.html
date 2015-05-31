@@ -44,9 +44,6 @@
 {% endblock %}
 
 {% block main %}
-    {% if request.user.is_eighth_admin %}
-        <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 35px">View Eighth Profile</a>
-    {% endif %}
     <div class="primary-content">
         <div class="user-pictures">
         {% if profile_user.is_student %}
@@ -80,6 +77,12 @@
                 <span>
                     View all pictures
                 </span>
+            {% endif %}
+
+
+            {% if request.user.is_eighth_admin %}
+                <br />
+                <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 20px">View Eighth Profile</a>
             {% endif %}
         </div>
 
