@@ -48,11 +48,12 @@
                         <td> {{ profile_user.counselor.last_name }} </td>
                     </div>
                 {% endif %}
-
+                {% if request.user.is_eighth_admin %}
                     <tr class="comments">
                         <th>Comments</th>
                         <td style="width: 400px">{{ profile_user.admin_comments|safe }}</td>
                     </tr>
+                {% endif %}
 
             </table>
             <a href="/profile/{{ profile_user.id }}" class="button">View All Info</a> &nbsp;
@@ -61,6 +62,10 @@
             {% endif %}
             {% if request.user.is_eighth_admin and profile_user.is_student %}
                 <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+            {% endif %}
+
+            {% if not request.user.is_eighth_admin and profile_user == user %}
+                <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
             {% endif %}
         </div>
 

@@ -56,8 +56,8 @@
                             </span>
                         </td>
                     </tr>
-                    <tr>
-                        <th class="checkbox">
+                    <tr class="desc">
+                        <th class="center checkbox">
                             <input type="checkbox" />
                         </th>
                         <th>
@@ -70,7 +70,7 @@
                                 <a href="" onclick="return false" class="block-type">Fri B</a>
                             </div>
                         </th>
-                        <th>Block</th>
+                        <th class="center">Block</th>
                         <th>Activity</th>
                         <th>Teacher</th>
                         <th>Room</th>
@@ -86,13 +86,13 @@
                 {% endif %}
                 {% for sch in eighth_schedule %}
                 <tr class="form-row">
-                    <td class="checkbox">
+                    <td class="center checkbox">
                         <input type="checkbox" name="block" value="{{ sch.block.id }}" />
                     </td>
                     <td>
                         {{ sch.block.date|date:'D, N j, Y' }}
                     </td>
-                    <td>
+                    <td class="center">
                         {{ sch.block.block_letter }}
                     </td>
                     {% if sch.signup %}
@@ -111,7 +111,7 @@
                     </td>
                     {% endif %}
                     <td class="button-row">
-                        <a href="{% url 'eighth_signup' %}/{{ sch.signup.scheduled_activity.block.id }}?user={{ profile_user.id }}" class="button">
+                        <a href="{% url 'eighth_signup' %}/{{ sch.block.id }}?user={{ profile_user.id }}" class="button">
                             {% if sch.signup %}
                                 Change
                             {% else %}

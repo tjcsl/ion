@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from datetime import datetime, timedelta
-from django.http import Http404
+from django import http
 from django.shortcuts import redirect, render
 from ...auth.decorators import eighth_admin_required
 from ...users.models import User
@@ -14,15 +14,20 @@ logger = logging.getLogger(__name__)
 def date_fmt(date):
     return datetime.strftime(date, "%Y-%m-%d")
 
-@eighth_admin_required
+def edit_profile_view(request, user_id=None):
+    pass
+
 def profile_view(request, user_id=None):
     if user_id:
         try:
             profile_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            raise Http404
+            raise http.Http404
     else:
         profile_user = request.user
+
+    if profile_user != request.user and not request.user.is_eighth_admin:
+        return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
     custom_date_set = False
     if "date" in request.GET:
