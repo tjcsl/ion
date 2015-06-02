@@ -39,6 +39,16 @@
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
                 <input type="submit" value="Save">
             </div>
+
+
+            <div class="propagate-direction">
+                <b>Propagate Direction:</b>
+                <select onchange="window.updatePropagate(this.value)">
+                    <option value="both" default>Both</option>
+                    <option value="up">Up</option>
+                    <option value="down">Down</option>
+                </select>
+            </div>
         {% endif %}
 
     </div>
@@ -46,7 +56,6 @@
         {% csrf_token %}
 
         {{ formset.management_form }}
-
         <table class="schedule-activity-grid">
             <thead>
                 <tr>
@@ -117,11 +126,6 @@
                                     <span class="propagate {{ field.name }}" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fa fa-arrows-v"></i>
                                     </span>
-                                {% endif %}
-                                {% if field.name in "" %}
-                                <span class="propagate {{ field.name }}" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
-                                    <i class="fa fa-arrows-v"></i>
-                                </span>
                                 {% endif %}
                                 </td>
                             {% endif %}

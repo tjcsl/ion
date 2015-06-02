@@ -49,18 +49,64 @@ $(function() {
         $capacityInput.attr("placeholder", capacitySum == 0 ? defaultCapacity : capacitySum);
     });
 
+    window.propagate_direction = "both";
+    window.updatePropagate = function(opt) {
+        window.propagate_direction = opt;
+        console.info("New propagate direction:", opt)
+
+        var classes = ["fa-arrows-v", "fa-long-arrow-up", "fa-long-arrow-down"];
+        if(opt == "both") {
+            $(".propagate > i").removeClass(classes[1]).removeClass(classes[2])
+                               .addClass(classes[0]);
+        } else if(opt == "up") {
+            $(".propagate > i").removeClass(classes[0]).removeClass(classes[2])
+                               .addClass(classes[1]);
+        } else if(opt == "down") {
+            $(".propagate > i").removeClass(classes[0]).removeClass(classes[1])
+                               .addClass(classes[2]);
+        }
+    }
+
     $(".propagate").click(function() {
         var field = $(this).attr("data-field");
         var input = $(this).attr("data-input");
         var el = $("#" + input);
         console.debug("Propagate", field, input, el.length > 0);
+
+        var rows = $(".schedule-activity-grid tr.form-row");
+        if(window.propagate_direction && window.propagate_direction == "down") {
+            var current_row = el.parent().parent();
+            var rows = [];
+            var row = current_row;
+            while(row && row.length > 0) {
+                row = row.next();
+                if(row.hasClass("form-row")) {
+                    rows.push(row[0]);
+                }
+            }
+            rows = $(rows);
+        }
+
+        if(window.propagate_direction && window.propagate_direction == "up") {
+            var current_row = el.parent().parent();
+            var rows = [];
+            var row = current_row;
+            while(row && row.length > 0) {
+                row = row.prev();
+                if(row.hasClass("form-row")) {
+                    rows.push(row[0]);
+                }
+            }
+            rows = $(rows);
+        }
+
         if(el.hasClass("selectized")) {
             console.info("Selectized element");
             var sel = el[0].selectize;
             mod_items = sel.items;
             console.info("New value:", mod_items);
 
-            $(".schedule-activity-grid tr.form-row").each(function() {
+            rows.each(function() {
                 var ntd = $("td[data-field='" + field + "']", $(this));
                 var ninp = $("input, select", ntd);
                 var nsel = ninp[0].selectize;
@@ -73,7 +119,7 @@ $(function() {
             mod_val = el.val();
             console.info("New value:", mod_val);
 
-            $(".schedule-activity-grid tr.form-row").each(function() {
+            rows.each(function() {
                 var ntd = $("td[data-field='" + field + "']", $(this));
                 var ninp = $("input, select, textarea", ntd);
 
