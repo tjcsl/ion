@@ -70,7 +70,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
 {% endblock %}
 
-{% block bodyclass %}{{ block.super}} schedule-activity-page{% if activity %} floating{% endif %}{% endblock %}
+{% block bodyclass %}{{ block.super }} schedule-activity-page{% if activity %} floating{% endif %}{% endblock %}
 
 {% block admin_main %}
 
@@ -146,6 +146,9 @@
                                             </option>
                                         {% endfor %}
                                     </select>
+                                    <span class="propagate selectize" title="Propagate rooms" data-block="{{ form.block.value }}" data-field="{{ field.id_for_label }}">
+                                        <i class="fa fa-arrows-v"></i>
+                                    </span>
                                 {% elif field.name == "sponsors" %}
                                     <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{{ default_sponsors|join:", " }}">
                                         {% for val in field.value %}
@@ -156,9 +159,15 @@
                                             </option>
                                         {% endfor %}
                                     </select>
+                                    <span class="propagate selectize" title="Propagate sponsors" data-block="{{ form.block.value }}" data-field="{{ field.id_for_label }}">
+                                        <i class="fa fa-arrows-v"></i>
+                                    </span>
                                 {% elif field.name == "capacity" %}
                                     {% with bid=form.block.value %}
                                         {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
+                                        <span class="propagate" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.id_for_label }}">
+                                            <i class="fa fa-arrows-v"></i>
+                                        </span>
                                     {% endwith %}
                                 {% else %}
                                     {{ field }}
