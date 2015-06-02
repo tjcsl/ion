@@ -273,8 +273,10 @@ def take_attendance_view(request, scheduled_activity_id):
             writer = csv.writer(response)
             writer.writerow(["Activity",
                              "Block",
+                             "Locked",
                              "Rooms",
                              "Sponsors",
+                             "Attendance Taken",
                              "Present",
                              "Had Pass",
                              "Name",
@@ -285,13 +287,15 @@ def take_attendance_view(request, scheduled_activity_id):
                 logger.debug(member)
                 row.append(str(scheduled_activity.activity))
                 row.append(str(scheduled_activity.block))
+                row.append(scheduled_activity.block.locked)
                 rooms = scheduled_activity.get_true_rooms()
                 row.append(", ".join(["{} ({})".format(room.name, room.capacity) for room in rooms]))
                 sponsors = scheduled_activity.get_true_sponsors()
                 row.append(" ,".join([sponsor.name for sponsor in sponsors]))
-                row.append(member["present"])
+                row.append(scheduled_activity.attendance_taken)
+                row.append(member["present"] if scheduled_activity.block.locked else "N/A")
 
-                row.append(member["had_pass"])
+                row.append(member["had_pass"] if scheduled_activity.block.locked else "N/A")
                 row.append(member["name"])
                 row.append(member["id"])
                 row.append(member["grade"])
