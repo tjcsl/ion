@@ -6,9 +6,50 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+$(function() {
+    $(".select-all").change(function() {
+        var chk = $(this).prop("checked");
+        var name = $(this).attr("data-name");
+        console.debug(chk, name);
+        $(".user-item").each(function() {
+            if($(this).attr("name") == name) {
+                $(this).prop("checked", chk);
+            }
+        });
+    });
+
+    $(".user-item").change(function() {
+        var chk = $(this).prop("checked");
+        var name = $(this).attr("name");
+        var num_checked = 0;
+        $(".user-item").each(function() {
+            if($(this).prop("checked")) {
+                num_checked++;
+            }
+        });
+        $e = $(".select-all[data-name='"+ name + "']");
+        if(num_checked == 0) {
+            $e.prop("checked", false);
+            $e.prop("indeterminate", false);
+        } else if(num_checked == $(".user-item").length) {
+            $e.prop("checked", true);
+            $e.prop("indeterminate", false);
+        } else {
+            $e.prop("checked", false);
+            $e.prop("indeterminate", true);
+        }
+    });
+
+})
+    </script>
+{% endblock %}
+
 {% block admin_main %}
     {% if show_selection %}
-    <form action="{% url 'eighth_admin_distribute_action' %}" method="post" class="schedule-activity-grid">
+    <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
         
         {% if users_type == "unsigned" %}
             <p>These users have not signed up for any activities.</p>
@@ -25,7 +66,8 @@
                     {% for sch in schacts %}
                     <th>
                         {{ sch.activity }}<br />
-                        {{ sch.block }}
+                        {{ sch.block }}<br />
+                        <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}" />
                     </th>
                     {% empty %}
                     <th>No activities found.</th>
@@ -38,7 +80,7 @@
                 <td>{{ user.display_name }} ({{ user }})</td>
                 {% for sch in schacts %}
                 <td>
-                    <input type="checkbox" name="schact{{ sch.id }}" value="{{ user.id }}" />
+                    <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}" />
                 </td>
                 {% endfor %}
             </tr>

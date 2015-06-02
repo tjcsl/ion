@@ -272,15 +272,24 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         logger.debug(block)
         logger.debug(activities)
 
-        args = "block={}".format(block.id)
-        for a in activities:
-            args += "&activity={}".format(a.id)
+        schact_ids = []
+        for act in activities:
+            try:
+                schact = EighthScheduledActivity.objects.get(block=block, activity=act)
+                schact_ids.append(schact.id)
+            except EighthScheduledActivity.DoesNotExist:
+                raise Http404
+
+        args = ""
+        for said in schact_ids:
+            args += "&schact={}".format(said)
 
         if "group_id" in kwargs:
             gid = kwargs["group_id"]
             args += "&group={}".format(gid)
-        else:
-            args += "&unsigned=1"
+        
+        if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
+            args += "&unsigned=1&block={}".format(block.id)
 
         return redirect("/eighth/admin/groups/distribute_action?{}".format(args))
 
@@ -330,27 +339,31 @@ def eighth_admin_distribute_action(request):
         messages.success(request, "Successfully signed up users for {} activities.".format(changes))
 
         return redirect("eighth_admin_dashboard")
-    elif "activity" in request.GET and "block" in request.GET:
-        blockid = request.GET.get("block")
-        activityids = request.GET.getlist("activity")
+    elif "schact" in request.GET:
+        schactids = request.GET.getlist("schact")
 
         schacts = []
-        for act in activityids:
+        for schact in schactids:
             try:
-                sch = EighthScheduledActivity.objects.get(block__id=blockid,
-                                                          activity__id=act)
+                sch = EighthScheduledActivity.objects.get(id=schact)
                 schacts.append(sch)
             except EighthScheduledActivity.DoesNotExist:
-                messages.error(request, "An eighth scheduled activity for {} on {} did not exist.".format(act, EighthBlock.objects.get(id=blockid)))
+                raise http.Http404
 
         users = []
         users_type = ""
+
         if "group" in request.GET:
             group = Group.objects.get(id=request.GET.get("group"))
             users = group.user_set.all()
             users_type = "group"
         elif "unsigned" in request.GET:
             unsigned = []
+
+            if "block" in request.GET:
+                blockid = request.GET.get("block")
+            else:
+                raise http.Http404
 
             students = User.objects.filter(username__startswith="2")
             for student in students:
@@ -360,9 +373,6 @@ def eighth_admin_distribute_action(request):
 
             users = unsigned
             users_type = "unsigned"
-        elif "grade" in request.GET:
-            users = User.objects.get(grade=request.GET.get("grade"))
-            users_type = "properties"
 
         context = {
             "admin_page_title": "Distribute Group Members Across Activities",
