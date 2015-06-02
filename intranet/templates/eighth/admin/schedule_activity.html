@@ -171,6 +171,11 @@
                                     {% endwith %}
                                 {% else %}
                                     {{ field }}
+                                    {% if field.name in "title comments admin_comments" %}
+                                    <span class="propagate {{ field.name }}" title="Propagate sponsors" data-type="{{ field.name }}" data-block="{{ form.block.value }}" data-field="{{ field.id_for_label }}">
+                                        <i class="fa fa-arrows-v"></i>
+                                    </span>
+                                    {% endif %}
                                 {% endif %}
                                 </td>
                             {% endif %}
