@@ -7,19 +7,25 @@
 {% endblock %}
 
 {% block admin_main %}
-    <h2>User Signup</h2>
     {% if show_selection %}
     <form action="{% url 'eighth_admin_distribute_action' %}" method="post" class="schedule-activity-grid">
+        
+        {% if users_type == "unsigned" %}
+            <p>These users have not signed up for any activities.</p>
+        {% elif users_type == "group" %}
+            <b>Group:</b> {{ group }}<br />
+            <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a>
+        {% endif %}
         <input type="hidden" name="users" value="true" />
         {% csrf_token %}
-        <table class="schedule-activity-grid">
+        <table class="distribute-group-grid fancy-table">
             <thead>
                 <tr>
                     <th>User</th>
                     {% for sch in schacts %}
                     <th>
                         {{ sch.activity }}<br />
-                        on {{ sch.block }}
+                        {{ sch.block }}
                     </th>
                     {% empty %}
                     <th>No activities found.</th>

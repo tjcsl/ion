@@ -262,7 +262,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminDistributeGroupWizard,
                         self).get_context_data(form=form, **kwargs)
-        context.update({"admin_page_title": "Distribute Group"})
+        context.update({"admin_page_title": "Distribute Group Members Among Activities"})
         return context
 
     def done(self, form_list, **kwargs):
@@ -344,9 +344,11 @@ def eighth_admin_distribute_action(request):
                 messages.error(request, "An eighth scheduled activity for {} on {} did not exist.".format(act, EighthBlock.objects.get(id=blockid)))
 
         users = []
+        users_type = ""
         if "group" in request.GET:
             group = Group.objects.get(id=request.GET.get("group"))
             users = group.user_set.all()
+            users_type = "group"
         elif "unsigned" in request.GET:
             unsigned = []
 
@@ -357,8 +359,15 @@ def eighth_admin_distribute_action(request):
                     unsigned.append(student)
 
             users = unsigned
+            users_type = "unsigned"
+        elif "grade" in request.GET:
+            users = User.objects.get(grade=request.GET.get("grade"))
+            users_type = "properties"
 
         context = {
+            "admin_page_title": "Distribute Group Members Across Activities",
+            "users_type": users_type,
+            "group": group if users_type == "group" else None,
             "schacts": schacts,
             "users": users,
             "show_selection": True
