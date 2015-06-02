@@ -34,11 +34,14 @@ $(function() {
         var $select = $(e.target);
 
         var capacitySum = 0;
-        $select.val().forEach(function(roomID) {
-            var c = all_rooms_lookup[roomID].capacity;
-            if (c == -1) c = Infinity;
-            capacitySum += c;
-        });
+        var val = $select.val();
+        if(val !== null) {
+            val.forEach(function(roomID) {
+                var c = all_rooms_lookup[roomID].capacity;
+                if (c == -1) c = Infinity;
+                capacitySum += c;
+            });
+        }
 
         if (capacitySum == Infinity) capacitySum = -1;
         var $capacityInput = $("input.capacity", $select.parent().parent());
@@ -52,22 +55,21 @@ $(function() {
         var el = $("#" + input);
         console.debug("Propagate", field, input, el.length > 0);
         if(el.hasClass("selectized")) {
-            var opts = el.html();
-            var sel = $(".selectize-input", el.parent());
-            var inp = sel.html();
-            console.debug("opts", opts);
-            console.debug("inp", inp);
+            var sel = el[0].selectize;
+            console.debug("selectize object", sel);
+            var items = sel.items;
+            console.debug("items", items);
 
             $(".schedule-activity-grid tr.form-row").each(function() {
-                var nfield = $("td[data-field='" + field + "'] > select");
-                console.debug("nfield", nfield);
-                nfield.html(opts);
-
-                var ninp = $("td[data-field='" + field + "'] .selectize-input");
-                console.debug("ninp", ninp);
-                ninp.html(inp);
-
-            })
+                var ntd = $("td[data-field='" + field + "']", $(this));
+                var ninp = $("input, select", ntd);
+                console.log("* orig input object", ninp);
+                var nsel = ninp[0].selectize;
+                nsel.clear();
+                for(var i=0; i<items.length; i++) {
+                    nsel.addItem(items[i]);
+                }
+            });
         }
 
     })
