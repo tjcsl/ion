@@ -55,20 +55,19 @@ $(function() {
         var el = $("#" + input);
         console.debug("Propagate", field, input, el.length > 0);
         if(el.hasClass("selectized")) {
+            console.info("Selectized element");
             var sel = el[0].selectize;
-            console.debug("selectize object", sel);
-            var items = sel.items;
-            console.debug("items", items);
+            mod_items = sel.items;
+            console.info("New value:", mod_items);
 
             $(".schedule-activity-grid tr.form-row").each(function() {
                 var ntd = $("td[data-field='" + field + "']", $(this));
                 var ninp = $("input, select", ntd);
-                console.log("* orig input object", ninp);
                 var nsel = ninp[0].selectize;
-                nsel.clear();
-                for(var i=0; i<items.length; i++) {
-                    nsel.addItem(items[i]);
-                }
+                var o_items = nsel.items;
+                nsel.setValue(mod_items);
+                console.debug("items: ", o_items, "=>", nsel.items);
+
             });
         }
 
