@@ -362,6 +362,7 @@ def eighth_admin_distribute_action(request):
 
             if "block" in request.GET:
                 blockid = request.GET.get("block")
+                block = EighthBlock.objects.get(id=blockid)
             else:
                 raise http.Http404
 
@@ -378,6 +379,7 @@ def eighth_admin_distribute_action(request):
             "admin_page_title": "Distribute Group Members Across Activities",
             "users_type": users_type,
             "group": group if users_type == "group" else None,
+            "eighthblock": block if users_type == "unsigned" else None,
             "schacts": schacts,
             "users": users,
             "show_selection": True
