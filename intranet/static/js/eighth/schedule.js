@@ -69,6 +69,17 @@ $(function() {
                 console.debug("items: ", o_items, "=>", nsel.items);
 
             });
+        } else {
+            mod_val = el.val();
+            console.info("New value:", mod_val);
+
+            $(".schedule-activity-grid tr.form-row").each(function() {
+                var ntd = $("td[data-field='" + field + "']", $(this));
+                var ninp = $("input, select, textarea", ntd);
+
+                ninp.val(mod_val);
+            });
+
         }
 
     })
