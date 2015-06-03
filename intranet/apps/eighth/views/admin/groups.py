@@ -150,14 +150,16 @@ def upload_group_members_view(request, group_id):
         elif "user_id" in request.POST:
             userids = request.POST.getlist("user_id")
             num_added = 0
+            bulk_users = []
             for uid in userids:
                 user = User.objects.get(id=uid)
                 if user is None:
                     messages.error(request, "User with ID {} does not exist".format(uid))
                 else:
                     user.groups.add(group)
-                    user.save()
+                    bulk_users.add(user)
                     num_added += 1
+            User.objects.bulk_create(bulk_users)
             messages.success(request, "{} added to group {}".format(num_added, group))
             return redirect("eighth_admin_edit_group", group.id)
 
