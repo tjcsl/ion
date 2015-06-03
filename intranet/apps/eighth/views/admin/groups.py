@@ -91,7 +91,11 @@ def get_file_string(fileobj):
     return filetext
 
 def get_user_info(key, val):
-    return User.objects.filter(**{ key: val })
+    try:
+        u = User.objects.filter(**{ key: val })
+    except ValueError:
+        return []
+    return u
 
 
 def handle_group_input(filetext):
@@ -103,42 +107,37 @@ def handle_group_input(filetext):
         line = line.strip()
 
         # Try username, user id
-        for i in ["username",
-                  "id"]:
+        for i in ["username", "id"]:
             r = get_user_info(i, line)
-            if len(r) == 0:
-                pass
-            elif len(r) == 1:
+            if len(r) == 1:
                 sure_users.append([line, r[0]])
                 continue
-            elif len(r) > 1:
-                unsure_users.append([line, r])
-                continue
-
+            
         # Try student id
         r = User.objects.user_with_student_id(line)
         if r:
             sure_users.append([line, r])
-        
+
+    logger.debug("Sure users:")
+    logger.debug(sure_users)
+    logger.debug("Unsure users:")
+    logger.debug(unsure_users)
+
+    return sure_users, unsure_users
 
 @eighth_admin_required
 def upload_group_view(request):
     stage = "upload"
     data = {}
-
+    filetext = False
     if request.method == "POST":
         form = UploadGroupForm(request)
-        filetext = False
         logger.debug(request.FILES)
         if "file" in request.FILES:
             fileobj = request.FILES['file']
             filetext = get_file_string(fileobj)
         elif "filetext" in request.POST:
             filetext = request.POST.get("filetext")
-
-        if filetext:
-            stage = "parse"
-            data = handle_group_input(filetext)
 
     else:
         form = UploadGroupForm()
@@ -148,6 +147,12 @@ def upload_group_view(request):
         "stage": stage,
         "data": data
     }
+
+    if filetext:
+        context["stage"] = "parse"
+        data = handle_group_input(filetext)
+        context["sure_users"], context["unsure_users"] = data
+
     return render(request, "eighth/admin/upload_group.html", context)
 
 
