@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
+from ...forms.admin.activities import ScheduledActivityMultiSelectForm
 from ...models import EighthBlock, EighthScheduledActivity
 from ..attendance import generate_roster_pdf
 from ...serializers import EighthBlockDetailSerializer
@@ -78,6 +79,7 @@ def add_multiple_blocks_view(request):
 
 
     context = {
+        "admin_page_title": "Add Multiple Blocks",
         "date": date,
         "letters": letters,
         "show_letters": show_letters
@@ -137,13 +139,25 @@ def delete_block_view(request, block_id):
 
 @eighth_admin_required
 def print_block_rosters_view(request, block_id):
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = "inline; filename=\"block_{}_rosters.pdf\"".format(block_id)
-    sched_act_ids = (EighthScheduledActivity.objects
-                                            .filter(block=block_id)
-                                            .values_list("id", flat=True))
+    if "schact_id" in request.POST:
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = "inline; filename=\"block_{}_rosters.pdf\"".format(block_id)
+        sched_act_ids = request.POST.getlist("schact_id")
 
-    pdf_buffer = generate_roster_pdf(sched_act_ids, True)
-    response.write(pdf_buffer.getvalue())
-    pdf_buffer.close()
-    return response
+        pdf_buffer = generate_roster_pdf(sched_act_ids, True)
+        response.write(pdf_buffer.getvalue())
+        pdf_buffer.close()
+        return response
+    else:
+        try:
+            block = EighthBlock.objects.get(id=block_id)
+            schacts = EighthScheduledActivity.objects.filter(block=block)
+        except EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist:
+            raise http.Http404
+
+        context = {
+            "eighthblock": block,
+            "admin_page_title": "Choose activities to print",
+            "schacts": schacts
+        }
+        return render(request, "eighth/admin/choose_roster_activities.html", context)

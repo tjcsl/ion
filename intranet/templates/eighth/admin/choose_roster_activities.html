@@ -1,0 +1,42 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+$(function() {
+    $("input[type=checkbox].all").change(function() {
+        var chk = $(this).prop("checked");
+        $(".choose-activities tbody input").each(function() {
+            $(this).prop("checked", chk);
+        })
+    })
+});
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+    <b>Block:</b> {{ eighthblock }}<br />
+    <form action="" method="post">{% csrf_token %}
+
+        <table class="fancy-table choose-activities">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="all" checked /></th>
+                <th>Activity Name</th>
+                <th>Activity Sponsor</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for schact in schacts %}
+        <tr>
+            <td><input type="checkbox" name="schact_id" value="{{ schact.id }}" checked /></td>
+            <td>{{ schact.full_title }}</td>
+            <td>{{ schact.get_true_sponsors|join:"; " }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        <input type="submit" value="Print Roster" />
+    </form>
+{% endblock %}
