@@ -108,7 +108,7 @@ def picture_view(request, user_id, year=None):
                     current_grade = 12
                 else:
                     current_grade = int(user.grade)
-                    if current_grade == 13:
+                    if current_grade > 12:
                         current_grade = 12
 
                 for i in reversed(range(9, current_grade + 1)):
@@ -121,7 +121,7 @@ def picture_view(request, user_id, year=None):
                     image_buffer = StringIO(data)
 
             # Exclude 'graduate' from names array
-            elif preferred in Grade.names[:-1]:
+            elif preferred in Grade.names:
                 data = user.photo_binary(preferred)
 
                 if data:
