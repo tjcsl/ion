@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r"^/add$", views.add_announcement_view, name="add_announcement"),
+    url(r"^/request$", views.request_announcement_view, name="request_announcement"),
     url(r"^/modify/(?P<id>\d+)$", views.modify_announcement_view, name="modify_announcement"),
     url(r"^/delete$", views.delete_announcement_view, name="delete_announcement"),
 ]

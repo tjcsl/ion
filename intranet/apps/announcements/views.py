@@ -4,13 +4,30 @@ from __future__ import unicode_literals
 import logging
 from django import http
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from ..auth.decorators import announcements_admin_required
 from .models import Announcement
-from .forms import AnnouncementForm
+from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
 
+@login_required
+def request_announcement_view(request):
+    if request.method == "POST":
+        form = AnnouncementRequestForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully added announcement request.")
+            return redirect("index")
+        else:
+            messages.error(request, "Error adding announcement request")
+    else:
+        form = AnnouncementRequestForm()
+    return render(request, "announcements/request.html", {"form": form, "action": "add"})
 
 @announcements_admin_required
 def add_announcement_view(request):

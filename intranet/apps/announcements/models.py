@@ -55,3 +55,51 @@ class Announcement(models.Model):
 
     class Meta:
         ordering = ["-added"]
+
+
+class AnnouncementRequest(models.Model):
+
+    """Represents a request for an announcement.
+
+    Attributes:
+        title
+            The title of the announcement
+        content
+            The HTML content of the news post
+        notes
+            Notes for the person who approves the announcement
+        added
+            The date the request was added
+        updated
+            The most recent date the request was updated
+        user
+            The user who submitted the request
+        teachers_requested
+            The teachers requested to approve the request
+        teachers_approved
+            The teachers who have approved the request
+        posted
+            ForeignKey to Announcement if posted
+
+    """
+
+    title = models.CharField(max_length=127)
+    content = models.TextField()
+    notes = models.TextField()
+
+    added = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    user = models.ForeignKey(User, null=True, blank=True)
+    
+    teachers_requested = models.ManyToManyField(User, blank=True, related_name="teachers_requested")
+    teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
+
+    posted = models.ForeignKey(Announcement, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-added"]
+

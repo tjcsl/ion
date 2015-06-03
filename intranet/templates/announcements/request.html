@@ -1,0 +1,93 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {{ action|title }} Announcement
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("select#id_groups").selectize({
+                plugins: ["remove_button"],
+                placeholder: "Everyone"
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <style type="text/css">
+
+        div.cke_chrome {
+            margin: 10px 0;
+        }
+
+        .announcements table {
+            width: 600px;
+        }
+
+        .announcements input {
+            width: 100%;
+        }
+
+        @media (max-width: 810px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 342px !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 400px !important;
+            }
+        }
+
+        ol li {
+            margin-left: 40px;
+            list-style-type: circle;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h2>
+        {{ action|title }} Announcement Request
+    </h2>
+    <p>
+    Do you want to post an informational news article or announcement on Intranet? This page allows you to easily submit news for approval.
+    </p>
+    <strong>Guidelines for News Posts:</strong><br />
+    To increase the chances that your post comes up quickly, please mind the following:<br />
+    <ol>
+    <li>Use correct English grammar, punctuation, and spelling; do not use all caps; keep posts concise when possible, and use active voice for better clarity.</li>
+    <li>Embedded images are not permitted directly in news posts except in special circumstances.</li>
+    <li>If you have a link to an external website in your post, make sure that it can be accessed without having to register for that site or provide any personal information. Facebook links that require you to sign in cannot be used for this reason, and may be omitted. This is to improve compliance with the FCPS Network User Guidelines.</li>
+    <li>If you are talking about a club, activity, or event in your post, please put the location and time in your post body. Otherwise people will have no idea where or when it is.  Please also try to make your post unique; we do not need twenty posts all titled "Free food!"</li>
+    <li>If there's a well-defined group, such as "The class of 2016" that you'd like to limit your post to, add that as a note in the notes field. If we have that group in the system, then we will post it to that group; otherwise, we will do the best that we can. If you do not specify a group, your news post will be visible to all students and faculty.</li>
+    <li>Please do not make requests for lost-and-found-type notices.</li>
+    </ol>
+    We reserve the power to edit requests at our discretion. If your news post does not comply with our requirements, we may modify it, ask you to revise it, or in some cases reject it.
+    <br/><br/>
+    <form action="/announcements/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td><input type="submit" /></td></tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("content", {
+        width: "600px"
+    });
+</script>
+{% endblock %}

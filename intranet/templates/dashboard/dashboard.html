@@ -138,15 +138,22 @@
 <div class="announcements primary-content">
     <div class="announcements-header">
         <h2>Announcements</h2>
-        {% if request.user.is_announcements_admin %}
 
             <span class="announcements-icon-wrapper">
+            {% if request.user.is_announcements_admin %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
                     <i class="fa fa-plus"></i>
                     Add
                 </a>
+            {% endif %}
+
+            <a class="button announcement-request" href="{% url 'request_announcement' %}">
+                    <i class="fa fa-file-text-o"></i>
+                    Request Post
+                </a>
             </span>
-        {% endif %}
+
+
     </div>
     <div class="announcements-container">
         {% for announcement in announcements %}
