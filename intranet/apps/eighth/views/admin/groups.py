@@ -285,31 +285,34 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         users = group.user_set.all()
 
+        signup_bulk = []
         if not activity.both_blocks:
             EighthSignup.objects.filter(
                 user__in=users,
                 scheduled_activity__block=block
             ).delete()
             for user in users:
-                EighthSignup.objects.create(
+                signup_bulk.append(EighthSignup(
                     user=user,
                     scheduled_activity=scheduled_activity
-                )
+                ))
         else:
             EighthSignup.objects.filter(
                 user__in=users,
                 scheduled_activity__block__date=block.date
-            )
+            ).delete()
             for user in users:
                 all_sched_acts = EighthScheduledActivity.objects.filter(
                     block__date=block.date,
                     activity=activity
                 )
                 for sched_act in all_sched_acts:
-                    EighthSignup.objects.create(
+                    signup_bulk.append(EighthSignup(
                         user=user,
                         scheduled_activity=sched_act
-                    )
+                    ))
+
+        EighthSignup.objects.bulk_create(signup_bulk)
 
         messages.success(self.request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")

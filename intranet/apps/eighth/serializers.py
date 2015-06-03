@@ -47,7 +47,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
-    block_letter = serializers.CharField(max_length=1)
+    block_letter = serializers.CharField(max_length=10)
 
     def fetch_activity_list_with_metadata(self, block):
         activity_list = {}
