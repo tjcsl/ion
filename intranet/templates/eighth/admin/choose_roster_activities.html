@@ -16,14 +16,17 @@ $(function() {
 
 {% block admin_main %}
     <b>Block:</b> {{ eighthblock }}<br />
+    <br />
     <form action="" method="post">{% csrf_token %}
 
+        <input type="submit" value="Print Roster" />
         <table class="fancy-table choose-activities">
         <thead>
             <tr>
                 <th><input type="checkbox" class="all" checked /></th>
                 <th>Activity Name</th>
-                <th>Activity Sponsor</th>
+                <th>Sponsors</th>
+                <th>Rooms</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +35,7 @@ $(function() {
             <td><input type="checkbox" name="schact_id" value="{{ schact.id }}" checked /></td>
             <td>{{ schact.full_title }}</td>
             <td>{{ schact.get_true_sponsors|join:"; " }}</td>
+            <td>{{ schact.get_true_rooms|join:"; " }}</td>
         </tr>
         {% endfor %}
         </tbody>
