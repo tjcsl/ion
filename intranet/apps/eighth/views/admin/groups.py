@@ -91,11 +91,16 @@ def get_file_string(fileobj):
     return filetext
 
 def get_user_info(key, val):
-    try:
-        u = User.objects.filter(**{ key: val })
-    except ValueError:
-        return []
-    return u
+    if key in ["username", "id"]:
+        try:
+            u = User.objects.filter(**{ key: val })
+        except ValueError:
+            return []
+        return u
+
+    if key == "student_id":
+        u = User.objects.user_with_student_id(val)
+        return [u] if u else []
 
 
 def handle_group_input(filetext):
@@ -104,19 +109,19 @@ def handle_group_input(filetext):
     unsure_users = []
     lines = filetext.splitlines()
     for line in lines:
+        done = False
         line = line.strip()
 
         # Try username, user id
-        for i in ["username", "id"]:
+        for i in ["username", "id", "student_id"]:
             r = get_user_info(i, line)
-            if len(r) == 1:
+            if r:
                 sure_users.append([line, r[0]])
-                continue
-            
-        # Try student id
-        r = User.objects.user_with_student_id(line)
-        if r:
-            sure_users.append([line, r])
+                done = True
+                break
+
+        if not done:
+            unsure_users.append([line, r])
 
     logger.debug("Sure users:")
     logger.debug(sure_users)
