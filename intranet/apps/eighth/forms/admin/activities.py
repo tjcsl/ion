@@ -116,5 +116,6 @@ class ActivityForm(forms.ModelForm):
             "seniors_allowed"
         ]
         widgets = {
-            "description": forms.Textarea(attrs={"rows": 5, "cols": 46})
+            "description": forms.Textarea(attrs={"rows": 5, "cols": 46}),
+            "name": forms.TextInput(attrs={"style": "width: 292px"})
         }
