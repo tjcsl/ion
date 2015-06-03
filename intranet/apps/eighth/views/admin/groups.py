@@ -126,7 +126,11 @@ def handle_group_input(filetext):
     return sure_users, unsure_users
 
 @eighth_admin_required
-def upload_group_view(request):
+def upload_group_view(request, group_id):
+    try:
+        group = Group.objects.get(id=group_id)
+    except Group.DoesNotExist:
+        raise http.Http404
     stage = "upload"
     data = {}
     filetext = False
@@ -138,6 +142,20 @@ def upload_group_view(request):
             filetext = get_file_string(fileobj)
         elif "filetext" in request.POST:
             filetext = request.POST.get("filetext")
+        elif "user_id" in request.POST:
+            userids = request.POST.getlist("user_id")
+            num_added = 0
+            for uid in userids:
+                user = User.objects.get(id=uid)
+                if user is None:
+                    messages.error(request, "User with ID {} does not exist".format(uid))
+                else:
+                    user.groups.add(group)
+                    user.save()
+                    num_added += 1
+            messages.success(request, "{} added to group {}".format(num_added, group))
+            return redirect("eighth_admin_edit_group", group.id)
+
 
     else:
         form = UploadGroupForm()
@@ -145,7 +163,8 @@ def upload_group_view(request):
         "admin_page_title": "Upload Group Info",
         "form": form,
         "stage": stage,
-        "data": data
+        "data": data,
+        "group": group
     }
 
     if filetext:
