@@ -92,7 +92,7 @@ class AnnouncementRequest(models.Model):
 
     user = models.ForeignKey(User, null=True, blank=True)
     
-    teachers_requested = models.ManyToManyField(User, blank=True, related_name="teachers_requested")
+    teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True)
