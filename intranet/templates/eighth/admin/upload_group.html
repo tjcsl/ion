@@ -5,7 +5,7 @@
     <style type="text/css">
 textarea[name=filetext] {
     width: 500px;
-    height: 300px;
+    height: 200px;
 }
     </style>
 {% endblock %}
@@ -13,24 +13,28 @@ textarea[name=filetext] {
 {% block admin_main %}
 
 {% if stage == "upload" %}
+    <p style="width: 500px">Either upload a file or enter text in the box below containing either Student IDs (e.x. 1231234), Ion IDs (31863), or TJ usernames (2016jwoglom), separated by line breaks.</p>
     <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="file">File:</label> &nbsp; 
-        {{ form.file }}<br />
-        <input type="submit" value="Upload File" />
+        <label for="file"><b>Upload File:</b></label>
+        <br /><br />
+        {{ form.file }}
+        <br /><br />
+        <input type="submit" value="Upload" />
     </form>
     <br />
     <hr />
     <br />
     <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="filetext">Enter Text:</label><br />
+        <label for="filetext"><b>Enter text:</b></label><br />
         <textarea name="filetext"></textarea>
         <br />
         <input type="submit" value="Read Data" />
     </form>
 
 {% elif stage == "parse" %}
+<p>Check the boxes for the users you wish to import.</p>
     <b>Matched users:</b>
     <form action="" method="post">
     {% csrf_token %}
@@ -38,7 +42,7 @@ textarea[name=filetext] {
     <thead>
         <tr>
             <th>Input line</th>
-            <th><input type="checkbox" /></th>
+            <th></th>
             <th>User Matched</th>
         </tr>
     </thead>
@@ -47,12 +51,14 @@ textarea[name=filetext] {
         <tr>
             <td>{{ user.0 }}</td>
             <td>
-                <input type="checkbox" name="user_id" value="{{ user.1.id }}" /> 
+                <input type="checkbox" name="user_id" value="{{ user.1.id }}" checked /> 
             </td>
             <td>
                 {{ user.1.display_name }} ({{ user.1.student_id }}, {{ user.1.grade }})
             </td>
         </tr>
+    {% empty %}
+        No valid user identifiers were found.
     {% endfor %}
     </tbody>
     </table>
@@ -71,15 +77,18 @@ textarea[name=filetext] {
     {% for user in unsure_users %}
         <tr>
             <th>{{ user.0 }}</th>
-            <td>
             {% if user.1 %}
                 {% for u in user.1 %}
+                <td>
                     <input type="checkbox" name="add_user" value="{{ u.id }}" /> 
+                </td>
+                <td>
                     {{ u.display_name }} ({{ u.student_id }}, {{ u.grade }})
-                    <br />
+                </td>
                 {% endfor %}
             {% else %}
-                No possible matches found.
+                <td></td>
+                <td>No matches found.</td>
             {% endif %}
             </td>
         </tr>

@@ -131,7 +131,7 @@ def handle_group_input(filetext):
     return sure_users, unsure_users
 
 @eighth_admin_required
-def upload_group_view(request, group_id):
+def upload_group_members_view(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
