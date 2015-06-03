@@ -4,15 +4,17 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; th
   git config --global user.email "ahamilto+ion@tjhsst.edu"
   git config --global user.name "Travis"
 
-  cp -R docs/build $HOME/html_docs
-  cd $HOME
-  git clone --branch=gh-pages https://${GH_TOKEN}@github.com/tjcsl/ion.git gh-pages
+  git clone --depth=50 --branch=gh-pages https://${GH_TOKEN}@github.com/tjcsl/ion.git gh-pages
   rm -rf gh-pages/*
   cd gh-pages
-  cp -R $HOME/html_docs/* .
-  touch .nojekyll
+  cp -R ../docs/build/* .
   git add -A .
+  latest=$(git log -1 --pretty=%s|sed "s/Travis build \([0-9]\+\)/\1/")
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
-  git push -f origin gh-pages |& sed s/${GH_TOKEN}/[secure]/g
-  echo "Pushed docs to Github Pages"
+  if [ "$latest" -ge "$TRAVIS_BUILD_NUMBER" ]; then
+      echo "Not overwriting newer docs."
+  else
+      git push origin gh-pages |& sed s/${GH_TOKEN}/[secure]/g
+      echo "Pushed docs to Github Pages"
+  fi
 fi
