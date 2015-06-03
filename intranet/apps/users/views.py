@@ -25,7 +25,7 @@ def profile_view(request, user_id=None):
             specified, show the user's own profile.
 
     """
-    if request.user.is_eighthoffice and not "full" in request.GET:
+    if request.user.is_eighthoffice and "full" not in request.GET:
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:
@@ -39,8 +39,10 @@ def profile_view(request, user_id=None):
 
     eighth_schedule = []
     start_block = EighthBlock.objects.get_first_upcoming_block()
-    blocks = [start_block] + list(start_block.next_blocks(num_blocks-1))
-
+    if start_block:
+        blocks = [start_block] + list(start_block.next_blocks(num_blocks-1))
+    else:
+        blocks = []
 
     for block in blocks:
         sch = {}
@@ -54,12 +56,11 @@ def profile_view(request, user_id=None):
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
 
-
         logger.debug("Eighth sponsor {}".format(sponsor))
 
         eighth_sponsor_schedule = []
-        activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor)\
-                                                                .filter(block__date__gt=start_block.date)
+        activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                .filter(block__date__gt=start_block.date))
         logger.debug(activities_sponsoring)
         surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
         for b in surrounding_blocks:

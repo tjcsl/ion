@@ -283,7 +283,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def tj_email(self):
         return "{}@tjhsst.edu".format(self.username)
-    
+
 
     @property
     def grade(self):
@@ -493,7 +493,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             Binary data
 
         """
-
         identifier = ":".join([self.dn, "photo", photo_year])
         key = identifier  # User.create_secure_cache_key(identifier)
 
@@ -701,7 +700,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
         """
         return self.id == 9999
-    
+
 
     @property
     def is_staff(self):
