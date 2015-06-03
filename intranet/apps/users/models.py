@@ -283,7 +283,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def tj_email(self):
         return "{}@tjhsst.edu".format(self.username)
-    
+
 
     @property
     def grade(self):
@@ -493,7 +493,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             Binary data
 
         """
-
         identifier = ":".join([self.dn, "photo", photo_year])
         key = identifier  # User.create_secure_cache_key(identifier)
 
@@ -701,7 +700,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
         """
         return self.id == 9999
-    
+
 
     @property
     def is_staff(self):
@@ -946,7 +945,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             "admin_comments": {
                 "ldap_name": "eighthoffice-comments",
                 "perm": None,
-                "is_list": False
+                "is_list": False,
+                "cache": False
             }
         }
 
@@ -956,12 +956,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
-        identifier = ":".join((self.dn, name))
-        key = User.create_secure_cache_key(identifier)
-
-        cached = cache.get(key)
-
         attr = user_attributes[name]
+        should_cache = "cache" not in attr or attr["cache"]
+        if should_cache:
+            identifier = ":".join((self.dn, name))
+            key = User.create_secure_cache_key(identifier)
+
+            cached = cache.get(key)
+        else:
+            cached = False
 
         if attr["perm"] is None:
             visible = True
@@ -984,8 +987,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                 else:
                     value = result[0]
 
-                cache.set(key, value,
-                          timeout=settings.CACHE_AGE["user_attribute"])
+                if should_cache:
+                    cache.set(key, value,
+                              timeout=settings.CACHE_AGE["user_attribute"])
                 return value
             except KeyError:
                 return None

@@ -22,10 +22,17 @@ $(function() {
     loadModels();
 
     eighth.ActivityDetailView = Backbone.View.extend({
+        el: $("#activity-detail"),
+
         initialize: function(){
             _.bindAll(this, "render");
 
             this.template = _.template($("#activity-details-template").html());
+        },
+
+        events: {
+            "click button#signup-button": "signupClickHandler",
+            "click button#roster-button": "rosterClickHandler"
         },
 
         render: function(){
@@ -33,6 +40,31 @@ $(function() {
                 renderedContent = this.template(this.model.toJSON());
             container.html(renderedContent);
             return this;
+        },
+
+        signupClickHandler: function(e) {
+            var target = e.target
+            $(target).attr("disabled", "disabled");
+            var spinnerEl = document.getElementById("signup-spinner");
+            var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
+            var aid = $(this.el).data("aid");
+            var bid = $(this.el).data("bid");
+            var uid = $(this.el).data("uid");
+            eighth.signUp(uid, bid, aid, function() {
+                $(target).removeAttr("disabled");
+                spinner.spin(false);
+            });
+        },
+
+        rosterClickHandler: function(e) {
+            var target = e.target;
+            var schact_id = this.model.attributes.scheduled_activity;
+            console.debug("Load roster for scheduled activity", schact_id)
+            var endpoint = $(target).parent().data("endpoint");
+            var container = $(target).parent();
+            $.get(endpoint + "/" + schact_id, {}, function(resp) {
+                container.html(resp);
+            });
         }
     });
 
@@ -66,6 +98,7 @@ $(function() {
         },
 
         showDetail: function(e) {
+            console.log("showing detail");
             $("#activity-list li[data-activity-id].selected").removeClass("selected");
             var $target = $(e.target);
             if (!$target.is("li")) {
@@ -89,32 +122,6 @@ $(function() {
             activityDetailView.render();
 
             initUIElementBehavior();
-
-            var signupClickHandler = function() {
-                $(this).unbind("click");
-                var target = document.getElementById("signup-spinner");
-                var spinner = new Spinner(spinnerOptions).spin(target);
-                var aid = $("#activity-detail").data("aid");
-                var bid = $("#activity-detail").data("bid");
-                var uid = $("#activity-detail").data("uid");
-
-                eighth.signUp(uid, bid, aid, function() {
-                    $("#signup-button").click(signupClickHandler);
-                    spinner.spin(false);
-                });
-            };
-
-            var rosterClickHandler = function() {
-                var schact_id = activityDetailView.model.attributes.scheduled_activity;
-                console.debug("Load roster for scheduled activity", schact_id)
-                var endpoint = $(this).parent().data("endpoint");
-                var container = $(this).parent();
-                $.get(endpoint + "/" + schact_id, {}, function(resp) {
-                    container.html(resp);
-                });
-            }
-            $("#signup-button").click(signupClickHandler);
-            $("#roster-button").click(rosterClickHandler);
         }
     });
 
