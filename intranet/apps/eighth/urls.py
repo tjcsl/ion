@@ -79,6 +79,7 @@ eighth_admin_patterns = [
     url(r"^groups/distribute/unsigned$", groups.eighth_admin_distribute_unsigned, name="eighth_admin_distribute_unsigned"),
     url(r"^groups/distribute_action$", groups.eighth_admin_distribute_action, name="eighth_admin_distribute_action"),
     url(r"^groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
+    url(r"^groups/upload$", groups.upload_group_view, name="eighth_admin_upload_group"),
 
 
     # Rooms

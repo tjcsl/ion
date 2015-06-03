@@ -1,0 +1,16 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+
+{% if stage == "upload" %}
+    <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file">File:</label> &nbsp; 
+        {{ form.file }}<br />
+        <input type="submit" value="Upload File" />
+    </form>
+{% elif stage == "parse" %}
+    Parse
+{% endif %}
+
+{% endblock %}

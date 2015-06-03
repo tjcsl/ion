@@ -14,7 +14,7 @@ from ....auth.decorators import eighth_admin_required
 from ....users.models import User
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
-from ...forms.admin.groups import QuickGroupForm, GroupForm
+from ...forms.admin.groups import QuickGroupForm, GroupForm, UploadGroupForm
 from ...models import EighthScheduledActivity, EighthSignup, EighthBlock
 from ...utils import get_start_date
 
@@ -83,6 +83,72 @@ def edit_group_view(request, group_id):
                               args=[group_id])
     }
     return render(request, "eighth/admin/edit_group.html", context)
+
+def get_file_string(fileobj):
+    filetext = ""
+    for chunk in fileobj.chunks():
+        filetext += chunk
+    return filetext
+
+def get_user_info(key, val):
+    return User.objects.filter(**{ key: val })
+
+
+def handle_group_input(filetext):
+    logger.debug(filetext)
+    sure_users = []
+    unsure_users = []
+    lines = filetext.splitlines()
+    for line in lines:
+        line = line.strip()
+
+        # Try username, user id
+        for i in ["username",
+                  "id"]:
+            r = get_user_info(i, line)
+            if len(r) == 0:
+                pass
+            elif len(r) == 1:
+                sure_users.append([line, r[0]])
+                continue
+            elif len(r) > 1:
+                unsure_users.append([line, r])
+                continue
+
+        # Try student id
+        r = User.objects.user_with_student_id(line)
+        if r:
+            sure_users.append([line, r])
+        
+
+@eighth_admin_required
+def upload_group_view(request):
+    stage = "upload"
+    data = {}
+
+    if request.method == "POST":
+        form = UploadGroupForm(request)
+        filetext = False
+        logger.debug(request.FILES)
+        if "file" in request.FILES:
+            fileobj = request.FILES['file']
+            filetext = get_file_string(fileobj)
+        elif "filetext" in request.POST:
+            filetext = request.POST.get("filetext")
+
+        if filetext:
+            stage = "parse"
+            data = handle_group_input(filetext)
+
+    else:
+        form = UploadGroupForm()
+    context = {
+        "admin_page_title": "Upload Group Info",
+        "form": form,
+        "stage": stage,
+        "data": data
+    }
+    return render(request, "eighth/admin/upload_group.html", context)
 
 
 @eighth_admin_required
