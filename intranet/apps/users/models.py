@@ -39,6 +39,20 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
+    # Simple way to filter out teachers and students without hitting LDAP.
+    # This shouldn't be a problem unless the username scheme changes and
+    # the consequences of error are not significant.
+
+    def get_students(self):
+        usernums = User.objects.filter(username__startswith="2")
+        # Add possible exceptions handling here
+        return usernums
+
+    def get_teachers(self):
+        usernonums = User.objects.exclude(username__startswith="2")
+        # Add possible exceptions handling here
+        return usernonums
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 

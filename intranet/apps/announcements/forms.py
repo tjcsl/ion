@@ -25,7 +25,7 @@ class AnnouncementRequestForm(forms.ModelForm):
                                          "share with the Intranet administrators. You should include information "\
                                          "regarding group restrictions here."
         self.fields["teachers_requested"].help_text = "The teacher(s) who will approve your announcement."
-        self.fields["teachers_requested"].queryset = (User.objects.exclude(username__startswith="2"))
+        self.fields["teachers_requested"].queryset = (User.objects.get_teachers())
 
     class Meta:
         model = AnnouncementRequest
@@ -35,3 +35,4 @@ class AnnouncementRequestForm(forms.ModelForm):
             "teachers_requested",
             "notes"
         ]
+
