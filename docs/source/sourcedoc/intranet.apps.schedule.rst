@@ -19,6 +19,14 @@ intranet.apps.schedule.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.schedule.forms module
+-----------------------------------
+
+.. automodule:: intranet.apps.schedule.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.schedule.models module
 ------------------------------------
 
