@@ -152,7 +152,7 @@ def print_block_rosters_view(request, block_id):
         try:
             block = EighthBlock.objects.get(id=block_id)
             schacts = EighthScheduledActivity.objects.filter(block=block)
-        except EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist:
+        except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
             raise http.Http404
 
         context = {
