@@ -19,6 +19,14 @@ intranet.apps.eighth.views.attendance module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.eighth.views.profile module
+-----------------------------------------
+
+.. automodule:: intranet.apps.eighth.views.profile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.eighth.views.routers module
 -----------------------------------------
 

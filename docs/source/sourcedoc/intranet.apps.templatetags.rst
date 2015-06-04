@@ -12,6 +12,14 @@ intranet.apps.templatetags.dates module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.templatetags.dictionaries module
+----------------------------------------------
+
+.. automodule:: intranet.apps.templatetags.dictionaries
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.templatetags.math module
 --------------------------------------
 
