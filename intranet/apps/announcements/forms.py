@@ -18,22 +18,20 @@ class AnnouncementForm(forms.ModelForm):
 
 class AnnouncementRequestForm(forms.ModelForm):
 
-    content = forms.CharField(help_text="The text you wish to have in the announcement.", widget=forms.Textarea)
-    notes = forms.CharField(help_text="Any information about this announcement you wish to "\
-                                      "share with the Intranet administrators. You should include information "\
-                                      "regarding group restrictions here.", widget=forms.Textarea)
-    
     def __init__(self, *args, **kwargs):
         super(AnnouncementRequestForm, self).__init__(*args, **kwargs)
-
-        self.fields["teachers_requested"].queryset = (User.objects
-                                                          .exclude(username__startswith="2"))
+        self.fields["content"].help_text = "The text you wish to have in the announcement."
+        self.fields["notes"].help_text = "Any information about this announcement you wish to "\
+                                         "share with the Intranet administrators. You should include information "\
+                                         "regarding group restrictions here."
+        self.fields["teachers_requested"].help_text = "The teacher(s) who will approve your announcement."
+        self.fields["teachers_requested"].queryset = (User.objects.exclude(username__startswith="2"))
 
     class Meta:
         model = AnnouncementRequest
         fields = [
             "title",
             "content",
-            "notes",
-            "teachers_requested"
+            "teachers_requested",
+            "notes"
         ]

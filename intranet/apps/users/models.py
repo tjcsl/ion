@@ -282,7 +282,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
-        return "{}@tjhsst.edu".format(self.username)
+        if self.user_type == "tjhsstTeacher":
+            domain = "fcps.edu"
+        else:
+            domain = "tjhsst.edu"
+
+        return "{}@{}".format(self.username, domain)
 
 
     @property

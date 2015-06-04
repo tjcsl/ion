@@ -5,12 +5,26 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
 from ..auth.decorators import announcements_admin_required
 from .models import Announcement
 from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
+
+def send_email(email, subject, template):
+    pass
+
+
+def request_announcement_email(request, obj):
+    teachers = obj.teachers_requested
+    for teacher in teachers:
+        logger.debug(teacher)
+        email = teacher.email
+
+
 
 @login_required
 def request_announcement_view(request):
@@ -21,6 +35,7 @@ def request_announcement_view(request):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
+            request_announcement_email(request, obj)
             messages.success(request, "Successfully added announcement request.")
             return redirect("index")
         else:
