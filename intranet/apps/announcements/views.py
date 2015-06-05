@@ -5,24 +5,42 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
+from intranet import settings
 from ..auth.decorators import announcements_admin_required
+from ..users.models import User
 from .models import Announcement
 from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
 
-def send_email(email, subject, template):
-    pass
-
 
 def request_announcement_email(request, obj):
-    teachers = obj.teachers_requested
+    logger.debug(obj.data)
+    teacher_ids = obj.data["teachers_requested"]
+    if type(teacher_ids) != list:
+        teacher_ids = [teacher_ids]
+    logger.debug(teacher_ids)
+    teachers = User.objects.filter(id__in=teacher_ids)
+    logger.debug(teachers)
+    subject = "Intranet News Post Confirmation Request from {}".format(request.user)
+    text = get_template("announcements/teacher_approve_email.txt")
+    html = get_template("announcements/teacher_approve_email.html")
     for teacher in teachers:
         logger.debug(teacher)
-        email = teacher.email
+        email = teacher.tj_email
+        data = {
+            "teacher": teacher
+        }
+        text_content = text.render(data)
+        html_content = html.render(data)
+        logger.debug("Email: {}\n{}\n{}\n{}".format(subject, text_content, settings.EMAIL_FROM, email))
+        msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [email])
+        msg.attach_alternative(html_content, "text/html")
+        logger.debug(msg)
+        #msg.send()
 
 
 
@@ -35,7 +53,7 @@ def request_announcement_view(request):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
-            request_announcement_email(request, obj)
+            request_announcement_email(request, form)
             messages.success(request, "Successfully added announcement request.")
             return redirect("index")
         else:

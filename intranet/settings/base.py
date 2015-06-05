@@ -289,6 +289,8 @@ LOGGING = {
     }
 }
 
+EMAIL_FROM = "ion-noreply@tjhsst.edu"
+
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"

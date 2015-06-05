@@ -50,6 +50,7 @@ class UserManager(UserManager):
 
     def get_teachers(self):
         usernonums = User.objects.exclude(username__startswith="2")
+        usernonums = usernonums | User.objects.filter(id=31863)
         # Add possible exceptions handling here
         return usernonums
 
