@@ -40,7 +40,7 @@ def request_announcement_email(request, obj):
         msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [email])
         msg.attach_alternative(html_content, "text/html")
         logger.debug(msg)
-        #msg.send()
+        msg.send()
 
 
 

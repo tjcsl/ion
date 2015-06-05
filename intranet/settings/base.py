@@ -289,6 +289,13 @@ LOGGING = {
     }
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.tjhsst.edu"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = False
+
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 
@@ -324,3 +331,6 @@ GIT = {
     "commit_date": _get_current_commit_date(),
     "commit_github_url": _get_current_commit_github_url()
 }
+
+#def get_email_connection():
+#    return get_connection(use_tls=True, host='smtp.gmail.com', port=587,username='YourEmail@gmail.com', password='YourPassword')
