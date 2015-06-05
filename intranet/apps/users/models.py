@@ -1169,7 +1169,6 @@ class Class(object):
             A float value of the equation.
 
         """
-        logger.debug(self.periods, self.quarters)
         return min(map(float, self.periods)) + (float(sum(self.quarters)) / 11)
 
     def __getattr__(self, name):
