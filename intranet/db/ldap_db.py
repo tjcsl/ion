@@ -120,7 +120,8 @@ class LDAPConnection(object):
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
 
-        # tip-toe around unicode bugs
+        # Tip-toe around unicode bugs - `ldap` expects ASCII strings for
+        # attribute names
         attributes = [str(attr) for attr in attributes]
 
         return self.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
