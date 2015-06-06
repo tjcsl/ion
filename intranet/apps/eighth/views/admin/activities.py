@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 def add_activity_view(request):
     if request.method == "POST":
         form = QuickActivityForm(request.POST)
-        logger.error("{}".format(request.POST["name"]))
         if form.is_valid():
             activity = form.save()
             messages.success(request, "Successfully added activity.")

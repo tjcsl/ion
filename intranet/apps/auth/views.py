@@ -41,7 +41,7 @@ class login_view(View):
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
         else:
-            logger.error("No cookie support detected! This could cause problems.")
+            logger.warning("No cookie support detected! This could cause problems.")
         if form.is_valid():
             login(request, form.get_user())
             # Initial load into session

@@ -270,7 +270,8 @@ LOGGING = {
         "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler"
+            "class": "django.utils.log.AdminEmailHandler",
+            "include_html": True
         },
         "console": {
             "level": "DEBUG",
@@ -285,12 +286,13 @@ LOGGING = {
             "propagate": True,
         },
         "intranet": {
-            "handlers": ["console"],
+            "handlers": ["console", "mail_admins"],
             "level": LOG_LEVEL,
             "propagate": True,
         },
     }
 }
+
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
@@ -324,6 +326,3 @@ GIT = {
     "commit_date": _get_current_commit_date(),
     "commit_github_url": _get_current_commit_github_url()
 }
-
-#def get_email_connection():
-#    return get_connection(use_tls=True, host='smtp.gmail.com', port=587,username='YourEmail@gmail.com', password='YourPassword')
