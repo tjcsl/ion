@@ -126,18 +126,20 @@ def modify_announcement_view(request, id=None):
 
 
 @announcements_admin_required
-def delete_announcement_view(request):
+def delete_announcement_view(request, id):
     if request.method == "POST":
         post_id = None
         try:
             post_id = request.POST["id"]
         except AttributeError:
             post_id = None
+        try:
+            Announcement.objects.get(id=post_id).delete()
+            messages.success(request, "Successfully deleted announcement.")
+        except Announcement.DoesNotExist:
+            pass
 
-        # Silently fail if announcement with given id doesn't exist
-        # by using .filter instead of .get
-        Announcement.objects.filter(id=post_id).delete()
-
-        return http.HttpResponse(status=204)
+        return redirect("index")
     else:
-        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+        announcement = get_object_or_404(Announcement, id=id)
+        return render(request, "announcements/delete.html", {"announcement": announcement})

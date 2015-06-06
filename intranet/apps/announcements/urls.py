@@ -9,5 +9,5 @@ urlpatterns = [
     url(r"^/request$", views.request_announcement_view, name="request_announcement"),
     url(r"^/approve/(?P<req_id>\d+)$", views.approve_announcement_view, name="approve_announcement"),
     url(r"^/modify/(?P<id>\d+)$", views.modify_announcement_view, name="modify_announcement"),
-    url(r"^/delete$", views.delete_announcement_view, name="delete_announcement"),
+    url(r"^/delete/(?P<id>\d+)$", views.delete_announcement_view, name="delete_announcement"),
 ]

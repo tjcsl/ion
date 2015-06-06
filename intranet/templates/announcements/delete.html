@@ -1,0 +1,40 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {{ action|title }} Announcement
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h4>Are you sure you want to delete this announcement?</h4>
+    <b>{{ announcement.title }}</b>
+    <br />
+    <br />
+    {{ announcement.content|safe }}
+    <br />
+    <br />
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ announcement.id }}" />
+        <a class="button" href="{% url 'index' %}">Cancel</a>
+        <input type="submit" value="Delete" />
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("content", {
+        width: "600px"
+    });
+</script>
+{% endblock %}

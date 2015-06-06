@@ -16,7 +16,7 @@
     <script type="text/javascript" src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/dashboard/announcements.js' %}"></script>
 
-    <style>
+    <style type="text/css">
         div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
             content: attr(data-placeholder);
             float: left;
@@ -165,7 +165,7 @@
                             <a href="{% url 'modify_announcement' announcement.id %}">
                                 <i class="announcement-icon fa fa-pencil"></i>
                             </a>
-                            <a href="" class="announcement-delete" onclick="return false" data-id="{{ announcement.id }}">
+                            <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete">
                                 <i class="announcement-icon fa fa-trash-o"></i>
                             </a>
                         </div>
