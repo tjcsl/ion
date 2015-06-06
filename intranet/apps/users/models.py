@@ -297,6 +297,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
+        for email in self.emails:
+            if email[-9:] == "@fcps.edu":
+                return email
+            if email[-11:] == "@tjhsst.edu":
+                return email
+
         if self.user_type == "tjhsstTeacher":
             domain = "fcps.edu"
         else:
