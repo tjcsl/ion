@@ -39,23 +39,30 @@ class KerberosAuthenticationBackend(object):
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
 
-        kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.CSL_REALM))
-        kinit.expect(":")
-        kinit.sendline(password)
-        kinit.expect(pexpect.EOF)
-        kinit.close()
-
-        exitstatus = kinit.exitstatus
-        realm = settings.CSL_REALM
-
-        if exitstatus != 0:
-            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, settings.AD_REALM))
+        try:
+            realm = settings.CSL_REALM
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm))
             kinit.expect(":")
             kinit.sendline(password)
             kinit.expect(pexpect.EOF)
             kinit.close()
             exitstatus = kinit.exitstatus
+        except pexpect.TIMEOUT:
+            logger.critical("kinit timed out for {}@{}".format(username, realm))
+            exitstatus = 1
+
+        if exitstatus != 0:
             realm = settings.AD_REALM
+            try:
+                kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm))
+                kinit.expect(":", timeout=5)
+                kinit.sendline(password)
+                kinit.expect(pexpect.EOF)
+                kinit.close()
+                exitstatus = kinit.exitstatus
+            except pexpect.TIMEOUT:
+                logger.critical("kinit timed out for {}@{}".format(username, realm))
+                exitstatus = 1
 
         if exitstatus == 0:
             logger.debug("Kerberos authorized {}@{}".format(username, realm))
