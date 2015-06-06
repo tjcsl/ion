@@ -28,16 +28,26 @@
     <div class="schedule-activity-head">
         <h4>Select an Activity:</h4>
 
-        <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
-            {% for a in activities %}
-                <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
-            {% endfor %}
-        </select>
+        <table>
+            <tr>
+                <td>
+                    <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+                        {% for a in activities %}
+                            <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td style="vertical-align: top">
+                    <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">Edit Activity</a>
+                </td>
+            </tr>
+        </table>
+
+
 
         {% if activity %}
             <div class="schedule-activity-buttons">
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-                <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">Edit Activity</a>
                 <input type="submit" value="Save" />
             </div>
 
@@ -167,7 +177,6 @@
 
         <div class="footer-buttons">
             <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-            <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">Edit Activity</a>
             <input type="submit" value="Save" />
         </div>
     {% endif %}
