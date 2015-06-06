@@ -102,6 +102,16 @@ def dashboard_view(request):
                                      .visible_to_user(request.user)
                                      .prefetch_related("groups"))
 
+    if "start" in request.GET:
+        start_num = int(request.GET.get("start"))
+    else:
+        start_num = 0
+
+    display_num = 15
+    end_num = start_num + display_num
+    more_announcements = ((announcements.count() - start_num) > display_num)
+    announcements = announcements[start_num:end_num]
+
     is_student = request.user.is_student
     eighth_sponsor = request.user.is_eighth_sponsor
 
@@ -119,6 +129,9 @@ def dashboard_view(request):
         "announcements": announcements,
         "schedule": schedule,
         "sponsor_schedule": sponsor_schedule,
-        "eighth_sponsor": eighth_sponsor
+        "eighth_sponsor": eighth_sponsor,
+        "start_num": start_num,
+        "end_num": end_num,
+        "more_announcements": more_announcements
     }
     return render(request, "dashboard/dashboard.html", context)
