@@ -4,7 +4,7 @@
 
 <div class="schedule">
     <a href="/?date={{ date_yesterday }}" class="chevron schedule-left"><i class="fa fa-chevron-left"></i></a>
-    {{ date|date:"F j" }}
+    {{ date|date:"D, F j" }}
     <a href="/?date={{ date_tomorrow }}" class="chevron schedule-right"><i class="fa fa-chevron-right"></i></a>
     <br>
     {% if dayobj %}
@@ -14,11 +14,15 @@
         {% for blk in dayobj.type.blocks.all %}
             <tr>
                 <th>{{ blk.name }}:</th>
-                <td> {{ blk.start }} - {{ blk.end }}</td>
+                <td>{{ blk.start }} - {{ blk.end }}</td>
             </tr>
         {% endfor %}
         </table>
     {% else %}
-        No schedule information available.
+        {% if is_weekday %}
+            No schedule available
+        {% else %}
+            No school
+        {% endif %}
     {% endif %}
 </div>
