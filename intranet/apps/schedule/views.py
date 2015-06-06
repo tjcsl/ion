@@ -2,16 +2,15 @@
 from __future__ import unicode_literals
 
 import logging
-import re
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 import calendar
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .models import Time, Block, CodeName, DayType, Day
+from django.shortcuts import render
+from .models import Block, DayType, Day
 from .forms import DayTypeForm, DayForm
 
 logger = logging.getLogger(__name__)
+
 
 def date_format(date):
     try:
@@ -20,12 +19,17 @@ def date_format(date):
         return None
     return d
 
+
 def decode_date(str):
     try:
         d = datetime.strptime(str, "%Y-%m-%d")
     except ValueError:
         return None
     return d
+
+
+def is_weekday(date):
+    return date.isoweekday() in range(1, 6)
 
 
 def get_context(request=None, date=None):
@@ -36,7 +40,12 @@ def get_context(request=None, date=None):
     if date is None:
         date = datetime.now()
 
-    logger.debug("schedule date %s", date)
+        if is_weekday(date) and date.hour > 17:
+            date += timedelta(days=1)
+        else:
+            while not is_weekday(date):
+                date += timedelta(days=1)
+
     try:
         dayobj = Day.objects.get(date=date)
     except Day.DoesNotExist:
@@ -45,9 +54,11 @@ def get_context(request=None, date=None):
     return {
         "dayobj": dayobj,
         "date": date,
+        "is_weekday": is_weekday(date),
         "date_tomorrow": date_format(date+timedelta(days=1)),
         "date_yesterday": date_format(date+timedelta(days=-1))
     }
+
 
 def schedule_view(request):
     data = get_context(request)
@@ -64,15 +75,15 @@ def get_day_data(firstday, daynum):
         "formatted_date": date_format(date),
         "date": date
     }
-    
+
     try:
         dayobj = Day.objects.get(date=date)
         data["schedule"] = dayobj.type
     except Day.DoesNotExist:
         data["schedule"] = None
 
-
     return data
+
 
 def admin_home_view(request):
     if "month" in request.GET:
@@ -92,8 +103,6 @@ def admin_home_view(request):
             week.append(get_day_data(firstday, d))
         sch.append(week)
 
-
-
     data = {
         "month_name": month_name,
         "sch": sch
@@ -101,11 +110,12 @@ def admin_home_view(request):
 
     return render(request, "schedule/admin_home.html", data)
 
+
 def admin_add_view(request):
     if request.method == "POST":
         form = DayForm(request.POST)
         if form.is_valid():
-            model = form.save()
+            form.save()
     else:
         form = DayForm()
 
@@ -113,6 +123,7 @@ def admin_add_view(request):
         "form": form
     }
     return render(request, "schedule/admin_add.html", context)
+
 
 def admin_daytype_view(request):
     if request.method == "POST":
@@ -122,9 +133,10 @@ def admin_daytype_view(request):
         if form.is_valid():
             model = form.save()
             """Add blocks"""
-            blocks = zip(request.POST['block_name'],
-                         [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_start')],
-                         [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_end')]
+            blocks = zip(
+                request.POST['block_name'],
+                [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_start')],
+                [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_end')]
             )
             form.blocks = []
             for blk in blocks:
@@ -143,19 +155,3 @@ def admin_daytype_view(request):
     else:
         form = DayTypeForm()
     return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": DayType.objects.all()[0]})
-
-def create_example():
-    blocks = [
-        Block.objects.create(period="1", name="Period 1",
-                             start=Time.objects.create(hour=8, min=30),
-                             end=Time.objects.create(hour=10, min=5)
-        ), Block.objects.create(period="2", name="Period 2",
-                             start=Time.objects.create(hour=10, min=15),
-                             end=Time.objects.create(hour=11, min=45)
-        )
-    ]
-    type = DayType.objects.create(name="Blue Day")
-    for blk in blocks:
-        type.blocks.add(blk)
-    type.save()
-    day = Day.objects.create(date=datetime.now(), type=type)
