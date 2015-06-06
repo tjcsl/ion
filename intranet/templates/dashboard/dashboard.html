@@ -145,13 +145,14 @@
                     <i class="fa fa-plus"></i>
                     Add
                 </a>
+            {% else %}
+                <a class="button announcement-request" href="{% url 'request_announcement' %}">
+                        <i class="fa fa-file-text-o"></i>
+                        Request Post
+                    </a>
+                </span>
             {% endif %}
 
-            <a class="button announcement-request" href="{% url 'request_announcement' %}">
-                    <i class="fa fa-file-text-o"></i>
-                    Request Post
-                </a>
-            </span>
 
 
     </div>
@@ -192,10 +193,10 @@
         {% endfor %}
 
         {% if start_num > 0 %}
-            <a href="?start=0" class="button">Go back</a>
+            <a href="?start={{ prev_page }}" class="button">&larr; Newer Posts</a>
         {% endif %}
         {% if more_announcements %}
-            <a href="?start={{ end_num }}" class="button" style="float:right">View more</a>
+            <a href="?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
         {% endif %}
     </div>
 </div>

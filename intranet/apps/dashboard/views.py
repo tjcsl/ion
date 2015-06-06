@@ -132,6 +132,7 @@ def dashboard_view(request):
         "eighth_sponsor": eighth_sponsor,
         "start_num": start_num,
         "end_num": end_num,
+        "prev_page": start_num - display_num,
         "more_announcements": more_announcements
     }
     return render(request, "dashboard/dashboard.html", context)
