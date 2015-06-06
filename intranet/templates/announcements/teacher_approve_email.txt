@@ -1,6 +1,18 @@
-{{ teacher }}. {{ teacher.name }} {{ teacher.tj_email }}
-This is an example email message.
+This is an automated message sent from the TJ Intranet system (http://ion.tjhsst.edu).
 
-Please ignore.
+{{ user.full_name }} ({{ user }}) has requested that an Intranet announcement be posted, and has asked for you to approve its posting. The details of the announcement are:
 
-Plaintext email.
+Title: {{ formdata.title }}
+
+Content (that will be posted):
+{% autoescape off %}
+    {{ formdata.content }}
+{% endautoescape %}
+
+Notes (for you and the Intranet administrators):
+{{ formdata.notes }}
+
+Teachers Requsted for Approval: {{ formdata.teachers_requested|join:", " }}
+
+To approve or reject this posting, click on this link: https://ion.tjhsst.edu/{{ info_link }}
+If you do nothing, the post will not be approved and will not be posted.

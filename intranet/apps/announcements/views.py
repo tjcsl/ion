@@ -30,9 +30,9 @@ def email_send(text_template, html_template, data, subject, emails):
     return msg
 
 
-def request_announcement_email(request, obj):
-    logger.debug(obj.data)
-    teacher_ids = obj.data["teachers_requested"]
+def request_announcement_email(request, form, obj):
+    logger.debug(form.data)
+    teacher_ids = form.data["teachers_requested"]
     if type(teacher_ids) != list:
         teacher_ids = [teacher_ids]
     logger.debug(teacher_ids)
@@ -46,7 +46,8 @@ def request_announcement_email(request, obj):
         data = {
             "teacher": teacher,
             "user": request.user,
-            "formdata": obj.data
+            "formdata": form.data,
+            "info_link": "announcements/request/approve?id={}".format(obj.id)
         }
         email_send("announcements/teacher_approve_email.txt", 
                    "announcements/teacher_approve_email.html",
@@ -63,7 +64,7 @@ def request_announcement_view(request):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
-            request_announcement_email(request, form)
+            request_announcement_email(request, form, obj)
             messages.success(request, "Successfully added announcement request.")
             return redirect("index")
         else:
