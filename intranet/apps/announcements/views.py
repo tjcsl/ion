@@ -16,6 +16,19 @@ from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
 
+def email_send(text_template, html_template, data, subject, emails):
+    text = get_template(text_template)
+    html = get_template(html_template)
+    text_content = text.render(data)
+    html_content = html.render(data)
+    subject = settings.EMAIL_SUBJECT_PREFIX + subject
+    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails)
+    msg.attach_alternative(html_content, "text/html")
+    logger.debug(msg)
+    msg.send()
+
+    return msg
+
 
 def request_announcement_email(request, obj):
     logger.debug(obj.data)
@@ -25,22 +38,19 @@ def request_announcement_email(request, obj):
     logger.debug(teacher_ids)
     teachers = User.objects.filter(id__in=teacher_ids)
     logger.debug(teachers)
+
     subject = "Intranet News Post Confirmation Request from {}".format(request.user)
-    text = get_template("announcements/teacher_approve_email.txt")
-    html = get_template("announcements/teacher_approve_email.html")
     for teacher in teachers:
         logger.debug(teacher)
         email = teacher.tj_email
         data = {
-            "teacher": teacher
+            "teacher": teacher,
+            "user": request.user,
+            "formdata": obj.data
         }
-        text_content = text.render(data)
-        html_content = html.render(data)
-        logger.debug("Email: {}\n{}\n{}\n{}".format(subject, text_content, settings.EMAIL_FROM, email))
-        msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [email])
-        msg.attach_alternative(html_content, "text/html")
-        logger.debug(msg)
-        msg.send()
+        email_send("announcements/teacher_approve_email.txt", 
+                   "announcements/teacher_approve_email.html",
+                   data, subject, [email])
 
 
 

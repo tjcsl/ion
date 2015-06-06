@@ -12,10 +12,13 @@ LOGIN_REDIRECT_URL = "/"
 
 APPEND_SLASH = False
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mail.tjhsst.edu"
-EMAIL_PORT = 465
-EMAIL_USE_TLS = True
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = "[Ion] "
+
+EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 ADMINS = (
     ("Ethan Lowman", "2015elowman+ion@tjhsst.edu"),
@@ -288,16 +291,6 @@ LOGGING = {
         },
     }
 }
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.tjhsst.edu"
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
-EMAIL_USE_TLS = False
-
-EMAIL_FROM = "ion-noreply@tjhsst.edu"
-
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
