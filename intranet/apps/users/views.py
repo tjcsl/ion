@@ -59,14 +59,15 @@ def profile_view(request, user_id=None):
         logger.debug("Eighth sponsor {}".format(sponsor))
 
         eighth_sponsor_schedule = []
-        activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                                .filter(block__date__gt=start_block.date))
-        logger.debug(activities_sponsoring)
-        surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
-        for b in surrounding_blocks:
-            sponsored_for_block = activities_sponsoring.filter(block=b)
-            for schact in sponsored_for_block:
-                eighth_sponsor_schedule.append(schact)
+        if start_block:
+            activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                    .filter(block__date__gt=start_block.date))
+            logger.debug(activities_sponsoring)
+            surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
+            for b in surrounding_blocks:
+                sponsored_for_block = activities_sponsoring.filter(block=b)
+                for schact in sponsored_for_block:
+                    eighth_sponsor_schedule.append(schact)
 
     else:
         eighth_sponsor_schedule = None
