@@ -1,0 +1,101 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {{ action|title }} Announcement
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("select#id_groups").selectize({
+                plugins: ["remove_button"],
+                placeholder: "Everyone"
+            });
+
+            $("select#id_teachers_requested").selectize({
+                plugins: ["remove_button"]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <style type="text/css">
+
+        div.cke_chrome {
+            margin: 10px 0;
+        }
+
+        .announcements table {
+            width: 600px;
+        }
+
+        .announcements input {
+            width: 100%;
+        }
+
+        @media (max-width: 810px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 342px !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 400px !important;
+            }
+        }
+
+        ol li {
+            margin-left: 40px;
+            list-style-type: circle;
+        }
+
+        #cke_id_content {
+            width: 600px;
+            margin-bottom: -15px;
+        }
+
+        .helptext {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h2>
+        Announcement Approval
+    </h2>
+
+    <p>{{ req.user.full_name }} ({{ req.user }}) has requested that an Intranet announcement be posted, and has asked for you to approve its posting. The details of this announcement are included below.</p>
+    <p>You may edit the fields below if you would like to change what is submitted. Please note that pressing the 'Approve' button below will not automatically post the announcement; it will still have to be approved manually by an administrator.</p>
+
+    <form action="" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td>
+        <input type="submit" name="approve" value="Approve Announcement" />
+        <a href="/" class="button">Reject Announcement</a>
+        </td></tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("content", {
+        width: "600px"
+    });
+
+</script>
+{% endblock %}

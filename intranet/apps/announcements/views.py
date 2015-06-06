@@ -6,12 +6,12 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from intranet import settings
 from ..auth.decorators import announcements_admin_required
 from ..users.models import User
-from .models import Announcement
+from .models import Announcement, AnnouncementRequest
 from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
@@ -39,19 +39,20 @@ def request_announcement_email(request, form, obj):
     teachers = User.objects.filter(id__in=teacher_ids)
     logger.debug(teachers)
 
-    subject = "Intranet News Post Confirmation Request from {}".format(request.user)
+    subject = "News Post Confirmation Request from {}".format(request.user.full_name)
+    emails = []
     for teacher in teachers:
-        logger.debug(teacher)
-        email = teacher.tj_email
-        data = {
-            "teacher": teacher,
-            "user": request.user,
-            "formdata": form.data,
-            "info_link": "announcements/request/approve?id={}".format(obj.id)
-        }
-        email_send("announcements/teacher_approve_email.txt", 
-                   "announcements/teacher_approve_email.html",
-                   data, subject, [email])
+        emails.append(teacher.tj_email)
+    logger.debug(emails)
+    data = {
+        "teachers": teachers,
+        "user": request.user,
+        "formdata": form.data,
+        "info_link": "announcements/approve/{}".format(obj.id)
+    }
+    email_send("announcements/teacher_approve_email.txt", 
+               "announcements/teacher_approve_email.html",
+               data, subject, emails)
 
 
 
@@ -72,6 +73,22 @@ def request_announcement_view(request):
     else:
         form = AnnouncementRequestForm()
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
+
+@login_required
+def approve_announcement_view(request, req_id):
+    req = get_object_or_404(AnnouncementRequest, id=req_id)
+    requested_teachers = req.teachers_requested.all()
+    logger.debug(requested_teachers)
+    if request.user not in requested_teachers:
+        messages.error(request, "You do not have permission to approve this announcement.")
+        return redirect("index")
+
+    form = AnnouncementRequestForm({"id": req_id})
+    context = {
+        "form": form
+    }
+    return render(request, "announcements/approve.html", context)
+
 
 @announcements_admin_required
 def add_announcement_view(request):

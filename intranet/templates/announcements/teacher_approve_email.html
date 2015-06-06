@@ -1,6 +1,6 @@
 <p>This is an automated message sent from the <a href="https://ion.tjhsst.edu">TJ Intranet system</a>.</p>
 
-<p>{{ user.full_name }} ({{ user }}) has requested that an Intranet announcement be posted, and has asked for you to approve its posting. The details of the announcement are:</p>
+<p>{{ user.full_name }} ({{ user }}) has requested that an Intranet announcement be posted, and has asked for you to approve its posting. The details of this announcement are:</p>
 <b>Title:</b> {{ formdata.title }}<br />
 <b>Content (that will be posted):</b><br />
 {% autoescape off %}
@@ -8,9 +8,11 @@
 {% endautoescape %}
 <br />
 <b>Notes (for you and the Intranet administrators):</b><br />
-{{ formdata.notes }}
+{{ formdata.notes|linebreaks }}
 <br />
-<b>Teachers Requsted for Approval:</b> {{ formdata.teachers_requested|join:", " }}
+<b>Teachers Requsted for Approval:</b> {% for teacher in teachers %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% endfor %}
 <br />
 <br />
 To approve or reject this posting, <a href="https://ion.tjhsst.edu/{{ info_link }}">click on this link</a>. If you do nothing, the post will not be approved and will not be posted.
