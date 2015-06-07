@@ -16,6 +16,9 @@
     #activity-list li[data-administrative=true] {
         display: none;
     }
+    dl.activityid {
+        display: none;
+    }
     </style>
     {% endif %}
 {% endblock %}
@@ -121,6 +124,11 @@
         <% } %>
 
         <dl>
+            <% if (isEighthAdmin) { %>
+                <dt>Activity ID:</dt>
+                <dd><%= id %></dd>
+            <% } %>
+
             <% rooms = _.uniq(rooms)%>
             <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
             <dd>
@@ -128,6 +136,7 @@
                 <% if (rooms.length != 0) {%>
                         <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
                 <%} else {%>
+                    None
                     <br />
                 <%}%>
             </dd>

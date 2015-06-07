@@ -94,7 +94,7 @@ def schedule_activity_view(request):
     activity_id = request.GET.get("activity", None)
     activity = None
 
-    if activity_id is not None:
+    if activity_id is not None and len(activity_id) > 0:
         try:
             activity = EighthActivity.undeleted_objects.get(id=activity_id)
         except (EighthActivity.DoesNotExist, ValueError):
