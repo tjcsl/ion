@@ -9,7 +9,7 @@ devconfig = JSON.parse(File.read("config/devconfig.json"))
 def setup_host
   return unless ["up", "resume", "ssh", "reload"].include? ARGV[0]
 
-  if !(`netstat -nr`.include? "198.38.24")
+  if !(`netstat -nr`.include? "198.38.")
     puts "Adding routes to host computer..."
     if RUBY_PLATFORM =~ /darwin/
       cmd = "sudo route add 198.38.24.0/21 198.38.22.126"
