@@ -24,38 +24,9 @@
                 $username.focus();
             }
 
-            // /* Message */
-            // $msg = $(".message");
-            // $msg.click(function() {
-            //     $(this).slideUp();
-            // });
-            // setTimeout(function() {
-            //     $msg.slideUp();
-            // }, 2000);
-
-            /* Schedule */
-            $(".schedule-left").click(function() {
-                console.log("Last week");
+            $(".logo").click(function() {
+                location.href = (window.osearch ? "/?"+window.osearch.substring(0, window.osearch.length-1) : "/");
             });
-            $(".schedule-right").click(function() {
-                console.log("Next week");
-            })
-
-            if($("body").hasClass("touch")) {
-                $(".schedule-one, .schedule-two").fadeIn("slow");
-                $(".schedule-four, .schedule-five").fadeIn("slow");
-                $(".schedule-bottom").addClass("hovered");
-            } else {
-                $(".schedule-bottom").hover(function() {
-                    $(".schedule-one, .schedule-two").fadeIn();
-                    $(".schedule-four, .schedule-five").fadeIn();
-                    $(".schedule-bottom").addClass("hovered");
-                }, function() {
-                    $(".schedule-one, .schedule-two").fadeOut();
-                    $(".schedule-four, .schedule-five").fadeOut();
-                    $(".schedule-bottom").removeClass("hovered");
-                });
-            }
         });
     </script>
 {% endblock %}

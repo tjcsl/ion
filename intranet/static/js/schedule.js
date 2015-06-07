@@ -11,7 +11,21 @@ $(document).ready(function() {
             scheduleView(1);
         });
     }
-    window.osearch = null;
+
+    genOrigSearch = function() {        
+        qs = location.search.substring(1);
+        osearch = "";
+        for(i in searchparts=qs.split("&")) {
+            console.debug(searchparts[i])
+            if(searchparts[i].length > 0 && searchparts[i].substring(0, 5) != "date=") {
+                osearch += searchparts[i] + "&";
+            }
+        }
+        return osearch;
+    }
+    window.osearch = genOrigSearch();
+    console.info("osearch:", window.osearch)
+
     scheduleView = function(reldate) {
         $sch = $(".schedule");
         var endpoint = $sch.attr("data-endpoint");
@@ -22,18 +36,6 @@ $(document).ready(function() {
         else date = reldate;
 
         if(history.pushState) {
-            if(window.osearch == null) {
-                qs = location.search.substring(1);
-                osearch = "";
-                for(i in searchparts=qs.split("&")) {
-                    console.debug(searchparts[i])
-                    if(searchparts[i].length > 0 && searchparts[i].substring(0, 5) != "date=") {
-                        osearch += searchparts[i] + "&";
-                    }
-                }
-                window.osearch = osearch;
-                console.info("osearch:", window.osearch)
-            }
             var url = "?"+window.osearch+"date="+date
             console.debug(url);
             history.pushState(null, null, url);
@@ -44,10 +46,6 @@ $(document).ready(function() {
             scheduleBind();
         });
     }
-
-    $(".logo").click(function() {
-        location.href = '';
-    })
 
     scheduleBind(); 
 });
