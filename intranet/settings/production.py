@@ -32,3 +32,5 @@ DATABASES = {
         'HOST': url.hostname
     }
 }
+
+LOGGING["loggers"]["intranet_access"]["handlers"].append("intranet_access")

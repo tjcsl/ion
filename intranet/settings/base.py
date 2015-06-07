@@ -307,7 +307,7 @@ LOGGING = {
             "propagate": True,
         },
         "intranet_access": {
-            "handlers": ["console_access", "access_log"],
+            "handlers": ["console_access"],
             "level": "DEBUG",
             "propagate": False
         }
