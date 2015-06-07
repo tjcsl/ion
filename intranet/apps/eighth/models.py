@@ -289,8 +289,8 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def save(self, *args, **kwargs):
         letter = getattr(self, "block_letter", None)
-        if letter:
-            self.block_letter = letter.capitalize()
+        if letter and len(letter) >= 1:
+            self.block_letter = letter[:1].upper() + letter[1:]
 
         super(EighthBlock, self).save(*args, **kwargs)
 
