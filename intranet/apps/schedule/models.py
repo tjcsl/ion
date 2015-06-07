@@ -10,6 +10,10 @@ class Time(models.Model):
     minute = models.IntegerField()
 
     def __unicode__(self):
+        minute = "0"+str(self.minute) if self.minute < 10 else self.minute
+        return "{}:{}".format(self.hour, minute)
+
+    def str_12_hr(self):
         hour = self.hour if self.hour <= 12 else (self.hour - 12)
         minute = "0"+str(self.minute) if self.minute < 10 else self.minute
         return "{}:{}".format(hour, minute)
