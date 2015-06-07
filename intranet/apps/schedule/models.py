@@ -7,14 +7,16 @@ from django.db import models
 
 class Time(models.Model):
     hour = models.IntegerField()
-    min = models.IntegerField()
+    minute = models.IntegerField()
 
     def __unicode__(self):
-        return "{}:{}".format(self.hour % 12, "0"+str(self.min) if self.min < 10 else self.min)
+        hour = self.hour if self.hour <= 12 else (self.hour - 12)
+        minute = "0"+str(self.minute) if self.minute < 10 else self.minute
+        return "{}:{}".format(hour, minute)
 
     class Meta:
-        unique_together = (("hour", "min"))
-        ordering = ("hour", "min")
+        unique_together = (("hour", "minute"))
+        ordering = ("hour", "minute")
 
 
 class Block(models.Model):
@@ -48,7 +50,7 @@ class DayType(models.Model):
 
 class Day(models.Model):
     date = models.DateField(unique=True)
-    type = models.ForeignKey('DayType')
+    day_type = models.ForeignKey('DayType')
 
     def __unicode__(self):
-        return "{}: {}".format(text_type(self.date), self.type)
+        return "{}: {}".format(text_type(self.date), self.day_type)

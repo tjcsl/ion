@@ -32,7 +32,7 @@ def is_weekday(date):
     return date.isoweekday() in range(1, 6)
 
 
-def get_context(request=None, date=None):
+def schedule_context(request=None, date=None):
     if 'date' in request.GET:
         date = decode_date(request.GET['date'])
     else:
@@ -51,17 +51,25 @@ def get_context(request=None, date=None):
     except Day.DoesNotExist:
         dayobj = None
 
+    blocks = (dayobj.day_type
+                    .blocks
+                    .select_related("start", "end")
+                    .order_by("start__hour", "start__minute"))
+
     return {
-        "dayobj": dayobj,
-        "date": date,
-        "is_weekday": is_weekday(date),
-        "date_tomorrow": date_format(date+timedelta(days=1)),
-        "date_yesterday": date_format(date+timedelta(days=-1))
+        "sched_ctx": {
+            "dayobj": dayobj,
+            "blocks": blocks,
+            "date": date,
+            "is_weekday": is_weekday(date),
+            "date_tomorrow": date_format(date+timedelta(days=1)),
+            "date_yesterday": date_format(date+timedelta(days=-1))
+        }
     }
 
 
 def schedule_view(request):
-    data = get_context(request)
+    data = schedule_context(request)
     return render(request, "schedule/view.html", data)
 
 
@@ -78,7 +86,7 @@ def get_day_data(firstday, daynum):
 
     try:
         dayobj = Day.objects.get(date=date)
-        data["schedule"] = dayobj.type
+        data["schedule"] = dayobj.day_type
     except Day.DoesNotExist:
         data["schedule"] = None
 
@@ -143,9 +151,9 @@ def admin_daytype_view(request):
                 obj = Block.objects.get_or_create(
                         name=blk[0],
                         start__hour=blk[1][0],
-                        start__min=blk[1][1],
+                        start__minute=blk[1][1],
                         end__hour=blk[2][0],
-                        end__min=blk[2][1]
+                        end__minute=blk[2][1]
                 )
                 model.blocks.add(obj)
             model.save()

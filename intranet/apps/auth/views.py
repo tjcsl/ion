@@ -5,7 +5,7 @@ import os
 import logging
 from intranet import settings
 from ..dashboard.views import dashboard_view
-from ..schedule.views import get_context as schedule_context
+from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
