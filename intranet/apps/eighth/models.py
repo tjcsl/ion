@@ -285,8 +285,7 @@ class EighthBlock(AbstractBaseEighthModel):
                                         through="EighthScheduledActivity",
                                         blank=True)
 
-    override_blocks = models.ManyToManyField("EighthBlock",
-                                              blank=True)
+    override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 
     def save(self, *args, **kwargs):
         letter = getattr(self, "block_letter", None)
@@ -541,7 +540,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Check if the block has been locked
             for sched_act in all_sched_act:
                 if sched_act.block.locked:
-                    exception.BlockLocked = True            
+                    exception.BlockLocked = True
 
             # Check if the scheduled activity has been cancelled
             for sched_act in all_sched_act:
@@ -597,6 +596,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.Restricted = True
 
         success_message = "Successfully signed up for activity. "
+
+        """
         final_remove_signups = []
 
         # Check if the block overrides signups on other blocks
@@ -612,9 +613,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     break
 
                 signup_objs = (EighthSignup.objects
-                                          .filter(user=user,
-                                                  scheduled_activity__activity__sticky=True,
-                                                  scheduled_activity__block=block))
+                                           .filter(user=user,
+                                                   scheduled_activity__activity__sticky=True,
+                                                   scheduled_activity__block=block))
                 in_stickie = signup_objs.exists()
                 if in_stickie and not force:
                     exception.OverrideBlockPermissions = [signup_objs[0].scheduled_activity.activity, block]
@@ -628,11 +629,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     for signup in ovr_signups:
                         logger.debug("Need to remove signup for {}".format(signup))
                         final_remove_signups.append(signup)
-                
-
-
-
-
+        """
 
         # If we've collected any errors, raise the exception and abort
         # the signup attempt
@@ -716,16 +713,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 # signup.previous_activity_name = signup.activity.name_with_flags
                 # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
 
-
+        """
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
         for signup in final_remove_signups:
             success_message += "\nYour signup for {} on {} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
             signup.delete()
-
+        """
 
         return success_message
-
 
     class Meta:
         unique_together = (("block", "activity"),)
