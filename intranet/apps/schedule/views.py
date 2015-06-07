@@ -33,6 +33,8 @@ def is_weekday(date):
 
 
 def schedule_context(request=None, date=None):
+    MONDAY = 1
+    FRIDAY = 5
     if 'date' in request.GET:
         date = decode_date(request.GET['date'])
     else:
@@ -41,7 +43,8 @@ def schedule_context(request=None, date=None):
         date = datetime.now()
 
         if is_weekday(date) and date.hour > 17:
-            date += timedelta(days=1)
+            delta = 3 if date.isoweekday() == FRIDAY else 1
+            date += timedelta(days=delta)
         else:
             while not is_weekday(date):
                 date += timedelta(days=1)
@@ -59,14 +62,20 @@ def schedule_context(request=None, date=None):
     else:
         blocks = []
 
+    delta = 3 if date.isoweekday() == FRIDAY else 1
+    date_tomorrow = date_format(date + timedelta(days=delta))
+
+    delta = -3 if date.isoweekday() == MONDAY else -1
+    date_yesterday = date_format(date + timedelta(days=delta))
+
     return {
         "sched_ctx": {
             "dayobj": dayobj,
             "blocks": blocks,
             "date": date,
             "is_weekday": is_weekday(date),
-            "date_tomorrow": date_format(date+timedelta(days=1)),
-            "date_yesterday": date_format(date+timedelta(days=-1))
+            "date_tomorrow": date_tomorrow,
+            "date_yesterday": date_yesterday
         }
     }
 
