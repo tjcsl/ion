@@ -12,6 +12,9 @@ class Time(models.Model):
     def __unicode__(self):
         return "{}:{}".format(self.hour, "0"+str(self.min) if self.min < 10 else self.min)
 
+    class Meta:
+        unique_together = (("hour", "min"))
+
 
 class Block(models.Model):
     name = models.CharField(max_length=100)
@@ -20,6 +23,9 @@ class Block(models.Model):
 
     def __unicode__(self):
         return "{}: {}-{}".format(self.name, self.start, self.end)
+
+    class Meta:
+        unique_together = (("name", "start", "end"))
 
 
 class CodeName(models.Model):
@@ -40,7 +46,7 @@ class DayType(models.Model):
 
 
 class Day(models.Model):
-    date = models.DateField()
+    date = models.DateField(unique=True)
     type = models.ForeignKey('DayType')
 
     def __unicode__(self):
