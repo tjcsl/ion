@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
@@ -123,8 +124,9 @@ def schedule_activity_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        blocks = EighthBlock.objects.filter(date__gte=start_date)
+        end_date = start_date + timedelta(days=60)
 
+        blocks = EighthBlock.objects.filter(date__gte=start_date, date__lte=end_date)
         initial_formset_data = []
 
         sched_act_queryset = (EighthScheduledActivity.objects

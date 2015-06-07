@@ -157,7 +157,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     def capacity(self):
         # Note that this is the default capacity if the
-        # rooms/capacityare not overridden for a particular block.
+        # rooms/capacity are not overridden for a particular block.
 
         rooms = self.rooms.all()
         return EighthRoom.total_capacity_of_rooms(rooms)
