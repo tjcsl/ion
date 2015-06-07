@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
 {% load math %}
+{% load strings %}
 
 {% block title %}
     {{ block.super }} - Eighth Period
@@ -270,7 +271,11 @@
                     </h2>
                     <h4>
                         {% if block_info.block_letter %}
-                            {{ block_info.block_letter }} Block
+                            {% if block_info.block_letter|contains_digit %}
+                                Block {{ block_info.block_letter }}
+                            {% else %}
+                                {{ block_info.block_letter }} Block
+                            {% endif %}
                         {% endif %}
                     </h4>
                 </div>
