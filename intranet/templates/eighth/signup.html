@@ -259,24 +259,26 @@
             </ul>
         </div>
 
-        <div class="middle">
-            <div class="block-title">
-                <h2>
-                    {% if active_block.locked %}
-                        <i class="fa fa-lock"></i>
-                    {% endif %}
-                    {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
-                </h2>
-                <h4>
-                    {% if block_info.block_letter %}
-                        {{ block_info.block_letter }} Block
-                    {% endif %}
-                </h4>
-            </div>
+        <div class="middle-wrapper">
+            <div class="middle">
+                <div class="block-title">
+                    <h2>
+                        {% if active_block.locked %}
+                            <i class="fa fa-lock"></i>
+                        {% endif %}
+                        {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                    </h2>
+                    <h4>
+                        {% if block_info.block_letter %}
+                            {{ block_info.block_letter }} Block
+                        {% endif %}
+                    </h4>
+                </div>
 
-            <div class="switch">
-                <i class="fa fa-chevron-up up"></i>
-                <i class="fa fa-chevron-down down"></i>
+                <div class="switch">
+                    <i class="fa fa-chevron-up up"></i>
+                    <i class="fa fa-chevron-down down"></i>
+                </div>
             </div>
         </div>
 
