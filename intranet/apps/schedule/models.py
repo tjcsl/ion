@@ -14,6 +14,7 @@ class Time(models.Model):
 
     class Meta:
         unique_together = (("hour", "min"))
+        ordering = ("hour", "min")
 
 
 class Block(models.Model):
