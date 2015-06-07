@@ -118,7 +118,7 @@ TEMPLATES = [
     },
 ]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
@@ -130,7 +130,8 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
-)
+    "intranet.middleware.access_log.AccessLogMiddleWare"
+]
 
 ROOT_URLCONF = "intranet.urls"
 
@@ -260,6 +261,9 @@ LOGGING = {
         "simple": {
             "format": "%(levelname)s: %(message)s"
         },
+        "access": {
+            "format": "%(message)s"
+        }
     },
     "filters": {
         "require_debug_false": {
@@ -278,6 +282,18 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "simple"
         },
+        "console_access": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "access"
+        },
+        "access_log": {
+            "level": "DEBUG",
+            "filters": ["require_debug_false"],
+            "class": "logging.FileHandler",
+            "formatter": "access",
+            "filename": "/var/log/ion/app_access.log"
+        }
     },
     "loggers": {
         "django.request": {
@@ -290,6 +306,11 @@ LOGGING = {
             "level": LOG_LEVEL,
             "propagate": True,
         },
+        "intranet_access": {
+            "handlers": ["console_access", "access_log"],
+            "level": "DEBUG",
+            "propagate": False
+        }
     }
 }
 

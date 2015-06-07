@@ -99,3 +99,6 @@ cd intranet
 ./manage.py migrate --noinput
 cd ..
 chown -R vagrant: /home/vagrant
+
+mkdir /var/log/ion
+chown -R vagrant: ion
