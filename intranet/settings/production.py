@@ -33,4 +33,4 @@ DATABASES = {
     }
 }
 
-LOGGING["loggers"]["intranet_access"]["handlers"].append("intranet_access")
+LOGGING["loggers"]["intranet_access"]["handlers"].append("access_log")
