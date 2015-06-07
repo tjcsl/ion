@@ -12,8 +12,13 @@ class AccessLogMiddleWare(object):
         else:
             username = request.user.username
 
+        if "HTTP_X_FORWARDED_FOR" in request.META:
+            ip = request.META["HTTP_X_FORWARDED_FOR"]
+        else:
+            ip = request.META.get("REMOTE_ADDR", ""),
+
         log_line = "{} - {} - [{}] \"{}\" \"{}\"".format(
-            request.META.get("REMOTE_ADDR", ""),
+            ip,
             username,
             datetime.now(),
             request.path,
