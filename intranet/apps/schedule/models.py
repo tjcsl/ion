@@ -33,6 +33,7 @@ class Block(models.Model):
 
     class Meta:
         unique_together = (("name", "start", "end"))
+        ordering = ("name", "start", "end")
 
 
 class CodeName(models.Model):
@@ -51,6 +52,9 @@ class DayType(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ("name",)
+
 
 class Day(models.Model):
     date = models.DateField(unique=True)
@@ -58,3 +62,6 @@ class Day(models.Model):
 
     def __unicode__(self):
         return "{}: {}".format(text_type(self.date), self.day_type)
+
+    class Meta:
+        ordering = ("date",)
