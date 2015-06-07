@@ -85,7 +85,7 @@
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
             <span class="activity-sponsors" title="<%= sponsors_all %>"><%= sponsors_all %></span>
-            
+
         {% endverbatim %}
     </script>
 
@@ -142,7 +142,10 @@
                 <%}%>
             </dd>
 
-            <dt>Signups:</dt><dd><%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%></dd>
+            <dt>Signups:</dt>
+            <dd>
+                <%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%>
+            </dd>
 
             <% if (both_blocks) {%>
                 <div>This activity runs both blocks.</div>
@@ -158,16 +161,16 @@
                 <p><%= description %></p>
             <%}%>
 
-            <div id="roster-section" data-endpoint="/eighth/roster/raw">
-                <button id="roster-button">
-                    View Roster
-                </button>
-            </div>
 
             <div id="signup-section">
+                <% var showingRosterButton = false %>
                 <% if (!cancelled) {%>
                     <% if (!selected) {%>
                         <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
+                            <% showingRosterButton = true %>
+                            <button id="roster-button" data-endpoint="/eighth/roster/raw">
+                                View Roster
+                            </button>
                             <button id="signup-button">
                                 Sign Up
                             </button>
@@ -179,7 +182,7 @@
                         <%}%>
                     <%} else {%>
                         <% if (display_text.length > 0) {%>
-                            <strong><%= display_text %></strong><br />
+                            <strong><%= display_text %></strong><br /><br />
                         <% }else{ %>
                             <strong>You are currently signed up for this activity.</strong>
                         <% } %>
@@ -188,6 +191,13 @@
 
                 <div class="error-feedback">
                 </div>
+            </div>
+            <% if (!showingRosterButton) { %>
+                <button id="roster-button" data-endpoint="/eighth/roster/raw">
+                    View Roster
+                </button>
+            <% } %>
+            <div id="roster-section">
             </div>
         </dl>
         {% endverbatim %}

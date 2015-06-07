@@ -26,7 +26,6 @@ $(function() {
 
         initialize: function(){
             _.bindAll(this, "render");
-
             this.template = _.template($("#activity-details-template").html());
         },
 
@@ -57,11 +56,12 @@ $(function() {
         },
 
         rosterClickHandler: function(e) {
+            console.log(e.target);
             var target = e.target;
             var schact_id = this.model.attributes.scheduled_activity;
             console.debug("Load roster for scheduled activity", schact_id)
-            var endpoint = $(target).parent().data("endpoint");
-            var container = $(target).parent();
+            var endpoint = $(target).data("endpoint");
+            var container = $("#roster-section");
             $.get(endpoint + "/" + schact_id, {}, function(resp) {
                 container.html(resp);
             });
@@ -98,7 +98,6 @@ $(function() {
         },
 
         showDetail: function(e) {
-            console.log("showing detail");
             $("#activity-list li[data-activity-id].selected").removeClass("selected");
             var $target = $(e.target);
             if (!$target.is("li")) {
@@ -111,15 +110,20 @@ $(function() {
 
             $target.addClass("selected");
 
-            activityDetailView = new eighth.ActivityDetailView({
-                model: this.model,
-                viewContainer: $("#activity-detail")
-            });
+            if (window.activityDetailView) {
+                window.activityDetailView.model = this.model;
+            } else {
+                window.activityDetailView = new eighth.ActivityDetailView({
+                    model: this.model,
+                    viewContainer: $("#activity-detail")
+                });
+            }
 
-            $("#activity-detail").data("aid", activityDetailView.model.id);
+
+            $("#activity-detail").data("aid", window.activityDetailView.model.id);
             $("#activity-detail").addClass("selected");
 
-            activityDetailView.render();
+            window.activityDetailView.render();
 
             initUIElementBehavior();
         }
@@ -225,24 +229,27 @@ $(function() {
         el: $("#activity-list"),
 
         initialize: function() {
+            this.rowViews = [];
             _.bindAll(this, "render");
-
             this.activities = activityModels.sort();
         },
 
         render: function() {
             var prevSelectedInFavorites = $("li[data-activity-id].selected").parent().hasClass("favorite-activities");
             var prevSelectedAid = $("li[data-activity-id].selected").data("activity-id");
-
+            var rowViews = this.rowViews;
+            while (rowViews.length > 0) {
+                rowViews.pop().remove();
+            }
             var renderActivitiesInContainer = function(models, $container) {
                 $container.html("");
                 _.each(models, function(model){
-                    var ActivityListRowView = new eighth.ActivityListRowView({
+                    var activityListRowView = new eighth.ActivityListRowView({
                         model: model
                     });
+                    rowViews.push(activityListRowView)
 
-                    $container.append(ActivityListRowView.render().el);
-                    // console.log(model.attributes.name);
+                    $container.append(activityListRowView.render().el);
                 }, this);
             }
 
