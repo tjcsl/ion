@@ -51,10 +51,13 @@ def schedule_context(request=None, date=None):
     except Day.DoesNotExist:
         dayobj = None
 
-    blocks = (dayobj.day_type
-                    .blocks
-                    .select_related("start", "end")
-                    .order_by("start__hour", "start__minute"))
+    if dayobj is not None:
+        blocks = (dayobj.day_type
+                        .blocks
+                        .select_related("start", "end")
+                        .order_by("start__hour", "start__minute"))
+    else:
+        blocks = []
 
     return {
         "sched_ctx": {
