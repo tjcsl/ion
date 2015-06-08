@@ -292,7 +292,8 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "logging.FileHandler",
             "formatter": "access",
-            "filename": "/var/log/ion/app_access.log"
+            "filename": "/var/log/ion/app_access.log",
+            "delay": True
         }
     },
     "loggers": {
