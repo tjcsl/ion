@@ -432,7 +432,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
             Paragraph("<b>Activity ID {}</b>".format(sact.activity.id), styles["Normal"]),
             Paragraph("{}<br/>{}<br/>{}".format(sponsors_str,
                                                 rooms_str,
-                                                sact.block.date.strftime("%A, %B %-d")),
+                                                sact.block.date.strftime("%A, %B %-d %Y")),
                       styles["ActivityAttribute"]),
             Paragraph("A", styles["BlockLetter"])
         ]]
@@ -452,15 +452,23 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Paragraph(num_members_label, styles["Center"]))
         elements.append(Spacer(0, 5))
 
-        attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]), Paragraph("Grade", styles["Heading5"])]]
+        attendance_data = [[
+            Paragraph("Present", styles["Heading5"]),
+            Paragraph("Student Name (ID)", styles["Heading5"]),
+            Paragraph("Grade", styles["Heading5"])
+        ]]
 
         members = []
         for member in sact.members.all():
-            members.append((member.last_name + ", " + member.first_name, member.id))
+            members.append((
+                member.last_name + ", " + member.first_name,
+                (member.student_id if member.student_id else "User {}".format(member.id)),
+                int(member.grade) if member.grade else "?"
+            ))
         members = sorted(members)
 
-        for member_name, member_id in members:
-            row = ["", "{} ({})".format(member_name, member_id), "12"]
+        for member_name, member_id, member_grade in members:
+            row = ["", "{} ({})".format(member_name, member_id), member_grade]
             attendance_data.append(row)
 
         # Line commands are like this:
