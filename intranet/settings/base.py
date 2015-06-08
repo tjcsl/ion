@@ -5,6 +5,9 @@ import os
 import subprocess
 from .secret import *
 
+PRODUCTION = os.getenv("PRODUCTION", "") == "TRUE"
+TRAVIS = os.getenv("TRAVIS", "") == "true"
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_URL = "/login"
@@ -245,7 +248,7 @@ EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-LOG_LEVEL = "DEBUG" if os.getenv("PRODUCTION", "FALSE") == "FALSE" else "INFO"
+LOG_LEVEL = "DEBUG" if not PRODUCTION else "INFO"
 _log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 if os.getenv("LOG_LEVEL", None) in _log_levels:
     LOG_LEVEL = os.environ["LOG_LEVEL"]
@@ -308,7 +311,7 @@ LOGGING = {
             "propagate": True,
         },
         "intranet_access": {
-            "handlers": ["console_access"],
+            "handlers": ["console_access"] + (["access_log"] if (PRODUCTION and not TRAVIS) else []),
             "level": "DEBUG",
             "propagate": False
         }
