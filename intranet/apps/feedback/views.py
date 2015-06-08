@@ -25,6 +25,7 @@ def send_feedback_email(request, data):
     }
     email_send("feedback/email.txt", "feedback/email.html", data, "Feedback from {}".format(request.user), [settings.FEEDBACK_EMAIL], headers)
 
+@login_required
 def send_feedback_view(request):
     if request.method == "POST":
         form = FeedbackForm(request.POST)
