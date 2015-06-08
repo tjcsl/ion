@@ -64,21 +64,26 @@ def gen_sponsor_schedule(user, num_blocks=6):
 
     """
 
+    no_attendance_today = None
     acts = []
 
     sponsor = user.get_eighth_sponsor()
 
     block = EighthBlock.objects.get_first_upcoming_block()
-    activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor)\
-        .filter(block__date__gt=block.date)
+    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                            .filter(block__date__gte=block.date))
 
     surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
     for b in surrounding_blocks:
         num_added = 0
-
         sponsored_for_block = activities_sponsoring.filter(block=b)
+
         for schact in sponsored_for_block:
             acts.append(schact)
+            if schact.block.is_today():
+                if not schact.attendance_taken and schact.block.locked:
+                    no_attendance_today = True
+
             num_added += 1
 
         if num_added == 0:
@@ -89,7 +94,8 @@ def gen_sponsor_schedule(user, num_blocks=6):
                 "fake": True
             })
 
-    return acts
+    logger.debug(acts)
+    return acts, no_attendance_today
 
 
 @login_required
