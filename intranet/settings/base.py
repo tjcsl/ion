@@ -28,6 +28,8 @@ ADMINS = (
     ("James Woglom", "2016jwoglom+ion@tjhsst.edu")
 )
 
+FEEDBACK_EMAIL = "intranet+feedback@tjhsst.edu"
+
 MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
