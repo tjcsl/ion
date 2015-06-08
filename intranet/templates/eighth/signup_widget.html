@@ -1,15 +1,17 @@
 <div class="widget eighth-widget">
     <div class="widget-title">
         <h2>
+            {% if no_signup_today %}
+            <div class="warning-icon" title="You have not signed up today.">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            {% endif %}
             Upcoming Eighth Periods
         </h2>
         <div class="info">
             <a href="{% url 'eighth_signup' %}" class="ui-link">View more blocks</a>
         </div>
-        <!--div class="info warning">
-            <i class="fa fa-warning-sign"></i>
-            15 Minutes Left to Sign Up
-        </div-->
+        
     </div>
     <div class="widget-content">
     {% for block in schedule %}

@@ -17,7 +17,7 @@ def gen_schedule(user, num_blocks=6):
     current activity signup.
 
     """
-
+    no_signup_today = None
     schedule = []
 
     block = EighthBlock.objects.get_first_upcoming_block()
@@ -52,7 +52,10 @@ def gen_schedule(user, num_blocks=6):
             }
             schedule.append(info)
 
-    return schedule
+            if b.is_today() and not current_signup:
+                no_signup_today = True
+
+    return schedule, no_signup_today
 
 
 def gen_sponsor_schedule(user, num_blocks=6):
@@ -116,19 +119,23 @@ def dashboard_view(request):
     is_student = request.user.is_student
     eighth_sponsor = request.user.is_eighth_sponsor
 
+
     if is_student:
-        schedule = gen_schedule(request.user)
+        schedule, no_signup_today = gen_schedule(request.user)
     else:
         schedule = None
+        no_signup_today = None
 
     if eighth_sponsor:
-        sponsor_schedule = gen_sponsor_schedule(request.user)
+        sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
     else:
         sponsor_schedule = None
+        no_sponsorship_today = None
 
     context = {
         "announcements": announcements,
         "schedule": schedule,
+        "no_signup_today": no_signup_today,
         "sponsor_schedule": sponsor_schedule,
         "eighth_sponsor": eighth_sponsor,
         "start_num": start_num,
