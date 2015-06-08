@@ -17,13 +17,17 @@
                 {{ schact.block.date|date:"D, N j" }}
                 {% if schact.activity %}
 
-                    {% if schact.block.locked %}
+                    {% if schact.attendance_taken %}
+                        <span class="block-sponsorship attendance-taken">
+                            <i class="fa fa-check" title="You have taken attendance."></i>{{ schact.activity }}
+                        </span>
+                    {% elif schact.block.locked %}
                         <span class="block-sponsorship">
                             {{ schact.activity }}
                         </span>
                     {% else %}
                         <span class="block-sponsorship unlocked">
-                            <i class="fa fa-unlock-alt"></i>
+                            <i class="fa fa-unlock-alt" title="The block has not been locked."></i>
                             {{ schact.activity }}
                         </span>
                     {% endif %}
