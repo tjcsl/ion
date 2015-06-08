@@ -23,7 +23,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
                                           .order_by("date"))
     groups = Group.objects.order_by("name")
     rooms = EighthRoom.objects.all()
-    sponsors = EighthSponsor.objects.order_by("last_name", "first_name")
+    sponsors = EighthSponsor.objects.prefetch_related('user').order_by("last_name", "first_name")
 
     context = {
         "start_date": start_date,
