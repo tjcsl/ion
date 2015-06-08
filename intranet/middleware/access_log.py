@@ -21,7 +21,7 @@ class AccessLogMiddleWare(object):
             ip,
             username,
             datetime.now(),
-            request.path,
+            request.get_full_path(),
             request.META.get("HTTP_USER_AGENT", "")
         )
 
