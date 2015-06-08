@@ -136,13 +136,14 @@ def dashboard_view(request):
         sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
     else:
         sponsor_schedule = None
-        no_sponsorship_today = None
+        no_attendance_today = None
 
     context = {
         "announcements": announcements,
         "schedule": schedule,
         "no_signup_today": no_signup_today,
         "sponsor_schedule": sponsor_schedule,
+        "no_attendance_today": no_attendance_today,
         "eighth_sponsor": eighth_sponsor,
         "start_num": start_num,
         "end_num": end_num,

@@ -16,7 +16,7 @@
                 </span>
                 {{ schact.block.date|date:"D, N j" }}
                 {% if schact.activity %}
-                    <span class="block-sponsorship">
+                    <span class="block-sponsorship{% if schact.block.is_today %} today{% endif %}{% if not schact.attendance_taken %} no-attendance{% endif %}">
                         {{ schact.activity }}
                     </span>
                     <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
