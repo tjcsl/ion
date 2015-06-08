@@ -1,0 +1,59 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - Send Feedback
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+
+    .primary-content p {
+        max-width: 700px;
+    }
+
+    div.cke_chrome {
+        margin: 10px 0;
+    }
+
+    #cke_id_comments {
+        width: 600px;
+        margin-bottom: -15px;
+    }
+
+
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="feedback primary-content">
+    <h2>
+        Send Intranet Feedback
+    </h2>
+    <p>
+        Please use this form to send feedback about Intranet. Your name, as well as browser and system information will be sent along with your comments. We may follow up with you via your primary email address under Preferences. Thanks!
+    </p>
+    
+    <form action="" method="post">
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+            <tr><td><input type="submit" /></td></tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("comments", {
+        width: "600px"
+    });
+
+</script>
+{% endblock %}
