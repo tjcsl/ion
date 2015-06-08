@@ -63,7 +63,7 @@ def request_announcement_view(request):
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save(commit=True)
             obj.user = request.user
             obj.save()
             request_announcement_email(request, form, obj)
@@ -78,13 +78,24 @@ def request_announcement_view(request):
 @login_required
 def approve_announcement_view(request, req_id):
     req = get_object_or_404(AnnouncementRequest, id=req_id)
+
     requested_teachers = req.teachers_requested.all()
     logger.debug(requested_teachers)
     if request.user not in requested_teachers:
         messages.error(request, "You do not have permission to approve this announcement.")
         return redirect("index")
 
-    form = AnnouncementRequestForm({"id": req_id})
+    if request.method == "POST":
+        form = AnnouncementRequestForm(request.POST, instance=req)
+        if form.is_valid():
+            obj = form.save(commit=True)
+            if "approve" in request.POST:
+                obj.teachers_approved.add(request.user)
+            obj.save()
+            messages.success(request, "Successfully approved announcement request.")
+            return redirect("index")
+    
+    form = AnnouncementRequestForm(instance=req)
     context = {
         "form": form
     }
