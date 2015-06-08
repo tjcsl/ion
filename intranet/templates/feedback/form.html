@@ -3,7 +3,7 @@
 {% load dates %}
 
 {% block title %}
-    {{ block.super}} - Send Feedback
+    {{ block.super }} - Send Feedback
 {% endblock %}
 
 {% block js %}
@@ -41,12 +41,11 @@
         Please use this form to send feedback about Intranet. Your name, as well as browser and system information will be sent along with your comments. We may follow up with you via your primary email address under Preferences. Thanks!
     </p>
     
-    <form action="" method="post">
-        <table>
+    <form action="{% url 'send_feedback' %}" method="post">
             {% csrf_token %}
-            {{ form.as_table }}
-            <tr><td><input type="submit" /></td></tr>
-        </table>
+            {{ form.as_p }}
+            <br />
+            <input type="submit" />
     </form>
 </div>
 <script type="text/javascript">

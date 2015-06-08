@@ -11,12 +11,13 @@ from .forms import FeedbackForm
 
 logger = logging.getLogger(__name__)
 
-def send_feedback_email(request, data):
-    logger.debug(data)
+def send_feedback_email(request, comments):
+    logger.debug(comments)
     pass
 
 def send_feedback_view(request):
     if request.method == "POST":
+        logger.debug(request.POST)
         comments = request.POST.get("comments")
         sent = send_feedback_email(request, comments)
         if sent: messages.success(request, "Your feedback was sent. Thanks!")
