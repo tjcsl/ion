@@ -1,0 +1,46 @@
+<div class="widget sponsor-widget">
+    <div class="widget-title">
+        <h2>
+            Take Attendance
+        </h2>
+        <div class="info">
+            <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="ui-link">View more blocks</a>
+        </div>
+    </div>
+    <div class="widget-content">
+    {% for schact in sponsor_schedule %}
+        <div class="eighth-block">
+            <div class="block-header{% if schact.activity %} clickable{% endif %}">
+                <span class="block-letter"{% if schact.block_letter_width %} style="width: {{ schact.block_letter_width }}px"{% endif %}>
+                    {{ schact.block.block_letter }}
+                </span>
+                {{ schact.block.date|date:"D, N j" }}
+                {% if schact.activity %}
+                    <span class="block-sponsorship">
+                        {{ schact.activity }}
+                    </span>
+                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
+                    {% if schact.attendance_taken %}
+                        Modify
+                    {% elif schact.block.locked %}
+                        Take Now
+                    {% else %}
+                        View
+                    {% endif %}
+                    </a>
+                {% else %}
+                    <span class="block-signup no-activity-selected">
+                        Not sponsoring an activity
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="eighth-block">
+            <div class="block-header">
+                You are not sponsoring any activities.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>

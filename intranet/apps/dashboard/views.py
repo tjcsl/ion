@@ -47,7 +47,8 @@ def gen_schedule(user, num_blocks=6):
                 "current_signup_cancelled": current_signup_cancelled,
                 "locked": b.locked,
                 "date": b.date,
-                "flags": flags
+                "flags": flags,
+                "is_today": b.is_today()
             }
             schedule.append(info)
 
