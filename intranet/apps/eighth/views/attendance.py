@@ -440,7 +440,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
             block_letter_width += (0.5 * inch) * (len(block_letter) - 1)
             block_letter_style = "BlockLetter"
         elif len(block_letter) < 7:
-            block_letter_width = 0.5 * inch
+            block_letter_width = 0.4 * inch
             block_letter_width += (0.3 * inch) * (len(block_letter) - 1)
             block_letter_style = "BlockLetterSmall"
         else:

@@ -1318,6 +1318,10 @@ class Grade(object):
         else:
             self._name = "graduate"
 
+        if self._number is None:
+            self._number = 13
+
+
     @property
     def number(self):
         """Return the grade as a number (9-12).
