@@ -9,6 +9,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker/jquery.datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
@@ -16,17 +17,26 @@
                 plugins: ["remove_button"],
                 placeholder: "Everyone"
             });
+
+            $("#id_expiration_date").datetimepicker({
+                format: "Y-m-d H:i:s"
+            })
         });
     </script>
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
     <style type="text/css">
 
         div.cke_chrome {
             margin: 10px 0;
+        }
+
+        .selectize-input {
+            width: calc(100% + 8px);
         }
 
         .announcements table {

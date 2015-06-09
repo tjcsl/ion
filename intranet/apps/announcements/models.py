@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
 from django.db import models
 from django.db.models import Manager, Q
 from django.contrib.auth.models import Group
@@ -49,6 +50,8 @@ class Announcement(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(Group, blank=True)
+
+    expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
 
     def __unicode__(self):
         return self.title
