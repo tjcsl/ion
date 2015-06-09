@@ -18,7 +18,21 @@
                 placeholder: "Everyone"
             });
 
-            $("#id_expiration_date").datetimepicker({
+            var reset = false;
+            $("#id_expiration_date").click(function() {
+                if(!reset) {
+                    var d = new Date();
+                    date_str = (d.getFullYear()) + "-" + 
+                               (d.getMonth() < 9 ? "0"+(d.getMonth()+1) : d.getMonth()+1) + "-" +
+                               (d.getDay() < 9 ? "0"+(d.getDay()+1) : d.getDay()+1) + " " + 
+                               (d.getHours() < 10 ? "0"+d.getHours() : d.getHours()) + ":" +
+                               (d.getMinutes() < 10 ? "0"+d.getMinutes() : d.getMinutes()) + ":" + 
+                               (d.getSeconds() < 10 ? "0"+d.getSeconds() : d.getSeconds());
+                    $(this).val(date_str);
+                    reset = true;
+                }
+            }).datetimepicker({
+                lazyInit: true,
                 format: "Y-m-d H:i:s"
             })
         });
