@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 from ...models import EighthBlock
 
 
-block_letter_validator = RegexValidator(r"^[a-zA-Z0-9]{1,10}$", "Only alphanumeric characters less than 10 characters long are allowed.")
+block_letter_validator = RegexValidator(r"^[a-zA-Z0-9_-]{1,10}$", "A block letter must be less than 10 characters long.")
 
 
 class BlockSelectionForm(forms.Form):
