@@ -26,7 +26,26 @@ def edit_profile_view(request, user_id=None):
 
     for field in ProfileEditForm.ADDRESS_FIELDS:
         defaults[field] = getattr(user.address, field)
+    defaults["birthday"] = str(defaults["birthday"]).split(" ")[0]
     defaults["counselor_id"] = user.counselor.id if user.counselor else None
+
+    if request.method == "POST":
+        logger.debug("Saving")
+        form = ProfileEditForm(request.POST)
+        if form.is_valid():
+            pass # We don't care.
+        items = form.cleaned_data
+        new_data = {}
+        for field in items:
+            new = items[field]
+            old = defaults[field]
+            if str(new) != str(old):
+                new_data[field] = new
+        logger.debug(new_data)
+
+        for key in new_data:
+            setattr(user, key, new_data[key])
+        user.save()
 
     form = ProfileEditForm(initial=defaults)
 
