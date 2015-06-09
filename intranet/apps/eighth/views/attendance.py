@@ -146,8 +146,13 @@ def roster_view(request, scheduled_activity_id):
 
     signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
 
+    viewable_members = scheduled_activity.get_viewable_members(request.user)
+    num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
+    logger.debug(viewable_members)
     context = {
         "scheduled_activity": scheduled_activity,
+        "viewable_members": viewable_members,
+        "num_hidden_members": num_hidden_members,
         "signups": signups
     }
 
@@ -161,8 +166,13 @@ def raw_roster_view(request, scheduled_activity_id):
 
     signups = EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
 
+    viewable_members = scheduled_activity.get_viewable_members(request.user)
+    num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
+
     context = {
         "scheduled_activity": scheduled_activity,
+        "viewable_members": viewable_members,
+        "num_hidden_members": num_hidden_members,
         "signups": signups
     }
 
