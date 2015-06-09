@@ -20,11 +20,15 @@ def date_fmt(date):
 def edit_profile_view(request, user_id=None):
     user = get_object_or_404(User, id=user_id)
 
-    form = ProfileEditForm()
-    logger.debug(form.fields)
-    for field in form.FIELDS:
-        logger.debug(field)
-        form.data[field] = getattr(user, field)
+    defaults = {}
+    for field in ProfileEditForm.FIELDS:
+        defaults[field] = getattr(user, field)
+
+    for field in ProfileEditForm.ADDRESS_FIELDS:
+        defaults[field] = getattr(user.address, field)
+
+    form = ProfileEditForm(initial=defaults)
+
     context = {
         "profile_user": user,
         "form": form

@@ -16,24 +16,22 @@ class ProfileEditForm(forms.Form):
     street = forms.CharField(label="Street")
     city = forms.CharField(label="City")
     state = forms.CharField(label="State")
-    zip = forms.CharField(label="ZIP")
+    postal_code = forms.CharField(label="ZIP")
     #counselor = forms.CharField(label="Counselor")
     #locker = forms.CharField(label="Locker")
     
-    def __init__(self, *args, **kwargs):
-        super(forms.Form, self).__init__(*args, **kwargs)
-        self.FIELDS = ["student_id",
-                       "first_name",
-                       "middle_name",
-                       "last_name",
-                       "title",
-                       "nickname",
-                       "graduation_year",
-                       "sex",
-                       "birthday",
-                       "home_phone",
-                       "counselor"]
-        self.ADDRESS_FIELDS = ["street",
-                               "city",
-                               "state",
-                               "zip"]
+    FIELDS = ["student_id",
+               "first_name",
+               "middle_name",
+               "last_name",
+               "title",
+               "nickname",
+               "graduation_year",
+               "sex",
+               "birthday",
+               "home_phone",
+               "counselor"]
+    ADDRESS_FIELDS = ["street",
+                       "city",
+                       "state",
+                       "postal_code"]
