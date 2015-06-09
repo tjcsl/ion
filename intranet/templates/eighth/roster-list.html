@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for user in scheduled_activity.members.all %}
+    {% for user in scheduled_activity.viewable_members %}
         <tr class="item-row">
             <td>{{ user.last_name }}, {{ user.first_name }}</td>
             <td>{{ user.grade.number }}</td>
@@ -20,3 +20,6 @@
     {% endfor %}
     </tbody>
 </table>
+{% if scheduled_activity.num_hidden_members > 0 %}
+    <p>{{ scheduled_activity.num_hidden_members }} {% if scheduled_activity.num_hidden_members == 1 %}user has{% else %}users have{% endif %} elected to not appear on this list.</p>
+{% endif %}

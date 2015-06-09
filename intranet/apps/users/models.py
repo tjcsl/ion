@@ -671,6 +671,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
+    def can_view_eighth(self):
+        return self.permissions["self"]["showeighth"]
+    
+
+    @property
     def is_eighth_admin(self):
         """Checks if user is an eighth period admin.
 

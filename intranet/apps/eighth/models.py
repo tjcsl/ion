@@ -509,6 +509,36 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return (now < (activity_date - presign_period))
 
+    def viewable_members(self, user=None):
+        """Get the list of members that you have permissions to view.
+
+        Returns: List of members
+        """
+        members = []
+        for member in self.members.all():
+            show = False
+            if member.permissions and member.permissions['self']:
+                show = member.permissions['self']['showeighth']
+            if show:
+                members.append(member)
+
+        return members
+
+    def num_hidden_members(self, user=None):
+        """Get the number of members that you do not have permission to view.
+
+        Returns: Number of members hidden based on preferences
+        """
+        hidden_members = 0
+        for member in self.members.all():
+            show = False
+            if member.permissions and member.permissions['self']:
+                show = member.permissions['self']['showeighth']
+            if not show:
+                hidden_members += 1
+
+        return hidden_members
+
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
 
