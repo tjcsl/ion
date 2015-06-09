@@ -8,7 +8,7 @@ class ProfileEditForm(forms.Form):
     last_name = forms.CharField(label="Last Name")
     title = forms.CharField(label="Title")
     nickname = forms.CharField(label="Nickname")
-    graduation_year = forms.IntegerField(label="Grade")
+    graduation_year = forms.IntegerField(label="Graduation Year")
     sex = forms.CharField(label="Sex (M or F)")
     birthday = forms.DateField(label="Birth Date")
     home_phone = forms.CharField(label="Home Phone")
@@ -17,7 +17,7 @@ class ProfileEditForm(forms.Form):
     city = forms.CharField(label="City")
     state = forms.CharField(label="State")
     postal_code = forms.CharField(label="ZIP")
-    #counselor = forms.CharField(label="Counselor")
+    counselor_id = forms.IntegerField(label="Counselor ID")
     #locker = forms.CharField(label="Locker")
     
     FIELDS = ["student_id",
@@ -29,8 +29,7 @@ class ProfileEditForm(forms.Form):
                "graduation_year",
                "sex",
                "birthday",
-               "home_phone",
-               "counselor"]
+               "home_phone"]
     ADDRESS_FIELDS = ["street",
                        "city",
                        "state",

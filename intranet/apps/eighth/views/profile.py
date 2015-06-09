@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def date_fmt(date):
     return datetime.strftime(date, "%Y-%m-%d")
 
-@login_required
+@eighth_admin_required
 def edit_profile_view(request, user_id=None):
     user = get_object_or_404(User, id=user_id)
 
@@ -26,6 +26,7 @@ def edit_profile_view(request, user_id=None):
 
     for field in ProfileEditForm.ADDRESS_FIELDS:
         defaults[field] = getattr(user.address, field)
+    defaults["counselor_id"] = user.counselor.id if user.counselor else None
 
     form = ProfileEditForm(initial=defaults)
 
