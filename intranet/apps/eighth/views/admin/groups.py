@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
+from ....search.views import get_search_results
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm, UploadGroupForm
@@ -82,6 +83,12 @@ def edit_group_view(request, group_id):
         "delete_url": reverse("eighth_admin_delete_group",
                               args=[group_id])
     }
+
+    if "possible_student" in request.GET:
+        student_ids = request.GET.getlist("possible_student")
+        possible_students = User.objects.get(id__in=student_ids)
+        context["possible_students"] = students
+
     return render(request, "eighth/admin/edit_group.html", context)
 
 def get_file_string(fileobj):
@@ -105,9 +112,12 @@ def get_user_info(key, val):
 
 def handle_group_input(filetext):
     logger.debug(filetext)
+    lines = filetext.splitlines()
+    return find_users_input(lines)
+    
+def find_users_input(lines):
     sure_users = []
     unsure_users = []
-    lines = filetext.splitlines()
     for line in lines:
         done = False
         line = line.strip()
@@ -500,17 +510,33 @@ def add_member_to_group_view(request, group_id):
 
     next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
 
-    if "student_id" not in request.POST or not request.POST["student_id"].isdigit():
+    if "query" not in request.POST:
         return redirect(next_url + "?error=s")
 
-    student_id = request.POST["student_id"]
-    user = User.objects.user_with_student_id(student_id)
-    if user is None:
+    query = request.POST["query"]
+    errors, results = get_search_results(query)
+    logger.debug(results)
+    if results["hits"]["total"] == 1:
+        user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
+        logger.debug("User id: {}".format(user_id))
+        user = User.objects.user_with_ion_id(user_id)
+
+        user.groups.add(group)
+        user.save()
+        messages.success(request, "Successfully added user \"{}\" to the group.".format(user.full_name))
+        return redirect(next_url + "?added=" + str(user_id))
+    elif results["hits"]["total"] == 0:
         return redirect(next_url + "?error=n")
-    user.groups.add(group)
-    user.save()
-    messages.success(request, "Successfully added user \"{}\" to the group.".format(user.full_name))
-    return redirect(next_url + "?added=" + str(student_id))
+    else:
+        users = [r["_source"] for r in results["hits"]["hits"]]
+        context = {
+            "users": users,
+            "group": group,
+            "admin_page_title": "Add Members to Group"
+        }
+        return render(request, "eighth/admin/possible_students_add_group.html", context)
+
+    
 
 
 @eighth_admin_required
