@@ -85,7 +85,7 @@ class EighthUserSignupList(views.APIView):
         if "scheduled_activity" in serializer.validated_data:
             schactivity = serializer.validated_data["scheduled_activity"]
         else:
-            schactivity = EighthScheduledActivity.filter(activity=serializer.validated_data["activity"], block=serializer.validated_data["block"])
+            schactivity = EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"]).filter(block=serializer.validated_data["block"]).get()
         if 'force' in serializer.validated_data:
             force = serializer.validated_data['force']
         else:
