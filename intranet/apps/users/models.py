@@ -6,6 +6,7 @@ import hashlib
 import logging
 import ldap
 import os
+import re
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
@@ -308,6 +309,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
+        if not self.emails:
+            return None
         for email in self.emails:
             if email.endswith(("@fcps.edu", "@tjhsst.edu")):
                 return email
@@ -1078,6 +1081,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __unicode__(self):
         return self.username or self.ion_username or self.id
 
+    def __int__(self):
+        return self.id
+
 
 class Class(object):
     """Represents a tjhsstClass LDAP object in which a user is enrolled.
@@ -1093,15 +1099,19 @@ class Class(object):
 
     """
 
-    def __init__(self, dn):
+    def __init__(self, dn=None, id=None):
         """Initialize the Class object.
+
+        Either dn or id is required.
 
         Args:
             dn
                 The full DN of the class.
+            id
+                The tjhsstSectionId of the class.
 
         """
-        self.dn = dn
+        self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
 
@@ -1358,7 +1368,7 @@ class Grade(object):
     @property
     def name(self):
         """Return the grade's name (e.g. senior)"""
-        return self._number
+        return self._name
 
     def __int__(self):
         """Return the grade as a number (9-12)."""
