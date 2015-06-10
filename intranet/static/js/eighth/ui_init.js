@@ -20,7 +20,8 @@ $(function() {
     })});
 
     $("select#block-select").each(function(i, el){$(el).selectize({
-        score: selectizeIDScore
+        score: selectizeIDScore,
+        maxOptions: 99999
     })});
 
     // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
