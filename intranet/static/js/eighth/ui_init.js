@@ -15,7 +15,8 @@ $(function() {
     $("select#activity-select").each(function(i, el){$(el).selectize({
         score: selectizeIDScore,
         labelField: 'data-name',
-        searchField: ['data-name']
+        searchField: ['data-name'],
+        maxOptions: 99999
     })});
 
     $("select#block-select").each(function(i, el){$(el).selectize({
@@ -25,8 +26,11 @@ $(function() {
     // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
     $("select[multiple=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({
         plugins: ["remove_button"],
+        maxOptions: 99999
     })});
-    $("select[multiple!=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({})})
+    $("select[multiple!=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({
+        maxOptions: 99999
+    })})
 
     $("select.remote-rooms").each(function(i, el){$(el).selectize({
         plugins: ["remove_button"],
