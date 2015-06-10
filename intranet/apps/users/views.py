@@ -25,7 +25,7 @@ def profile_view(request, user_id=None):
             specified, show the user's own profile.
 
     """
-    if request.user.is_eighthoffice and "full" not in request.GET:
+    if request.user.is_eighthoffice and "full" not in request.GET and user_id is not None:
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:

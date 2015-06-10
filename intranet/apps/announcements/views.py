@@ -16,13 +16,14 @@ from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
 
-def email_send(text_template, html_template, data, subject, emails):
+def email_send(text_template, html_template, data, subject, emails, headers=None):
     text = get_template(text_template)
     html = get_template(html_template)
     text_content = text.render(data)
     html_content = html.render(data)
     subject = settings.EMAIL_SUBJECT_PREFIX + subject
-    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails)
+    headers = {} if headers is None else headers
+    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
     msg.attach_alternative(html_content, "text/html")
     logger.debug(msg)
     msg.send()

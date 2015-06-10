@@ -151,7 +151,7 @@ def delinquent_students_view(request):
             counselor = delinquent["user"].counselor
             row.append(counselor.last_name if counselor else "")
             row.append("{}@tjhsst.edu".format(delinquent["user"].username))
-            row.append(delinquent["user"].emails[0] if len(delinquent["user"].emails) > 0 else "")
+            row.append(delinquent["user"].emails[0] if delinquent["user"].emails and len(delinquent["user"].emails) > 0 else "")
             writer.writerow(row)
 
         return response
