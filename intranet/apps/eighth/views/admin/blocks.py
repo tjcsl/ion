@@ -151,10 +151,9 @@ def print_block_rosters_view(request, block_id):
     else:
         try:
             block = EighthBlock.objects.get(id=block_id)
-            schacts = EighthScheduledActivity.objects.filter(block=block)
+            schacts = EighthScheduledActivity.objects.filter(block=block).order_by("sponsors")
         except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
             raise http.Http404
-
         context = {
             "eighthblock": block,
             "admin_page_title": "Choose activities to print",
