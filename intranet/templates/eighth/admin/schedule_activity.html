@@ -31,20 +31,12 @@
         <table>
             <tr>
                 <td>
-                {% if activity %}
-                    <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity" autocomplete="off">
-                    </select>
-                    <script type="text/javacript">
-                    $(function() { $(".url-param-selector")[0].selectize.addItem("{{ activity.id }}"); });
-                    </script>
-                {% else %}
                     <select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity" autocomplete="off">
                         <option value="">Select or search for an activity</option>
                         {% for a in activities %}
                             <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
                         {% endfor %}
                     </select>
-                {% endif %}
                 </td>
                 {% if activity %}
                     <td style="vertical-align: top">
