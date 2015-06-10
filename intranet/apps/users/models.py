@@ -671,6 +671,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
+    def can_view_eighth(self):
+        """Checks if a user has the showeighth permission.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.permissions["self"]["showeighth"] if self.permissions and "self" in self.permissions and "showeighth" in self.permissions["self"] else False
+    
+
+    @property
     def is_eighth_admin(self):
         """Checks if user is an eighth period admin.
 
@@ -1317,6 +1329,10 @@ class Grade(object):
             self._name = Grade.names[self._number - 9]
         else:
             self._name = "graduate"
+
+        if self._number is None:
+            self._number = 13
+
 
     @property
     def number(self):

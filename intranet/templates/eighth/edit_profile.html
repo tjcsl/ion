@@ -1,0 +1,45 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load staticfiles %}
+
+{% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+    {% include "eighth/profile-header.html" %}
+
+    <section class="user-info-edit">
+    <form action="{% url 'eighth_edit_profile' profile_user.id %}" method="POST">
+    {% csrf_token %}
+        <input type="hidden" name="user" value="{{ profile_user.id }}" />
+        <h3>
+            Modify User Info: {{ profile_user.full_name }} ({{ profile_user.student_id }})
+        </h3>
+        <table class="edit-table">
+            {{ form.as_table }}
+            <tr><td><input type="submit" /></td></tr>
+        </table>
+    </form>
+    </section>
+</div>
+{% endblock %}

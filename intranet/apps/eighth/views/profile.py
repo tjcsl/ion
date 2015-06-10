@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 import logging
 from datetime import datetime, timedelta
 from django import http
-from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render, get_object_or_404
 from ...auth.decorators import eighth_admin_required
 from ...users.models import User
+from ...users.forms import ProfileEditForm
 from ..models import EighthBlock, EighthSignup
 logger = logging.getLogger(__name__)
 
@@ -14,9 +16,46 @@ logger = logging.getLogger(__name__)
 def date_fmt(date):
     return datetime.strftime(date, "%Y-%m-%d")
 
+@eighth_admin_required
 def edit_profile_view(request, user_id=None):
-    pass
+    user = get_object_or_404(User, id=user_id)
 
+    defaults = {}
+    for field in ProfileEditForm.FIELDS:
+        defaults[field] = getattr(user, field)
+
+    for field in ProfileEditForm.ADDRESS_FIELDS:
+        defaults[field] = getattr(user.address, field)
+    defaults["birthday"] = str(defaults["birthday"]).split(" ")[0]
+    defaults["counselor_id"] = user.counselor.id if user.counselor else None
+
+    if request.method == "POST":
+        logger.debug("Saving")
+        form = ProfileEditForm(request.POST)
+        if form.is_valid():
+            pass # We don't care.
+        items = form.cleaned_data
+        new_data = {}
+        for field in items:
+            new = items[field]
+            old = defaults[field]
+            if str(new) != str(old):
+                new_data[field] = new
+        logger.debug(new_data)
+
+        for key in new_data:
+            setattr(user, key, new_data[key])
+        user.save()
+
+    form = ProfileEditForm(initial=defaults)
+
+    context = {
+        "profile_user": user,
+        "form": form
+    }
+    return render(request, "eighth/edit_profile.html", context)
+
+@login_required
 def profile_view(request, user_id=None):
     if user_id:
         try:

@@ -1,4 +1,22 @@
 $(function() {
+
+
+    $("select#activity-select").each(function(i, el){$(el).selectize({
+        score: function(search) {
+            console.log("SCORE RAN")
+            var ths = $(this)[0];
+            var score = this.getScoreFunction(search);
+            return function(item) {
+                //console.log("SCORE", item);
+                var lastquery = ths.lastQuery;
+                if(parseInt(item.value) == parseInt(lastquery)) {
+                    return 10000;
+                }
+                return score(item);
+            };
+        }
+    })});
+
     // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
     $("select[multiple=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({
         plugins: ["remove_button"],
@@ -50,4 +68,4 @@ $(function() {
         $select.on("change", update);
         update();
     });
-})
+});

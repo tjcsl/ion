@@ -66,25 +66,6 @@
         <dd>{{ scheduled_activity.members.all|length }} / {{ scheduled_activity.get_true_capacity }}</dd>
     </dl>
 
-    <table class="members-table fancy-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in scheduled_activity.members.all %}
-            <tr class="item-row">
-                <td>{{ user.last_name }}, {{ user.first_name }}</td>
-                <td>{{ user.grade.number }}</td>
-            </tr>
-        {% empty %}
-            <tr class="item-row">
-                <td colspan="2">There are no signups.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% include "eighth/roster-list.html" %}
 </div>
 {% endblock %}
