@@ -39,6 +39,17 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
+    def user_with_ion_id(self, student_id):
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                           "iodineUidNumber={}".format(student_id),
+                           ["dn"])
+
+        if len(results) == 1:
+            return User.get_user(dn=results[0][0])
+        return None
+
     # Simple way to filter out teachers and students without hitting LDAP.
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
