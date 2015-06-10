@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import logging
+import json
 
 from django.http import Http404
-from rest_framework import generics, views
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, views, status
 from rest_framework.response import Response
-from ..models import EighthActivity, EighthBlock, EighthSignup
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityDetailSerializer, EighthSignupSerializer
+from intranet.apps.users.models import User
+from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer
+
+logger = logging.getLogger(__name__)
 
 
 # class EighthActivityList(generics.ListAPIView):
@@ -52,18 +58,38 @@ class EighthUserSignupList(views.APIView):
     """API endpoint that lists all signups for a certain user
     """
 
-    def get(self, request, user_id):
+    def get(self, request, user_id=None):
+        if not user_id:
+            user_id = request.user.id
+
         signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
 
         # if block_id is not None:
         # signups = signups.filter(activity__block_id=block_id)
 
-        serializer = EighthSignupSerializer(signups, context={"request": request})
-        data = serializer.data
+        #serialized = [EighthSignupSerializer(signup, context={"request": request}).data for signup in signups]
+        serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
+        logger.debug(serialized)
 
-        return Response(data)
+        return Response(serialized.data)
 
+    def post(self, request, user_id=None):
+        if user_id:
+            user = User.objects.filter(id=user_id)
+        else:
+            user = request.user
 
+        serializer = EighthAddSignupSerializer(data=request.data, context={"request": request})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        schactivity = get_object_or_404(EighthScheduledActivity, activity=serializer.validated_data["activity"], block=serializer.validated_data["block"])
+        logger.debug(schactivity)
+        schactivity.add_user(user, request)
+        logger.debug("Scheduled")
+
+        return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data)
+        
 class EighthScheduledActivitySignupList(views.APIView):
 
     """API endpoint that lists all signups for a certain scheduled activity

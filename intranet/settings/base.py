@@ -213,6 +213,10 @@ REST_FRAMEWORK = {
     "DATETIME_FORMAT": None,
     "DATE_FORMAT": None,
     "TIME_FORMAT": None,
+
+    "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 50
 }
 
 INSTALLED_APPS = (

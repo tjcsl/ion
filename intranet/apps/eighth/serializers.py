@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
 
     class Meta:
         model = EighthActivity
@@ -263,3 +264,8 @@ class EighthSignupSerializer(serializers.ModelSerializer):
                   "activity",
                   "scheduled_activity",
                   "user")
+
+class EighthAddSignupSerializer(serializers.Serializer):
+    block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all())
+    activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all())
+    force = serializers.BooleanField(label='force', required=False)
