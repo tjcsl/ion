@@ -83,12 +83,16 @@ class EighthUserSignupList(views.APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        schactivity = get_object_or_404(EighthScheduledActivity, activity=serializer.validated_data["activity"], block=serializer.validated_data["block"])
+        if "scheduled_activity" in serializer.validated_data:
+            schactivity = serializer.validated_data["scheduled_activity"]
+        else:
+            schactivity = EighthScheduledActivity.filter(activity=serializer.validated_data["activity"], block=serializer.validated_data["block"])
+
         logger.debug(schactivity)
         schactivity.add_user(user, request)
         logger.debug("Scheduled")
 
-        return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data)
+        return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
         
 class EighthScheduledActivitySignupList(views.APIView):
 
