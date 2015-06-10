@@ -12,15 +12,16 @@ $(function() {
         };
     };
 
-
     $("select#activity-select").each(function(i, el){$(el).selectize({
-        score: selectizeIDScore
+        score: selectizeIDScore,
+        labelField: 'data-name',
+        searchField: ['data-name']
     })});
 
     $("select#block-select").each(function(i, el){$(el).selectize({
         score: selectizeIDScore
     })});
-    
+
     // It should be possible to do $(...).selectize(), but this seems to be a bug in Selectize.js
     $("select[multiple=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({
         plugins: ["remove_button"],
