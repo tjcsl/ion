@@ -69,7 +69,6 @@ class EighthUserSignupList(views.APIView):
 
         #serialized = [EighthSignupSerializer(signup, context={"request": request}).data for signup in signups]
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
-        logger.debug(serialized)
 
         return Response(serialized.data)
 
@@ -87,10 +86,12 @@ class EighthUserSignupList(views.APIView):
             schactivity = serializer.validated_data["scheduled_activity"]
         else:
             schactivity = EighthScheduledActivity.filter(activity=serializer.validated_data["activity"], block=serializer.validated_data["block"])
+        if 'force' in serializer.validated_data:
+            force = serializer.validated_data['force']
+        else:
+            force = False
 
-        logger.debug(schactivity)
-        schactivity.add_user(user, request)
-        logger.debug("Scheduled")
+        schactivity.add_user(user, request, force=force)
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
         
