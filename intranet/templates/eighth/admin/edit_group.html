@@ -1,33 +1,57 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .group-edit-table td {
+        padding: 0 50px;
+    }
+    </style>
+{% endblock %}
+
 {% block admin_main %}
 
+<table class="group-edit-table">
+    <tr>
+        <td>
 
-<form action="" method="post" autocomplete="off">
-    {% csrf_token %}
-    <label for="id_name"><b>Edit Group Name</b></label>
-    <br />
-    {{ edit_form.name }} <input type="submit" value="Save">
-</form>
-<br />
+        <form action="" method="post" autocomplete="off">
+            {% csrf_token %}
+            <label for="id_name"><b>Edit Group Name</b></label>
+            <br />
+            {{ edit_form.name }} <input type="submit" value="Save">
+        </form>
 
-<form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
-    {% csrf_token %}
-    <label for="student-id"><b>Add user by search query</b></label>
-    <p class="error-color">
-        {% if request.GET.error == "s" %}
-            Invalid student ID
-        {% elif request.GET.error == "n" %}
-            No user exists with that student ID.
-        {% endif %}
-    </p>
-    <input type="text" name="query" id="query"> <input type="submit" value="Add">
-</form>
-<br />
-<a href="{% url 'eighth_admin_upload_group_members' group.id %}" class="button">Import members</a>
+        </td>
+        <td>
+
+        <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
+            {% csrf_token %}
+            <label for="student-id"><b>Add user by search query</b></label>
+            <br />
+            {% if request.GET.error %}
+            <p class="error-color">
+                {% if request.GET.error == "s" %}
+                    Invalid student ID
+                {% elif request.GET.error == "n" %}
+                    No user exists with that student ID.
+                {% endif %}
+            </p>
+            {% endif %}
+            <input type="text" name="query" id="query"> <input type="submit" value="Add">
+        </form>
+        </td>
+
+        <td>
+        <br />
+        <a href="{% url 'eighth_admin_upload_group_members' group.id %}" class="button">Import members</a>
+        </td>
+    </tr>
+</table>
 
 <br />
 <br />
+<h3>{{ group.name }}: {{ members|length }} members</h3>
 <table class="fancy-table">
     <thead>
         <tr>
