@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -105,11 +106,12 @@ def dashboard_view(request):
     if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = Announcement.objects.all()
+        announcements = Announcement.objects.filter(expiration_date__gt=datetime.now())
     else:
         # Only show announcements for groups that the user is enrolled in.
         announcements = (Announcement.objects
                                      .visible_to_user(request.user)
+                                     .filter(expiration_date__gt=datetime.now())
                                      .prefetch_related("groups"))
 
     if "start" in request.GET:
