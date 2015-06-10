@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from rest_framework import generics
 from rest_framework.response import Response
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Class
+from .serializers import UserSerializer, ClassSerializer
 
 class ProfileDetail(generics.RetrieveAPIView):
     """API endpoint that retrieves an Ion profile
@@ -19,3 +19,13 @@ class ProfileDetail(generics.RetrieveAPIView):
 
         serializer = self.get_serializer(user)
         return Response(serializer.data)
+
+class ClassDetail(generics.RetrieveAPIView):
+    serializer_class = ClassSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        cl = Class(id=kwargs['pk'])
+
+        serializer = self.get_serializer(cl)
+        return Response(serializer.data)
+

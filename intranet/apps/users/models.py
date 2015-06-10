@@ -298,11 +298,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
-        if not self.emails:
-            return None
-        for email in self.emails:
-            if email.endswith(("@fcps.edu", "@tjhsst.edu")):
-                return email
+        if self.emails:
+            for email in self.emails:
+                if email.endswith(("@fcps.edu", "@tjhsst.edu")):
+                    return email
 
         if self.user_type == "tjhsstTeacher":
             domain = "fcps.edu"
@@ -1103,6 +1102,7 @@ class Class(object):
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
+    pk = section_id
 
     @property
     def students(self):
