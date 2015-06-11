@@ -198,10 +198,9 @@ class LDAPResult(object):
     """
 
     def __init__(self, result):
-        self.result = self.decode_obj(result) # Encode results as unicode
-        logger.debug(self.result)
+        self.result = self.decode_obj(result)  # Encode results as unicode
 
-    def decode_obj(self, obj):
+    def decode_obj(self, obj):  # FIXME: Currently, python-ldap is not unicode safe, so this is the best we can do.
         if isinstance(obj, list):
             return list([self.decode_obj(element) for element in obj])
         elif isinstance(obj, tuple):
