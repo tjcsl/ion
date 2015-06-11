@@ -19,7 +19,7 @@ def custom_exception_handler(exc, context):
         response = Response({'details': ['Object does not exist (in database).']}, status=status.HTTP_404_NOT_FOUND)
 
     elif not settings.DEBUG:
-        response = Response({'details': ['Unknown error occured.']}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        response = Response({'details': ['Unknown error occurred.']}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return response
 
