@@ -22,6 +22,7 @@ class GradeSerializer(serializers.Serializer):
 class SubClassSerializer(serializers.Serializer):
     section_id = serializers.CharField(max_length=500)
     url = serializers.HyperlinkedIdentityField(view_name="api_user_class_detail")
+    name = serializers.CharField(max_length=500)
 
 class AddressSerializer(serializers.Serializer):
     street = serializers.CharField(max_length=500)
@@ -78,8 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-
-        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'is_staff', 'classes')#, 'ion_id', 'ion_username', 'common_name', 'display_name', 'nickname', 'title', 'first_name', 'middle_name', 'last_name', 'sex', 'user_type', 'graduation_year', 'preferred_photo', 'emails', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'startpage')
+        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
 
 class ClassSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=300)
