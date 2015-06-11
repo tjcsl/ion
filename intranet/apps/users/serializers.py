@@ -22,6 +22,7 @@ class GradeSerializer(serializers.Serializer):
 class SubClassSerializer(serializers.Serializer):
     section_id = serializers.CharField(max_length=500)
     url = serializers.HyperlinkedIdentityField(view_name="api_user_class_detail")
+    name = serializers.CharField(max_length=500)
 
 class AddressSerializer(serializers.Serializer):
     street = serializers.CharField(max_length=500)
