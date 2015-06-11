@@ -198,7 +198,21 @@ class LDAPResult(object):
     """
 
     def __init__(self, result):
-        self.result = result
+        self.result = self.decode_obj(result) # Encode results as unicode
+        logger.debug(self.result)
+
+    def decode_obj(self, obj):
+        if isinstance(obj, list):
+            return list([self.decode_obj(element) for element in obj])
+        elif isinstance(obj, tuple):
+            return tuple(self.decode_obj(element) for element in obj)
+        elif isinstance(obj, dict):
+            return dict({self.decode_obj(key): self.decode_obj(value) for key,value in obj.items()})
+        else:
+            try:
+                return obj.decode("utf-8")
+            except:
+                return obj
 
     def first_result(self):
         """Fetch the first LDAP object in the response."""
