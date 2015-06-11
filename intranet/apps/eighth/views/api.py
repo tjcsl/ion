@@ -9,7 +9,7 @@ from rest_framework import generics, views, status
 from rest_framework.response import Response
 from intranet.apps.users.models import User
 from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,10 @@ logger = logging.getLogger(__name__)
 #     queryset = EighthActivity.undeleted_objects.all()
 #     serializer_class = EighthActivityDetailSerializer
 
+
+class EighthActivityList(generics.ListAPIView):
+    queryset = EighthActivity.undeleted_objects.all()
+    serializer_class = EighthActivityListSerializer
 
 class EighthActivityDetail(generics.RetrieveAPIView):
 

@@ -13,14 +13,19 @@ from .models import (
 
 logger = logging.getLogger(__name__)
 
-
-class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
 
     class Meta:
         model = EighthActivity
         fields = ("id",
-                  "url",
+                  "name")
+
+class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EighthActivity
+        fields = ("id",
                   "name",
                   "description",
                   "administrative",
