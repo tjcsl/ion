@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from ldap import NO_SUCH_OBJECT
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
