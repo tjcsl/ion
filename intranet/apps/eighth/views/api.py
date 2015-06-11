@@ -101,9 +101,9 @@ class EighthScheduledActivitySignupList(views.APIView):
     """
 
     def get(self, request, scheduled_activity_id):
-        signups = EighthSignup.objects.filter(scheduled_activity__id=scheduled_activity_id)
+        signups = EighthSignup.objects.get(scheduled_activity__id=scheduled_activity_id)
 
-        serializer = EighthSignupSerializer(signups, context={"request": request})
+        serializer = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
         return Response(serializer.data)
 
