@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from intranet.apps.search.views import get_search_results
 from .models import User, Class
 from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
@@ -14,6 +15,7 @@ class ProfileDetail(generics.RetrieveAPIView):
     /api/profile/<pk>: retrieve the profile of the user with id <pk>
     """
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
         if 'pk' in kwargs:
@@ -28,6 +30,7 @@ class ClassDetail(generics.RetrieveAPIView):
     """API endpoint that retrieves details of a TJHSST class
     """
     serializer_class = ClassSerializer
+    permission_classes = (IsAuthenticated,)
     
     def retrieve(self, request, *args, **kwargs):
         cl = Class(id=kwargs['pk'])
@@ -40,6 +43,8 @@ class Search(generics.RetrieveAPIView):
 
     Paginated using ?page=<page>
     """
+
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
         query = kwargs['query']

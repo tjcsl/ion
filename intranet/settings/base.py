@@ -25,7 +25,8 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 ADMINS = (
     ("Ethan Lowman", "2015elowman+ion@tjhsst.edu"),
-    ("James Woglom", "2016jwoglom+ion@tjhsst.edu")
+    ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
+    ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu"),
 )
 
 FEEDBACK_EMAIL = "intranet+feedback@tjhsst.edu"
