@@ -123,6 +123,7 @@ class EighthActivity(AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
+    aid = models.CharField(max_length=10, blank=True) # Should be unique
     name = models.CharField(max_length=100)  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
