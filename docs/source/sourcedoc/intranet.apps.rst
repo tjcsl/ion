@@ -13,6 +13,7 @@ Subpackages
     intranet.apps.eighth
     intranet.apps.error
     intranet.apps.events
+    intranet.apps.feedback
     intranet.apps.files
     intranet.apps.groups
     intranet.apps.notifications

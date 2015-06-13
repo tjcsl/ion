@@ -12,6 +12,14 @@ intranet.apps.announcements.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.announcements.api module
+--------------------------------------
+
+.. automodule:: intranet.apps.announcements.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.announcements.forms module
 ----------------------------------------
 
@@ -24,6 +32,14 @@ intranet.apps.announcements.models module
 -----------------------------------------
 
 .. automodule:: intranet.apps.announcements.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.announcements.serializers module
+----------------------------------------------
+
+.. automodule:: intranet.apps.announcements.serializers
     :members:
     :undoc-members:
     :show-inheritance:

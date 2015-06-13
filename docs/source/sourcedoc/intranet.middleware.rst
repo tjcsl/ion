@@ -4,6 +4,14 @@ intranet.middleware package
 Submodules
 ----------
 
+intranet.middleware.access_log module
+-------------------------------------
+
+.. automodule:: intranet.middleware.access_log
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.ajax module
 -------------------------------
 
