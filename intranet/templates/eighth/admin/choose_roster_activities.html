@@ -1,7 +1,15 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
 
 {% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
     {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+
     <script type="text/javascript">
 $(function() {
     $("input[type=checkbox].all").change(function() {
@@ -14,13 +22,19 @@ $(function() {
     </script>
 {% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
 {% block admin_main %}
     <b>Block:</b> {{ eighthblock }}<br />
     <br />
     <form action="" method="post">{% csrf_token %}
-
         <input type="submit" value="Print Roster" />
-        <table class="fancy-table choose-activities">
+        <br />
+        Click on column titles to sort.
+        <table data-sortable class="fancy-table choose-activities zebra">
         <thead>
             <tr>
                 <th><input type="checkbox" class="all" checked /></th>

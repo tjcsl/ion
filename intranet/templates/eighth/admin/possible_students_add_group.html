@@ -1,11 +1,28 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
 
 {% block admin_main %}
 <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post" id="add_to_group">
     {% csrf_token %}
     <p class="error-color">
-        That input matched the following students:
-        <table class="fancy-table">
+        <h4>That input matched the following students:</h4>
+        Click on column titles to sort.
+        <table data-sortable class="fancy-table">
             <thead>
             <tr>
                 <th>Name</th>
