@@ -58,15 +58,15 @@ class EighthSponsor(AbstractBaseEighthModel):
                             "online_attendance"),)
         ordering = ("last_name", "first_name",)
 
-    def __unicode__(self):
-        return self.last_name + ", " + self.first_name
-
     @property
     def name(self):
         if self.show_full_name:
-            return self.first_name + " " + self.last_name
+            return self.last_name + ", " + self.first_name
         else:
             return self.last_name
+
+    def __unicode__(self):
+        return self.name
 
 
 class EighthRoom(AbstractBaseEighthModel):
