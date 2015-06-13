@@ -225,11 +225,19 @@ class EighthActivity(AbstractBaseEighthModel):
         """
         update_aid = False
 
+
         if not self.aid:
             if self.pk:
                 self.aid = self.pk
             else:
                 update_aid = True
+        else:
+            with_aid = EighthActivity.objects.filter(aid=self.aid)
+            if len(with_aid) == 0 or (len(with_aid) == 1 and with_aid[0] == self):
+                update_aid = False
+            else:
+                # aid is not unique
+                raise ValidationError("AID is not unique.")
 
         super(EighthActivity, self).save(*args, **kwargs)
 
