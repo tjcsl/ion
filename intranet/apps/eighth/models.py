@@ -212,6 +212,19 @@ class EighthActivity(AbstractBaseEighthModel):
 
         return list(activities)
 
+    def save(self, *args, **kwargs):
+        update_aid = False
+        if not self.pk:
+            # Not in database yet
+            if not self.aid:
+                update_aid = True
+        # Create and get an ID
+        super(EighthActivity, self).save(*args, **kwargs)
+        self.aid = self.pk
+
+        # Save again
+        super(EighthActivity, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = "eighth activities"
 
