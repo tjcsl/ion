@@ -166,13 +166,18 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def name_with_flags(self):
+        """Return the activity name with special, both blocks,
+        restricted, administrative, sticky, and deleted flags."""
         return self._name_with_flags(True)
 
     @property
     def name_with_flags_no_restricted(self):
+        """Return the activity name with special, both blocks,
+        administrative, sticky, and deleted flags."""
         return self._name_with_flags(False)
 
     def _name_with_flags(self, include_restricted):
+        """Generate the name with flags."""
         name = "Special: " if self.special else ""
         name += self.name
         if include_restricted:
@@ -185,6 +190,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def restricted_activities_available_to_user(cls, user):
+        """Find the restricted activities available to the given user."""
         activities = set(user.restricted_activity_set
                              .values_list("id", flat=True))
 
