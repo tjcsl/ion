@@ -79,6 +79,7 @@ def edit_group_view(request, group_id):
         "group": group,
         "members": members,
         "edit_form": form,
+        "added_ids": request.GET.getlist("added"),
         "admin_page_title": "Edit Group",
         "delete_url": reverse("eighth_admin_delete_group",
                               args=[group_id])
@@ -509,6 +510,18 @@ def add_member_to_group_view(request, group_id):
         raise http.Http404
 
     next_url = reverse("eighth_admin_edit_group", kwargs={"group_id": group_id})
+
+    if "user_id" in request.POST:
+        user_ids = request.POST.getlist("user_id")
+        user_objects = User.objects.filter(id__in=user_ids)
+        next_url += "?"
+        for user in user_objects:
+            user.groups.add(group)
+            user.save()
+            next_url += "added={}&".format(user.id)
+        messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
+        return redirect(next_url)
+
 
     if "query" not in request.POST:
         return redirect(next_url + "?error=s")

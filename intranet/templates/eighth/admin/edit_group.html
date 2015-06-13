@@ -1,6 +1,18 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
 
 {% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
     <style type="text/css">
     .group-edit-table td {
@@ -52,7 +64,7 @@
 <br />
 <br />
 <h3>{{ group.name }}: {{ members|length }} members</h3>
-<table class="fancy-table">
+<table data-sortable class="fancy-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -63,9 +75,9 @@
     </thead>
     <tbody>
         {% for member in members %}
-            <tr style="{% if member.student_id and request.GET.added == member.student_id %}font-weight: bold;{% endif %}">
+            <tr style="{% if member.id in added_ids %}font-weight: bold;{% endif %}">
                 <td><a href="{% url 'user_profile' member.id %}">{{ member.last_name }}, {{ member.first_name }}</a></td>
-                <td>{% firstof member.student_id "" %}</td>
+                <td>{% if member.student_id %}{{ member.student_id }}{% else %}Ion ID: {{ member.id }}{% endif %}</td>
                 <td>{% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
                 <td>{{ member.grade }}</td>
                 <td>
