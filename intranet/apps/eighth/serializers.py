@@ -20,6 +20,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthActivity
         fields = ("id",
+                  "aid",
                   "url",
                   "name",
                   "description",
@@ -85,6 +86,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
             activity_info = {
                 "id": activity.id,
+                "aid": activity.aid,
                 "scheduled_activity": scheduled_activity.id,
                 "url": reverse("api_eighth_activity_detail",
                                args=[activity.id],
