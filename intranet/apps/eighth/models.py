@@ -14,8 +14,9 @@ from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
-
 class AbstractBaseEighthModel(models.Model):
+    """Abstract base model that includes created and last modified times."""
+
     created_time = models.DateTimeField(auto_now_add=True, null=True)
     last_modified_time = models.DateTimeField(auto_now=True, null=True)
 
@@ -213,6 +214,9 @@ class EighthActivity(AbstractBaseEighthModel):
         return list(activities)
 
     def save(self, *args, **kwargs):
+        """When saving the model, update the AID to
+        be the internal ID if it is blank or None.
+        """
         update_aid = False
 
         if not self.aid:
@@ -305,6 +309,7 @@ class EighthBlock(AbstractBaseEighthModel):
     override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 
     def save(self, *args, **kwargs):
+        """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
         if letter and len(letter) >= 1:
             self.block_letter = letter[:1].upper() + letter[1:]
@@ -312,6 +317,7 @@ class EighthBlock(AbstractBaseEighthModel):
         super(EighthBlock, self).save(*args, **kwargs)
 
     def next_blocks(self, quantity=-1):
+        """Get the next blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("date", "block_letter")
                              .filter(Q(date__gt=self.date)
@@ -323,6 +329,7 @@ class EighthBlock(AbstractBaseEighthModel):
         return blocks[:quantity + 1]
 
     def previous_blocks(self, quantity=-1):
+        """Get the previous blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("-date", "-block_letter")
                              .filter(Q(date__lt=self.date)
@@ -502,6 +509,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return EighthRoom.total_capacity_of_rooms(rooms)
 
     def is_full(self):
+        """Return whether the activity is full.
+
+        """
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -509,6 +519,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_overbooked(self):
+        """Return whether the activity is overbooked.
+
+        """
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -516,12 +529,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_too_early_to_signup(self, now=None):
+        """Return whether it is too early to sign up for the
+        activity if it is a presign (48 hour logic is here).
+
+        """
         if now is None:
             now = datetime.datetime.now()
 
         activity_date = (datetime.datetime
                                  .combine(self.block.date,
                                           datetime.time(0, 0, 0)))
+        # Presign activities can only be signed up for 2 days in advance.
         presign_period = datetime.timedelta(days=2)
 
         return (now < (activity_date - presign_period))
@@ -564,6 +582,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
+        This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
         unless the signup is forced.
@@ -571,6 +590,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         if request is not None:
             force = (force or ("force" in request.GET)) and request.user.is_eighth_admin
+
         exception = eighth_exceptions.SignupException()
 
         if not force:
@@ -583,6 +603,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             if self.activity.both_blocks:
                 # Find all schedulings of the same activity on the same day
+                # TODO: Should this only find the second (A or B) block on this day?
                 all_sched_act = (EighthScheduledActivity.objects
                                                         .filter(block__date=self.block.date,
                                                                 activity=self.activity))
@@ -831,6 +852,8 @@ class EighthSignup(AbstractBaseEighthModel):
     absence_acknowledged = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
+        """Checked whether more than one EighthSignup exists for a User
+        on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
         not_unique = (self.__class__
