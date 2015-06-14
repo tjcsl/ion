@@ -211,6 +211,16 @@ def room_utilization_action(request, start_id, end_id):
                                                  block__date__lte=end_block.date)
                                          .order_by("block__date",
                                                    "block__block_letter"))
+    rooms = EighthRoom.objects.all().order_by("name")
+
+    room_ids = request.GET.getlist("room")
+    if "room" in request.GET:
+        rooms = EighthRoom.objects.filter(id__in=room_ids)
+        all_sched_acts = sched_acts
+        sched_acts = []
+        for sched_act in all_sched_acts:
+            if len(set(rooms).intersection(set(sched_act.get_true_rooms()))) > 0:
+                sched_acts.append(sched_act)
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
@@ -225,7 +235,9 @@ def room_utilization_action(request, start_id, end_id):
         "admin_page_title": "Room Utilization",
         "start_block": start_block,
         "end_block": end_block,
-        "show": show
+        "show": show,
+        "rooms": rooms,
+        "room_ids": [int(i) for i in room_ids]
     }
 
     return render(request, "eighth/admin/room_utilization.html", context)

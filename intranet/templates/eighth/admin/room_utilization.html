@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block admin_main %}
-    {% if not scheduled_activities %}
+    {% if not scheduled_activities and wizard %}
         <form action="" method="post">{% csrf_token %}
             {{ wizard.management_form }}
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
@@ -37,6 +37,17 @@
         <br />
         <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
         <br /><br />
+
+        <b>Filter by room:</b>
+        <form action="" method="get" name="choose-rooms">
+            <select multiple="multiple" name="room" id="room-select" placeholder="Select or search for a room">
+                <option value="">Select or search for a room</option>
+                {% for room in rooms %}
+                    <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Filter" />
+        </form>
 
         
         Choose the fields that you wish to display:
@@ -92,6 +103,8 @@
                             <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
                         {% endif %}
                     </tr>
+                {% empty %}
+                    <tr><td colspan="7">There were no results.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
