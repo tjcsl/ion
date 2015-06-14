@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import csv
 from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http
@@ -149,6 +150,32 @@ def room_utilization_for_block_view(request):
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "Room Utilization for Block"
+
+    if request.resolver_match.url_name == "eighth_admin_room_utilization_for_block_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"room_utilization_for_block.csv\""
+
+        writer = csv.writer(response)
+        writer.writerow(["Rooms",
+                         "Activity ID",
+                         "Activity",
+                         "Sponsors",
+                         "Signups",
+                         "Capacity"])
+
+        for sch_act in scheduled_activities:
+            row = []
+            row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            row.append(sch_act.activity.id)
+            row.append(sch_act.activity)
+            row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
+            row.append(sch_act.members.count())
+            row.append(sch_act.get_true_capacity())
+
+            writer.writerow(row)
+
+        return response
+
     return render(request, "eighth/admin/room_utilization_for_block.html", context)
 
 
