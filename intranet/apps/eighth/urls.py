@@ -24,6 +24,7 @@ urlpatterns = [
 
     # Profile
     url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
+    url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
     url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
 
     # Roster (for students)
@@ -88,7 +89,10 @@ eighth_admin_patterns = [
     url(r"^rooms/delete/(?P<room_id>\d+)$", rooms.delete_room_view, name="eighth_admin_delete_room"),
     url(r"^rooms/sanity_check$", rooms.room_sanity_check_view, name="eighth_admin_room_sanity_check"),
     url(r"^rooms/block_utilization$", rooms.room_utilization_for_block_view, name="eighth_admin_room_utilization_for_block"),
+    url(r"^rooms/block_utilization/csv$", rooms.room_utilization_for_block_view, name="eighth_admin_room_utilization_for_block_csv"),
     url(r"^rooms/utilization$", rooms.room_utilization_view, name="eighth_admin_room_utilization"),
+    url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)$", rooms.room_utilization_action, name="eighth_admin_room_utilization"),
+    url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)/csv$", rooms.room_utilization_action, name="eighth_admin_room_utilization_csv"),
 
 
     # Sponsors

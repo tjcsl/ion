@@ -16,13 +16,14 @@ from .forms import AnnouncementForm, AnnouncementRequestForm
 
 logger = logging.getLogger(__name__)
 
-def email_send(text_template, html_template, data, subject, emails):
+def email_send(text_template, html_template, data, subject, emails, headers=None):
     text = get_template(text_template)
     html = get_template(html_template)
     text_content = text.render(data)
     html_content = html.render(data)
     subject = settings.EMAIL_SUBJECT_PREFIX + subject
-    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails)
+    headers = {} if headers is None else headers
+    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
     msg.attach_alternative(html_content, "text/html")
     logger.debug(msg)
     msg.send()
@@ -62,7 +63,7 @@ def request_announcement_view(request):
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save(commit=True)
             obj.user = request.user
             obj.save()
             teacher_ids = form.data["teachers_requested"]
@@ -86,13 +87,24 @@ def request_announcement_view(request):
 @login_required
 def approve_announcement_view(request, req_id):
     req = get_object_or_404(AnnouncementRequest, id=req_id)
+
     requested_teachers = req.teachers_requested.all()
     logger.debug(requested_teachers)
     if request.user not in requested_teachers:
         messages.error(request, "You do not have permission to approve this announcement.")
         return redirect("index")
 
-    form = AnnouncementRequestForm({"id": req_id})
+    if request.method == "POST":
+        form = AnnouncementRequestForm(request.POST, instance=req)
+        if form.is_valid():
+            obj = form.save(commit=True)
+            if "approve" in request.POST:
+                obj.teachers_approved.add(request.user)
+            obj.save()
+            messages.success(request, "Successfully approved announcement request.")
+            return redirect("index")
+    
+    form = AnnouncementRequestForm(instance=req)
     context = {
         "form": form
     }

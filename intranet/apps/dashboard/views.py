@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.utils import timezone
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -17,7 +18,7 @@ def gen_schedule(user, num_blocks=6):
     current activity signup.
 
     """
-
+    no_signup_today = None
     schedule = []
 
     block = EighthBlock.objects.get_first_upcoming_block()
@@ -47,11 +48,15 @@ def gen_schedule(user, num_blocks=6):
                 "current_signup_cancelled": current_signup_cancelled,
                 "locked": b.locked,
                 "date": b.date,
-                "flags": flags
+                "flags": flags,
+                "is_today": b.is_today()
             }
             schedule.append(info)
 
-    return schedule
+            if b.is_today() and not current_signup:
+                no_signup_today = True
+
+    return schedule, no_signup_today
 
 
 def gen_sponsor_schedule(user, num_blocks=6):
@@ -60,21 +65,26 @@ def gen_sponsor_schedule(user, num_blocks=6):
 
     """
 
+    no_attendance_today = None
     acts = []
 
     sponsor = user.get_eighth_sponsor()
 
     block = EighthBlock.objects.get_first_upcoming_block()
-    activities_sponsoring = EighthScheduledActivity.objects.for_sponsor(sponsor)\
-        .filter(block__date__gt=block.date)
+    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                            .filter(block__date__gte=block.date))
 
     surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
     for b in surrounding_blocks:
         num_added = 0
-
         sponsored_for_block = activities_sponsoring.filter(block=b)
+
         for schact in sponsored_for_block:
             acts.append(schact)
+            if schact.block.is_today():
+                if not schact.attendance_taken and schact.block.locked:
+                    no_attendance_today = True
+
             num_added += 1
 
         if num_added == 0:
@@ -85,7 +95,8 @@ def gen_sponsor_schedule(user, num_blocks=6):
                 "fake": True
             })
 
-    return acts
+    logger.debug(acts)
+    return acts, no_attendance_today
 
 
 @login_required
@@ -95,11 +106,12 @@ def dashboard_view(request):
     if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = Announcement.objects.all()
+        announcements = Announcement.objects.filter(expiration_date__gt=timezone.now())
     else:
         # Only show announcements for groups that the user is enrolled in.
         announcements = (Announcement.objects
                                      .visible_to_user(request.user)
+                                     .filter(expiration_date__gt=timezone.now())
                                      .prefetch_related("groups"))
 
     if "start" in request.GET:
@@ -115,20 +127,25 @@ def dashboard_view(request):
     is_student = request.user.is_student
     eighth_sponsor = request.user.is_eighth_sponsor
 
+
     if is_student:
-        schedule = gen_schedule(request.user)
+        schedule, no_signup_today = gen_schedule(request.user)
     else:
         schedule = None
+        no_signup_today = None
 
     if eighth_sponsor:
-        sponsor_schedule = gen_sponsor_schedule(request.user)
+        sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
     else:
         sponsor_schedule = None
+        no_attendance_today = None
 
     context = {
         "announcements": announcements,
         "schedule": schedule,
+        "no_signup_today": no_signup_today,
         "sponsor_schedule": sponsor_schedule,
+        "no_attendance_today": no_attendance_today,
         "eighth_sponsor": eighth_sponsor,
         "start_num": start_num,
         "end_num": end_num,

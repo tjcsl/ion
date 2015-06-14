@@ -1,0 +1,58 @@
+<div class="widget eighth-widget">
+    <div class="widget-title">
+        <h2>
+            {% if no_signup_today %}
+            <div class="warning-icon" title="You have not signed up today.">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            {% endif %}
+            Upcoming Eighth Periods
+        </h2>
+        <div class="info">
+            <a href="{% url 'eighth_signup' %}" class="ui-link">View more blocks</a>
+        </div>
+        
+    </div>
+    <div class="widget-content">
+    {% for block in schedule %}
+        <div class="eighth-block clickable {{ block.flags }}">
+            <div class="block-header">
+                <span class="block-letter"{% if block.block_letter_width %} style="width: {{ block.block_letter_width }}px"{% endif %}>
+                    {{ block.block_letter }}
+                </span>
+                {{ block.date|date:"D, N j" }}
+                {% if block.locked %}
+                    {% if block.current_signup %}
+                        <span class="block-signup locked{% if block.is_today %} today{% endif %}">
+                            <i class="fa fa-lock"></i>
+                            {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
+                        </span>
+                    {% else %}
+                         <span class="block-signup locked no-activity-selected{% if block.is_today %} today{% endif %}">
+                            <i class="fa fa-lock"></i>
+                            No activity selected
+                        </span>
+                    {% endif %}
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Locked</a>
+                {% elif block.current_signup %}
+                    <span class="block-signup{% if block.is_today %} today{% endif %}">
+                        {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
+                    </span>
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Change</a>
+                {% else %}
+                    <span class="block-signup no-activity-selected{% if block.is_today %} today{% endif %}">
+                        No activity selected
+                    </span>
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="eighth-block">
+            <div class="block-header">
+            There are no blocks available at this time.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>

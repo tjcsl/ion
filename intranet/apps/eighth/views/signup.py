@@ -27,6 +27,29 @@ def eighth_signup_view(request, block_id=None):
         return redirect("/eighth/signup/{}?{}".format(block_id, args))
 
     if request.method == "POST":
+        if "unsignup" in request.POST and not "aid" in request.POST:
+            uid = request.POST["uid"]
+            bid = request.POST["bid"]
+
+            try:
+                user = User.get_user(id=uid)
+            except User.DoesNotExist:
+                return http.HttpResponseNotFound("Given user does not exist.")
+
+            try:
+                eighth_signup = (EighthSignup.objects
+                                             .get(scheduled_activity__block__id=bid,
+                                                  user__id=uid))
+                success_message = eighth_signup.remove_signup(request.user)
+            except EighthSignup.DoesNotExist:
+                return http.HttpResponse("The signup did not exist.")
+            except SignupException as e:
+                show_admin_messages = (request.user.is_eighth_admin and
+                                   not request.user.is_student)
+                return e.as_response(admin=show_admin_messages)
+
+            return http.HttpResponse(success_message)
+
         for field in ("uid", "bid", "aid"):
             if not (field in request.POST and request.POST[field].isdigit()):
                 return http.HttpResponseBadRequest(field + " must be an "

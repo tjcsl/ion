@@ -9,6 +9,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
@@ -16,17 +17,40 @@
                 plugins: ["remove_button"],
                 placeholder: "Everyone"
             });
+
+            var reset = $("#id_expiration_date").val() != "3000-01-01 00:00:00";
+            $("#id_expiration_date").click(function() {
+                if(!reset) {
+                    var d = new Date();
+                    date_str = (d.getFullYear()) + "-" + 
+                               (d.getMonth() < 9 ? "0"+(d.getMonth()+1) : d.getMonth()+1) + "-" +
+                               (d.getDate() < 10 ? "0"+d.getDate() : d.getDate()) + " " + 
+                               (d.getHours() < 10 ? "0"+d.getHours() : d.getHours()) + ":" +
+                               (d.getMinutes() < 10 ? "0"+d.getMinutes() : d.getMinutes()) + ":" + 
+                               "00";
+                    $(this).val(date_str);
+                    reset = true;
+                }
+            }).datetimepicker({
+                lazyInit: true,
+                format: "Y-m-d H:i:s"
+            })
         });
     </script>
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker/jquery.datetimepicker.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
     <style type="text/css">
 
         div.cke_chrome {
             margin: 10px 0;
+        }
+
+        .selectize-input {
+            width: calc(100% + 8px);
         }
 
         .announcements table {

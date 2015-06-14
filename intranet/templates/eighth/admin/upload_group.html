@@ -1,6 +1,18 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
 
 {% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
     <style type="text/css">
 textarea[name=filetext] {
@@ -34,11 +46,12 @@ textarea[name=filetext] {
     </form>
 
 {% elif stage == "parse" %}
-<p>Check the boxes for the users you wish to import.</p>
-    <b>Matched users:</b>
+<h4>Check the boxes for the users you wish to import.</h4>
+    <b>Matched users:</b><br />
+    Click on column titles to sort.
     <form action="" method="post">
     {% csrf_token %}
-    <table class="fancy-table">
+    <table data-sortable class="fancy-table">
     <thead>
         <tr>
             <th>Input line</th>
@@ -54,7 +67,7 @@ textarea[name=filetext] {
                 <input type="checkbox" name="user_id" value="{{ user.1.id }}" checked /> 
             </td>
             <td>
-                {{ user.1.display_name }} ({{ user.1.student_id }}, {{ user.1.grade }})
+                {{ user.1.display_name }} ({{ user.1.student_id }}, {{ user.1.grade.number }})
             </td>
         </tr>
     {% empty %}
@@ -64,8 +77,9 @@ textarea[name=filetext] {
     </table>
     <input type="submit" value="Add Users" />
     <br /><br />
-    <b>Unmatched users:</b>
-    <table class="fancy-table">
+    <b>Unmatched users:</b><br />
+    Click on column titles to sort.
+    <table data-sortable class="fancy-table">
     <thead>
         <tr>
             <th>Input line</th>

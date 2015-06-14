@@ -31,107 +31,10 @@
 {% block main %}
 <div class="widgets" style="visibility:visible">
 {% if request.user.is_student %}
-    <div class="widget eighth-widget">
-        <div class="widget-title">
-            <h2>
-                Upcoming Eighth Periods
-            </h2>
-            <div class="info">
-                <a href="{% url 'eighth_signup' %}" class="ui-link">View more blocks</a>
-            </div>
-            <!--div class="info warning">
-                <i class="fa fa-warning-sign"></i>
-                15 Minutes Left to Sign Up
-            </div-->
-        </div>
-        <div class="widget-content">
-        {% for block in schedule %}
-            <div class="eighth-block clickable {{ block.flags }}">
-                <div class="block-header">
-                    <span class="block-letter"{% if block.block_letter_width %} style="width: {{ block.block_letter_width }}px"{% endif %}>
-                        {{ block.block_letter }}
-                    </span>
-                    {{ block.date|date:"D, N j" }}
-                    {% if block.locked %}
-                        <span class="block-signup locked">
-                            <i class="fa fa-lock"></i>
-                            {% if block.current_signup %}
-                                {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
-                            {% else %}
-                                No activity selected
-                            {% endif %}
-                        </span>
-                        <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Locked</a>
-                    {% elif block.current_signup %}
-                        <span class="block-signup">
-                            {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
-                        </span>
-                        <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Change</a>
-                    {% else %}
-                        <span class="block-signup no-activity-selected">
-                            No activity selected
-                        </span>
-                        <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Sign Up</a>
-                    {% endif %}
-                </div>
-            </div>
-        {% empty %}
-            <div class="eighth-block">
-                <div class="block-header">
-                There are no blocks available at this time.
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
+    {% include "eighth/signup_widget.html" %}
 {% endif %}
 {% if request.user.is_teacher or eighth_sponsor %}
-    <div class="widget sponsor-widget">
-        <div class="widget-title">
-            <h2>
-                Take Attendance
-            </h2>
-            <div class="info">
-                <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="ui-link">View more blocks</a>
-            </div>
-        </div>
-        <div class="widget-content">
-        {% for schact in sponsor_schedule %}
-            <div class="eighth-block">
-                <div class="block-header{% if schact.activity %} clickable{% endif %}">
-                    <span class="block-letter"{% if schact.block_letter_width %} style="width: {{ schact.block_letter_width }}px"{% endif %}>
-                        {{ schact.block.block_letter }}
-                    </span>
-                    {{ schact.block.date|date:"D, N j" }}
-                    {% if schact.activity %}
-                        <span class="block-sponsorship">
-                            {{ schact.activity }}
-                        </span>
-                        <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
-                        {% if schact.attendance_taken %}
-                            Modify
-                        {% elif schact.block.locked %}
-                            Take Now
-                        {% else %}
-                            View
-                        {% endif %}
-                        </a>
-                    {% else %}
-                        <span class="block-signup no-activity-selected">
-                            Not sponsoring an activity
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
-        {% empty %}
-            <div class="eighth-block">
-                <div class="block-header">
-                    You are not sponsoring any activities.
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
+    {% include "eighth/attendance_widget.html" %}
 {% endif %}
 </div>
 

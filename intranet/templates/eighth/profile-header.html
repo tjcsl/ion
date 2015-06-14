@@ -62,16 +62,12 @@
                 {% endif %}
 
             </table>
+            {% if show_eighth_profile_link %}
+                <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
+            {% endif %}
             <a href="/profile/{{ profile_user.id }}?full=1" class="button">View All Info</a> &nbsp;
             {% if request.user.is_eighth_admin %}
-                <a href="/profile/edit/{{ profile_user.id }}" class="button">Edit Info</a> &nbsp;
-            {% endif %}
-            {% if request.user.is_eighth_admin and profile_user.is_student %}
-                <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
-            {% endif %}
-
-            {% if not request.user.is_eighth_admin and profile_user == user %}
-                <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
+                <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button">Edit Info</a> &nbsp;
             {% endif %}
 
         </div>

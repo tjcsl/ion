@@ -14,8 +14,9 @@ from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
-
 class AbstractBaseEighthModel(models.Model):
+    """Abstract base model that includes created and last modified times."""
+
     created_time = models.DateTimeField(auto_now_add=True, null=True)
     last_modified_time = models.DateTimeField(auto_now=True, null=True)
 
@@ -57,15 +58,15 @@ class EighthSponsor(AbstractBaseEighthModel):
                             "online_attendance"),)
         ordering = ("last_name", "first_name",)
 
-    def __unicode__(self):
-        return self.last_name + ", " + self.first_name
-
     @property
     def name(self):
         if self.show_full_name:
-            return self.first_name + " " + self.last_name
+            return self.last_name + ", " + self.first_name
         else:
             return self.last_name
+
+    def __unicode__(self):
+        return self.name
 
 
 class EighthRoom(AbstractBaseEighthModel):
@@ -123,6 +124,7 @@ class EighthActivity(AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
+    aid = models.CharField(max_length=10, blank=True) # Should be unique
     name = models.CharField(max_length=100)  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
@@ -164,13 +166,18 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def name_with_flags(self):
+        """Return the activity name with special, both blocks,
+        restricted, administrative, sticky, and deleted flags."""
         return self._name_with_flags(True)
 
     @property
     def name_with_flags_no_restricted(self):
+        """Return the activity name with special, both blocks,
+        administrative, sticky, and deleted flags."""
         return self._name_with_flags(False)
 
     def _name_with_flags(self, include_restricted):
+        """Generate the name with flags."""
         name = "Special: " if self.special else ""
         name += self.name
         if include_restricted:
@@ -183,6 +190,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def restricted_activities_available_to_user(cls, user):
+        """Find the restricted activities available to the given user."""
         activities = set(user.restricted_activity_set
                              .values_list("id", flat=True))
 
@@ -210,6 +218,33 @@ class EighthActivity(AbstractBaseEighthModel):
                                    .values_list("id", flat=True))
 
         return list(activities)
+
+    def save(self, *args, **kwargs):
+        """When saving the model, update the AID to
+        be the internal ID if it is blank or None.
+        """
+        update_aid = False
+
+
+        if not self.aid:
+            if self.pk:
+                self.aid = self.pk
+            else:
+                update_aid = True
+        else:
+            with_aid = EighthActivity.objects.filter(aid=self.aid)
+            if len(with_aid) == 0 or (len(with_aid) == 1 and with_aid[0] == self):
+                update_aid = False
+            else:
+                # aid is not unique
+                raise ValidationError("AID is not unique.")
+
+        super(EighthActivity, self).save(*args, **kwargs)
+
+        if update_aid:
+            # Update aid with new ID and re-save
+            self.aid = self.pk
+            super(EighthActivity, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "eighth activities"
@@ -288,6 +323,7 @@ class EighthBlock(AbstractBaseEighthModel):
     override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 
     def save(self, *args, **kwargs):
+        """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
         if letter and len(letter) >= 1:
             self.block_letter = letter[:1].upper() + letter[1:]
@@ -295,6 +331,7 @@ class EighthBlock(AbstractBaseEighthModel):
         super(EighthBlock, self).save(*args, **kwargs)
 
     def next_blocks(self, quantity=-1):
+        """Get the next blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("date", "block_letter")
                              .filter(Q(date__gt=self.date)
@@ -306,6 +343,7 @@ class EighthBlock(AbstractBaseEighthModel):
         return blocks[:quantity + 1]
 
     def previous_blocks(self, quantity=-1):
+        """Get the previous blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("-date", "-block_letter")
                              .filter(Q(date__lt=self.date)
@@ -485,6 +523,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return EighthRoom.total_capacity_of_rooms(rooms)
 
     def is_full(self):
+        """Return whether the activity is full.
+
+        """
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -492,6 +533,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_overbooked(self):
+        """Return whether the activity is overbooked.
+
+        """
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -499,26 +543,68 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_too_early_to_signup(self, now=None):
+        """Return whether it is too early to sign up for the
+        activity if it is a presign (48 hour logic is here).
+
+        """
         if now is None:
             now = datetime.datetime.now()
 
         activity_date = (datetime.datetime
                                  .combine(self.block.date,
                                           datetime.time(0, 0, 0)))
+        # Presign activities can only be signed up for 2 days in advance.
         presign_period = datetime.timedelta(days=2)
 
         return (now < (activity_date - presign_period))
 
+    def get_viewable_members(self, user=None):
+        """Get the list of members that you have permissions to view.
+
+        Returns: List of members
+        """
+        members = []
+        for member in self.members.all():
+            show = False
+            show = member.can_view_eighth
+            if user and user.is_eighth_admin:
+                show = True
+            if member == user:
+                show = True
+            if show:
+                members.append(member)
+
+        return members
+
+    def get_hidden_members(self, user=None):
+        """Get the number of members that you do not have permission to view.
+
+        Returns: Number of members hidden based on preferences
+        """
+        hidden_members = []
+        for member in self.members.all():
+            show = False
+            show = member.can_view_eighth
+            if user and user.is_eighth_admin:
+                show = True
+            if member == user:
+                show = True
+            if not show:
+                hidden_members.append(member)
+
+        return hidden_members
+
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
+        This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
         unless the signup is forced.
 
         """
         if request is not None:
-            force = force or (("force" in request.GET) and
-                              request.user.is_eighth_admin)
+            force = (force or ("force" in request.GET)) and request.user.is_eighth_admin
+
         exception = eighth_exceptions.SignupException()
 
         if not force:
@@ -531,6 +617,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             if self.activity.both_blocks:
                 # Find all schedulings of the same activity on the same day
+                # TODO: Should this only find the second (A or B) block on this day?
                 all_sched_act = (EighthScheduledActivity.objects
                                                         .filter(block__date=self.block.date,
                                                                 activity=self.activity))
@@ -779,6 +866,8 @@ class EighthSignup(AbstractBaseEighthModel):
     absence_acknowledged = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
+        """Checked whether more than one EighthSignup exists for a User
+        on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
         not_unique = (self.__class__
@@ -793,6 +882,39 @@ class EighthSignup(AbstractBaseEighthModel):
                 NON_FIELD_ERRORS: ("EighthSignup already exists for the User "
                                    "and the EighthScheduledActivity's block",)
             })
+
+    def remove_signup(self, user=None):
+        """Attempt to remove the EighthSignup if the user has permission
+        to do so."""
+
+        exception = eighth_exceptions.SignupException()
+
+        if user is not None:
+            if user != self.user and not user.is_eighth_admin:
+                exception.SignupForbidden = True
+
+        # Check if the block has been locked
+        if self.scheduled_activity.block.locked:
+            exception.BlockLocked = True
+
+        # Check if the scheduled activity has been cancelled
+        if self.scheduled_activity.cancelled:
+            exception.ScheduledActivityCancelled = True
+
+        # Check if the activity has been deleted
+        if self.scheduled_activity.activity.deleted:
+            exception.ActivityDeleted = True
+
+        # Check if the user is already stickied into an activity
+        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky:
+            exception.Sticky = True
+
+        if len(exception.messages()) > 0:
+            raise exception
+        else:
+            block = self.scheduled_activity.block
+            self.delete()
+            return "Successfully removed signup for {}.".format(block)
 
     def __unicode__(self):
         return "{}: {}".format(self.user,

@@ -1,34 +1,70 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+    <style type="text/css">
+    .group-edit-table td {
+        padding: 0 50px;
+    }
+    </style>
+{% endblock %}
 
 {% block admin_main %}
 
+<table class="group-edit-table">
+    <tr>
+        <td>
 
-<form action="" method="post" autocomplete="off">
-    {% csrf_token %}
-    <label for="id_name"><b>Edit Group Name</b></label>
-    <br />
-    {{ edit_form.name }} <input type="submit" value="Save">
-</form>
-<br />
+        <form action="" method="post" autocomplete="off">
+            {% csrf_token %}
+            <label for="id_name"><b>Edit Group Name</b></label>
+            <br />
+            {{ edit_form.name }} <input type="submit" value="Save">
+        </form>
 
-<form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
-    {% csrf_token %}
-    <label for="student-id"><b>Add user by student ID</b></label>
-    <p class="error-color">
-        {% if request.GET.error == "s" %}
-            Invalid student ID
-        {% elif request.GET.error == "n" %}
-            No user exists with that student ID.
-        {% endif %}
-    </p>
-    <input type="text" name="student_id" id="student-id"> <input type="submit" value="Add">
-</form>
-<br />
-<a href="{% url 'eighth_admin_upload_group_members' group.id %}" class="button">Import members</a>
+        </td>
+        <td>
+
+        <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
+            {% csrf_token %}
+            <label for="student-id"><b>Add user by search query</b></label>
+            <br />
+            {% if request.GET.error %}
+            <p class="error-color">
+                {% if request.GET.error == "s" %}
+                    Invalid student ID
+                {% elif request.GET.error == "n" %}
+                    No user exists with that student ID.
+                {% endif %}
+            </p>
+            {% endif %}
+            <input type="text" name="query" id="query"> <input type="submit" value="Add">
+        </form>
+        </td>
+
+        <td>
+        <br />
+        <a href="{% url 'eighth_admin_upload_group_members' group.id %}" class="button">Import members</a>
+        </td>
+    </tr>
+</table>
 
 <br />
 <br />
-<table class="fancy-table">
+<h3>{{ group.name }}: {{ members|length }} members</h3>
+<table data-sortable class="fancy-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -39,9 +75,9 @@
     </thead>
     <tbody>
         {% for member in members %}
-            <tr style="{% if member.student_id and request.GET.added == member.student_id %}font-weight: bold;{% endif %}">
+            <tr style="{% if member.id in added_ids %}font-weight: bold;{% endif %}">
                 <td><a href="{% url 'user_profile' member.id %}">{{ member.last_name }}, {{ member.first_name }}</a></td>
-                <td>{% firstof member.student_id "" %}</td>
+                <td>{% if member.student_id %}{{ member.student_id }}{% else %}Ion ID: {{ member.id }}{% endif %}</td>
                 <td>{% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
                 <td>{{ member.grade }}</td>
                 <td>
@@ -50,6 +86,10 @@
                         <input type="submit" value="Remove">
                     </form>
                 </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">There are no users in this group.</td>
             </tr>
         {% endfor %}
     </tbody>

@@ -15,10 +15,12 @@ logger = logging.getLogger(__name__)
 
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
 
     class Meta:
         model = EighthActivity
         fields = ("id",
+                  "aid",
                   "url",
                   "name",
                   "description",
@@ -84,6 +86,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
             activity_info = {
                 "id": activity.id,
+                "aid": activity.aid,
                 "scheduled_activity": scheduled_activity.id,
                 "url": reverse("api_eighth_activity_detail",
                                args=[activity.id],
@@ -263,3 +266,19 @@ class EighthSignupSerializer(serializers.ModelSerializer):
                   "activity",
                   "scheduled_activity",
                   "user")
+
+def add_signup_validator(value):
+    if 'scheduled_activity' in value:
+        return
+    if 'block' in value and 'activity' in value:
+        return
+    raise serializers.ValidationError('Either scheduled_activity, or block and activity must exist.')
+
+class EighthAddSignupSerializer(serializers.Serializer):
+    block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all(), required=False)
+    activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all(), required=False)
+    scheduled_activity = serializers.PrimaryKeyRelatedField(queryset=EighthScheduledActivity.objects.all(), required=False)
+    force = serializers.BooleanField(label='force', required=False)
+
+    class Meta:
+        validators = [add_signup_validator]

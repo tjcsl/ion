@@ -34,8 +34,12 @@ $(function() {
     });
 
     $("select.url-param-selector").on("change", function() {
-        var url = updateParam(document.URL, $(this).data("param"), $(this).val());
-        location.href = url;
+        var val = $(this).val();
+        console.debug("param-selector value:",val);
+        if(val != "") {
+            var url = updateParam(document.URL, $(this).data("param"), val);
+            location.href = url;
+        }
     })
 
 
@@ -121,6 +125,10 @@ $(function() {
 
     $("#only-show-overbooked").click(function() {
         $("tr.underbooked").toggle();
+    })
+
+    $("#hide-administrative").click(function() {
+        $("tr.administrative").toggle();
     })
 
 });

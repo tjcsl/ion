@@ -6,6 +6,7 @@ import hashlib
 import logging
 import ldap
 import os
+import re
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
@@ -29,10 +30,23 @@ class UserManager(UserManager):
     """
 
     def user_with_student_id(self, student_id):
+        """Get a unique user object by student ID."""
         c = LDAPConnection()
 
         results = c.search(settings.USER_DN,
                            "tjhsstStudentId={}".format(student_id),
+                           ["dn"])
+
+        if len(results) == 1:
+            return User.get_user(dn=results[0][0])
+        return None
+
+    def user_with_ion_id(self, student_id):
+        """Get a unique user object by Ion ID."""
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                           "iodineUidNumber={}".format(student_id),
                            ["dn"])
 
         if len(results) == 1:
@@ -44,11 +58,13 @@ class UserManager(UserManager):
     # the consequences of error are not significant.
 
     def get_students(self):
+        """Get user objects that are students (quickly)."""
         usernums = User.objects.filter(username__startswith="2")
         # Add possible exceptions handling here
         return usernums
 
     def get_teachers(self):
+        """Get user objects that are teachers (quickly)."""
         usernonums = User.objects.exclude(username__startswith="2")
         usernonums = usernonums | User.objects.filter(id=31863)
         # Add possible exceptions handling here
@@ -275,6 +291,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.first_name
 
     def get_short_name(self):
+        """Get short (first) name of a user."""
         return self.short_name
 
     @property
@@ -297,9 +314,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
-        for email in self.emails:
-            if email.endswith(("@fcps.edu", "@tjhsst.edu")):
-                return email
+        """
+        Get (or guess) a user's TJ email. If a fcps.edu or 
+        tjhsst.edu email is specified in their email list, use
+        that. Otherwise, append the user's username to the proper
+        email suffix, depending on whether they are a student or teacher.
+        """
+
+        if self.emails:
+            for email in self.emails:
+                if email.endswith(("@fcps.edu", "@tjhsst.edu")):
+                    return email
 
         if self.user_type == "tjhsstTeacher":
             domain = "fcps.edu"
@@ -671,6 +696,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             return perms
 
     @property
+    def can_view_eighth(self):
+        """Checks if a user has the showeighth permission.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.permissions["self"]["showeighth"] if self.permissions and "self" in self.permissions and "showeighth" in self.permissions["self"] else False
+    
+
+    @property
     def is_eighth_admin(self):
         """Checks if user is an eighth period admin.
 
@@ -717,6 +754,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_eighthoffice(self):
         """Checks if user is an Eighth Period office user.
+
         This is currently hardcoded, but is meant to be used instead
         of user.id == 9999 or user.username == "eighthoffice".
 
@@ -1048,12 +1086,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def absence_count(self):
+        """Return the user's absence count. If the user has no absences
+        or is not a signup user, returns 0.
+
+        """
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True).count()
 
     def __unicode__(self):
         return self.username or self.ion_username or self.id
+
+    def __int__(self):
+        return self.id
 
 
 class Class(object):
@@ -1070,17 +1115,22 @@ class Class(object):
 
     """
 
-    def __init__(self, dn):
+    def __init__(self, dn=None, id=None):
         """Initialize the Class object.
+
+        Either dn or id is required.
 
         Args:
             dn
                 The full DN of the class.
+            id
+                The tjhsstSectionId of the class.
 
         """
-        self.dn = dn
+        self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
     section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
+    pk = section_id
 
     @property
     def students(self):
@@ -1318,6 +1368,10 @@ class Grade(object):
         else:
             self._name = "graduate"
 
+        if self._number is None:
+            self._number = 13
+
+
     @property
     def number(self):
         """Return the grade as a number (9-12).
@@ -1331,7 +1385,7 @@ class Grade(object):
     @property
     def name(self):
         """Return the grade's name (e.g. senior)"""
-        return self._number
+        return self._name
 
     def __int__(self):
         """Return the grade as a number (9-12)."""

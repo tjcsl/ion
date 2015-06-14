@@ -1,0 +1,65 @@
+<div class="widget sponsor-widget">
+    <div class="widget-title">
+        <h2>
+            Take Attendance
+        </h2>
+        <div class="info">
+            <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="ui-link">View more blocks</a>
+        </div>
+    </div>
+    <div class="widget-content">
+    {% for schact in sponsor_schedule %}
+        <div class="eighth-block{% if schact.block.is_today %} today{% endif %}{% if schact.activity and not schact.attendance_taken %} no-attendance{% endif %}">
+            <div class="block-header{% if schact.activity %} clickable{% endif %}">
+                <span class="block-letter"{% if schact.block_letter_width %} style="width: {{ schact.block_letter_width }}px"{% endif %}>
+                    {{ schact.block.block_letter }}
+                </span>
+                {{ schact.block.date|date:"D, N j" }}
+                {% if schact.activity %}
+
+                    {% if schact.attendance_taken %}
+                        <span class="block-sponsorship attendance-taken">
+                            <i class="fa fa-check" title="You have taken attendance."></i>{{ schact.activity }}
+                        </span>
+                    {% elif schact.block.locked %}
+                        <span class="block-sponsorship">
+                            {{ schact.activity }}
+                        </span>
+                    {% else %}
+                        <span class="block-sponsorship unlocked">
+                            <i class="fa fa-unlock-alt" title="The block has not been locked."></i>
+                            {{ schact.activity }}
+                        </span>
+                    {% endif %}
+                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
+                    {% if schact.attendance_taken %}
+                        Modify
+                    {% elif schact.block.locked %}
+                        Take Now
+                    {% else %}
+                        View
+                    {% endif %}
+                    </a>
+                {% else %}
+                    {% if schact.block.locked %}
+                        <span class="block-sponsorship no-activity-selected">
+                        Not sponsoring an activity
+                    </span>
+                    {% else %}
+                        <span class="block-sponsorship no-activity-selected unlocked">
+                            <i class="fa fa-unlock-alt"></i>
+                            Not sponsoring an activity
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="eighth-block">
+            <div class="block-header">
+                You are not sponsoring any activities.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>

@@ -8,13 +8,15 @@ from ..users.models import User
 
 class AnnouncementForm(forms.ModelForm):
 
+    expiration_date = forms.DateTimeInput()
     class Meta:
         model = Announcement
         fields = [
             "title",
             "author",
             "content",
-            "groups"
+            "groups",
+            "expiration_date"
         ]
 
 

@@ -1,7 +1,39 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+
+            $("#export-csv").click(function(event) {
+                event.preventDefault();
+                document.forms["choose-fields"].action = $(this).attr("href");
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#hide-administrative").on("change", function() {
+                var sel = $(this).prop("checked");
+                if(document.forms["choose-fields"].hide_administrative) {
+                    document.forms["choose-fields"].hide_administrative.value = sel?1:0;
+                }
+            });
+            {% if hide_administrative %}
+                $("tr.administrative").toggle();
+            {% endif %}
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
 
 {% block admin_main %}
-    {% if not scheduled_activities %}
+    {% if not scheduled_activities and wizard %}
         <form action="" method="post">{% csrf_token %}
             {{ wizard.management_form }}
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
@@ -17,37 +49,112 @@
             {% endif %}
         </form>
     {% else %}
-        <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
-        <br>
-        <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
-        <br>
+    <table style="width: 100%">
+    <tr>
+        <td>
+        <br />
+            <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+            <br />
+            <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
+            
+        </td>
+        <td>
 
-        <table class="fancy-table">
+            <b>Filter by room:</b>
+            <form action="" method="get" name="choose-rooms">
+                <select multiple="multiple" name="room" id="room-select" placeholder="Select or search for a room">
+                    <option value="">Select or search for a room</option>
+                    {% for room in all_rooms %}
+                        <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Filter" />
+            </form>
+        </td>
+        <td>
+            <br />
+            <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
+            <label for="hide-administrative">Hide administrative</label>
+        </td>
+    </tr>
+    </table>
+
+        <br />
+        Choose the fields that you wish to display:
+        <form action="" method="get" name="choose-fields">
+        <table class="choose-fields fancy-table">
+            <tr>
+                <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}" />
+            {% for room in room_ids %}
+                <input type="hidden" name="room" value="{{ room }}" />
+            {% endfor %}
+                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} /><br />Block</td>
+                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} /><br />Rooms</td>
+                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} /><br />AID</td>
+                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity</td>
+                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
+                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
+                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
+                <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
+                <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
+                <th><input type="submit" value="Apply" /></th>
+                <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
+            </tr>
+        </table>
+        
+        <br />
+        Click on column titles to sort.
+        <table data-sortable class="fancy-table">
             <thead>
                 <tr>
-                    <th>Block</th>
-                    <th>Room(s)</th>
-                    <th>Activity ID</th>
-                    <th>Activity Name</th>
-                    <th>Sponsor(s)</th>
-                    <th>Students Enrolled</th>
-                    <th>Capacity</th>
+                    {% if show.block %}<th>Block</th>{% endif %}
+                    {% if show.rooms %}<th>Rooms</th>{% endif %}
+                    {% if show.aid %}<th>AID</th>{% endif %}
+                    {% if show.activity %}<th>Activity</th>{% endif %}
+                    {% if show.sponsors %}<th>Sponsors</th>{% endif %}
+                    {% if show.signups %}<th>Signups</th>{% endif %}
+                    {% if show.capacity %}<th>Capacity</th>{% endif %}
+                    {% if show.comments %}<th>Comments</th>{% endif %}
+                    {% if show.admin_comments %}<th>Admin Comments</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr>
-                        <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }}</td>
-                        <td>{{ sched_act.get_true_rooms|join:", " }}</td>
-                        <td>{{ sched_act.activity.id }}</td>
-                        <td>{{ sched_act.activity.name_with_flags }}</td>
-                        <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
-                        <td>{{ sched_act.members.count }}</td>
-                        <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}">
+                        {% if show.block %}
+                            <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
+                        {% endif %}
+                        {% if show.rooms %}
+                            <td>{{ sched_act.get_true_rooms|join:", " }}</td>
+                        {% endif %}
+                        {% if show.aid %}
+                            <td>{{ sched_act.activity.aid }}</td>
+                        {% endif %}
+                        {% if show.activity %}
+                            <td>{{ sched_act.activity.name_with_flags }}</td>
+                        {% endif %}
+                        {% if show.sponsors %}
+                            <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
+                        {% endif %}
+                        {% if show.signups %}
+                            <td>{{ sched_act.members.count }}</td>
+                        {% endif %}
+                        {% if show.capacity %}
+                            <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                        {% endif %}
+                        {% if show.comments %}
+                            <td>{{ sched_act.comments }}</td>
+                        {% endif %}
+                        {% if show.admin_comments %}
+                            <td>{{ sched_act.admin_comments }}</td>
+                        {% endif %}
                     </tr>
+                {% empty %}
+                    <tr><td colspan="7">There were no results.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
+        </form>
     {% endif %}
 
 {% endblock %}
