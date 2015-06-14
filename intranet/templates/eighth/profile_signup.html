@@ -243,25 +243,15 @@
             <table class="eighth-table {% if eighth_schedule %}zebra{% endif %}">
             <thead>
                 <tr>
-                    <td class="button-container" colspan="7">
-                        <span class="button-left">
-                            <a href="?date={{ date_previous }}" class="button">
-                                <i class="fa fa-arrow-left"></i> Back Two Weeks
-                            </a>
-                        </span>
-                        <span class="button-center">
-                            <input type="submit" value="Change Selected" />
-
-                            {% if custom_date_set %}
-                                <a href="?" class="button">Reset Date</a>
-                            {% endif %}
-                        </span>
-                        <span class="button-right">
-                            <a href="?date={{ date_next }}" class="button">
-                                Forward Two Weeks <i class="fa fa-arrow-right"></i>
-                            </a>
-                        </span>
-                    </td>
+                    <td class="button-container" colspan="7" style="text-align: center">
+                        {% if show_eighth_profile_link %}
+                            <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
+                        {% endif %}
+                        <a href="/profile/{{ profile_user.id }}?full=1" class="button">View All Info</a> &nbsp;
+                        {% if request.user.is_eighth_admin %}
+                            <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button">Edit Info</a> &nbsp;
+                        {% endif %}
+                                </td>
                 </tr>
                 <tr class="desc">
                     <th class="center checkbox">
