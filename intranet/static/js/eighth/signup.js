@@ -196,6 +196,12 @@ $(function() {
                 activityDetailView.render();
                 activityListView.render();
 
+                var $container = $(".primary-content.eighth-signup");
+                var next_url = $container.attr("data-next-url");
+                if(next_url) {
+                    location.href = next_url;
+                }
+
 
             },
             error: function(xhr, status, error) {
