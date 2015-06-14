@@ -48,12 +48,14 @@
             </select>
             <input type="submit" value="Filter" />
         </form>
-
-        
+        <br />
         Choose the fields that you wish to display:
         <form action="" method="get" name="choose-fields">
         <table class="choose-fields fancy-table">
             <tr>
+            {% for room in room_ids %}
+                <input type="hidden" name="room" value="{{ room }}" />
+            {% endfor %}
                 <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} />Block</td>
                 <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} />Rooms</td>
                 <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} />Activity ID</td>
