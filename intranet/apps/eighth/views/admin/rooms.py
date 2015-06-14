@@ -194,31 +194,41 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
-        sched_acts = (EighthScheduledActivity.objects
-                                             .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
-                                             .filter(block__date__gte=start_block.date,
-                                                     block__date__lte=end_block.date)
-                                             .order_by("block__date",
-                                                       "block__block_letter"))
+        return redirect("eighth_admin_room_utilization_action", start_block.id, end_block.id)
+        
 
-        # If a "show" GET parameter is defined, only show the values that are given.
-        show_vals = self.request.GET.getlist("show")
-        show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
-        if len(show_vals) == 0:
-            show = {name: True for name in show_opts}
-        else:
-            show = {name: name in show_vals for name in show_opts}
+def room_utilization_action(request, start_id, end_id):
+    try:
+        start_block = EighthBlock.objects.get(id=start_id)
+        end_block = EighthBlock.objects.get(id=end_id)
+    except EighthBlock.DoesNotExist:
+        raise Http404
 
-        context = {
-            "scheduled_activities": sched_acts,
-            "admin_page_title": "Room Utilization",
-            "start_block": start_block,
-            "end_block": end_block,
-            "show": show
-        }
+    sched_acts = (EighthScheduledActivity.objects
+                                         .exclude(activity__deleted=True)
+                                         .exclude(cancelled=True)
+                                         .filter(block__date__gte=start_block.date,
+                                                 block__date__lte=end_block.date)
+                                         .order_by("block__date",
+                                                   "block__block_letter"))
 
-        return render(self.request, "eighth/admin/room_utilization.html", context)
+    # If a "show" GET parameter is defined, only show the values that are given.
+    show_vals = request.GET.getlist("show")
+    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
+    if len(show_vals) == 0:
+        show = {name: True for name in show_opts}
+    else:
+        show = {name: name in show_vals for name in show_opts}
+
+    context = {
+        "scheduled_activities": sched_acts,
+        "admin_page_title": "Room Utilization",
+        "start_block": start_block,
+        "end_block": end_block,
+        "show": show
+    }
+
+    return render(request, "eighth/admin/room_utilization.html", context)
 
 room_utilization_view = eighth_admin_required(
     EighthAdminRoomUtilizationWizard.as_view(
