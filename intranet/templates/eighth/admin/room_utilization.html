@@ -54,6 +54,10 @@
             </select>
             <input type="submit" value="Filter" />
         </form>
+
+        <input type="checkbox" id="hide-administrative">
+        <label for="hide-administrative">Hide administrative</label>
+
         <br />
         Choose the fields that you wish to display:
         <form action="" method="get" name="choose-fields">
@@ -65,7 +69,7 @@
                 <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} /><br />Block</td>
                 <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} /><br />Rooms</td>
                 <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} /><br />AID</td>
-                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity Name</td>
+                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity</td>
                 <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
                 <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
                 <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
@@ -94,7 +98,7 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr>
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}">
                         {% if show.block %}
                             <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
                         {% endif %}

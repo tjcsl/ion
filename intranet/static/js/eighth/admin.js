@@ -127,4 +127,8 @@ $(function() {
         $("tr.underbooked").toggle();
     })
 
+    $("#hide-administrative").click(function() {
+        $("tr.administrative").toggle();
+    })
+
 });
