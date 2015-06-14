@@ -194,7 +194,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
-        return redirect("eighth_admin_room_utilization_action", start_block.id, end_block.id)
+        return redirect("eighth_admin_room_utilization", start_block.id, end_block.id)
         
 
 def room_utilization_action(request, start_id, end_id):
