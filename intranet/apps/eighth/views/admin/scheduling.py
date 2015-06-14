@@ -271,6 +271,8 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             activity=source_activity
         )
 
+        num = source_scheduled_activity.members.count()
+
         dest_block = form_list[2].cleaned_data["block"]
         dest_activity = form_list[3].cleaned_data["activity"]
         dest_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -282,7 +284,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             scheduled_activity=dest_scheduled_activity
         )
 
-        messages.success(self.request, "Successfully transfered students.")
+        messages.success(self.request, "Successfully transfered {} students.".format(num))
         return redirect("eighth_admin_dashboard")
 
 transfer_students_view = eighth_admin_required(

@@ -66,6 +66,15 @@ def request_announcement_view(request):
             obj = form.save(commit=True)
             obj.user = request.user
             obj.save()
+            teacher_ids = form.data["teachers_requested"]
+            teachers = User.objects.filter(id__in=teacher_ids)
+
+            ann = AnnouncementRequest.objects.get(id=obj.id)
+            logger.debug(teachers)
+            for teacher in teachers:
+                ann.teachers_requested.add(teacher)
+            ann.save()
+
             request_announcement_email(request, form, obj)
             messages.success(request, "Successfully added announcement request.")
             return redirect("index")

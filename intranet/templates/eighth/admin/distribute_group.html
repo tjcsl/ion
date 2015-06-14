@@ -15,6 +15,7 @@
             Sortable.init();
         });
     </script>
+{% if show_selection %}
     <script type="text/javascript">
 $(function() {
     $(".select-all").change(function() {
@@ -107,6 +108,15 @@ $(function() {
 
 })
     </script>
+{% else %}
+    <script type="text/javascript">
+        $(function() {
+            $("form[name=wizard] select#id_block-block").on("change", function() {
+                document.forms["wizard"].submit();
+            });
+        })
+    </script>
+{% endif %}
 {% endblock %}
 
 {% block admin_main %}
@@ -163,7 +173,7 @@ $(function() {
 
         <input type="submit" value="Finish" onclick="return confirm('Are you sure you want to sign these users up for these activities?')" />
     {% else %}
-    <form method="post">{% csrf_token %}
+    <form method="post" name="wizard">{% csrf_token %}
         {{ wizard.management_form }}
         <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
         <br>
