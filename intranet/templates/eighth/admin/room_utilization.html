@@ -49,24 +49,35 @@
             {% endif %}
         </form>
     {% else %}
-        <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+    <table style="width: 100%">
+    <tr>
+        <td>
         <br />
-        <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
-        <br /><br />
+            <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+            <br />
+            <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
+            
+        </td>
+        <td>
 
-        <b>Filter by room:</b>
-        <form action="" method="get" name="choose-rooms">
-            <select multiple="multiple" name="room" id="room-select" placeholder="Select or search for a room">
-                <option value="">Select or search for a room</option>
-                {% for room in rooms %}
-                    <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="Filter" />
-        </form>
-
-        <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
-        <label for="hide-administrative">Hide administrative</label>
+            <b>Filter by room:</b>
+            <form action="" method="get" name="choose-rooms">
+                <select multiple="multiple" name="room" id="room-select" placeholder="Select or search for a room">
+                    <option value="">Select or search for a room</option>
+                    {% for room in all_rooms %}
+                        <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Filter" />
+            </form>
+        </td>
+        <td>
+            <br />
+            <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
+            <label for="hide-administrative">Hide administrative</label>
+        </td>
+    </tr>
+    </table>
 
         <br />
         Choose the fields that you wish to display:
