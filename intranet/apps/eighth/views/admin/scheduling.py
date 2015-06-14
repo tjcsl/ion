@@ -104,7 +104,10 @@ def schedule_activity_view(request):
     all_rooms = {r["id"]: r for r in EighthRoom.objects.values()}
 
     for sid, sponsor in all_sponsors.items():
-        all_sponsors[sid]["full_name"] = sponsor["first_name"] + " " + sponsor["last_name"]
+        if sponsor["show_full_name"]:
+            all_sponsors[sid]["full_name"] = sponsor["last_name"] + ", " + sponsor["first_name"]
+        else:
+            all_sponsors[sid]["full_name"] = sponsor["last_name"]
 
     for rid, room in all_rooms.items():
         all_rooms[rid]["description"] = room["name"] + " (" + str(room["capacity"]) + ")"

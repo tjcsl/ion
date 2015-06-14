@@ -21,6 +21,10 @@
     }
     </style>
     {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
 {% endblock %}
 
 {% block js %}
@@ -215,57 +219,120 @@
 
 
 
-    <div class="primary-content eighth-signup">
-        <div class="day-picker">
-            <span class="day-picker-buttons">
-                <button class="earlier-days">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
+    <div class="primary-content eighth-signup" data-next-url="{% url 'eighth_profile' profile_user.id %}">
+        {% if request.user.is_eighth_admin %}
+            <div class="eighth-header">
+                {% include "eighth/admin/start_date.html" %}
+            </div>
+        {% endif %}
+        <br />
 
-                <button class="later-days">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
+        <section class="user-info-eighth user-info">
+        <form action="{% url 'eighth_signup' %}" method="GET">
+
+            <input type="hidden" name="user" value="{{ profile_user.id }}" />
+            <h3>
+                Eighth Period - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>
+            </h3>
+            {% if skipped_ahead %}
+                There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
+            {% endif %}
+            {% if not profile_user.is_student %}
+                <b>This user is not a student. They may not be signed up for activities.</b>
+            {% endif %}
+            <table class="eighth-table {% if eighth_schedule %}zebra{% endif %}">
+            <thead>
+                <tr>
+                    <td class="button-container" colspan="7" style="text-align: center">
+                        {% if show_eighth_profile_link %}
+                            <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
+                        {% endif %}
+                        <a href="/profile/{{ profile_user.id }}?full=1" class="button">View All Info</a> &nbsp;
+                        {% if request.user.is_eighth_admin %}
+                            <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button">Edit Info</a> &nbsp;
+                        {% endif %}
+                                </td>
+                </tr>
+                <tr class="desc">
+                    <th class="center checkbox">
+                        <input type="checkbox" />
+                    </th>
+                    <th>
+                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
+                        <div class="select-blocks-popover closed">
+                            <a href="" onclick="return false" class="block-type">Mon B</a>
+                            <a href="" onclick="return false" class="block-type">Wed A</a>
+                            <a href="" onclick="return false" class="block-type">Wed B</a>
+                            <a href="" onclick="return false" class="block-type">Fri A</a>
+                            <a href="" onclick="return false" class="block-type">Fri B</a>
+                        </div>
+                    </th>
+                    <th class="center">Block</th>
+                    <th>Activity</th>
+                    <th>Teacher</th>
+                    <th>Room</th>
+                    <th></th>
+                </tr>
+            </thead>
+            {% for sch in eighth_schedule %}
+            {% if sch.block.date == active_block.date %}
+                <tr class="form-row"{% if sch.block == active_block %} style="background-color: yellow"{% endif %}>
+                    <td class="center checkbox">
+                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
+                    </td>
+                    <td>
+                        {{ sch.block.date|date:'D, N j, Y' }}
+                    </td>
+                    <td class="center">
+                        {{ sch.block.block_letter }}
+                    </td>
+                    {% if sch.signup %}
+                    <td>
+                    <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
+                        {{ sch.signup.scheduled_activity.full_title }}
+                    </a>
+                    </td>
+                    <td>
+                        {% for sponsor in sch.signup.scheduled_activity.get_true_sponsors %}
+                            {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
+                    </td>
+                    {% else %}
+                    <td colspan="3">
+                        <span class="no-activity-selected">No activity selected</span>
+                    </td>
+                    {% endif %}
+
+                    <td class="button-row">
+                        <a href="{% url 'eighth_profile_signup' profile_user.id sch.block.id %}" class="button"{% if sch.block == active_block %} style="visibility: hidden"{% endif %}>
+                            {% if sch.signup %}
+                                Change
+                            {% else %}
+                                Sign Up
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% empty %}
+                <tr>
+                <td colspan="7">
+                    You have reached a point beyond the last eighth period block that has been created.
+                </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+    </section>
+        
+
+        <div class="day-picker" style="display: none">
+            <span class="day-picker-buttons">
             </span>
             <ul class="days-container">
-                {% spaceless %}
-                    {% for day in block_info.schedule %}
-                        <li class="day">
-                            <div class="day-title">
-                                {{ day.date|date:"l, M j" }}
-                            </div>
-                                <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
-                                    {% for b in day.blocks %}
-                                        <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
-                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
-                                                <span class="block-letter"{% if b.block_letter_width %} style="width: {{ b.block_letter_width }}px"{% endif %}>
-                                                    {{ b.block_letter }}
-                                                </span>
-                                                {% if b.locked %}
-                                                    <i class="fa fa-lock"></i>
-                                                {% endif %}
-                                                <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags_no_restricted }}{% endif %}">
-                                                    {% if b.current_signup_cancelled %}
-                                                        <strong>Cancelled</strong> -
-                                                    {% endif %}
-                                                    {% if b.current_signup %}
-                                                        {{ b.current_signup.name_with_flags_no_restricted }}
-                                                    {% else %}
-                                                        <span class="no-activity-selected">
-                                                            No activity selected
-                                                        </span>
-                                                    {% endif %}
-                                                </span>
-                                            </div>
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                        </li>
-                    {% empty %}
-                        <div class="day-title">
-                            There are no eighth period blocks scheduled at this time.
-                        </div>
-                    {% endfor %}
-                {% endspaceless %}
             </ul>
         </div>
 
@@ -276,17 +343,21 @@
                         {% if active_block.locked %}
                             <i class="fa fa-lock"></i>
                         {% endif %}
-                        {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                        {{ active_block.date|date:"l, F j, Y" }}
                     </h2>
                     <h4>
-                        {% if block_info.block_letter %}
-                            {% if block_info.block_letter|contains_digit %}
-                                Block {{ block_info.block_letter }}
+                        {% if active_block.block_letter %}
+                            {% if active_block.block_letter|contains_digit %}
+                                Block {{ active_block.block_letter }}
                             {% else %}
-                                {{ block_info.block_letter }} Block
+                                {{ active_block.block_letter }} Block
                             {% endif %}
                         {% endif %}
                     </h4>
+                </div>
+
+                <div class="unsignup">
+                    <button id="unsignup-button" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}">Remove Signup</button>
                 </div>
 
                 <div class="switch">
@@ -312,7 +383,7 @@
                 <h5 class="sticky-header">All</h5>
                 <ul class="all-activities"></ul>
             </div>
-            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
+            <div id="activity-detail" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
                 <h3 class="empty-state">
                     Select an activity
                 </h3>

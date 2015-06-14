@@ -10,6 +10,14 @@ from ...models import EighthActivity, EighthScheduledActivity
 logger = logging.getLogger(__name__)
 
 
+class ActivityDisplayField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{}: {}".format(obj.aid, obj.name)
+
+class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "{}: {}".format(obj.aid, obj.name)
+
 class ActivitySelectionForm(forms.Form):
 
     def __init__(self, label="Activity", block=None, sponsor=None, *args, **kwargs):
@@ -38,9 +46,9 @@ class ActivitySelectionForm(forms.Form):
             else:
                 queryset = EighthActivity.undeleted_objects.all()
 
-        self.fields["activity"] = forms.ModelChoiceField(queryset=queryset,
-                                                         label=label,
-                                                         empty_label="Select an activity")
+        self.fields["activity"] = ActivityDisplayField(queryset=queryset,
+                                                       label=label,
+                                                       empty_label="Select an activity")
 
 
 class QuickActivityForm(forms.ModelForm):
@@ -49,9 +57,8 @@ class QuickActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = ["name"]
 
-
 class ActivityMultiSelectForm(forms.Form):
-    activities = forms.ModelMultipleChoiceField(queryset=None)
+    activities = ActivityMultiDisplayField(queryset=None)
 
     def __init__(self, label="Activities", *args, **kwargs):
         super(ActivityMultiSelectForm, self).__init__(*args, **kwargs)
@@ -59,7 +66,7 @@ class ActivityMultiSelectForm(forms.Form):
 
 
 class ScheduledActivityMultiSelectForm(forms.Form):
-    activities = forms.ModelMultipleChoiceField(queryset=None)
+    activities = ActivityMultiDisplayField(queryset=None)
 
     def __init__(self, label="Activities", block=None, *args, **kwargs):
         super(ScheduledActivityMultiSelectForm, self).__init__(*args, **kwargs)
@@ -100,6 +107,7 @@ class ActivityForm(forms.ModelForm):
             "description",
             "sponsors",
             "rooms",
+            "aid",
             "presign",
             "one_a_day",
             "both_blocks",
