@@ -41,6 +41,20 @@ def eighth_signup_view(request, block_id=None):
         except User.DoesNotExist:
             return http.HttpResponseNotFound("Given user does not exist.")
 
+        if "unsignup" in request.POST and not aid:
+            try:
+                eighth_signup = (EighthSignup.objects
+                                             .get(scheduled_activity__block__id=bid,
+                                                  user__id=uid))
+                success_message = eighth_signup.remove_signup(request.user)
+            except EighthSignup.DoesNotExist:
+                return http.HttpResponse("The signup did not exist.")
+            except SignupException as e:
+                show_admin_messages = (request.user.is_eighth_admin and
+                                   not request.user.is_student)
+                return e.as_response(admin=show_admin_messages)
+
+
         try:
             scheduled_activity = (EighthScheduledActivity.objects
                                                          .exclude(activity__deleted=True)

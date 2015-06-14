@@ -883,6 +883,39 @@ class EighthSignup(AbstractBaseEighthModel):
                                    "and the EighthScheduledActivity's block",)
             })
 
+    def remove_signup(self, user=None):
+        """Attempt to remove the EighthSignup if the user has permission
+        to do so."""
+
+        exception = eighth_exceptions.SignupException()
+
+        if user is not None:
+            if user != self.user and not user.is_eighth_admin:
+                exception.SignupForbidden = True
+
+        # Check if the block has been locked
+        if self.scheduled_activity.block.locked:
+            exception.BlockLocked = True
+
+        # Check if the scheduled activity has been cancelled
+        if self.scheduled_activity.cancelled:
+            exception.ScheduledActivityCancelled = True
+
+        # Check if the activity has been deleted
+        if self.scheduled_activity.activity.deleted:
+            exception.ActivityDeleted = True
+
+        # Check if the user is already stickied into an activity
+        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky:
+            exception.Sticky = True
+
+        if len(exception.messages()) > 0:
+            raise exception
+        else:
+            block = self.scheduled_activity.block
+            self.delete()
+            return "Successfully removed signup for {}.".format(block)
+
     def __unicode__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity)
