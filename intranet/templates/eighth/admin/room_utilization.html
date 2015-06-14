@@ -7,6 +7,12 @@
     <script type="text/javascript">
         $(function() {
             Sortable.init();
+
+            $("#export-csv").click(function(event) {
+                event.preventDefault();
+                document.forms["choose-fields"].action = $(this).attr("href");
+                document.forms["choose-fields"].submit();
+            });
         });
     </script>
 {% endblock %}
@@ -64,8 +70,10 @@
                 <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} />Signups</td>
                 <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} />Capacity</td>
                 <th><input type="submit" value="Apply" /></th>
+                <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
             </tr>
         </table>
+        
         <br />
         Click on column titles to sort.
         <table data-sortable class="fancy-table">

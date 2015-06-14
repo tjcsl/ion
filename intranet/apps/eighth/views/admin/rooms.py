@@ -267,6 +267,39 @@ def room_utilization_action(request, start_id, end_id):
         "room_ids": [int(i) for i in room_ids]
     }
 
+    if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"room_utilization.csv\""
+
+        writer = csv.writer(response)
+
+        title_row = []
+        for opt in show_opts:
+            if show[opt]:
+                title_row.append(opt.capitalize())
+        writer.writerow(title_row)
+
+        for sch_act in sched_acts:
+            row = []
+            if show["block"]:
+                row.append(sch_act.block)
+            if show["rooms"]:
+                row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            if show["aid"]:
+                row.append(sch_act.activity.aid)
+            if show["activity"]:
+                row.append(sch_act.activity)
+            if show["sponsors"]:
+                row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
+            if show["signups"]:
+                row.append(sch_act.members.count())
+            if show["capacity"]:
+                row.append(sch_act.get_true_capacity())
+
+            writer.writerow(row)
+
+        return response
+
     return render(request, "eighth/admin/room_utilization.html", context)
 
 room_utilization_view = eighth_admin_required(

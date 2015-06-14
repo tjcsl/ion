@@ -92,6 +92,7 @@ eighth_admin_patterns = [
     url(r"^rooms/block_utilization/csv$", rooms.room_utilization_for_block_view, name="eighth_admin_room_utilization_for_block_csv"),
     url(r"^rooms/utilization$", rooms.room_utilization_view, name="eighth_admin_room_utilization"),
     url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)$", rooms.room_utilization_action, name="eighth_admin_room_utilization"),
+    url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)/csv$", rooms.room_utilization_action, name="eighth_admin_room_utilization_csv"),
 
 
     # Sponsors
