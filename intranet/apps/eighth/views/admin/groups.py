@@ -475,11 +475,7 @@ def eighth_admin_distribute_action(request):
             else:
                 raise http.Http404
 
-            students = User.objects.get_students()
-            for student in students:
-                su = EighthSignup.objects.filter(user=student, scheduled_activity__block__id=blockid)
-                if len(su) == 0:
-                    unsigned.append(student)
+            unsigned = User.objects.get_students().exclude(eighthsignup__scheduled_activity__block__id=blockid)
 
             users = unsigned
             users_type = "unsigned"
