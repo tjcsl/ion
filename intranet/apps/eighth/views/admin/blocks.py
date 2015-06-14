@@ -68,9 +68,17 @@ def add_multiple_blocks_view(request):
 
 
     letters = []
+    visible_blocks = ["A","B","C","D","E","F","G","H"]
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
-        for l in "ABCDEFGH":
+        for blk in onday:
+            if blk.block_letter not in visible_blocks:
+                visible_blocks.append(blk.block_letter)
+                letters.append({
+                    "name": blk.block_letter,
+                    "exists": True
+                })
+        for l in visible_blocks:
             exists = onday.filter(block_letter=l)
             letters.append({
                 "name": l,
