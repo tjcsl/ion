@@ -484,6 +484,10 @@ def eighth_admin_distribute_action(request):
             users = unsigned
             users_type = "unsigned"
 
+
+        # Sort by last name
+        users = sorted(list(users), key=lambda x: x.last_name)
+
         context = {
             "admin_page_title": "Distribute Group Members Across Activities",
             "users_type": users_type,
