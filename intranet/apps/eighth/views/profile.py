@@ -166,6 +166,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "real_user": request.user,
         "activities_list": activities_list,
         "active_block": block,
-        "active_block_current_signup": active_block_current_signup
+        "active_block_current_signup": active_block_current_signup,
+        "show_eighth_profile_link": True
     }
     return render(request, "eighth/profile_signup.html", context)

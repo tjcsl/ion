@@ -9,8 +9,6 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
     {% if not real_user.is_eighth_admin %}
@@ -23,6 +21,9 @@
     }
     </style>
     {% endif %}
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
 {% endblock %}
 
 {% block js %}
@@ -284,14 +285,14 @@
                         {% if active_block.locked %}
                             <i class="fa fa-lock"></i>
                         {% endif %}
-                        {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                        {{ active_block.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                     </h2>
                     <h4>
-                        {% if block_info.block_letter %}
-                            {% if block_info.block_letter|contains_digit %}
-                                Block {{ block_info.block_letter }}
+                        {% if active_block.block_letter %}
+                            {% if active_block.block_letter|contains_digit %}
+                                Block {{ active_block.block_letter }}
                             {% else %}
-                                {{ block_info.block_letter }} Block
+                                {{ active_block.block_letter }} Block
                             {% endif %}
                         {% endif %}
                     </h4>
