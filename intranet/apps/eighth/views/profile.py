@@ -57,8 +57,7 @@ def edit_profile_view(request, user_id=None):
     }
     return render(request, "eighth/edit_profile.html", context)
 
-@login_required
-def profile_view(request, user_id=None):
+def get_profile_context(request, user_id=None, date=None):
     if user_id:
         try:
             profile_user = User.objects.get(id=user_id)
@@ -71,7 +70,9 @@ def profile_view(request, user_id=None):
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
     custom_date_set = False
-    if "date" in request.GET:
+    if date:
+        custom_date_set = True
+    elif "date" in request.GET:
         date = request.GET.get("date")
         date = datetime.strptime(date, "%Y-%m-%d")
         custom_date_set = True
@@ -118,9 +119,15 @@ def profile_view(request, user_id=None):
         "skipped_ahead": skipped_ahead,
         "custom_date_set": custom_date_set
     }
+
+    return context
+
+@login_required
+def profile_view(request, user_id=None):
+    context = get_profile_context(request, user_id)
     return render(request, "eighth/profile.html", context)
 
-
+@login_required
 def profile_signup_view(request, user_id=None, block_id=None):
     if user_id:
         try:
@@ -157,16 +164,17 @@ def profile_signup_view(request, user_id=None, block_id=None):
 
     try:
         active_block_current_signup = EighthSignup.objects.get(user=user, scheduled_activity__block__id=block_id)
+        active_block_current_signup = active_block_current_signup.scheduled_activity.activity.id
     except EighthSignup.DoesNotExist:
         active_block_current_signup = None
 
     context = {
         "user": user,
-        "profile_user": user,
         "real_user": request.user,
         "activities_list": activities_list,
         "active_block": block,
         "active_block_current_signup": active_block_current_signup,
         "show_eighth_profile_link": True
     }
+    context.update(get_profile_context(request, user_id, block.date))
     return render(request, "eighth/profile_signup.html", context)
