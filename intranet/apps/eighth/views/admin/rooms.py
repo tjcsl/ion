@@ -260,6 +260,8 @@ def room_utilization_action(request, start_id, end_id):
     else:
         show = {name: name in show_vals for name in show_opts}
 
+    hide_administrative = "hide_administrative" in request.GET and request.GET.get("hide_administrative") != "0"
+
     context = {
         "scheduled_activities": sched_acts,
         "admin_page_title": "Room Utilization",
@@ -267,7 +269,8 @@ def room_utilization_action(request, start_id, end_id):
         "end_block": end_block,
         "show": show,
         "rooms": rooms,
-        "room_ids": [int(i) for i in room_ids]
+        "room_ids": [int(i) for i in room_ids],
+        "hide_administrative": hide_administrative
     }
 
     if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
@@ -284,6 +287,9 @@ def room_utilization_action(request, start_id, end_id):
 
         for sch_act in sched_acts:
             row = []
+            if sch_act.activity.administrative and hide_administrative:
+                continue
+
             if show["block"]:
                 row.append(sch_act.block)
             if show["rooms"]:

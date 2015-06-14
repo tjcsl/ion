@@ -13,6 +13,16 @@
                 document.forms["choose-fields"].action = $(this).attr("href");
                 document.forms["choose-fields"].submit();
             });
+
+            $("#hide-administrative").on("change", function() {
+                var sel = $(this).prop("checked");
+                if(document.forms["choose-fields"].hide_administrative) {
+                    document.forms["choose-fields"].hide_administrative.value = sel?1:0;
+                }
+            });
+            {% if hide_administrative %}
+                $("tr.administrative").toggle();
+            {% endif %}
         });
     </script>
 {% endblock %}
@@ -55,7 +65,7 @@
             <input type="submit" value="Filter" />
         </form>
 
-        <input type="checkbox" id="hide-administrative">
+        <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
         <label for="hide-administrative">Hide administrative</label>
 
         <br />
@@ -63,6 +73,7 @@
         <form action="" method="get" name="choose-fields">
         <table class="choose-fields fancy-table">
             <tr>
+                <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}" />
             {% for room in room_ids %}
                 <input type="hidden" name="room" value="{{ room }}" />
             {% endfor %}
