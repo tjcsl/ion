@@ -62,13 +62,15 @@
             {% for room in room_ids %}
                 <input type="hidden" name="room" value="{{ room }}" />
             {% endfor %}
-                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} />Block</td>
-                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} />Rooms</td>
-                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} />Activity ID</td>
-                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} />Activity Name</td>
-                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} />Sponsor(s)</td>
-                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} />Signups</td>
-                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} />Capacity</td>
+                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} /><br />Block</td>
+                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} /><br />Rooms</td>
+                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} /><br />AID</td>
+                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity Name</td>
+                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
+                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
+                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
+                <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
+                <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
                 <th><input type="submit" value="Apply" /></th>
                 <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
             </tr>
@@ -80,12 +82,14 @@
             <thead>
                 <tr>
                     {% if show.block %}<th>Block</th>{% endif %}
-                    {% if show.rooms %}<th>Room(s)</th>{% endif %}
-                    {% if show.aid %}<th>Activity ID</th>{% endif %}
-                    {% if show.activity %}<th>Activity Name</th>{% endif %}
-                    {% if show.sponsors %}<th>Sponsor(s)</th>{% endif %}
+                    {% if show.rooms %}<th>Rooms</th>{% endif %}
+                    {% if show.aid %}<th>AID</th>{% endif %}
+                    {% if show.activity %}<th>Activity</th>{% endif %}
+                    {% if show.sponsors %}<th>Sponsors</th>{% endif %}
                     {% if show.signups %}<th>Signups</th>{% endif %}
                     {% if show.capacity %}<th>Capacity</th>{% endif %}
+                    {% if show.comments %}<th>Comments</th>{% endif %}
+                    {% if show.admin_comments %}<th>Admin Comments</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +115,12 @@
                         {% endif %}
                         {% if show.capacity %}
                             <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                        {% endif %}
+                        {% if show.comments %}
+                            <td>{{ sched_act.comments }}</td>
+                        {% endif %}
+                        {% if show.admin_comments %}
+                            <td>{{ sched_act.admin_comments }}</td>
                         {% endif %}
                     </tr>
                 {% empty %}

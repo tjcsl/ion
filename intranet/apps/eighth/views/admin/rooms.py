@@ -251,9 +251,12 @@ def room_utilization_action(request, start_id, end_id):
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
-    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
+    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity", "comments", "admin_comments"]
+    show_opts_defaults = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
+    show_opts_hidden = ["comments", "admin_comments"]
     if len(show_vals) == 0:
-        show = {name: True for name in show_opts}
+        show = {name: True for name in show_opts_defaults}
+        show.update({name: False for name in show_opts_hidden})
     else:
         show = {name: name in show_vals for name in show_opts}
 
@@ -276,7 +279,7 @@ def room_utilization_action(request, start_id, end_id):
         title_row = []
         for opt in show_opts:
             if show[opt]:
-                title_row.append(opt.capitalize())
+                title_row.append(opt.capitalize().replace("_", " "))
         writer.writerow(title_row)
 
         for sch_act in sched_acts:
@@ -295,6 +298,10 @@ def room_utilization_action(request, start_id, end_id):
                 row.append(sch_act.members.count())
             if show["capacity"]:
                 row.append(sch_act.get_true_capacity())
+            if show["comments"]:
+                row.append(sch_act.comments)
+            if show["admin_comments"]:
+                row.append(sch_act.admin_comments)
 
             writer.writerow(row)
 
