@@ -202,11 +202,20 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
                                              .order_by("block__date",
                                                        "block__block_letter"))
 
+        # If a "show" GET parameter is defined, only show the values that are given.
+        show_vals = self.request.GET.getlist("show")
+        show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
+        if len(show_vals) == 0:
+            show = {name: True for name in show_opts}
+        else:
+            show = {name: name in show_vals for name in show_opts}
+
         context = {
             "scheduled_activities": sched_acts,
             "admin_page_title": "Room Utilization",
             "start_block": start_block,
-            "end_block": end_block
+            "end_block": end_block,
+            "show": show
         }
 
         return render(self.request, "eighth/admin/room_utilization.html", context)
