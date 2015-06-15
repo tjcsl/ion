@@ -62,7 +62,18 @@ $(function() {
     }
 
     var updateBlockCheckboxes = function() {
-        $blockCheckboxes.prop("checked", $(this).prop("checked"));
+        var chk = $(this).prop("checked");
+        console.debug(chk);
+        $blockCheckboxes.prop("checked", chk);
+        try {
+            if(chk) {
+                $blockCheckboxes.parent().parent().removeClass("hidden");
+                $blockCheckboxes.parent().parent().data("hidden", false);
+            } else {
+                $blockCheckboxes.parent().parent().addClass("hidden");
+                $blockCheckboxes.parent().parent().data("hidden", true);
+            }
+        } catch(e) {}
     }
 
     $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
