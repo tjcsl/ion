@@ -1,9 +1,19 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            $("form#select_form select").on("change", function() {
+                document.forms["select_form"].submit();
+            });
+        })
+    </script>
+{% endblock %}
 
 {% block admin_main %}
     <h4>Select a Block:</h4>
 
-    <form action="{% url 'eighth_admin_migrate_outstanding_passes' %}" method="post" class="select-form">
+    <form action="{% url 'eighth_admin_migrate_outstanding_passes' %}" method="post" class="select-form" id="select_form" name="select_form">
             {% csrf_token %}
             <select name="block" placeholder="Select or search for a block">
             <option value="">Select or search for a block</option>
