@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
 import logging
-from django import http
+from django import http, forms
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
@@ -41,9 +41,14 @@ def edit_activity_view(request, activity_id):
     if request.method == "POST":
         form = ActivityForm(request.POST, instance=activity)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Successfully edited activity.")
-            return redirect("eighth_admin_dashboard")
+            try:
+                form.save()
+            except forms.ValidationError as error:
+                error = str(error)
+                messages.error(request, error)
+            else:
+                messages.success(request, "Successfully edited activity.")
+                return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding activity.")
     else:
