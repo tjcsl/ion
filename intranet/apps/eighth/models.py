@@ -368,6 +368,10 @@ class EighthBlock(AbstractBaseEighthModel):
         """Does the block occur today?"""
         return datetime.date.today() == self.date
 
+    @property
+    def letter_width(self):
+        return (len(self.block_letter) - 1) * 6 + 15
+
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
         return "{} ({})".format(formatted_date, self.block_letter)
