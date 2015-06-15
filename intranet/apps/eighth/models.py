@@ -60,7 +60,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def name(self):
-        if self.show_full_name:
+        if self.show_full_name and self.first_name:
             return self.last_name + ", " + self.first_name
         else:
             return self.last_name
@@ -481,6 +481,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         activity defaults and overrides.
         """
 
+        # When an activity is cancelled, automatically
+        # return sponsor and room as CANCELLED.
+        if self.cancelled:
+            return [EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]]
+
         sponsors = self.sponsors.all()
         if len(sponsors) > 0:
             return sponsors
@@ -507,6 +512,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         """
 
+        # When an activity is cancelled, automatically
+        # return sponsor and room as CANCELLED.
+        if self.cancelled:
+            return [EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]]
+
+
         rooms = self.rooms.all()
         if len(rooms) > 0:
             return rooms
@@ -518,6 +529,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         account activity defaults and overrides.
 
         """
+
+        # When an activity is cancelled, automatically
+        # return sponsor and room as CANCELLED.
+        if self.cancelled:
+            return 0
 
         c = self.capacity
         if c is not None:
