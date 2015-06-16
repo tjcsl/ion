@@ -10,7 +10,7 @@ from rest_framework.renderers import JSONRenderer
 from ...auth.decorators import eighth_admin_required
 from ...users.models import User
 from ...users.forms import ProfileEditForm
-from ..models import EighthBlock, EighthSignup
+from ..models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
 logger = logging.getLogger(__name__)
 
@@ -119,6 +119,25 @@ def get_profile_context(request, user_id=None, date=None):
         "skipped_ahead": skipped_ahead,
         "custom_date_set": custom_date_set
     }
+
+    if profile_user.is_eighth_sponsor:
+        sponsor = EighthSponsor.objects.get(user=profile_user)
+
+        logger.debug("Eighth sponsor {}".format(sponsor))
+
+        eighth_sponsor_schedule = []
+        start_block = EighthBlock.objects.get_first_upcoming_block()
+        num_blocks = 6
+        if start_block:
+            activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                    .filter(block__date__gt=start_block.date))
+            logger.debug(activities_sponsoring)
+            surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
+            for b in surrounding_blocks:
+                sponsored_for_block = activities_sponsoring.filter(block=b)
+                for schact in sponsored_for_block:
+                    eighth_sponsor_schedule.append(schact)
+        context.update({"eighth_sponsor_schedule": eighth_sponsor_schedule})
 
     return context
 
