@@ -56,29 +56,22 @@ class EighthBlockDetail(views.APIView):
         serializer = EighthBlockDetailSerializer(block, context={"request": request})
         return Response(serializer.data)
 
+class EighthUserSignupListAdd(generics.ListCreateAPIView):
+    serializer_class = EighthAddSignupSerializer
 
-class EighthUserSignupList(views.APIView):
-
-    """API endpoint that lists all signups for a certain user
-    """
-
-    def get(self, request, user_id=None):
+    def list(self, request, user_id=None):
         if not user_id:
             user_id = request.user.id
 
         signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
 
-        # if block_id is not None:
-        # signups = signups.filter(activity__block_id=block_id)
-
-        #serialized = [EighthSignupSerializer(signup, context={"request": request}).data for signup in signups]
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
         return Response(serialized.data)
 
-    def post(self, request, user_id=None):
+    def create(self, request, user_id=None):
         if user_id:
-            user = User.objects.filter(id=user_id)
+            user = User.objects.get(id=user_id)
         else:
             user = request.user
 
@@ -86,7 +79,7 @@ class EighthUserSignupList(views.APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if "scheduled_activity" in serializer.validated_data:
+        if "activity" not in serializer.validated_data or "block" not in serializer.validated_data or serializer.validated_data.get("use_scheduled_activity", False):
             schactivity = serializer.validated_data["scheduled_activity"]
         else:
             schactivity = EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"]).filter(block=serializer.validated_data["block"]).get()
@@ -98,7 +91,7 @@ class EighthUserSignupList(views.APIView):
         schactivity.add_user(user, request, force=force)
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
-        
+
 class EighthScheduledActivitySignupList(views.APIView):
 
     """API endpoint that lists all signups for a certain scheduled activity
@@ -110,7 +103,6 @@ class EighthScheduledActivitySignupList(views.APIView):
         serializer = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
         return Response(serializer.data)
-
 
 class EighthSignupDetail(generics.RetrieveAPIView):
 

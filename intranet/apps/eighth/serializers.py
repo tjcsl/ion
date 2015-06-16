@@ -273,15 +273,17 @@ class EighthSignupSerializer(serializers.ModelSerializer):
 def add_signup_validator(value):
     if 'scheduled_activity' in value:
         return
-    if 'block' in value and 'activity' in value:
+    if 'block' in value and 'activity' in value and not value.get('use_scheduled_activity', False):
         return
-    raise serializers.ValidationError('Either scheduled_activity, or block and activity must exist.')
+    raise serializers.ValidationError('Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity.')
 
 class EighthAddSignupSerializer(serializers.Serializer):
     block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all(), required=False)
     activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all(), required=False)
-    scheduled_activity = serializers.PrimaryKeyRelatedField(queryset=EighthScheduledActivity.objects.all(), required=False)
-    force = serializers.BooleanField(label='force', required=False)
+    scheduled_activity = serializers.PrimaryKeyRelatedField(queryset=EighthScheduledActivity.objects.select_related('activity').select_related('block'), required=False)
+    use_scheduled_activity = serializers.BooleanField(required=False)
+    force = serializers.BooleanField(required=False)
 
     class Meta:
         validators = [add_signup_validator]
+
