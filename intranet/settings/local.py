@@ -106,3 +106,6 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar",
         "debug_toolbar_line_profiler",
     )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+
