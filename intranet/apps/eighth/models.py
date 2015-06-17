@@ -481,11 +481,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         activity defaults and overrides.
         """
 
-        # When an activity is cancelled, automatically
-        # return sponsor and room as CANCELLED.
-        if self.cancelled:
-            return [EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]]
-
         sponsors = self.sponsors.all()
         if len(sponsors) > 0:
             return sponsors
@@ -512,11 +507,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         """
 
-        # When an activity is cancelled, automatically
-        # return sponsor and room as CANCELLED.
-        if self.cancelled:
-            return [EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]]
-
 
         rooms = self.rooms.all()
         if len(rooms) > 0:
@@ -529,11 +519,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         account activity defaults and overrides.
 
         """
-
-        # When an activity is cancelled, automatically
-        # return sponsor and room as CANCELLED.
-        if self.cancelled:
-            return 0
 
         c = self.capacity
         if c is not None:
@@ -829,6 +814,36 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
 
         return success_message
+
+    def save(self, *args, **kwargs):
+        """If the EighthScheduledActivity has been cancelled, update the
+        rooms and sponsors to be "CANCELLED".
+        """
+
+        super(EighthScheduledActivity, self).save(*args, **kwargs)
+
+        logger.debug("Act cancelled: {}".format(self.cancelled))
+
+        cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
+        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
+
+        if self.cancelled:
+            if cancelled_room not in self.rooms.all():
+                self.rooms.all().delete()
+                self.rooms.add(cancelled_room)
+
+            if cancelled_sponsor not in self.sponsors.all():
+                self.sponsors.all().delete()
+                self.sponsors.add(cancelled_sponsor)
+        else:
+            if cancelled_room in self.rooms.all():
+                self.rooms.filter(id=cancelled_room.id).delete()
+
+            if cancelled_sponsor in self.sponsors.all():
+                self.sponsors.filter(id=cancelled_sponsor.id).delete()
+
+        super(EighthScheduledActivity, self).save(*args, **kwargs)
+    
 
     class Meta:
         unique_together = (("block", "activity"),)

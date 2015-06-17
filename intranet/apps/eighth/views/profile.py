@@ -12,6 +12,7 @@ from ...users.models import User
 from ...users.forms import ProfileEditForm
 from ..models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
 from ..serializers import EighthBlockDetailSerializer
+from ..utils import get_start_date
 logger = logging.getLogger(__name__)
 
 
@@ -122,21 +123,14 @@ def get_profile_context(request, user_id=None, date=None):
 
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
+        start_date = get_start_date(request)
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                   .filter(block__date__gte=start_date)
+                                                                   .order_by("block__date",
+                                                                             "block__block_letter"))
 
         logger.debug("Eighth sponsor {}".format(sponsor))
 
-        eighth_sponsor_schedule = []
-        start_block = EighthBlock.objects.get_first_upcoming_block()
-        num_blocks = 6
-        if start_block:
-            activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                                    .filter(block__date__gt=start_block.date))
-            logger.debug(activities_sponsoring)
-            surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
-            for b in surrounding_blocks:
-                sponsored_for_block = activities_sponsoring.filter(block=b)
-                for schact in sponsored_for_block:
-                    eighth_sponsor_schedule.append(schact)
         context.update({"eighth_sponsor_schedule": eighth_sponsor_schedule})
 
     return context
