@@ -19,7 +19,8 @@ class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthActivity
         fields = ("id",
-                  "name")
+                  "name",
+                  "url")
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
 
