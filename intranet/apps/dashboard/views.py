@@ -71,6 +71,8 @@ def gen_sponsor_schedule(user, num_blocks=6):
     sponsor = user.get_eighth_sponsor()
 
     block = EighthBlock.objects.get_first_upcoming_block()
+    if block is None:
+        return [], False
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .filter(block__date__gte=block.date))
 
