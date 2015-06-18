@@ -19,15 +19,16 @@ class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EighthActivity
         fields = ("id",
+                  "aid",
+                  "url",
                   "name")
 
-class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+class EighthActivityDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EighthActivity
         fields = ("id",
                   "aid",
-                  "url",
                   "name",
                   "description",
                   "administrative",
