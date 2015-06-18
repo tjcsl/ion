@@ -22,7 +22,14 @@ class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
                   "name",
                   "url")
 
+
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
+    scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
+
+    def fetch_scheduled_on(self, act):
+        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act)
+        #return scheduled_activities
+
 
     class Meta:
         model = EighthActivity
@@ -35,7 +42,8 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                   "one_a_day",
                   "both_blocks",
                   "sticky",
-                  "special")
+                  "special",
+                  "scheduled_on")
 
 
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,6 +64,67 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=10)
 
+    def process_scheduled_activity(self, scheduled_activity, user=None, favorited_activities=None, available_restricted_acts=None):
+        if user is None:
+           user = self.context.get("user", self.context["request"].user)
+        if favorited_activities is None:
+            favorited_activities = set(user.favorited_activity_set
+                                           .values_list("id", flat=True))
+        if available_restricted_acts is None:
+            available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
+
+
+        activity = scheduled_activity.activity
+        restricted_for_user = (activity.restricted and
+                               not (user.is_eighth_admin and not user.is_student)
+                               and (activity.id not in available_restricted_acts))
+        prefix = "Special: " if activity.special else ""
+        prefix += activity.name
+        if scheduled_activity.title:
+            prefix += " - " + scheduled_activity.title
+        middle = " (R)" if restricted_for_user else ""
+        suffix = " (BB)" if activity.both_blocks else ""
+        suffix += " (A)" if activity.administrative else ""
+        suffix += " (S)" if activity.sticky else ""
+        suffix += " (Deleted)" if activity.deleted else ""
+
+        name_with_flags = prefix + middle + suffix
+        name_with_flags_for_user = prefix + (middle if restricted_for_user else "") + suffix
+
+        activity_info = {
+            "id": activity.id,
+            "scheduled_activity": scheduled_activity.id,
+            "url": reverse("api_eighth_activity_detail",
+                           args=[activity.id],
+                           request=self.context["request"]),
+            "name": activity.name,
+            "name_with_flags": name_with_flags,
+            "name_with_flags_for_user": name_with_flags_for_user,
+            "description": activity.description,
+            "cancelled": scheduled_activity.cancelled,
+            "favorited": activity.id in favorited_activities,
+            "roster": {
+                "count": 0,
+                "capacity": 0,
+                "url": reverse("api_eighth_scheduled_activity_signup_list",
+                               args=[scheduled_activity.id],
+                               request=self.context["request"])
+            },
+            "rooms": [],
+            "sponsors": [],
+            "restricted": activity.restricted,
+            "restricted_for_user": restricted_for_user,
+            "both_blocks": activity.both_blocks,
+            "special": activity.special,
+            "administrative": activity.administrative,
+            "sticky": activity.sticky,
+            "title": scheduled_activity.title,
+            "comments": scheduled_activity.comments,
+            "display_text": ""
+        }
+        return activity_info
+
+
     def fetch_activity_list_with_metadata(self, block):
         activity_list = {}
         scheduled_activity_to_activity_map = {}
@@ -72,56 +141,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         for scheduled_activity in scheduled_activities:
+            activity_info = self.process_scheduled_activity(scheduled_activity, user, favorited_activities, available_restricted_acts)
             activity = scheduled_activity.activity
-            restricted_for_user = (activity.restricted and
-                                   not (user.is_eighth_admin and not user.is_student)
-                                   and (activity.id not in available_restricted_acts))
-            prefix = "Special: " if activity.special else ""
-            prefix += activity.name
-            if scheduled_activity.title:
-                prefix += " - " + scheduled_activity.title
-            middle = " (R)" if restricted_for_user else ""
-            suffix = " (BB)" if activity.both_blocks else ""
-            suffix += " (A)" if activity.administrative else ""
-            suffix += " (S)" if activity.sticky else ""
-            suffix += " (Deleted)" if activity.deleted else ""
-
-            name_with_flags = prefix + middle + suffix
-            name_with_flags_for_user = prefix + (middle if restricted_for_user else "") + suffix
-
-            activity_info = {
-                "id": activity.id,
-                "scheduled_activity": scheduled_activity.id,
-                "url": reverse("api_eighth_activity_detail",
-                               args=[activity.id],
-                               request=self.context["request"]),
-                "name": activity.name,
-                "name_with_flags": name_with_flags,
-                "name_with_flags_for_user": name_with_flags_for_user,
-                "description": activity.description,
-                "cancelled": scheduled_activity.cancelled,
-                "favorited": activity.id in favorited_activities,
-                "roster": {
-                    "count": 0,
-                    "capacity": 0,
-                    "url": reverse("api_eighth_scheduled_activity_signup_list",
-                                   args=[scheduled_activity.id],
-                                   request=self.context["request"])
-                },
-                "rooms": [],
-                "sponsors": [],
-                "restricted": activity.restricted,
-                "restricted_for_user": restricted_for_user,
-                "both_blocks": activity.both_blocks,
-                "special": activity.special,
-                "administrative": activity.administrative,
-                "sticky": activity.sticky,
-                "title": scheduled_activity.title,
-                "comments": scheduled_activity.comments,
-                "display_text": ""
-            }
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
-
             activity_list[activity.id] = activity_info
 
         # Find the number of students signed up for every activity

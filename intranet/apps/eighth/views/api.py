@@ -25,6 +25,7 @@ class EighthActivityList(generics.ListAPIView):
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityListSerializer
 
+
 class EighthActivityDetail(generics.RetrieveAPIView):
 
     """API endpoint that shows details of an eighth activity.
@@ -55,6 +56,7 @@ class EighthBlockDetail(views.APIView):
 
         serializer = EighthBlockDetailSerializer(block, context={"request": request})
         return Response(serializer.data)
+
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
@@ -92,6 +94,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
+
 class EighthScheduledActivitySignupList(views.APIView):
 
     """API endpoint that lists all signups for a certain scheduled activity
@@ -103,6 +106,7 @@ class EighthScheduledActivitySignupList(views.APIView):
         serializer = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
         return Response(serializer.data)
+
 
 class EighthSignupDetail(generics.RetrieveAPIView):
 
