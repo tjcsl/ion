@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import csv
 from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http
@@ -149,6 +150,32 @@ def room_utilization_for_block_view(request):
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "Room Utilization for Block"
+
+    if request.resolver_match.url_name == "eighth_admin_room_utilization_for_block_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"room_utilization_for_block.csv\""
+
+        writer = csv.writer(response)
+        writer.writerow(["Rooms",
+                         "Activity ID",
+                         "Activity",
+                         "Sponsors",
+                         "Signups",
+                         "Capacity"])
+
+        for sch_act in scheduled_activities:
+            row = []
+            row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            row.append(sch_act.activity.id)
+            row.append(sch_act.activity)
+            row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
+            row.append(sch_act.members.count())
+            row.append(sch_act.get_true_capacity())
+
+            writer.writerow(row)
+
+        return response
+
     return render(request, "eighth/admin/room_utilization_for_block.html", context)
 
 
@@ -194,22 +221,102 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
-        sched_acts = (EighthScheduledActivity.objects
-                                             .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
-                                             .filter(block__date__gte=start_block.date,
-                                                     block__date__lte=end_block.date)
-                                             .order_by("block__date",
-                                                       "block__block_letter"))
+        return redirect("eighth_admin_room_utilization", start_block.id, end_block.id)
+        
 
-        context = {
-            "scheduled_activities": sched_acts,
-            "admin_page_title": "Room Utilization",
-            "start_block": start_block,
-            "end_block": end_block
-        }
+def room_utilization_action(request, start_id, end_id):
+    try:
+        start_block = EighthBlock.objects.get(id=start_id)
+        end_block = EighthBlock.objects.get(id=end_id)
+    except EighthBlock.DoesNotExist:
+        raise Http404
 
-        return render(self.request, "eighth/admin/room_utilization.html", context)
+    sched_acts = (EighthScheduledActivity.objects
+                                         .exclude(activity__deleted=True)
+                                         .exclude(cancelled=True)
+                                         .filter(block__date__gte=start_block.date,
+                                                 block__date__lte=end_block.date)
+                                         .order_by("block__date",
+                                                   "block__block_letter"))
+    all_rooms = EighthRoom.objects.all().order_by("name")
+
+    room_ids = request.GET.getlist("room")
+    if "room" in request.GET:
+        rooms = EighthRoom.objects.filter(id__in=room_ids)
+        all_sched_acts = sched_acts
+        sched_acts = []
+        for sched_act in all_sched_acts:
+            if len(set(rooms).intersection(set(sched_act.get_true_rooms()))) > 0:
+                sched_acts.append(sched_act)
+    else:
+        rooms = all_rooms
+
+    # If a "show" GET parameter is defined, only show the values that are given.
+    show_vals = request.GET.getlist("show")
+    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity", "comments", "admin_comments"]
+    show_opts_defaults = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
+    show_opts_hidden = ["comments", "admin_comments"]
+    if len(show_vals) == 0:
+        show = {name: True for name in show_opts_defaults}
+        show.update({name: False for name in show_opts_hidden})
+    else:
+        show = {name: name in show_vals for name in show_opts}
+
+    hide_administrative = "hide_administrative" in request.GET and request.GET.get("hide_administrative") != "0"
+
+    context = {
+        "scheduled_activities": sched_acts,
+        "admin_page_title": "Room Utilization",
+        "start_block": start_block,
+        "end_block": end_block,
+        "show": show,
+        "rooms": rooms,
+        "all_rooms": all_rooms,
+        "room_ids": [int(i) for i in room_ids],
+        "hide_administrative": hide_administrative
+    }
+
+    if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"room_utilization.csv\""
+
+        writer = csv.writer(response)
+
+        title_row = []
+        for opt in show_opts:
+            if show[opt]:
+                title_row.append(opt.capitalize().replace("_", " "))
+        writer.writerow(title_row)
+
+        for sch_act in sched_acts:
+            row = []
+            if sch_act.activity.administrative and hide_administrative:
+                continue
+
+            if show["block"]:
+                row.append(sch_act.block)
+            if show["rooms"]:
+                row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            if show["aid"]:
+                row.append(sch_act.activity.aid)
+            if show["activity"]:
+                row.append(sch_act.activity)
+            if show["sponsors"]:
+                row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
+            if show["signups"]:
+                row.append(sch_act.members.count())
+            if show["capacity"]:
+                row.append(sch_act.get_true_capacity())
+            if show["comments"]:
+                row.append(sch_act.comments)
+            if show["admin_comments"]:
+                row.append(sch_act.admin_comments)
+
+            writer.writerow(row)
+
+        return response
+
+    return render(request, "eighth/admin/room_utilization.html", context)
 
 room_utilization_view = eighth_admin_required(
     EighthAdminRoomUtilizationWizard.as_view(

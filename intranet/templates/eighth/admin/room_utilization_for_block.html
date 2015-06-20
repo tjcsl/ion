@@ -1,4 +1,20 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
 
 {% block admin_main %}
     <h4>Select a Block:</h4>
@@ -10,18 +26,20 @@
     </select>
 
     {% if chosen_block %}
-        <br>
+        <a href="{% url 'eighth_admin_room_utilization_for_block_csv' %}?block={{ chosen_block.id }}" class="button">Export CSV</a>
+        <br />
         <input type="checkbox" id="only-show-overbooked">
         <label for="only-show-overbooked">Only show overbooked</label>
-        <br>
-        <table class="fancy-table">
+        <br /><br />
+        Click on column titles to sort.
+        <table data-sortable class="fancy-table">
             <thead>
                 <tr>
                     <th>Room(s)</th>
                     <th>Activity ID</th>
                     <th>Activity Name</th>
                     <th>Sponsor(s)</th>
-                    <th>Students Enrolled</th>
+                    <th>Signups</th>
                     <th>Capacity</th>
                 </tr>
             </thead>
@@ -29,7 +47,7 @@
                 {% for sched_act in scheduled_activities %}
                     <tr {% if not sched_act.is_overbooked %} class="underbooked"{% endif %}>
                         <td>{{ sched_act.get_true_rooms|join:", " }}</td>
-                        <td>{{ sched_act.activity.id }}</td>
+                        <td>{{ sched_act.activity.aid }}</td>
                         <td>{{ sched_act.activity.name_with_flags }}</td>
                         <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
                         <td>{{ sched_act.members.count }}</td>

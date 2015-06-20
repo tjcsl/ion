@@ -1,0 +1,59 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+            $("input#select_all").click(function() {
+                $("input[name=member_id]").prop("checked",  $(this).prop("checked"));
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+<form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post" id="add_to_group">
+    {% csrf_token %}
+
+    <input type="submit" value="Add Users" />
+    <p class="error-color">
+        <h4>That input matched the following students:</h4>
+        Click on column titles to sort.
+        <table data-sortable class="fancy-table">
+            <thead>
+            <tr>
+                <th data-sortable="false"><input type="checkbox" id="select_all" /></th>
+                <th>Name</th>
+                <th>Ion ID</th>
+                <th>Student ID</th>
+                <th>Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for member in users %}
+            <tr>
+                <td><input type="checkbox" name="user_id" value="{{ member.id }}" />
+                <td>{{ member.name }}</td>
+                <td>{{ member.id }}</td>
+                <td>{% if not member.graduation_year %}Teacher{% else %}{{ member.student_id }}{% endif %}</td>
+                <td>{{ member.grade }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Add Users" />
+    </p>
+    <br />
+<form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post" id="add_to_group">
+    <label for="student-id"><b>Add user by search query</b></label><br />
+    <input type="text" name="query" id="query"> <input type="submit" value="Add">
+</form>
+{% endblock %}

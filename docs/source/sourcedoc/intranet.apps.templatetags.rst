@@ -28,6 +28,14 @@ intranet.apps.templatetags.math module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.templatetags.strings module
+-----------------------------------------
+
+.. automodule:: intranet.apps.templatetags.strings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

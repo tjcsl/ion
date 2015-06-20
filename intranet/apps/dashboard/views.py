@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
+from django.utils import timezone
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -42,8 +42,8 @@ def gen_schedule(user, num_blocks=6):
 
             info = {
                 "id": b.id,
+                "block": b,
                 "block_letter": b.block_letter,
-                "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "current_signup": current_signup,
                 "current_signup_cancelled": current_signup_cancelled,
                 "locked": b.locked,
@@ -90,7 +90,6 @@ def gen_sponsor_schedule(user, num_blocks=6):
         if num_added == 0:
             acts.append({
                 "block": b,
-                "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
                 "id": None,
                 "fake": True
             })
@@ -106,12 +105,12 @@ def dashboard_view(request):
     if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = Announcement.objects.filter(expiration_date__gt=datetime.now())
+        announcements = Announcement.objects.filter(expiration_date__gt=timezone.now())
     else:
         # Only show announcements for groups that the user is enrolled in.
         announcements = (Announcement.objects
                                      .visible_to_user(request.user)
-                                     .filter(expiration_date__gt=datetime.now())
+                                     .filter(expiration_date__gt=timezone.now())
                                      .prefetch_related("groups"))
 
     if "start" in request.GET:

@@ -3,11 +3,19 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.schedule.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% if show_selection %}
     <script type="text/javascript">
 $(function() {
     $(".select-all").change(function() {
@@ -100,6 +108,15 @@ $(function() {
 
 })
     </script>
+{% else %}
+    <script type="text/javascript">
+        $(function() {
+            $("form[name=wizard] select#id_block-block").on("change", function() {
+                document.forms["wizard"].submit();
+            });
+        })
+    </script>
+{% endif %}
 {% endblock %}
 
 {% block admin_main %}
@@ -111,15 +128,20 @@ $(function() {
         {% elif users_type == "group" %}
             <b>Group:</b> {{ group }}<br />
             <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a>
+            <br />
         {% endif %}
+        <br />
         <button onclick="distribute(); return false">Evenly Distribute</button>
-        
+        <br />
         <input type="hidden" name="users" value="true" />
         {% csrf_token %}
-        <table class="distribute-group-grid fancy-table">
+        Click on column titles to sort.
+        <table data-sortable class="distribute-group-grid fancy-table">
             <thead>
                 <tr>
-                    <th>User</th>
+                    <th>Name</th>
+                    <th>Student ID</th>
+                    <th>Grade</th>
                     {% for sch in schacts %}
                     <th>
                         {{ sch.activity }}<br />
@@ -134,7 +156,9 @@ $(function() {
             <tbody>
             {% for user in users %}
             <tr class="user-row">
-                <td>{{ user.display_name }} ({{ user }})</td>
+                <td>{{ user.last_name }}, {{ user.first_name }}{% if user.nickname %} ({{ user.nickname }}){% endif %}</td>
+                <td>{{ user.student_id }}</td>
+                <td>{{ user.grade.number }}</td>
                 {% for sch in schacts %}
                 <td>
                     <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}" />
@@ -149,7 +173,7 @@ $(function() {
 
         <input type="submit" value="Finish" onclick="return confirm('Are you sure you want to sign these users up for these activities?')" />
     {% else %}
-    <form method="post">{% csrf_token %}
+    <form method="post" name="wizard">{% csrf_token %}
         {{ wizard.management_form }}
         <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
         <br>

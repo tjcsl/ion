@@ -6,10 +6,13 @@ from datetime import datetime, timedelta
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from rest_framework.renderers import JSONRenderer
 from ...auth.decorators import eighth_admin_required
 from ...users.models import User
 from ...users.forms import ProfileEditForm
-from ..models import EighthBlock, EighthSignup
+from ..models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
+from ..serializers import EighthBlockDetailSerializer
+from ..utils import get_start_date
 logger = logging.getLogger(__name__)
 
 
@@ -55,8 +58,7 @@ def edit_profile_view(request, user_id=None):
     }
     return render(request, "eighth/edit_profile.html", context)
 
-@login_required
-def profile_view(request, user_id=None):
+def get_profile_context(request, user_id=None, date=None):
     if user_id:
         try:
             profile_user = User.objects.get(id=user_id)
@@ -69,7 +71,9 @@ def profile_view(request, user_id=None):
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
     custom_date_set = False
-    if "date" in request.GET:
+    if date:
+        custom_date_set = True
+    elif "date" in request.GET:
         date = request.GET.get("date")
         date = datetime.strptime(date, "%Y-%m-%d")
         custom_date_set = True
@@ -116,4 +120,74 @@ def profile_view(request, user_id=None):
         "skipped_ahead": skipped_ahead,
         "custom_date_set": custom_date_set
     }
+
+    if profile_user.is_eighth_sponsor:
+        sponsor = EighthSponsor.objects.get(user=profile_user)
+        start_date = get_start_date(request)
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                   .filter(block__date__gte=start_date)
+                                                                   .order_by("block__date",
+                                                                             "block__block_letter"))
+
+        logger.debug("Eighth sponsor {}".format(sponsor))
+
+        context.update({"eighth_sponsor_schedule": eighth_sponsor_schedule})
+
+    return context
+
+@login_required
+def profile_view(request, user_id=None):
+    context = get_profile_context(request, user_id)
     return render(request, "eighth/profile.html", context)
+
+@login_required
+def profile_signup_view(request, user_id=None, block_id=None):
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise http.Http404
+    else:
+        user = request.user
+
+    if user != request.user and not request.user.is_eighth_admin:
+        return render(request, "error/403.html", {"reason": "You may only modify your own schedule."}, status=403)
+
+    if block_id is None:
+        return redirect(request, "eighth_profile", user_id)
+
+    try:
+        block = (EighthBlock.objects
+                            .prefetch_related("eighthscheduledactivity_set")
+                            .get(id=block_id))
+    except EighthBlock.DoesNotExist:
+        if EighthBlock.objects.count() == 0:
+            # No blocks have been added yet
+            return render(request, "eighth/profile_signup.html", {"no_blocks": True})
+        else:
+            # The provided block_id is invalid
+            raise http.Http404
+
+    serializer_context = {
+        "request": request,
+        "user": user
+    }
+    block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
+    activities_list = JSONRenderer().render(block_info["activities"])
+
+    try:
+        active_block_current_signup = EighthSignup.objects.get(user=user, scheduled_activity__block__id=block_id)
+        active_block_current_signup = active_block_current_signup.scheduled_activity.activity.id
+    except EighthSignup.DoesNotExist:
+        active_block_current_signup = None
+
+    context = {
+        "user": user,
+        "real_user": request.user,
+        "activities_list": activities_list,
+        "active_block": block,
+        "active_block_current_signup": active_block_current_signup,
+        "show_eighth_profile_link": True
+    }
+    context.update(get_profile_context(request, user_id, block.date))
+    return render(request, "eighth/profile_signup.html", context)

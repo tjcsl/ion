@@ -65,3 +65,4 @@ class Search(generics.RetrieveAPIView):
                 response.append(CounselorTeacherSerializer(user, context={'request': request}).data)
 
         return self.get_paginated_response(response)
+

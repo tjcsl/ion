@@ -19,6 +19,22 @@ intranet.apps.users.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.users.api module
+------------------------------
+
+.. automodule:: intranet.apps.users.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.users.forms module
+--------------------------------
+
+.. automodule:: intranet.apps.users.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.users.models module
 ---------------------------------
 

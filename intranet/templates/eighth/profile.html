@@ -38,9 +38,7 @@
         {% if skipped_ahead %}
             There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
         {% endif %}
-        {% if not profile_user.is_student %}
-            <b>This user is not a student. They may not be signed up for activities.</b>
-        {% endif %}
+    {% if profile_user.is_student %}
         <table class="eighth-table {% if eighth_schedule %}zebra{% endif %}">
         <thead>
             <tr>
@@ -116,7 +114,7 @@
             </td>
             {% endif %}
             <td class="button-row">
-                <a href="{% url 'eighth_signup' %}/{{ sch.block.id }}?user={{ profile_user.id }}" class="button">
+                <a href="{% url 'eighth_profile_signup' profile_user.id sch.block.id %}" class="button">
                     {% if sch.signup %}
                         Change
                     {% else %}
@@ -133,7 +131,42 @@
             </tr>
         {% endfor %}
         </table>
+    {% else %}
+    <b>This user is not a student. They may not be signed up for activities.</b>
+    {% endif %}
     </form>
     </section>
+    {% if profile_user.is_eighth_sponsor %}
+        <section class="user-info-eighth sponsor">
+            <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsored Activities{% endif %}</h3>
+            <table data-sortable class="fancy-table">
+                <thead>
+                    <tr>
+                        <th>Block</th>
+                        <th>Activity</th>
+                        <th>Comments</th>
+                        <th>Room</th>
+                        <th>Signups</th>
+                        <th>Capacity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scheduled_activity in eighth_sponsor_schedule %}
+                        <tr>
+                            <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                            <td>{{ scheduled_activity.activity.name_with_flags }}</td>
+                            <td>{{ scheduled_activity.comments }}</td>
+                            <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                            <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                            <td>{{ scheduled_activity.get_true_capacity }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        </section>
+    {% elif profile_user.is_teacher %}
+        <b>This user is a teacher, but not an eighth period sponsor.</b>
+    {% endif %}
 </div>
 {% endblock %}

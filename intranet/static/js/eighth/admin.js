@@ -34,9 +34,13 @@ $(function() {
     });
 
     $("select.url-param-selector").on("change", function() {
-        var url = updateParam(document.URL, $(this).data("param"), $(this).val());
-        location.href = url;
-    })
+        var val = $(this).val();
+        console.debug("param-selector value:",val);
+        if(val) {
+            var url = updateParam(document.URL, $(this).data("param"), val);
+            location.href = url;
+        }
+    });
 
 
     // Set up checkboxes on activity scheduling page
@@ -58,7 +62,18 @@ $(function() {
     }
 
     var updateBlockCheckboxes = function() {
-        $blockCheckboxes.prop("checked", $(this).prop("checked"));
+        var chk = $(this).prop("checked");
+        console.debug(chk);
+        $blockCheckboxes.prop("checked", chk);
+        try {
+            if(chk) {
+                $blockCheckboxes.parent().parent().removeClass("hidden");
+                $blockCheckboxes.parent().parent().data("hidden", false);
+            } else {
+                $blockCheckboxes.parent().parent().addClass("hidden");
+                $blockCheckboxes.parent().parent().data("hidden", true);
+            }
+        } catch(e) {}
     }
 
     $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
@@ -121,6 +136,10 @@ $(function() {
 
     $("#only-show-overbooked").click(function() {
         $("tr.underbooked").toggle();
+    })
+
+    $("#hide-administrative").click(function() {
+        $("tr.administrative").toggle();
     })
 
 });

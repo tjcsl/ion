@@ -1,7 +1,18 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            $("form[name=wizard] select").on("change", function() {
+                document.forms["wizard"].submit();
+            });
+        })
+    </script>
+{% endblock %}
+
 {% block admin_main %}
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" name="wizard">{% csrf_token %}
         {{ wizard.management_form }}
         <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
         {{ wizard.form }}

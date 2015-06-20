@@ -30,10 +30,23 @@ class UserManager(UserManager):
     """
 
     def user_with_student_id(self, student_id):
+        """Get a unique user object by student ID."""
         c = LDAPConnection()
 
         results = c.search(settings.USER_DN,
                            "tjhsstStudentId={}".format(student_id),
+                           ["dn"])
+
+        if len(results) == 1:
+            return User.get_user(dn=results[0][0])
+        return None
+
+    def user_with_ion_id(self, student_id):
+        """Get a unique user object by Ion ID."""
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                           "iodineUidNumber={}".format(student_id),
                            ["dn"])
 
         if len(results) == 1:
@@ -45,11 +58,13 @@ class UserManager(UserManager):
     # the consequences of error are not significant.
 
     def get_students(self):
+        """Get user objects that are students (quickly)."""
         usernums = User.objects.filter(username__startswith="2")
         # Add possible exceptions handling here
         return usernums
 
     def get_teachers(self):
+        """Get user objects that are teachers (quickly)."""
         usernonums = User.objects.exclude(username__startswith="2")
         usernonums = usernonums | User.objects.filter(id=31863)
         # Add possible exceptions handling here
@@ -276,6 +291,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.first_name
 
     def get_short_name(self):
+        """Get short (first) name of a user."""
         return self.short_name
 
     @property
@@ -298,6 +314,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
+        """
+        Get (or guess) a user's TJ email. If a fcps.edu or 
+        tjhsst.edu email is specified in their email list, use
+        that. Otherwise, append the user's username to the proper
+        email suffix, depending on whether they are a student or teacher.
+        """
+
         if self.emails:
             for email in self.emails:
                 if email.endswith(("@fcps.edu", "@tjhsst.edu")):
@@ -731,6 +754,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_eighthoffice(self):
         """Checks if user is an Eighth Period office user.
+
         This is currently hardcoded, but is meant to be used instead
         of user.id == 9999 or user.username == "eighthoffice".
 
@@ -1062,6 +1086,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def absence_count(self):
+        """Return the user's absence count. If the user has no absences
+        or is not a signup user, returns 0.
+
+        """
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True).count()

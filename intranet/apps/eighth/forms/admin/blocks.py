@@ -8,6 +8,9 @@ from ...models import EighthBlock
 
 block_letter_validator = RegexValidator(r"^[a-zA-Z0-9_-]{1,10}$", "A block letter must be less than 10 characters long.")
 
+class BlockDisplayField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{}: {}".format(obj.id, str(obj))
 
 class BlockSelectionForm(forms.Form):
 
@@ -24,7 +27,7 @@ class BlockSelectionForm(forms.Form):
 
         queryset = EighthBlock.objects.filter(**filter_params)
 
-        self.fields["block"] = forms.ModelChoiceField(queryset=queryset,
+        self.fields["block"] = BlockDisplayField(queryset=queryset,
                                                       label=label,
                                                       empty_label="Select a block")
 

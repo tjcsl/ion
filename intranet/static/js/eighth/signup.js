@@ -196,6 +196,12 @@ $(function() {
                 activityDetailView.render();
                 activityListView.render();
 
+                var $container = $(".primary-content.eighth-signup");
+                var next_url = $container.attr("data-next-url");
+                if(next_url) {
+                    location.href = next_url;
+                }
+
 
             },
             error: function(xhr, status, error) {
@@ -308,4 +314,24 @@ $(function() {
 
     window.activityListView = new eighth.ActivityListView();
     activityListView.render()
+
+
+    $("button#unsignup-button").click(function() {
+        var uid = $(this).attr("data-uid");
+        var bid = $(this).attr("data-bid");
+
+        $.ajax({
+            url: $("#activity-detail").data("signup-endpoint"),
+            type: "POST",
+            data: {
+                "uid": uid,
+                "bid": bid,
+                "unsignup": true
+            },
+            success: function(response) {
+                alert(response);
+                location.reload();
+            }
+        });
+    });
 });

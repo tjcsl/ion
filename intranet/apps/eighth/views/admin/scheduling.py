@@ -104,7 +104,10 @@ def schedule_activity_view(request):
     all_rooms = {r["id"]: r for r in EighthRoom.objects.values()}
 
     for sid, sponsor in all_sponsors.items():
-        all_sponsors[sid]["full_name"] = sponsor["first_name"] + " " + sponsor["last_name"]
+        if sponsor["show_full_name"]:
+            all_sponsors[sid]["full_name"] = sponsor["last_name"] + ", " + sponsor["first_name"]
+        else:
+            all_sponsors[sid]["full_name"] = sponsor["last_name"]
 
     for rid, room in all_rooms.items():
         all_rooms[rid]["description"] = room["name"] + " (" + str(room["capacity"]) + ")"
@@ -268,6 +271,8 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             activity=source_activity
         )
 
+        num = source_scheduled_activity.members.count()
+
         dest_block = form_list[2].cleaned_data["block"]
         dest_activity = form_list[3].cleaned_data["activity"]
         dest_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -279,7 +284,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             scheduled_activity=dest_scheduled_activity
         )
 
-        messages.success(self.request, "Successfully transfered students.")
+        messages.success(self.request, "Successfully transfered {} students.".format(num))
         return redirect("eighth_admin_dashboard")
 
 transfer_students_view = eighth_admin_required(
