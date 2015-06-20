@@ -6,8 +6,6 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Manager, Q
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.utils import formats
@@ -852,6 +850,19 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if cancelled_sponsor in list(self.sponsors.all()):
             self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
+    def save(self, *args, **kwargs):
+        super(EighthScheduledActivity, self).save(*args, **kwargs)
+        logger.debug("SAVING. Cancelled: {}".format(self.cancelled))
+        logger.debug(self)
+        if self.cancelled:
+            self.cancel()
+        else:
+            self.uncancel()
+        logger.debug(self.cancelled)
+        logger.debug(self.rooms.all())
+        super(EighthScheduledActivity, self).save(*args, **kwargs)
+
+
     class Meta:
         unique_together = (("block", "activity"),)
         verbose_name_plural = "eighth scheduled activities"
@@ -859,24 +870,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def __unicode__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
-
-def EighthScheduledActivity_check_cancelled(sender, instance, **kwargs):
-    """Run scheduled_activity.cancel() or scheduled_activity.uncancel() when
-    an EighthScheduledActivity is cancelled or uncancelled.
-    """
-
-    # Disconnect the post_save
-    post_save.disconnect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
-    if instance.cancelled:
-        instance.cancel()
-    else:
-        instance.uncancel()
-    instance.save()
-
-    # Reconnect the post_save
-    post_save.connect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
-
-post_save.connect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
 
 
 class EighthSignup(AbstractBaseEighthModel):
