@@ -27,8 +27,30 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
 
     def fetch_scheduled_on(self, act):
+        scheduled_on = {}
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=act)
-        #return scheduled_activities
+
+        user = self.context.get("user", self.context["request"].user)
+        favorited_activities = set(user.favorited_activity_set
+                                       .values_list("id", flat=True))
+        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
+
+        for scheduled_activity in scheduled_activities:
+            scheduled_on[scheduled_activity.block.id] = {
+                "id": scheduled_activity.block.id,
+                "date": scheduled_activity.block.date,
+                "block_letter": scheduled_activity.block.block_letter,
+                "url": reverse("api_eighth_block_detail",
+                           args=[scheduled_activity.block.id],
+                           request=self.context["request"]),
+                "roster": {
+                    "id": scheduled_activity.id,
+                    "url": reverse("api_eighth_scheduled_activity_signup_list",
+                               args=[scheduled_activity.id],
+                               request=self.context["request"]),
+                }
+            }
+        return scheduled_on
 
 
     class Meta:
@@ -64,16 +86,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=10)
 
-    def process_scheduled_activity(self, scheduled_activity, user=None, favorited_activities=None, available_restricted_acts=None):
-        if user is None:
-           user = self.context.get("user", self.context["request"].user)
-        if favorited_activities is None:
-            favorited_activities = set(user.favorited_activity_set
-                                           .values_list("id", flat=True))
-        if available_restricted_acts is None:
-            available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
-
-
+    def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, available_restricted_acts=None):
         activity = scheduled_activity.activity
         restricted_for_user = (activity.restricted and
                                not (user.is_eighth_admin and not user.is_student)
@@ -96,7 +109,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "scheduled_activity": scheduled_activity.id,
             "url": reverse("api_eighth_activity_detail",
                            args=[activity.id],
-                           request=self.context["request"]),
+                           request=request),
             "name": activity.name,
             "name_with_flags": name_with_flags,
             "name_with_flags_for_user": name_with_flags_for_user,
@@ -108,7 +121,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                 "capacity": 0,
                 "url": reverse("api_eighth_scheduled_activity_signup_list",
                                args=[scheduled_activity.id],
-                               request=self.context["request"])
+                               request=request)
             },
             "rooms": [],
             "sponsors": [],
@@ -141,7 +154,11 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         for scheduled_activity in scheduled_activities:
-            activity_info = self.process_scheduled_activity(scheduled_activity, user, favorited_activities, available_restricted_acts)
+            activity_info = self.process_scheduled_activity(scheduled_activity,
+                                                            self.context["request"],
+                                                            user,
+                                                            favorited_activities,
+                                                            available_restricted_acts)
             activity = scheduled_activity.activity
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
             activity_list[activity.id] = activity_info
@@ -153,6 +170,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                                                .exclude(scheduled_activity__activity__deleted=True)
                                                .values_list("scheduled_activity__activity_id")
                                                .annotate(user_count=Count("scheduled_activity")))
+
 
         for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count
