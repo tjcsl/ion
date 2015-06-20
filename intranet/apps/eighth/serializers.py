@@ -292,6 +292,7 @@ class EighthSignupSerializer(serializers.ModelSerializer):
     def block_info(self, signup):
         return {
             "id": signup.scheduled_activity.block.id,
+            "date": signup.scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail",
                            args=[signup.scheduled_activity.block.id],
                            request=self.context["request"])
@@ -300,6 +301,7 @@ class EighthSignupSerializer(serializers.ModelSerializer):
     def activity_info(self, signup):
         return {
             "id": signup.scheduled_activity.activity.id,
+            "title": signup.scheduled_activity.title_with_flags,
             "url": reverse("api_eighth_activity_detail",
                            args=[signup.scheduled_activity.activity.id],
                            request=self.context["request"])
@@ -346,6 +348,7 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     def block_info(self, scheduled_activity):
         return {
             "id": scheduled_activity.block.id,
+            "date": signup.scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail",
                            args=[scheduled_activity.block.id],
                            request=self.context["request"])
@@ -354,6 +357,7 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     def activity_info(self, scheduled_activity):
         return {
             "id": scheduled_activity.activity.id,
+            "title": scheduled_activity.title_with_flags,
             "url": reverse("api_eighth_activity_detail",
                            args=[scheduled_activity.activity.id],
                            request=self.context["request"])
