@@ -13,7 +13,7 @@ def perma_reverse(request, view, *args, **kwargs):
 def api_root(request, format=None):
     """Welcome to the Ion API!
 
-    Documentation is below. <pk> refers to the unique id of a certain object - this is shown as "id" in most lists and references.
+    Documentation is below. <pk\> refers to the unique id of a certain object - this is shown as "id" in most lists and references.
 
     The general form of the api link (with /api/ assumed to be prepended) is shown, along with an example URL.
     """
@@ -30,7 +30,7 @@ def api_root(request, format=None):
         "/classes/<pk>": ["Get class details", perma_reverse(request, "api_user_class_detail", kwargs={"pk": "123456-78"})]
     },
     "Search": {
-        "/search/<query>": ["Search users", perma_reverse(request, "api_user_search", kwargs={"query": "gradyear:2015"})]
+        "/search/<query>": ["Search users", perma_reverse(request, "api_user_search", kwargs={"query": "last:Kim"})]
     },
     "Activities": {
         "/activities": ["Get eighth activity list", perma_reverse(request, "api_eighth_activity_list")],

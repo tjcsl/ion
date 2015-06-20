@@ -9,7 +9,7 @@ from rest_framework import generics, views, status
 from rest_framework.response import Response
 from intranet.apps.users.models import User
 from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer, EighthScheduledActivitySerializer
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 class EighthActivityList(generics.ListAPIView):
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityListSerializer
+
 
 class EighthActivityDetail(generics.RetrieveAPIView):
 
@@ -55,6 +56,7 @@ class EighthBlockDetail(views.APIView):
 
         serializer = EighthBlockDetailSerializer(block, context={"request": request})
         return Response(serializer.data)
+
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
@@ -92,17 +94,18 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
+
 class EighthScheduledActivitySignupList(views.APIView):
 
     """API endpoint that lists all signups for a certain scheduled activity
     """
 
     def get(self, request, scheduled_activity_id):
-        signups = EighthSignup.objects.get(scheduled_activity__id=scheduled_activity_id)
-
-        serializer = EighthSignupSerializer(signups, context={"request": request}, many=True)
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
+        serializer = EighthScheduledActivitySerializer(scheduled_activity, context={"request": request})
 
         return Response(serializer.data)
+
 
 class EighthSignupDetail(generics.RetrieveAPIView):
 
