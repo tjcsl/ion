@@ -36,11 +36,11 @@ $(function() {
     $("select.url-param-selector").on("change", function() {
         var val = $(this).val();
         console.debug("param-selector value:",val);
-        if(val != "") {
+        if(val) {
             var url = updateParam(document.URL, $(this).data("param"), val);
             location.href = url;
         }
-    })
+    });
 
 
     // Set up checkboxes on activity scheduling page
