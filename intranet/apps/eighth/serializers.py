@@ -334,6 +334,14 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     block = serializers.SerializerMethodField("block_info")
     activity = serializers.SerializerMethodField("activity_info")
     signups = serializers.SerializerMethodField("signups_info")
+    name = serializers.SerializerMethodField()
+    capacity = serializers.SerializerMethodField()
+
+    def get_name(self, scheduled_activity):
+        return scheduled_activity.title_with_flags
+
+    def get_capacity(self, scheduled_activity):
+        return scheduled_activity.get_true_capacity()
 
     def block_info(self, scheduled_activity):
         return {
@@ -359,9 +367,11 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = EighthScheduledActivity
         fields = ("id",
+                  "name",
                   "block",
                   "activity",
-                  "signups")
+                  "signups",
+                  "capacity")
 
 
 def add_signup_validator(value):
