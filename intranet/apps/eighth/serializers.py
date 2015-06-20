@@ -53,8 +53,6 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
             }
         return scheduled_on
 
->>>>>>> dev
-
     class Meta:
         model = EighthActivity
         fields = ("id",
