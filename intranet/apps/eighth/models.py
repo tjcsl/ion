@@ -6,6 +6,8 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Manager, Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.utils import formats
@@ -815,35 +817,40 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return success_message
 
-    def save(self, *args, **kwargs):
-        """If the EighthScheduledActivity has been cancelled, update the
-        rooms and sponsors to be "CANCELLED".
+    def cancel(self):
+        """Cancel an EighthScheduledActivity, and update the rooms and sponsors
+        to be "CANCELLED."
         """
-
-        super(EighthScheduledActivity, self).save(*args, **kwargs)
-
-        logger.debug("Act cancelled: {}".format(self.cancelled))
+        if not self.cancelled:
+            logger.debug("Cancelling {}".format(self))
+            self.cancelled = True
 
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
         cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
+        if cancelled_room not in list(self.rooms.all()):
+            self.rooms.all().delete()
+            self.rooms.add(cancelled_room)
 
+        if cancelled_sponsor not in list(self.sponsors.all()):
+            self.sponsors.all().delete()
+            self.sponsors.add(cancelled_sponsor)
+
+
+    def uncancel(self):
+        """Uncancel an EighthScheduledActivity, by removing the "CANCELLED" rooms
+        and sponsors.
+        """
         if self.cancelled:
-            if cancelled_room not in self.rooms.all():
-                self.rooms.all().delete()
-                self.rooms.add(cancelled_room)
+            logger.debug("Uncancelling {}".format(self))
+            self.cancelled = False
 
-            if cancelled_sponsor not in self.sponsors.all():
-                self.sponsors.all().delete()
-                self.sponsors.add(cancelled_sponsor)
-        else:
-            if cancelled_room in self.rooms.all():
-                self.rooms.filter(id=cancelled_room.id).delete()
+        cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
+        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
+        if cancelled_room in list(self.rooms.all()):
+            self.rooms.filter(id=cancelled_room.id).delete()
 
-            if cancelled_sponsor in self.sponsors.all():
-                self.sponsors.filter(id=cancelled_sponsor.id).delete()
-
-        super(EighthScheduledActivity, self).save(*args, **kwargs)
-    
+        if cancelled_sponsor in list(self.sponsors.all()):
+            self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
     class Meta:
         unique_together = (("block", "activity"),)
@@ -852,6 +859,24 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def __unicode__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
+
+def EighthScheduledActivity_check_cancelled(sender, instance, **kwargs):
+    """Run scheduled_activity.cancel() or scheduled_activity.uncancel() when
+    an EighthScheduledActivity is cancelled or uncancelled.
+    """
+
+    # Disconnect the post_save
+    post_save.disconnect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
+    if instance.cancelled:
+        instance.cancel()
+    else:
+        instance.uncancel()
+    instance.save()
+
+    # Reconnect the post_save
+    post_save.connect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
+
+post_save.connect(EighthScheduledActivity_check_cancelled, sender=EighthScheduledActivity, dispatch_uid="EighthScheduledActivity_check_cancelled")
 
 
 class EighthSignup(AbstractBaseEighthModel):
