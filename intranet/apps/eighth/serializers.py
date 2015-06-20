@@ -298,7 +298,12 @@ class EighthSignupSerializer(serializers.ModelSerializer):
         }
 
     def activity_info(self, signup):
-        return signup.scheduled_activity.activity.id
+        return {
+            "id": signup.scheduled_activity.activity.id,
+            "url": reverse("api_eighth_activity_detail",
+                           args=[signup.scheduled_activity.activity.id],
+                           request=self.context["request"])
+        }
 
     def scheduled_activity_info(self, signup):
         return signup.scheduled_activity.id
@@ -310,6 +315,54 @@ class EighthSignupSerializer(serializers.ModelSerializer):
                   "activity",
                   "scheduled_activity",
                   "user")
+
+class UserSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, user):
+        return reverse("api_user_profile_detail",
+                   args=[user.id],
+                   request=self.context["request"])
+    class Meta:
+        model = User
+        fields = ("id",
+                  "full_name",
+                  "username",
+                  "url")
+
+class EighthScheduledActivitySerializer(serializers.ModelSerializer):
+    block = serializers.SerializerMethodField("block_info")
+    activity = serializers.SerializerMethodField("activity_info")
+    signups = serializers.SerializerMethodField("signups_info")
+
+    def block_info(self, scheduled_activity):
+        return {
+            "id": scheduled_activity.block.id,
+            "url": reverse("api_eighth_block_detail",
+                           args=[scheduled_activity.block.id],
+                           request=self.context["request"])
+        }
+
+    def activity_info(self, scheduled_activity):
+        return {
+            "id": scheduled_activity.activity.id,
+            "url": reverse("api_eighth_activity_detail",
+                           args=[scheduled_activity.activity.id],
+                           request=self.context["request"])
+        }
+
+    def signups_info(self, scheduled_activity):
+        signups = scheduled_activity.members
+        serializer = UserSerializer(signups, context=self.context, many=True)
+        return serializer.data
+
+    class Meta:
+        model = EighthScheduledActivity
+        fields = ("id",
+                  "block",
+                  "activity",
+                  "signups")
+
 
 def add_signup_validator(value):
     if 'scheduled_activity' in value:

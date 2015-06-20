@@ -9,7 +9,7 @@ from rest_framework import generics, views, status
 from rest_framework.response import Response
 from intranet.apps.users.models import User
 from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer, EighthScheduledActivitySerializer
 
 logger = logging.getLogger(__name__)
 
@@ -101,10 +101,8 @@ class EighthScheduledActivitySignupList(views.APIView):
     """
 
     def get(self, request, scheduled_activity_id):
-        signups = EighthSignup.objects.filter(scheduled_activity__id=scheduled_activity_id)
-
-        serializer = EighthSignupSerializer(signups, context={"request": request}, many=True)
-        logger.debug(serializer)
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
+        serializer = EighthScheduledActivitySerializer(scheduled_activity, context={"request": request})
 
         return Response(serializer.data)
 
