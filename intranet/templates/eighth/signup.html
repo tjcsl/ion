@@ -84,7 +84,34 @@
                 <% } %>
             </span>
             <% var full_name = name_with_flags_for_user + (cancelled ? " (Cancelled)" : ""); %>
-            <span class="activity-name" title="<%= full_name %>"><%= full_name %></span>
+            <span class="activity-name" title="<%= full_name %>">
+                <%= name %>
+
+                <% if (special) { %>
+                    <span class="badge green">Special</span>
+                <% } %>
+
+                <% if (cancelled) { %>
+                    <span class="badge darkred">CANCELLED</span>
+                <% } %>
+
+                <% if (restricted_for_user) { %>
+                    <span class="badge red">Restricted</span>
+                <% } %>
+
+                <% if (both_blocks) { %>
+                    <span class="badge blue">BB</span>
+                <% } %>
+
+                <% if (administrative) { %>
+                    <span class="badge yellow">Admin</span>
+                <% } %>
+
+                <% if (sticky) { %>
+                    <span class="badge orange">Sticky</span>
+                <% } %>
+
+            </span>
             <% var sponsors_all = ""; %>
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
@@ -100,7 +127,7 @@
         </h3>
 
         <% if (cancelled) { %>
-            <span class="badge red">Cancelled</span>
+            <span class="badge darkred">CANCELLED</span>
         <% } %>
 
         <% if (special) { %>
@@ -108,26 +135,31 @@
         <% } %>
 
         <% if (restricted_for_user) { %>
-            <span class="badge">Restricted</span>
+            <span class="badge red">Restricted</span>
+        <% } %>
+
+        <% if (both_blocks) { %>
+            <span class="badge blue">Both Blocks</span>
         <% } %>
 
         <% if (administrative) { %>
             <span class="badge">Administrative</span>
         <% } %>
 
+        <% if (presign) { %>
+            <span class="badge yellow">Presign</span>
+        <% } %>
+
         <% if (sticky) { %>
-            <span class="badge">Sticky</span>
+            <span class="badge orange">Sticky</span>
         <% } %>
 
-        <% if (both_blocks) { %>
-            <span class="badge">Both Blocks</span>
-        <% } %>
 
+        <dl class="activityid">
+            <dt>Activity ID:</dt>
+            <dd><%= aid %></dd>
+        </dl>
         <dl>
-            <% if (isEighthAdmin) { %>
-                <dt>Activity ID:</dt>
-                <dd><%= aid %></dd>
-            <% } %>
 
             <% rooms = _.uniq(rooms)%>
             <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>

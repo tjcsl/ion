@@ -763,6 +763,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.id == 9999
 
+    @property
+    def is_active(self):
+        """Checks if the user is active.
+        This is currently used to catch invalid logins.
+        """
+
+        return not self.username.startswith("INVALID_USER")
 
     @property
     def is_staff(self):

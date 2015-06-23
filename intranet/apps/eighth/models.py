@@ -815,36 +815,58 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return success_message
 
-    def save(self, *args, **kwargs):
-        """If the EighthScheduledActivity has been cancelled, update the
-        rooms and sponsors to be "CANCELLED".
+    def cancel(self):
+        """Cancel an EighthScheduledActivity, and update the rooms and sponsors
+        to be "CANCELLED."
         """
-
         super(EighthScheduledActivity, self).save(*args, **kwargs)
-        """
+
         logger.debug("Act cancelled: {}".format(self.cancelled))
+
+        if not self.cancelled:
+            logger.debug("Cancelling {}".format(self))
+            self.cancelled = True
 
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
         cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
+        if cancelled_room not in list(self.rooms.all()):
+            self.rooms.all().delete()
+            self.rooms.add(cancelled_room)
 
+        if cancelled_sponsor not in list(self.sponsors.all()):
+            self.sponsors.all().delete()
+            self.sponsors.add(cancelled_sponsor)
+
+
+    def uncancel(self):
+        """Uncancel an EighthScheduledActivity, by removing the "CANCELLED" rooms
+        and sponsors.
+        """
         if self.cancelled:
-            if cancelled_room not in self.rooms.all():
-                self.rooms.all().delete()
-                self.rooms.add(cancelled_room)
+            logger.debug("Uncancelling {}".format(self))
+            self.cancelled = False
 
-            if cancelled_sponsor not in self.sponsors.all():
-                self.sponsors.all().delete()
-                self.sponsors.add(cancelled_sponsor)
-        else:
-            if cancelled_room in self.rooms.all():
-                self.rooms.filter(id=cancelled_room.id).delete()
+        cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
+        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
+        if cancelled_room in list(self.rooms.all()):
+            self.rooms.filter(id=cancelled_room.id).delete()
 
-            if cancelled_sponsor in self.sponsors.all():
-                self.sponsors.filter(id=cancelled_sponsor.id).delete()
+        if cancelled_sponsor in list(self.sponsors.all()):
+            self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
+    def save(self, *args, **kwargs):
         super(EighthScheduledActivity, self).save(*args, **kwargs)
         """
-    
+        logger.debug("SAVING. Cancelled: {}".format(self.cancelled))
+        logger.debug(self)
+        if self.cancelled:
+            self.cancel()
+        else:
+            self.uncancel()
+        logger.debug(self.cancelled)
+        logger.debug(self.rooms.all())
+        super(EighthScheduledActivity, self).save(*args, **kwargs)
+        """
 
     class Meta:
         unique_together = (("block", "activity"),)

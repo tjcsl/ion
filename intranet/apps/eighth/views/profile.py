@@ -28,7 +28,10 @@ def edit_profile_view(request, user_id=None):
         defaults[field] = getattr(user, field)
 
     for field in ProfileEditForm.ADDRESS_FIELDS:
-        defaults[field] = getattr(user.address, field)
+        if user.address:
+            defaults[field] = getattr(user.address, field)
+        else:
+            defaults[field] = None
     defaults["birthday"] = str(defaults["birthday"]).split(" ")[0]
     defaults["counselor_id"] = user.counselor.id if user.counselor else None
 
