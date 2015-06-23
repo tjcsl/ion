@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthSponsor, EighthScheduledActivity
+from ...models import EighthSponsor, EighthScheduledActivity, EighthActivity
 from ...utils import get_start_date
 
 
@@ -88,13 +88,30 @@ def sponsor_schedule_view(request, sponsor_id):
         raise http.Http404
 
     start_date = get_start_date(request)
+
     sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                          .filter(block__date__gte=start_date)
                                          .order_by("block__date",
                                                    "block__block_letter"))
 
+    # Find list of all activities before the list is filtered to only show one activity
+    activities = set()
+    for sched_act in sched_acts:
+        activities.add(sched_act.activity)
+    activities = list(activities)
+
+    activity = None
+    if "activity" in request.GET:
+        activity_id = request.GET.get('activity')
+        activity = EighthActivity.objects.get(id=activity_id)
+        sched_acts = sched_acts.filter(activity=activity)
+    
+
+
     context = {
         "scheduled_activities": sched_acts,
+        "activities": activities,
+        "activity": activity,
         "admin_page_title": "Sponsor Schedule",
         "sponsor": sponsor
     }
