@@ -22,7 +22,7 @@ class CheckLDAPBindMiddleware:
         master_pwd_backend = "MasterPasswordAuthenticationBackend"
         if (LDAPConnection().did_use_simple_bind() and
                 not auth_backend.endswith(master_pwd_backend)):
-            logger.info("Destroying kerberos cache and logging out")
+            logger.info("Simple bind being used: Destroying kerberos cache and logging out")
             try:
                 kerberos_cache = request.session["KRB5CCNAME"]
                 os.system("/usr/bin/kdestroy -c " + kerberos_cache)
