@@ -1,0 +1,52 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Events
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Events</h2>
+        <div class="button-container">
+            <a href="{% url 'events_add' %}" class="button">
+                <i class="fa fa-plus"></i>
+                Add
+            </a>
+        </div>
+
+        <br />
+
+        <div class="events-container">
+        {% for event in events %}
+            <div class="event">
+                <h3>{{ event.title }}</h3>
+                By: {{ event.user }}<br />
+                For: 
+                {% if event.groups %}
+                    {% for group in event.groups %}{{ group }}{% if not forloop.last %}; {% endif %}{% endfor %}
+                {% else %}
+                    Everyone
+                {% endif %}
+                <br />
+                <p>Description: {{ event.description }}</p>
+                {% if event.links.all %}
+                <ul>
+                    {% for link in event.links.all %}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>There are no events visible to you at this time.</p>
+        {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}
