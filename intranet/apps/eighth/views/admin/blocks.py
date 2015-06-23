@@ -87,7 +87,7 @@ def add_multiple_blocks_view(request):
 
 
     context = {
-        "admin_page_title": "Add Multiple Blocks",
+        "admin_page_title": "Modify Blocks by Day",
         "date": date,
         "letters": letters,
         "show_letters": show_letters
