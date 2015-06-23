@@ -821,7 +821,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
 
         super(EighthScheduledActivity, self).save(*args, **kwargs)
-
+        """
         logger.debug("Act cancelled: {}".format(self.cancelled))
 
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
@@ -843,6 +843,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
         super(EighthScheduledActivity, self).save(*args, **kwargs)
+        """
     
 
     class Meta:
