@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 from .models import Event
+from .forms import EventForm
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
@@ -24,4 +26,17 @@ def events_view(request):
 
 @login_required
 def events_add_view(request):
-    return render(request, "events/add.html", context)
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully added event.")
+            return redirect("events")
+        else:
+            messages.error(request, "Error adding event")
+    else:
+        form = EventForm()
+    return render(request, "events/add_modify.html", {"form": form, "action": "add"})

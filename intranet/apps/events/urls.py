@@ -7,5 +7,5 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.events_view, name="events"),
-    url(r"^add$", views.events_add_view, name="events_add"),
+    url(r"^/add$", views.events_add_view, name="events_add"),
 ]

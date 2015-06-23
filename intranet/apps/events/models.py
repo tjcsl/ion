@@ -35,8 +35,8 @@ class Event(models.Model):
     objects = EventManager()
 
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=10000)
-    links = models.ManyToManyField("Link")
+    description = models.TextField(max_length=10000)
+    links = models.ManyToManyField("Link", blank=True)
     created_time = models.DateTimeField(auto_now=True)
     last_modified_time = models.DateTimeField(auto_now_add=True)
 
@@ -44,7 +44,7 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     user = models.ForeignKey(User)
 
-    scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True)
-    announcement = models.ForeignKey(Announcement, null=True)
+    scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True)
+    announcement = models.ForeignKey(Announcement, null=True, blank=True)
     
     groups = models.ManyToManyField(Group, blank=True)
