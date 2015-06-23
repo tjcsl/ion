@@ -6,6 +6,7 @@ import uuid
 import os
 import logging
 from django.contrib.auth.hashers import check_password
+from django.core import exceptions
 from intranet import settings
 from ..users.models import User
 
@@ -34,6 +35,20 @@ class KerberosAuthenticationBackend(object):
 
         """
 
+
+        def kinit_timeout_handle(username, realm):
+            """Check if the user exists before we throw an error.
+            If the user does not exist in LDAP, only throw a warning.
+            """
+
+            try:
+                user = User.get_user(username=username)
+            except User.DoesNotExist:
+                logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
+                return
+
+            logger.critical("kinit timed out for {}@{}".format(username, realm))
+
         cache = "/tmp/ion-" + str(uuid.uuid4())
 
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
@@ -48,7 +63,7 @@ class KerberosAuthenticationBackend(object):
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
-            logger.critical("kinit timed out for {}@{}".format(username, realm))
+            kinit_timeout_handle(username, realm)
             exitstatus = 1
 
         if exitstatus != 0:
@@ -61,7 +76,7 @@ class KerberosAuthenticationBackend(object):
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
-                logger.critical("kinit timed out for {}@{}".format(username, realm))
+                kinit_timeout_handle(username, realm)
                 exitstatus = 1
 
         if exitstatus == 0:
@@ -87,8 +102,16 @@ class KerberosAuthenticationBackend(object):
         Returns:
             `User`
 
+        NOTE: None is returned when the user account does not exist. However,
+        if the account exists but does not exist in LDAP, which is the case for
+        former and future students who do not have Intranet access, a dummy user
+        is returned that has the flag is_active=False. (The is_active property in
+        the User class returns False when the username starts with "INVALID_USER".)
+
         """
-        if not self.get_kerberos_ticket(username, password):
+        krb_ticket = self.get_kerberos_ticket(username, password)
+
+        if not krb_ticket:
             return None
         else:
             logger.debug("Authentication successful")
@@ -98,7 +121,9 @@ class KerberosAuthenticationBackend(object):
                 # Shouldn't happen
                 logger.error("User {} successfully authenticated but not found "
                              "in LDAP.".format(username))
-                return None
+                
+                user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
+                return user
 
             return user
 
