@@ -851,6 +851,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
     def save(self, *args, **kwargs):
+        """
         super(EighthScheduledActivity, self).save(*args, **kwargs)
         logger.debug("SAVING. Cancelled: {}".format(self.cancelled))
         logger.debug(self)
@@ -860,6 +861,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.uncancel()
         logger.debug(self.cancelled)
         logger.debug(self.rooms.all())
+        """
         super(EighthScheduledActivity, self).save(*args, **kwargs)
 
 

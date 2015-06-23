@@ -108,6 +108,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         activity_info = {
             "id": activity.id,
+            "aid": activity.aid,
             "scheduled_activity": scheduled_activity.id,
             "url": reverse("api_eighth_activity_detail",
                            args=[activity.id],
@@ -132,6 +133,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "both_blocks": activity.both_blocks,
             "special": activity.special,
             "administrative": activity.administrative,
+            "presign": activity.presign,
             "sticky": activity.sticky,
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
