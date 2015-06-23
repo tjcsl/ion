@@ -208,6 +208,9 @@
                                     <br />
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>
                                     <br />
+                                    {% if user.is_eighth_admin %}
+                                        <input type="submit" class="save-button" value="Force {% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" onclick="return confirm('Are you sure you want to {% if scheduled_activity.attendance_taken %}update{% else %}take{% endif %} attendance on an activity where signups are not locked?')" />
+                                    {% endif %}
                                 {% else %}
                                     <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                 {% endif %}
