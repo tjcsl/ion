@@ -6,8 +6,8 @@ from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect
-from rest_framework.renderers import JSONRenderer
 from formtools.wizard.views import SessionWizardView
+from .....utils.serialization import safe_json
 from ....auth.decorators import eighth_admin_required
 from ...models import (
     EighthBlock, EighthActivity, EighthScheduledActivity, EighthSponsor,
@@ -121,8 +121,8 @@ def schedule_activity_view(request):
         "sponsors": all_sponsors,
         "all_signups": all_signups,
         "rooms": all_rooms,
-        "sponsors_json": JSONRenderer().render(all_sponsors),
-        "rooms_json": JSONRenderer().render(all_rooms)
+        "sponsors_json": safe_json(all_sponsors),
+        "rooms_json": safe_json(all_rooms)
     }
 
     if activity is not None:

@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
-from rest_framework.renderers import JSONRenderer
+from ....utils.serialization import safe_json
 from ...auth.decorators import eighth_admin_required
 from ...users.models import User
 from ...users.forms import ProfileEditForm
@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 def date_fmt(date):
     return datetime.strftime(date, "%Y-%m-%d")
+
 
 @eighth_admin_required
 def edit_profile_view(request, user_id=None):
@@ -39,7 +40,7 @@ def edit_profile_view(request, user_id=None):
         logger.debug("Saving")
         form = ProfileEditForm(request.POST)
         if form.is_valid():
-            pass # We don't care.
+            pass  # We don't care.
         items = form.cleaned_data
         new_data = {}
         for field in items:
@@ -176,7 +177,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "user": user
     }
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
-    activities_list = JSONRenderer().render(block_info["activities"])
+    activities_list = safe_json(block_info["activities"])
 
     try:
         active_block_current_signup = EighthSignup.objects.get(user=user, scheduled_activity__block__id=block_id)

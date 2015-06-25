@@ -2,13 +2,14 @@
 {% load widget_tweaks %}
 {% load dictionaries %}
 {% load static %}
+{% load strings %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script type="text/javascript">
-        window.all_sponsors = _.values($.parseJSON("{{ sponsors_json|escapejs }}"));
-        window.all_rooms_lookup = $.parseJSON("{{ rooms_json|escapejs }}");
+        window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
+        window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
         window.all_rooms = _.values(all_rooms_lookup);
     </script>
 

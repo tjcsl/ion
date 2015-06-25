@@ -5,7 +5,7 @@ import logging
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework.renderers import JSONRenderer
+from ....utils.serialization import safe_json
 from ...users.models import User
 from ..exceptions import SignupException
 from ..models import (
@@ -27,7 +27,7 @@ def eighth_signup_view(request, block_id=None):
         return redirect("/eighth/signup/{}?{}".format(block_id, args))
 
     if request.method == "POST":
-        if "unsignup" in request.POST and not "aid" in request.POST:
+        if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST["uid"]
             bid = request.POST["bid"]
 
@@ -45,7 +45,7 @@ def eighth_signup_view(request, block_id=None):
                 return http.HttpResponse("The signup did not exist.")
             except SignupException as e:
                 show_admin_messages = (request.user.is_eighth_admin and
-                                   not request.user.is_student)
+                                       not request.user.is_student)
                 return e.as_response(admin=show_admin_messages)
 
             return http.HttpResponse(success_message)
@@ -158,7 +158,7 @@ def eighth_signup_view(request, block_id=None):
             "user": user,
             "real_user": request.user,
             "block_info": block_info,
-            "activities_list": JSONRenderer().render(block_info["activities"]),
+            "activities_list": safe_json(block_info["activities"]),
             "active_block": block,
             "active_block_current_signup": active_block_current_signup
         }
