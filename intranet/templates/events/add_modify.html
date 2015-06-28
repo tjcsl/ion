@@ -76,7 +76,11 @@
     <table>
     {% csrf_token %}
     {{ form.as_table }}
-    <tr><td><input type="submit" /></td></tr>
+    <tr><td>
+        {% if id %}
+            <a href="{% url 'delete_event' id %}" class="button">Delete</a>
+        {% endif %}
+        <input type="submit" /></td></tr>
     </table>
     </form>
 </div>

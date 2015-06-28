@@ -6,25 +6,13 @@ import datetime
 from calendar import monthrange
 from .models import Event
 from .forms import EventForm
+from ..auth.decorators import events_admin_required
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
-
-
-def get_week_days(today=None):
-    if today is None:
-        today = datetime.date.today()
-    start_delta = datetime.timedelta(days=today.weekday())
-    return [today - start_delta + datetime.timedelta(days=i) for i in range(7)]
-
-def get_month_days(today=None):
-    if today is None:
-        today = datetime.date.today()
-    start_delta = datetime.timedelta(days=today.day-1)
-    return [today - start_delta + datetime.timedelta(days=i) for i in range(monthrange(today.year, today.month)[1])]
 
 @login_required
 def events_view(request):
@@ -65,11 +53,35 @@ def add_event_view(request):
         form = EventForm()
     return render(request, "events/add_modify.html", {"form": form, "action": "add"})
 
-@login_required
-def modify_event_view(request):
-    pass
+@events_admin_required
+def modify_event_view(request, id=None):
+    if request.method == "POST":
+        event = Event.objects.get(id=id)
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully modified event.")
+            return redirect("events")
+        else:
+            messages.error(request, "Error adding event.")
+    else:
+        event = Event.objects.get(id=id)
+        form = EventForm(instance=event)
+    return render(request, "events/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
-@login_required
-def delete_event_view(request):
-    pass
+@events_admin_required
+def delete_event_view(request, id):
+    if request.method == "POST":
+        try:
+            Event.objects.get(id=id).delete()
+            messages.success(request, "Successfully deleted event.")
+        except Event.DoesNotExist:
+            pass
+
+        return redirect("events")
+    else:
+        event = get_object_or_404(Event, id=id)
+        return render(request, "events/delete.html", {"event": event})
