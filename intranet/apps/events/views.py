@@ -7,6 +7,7 @@ from calendar import monthrange
 from .models import Event
 from .forms import EventForm
 from ..auth.decorators import events_admin_required
+from intranet import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -16,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def events_view(request):
+
+    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+        return render(request, "events/not_ready.html")
 
     viewable_events = (Event.objects
                             .visible_to_user(request.user)
@@ -38,6 +42,10 @@ def events_view(request):
 
 @login_required
 def add_event_view(request):
+
+    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+        return render(request, "events/not_ready.html")
+
     if request.method == "POST":
         form = EventForm(request.POST)
         logger.debug(form)
