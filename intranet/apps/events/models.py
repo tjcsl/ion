@@ -40,7 +40,7 @@ class Event(models.Model):
     created_time = models.DateTimeField(auto_now=True)
     last_modified_time = models.DateTimeField(auto_now_add=True)
 
-    time = models.DateTimeField(auto_now=True)
+    time = models.DateTimeField()
     location = models.CharField(max_length=100)
     user = models.ForeignKey(User)
 
@@ -48,3 +48,6 @@ class Event(models.Model):
     announcement = models.ForeignKey(Announcement, null=True, blank=True)
     
     groups = models.ManyToManyField(Group, blank=True)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.title, self.time)

@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load dates %}
 
 {% block title %}
     {{ block.super}} - Events
@@ -10,71 +11,69 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
+
 {% block main %}
-    <div class="primary-content">
+    <div class="primary-content events">
         <h2>Events</h2>
         <div class="button-container">
-            <a href="{% url 'events_add' %}" class="button">
+            <a href="{% url 'add_event' %}" class="button">
                 <i class="fa fa-plus"></i>
                 Add
             </a>
         </div>
 
-        <br />
-
         <div class="events-container">
-        <h2>This week:</h2>
-        {% for event in this_week %}
-            <div class="event">
-                <h3>{{ event.title }}</h3>
-                By: {{ event.user }}<br />
-                For: 
-                {% if event.groups %}
-                    {% for group in event.groups.all %}{{ group }}{% if not forloop.last %}; {% endif %}{% endfor %}
-                {% else %}
-                    Everyone
-                {% endif %}
-                <br />
-                Time: {{ event.time }}<br />
-                <p>Description: {{ event.description }}</p>
-                {% if event.links.all %}
-                <ul>
-                    {% for link in event.links.all %}
-                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-        {% empty %}
-            <p>There are no events visible to you at this time.</p>
+        {% for category_title, category in events.items %}
+            <h2>{{ category_title }}:</h2>
+            {% for event in category %}
+                <div class="event" data-id="{{ event.id }}">
+                    <h3>
+                        {{ event.title }}
+                        {% if is_events_admin %}
+                            <div class="event-icon-wrapper">
+                                <a href="{% url 'modify_event' event.id %}">
+                                    <i class="event-icon fa fa-pencil"></i>
+                                </a>
+                                <a href="{% url 'delete_event' event.id %}" class="event-delete">
+                                    <i class="event-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </h3>
+
+                    <div class="event-metadata">
+                        by {{ event.user.full_name|escape }} &bull; {{ event.time|fuzzy_date|capfirst }} &bull; {{ event.time|date:"l, F j, Y P"}} &bull; for
+                        {% for group in event.groups.all %}
+                            {{ group }}
+                            {% if not forloop.last %},{% endif %}
+                        {% empty %}
+                            everyone
+                        {% endfor %}
+                    </div>
+                    <div class="event-content">
+                        {{ event.description|safe }}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="event">
+                    There are no events to display at this time.
+                </div>
+            {% endfor %}
         {% endfor %}
 
-        <h2>This month:</h2>
-        {% for event in this_month %}
-            <div class="event">
-                <h3>{{ event.title }}</h3>
-                By: {{ event.user }}<br />
-                For: 
-                {% if event.groups %}
-                    {% for group in event.groups.all %}{{ group }}{% if not forloop.last %}; {% endif %}{% endfor %}
-                {% else %}
-                    Everyone
-                {% endif %}
-                <br />
-                Time: {{ event.time }}<br />
-                <p>Description: {{ event.description }}</p>
-                {% if event.links.all %}
-                <ul>
-                    {% for link in event.links.all %}
-                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-        {% empty %}
-            <p>There are no events visible to you at this time.</p>
-        {% endfor %}
+        {% if start_num > 0 %}
+            <a href="?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
+        {% endif %}
+        {% if more_events %}
+            <a href="?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
+        {% endif %}
+    </div>
 
-        </div>
     </div>
 {% endblock %}

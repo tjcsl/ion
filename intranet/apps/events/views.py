@@ -34,17 +34,22 @@ def events_view(request):
                             .prefetch_related("groups"))
 
     # get date objects for week and month
-    this_week = get_week_days()
-    this_month = get_month_days()
+    today = datetime.date.today()
+    delta = today - datetime.timedelta(days=today.weekday())
+    this_week = (delta, delta + datetime.timedelta(days=7))
+    this_month = (this_week[1], this_week[1] + datetime.timedelta(days=31))
 
     context = {
-        "this_week": viewable_events.filter(time__lt=this_week[-1], time__gt=this_week[0]),
-        "this_month": viewable_events.filter(time__lt=this_month[-1], time__gt=this_week[-1] + datetime.timedelta(days=1))
+        "events": {
+            "This week": viewable_events.filter(time__gt=this_week[0], time__lt=this_week[1]),
+            "This month": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1])
+        },
+        "is_events_admin": request.user.has_admin_permission('events')
     }
     return render(request, "events/home.html", context)
 
 @login_required
-def events_add_view(request):
+def add_event_view(request):
     if request.method == "POST":
         form = EventForm(request.POST)
         logger.debug(form)
@@ -59,3 +64,12 @@ def events_add_view(request):
     else:
         form = EventForm()
     return render(request, "events/add_modify.html", {"form": form, "action": "add"})
+
+@login_required
+def modify_event_view(request):
+    pass
+
+
+@login_required
+def delete_event_view(request):
+    pass
