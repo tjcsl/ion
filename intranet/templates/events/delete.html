@@ -1,0 +1,33 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {{ action|title }} Event
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+<div class="events primary-content">
+    <h3>Are you sure you want to delete this event?</h3>
+    <b>{{ event.title }}</b>
+    <br />
+    <br />
+    {{ event.description|safe }}
+    <br />
+    <br />
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ event.id }}" />
+        <a class="button" href="{% url 'events' %}">Cancel</a>
+        <input type="submit" value="Delete" />
+    </form>
+</div>
+{% endblock %}

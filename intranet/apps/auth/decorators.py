@@ -27,5 +27,8 @@ eighth_admin_required = admin_required("eighth")
 #: Restrict the wrapped view to announcements admins
 announcements_admin_required = admin_required("announcements")
 
+#: Restrict the wrapped view to events admins
+events_admin_required = admin_required("events")
+
 #: Restrict the wrapped view to users who can take attendance
 attendance_taker_required = user_passes_test(lambda u: not u.is_anonymous() and u.is_attendance_taker)

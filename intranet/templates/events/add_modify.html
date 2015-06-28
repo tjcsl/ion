@@ -1,0 +1,93 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super}} - {{ action|title }} Event
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("select#id_groups").selectize({
+                plugins: ["remove_button"],
+                placeholder: "Everyone"
+            });
+
+            $("#id_time").datetimepicker({
+                lazyInit: true,
+                format: "Y-m-d H:i:s"
+            });
+
+            $("#id_links").selectize({
+                placeholder: "Links",
+                create: true
+            })
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <style type="text/css">
+
+        div.cke_chrome {
+            margin: 10px 0;
+        }
+
+        .selectize-input {
+            width: calc(100% + 8px);
+        }
+
+        .announcements table {
+            width: 600px;
+        }
+
+        .announcements input {
+            width: 100%;
+        }
+
+        @media (max-width: 810px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 342px !important;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .announcements table, .announcements #cke_id_content {
+                width: 400px !important;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="events primary-content">
+    <h2>
+        {{ action|title }} Event
+    </h2>
+    <form action="/events/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td>
+        {% if id %}
+            <a href="{% url 'delete_event' id %}" class="button">Delete</a>
+        {% endif %}
+        <input type="submit" /></td></tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("description", {
+        width: "600px"
+    });
+</script>
+{% endblock %}
