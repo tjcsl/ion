@@ -23,7 +23,8 @@
         <br />
 
         <div class="events-container">
-        {% for event in events %}
+        <h2>This week:</h2>
+        {% for event in this_week %}
             <div class="event">
                 <h3>{{ event.title }}</h3>
                 By: {{ event.user }}<br />
@@ -34,6 +35,33 @@
                     Everyone
                 {% endif %}
                 <br />
+                Time: {{ event.time }}<br />
+                <p>Description: {{ event.description }}</p>
+                {% if event.links.all %}
+                <ul>
+                    {% for link in event.links.all %}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>There are no events visible to you at this time.</p>
+        {% endfor %}
+
+        <h2>This month:</h2>
+        {% for event in this_month %}
+            <div class="event">
+                <h3>{{ event.title }}</h3>
+                By: {{ event.user }}<br />
+                For: 
+                {% if event.groups %}
+                    {% for group in event.groups.all %}{{ group }}{% if not forloop.last %}; {% endif %}{% endfor %}
+                {% else %}
+                    Everyone
+                {% endif %}
+                <br />
+                Time: {{ event.time }}<br />
                 <p>Description: {{ event.description }}</p>
                 {% if event.links.all %}
                 <ul>
