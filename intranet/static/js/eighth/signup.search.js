@@ -10,7 +10,7 @@ $(document).ready(function() {
         var results = [];
         var activities = window.activityModels._byId;
 
-        $("#activity-list li").each(function() {
+        $("#activity-list li[data-activity-id]").each(function() {
             var aid = $(this).data("activity-id");
             var activity = activities[aid].attributes;
 
@@ -142,7 +142,7 @@ $(document).ready(function() {
 
         // console.log("results:", results);
 
-        $("#activity-list li").each(function() {
+        $("#activity-list li[data-activity-id]").each(function() {
             var aid = $(this).data("activity-id");
 
             if(results.indexOf(aid) != -1) {
@@ -152,6 +152,13 @@ $(document).ready(function() {
             }
 
         });
+
+        if(results.length == 0) {
+            // No results
+            $("#activity-list ul.search-noresults").show();
+        } else {
+            $("#activity-list ul.search-noresults").hide();
+        }
 
         console.debug("time:", +new Date - _st);
 
