@@ -34,7 +34,8 @@ def events_view(request):
     context = {
         "events": {
             "This week": viewable_events.filter(time__gt=this_week[0], time__lt=this_week[1]),
-            "This month": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1])
+            "This month": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1]),
+            "Future": viewable_events.filter(time__gt=this_month[1])
         },
         "is_events_admin": request.user.has_admin_permission('events')
     }
