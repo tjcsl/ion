@@ -45,13 +45,16 @@ class Announcement(models.Model):
 
     title = models.CharField(max_length=127)
     content = models.TextField()
-    author = models.CharField(max_length=63)
+    author = models.CharField(max_length=63, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(Group, blank=True)
 
     expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
+
+    def get_author(self):
+        return self.author if self.author else self.user.full_name
 
     def __unicode__(self):
         return self.title

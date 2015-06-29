@@ -78,7 +78,7 @@
                 </h3>
 
                 <div class="announcement-metadata">
-                    by {{ announcement.author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
+                    by {{ announcement.get_author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
                     {% for group in announcement.groups.all %}
                         {{ group }}
                         {% if not forloop.last %},{% endif %}
