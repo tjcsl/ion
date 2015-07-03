@@ -17,7 +17,7 @@ $(function() {
         $(".choose-activities tbody input").each(function() {
             $(this).prop("checked", chk);
         })
-    })
+    });
 });
     </script>
 {% endblock %}
@@ -33,13 +33,14 @@ $(function() {
     <form action="" method="post">{% csrf_token %}
         <input type="submit" value="Print Roster" />
         <br />
-        Click on column titles to sort.
+        Click on column titles to sort on this selection screen.<br /> The exported PDF will be sorted by <b>the first listed sponsor's last name</b>.
         <table data-sortable class="fancy-table choose-activities zebra">
         <thead>
             <tr>
                 <th><input type="checkbox" class="all" checked /></th>
                 <th>Activity Name</th>
-                <th>Sponsors</th>
+                <!-- automatically sorted by sponsor -->
+                <th data-sorted="true" data-sorted-direction="ascending">Sponsors</th>
                 <th>Rooms</th>
             </tr>
         </thead>
