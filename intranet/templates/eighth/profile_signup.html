@@ -225,7 +225,6 @@
                 {% include "eighth/admin/start_date.html" %}
             </div>
         {% endif %}
-        <br />
 
         <section class="user-info-eighth user-info">
         <form action="{% url 'eighth_signup' %}" method="GET">
@@ -355,10 +354,11 @@
                         {% endif %}
                     </h4>
                 </div>
-
+                {% if user.is_eighth_admin %}
                 <div class="unsignup">
                     <button id="unsignup-button" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}">Remove Signup</button>
                 </div>
+                {% endif %}
 
                 <div class="switch">
                     <i class="fa fa-chevron-up up"></i>
