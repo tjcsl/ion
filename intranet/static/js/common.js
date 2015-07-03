@@ -42,29 +42,8 @@ $(function() {
         $(".nav li").slice(0,1).addClass("selected");
     });
 
-
-    /* Fix submit button bug with Selectize.js where
-     * form will not submit if the enter button is pressed
-     * while a form field is selected. */
-/*
-    $(".selectize-control").each(function() {
-        $(this).parent().bind("keypress", function() {
-
-        });
-    });*/
-
+    // On sortable tables, use the data-auto-sort parameter to
+    // automatically sort by that field.
+    $("table[data-sortable] thead th[data-auto-sort]").click();
 });
 
-
-// Prevent navigation backward when backspace is pressed
-$(function() {
-    var rx = /INPUT|SELECT|TEXTAREA/i;
-
-    $(document).bind("keydown keypress", function(e){
-        if( e.which == 8 ){ // 8 == backspace
-            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
-                e.preventDefault();
-            }
-        }
-    });
-})

@@ -12,6 +12,7 @@ class BlockDisplayField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.id, str(obj))
 
+
 class BlockSelectionForm(forms.Form):
 
     def __init__(self, label="Block", exclude_before_date=None, only_locked=False, *args, **kwargs):
