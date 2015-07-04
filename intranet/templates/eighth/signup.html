@@ -16,7 +16,11 @@
     #activity-list li[data-administrative=true] {
         display: none;
     }
-    dl.activityid {
+    dl.scheduledid {
+        display: none;
+    }
+
+    #activity-list li .activity-ids {
         display: none;
     }
     </style>
@@ -119,7 +123,13 @@
             <% var sponsors_all = ""; %>
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
-            <span class="activity-sponsors" title="<%= sponsors_all %>"><%= sponsors_all %></span>
+            <span class="activity-sponsors" title="<%= sponsors_all %>">
+
+                <span class="activity-ids">
+                    <%= aid %>; #<%= this.model.attributes.scheduled_activity %> &mdash;
+                </span>
+                <%= sponsors_all %>
+            </span>
 
         {% endverbatim %}
     </script>
@@ -158,13 +168,19 @@
             <span class="badge yellow">48-hr Wait</span>
         <% } %>
 
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
 
         <dl class="activityid">
             <dt>Activity ID:</dt>
             <dd><%= aid %></dd>
         </dl>
-        <dl>
 
+        <dl class="scheduledid">
+            <dt>Scheduled ID:</dt>
+            <dd><%= scheduled_activity_id %></dd>
+        </dl>
+
+        <dl>
             <% rooms = _.uniq(rooms)%>
             <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
             <dd>
@@ -389,7 +405,7 @@
                 You may also search for flags, such as Restricted, Special, and Sticky. To do this, use the syntax <em>is:restricted</em>, <em>is:special</em>, or <em>is:sticky</em>.
                 </p>
                 <p>
-                To exclude results, use the minus operator. For example, to hide activities that are restricted and not available to you, type <em>-is:restricted</em>.
+                To exclude results, use the minus operator. For example, to hide activities that are restricted and thus not available to you, type <em>-is:restricted</em>.
                 </p>
             </div>
         </div>
