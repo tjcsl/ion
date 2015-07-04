@@ -276,7 +276,10 @@ def take_attendance_view(request, scheduled_activity_id):
                 "grade": user.grade.number,
                 "present": (scheduled_activity.attendance_taken and
                             (user.id not in absent_user_ids)),
-                "had_pass": user.id in pass_users
+                "had_pass": user.id in pass_users,
+                "pass_present": (not scheduled_activity.attendance_taken and
+                                 user.id in pass_users and
+                                 user.id not in absent_user_ids)
             })
 
         members.sort(key=lambda m: m["name"])
@@ -364,10 +367,12 @@ def accept_pass_view(request, signup_id):
     logger.debug(status)
 
     if status == "accept":
+        logger.debug("ACCEPT")
         signup.was_absent = False
         signup.present = True
         signup.pass_accepted = True
     elif status == "reject":
+        logger.debug("REJECT")
         signup.was_absent = True
         signup.pass_accepted = True
 

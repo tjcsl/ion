@@ -239,7 +239,7 @@ $(function() {
                             {% for member in members %}
                                 <tr>
                                     {% if scheduled_activity.block.locked %}
-                                        <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}{% if not scheduled_activity.attendance_taken and member.had_pass and not member.was_absent %} checked{% endif %}></td>
+                                        <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
                                     {% endif %}
                                     <td>{{ member.name }}</td>
                                     <td>{% if member.student_id %}
@@ -248,7 +248,7 @@ $(function() {
                                         (Ion {{ member.id }})
                                     {% endif %}</td>
                                     <td style="text-align: center">{{ member.grade }}</td>
-                                    <td>{% if member.had_pass %}(Had Pass){% endif %}</td>
+                                    <td>{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Present{% endif %}){% endif %}</td>
                                 </tr>
                             {% empty %}
                                 <tr>
@@ -266,9 +266,6 @@ $(function() {
                                     <br />
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>
                                     <br />
-                                    {% if user.is_eighth_admin %}
-                                        <input type="submit" class="save-button" value="Force {% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" onclick="return confirm('Are you sure you want to {% if scheduled_activity.attendance_taken %}update{% else %}take{% endif %} attendance on an activity where signups are not locked?')" />
-                                    {% endif %}
                                 {% else %}
                                     {% if not scheduled_activity.attendance_taken %}
                                         <i class="fa fa-icon-right"></i>
@@ -291,7 +288,7 @@ $(function() {
                     <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');">
                         {% csrf_token %}
                         <input type="hidden" name="clear_attendance_bit" value="true" />
-                        <input type="submit" value="Clear Attendance Bit" />
+                        <input type="submit" value="Clear Attendance Bit" style="font-size: 10px; padding: 3px 5px" />
                     </form>
                 {% endif %}
             </div>
