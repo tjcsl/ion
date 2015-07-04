@@ -405,6 +405,33 @@ def open_passes_view(request):
 
         messages.success(request, "Accepted {} and rejected {} passes.".format(accepted, rejected))
 
+    if request.resolver_match.url_name == "eighth_admin_view_open_passes_csv":
+        response = http.HttpResponse(content_type="text/csv")
+        filename = "\"open_passes.csv\""
+        response["Content-Disposition"] = "attachment; filename=" + filename
+
+        writer = csv.writer(response)
+        writer.writerow(["Block",
+                         "Activity",
+                         "Student",
+                         "Grade",
+                         "Absences",
+                         "Time (Last Modified)",
+                         "Time (Created)"])
+
+        for p in passes:
+            row = []
+            row.append(p.scheduled_activity.block)
+            row.append(p.scheduled_activity.activity)
+            row.append("{}, {} {}".format(p.user.last_name, p.user.first_name, p.user.nickname if p.user.nickname else ""))
+            row.append(int(p.user.grade))
+            row.append(p.user.absence_count())
+            row.append(p.last_modified_time)
+            row.append(p.created_time)
+            writer.writerow(row)
+
+        return response
+
     context = {
         "admin_page_title": "Open Passes",
         "passes": passes

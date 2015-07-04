@@ -69,6 +69,7 @@ eighth_admin_patterns = [
     url(r"^attendance/export_out_of_building_schedules/csv/(?P<block_id>\d+)$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules_csv"),
     url(r"^attendance/clear_absences/(?P<signup_id>\d+)$", admin_attendance.clear_absence_view, name="eighth_admin_clear_absence"),
     url(r"^attendance/open_passes$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes"),
+    url(r"^attendance/open_passes/csv$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes_csv"),
 
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
