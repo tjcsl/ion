@@ -110,6 +110,7 @@ $(function() {
         $("tr.form-row").each(function() {
             var $blocksOfType = $(this).filter(blockTypeFilter);
             $blocksOfType.find("input[type='checkbox']").prop("checked", true);
+            $blocksOfType.removeClass("hidden");
         })
 
         updateSelectAllCheckbox();

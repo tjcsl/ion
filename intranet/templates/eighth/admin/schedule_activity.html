@@ -92,12 +92,12 @@
                             <a href="" onclick="return false" class="block-type">Fri B</a>
                         </div>
                     </th>
-                    <th>Rooms</th>
-                    <th>Signups/Capacity</th>
-                    <th>Sponsors</th>
-                    <th>Title suffix</th>
-                    <th>Comments</th>
-                    <th>Admin Comments</th>
+                    <th>Rooms</th><th></th>
+                    <th>Signups/Capacity</th><th></th>
+                    <th>Sponsors</th><th></th>
+                    <th>Title suffix</th><th></th>
+                    <th>Comments</th><th></th>
+                    <th>Admin Comments</th><th></th>
                 </tr>
             </thead>
             <tbody>
@@ -118,7 +118,7 @@
                                 <td data-field="{{ field.name }}">
                                 {{ field.errors }}
                                 {% if field.name == "rooms" %}
-                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{{ default_rooms|join:", " }}">
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{% if not default_rooms %}No default{% else %}{{ default_rooms|join:", " }}{% endif %}">
                                         {% for val in field.value %}
                                             <option value="{{ val }}" selected="selected">
                                                 {% with room=rooms|lookup:val %}
@@ -128,7 +128,7 @@
                                         {% endfor %}
                                     </select>
                                 {% elif field.name == "sponsors" %}
-                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{{ default_sponsors|join:", " }}">
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{% if not default_sponsors %}No default{% else %}{{ default_sponsors|join:", " }}{% endif %}">
                                         {% for val in field.value %}
                                             <option value="{{ val }}" selected="selected">
                                                 {% with sponsor=sponsors|lookup:val %}
@@ -144,12 +144,15 @@
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
-                                {% if field.name in "rooms capacity sponsors title comments admin_comments" %}
-                                    <span class="propagate {{ field.name }}" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
-                                        <i class="fa fa-arrows-v"></i>
-                                    </span>
-                                {% endif %}
                                 </td>
+
+                                {% if field.name in "rooms capacity sponsors title comments admin_comments" %}
+                                <td class="propagate" data-base-field="{{ field.name }}">
+                                    <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
+                                        <i class="fa fa-arrows-v"></i>
+                                    </a>
+                                </td>
+                                {% endif %}
                             {% endif %}
 
                             {% if field.name == "scheduled" %}
