@@ -16,7 +16,7 @@
         });
     </script>
 {% if show_selection %}
-    <script type="text/javascript" src="{% static 'css/eighth/distribute_group.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/distribute_group.js' %}"></script>
 {% else %}
     <script type="text/javascript">
         $(function() {
@@ -30,7 +30,7 @@
 
 {% block admin_main %}
     {% if show_selection %}
-    <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
+    <form action="{% url 'eighth_admin_distribute_action' %}" method="post" onsubmit="return confirm('Are you sure you want to sign these users up for these activities?')">
         
         {% if users_type == "unsigned" %}
             <p>These users have not signed up for any activities on {{ eighthblock }}.</p>
@@ -42,7 +42,7 @@
         <button onclick="distribute(); return false">Evenly Distribute</button>
         <br />
         <input type="hidden" name="users" value="true" />
-        <input type="submit" value="Finish" onclick="return confirm('Are you sure you want to sign these users up for these activities?')" />
+        <input type="submit" value="Finish" />
         {% csrf_token %}
         <br />
         Click on column titles to sort.
@@ -81,7 +81,7 @@
             </tbody>
         </table>
 
-        <input type="submit" value="Finish" onclick="return confirm('Are you sure you want to sign these users up for these activities?')" />
+        <input type="submit" value="Finish" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
     {% else %}
     <form method="post" name="wizard">{% csrf_token %}
         {{ wizard.management_form }}

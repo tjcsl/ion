@@ -450,7 +450,7 @@ def eighth_admin_distribute_action(request):
                     scheduled_activity=schact
                 )
 
-        messages.success(request, "Successfully signed up users for {} activities.".format(changes))
+        messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
         return redirect("eighth_admin_dashboard")
     elif "schact" in request.GET:
@@ -484,6 +484,9 @@ def eighth_admin_distribute_action(request):
 
             users = unsigned
             users_type = "unsigned"
+
+            if "limit" in request.GET:
+                users = users[0:int(request.GET.get('limit'))]
 
 
         # Sort by last name
