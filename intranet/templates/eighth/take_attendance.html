@@ -18,11 +18,53 @@
     <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
     <script type="text/javascript" src="{% static 'js/eighth/attendance.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/ui_init.js' %}"></script>
+    {% if wizard %}
+    <script type="text/javascript">
+$(function() {
+    $("form > select").on("change", function() {
+        this.form.submit();
+    })
+});
+    </script>
+    {% else %}
+    <script type="text/javascript">
+$(function() {
+    $("form[name='choose-activity'] > select").on("change", function() {
+        location.href = "/eighth/admin/attendance/" + $(this).val();
+    });
+})
+    </script>
+    {% endif %}
 {% endblock %}
 
 
 {% block main %}
     <div class="primary-content">
+    {% if request.user.is_eighth_admin and not wizard %}
+    <div>
+        <form action="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}" method="post" name="choose-block">
+            {% csrf_token %}
+            <input type="hidden" name="eighth_attendance_select_scheduled_activity_wizard-current_step" value="block" />
+            <b>Block:</b>
+            <select name="block-block" onchange="this.form.submit()" id="block-select">
+                {% for blk in blocks %}
+                    <option value="{{ blk.id }}"{% if blk.id == scheduled_activity.block.id %} selected{% endif %}>{{ blk }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <div>
+        <form name="choose-activity">
+            <b>Activity:</b>
+            <select name="scheduled-activities" id="activity-select">
+            {% for schact in scheduled_activities %}
+                <option value="{{ schact.id }}"{% if schact.id == scheduled_activity.id %} selected{% endif %}>{{ schact.activity }}</option>
+            {% endfor %}
+            </select>
+        </form>
+    </div>
+    {% endif %}
+
         <div class="eighth-header">
                 <h2>
                     {% if scheduled_activity.block.locked %}

@@ -25,7 +25,7 @@ from ...users.models import User
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup
+from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup, EighthBlock
 
 logger = logging.getLogger(__name__)
 
@@ -275,6 +275,15 @@ def take_attendance_view(request, scheduled_activity_id):
             "members": members,
             "p": pass_users
         }
+
+        if request.user.is_eighth_admin:
+            context["scheduled_activities"] = (EighthScheduledActivity.objects
+                                                                      .filter(block__id=scheduled_activity.block.id)
+                                                                      .exclude(cancelled=True))
+            logger.debug(context["scheduled_activities"])
+            context["blocks"] = (EighthBlock.objects
+                                            .filter(date__gte=get_start_date(request))
+                                            .order_by("date"))
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
             response = http.HttpResponse(content_type="text/csv")

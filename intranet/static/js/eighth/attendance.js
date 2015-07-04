@@ -1,5 +1,5 @@
 $(function() {
-    $("select").selectize({});
+    //$("select").selectize({});
     $("input.datepicker, input[name=date]").datepicker();
 
     // Set up checkboxes on attendance pages
