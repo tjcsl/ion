@@ -48,7 +48,7 @@ def edit_activity_view(request, activity_id):
                 messages.error(request, error)
             else:
                 messages.success(request, "Successfully edited activity.")
-                return redirect("eighth_admin_dashboard")
+                return redirect("eighth_admin_edit_activity", activity_id)
         else:
             messages.error(request, "Error adding activity.")
     else:
@@ -58,10 +58,11 @@ def edit_activity_view(request, activity_id):
         "form": form,
         "admin_page_title": "Edit Activity",
         "delete_url": reverse("eighth_admin_delete_activity",
-                              args=[activity_id])
+                              args=[activity_id]),
+        "activity": activity
     }
 
-    return render(request, "eighth/admin/edit_form.html", context)
+    return render(request, "eighth/admin/edit_activity.html", context)
 
 
 @eighth_admin_required

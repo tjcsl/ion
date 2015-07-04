@@ -63,6 +63,15 @@
             {% if only_show_overbooked %}
                 $("tr.underbooked").toggle();
             {% endif %}
+
+            {% if not scheduled_activities and wizard %}
+            $("form > select").on("change", function() {
+                var val = $(this).val();
+                if(val) {
+                    this.form.submit();
+                }
+            });
+            {% endif %}
         });
     </script>
 {% endblock %}
@@ -75,9 +84,6 @@
     color: red;
 }
 
-#room-util-table tr.restricted {
-    color: purple;
-}
     </style>
 {% endblock %}
 

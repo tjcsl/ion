@@ -1,0 +1,71 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+.edit-table .selectize-control {
+    width: 300px;
+}
+
+.restriction-list {
+    position: absolute;
+    top: 100px;
+    right: 10px;
+    width: 300px;
+}
+
+@media (max-width: 892px) {
+    .restriction-list {
+        position: static;
+    }
+}
+
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+
+<form action="" method="post" autocomplete="off">
+    <table class="edit-table">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <tr>
+            <td class="right-buttons" colspan=2>
+                <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+                {% if delete_url %}
+                    <a class="button" href="{{ delete_url }}">Delete</a>
+                {% endif %}
+                <input type="submit" value="Save">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="restriction-list">
+    <h2>Restriction List:</h2>
+    {% if activity.restricted %}
+        {% if not activity.groups_allowed.all and not activity.users_allowed.all %}
+            No students may sign up for this activity.
+        {% else %}
+            <ul>
+                {% for group in activity.groups_allowed.all %}
+                    <li><b>Group: {{ group }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
+                    <ul>
+                        {% for member in group.user_set.all %}
+                            <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
+                        {% endfor %}
+                    </ul>
+                    </li>
+                {% endfor %}
+
+                {% for member in activity.users_allowed.all %}
+                    <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        This activity is not restricted.<br />All students may sign up for this activity.
+    {% endif %}
+
+</div>
+{% endblock %}
