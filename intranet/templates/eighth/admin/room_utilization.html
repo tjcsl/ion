@@ -74,6 +74,10 @@
 #room-util-table tr.cancelled {
     color: red;
 }
+
+#room-util-table tr.restricted {
+    color: purple;
+}
     </style>
 {% endblock %}
 
@@ -172,7 +176,7 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %}">
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %} {% if sched_act.activity.restricted %}restricted{% endif %}">
                         {% if show.block %}
                             <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
                         {% endif %}

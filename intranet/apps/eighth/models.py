@@ -372,6 +372,13 @@ class EighthBlock(AbstractBaseEighthModel):
     def letter_width(self):
         return (len(self.block_letter) - 1) * 6 + 15
 
+    @property
+    def letter_text(self):
+        if any(char.isdigit() for char in self.block_letter):
+            return "Block {}".format(self.block_letter)
+        else:
+            return "{} Block".format(self.block_letter)
+
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
         return "{} ({})".format(formatted_date, self.block_letter)
