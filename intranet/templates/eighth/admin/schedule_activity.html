@@ -58,10 +58,17 @@
 
             <div class="propagate-direction">
                 <b>Propagate Direction:</b>
-                <select onchange="window.updatePropagate(this.value)">
+                <select onchange="window.updatePropagateDirection(this.value)">
                     <option value="both" default>Both</option>
                     <option value="up">Up</option>
                     <option value="down">Down</option>
+                </select>
+            </div>
+            <div class="propagate-method">
+                 <b>Propagate Method:</b>
+                 <select onchange="window.updatePropagateMethod(this.value)">
+                    <option value="only_new" default>New</option>
+                    <option value="all">All</option>
                 </select>
             </div>
         {% endif %}
@@ -159,7 +166,7 @@
                         {% endfor %}
                         {% if form.cancelled.value %}
                             <td>
-                                <button>Unschedule</button>
+                                <button onclick="return false">Unschedule</button>
                             </td>
                         {% endif %}
                     </tr>

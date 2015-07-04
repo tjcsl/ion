@@ -50,7 +50,8 @@ $(function() {
     });
 
     window.propagate_direction = "both";
-    window.updatePropagate = function(opt) {
+    window.propagate_method = "only_new";
+    window.updatePropagateDirection = function(opt) {
         window.propagate_direction = opt;
         console.info("New propagate direction:", opt)
 
@@ -65,6 +66,11 @@ $(function() {
             $(".propagate > i").removeClass(classes[0]).removeClass(classes[1])
                                .addClass(classes[2]);
         }
+    }
+
+    window.updatePropagateMethod = function(opt) {
+        console.info("New propagate method:", opt);
+        window.propagate_method = opt;
     }
 
     $(".propagate").click(function() {
@@ -98,6 +104,19 @@ $(function() {
                 }
             }
             rows = $(rows);
+        }
+
+        if(window.propagate_method && window.propagate_method == "only_new") {
+            var new_rows = [];
+            for(var i=0; i<rows.length; i++) {
+                var rw = $(rows[i]);
+                if(!rw.hasClass("scheduled")) {
+                    new_rows.push(rows[i]);
+                }
+            }
+            console.log(rows);
+            rows = $(new_rows);
+            console.log(rows);
         }
 
         if(el.hasClass("selectized")) {
