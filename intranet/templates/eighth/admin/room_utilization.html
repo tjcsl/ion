@@ -69,6 +69,11 @@
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
+    <style type="text/css">
+#room-util-table tr.cancelled {
+    color: red;
+}
+    </style>
 {% endblock %}
 
 {% block admin_main %}
@@ -150,7 +155,7 @@
         
         <br />
         Click on column titles to sort.
-        <table data-sortable class="fancy-table">
+        <table id="room-util-table" data-sortable class="fancy-table">
             <thead>
                 <tr>
                     {% if show.block %}<th>Block</th>{% endif %}
@@ -166,7 +171,7 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}{% if not sched_act.is_overbooked %} underbooked{% endif %}">
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %}">
                         {% if show.block %}
                             <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
                         {% endif %}
@@ -177,7 +182,7 @@
                             <td>{{ sched_act.activity.aid }}</td>
                         {% endif %}
                         {% if show.activity %}
-                            <td>{{ sched_act.activity.name_with_flags }}</td>
+                            <td>{{ sched_act.title_with_flags }}</td>
                         {% endif %}
                         {% if show.sponsors %}
                             <td>{{ sched_act.get_true_sponsors|join:", " }}</td>

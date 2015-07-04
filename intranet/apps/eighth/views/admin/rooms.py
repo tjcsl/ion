@@ -196,7 +196,7 @@ def room_utilization_action(request, start_id, end_id):
 
     sched_acts = (EighthScheduledActivity.objects
                                          .exclude(activity__deleted=True)
-                                         .exclude(cancelled=True)
+                                        #.exclude(cancelled=True) # include cancelled activities
                                          .filter(block__date__gte=start_block.date,
                                                  block__date__lte=end_block.date)
                                          .order_by("block__date",
