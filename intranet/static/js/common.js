@@ -18,11 +18,16 @@ $.ajaxSetup({
 
 
 // UI Stuff
-function initUIElementBehavior () {
+function initUIElementBehavior() {
     // Call this function whenever relevant UI elements are dynamically added to the page
     $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").mouseup(function() {
         $(this).blur();
     });
+}
+
+function showWaitScreen() {
+    var l = $("<div class='please-wait'><h2>Please wait..</h2><h4>This operation may take between 30 and 60 seconds to complete.</h4></div>");
+    $("body").append(l);
 }
 
 $(function() {
