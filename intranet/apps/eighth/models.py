@@ -465,15 +465,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Gets the full title for the activity, appending the title of the
         scheduled activity to the activity's name.
         """
-
-        return self.activity.name if not self.title else "{} - {}".format(self.activity.name, self.title)
+        cancelled_str = " (Cancelled)" if self.cancelled else ""
+        act_name = self.activity.name + cancelled_str
+        return act_name if not self.title else "{} - {}".format(act_name, self.title)
 
     @property
     def title_with_flags(self):
         """Gets the title for the activity, appending the title of the
         scheduled activity to the activity's name and flags.
         """
-        name_with_flags = self.activity._name_with_flags(True)
+        cancelled_str = " (Cancelled)" if self.cancelled else ""
+        name_with_flags = self.activity._name_with_flags(True) + cancelled_str
         return name_with_flags if not self.title else "{} - {}".format(name_with_flags, self.title)
 
     def get_true_sponsors(self):
