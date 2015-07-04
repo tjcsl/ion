@@ -80,6 +80,7 @@
                 <th>Activity</th>
                 <th>Teacher</th>
                 <th>Room</th>
+                <th>Attended</th>
                 <th></th>
             </tr>
         </thead>
@@ -108,8 +109,15 @@
             <td>
                 {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
             </td>
+            <td>
+                {% if sch.signup.scheduled_activity.attendance_taken %}
+                    {% if sch.signup.was_absent %}No{% else %}Yes{% endif %}
+                {% else %}
+                    &nbsp; &nbsp; &mdash;
+                {% endif %}
+            </td>
             {% else %}
-            <td colspan="3">
+            <td colspan="4">
                 <span class="no-activity-selected">No activity selected</span>
             </td>
             {% endif %}
