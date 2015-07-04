@@ -8,16 +8,39 @@
         $(function() {
             Sortable.init();
 
+            updateRoomChoices = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var room_ids = $("#room-select").val();
+                console.debug("updateRoomChoices", room_ids)
+                for(var i=0; i<room_ids.length; i++) {
+                    var el = $("<input type='hidden' name='room' />");
+                    el.val(room_ids[i]);
+                    $(form).append(el);
+                }
+            }
+
+            $("#rooms-submit").click(function(event) {
+                event.preventDefault();
+                updateRoomChoices();
+                document.forms["choose-fields"].submit();
+            });
+
+
             $("#export-csv").click(function(event) {
                 event.preventDefault();
+                updateRoomChoices();
                 document.forms["choose-fields"].action = $(this).attr("href");
                 document.forms["choose-fields"].submit();
 
-                $("#apply-btn").click(function(event) {
-                    event.preventDefault();
-                    document.forms["choose-fields"].action = "";
-                    document.forms["choose-fields"].submit();
-                });
+            });
+            
+            $("#apply-btn").click(function(event) {
+                event.preventDefault();
+                updateRoomChoices();
+                document.forms["choose-fields"].action = "";
+                document.forms["choose-fields"].submit();
             });
 
             $("#hide-administrative").on("change", function() {
@@ -87,7 +110,7 @@
                         <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
                     {% endfor %}
                 </select>
-                <input type="submit" value="Filter" />
+                <input type="submit" value="Filter" id="rooms-submit" />
             </form>
         </td>
         <td>
