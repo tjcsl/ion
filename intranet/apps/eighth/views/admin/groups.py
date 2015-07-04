@@ -276,6 +276,11 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminSignUpGroupWizard,
                         self).get_context_data(form=form, **kwargs)
+        
+        block = self.get_cleaned_data_for_step("block")
+        if block:
+            context.update({"block_obj": block["block"]})
+
         context.update({"admin_page_title": "Sign Up Group"})
         return context
 

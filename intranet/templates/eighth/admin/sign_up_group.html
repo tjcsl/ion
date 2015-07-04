@@ -15,7 +15,21 @@
     <form action="" method="post" name="wizard">{% csrf_token %}
         {{ wizard.management_form }}
         <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+        
+
+        {% if block_obj %}
+            <b>Block:</b> {{ block_obj }}
+            <br />
+            {% if block_obj.locked %}
+            This block is locked. This action would result in an after-deadline signup.
+            <br />
+            {% endif %}
+            <br />
+        {% endif %}
+
         {{ wizard.form }}
+
+
         {% if wizard.steps.prev %}
             <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
         {% endif %}
