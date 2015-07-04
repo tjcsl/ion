@@ -40,44 +40,48 @@ $(function() {
 
 {% block main %}
     <div class="primary-content">
+        <div class="eighth-header">
+            <h2>
+                {% if scheduled_activity.block.locked %}
+                    Take Attendance
+                {% else %}
+                    View Roster
+                {% endif %}
+            </h2>
+
+            {% if request.user.is_eighth_admin %}
+                {% include "eighth/admin/start_date.html" %}
+            {% endif %}
+        </div>
     {% if request.user.is_eighth_admin and not wizard %}
-    <div>
-        <form action="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}" method="post" name="choose-block">
-            {% csrf_token %}
-            <input type="hidden" name="eighth_attendance_select_scheduled_activity_wizard-current_step" value="block" />
-            <b>Block:</b>
-            <select name="block-block" onchange="this.form.submit()" id="block-select">
-                {% for blk in blocks %}
-                    <option value="{{ blk.id }}"{% if blk.id == scheduled_activity.block.id %} selected{% endif %}>{{ blk }}</option>
+        <div>
+            <form action="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}" method="post" name="choose-block">
+                {% csrf_token %}
+                <input type="hidden" name="eighth_attendance_select_scheduled_activity_wizard-current_step" value="block" />
+                <b>Block:</b>
+                <select name="block-block" onchange="this.form.submit()" id="block-select">
+                    {% for blk in blocks %}
+                        <option value="{{ blk.id }}" {% if blk.id == scheduled_activity.block.id %} selected{% endif %}>
+                            {{ blk }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div>
+            <form name="choose-activity">
+                <b>Activity:</b>
+                <select name="scheduled-activities" id="activity-select">
+                {% for schact in scheduled_activities %}
+                    <option value="{{ schact.id }}" {% if schact.id == scheduled_activity.id %} selected{% endif %}>
+                        {{ schact.activity }}
+                    </option>
                 {% endfor %}
-            </select>
-        </form>
-    </div>
-    <div>
-        <form name="choose-activity">
-            <b>Activity:</b>
-            <select name="scheduled-activities" id="activity-select">
-            {% for schact in scheduled_activities %}
-                <option value="{{ schact.id }}"{% if schact.id == scheduled_activity.id %} selected{% endif %}>{{ schact.activity }}</option>
-            {% endfor %}
-            </select>
-        </form>
-    </div>
+                </select>
+            </form>
+        </div>
     {% endif %}
 
-        <div class="eighth-header">
-                <h2>
-                    {% if scheduled_activity.block.locked %}
-                        Take Attendance
-                    {% else %}
-                        View Roster
-                    {% endif %}
-                </h2>
-
-                {% if request.user.is_eighth_admin %}
-                    {% include "eighth/admin/start_date.html" %}
-                {% endif %}
-        </div>
 
         {% if request.GET.ns %}
             <strong>You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
@@ -114,6 +118,7 @@ $(function() {
         {% else %}
             <div class="attendance-container">
                 <table class="key-value-table activity-attributes">
+                {% if not request.user.is_eighth_admin %}
                     <tr>
                         <th>Activity:</th>
                         <td>{{ scheduled_activity.activity.name_with_flags }} ({{ scheduled_activity.activity.id }})</td>
@@ -122,6 +127,7 @@ $(function() {
                         <th>Date:</th>
                         <td>{{ scheduled_activity.block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }}, {{ scheduled_activity.block.block_letter }} Block</td>
                     </tr>
+                {% endif %}
                     <tr>
                         <th>Rooms:</th>
                         <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
