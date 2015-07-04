@@ -131,54 +131,15 @@ def room_utilization_for_block_view(request):
     block_id = request.GET.get("block", None)
     block = None
 
-    if block_id is not None:
-        try:
-            block = EighthBlock.objects.get(id=block_id)
-        except (EighthBlock.DoesNotExist, ValueError):
-            pass
+    if block_id:
+        return redirect("eighth_admin_room_utilization", block_id, block_id)
     else:
         blocks = blocks.filter(date__gte=get_start_date(request))
-
-    context = {
-        "blocks": blocks,
-        "chosen_block": block
-    }
-
-    if block is not None:
-        scheduled_activities = (EighthScheduledActivity.objects
-                                                       .exclude(activity__deleted=True)
-                                                       .exclude(cancelled=True)
-                                                       .filter(block=block))
-        context["scheduled_activities"] = scheduled_activities
-
-    context["admin_page_title"] = "Room Utilization for Block"
-
-    if request.resolver_match.url_name == "eighth_admin_room_utilization_for_block_csv":
-        response = http.HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=\"room_utilization_for_block.csv\""
-
-        writer = csv.writer(response)
-        writer.writerow(["Rooms",
-                         "Activity ID",
-                         "Activity",
-                         "Sponsors",
-                         "Signups",
-                         "Capacity"])
-
-        for sch_act in scheduled_activities:
-            row = []
-            row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
-            row.append(sch_act.activity.id)
-            row.append(sch_act.activity)
-            row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
-            row.append(sch_act.members.count())
-            row.append(sch_act.get_true_capacity())
-
-            writer.writerow(row)
-
-        return response
-
-    return render(request, "eighth/admin/room_utilization_for_block.html", context)
+        context = {
+            "admin_page_title": "Room Utilization",
+            "blocks": blocks
+        }
+        return render(request, "eighth/admin/room_utilization_for_block.html", context)
 
 
 class EighthAdminRoomUtilizationWizard(SessionWizardView):
