@@ -47,6 +47,14 @@
             <br />
         {% endif %}
 
+        {% if request.GET.no_attendance %}
+            <a href="{% url 'eighth_admin_view_activities_without_attendance' %}?block={{ request.GET.no_attendance|escape }}" class="button">
+                <i class="fa fa-arrow-left"></i>
+                Activities w/o Attendance
+            </a>
+            <br />
+        {% endif %}
+
         {% if wizard %}
             <form action="" method="post">
                 {% csrf_token %}
