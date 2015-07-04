@@ -983,6 +983,18 @@ class EighthSignup(AbstractBaseEighthModel):
             self.delete()
             return "Successfully removed signup for {}.".format(block)
 
+    def accept_pass(self):
+        self.was_absent = False
+        self.present = True
+        self.pass_accepted = True
+        self.save()
+
+    def reject_pass(self):
+        self.was_absent = True
+        self.pass_accepted = True
+        self.save()
+
+
     def __unicode__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity)

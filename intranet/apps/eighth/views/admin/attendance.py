@@ -384,6 +384,27 @@ def open_passes_view(request):
     passes = (EighthSignup.objects
                           .filter(after_deadline=True,
                                   pass_accepted=False))
+    if request.method == "POST":
+        pass_ids = list(request.POST.keys())
+
+        csrf = "csrfmiddlewaretoken"
+        if csrf in pass_ids:
+            pass_ids.remove(csrf)
+
+        accepted = 0
+        rejected = 0
+        for signup_id in pass_ids:
+            signup = EighthSignup.objects.get(id=signup_id)
+            status = request.POST.get(signup_id)
+            if status == "accept":
+                signup.accept_pass()
+                accepted += 1
+            elif status == "reject":
+                signup.reject_pass()
+                rejected += 1
+
+        messages.success(request, "Accepted {} and rejected {} passes.".format(accepted, rejected))
+
     context = {
         "admin_page_title": "Open Passes",
         "passes": passes

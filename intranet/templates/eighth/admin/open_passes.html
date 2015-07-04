@@ -7,13 +7,20 @@
     <script type="text/javascript">
         $(function() {
             Sortable.init();
+
+            $("")
         });
     </script>
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}" />
     {{ block.super }}
+    <style type="text/css">
+    #open-passes .center {
+        padding-left: 15px;
+    }
+    </style>
 {% endblock %}
 
 
@@ -22,7 +29,9 @@
 
     {% if block %}
         Click on column titles to sort.
-        <table data-sortable>
+        <form method="post" action="">
+        {% csrf_token %}
+        <table id="open-passes" data-sortable>
             <thead>
                 <tr>
                     <th>Block</th>
@@ -31,6 +40,8 @@
                     <th>Grade</th>
                     <th>Absences</th>
                     <th>Time</th>
+                    <th>Accept</th>
+                    <th>Reject</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,6 +57,12 @@
                     <td>{{ pass.user.grade.number }}</td>
                     <td>{{ pass.user.absence_count }}</td>
                     <td>{{ pass.last_modified_time|date:'Y-m-d h:i A' }}</td>
+                    <td class="center">
+                        <input type="radio" name="{{ pass.id }}" value="accept" />
+                    </td>
+                    <td class="center">
+                        <input type="radio" name="{{ pass.id }}" value="reject" />
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
@@ -54,7 +71,24 @@
                     </td>
             {% endfor %}
             </tbody>
+            {% if passes %}
+            <tfoot>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td colspan="2">
+                    <input type="reset" value="Reset" />
+                    <input type="submit" value="Submit" />
+                </td>
+            </tr>
+            </tfoot>
+            {% endif %}
         </table>
+        </form>
         <br>
         <a class="button" href="{% url 'eighth_admin_download_delinquent_students_csv' %}?{{ request.META.QUERY_STRING }}">Download as CSV</a>
     {% endif %}

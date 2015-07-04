@@ -368,13 +368,15 @@ def accept_pass_view(request, signup_id):
 
     if status == "accept":
         logger.debug("ACCEPT")
-        signup.was_absent = False
+        """signup.was_absent = False
         signup.present = True
-        signup.pass_accepted = True
+        signup.pass_accepted = True"""
+        signup.accept_pass()
     elif status == "reject":
         logger.debug("REJECT")
-        signup.was_absent = True
-        signup.pass_accepted = True
+        """signup.was_absent = True
+        signup.pass_accepted = True"""
+        signup.reject_pass()
 
     signup.save()
 
