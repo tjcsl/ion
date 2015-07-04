@@ -30,7 +30,10 @@ $(function() {
     <script type="text/javascript">
 $(function() {
     $("form[name='choose-activity'] > select").on("change", function() {
-        location.href = "/eighth/admin/attendance/" + $(this).val();
+        var val = $(this).val();
+        if(val.length > 0) {
+            location.href = $(".choose-activity").attr("data-endpoint") + "/" + val;
+        }
     });
 })
     </script>
@@ -54,27 +57,27 @@ $(function() {
             {% endif %}
         </div>
     {% if request.user.is_eighth_admin and not wizard %}
-        <div>
+        <div class="choose-block">
             <form action="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}" method="post" name="choose-block">
                 {% csrf_token %}
                 <input type="hidden" name="eighth_attendance_select_scheduled_activity_wizard-current_step" value="block" />
                 <b>Block:</b>
-                <select name="block-block" onchange="this.form.submit()" id="block-select">
+                <select name="block-block" onchange="if(this.value.length > 0) this.form.submit()" id="block-select">
                     {% for blk in blocks %}
                         <option value="{{ blk.id }}" {% if blk.id == scheduled_activity.block.id %} selected{% endif %}>
-                            {{ blk }}
+                            {{ blk.id }}: {{ blk }}
                         </option>
                     {% endfor %}
                 </select>
             </form>
         </div>
-        <div>
+        <div class="choose-activity" data-endpoint="/eighth{% if request.user.is_eighth_admin %}/admin{% endif %}/attendance">
             <form name="choose-activity">
                 <b>Activity:</b>
                 <select name="scheduled-activities" id="activity-select">
                 {% for schact in scheduled_activities %}
                     <option value="{{ schact.id }}" {% if schact.id == scheduled_activity.id %} selected{% endif %}>
-                        {{ schact.activity }}
+                        {{ schact.activity.id }}: {{ schact.activity }}
                     </option>
                 {% endfor %}
                 </select>
@@ -144,6 +147,7 @@ $(function() {
                     </tr>
                 </table>
 
+                <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
 
                 {% if scheduled_activity.attendance_taken %}
                     <div class="attendance-taken">
@@ -154,8 +158,6 @@ $(function() {
                         <i class="fa fa-exclamation-triangle"></i> Attendance Not Taken
                     </div>
                 {% endif %}
-
-                <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
 
                 <div class="pass-container">
                 {% if passes and scheduled_activity.block.locked %}
@@ -237,7 +239,7 @@ $(function() {
                             {% for member in members %}
                                 <tr>
                                     {% if scheduled_activity.block.locked %}
-                                        <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}></td>
+                                        <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present %} checked{% endif %}{% if not scheduled_activity.attendance_taken and member.had_pass and not member.was_absent %} checked{% endif %}></td>
                                     {% endif %}
                                     <td>{{ member.name }}</td>
                                     <td>{% if member.student_id %}
@@ -268,13 +270,30 @@ $(function() {
                                         <input type="submit" class="save-button" value="Force {% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" onclick="return confirm('Are you sure you want to {% if scheduled_activity.attendance_taken %}update{% else %}take{% endif %} attendance on an activity where signups are not locked?')" />
                                     {% endif %}
                                 {% else %}
+                                    {% if not scheduled_activity.attendance_taken %}
+                                        <i class="fa fa-icon-right"></i>
+                                    {% endif %}
                                     <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
+                                    {% if not scheduled_activity.attendance_taken %}
+                                        <i class="fa fa-icon-left"></i>
+                                    {% endif %}
+
                                 {% endif %}
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
                 </form>
+                {% if user.is_eighth_admin %}
+                    <br />
+                    <br />
+                    <br />
+                    <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="clear_attendance_bit" value="true" />
+                        <input type="submit" value="Clear Attendance Bit" />
+                    </form>
+                {% endif %}
             </div>
         {% endif %}
     </div>

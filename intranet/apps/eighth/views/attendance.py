@@ -9,6 +9,7 @@ except ImportError:
     from cStringIO import StringIO as BytesIO
 import csv
 from django import http
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from formtools.wizard.views import SessionWizardView
@@ -199,6 +200,20 @@ def take_attendance_view(request, scheduled_activity_id):
         }, status=403)
 
     if request.method == "POST":
+
+        if "admin" in request.path:
+            url_name = "eighth_admin_take_attendance"
+        else:
+            url_name = "eighth_take_attendance"
+
+        if "clear_attendance_bit" in request.POST:
+            scheduled_activity.attendance_taken = False
+            scheduled_activity.save()
+
+            messages.success(request, "Attendance bit cleared for {}".format(scheduled_activity))
+
+            return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+
         if not scheduled_activity.block.locked:
             return render(request, "error/403.html", {
                 "reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."
@@ -228,10 +243,7 @@ def take_attendance_view(request, scheduled_activity_id):
         scheduled_activity.attendance_taken = True
         scheduled_activity.save()
 
-        if "admin" in request.path:
-            url_name = "eighth_admin_take_attendance"
-        else:
-            url_name = "eighth_take_attendance"
+        messages.success(request, "Attendance updated.")
 
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
     else:
@@ -349,8 +361,11 @@ def accept_pass_view(request, signup_id):
 
     status = request.POST.get("status")
 
+    logger.debug(status)
+
     if status == "accept":
         signup.was_absent = False
+        signup.present = True
         signup.pass_accepted = True
     elif status == "reject":
         signup.was_absent = True
