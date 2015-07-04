@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load dates %}
 
 {% block title %}
     {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
@@ -147,8 +148,6 @@ $(function() {
                     </tr>
                 </table>
 
-                <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
-
                 {% if scheduled_activity.attendance_taken %}
                     <div class="attendance-taken">
                         <i class="fa fa-check"></i> Attendance Taken
@@ -159,15 +158,22 @@ $(function() {
                     </div>
                 {% endif %}
 
+                {% if passes and scheduled_activity.block.locked %}
+                    <div class="passes-notice">
+                        <i class="fa fa-exclamation-triangle"></i> Accept/Reject Student Passes
+                    </div>
+                {% endif %}
+
                 <div class="pass-container">
                 {% if passes and scheduled_activity.block.locked %}
-                    <h3>Passes</h3>
+                    <h3 class="passes-notice"><i class="fa fa-exclamation-triangle"></i> Student Passes</h3>
                     <table class="take-passes">
                         <thead>
                             <tr>
                                 <th>Student</th>
                                 <th>Student ID</th>
                                 <th>Grade</th>
+                                <th>Time</th>
                                 <th>Accept/Reject</th>
                             </tr>
                         </thead>
@@ -187,6 +193,9 @@ $(function() {
                                 <td style="text-align: center">
                                     {{ pass.user.grade.number }}
                                 </td>
+                                <td>
+                                    {{ pass.last_modified_time|fuzzy_date }}
+                                </td>
                                 <td class="form">
                                     <form name="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
                                         {% csrf_token %}
@@ -199,12 +208,13 @@ $(function() {
                                 </td>
                             </tr>
                             {% endfor %}
-                            <tr>
+                            <tr class="pass-button-row">
+                                <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>
-                                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post">
+                                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post" onsubmit="return confirm('Accept passes for and mark {{ passes|length }} student{{ passes|pluralize }} present?')">
                                         {% csrf_token %}
                                         <input type="submit" class="button accept-all-passes" value="Accept All">
                                     </form>
@@ -217,6 +227,7 @@ $(function() {
                     <br />
                     <br />
                 {% else %}
+                    <h3>Passes</h3>
                     There are no passes to accept.
                 {% endif %}
                 </div>
@@ -281,8 +292,9 @@ $(function() {
                         </tfoot>
                     </table>
                 </form>
+
+                <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 {% if user.is_eighth_admin %}
-                    <br />
                     <br />
                     <br />
                     <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');">
