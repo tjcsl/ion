@@ -1,0 +1,191 @@
+{% extends "page_base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - About
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}" />
+    <style type="text/css">
+.center-wrapper {
+    width: 600px;
+    margin-left: -300px;
+
+}
+
+.center {
+    text-align: left;
+    padding: 20px;
+    width: auto;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center h1 {
+    width: auto;
+}
+
+.center h2 {
+    font-weight: normal;
+}
+
+.simulator-area {
+    width: 600px;
+    height: 400px;
+    position: relative;
+    margin-top: 25px;
+    margin-bottom: 25px
+}
+
+.desktop-area {
+    width: 512px;
+    height: 384px;
+    overflow: hidden;
+}
+
+.mobile-area {
+    width: 180px;
+    height: 258px;
+    overflow: hidden;
+
+    position: absolute;
+    top: 150px;
+    right: 30px;
+}
+
+.about-text {
+    text-align: left;
+}
+
+.credit-text {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p {
+    text-indent: 40px;
+}
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        var desktop = $(".desktop-area");
+        var mobile = $(".mobile-area");
+        var desktopMax = $("span", desktop).length;
+        var mobileMax = $("span", mobile).length;
+        var desktopIndex = 0;
+        var mobileIndex = 0;
+        setInterval(function() {
+            if(desktopIndex == desktopMax-1) {
+                $("span", desktop).eq(0).slideDown();
+                $("span", desktop).show();
+                desktopIndex = 0;
+            } else {
+                $("span", desktop).eq(desktopIndex).slideUp();
+                desktopIndex++;
+            }
+
+            if(mobileIndex == mobileMax-1) {
+                $("span", mobile).eq(0).slideDown();
+                $("span", mobile).show();
+                mobileIndex = 0;
+            } else {
+                $("span", mobile).eq(mobileIndex).slideUp();
+                mobileIndex++;
+            }
+        }, 5000);
+    });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="center-wrapper">
+        <div class="center">
+        <div class="simulator-area">
+                <div class="desktop-area">
+                    <span>
+                        <img src="{% static 'img/promo/dashboard.png' %}" style="zoom: .5" />
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/eighth-signup.png' %}" style="zoom: .5" />
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/profile.png' %}" style="zoom: .5" />
+                        <br /><br /><br /><br />
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/search.png' %}" style="zoom: .7" />
+                    </span>
+                </div>
+                <div class="mobile-area">
+                    <span>
+                        <img src="{% static 'img/promo/dashboard-mobile.png' %}" style="zoom: .4" />
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" style="zoom: .4">
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" style="zoom: .4" />
+                    </span>
+                    <span>
+                        <img src="{% static 'img/promo/nav-mobile.png' %}" style="zoom: .4" />
+                    </span>
+                </div>
+            </div>
+            <div class="logo"></div>
+            <h1>Welcome to the TJ Intranet</h1>
+            <h2>The TJ Intranet allows students, teachers, and staff at The Thomas Jefferson High School for Science and Technology (<a href="https://www.tjhsst.edu/">TJHSST</a>) to access student information, manage activity signups, and view information on news and events.</h2>
+            
+
+            <br />
+            <br />
+
+            <div class="about-text">
+                <a name="credits"></a>
+                <p>Intranet is a student-built project that was originally built to support the Eighth Period program at TJHSST, but now does so much more. For the 1999-2000 school year, several students created a web-based solution for activity signups, which was previously a mechanical process. In 2006, Intranet2, codenamed Iodine, was written as a replacement for the previous system that was more efficient and maintainable. This site evolved into a critical part of the school itself, giving access to news, polls, a student directory, and files, among many other functions. After nearly ten years of use, it was deemed necessary to create a new application, using modern web technologies, that could be used on across all forms of devices and platforms. Ion is that project.</p>
+
+                <p>Development on Intranet version 3 began in early 2013 and, more than two years later, is now ready for use during the 2015-2016 school year. The application is written using Python and the Django web framework, and on the client side, makes excessive use of responsive elements to allow for the best possible user experience across devices. </p>
+
+                <div class="credit-text">
+                    <b>Intranet 3 Founding Development Team:</b>
+                    <ul>
+                        <li>Ethan Lowman (2015)</li>
+                        <li>James Woglom (2016)</li>
+                    </ul>
+                    <br />
+                    <b>Intranet 3 Development Team:</b>
+                    <ul>
+                        <li>Ethan Lowman (2015)</li>
+                        <li>James Woglom (2016)</li>
+                        <li>Samuel Damashek (2017)</li>
+                        <li>Peter Foley (2013)</li>
+                        <li>Susanna Bradbury (2017)</li>
+                        <li>...more to come...</li>
+                    </ul>
+                    <br />
+                    <b>Additional Thanks:</b>
+                    <ul>
+                        <li>Ms. Allison Agee</li>
+                        <li>Mrs. Joan Burch</li>
+                        <li>Ms. Marie Lauducci</li>
+                        <li>Mr. Andrew Hamilton</li>
+                    </ul>
+                </div>
+                <br />
+                Additional thanks goes to <a href="https://livedoc.tjhsst.edu/wiki/Iodine#Intranet_Credits">the developers of the first two Intranet applications used at TJHSST</a>.
+
+            </div>
+        </div>
+    </div>
+    <div class="git-version" title="{{ git_info.commit_info|escape }}">
+        <i class="fa fa-flask"></i><span id="revision">Revision {{ git_info.commit_short_hash }}</span>
+    </div>
+{% endblock %}

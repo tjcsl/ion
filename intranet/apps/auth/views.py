@@ -65,6 +65,9 @@ class login_view(View):
         """Redirect to the login page."""
         return index_view(request, force_login=True)
 
+def about_view(request):
+    return render(request, "auth/about.html")
+
 
 def logout_view(request):
     """Clear the Kerberos cache and logout."""
