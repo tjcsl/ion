@@ -7,125 +7,20 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-    <style type="text/css">
-.center-wrapper {
-    width: 600px;
-    margin-left: -300px;
-}
-
-.center-outer {
-    position: relative;
-    text-align: left;
-    padding: 0;
-    width: 700px;
-    margin-left: -50px;
-    margin-top: 400px;
-    top: 0;
-}
-
-.center {
-    position: static;
-    top: 0;
-    margin-top: 0;
-    background-color: #f0f0f0;
-    width: 600px;
-    padding-top: 25px;
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-.center h1 {
-    width: auto;
-    white-space: nowrap;
-}
-
-.center h2 {
-    font-weight: normal;
-}
-
-.simulator-area {
-    width: 600px;
-    height: 400px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-
-    position: fixed;
-}
-
-.desktop-area {
-    width: 512px;
-    height: 384px;
-    overflow: hidden;
-}
-
-.mobile-area {
-    width: 180px;
-    height: 258px;
-    overflow: hidden;
-
-    position: absolute;
-    top: 128px;
-    right: 30px;
-}
-
-.about-text {
-    text-align: left;
-}
-
-.credit-text {
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-p {
-    text-indent: 40px;
-}
-
-@media (max-width: 700px) {
-    .center-wrapper {
-        width: 100%;
-        margin-left: 0;
-        left: 0;
-    }
-
-    .center-outer {
-        width: 100%;
-        margin-left: 0;
-        padding: 0;
-    }
-
-    .center {
-        padding-left: 0;
-        padding-right: 0;
-        width: auto;
-        padding: 40px;
-    }
-
-    .simulator-area {
-        width: 100%;
-    }
-
-    .desktop-area {
-        display: none;
-    }
-
-    .mobile-area {
-        zoom: 1.5;
-        top: 0;
-        left: 50%;
-        margin-left: -90px;
-    }
-}
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/about.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
     $(function() {
+
+        $(".logo").click(function() {
+            location.href = '/';
+        });
+
         var desktop = $(".desktop-area");
         var mobile = $(".mobile-area");
         var desktopMax = $("span", desktop).length;
@@ -156,6 +51,18 @@ p {
 {% endblock %}
 
 {% block body %}
+<ul class="nav">
+    <li>
+        <a href="{% url 'index' %}">
+            <i class="fa fa-arrow-left fa-2x"></i>
+            {% if request.user.is_authenticated %}
+                Dashboard
+            {% else %}
+                Login
+            {% endif %}
+        </a>
+    </li>
+</ul>
     <div class="center-wrapper">
         <div class="simulator-area">
             <div class="desktop-area">
@@ -178,10 +85,10 @@ p {
                     <img src="{% static 'img/promo/dashboard-mobile.png' %}" style="zoom: .4" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" style="zoom: .4">
+                    <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" style="zoom: .4" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" style="zoom: .4" />
+                    <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" style="zoom: .4">
                 </span>
                 <span>
                     <img src="{% static 'img/promo/nav-mobile.png' %}" style="zoom: .4" />
