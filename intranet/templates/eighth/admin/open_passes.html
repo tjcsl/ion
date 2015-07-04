@@ -1,0 +1,62 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+
+{% block admin_main %}
+
+
+    {% if block %}
+        Click on column titles to sort.
+        <table data-sortable>
+            <thead>
+                <tr>
+                    <th>Block</th>
+                    <th>Activity</th>
+                    <th>Student</th>
+                    <th>Grade</th>
+                    <th>Absences</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pass in passes %}
+                <tr>
+                    <td>{{ pass.scheduled_activity.block }}</td>
+                    <td>
+                        <a href="{% url 'eighth_admin_take_attendance' pass.scheduled_activity.id %}">
+                            {{ pass.scheduled_activity.activity }}
+                        </a>
+                    </td>
+                    <td>{{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.student_id }})</td>
+                    <td>{{ pass.user.grade.number }}</td>
+                    <td>{{ pass.user.absence_count }}</td>
+                    <td>{{ pass.last_modified_time|date:'Y-m-d h:i A' }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">
+                    There were no results.
+                    </td>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <a class="button" href="{% url 'eighth_admin_download_delinquent_students_csv' %}?{{ request.META.QUERY_STRING }}">Download as CSV</a>
+    {% endif %}
+
+{% endblock %}

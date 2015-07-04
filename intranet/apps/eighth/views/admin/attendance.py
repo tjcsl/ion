@@ -377,3 +377,15 @@ def clear_absence_view(request, signup_id):
         return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+
+@eighth_admin_required
+def open_passes_view(request):
+    passes = (EighthSignup.objects
+                          .filter(after_deadline=True,
+                                  pass_accepted=False))
+    context = {
+        "admin_page_title": "Open Passes",
+        "passes": passes
+    }
+    return render(request, "eighth/admin/open_passes.html", context)
