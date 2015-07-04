@@ -12,6 +12,12 @@
                 event.preventDefault();
                 document.forms["choose-fields"].action = $(this).attr("href");
                 document.forms["choose-fields"].submit();
+
+                $("#apply-btn").click(function(event) {
+                    event.preventDefault();
+                    document.forms["choose-fields"].action = "";
+                    document.forms["choose-fields"].submit();
+                });
             });
 
             $("#hide-administrative").on("change", function() {
@@ -22,6 +28,16 @@
             });
             {% if hide_administrative %}
                 $("tr.administrative").toggle();
+            {% endif %}
+
+            $("#only-show-overbooked").on("change", function() {
+                var sel = $(this).prop("checked");
+                if(document.forms["choose-fields"].only_show_overbooked) {
+                    document.forms["choose-fields"].only_show_overbooked.value = sel?1:0;
+                }
+            });
+            {% if only_show_overbooked %}
+                $("tr.underbooked").toggle();
             {% endif %}
         });
     </script>
@@ -53,10 +69,13 @@
     <tr>
         <td>
         <br />
+        {% if start_block == end_block %}
+            <strong>Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+        {% else %}
             <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
             <br />
             <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
-            
+        {% endif %}
         </td>
         <td>
 
@@ -75,6 +94,9 @@
             <br />
             <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
             <label for="hide-administrative">Hide administrative</label>
+            <br />
+            <input type="checkbox" id="only-show-overbooked" />
+            <label for="only-show-overbooked">Only show overbooked</label>
         </td>
     </tr>
     </table>
@@ -85,6 +107,7 @@
         <table class="choose-fields fancy-table">
             <tr>
                 <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}" />
+                <input type="hidden" name="only_show_overbooked" value="{% if only_show_overbooked %}1{% else %}0{% endif %}" />
             {% for room in room_ids %}
                 <input type="hidden" name="room" value="{{ room }}" />
             {% endfor %}
@@ -97,7 +120,7 @@
                 <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
                 <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
                 <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
-                <th><input type="submit" value="Apply" /></th>
+                <th><input type="submit" value="Apply" id="apply-btn" /></th>
                 <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
             </tr>
         </table>
@@ -120,7 +143,7 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}">
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}{% if not sched_act.is_overbooked %} underbooked{% endif %}">
                         {% if show.block %}
                             <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
                         {% endif %}

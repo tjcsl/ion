@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import csv
+import logging
 from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http
@@ -15,6 +16,7 @@ from ...forms.admin.rooms import RoomForm
 from ...models import EighthRoom, EighthBlock, EighthScheduledActivity
 from ...utils import get_start_date
 
+logger = logging.getLogger(__name__)
 
 @eighth_admin_required
 def add_room_view(request):
@@ -263,6 +265,7 @@ def room_utilization_action(request, start_id, end_id):
         show = {name: name in show_vals for name in show_opts}
 
     hide_administrative = "hide_administrative" in request.GET and request.GET.get("hide_administrative") != "0"
+    only_show_overbooked = "only_show_overbooked" in request.GET and request.GET.get("only_show_overbooked") != "0"
 
     context = {
         "scheduled_activities": sched_acts,
@@ -273,7 +276,8 @@ def room_utilization_action(request, start_id, end_id):
         "rooms": rooms,
         "all_rooms": all_rooms,
         "room_ids": [int(i) for i in room_ids],
-        "hide_administrative": hide_administrative
+        "hide_administrative": hide_administrative,
+        "only_show_overbooked": only_show_overbooked
     }
 
     if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
@@ -291,6 +295,9 @@ def room_utilization_action(request, start_id, end_id):
         for sch_act in sched_acts:
             row = []
             if sch_act.activity.administrative and hide_administrative:
+                continue
+
+            if not sch_act.is_overbooked() and only_show_overbooked:
                 continue
 
             if show["block"]:
