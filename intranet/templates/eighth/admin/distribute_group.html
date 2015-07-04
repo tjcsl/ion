@@ -16,98 +16,7 @@
         });
     </script>
 {% if show_selection %}
-    <script type="text/javascript">
-$(function() {
-    $(".select-all").change(function() {
-        var chk = $(this).prop("checked");
-        var name = $(this).attr("data-name");
-        console.debug(chk, name);
-        $(".user-item").each(function() {
-            if($(this).attr("name") == name) {
-                $(this).prop("checked", chk);
-            }
-        });
-    });
-
-    $(".user-item").change(function() {
-        var chk = $(this).prop("checked");
-        var name = $(this).attr("name");
-        var num_checked = 0;
-        var $checkboxes = $(".user-item[name='"+name+"']");
-
-        $checkboxes.each(function() {
-            if($(this).prop("checked")) {
-                num_checked++;
-            }
-        });
-
-        $e = $(".select-all[data-name='"+ name + "']");
-        if(num_checked == 0) {
-            $e.prop("checked", false);
-            $e.prop("indeterminate", false);
-        } else if(num_checked == $checkboxes.length) {
-            $e.prop("checked", true);
-            $e.prop("indeterminate", false);
-        } else {
-            $e.prop("checked", false);
-            $e.prop("indeterminate", true);
-        }
-    });
-
-    distribute = function() {
-        var acts = [];
-        var act_names = []
-        var $salls = $(".select-all");
-        $salls.each(function() {
-            acts.push($(this).attr("data-name"));
-            act_names.push($(this).parent().text());
-        });
-
-        var $rows = $("tr.user-row");
-        var max = $rows.length / $salls.length;
-        max = Math.floor(max);
-        console.debug("max:",max);
-        var rowi = 0;
-        var acti = 0;
-        var curi = 0;
-        var done = 0;
-        var maxi = acts.length;
-        var sus = {};
-
-
-        $rows.each(function() {
-            var act = acts[acti];
-            $("input", $(this)).prop("checked", false);
-            $("input[name='"+act+"']", $(this)).prop("checked", true);
-            curi++;
-            done++;
-            if(curi >= max && (acti+1) < acts.length) {
-                sus[acti] = curi;
-                acti++;
-                curi = 0;
-            }
-        });
-        sus[acti] = curi;
-
-        if(done < $rows.length) {
-            for(var i=done; i<$rows.length; i++) {
-
-            }
-        }
-
-        console.debug(sus);
-
-        var msg = "";
-        for(su in sus) {
-            if(sus.hasOwnProperty(su) && sus[su] > 0) {
-                msg += sus[su] + " students were placed into: " + act_names[su] + ".\n";
-            }
-        }
-        alert(msg);
-    }
-
-})
-    </script>
+    <script type="text/javascript" src="{% static 'css/eighth/distribute_group.js' %}"></script>
 {% else %}
     <script type="text/javascript">
         $(function() {
@@ -130,11 +39,12 @@ $(function() {
             <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a>
             <br />
         {% endif %}
-        <br />
         <button onclick="distribute(); return false">Evenly Distribute</button>
         <br />
         <input type="hidden" name="users" value="true" />
+        <input type="submit" value="Finish" onclick="return confirm('Are you sure you want to sign these users up for these activities?')" />
         {% csrf_token %}
+        <br />
         Click on column titles to sort.
         <table data-sortable class="distribute-group-grid fancy-table">
             <thead>
