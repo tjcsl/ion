@@ -97,9 +97,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         if scheduled_activity.title:
             prefix += " - " + scheduled_activity.title
         middle = " (R)" if restricted_for_user else ""
-        suffix = " (BB)" if activity.both_blocks else ""
+        suffix  = " (S)" if activity.sticky else ""
+        suffix += " (BB)" if activity.both_blocks else ""
         suffix += " (A)" if activity.administrative else ""
-        suffix += " (S)" if activity.sticky else ""
         suffix += " (Deleted)" if activity.deleted else ""
 
         name_with_flags = prefix + middle + suffix

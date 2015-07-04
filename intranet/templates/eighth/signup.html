@@ -87,9 +87,12 @@
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
                 <% } %>
             </span>
-            <% var full_name = name_with_flags_for_user + (cancelled ? " (Cancelled)" : ""); %>
+            <% var full_name = name_with_flags_for_user; %>
             <span class="activity-name" title="<%= full_name %>">
                 <%= name %>
+                <% if (title) { %>
+                    - <%= title %>
+                <% } %>
 
                 <% if (special) { %>
                     <span class="badge green">Special</span>
