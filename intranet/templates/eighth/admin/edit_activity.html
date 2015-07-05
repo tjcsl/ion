@@ -11,12 +11,25 @@
     position: absolute;
     top: 100px;
     right: 10px;
-    width: 300px;
+    width: 500px;
+}
+
+@media (max-width: 1092px) {
+    .restriction-list {
+        width: 400px;
+    }
+}
+
+@media (max-width: 992px) {
+    .restriction-list {
+        width: 300px;
+    }
 }
 
 @media (max-width: 892px) {
     .restriction-list {
         position: static;
+        width: auto;
     }
 }
 
@@ -43,11 +56,28 @@
 
 <div class="restriction-list">
     <h2>Restriction List:</h2>
+    {% if activity.administrative %}
+        This activity is Administrative, so it will not appear in users' signup lists.<br />
+    {% endif %}
     {% if activity.restricted %}
-        {% if not activity.groups_allowed.all and not activity.users_allowed.all %}
-            No students may sign up for this activity.
+        {% if not activity.groups_allowed.all and not activity.users_allowed.all and not activity.freshmen_allowed and not activity.sophomores_allowed and not activity.juniors_allowed and not activity.seniors_allowed %}
+            This activity is restricted. No students may sign up for this activity.
         {% else %}
+            This activity is restricted to the following members:
             <ul>
+                {% if activity.freshmen_allowed %}
+                    <li><b>All Freshmen</b></li>
+                {% endif %}
+                {% if activity.sophomores_allowed %}
+                    <li><b>All Sophomores</b></li>
+                {% endif %}
+                {% if activity.juniors_allowed %}
+                    <li><b>All Juniors</b></li>
+                {% endif %}
+                {% if activity.seniors_allowed %}
+                    <li><b>All Seniors</b></li>
+                {% endif %}
+
                 {% for group in activity.groups_allowed.all %}
                     <li><b>Group: {{ group }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
                     <ul>
@@ -64,7 +94,7 @@
             </ul>
         {% endif %}
     {% else %}
-        This activity is not restricted.<br />All students may sign up for this activity.
+        This activity is not restricted. All students may sign up for this activity.
     {% endif %}
 
 </div>
