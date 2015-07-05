@@ -19,6 +19,7 @@
     <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
     <script type="text/javascript" src="{% static 'js/eighth/attendance.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/ui_init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/user_link.js' %}"></script>
     {% if wizard %}
     <script type="text/javascript">
 $(function() {
@@ -180,8 +181,10 @@ $(function() {
                         <tbody>
                             {% for pass in passes %}
                             <tr class="pass-student">
-                                <td>
-                                    {{ pass.user.last_name }}, {{ pass.user.first_name }}
+                                <td class="user-link" data-user-id="{{ pass.user.id }}">
+                                    <a href="{% url 'user_profile' pass.user.id %}">
+                                        {{ pass.user.last_name }}, {{ pass.user.first_name }}
+                                    </a>
                                 </td>
                                 <td>
                                     {% if pass.user.student_id %}
@@ -252,7 +255,11 @@ $(function() {
                                     {% if scheduled_activity.block.locked %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
                                     {% endif %}
-                                    <td>{{ member.name }}</td>
+                                    <td class="user-link" data-user-id="{{ member.id }}">
+                                        <a href="{% url 'user_profile' member.id %}">
+                                            {{ member.name }}
+                                        </a>
+                                    </td>
                                     <td>{% if member.student_id %}
                                         {{ member.student_id }}
                                     {% else %}

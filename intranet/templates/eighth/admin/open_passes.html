@@ -50,10 +50,10 @@
                     <td>{{ pass.scheduled_activity.block }}</td>
                     <td>
                         <a href="{% url 'eighth_admin_take_attendance' pass.scheduled_activity.id %}">
-                            {{ pass.scheduled_activity.activity }}
+                            {{ pass.scheduled_activity.full_title }}
                         </a>
                     </td>
-                    <td>{{ pass.user.last_name }}, {{ pass.user.first_name }} ({{ pass.user.student_id }})</td>
+                    <td><a href="{% url 'user_profile' pass.user.id %}">{{ pass.user.last_name }}, {{ pass.user.first_name }}</a> ({{ pass.user.student_id }})</td>
                     <td>{{ pass.user.grade.number }}</td>
                     <td>{{ pass.user.absence_count }}</td>
                     <td>{{ pass.last_modified_time|date:'Y-m-d h:i A' }}</td>
