@@ -51,18 +51,25 @@
 {% endblock %}
 
 {% block body %}
-<ul class="nav">
-    <li>
-        <a href="{% url 'index' %}">
-            <i class="fa fa-arrow-left fa-2x"></i>
-            {% if request.user.is_authenticated %}
-                Dashboard
-            {% else %}
-                Login
-            {% endif %}
-        </a>
-    </li>
-</ul>
+{% if request.user.is_authenticated %}
+    <ul class="nav dashboard-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fa fa-arrow-left fa-2x"></i>
+                    Dashboard
+            </a>
+        </li>
+    </ul>
+{% else %}
+    <ul class="nav login-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fa fa-arrow-left fa-2x"></i>
+                    Login
+            </a>
+        </li>
+    </ul>
+{% endif %}
     <div class="center-wrapper">
         <div class="simulator-area">
             <div class="desktop-area">
