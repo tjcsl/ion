@@ -72,6 +72,15 @@
     <h2>
         {{ action|title }} Event
     </h2>
+    {% if action == "add" %}
+        <p style="max-width: 700px">
+            It has been the decision of the Intranet administrators to allow for open event creation. You currently have the ability to create events and share them with the entire school community, if you so choose. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
+        </p>
+        <p style="max-width: 700px">
+            Events posted should relate directly to the TJ community. Examples of this include special club meetings, bake sales, and school sporting events.
+        </p>
+        <br />
+    {% endif %}
     <form action="/events/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
     <table>
     {% csrf_token %}
