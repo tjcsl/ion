@@ -14,4 +14,5 @@ class EventForm(forms.ModelForm):
                    "user",
                    "scheduled_activity",
                    "announcement",
-                   "attending"]
+                   "attending",
+                   "links"]
