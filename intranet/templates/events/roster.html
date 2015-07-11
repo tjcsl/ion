@@ -44,10 +44,29 @@
                 <li>There are no users to display.</li>
             {% endfor %}
         </ul>
-        
+
         {% if num_hidden_members > 0 %}
+            <br />
             <p>{{ num_hidden_members }} {% if num_hidden_members == 1 %}user has{% else %}users have{% endif %} elected to not appear on this list.</p>
         {% endif %}
+
+        {% if is_events_admin %}
+            <br />
+            <h2>Full Roster</h2>
+
+            <ul>
+                {% for p in full_roster %}
+                    <li>
+                        <a href="{% url 'user_profile' p.id %}">
+                            {{ p.full_name }} ({{ p.grade.number }})
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>There are no users to display.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
 
     </div>
 {% endblock %}

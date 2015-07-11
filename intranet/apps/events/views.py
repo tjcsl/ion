@@ -99,7 +99,7 @@ def event_roster_view(request, id):
         "event": event,
         "viewable_roster": viewable_roster,
         "full_roster": full_roster,
-        "num_hidden_members": len(hidden_members),
+        "num_hidden_members": num_hidden_members,
         "is_events_admin": request.user.has_admin_permission('events'),
     }
     return render(request, "events/roster.html", context)
