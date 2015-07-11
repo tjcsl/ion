@@ -4,7 +4,7 @@
 {% load strings %}
 
 {% block title %}
-    {{ block.super }} - Eighth Period
+    {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
 {% endblock %}
 
 {% block css %}
@@ -69,6 +69,9 @@
                 $(".eighth-signup .switch").click();
             }, 450);
         }
+        {% if request.GET.activity %}
+            $("li[data-activity-id='{{ request.GET.activity|escape }}']").click()
+        {% endif %}
     })
     </script>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% load phone_numbers %}
 {% load staticfiles %}
 
-{% block title %}{{ block.super }} - Roster - {{ scheduled_activity.true_title }}{% endblock %}
+{% block title %}{{ block.super }} - Roster - {{ scheduled_activity }}{% endblock %}
 
 
 {% block css %}
@@ -42,6 +42,11 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
+
+
+    <a href="{% url 'eighth_signup' scheduled_activity.block.id %}?activity={{ scheduled_activity.activity.id }}" class="button">
+        <i class="fa fa-arrow-left"></i> Sign Up
+    </a>
 
     <h2>Roster for {{ scheduled_activity }}:</h2>
     <dl>
