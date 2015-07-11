@@ -46,6 +46,10 @@ fi
 cp intranet/config/ion_env_setup.sh /etc/ion_env_setup.sh
 touch .bash_history
 
+# Utils
+apt-get -y install htop
+apt-get -y install glances
+
 # PostsgreSQL
 apt-get -y install postgresql
 apt-get -y install postgresql-contrib
@@ -55,7 +59,7 @@ sqlcmd(){
 }
 sqlcmd "CREATE DATABASE ion;"
 sqlcmd "CREATE USER ion;"
-sqlcmd "ALTER USER ion WITH PASSWORD 'pwd';"
+sqlcmd "ALTER USER ion WITH PASSWORD '$(devconfig sql_password)';"
 sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 
