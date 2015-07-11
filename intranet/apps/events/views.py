@@ -79,6 +79,32 @@ def join_event_view(request, id):
     return render(request, "events/join_event.html", context)
 
 @login_required
+def event_roster_view(request, id):
+
+    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+        return render(request, "events/not_ready.html")
+
+    event = get_object_or_404(Event, id=id)
+    
+    full_roster = list(event.attending.all())
+    viewable_roster = []
+    num_hidden_members = 0
+    for p in full_roster:
+        if p.can_view_eighth or p == request.user:
+            viewable_roster.append(p)
+        else:
+            num_hidden_members += 1
+
+    context = {
+        "event": event,
+        "viewable_roster": viewable_roster,
+        "full_roster": full_roster,
+        "num_hidden_members": len(hidden_members),
+        "is_events_admin": request.user.has_admin_permission('events'),
+    }
+    return render(request, "events/roster.html", context)
+
+@login_required
 def add_event_view(request):
 
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):

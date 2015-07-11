@@ -39,6 +39,13 @@
         </form>
     {% endif %}
 
+
+    <span class="signup-status">
+        People attending: {{ event.attending.count }}
+        <a href="{% url 'event_roster' event.id %}" class="button small-button">View Public Roster</a>
+    </span>
+
+    <br />
     {% if request.user in event.attending.all %}
         <span class="attend-status">
             You are <b>attending</b> this event.

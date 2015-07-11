@@ -11,4 +11,5 @@ urlpatterns = [
     url(r"^/modify/(?P<id>\d+)$", views.modify_event_view, name="modify_event"),
     url(r"^/delete/(?P<id>\d+)$", views.delete_event_view, name="delete_event"),
     url(r"^/join/(?P<id>\d+)$", views.join_event_view, name="join_event"),
+    url(r"^/roster/(?P<id>\d+)$", views.event_roster_view, name="event_roster"),
 ]

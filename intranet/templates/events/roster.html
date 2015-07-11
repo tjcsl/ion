@@ -1,0 +1,53 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Event Roster
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        $("[data-form-submit]").click(function() {
+            var name = $(this).attr("data-form-submit");
+            document.forms[name].submit();
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events">
+
+        <div class="events-container">
+            {% include "events/event.html" %}
+        </div>
+
+
+        <h2>Public Roster</h2>
+
+        <ul>
+            {% for p in viewable_roster %}
+                <li>
+                    <a href="{% url 'user_profile' p.id %}">
+                        {{ p.full_name }} ({{ p.grade.number }})
+                    </a>
+                </li>
+            {% empty %}
+                <li>There are no users to display.</li>
+            {% endfor %}
+        </ul>
+        
+        {% if num_hidden_members > 0 %}
+            <p>{{ num_hidden_members }} {% if num_hidden_members == 1 %}user has{% else %}users have{% endif %} elected to not appear on this list.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}
