@@ -23,6 +23,8 @@ Move into the ``intranet`` directory and run ``workon ion`` to load the Python d
 
 The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
 
-If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet`` directory. This process may take a lot of RAM and can unexpectedly quit. If this happens, run ``./manage flush`` to flush the database, exit the SSH session, run ``vagrant halt``, increase the VM's allotted memory in VirtualBox, and run ``vagrant up`` again.
+If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet`` directory. This process may take a lot of RAM and can unexpectedly quit. If this happens, run ``./manage.py flush`` to flush the database, exit the SSH session, run ``vagrant halt``, increase the VM's allotted memory in VirtualBox, and run ``vagrant up`` again.
+
+If you have updated the database with fixtures, also run ``./manage.py fix_aids`` to verify that all AIDs are valid in the system.
 
 :doc:`Continue with these post-install steps.<postinstall>`
