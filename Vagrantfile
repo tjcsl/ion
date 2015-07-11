@@ -40,7 +40,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
-
+  
   config.vm.network "public_network", bridge: devconfig["network_interface"]
   config.vm.network "forwarded_port", guest: 8080, host: 8080
 
@@ -50,6 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    # vb.gui = true
   end
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
