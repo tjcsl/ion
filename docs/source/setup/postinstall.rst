@@ -41,3 +41,18 @@ Connecting and Disconnecting from the VM
 ========================================
 
 When you want to close the VM environment, make sure you have exited out of the ssh session and then run ``vagrant suspend``. To resume the session, run ``vagrant resume``. Suspending and resuming is significantly faster than halting and starting, and also dumps the contents of the machine's RAM to disk.
+
+Updating Block Dates
+====================
+
+Currently, the fixtures containing test data include Iodine data from the 2014-2015 school year. If you would like to modify this data so that all of the eighth period blocks occur in the future, run the following:
+
+.. code-block:: bash
+
+    $ ./manage.py shell_plus
+    Python 2.7.6 (default, Jun 22 2015, 17:58:13)
+    (InteractiveConsole)
+    >>> from dateutil.relativedelta import relativedelta
+    >>> for blk in blks:
+    ...     blk.date += relativedelta(months=+6)
+    ...     blk.save()

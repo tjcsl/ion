@@ -40,6 +40,9 @@ def gen_schedule(user, num_blocks=6):
             if current_signup_cancelled:
                 flags += " cancelled"
 
+            if type(current_sched_act) == EighthScheduledActivity and current_sched_act.title:
+                current_signup = current_sched_act.title_with_flags
+
             info = {
                 "id": b.id,
                 "block": b,
