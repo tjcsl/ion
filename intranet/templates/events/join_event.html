@@ -14,7 +14,12 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
-
+    $(function() {
+        $("[data-form-submit]").click(function() {
+            var name = $(this).attr("data-form-submit");
+            document.forms[name].submit();
+        });
+    });
     </script>
 {% endblock %}
 
@@ -24,24 +29,27 @@
 
         <p>Will you be attending this event?</p>
 
-        <table>
-        <tr>
-            <td>
-                <form action="" method="post" name="attend-form-{{ event.id }}">
-                    {% csrf_token %}
-                    <input type="hidden" name="attending" value="true" />
-                    <input type="submit" value="Yes" />
-                </form>
-            </td>
-            <td>
-                <form action="" method="post" name="no-attend-form-{{ event.id }}">
-                    {% csrf_token %}
-                    <input type="hidden" name="attending" value="false" />
-                    <input type="submit" value="No" />
-                </form>
-            </td>
-        </tr>
-        </table>
+        <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="true" />
+        </form>
+
+        <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="false" />
+        </form>
+
+        <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button attend-button">
+            <i class="fa fa-check"></i>
+            Attend
+        </a>
+        &nbsp; &nbsp; &nbsp;
+        <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button no-attend-button">
+            <i class="fa fa-times"></i>
+            Don't Attend
+        </a>
+
+        <br /><br />
 
         <div class="events-container">
             {% include "events/event.html" %}

@@ -46,7 +46,8 @@ def events_view(request):
                 "events": viewable_events.filter(time__gt=this_month[1])
             }
         ],
-        "is_events_admin": request.user.has_admin_permission('events')
+        "is_events_admin": request.user.has_admin_permission('events'),
+        "show_attend": True
     }
     return render(request, "events/home.html", context)
 
@@ -71,7 +72,11 @@ def join_event_view(request, id):
 
             return redirect("events")
 
-    return render(request, "events/join_event.html", {"event": event})
+    context = {
+        "event": event,
+        "is_events_admin": request.user.has_admin_permission('events'),
+    }
+    return render(request, "events/join_event.html", context)
 
 @login_required
 def add_event_view(request):

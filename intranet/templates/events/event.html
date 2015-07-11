@@ -27,9 +27,39 @@
         {{ event.description|safe }}
     </div>
     <br />
-    {% if request.user in event.attending.all %}
-        <span class="user-attending">You are attending this event.</span>
-    {% else %}
-        <span class="user-not-attending">You are not attending this event.</span>
+    {% if show_attend %}
+        <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="false" />
+        </form>
+
+        <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="true" />
+        </form>
     {% endif %}
+
+    {% if request.user in event.attending.all %}
+        <span class="attend-status">
+            You are <b>attending</b> this event.
+        </span>
+        {% if show_attend %}
+            <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button no-attend-button">
+                <i class="fa fa-times"></i>
+                Don't Attend
+            </a>
+        {% endif %}
+    {% else %}
+        <span class="attend-status">
+            You are <b>not attending</b> this event.
+        </span>
+        {% if show_attend %}
+            <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button attend-button">
+                <i class="fa fa-check"></i>
+                Attend
+            </a>
+        {% endif %}
+    {% endif %}
+
+
 </div>

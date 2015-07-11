@@ -13,7 +13,12 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
-
+    $(function() {
+        $("[data-form-submit]").click(function() {
+            var name = $(this).attr("data-form-submit");
+            document.forms[name].submit();
+        });
+    });
     </script>
 {% endblock %}
 
