@@ -30,18 +30,19 @@ def gen_schedule(user, num_blocks=6):
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
-            current_sched_act = block_signup_map.get(b.id, {})
-            current_signup = getattr(current_sched_act, "activity", None)
-            current_signup_cancelled = getattr(current_sched_act, "cancelled", False)
+            current_sched_act = block_signup_map.get(b.id, None)
+            if current_sched_act:
+                current_signup = current_sched_act.title_with_flags
+                current_signup_cancelled = current_sched_act.cancelled
+            else:
+                current_signup = None
+                current_signup_cancelled = False
 
             flags = "locked" if b.locked else "open"
             if (b.is_today() and not current_signup) or current_signup_cancelled:
                 flags += " warning"
             if current_signup_cancelled:
                 flags += " cancelled"
-
-            if type(current_sched_act) == EighthScheduledActivity and current_sched_act.title:
-                current_signup = current_sched_act.title_with_flags
 
             info = {
                 "id": b.id,
