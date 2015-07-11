@@ -115,7 +115,7 @@ def add_event_view(request):
         form = EventForm(request.POST)
         logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save()
             obj.user = request.user
             obj.save()
             messages.success(request, "Successfully added event.")
@@ -126,20 +126,22 @@ def add_event_view(request):
         form = EventForm()
     return render(request, "events/add_modify.html", {"form": form, "action": "add"})
 
-@events_admin_required
+@login_required
 def modify_event_view(request, id=None):
     event = get_object_or_404(Event, id=id)
+
     if not request.user.has_admin_permission('events') and event.user != request.user:
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
+        logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save()
             obj.user = request.user
             obj.save()
             messages.success(request, "Successfully modified event.")
-            return redirect("events")
+            #return redirect("events")
         else:
             messages.error(request, "Error adding event.")
     else:
@@ -147,7 +149,7 @@ def modify_event_view(request, id=None):
     return render(request, "events/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
-@events_admin_required
+@login_required
 def delete_event_view(request, id):
     event = get_object_or_404(Event, id=id)
     if not request.user.has_admin_permission('events') and event.user != request.user:

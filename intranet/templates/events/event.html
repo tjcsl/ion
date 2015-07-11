@@ -2,7 +2,7 @@
 <div class="event" data-id="{{ event.id }}">
     <h3>
         {{ event.title }}
-        {% if is_events_admin %}
+        {% if is_events_admin or event.user == request.user %}
             <div class="event-icon-wrapper">
                 <a href="{% url 'modify_event' event.id %}">
                     <i class="event-icon fa fa-pencil"></i>
@@ -36,7 +36,6 @@
     <div class="event-content">
         {{ event.description|safe }}
     </div>
-    <br />
     {% if show_attend %}
         <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
             {% csrf_token %}
@@ -60,25 +59,25 @@
     {% if request.user in event.attending.all %}
         <span class="attend-status">
             You are <b>attending</b> this event.
+            {% if show_attend %}
+                <br />
+                <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
+                    <i class="fa fa-times"></i>
+                    Don't Attend
+                </a>
+            {% endif %}
         </span>
-        <br />
-        {% if show_attend %}
-            <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
-                <i class="fa fa-times"></i>
-                Don't Attend
-            </a>
-        {% endif %}
     {% else %}
         <span class="attend-status">
             You are <b>not attending</b> this event.
+            {% if show_attend %}
+                <br />
+                <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
+                    <i class="fa fa-check"></i>
+                    Attend
+                </a>
+            {% endif %}
         </span>
-        <br />
-        {% if show_attend %}
-            <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
-                <i class="fa fa-check"></i>
-                Attend
-            </a>
-        {% endif %}
     {% endif %}
 
 
