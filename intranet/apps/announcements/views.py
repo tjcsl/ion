@@ -44,6 +44,14 @@ def email_send(text_template, html_template, data, subject, emails, headers=None
 
 
 def request_announcement_email(request, form, obj):
+    """
+        Send an announcement request email
+
+        form: The announcement request form
+        obj: The announcement request object
+
+    """
+
     logger.debug(form.data)
     teacher_ids = form.data["teachers_requested"]
     if type(teacher_ids) != list:
@@ -71,6 +79,10 @@ def request_announcement_email(request, form, obj):
 
 @login_required
 def request_announcement_view(request):
+    """
+        The request announcement page
+
+    """
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
@@ -98,6 +110,12 @@ def request_announcement_view(request):
 
 @login_required
 def approve_announcement_view(request, req_id):
+    """
+        The approve announcement page
+
+        req_id: The ID of the AnnouncementRequest
+
+    """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
     requested_teachers = req.teachers_requested.all()
@@ -125,6 +143,10 @@ def approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def add_announcement_view(request):
+    """
+        Add an announcement
+
+    """
     if request.method == "POST":
         form = AnnouncementForm(request.POST)
         logger.debug(form)
@@ -143,6 +165,12 @@ def add_announcement_view(request):
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
+    """
+        Modify an announcement
+
+        id: announcement id
+
+    """
     if request.method == "POST":
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
@@ -160,6 +188,12 @@ def modify_announcement_view(request, id=None):
 
 @announcements_admin_required
 def delete_announcement_view(request, id):
+    """
+        Delete an announcement
+
+        id: announcement id
+
+    """
     if request.method == "POST":
         post_id = None
         try:

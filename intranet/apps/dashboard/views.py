@@ -26,6 +26,7 @@ def gen_schedule(user, num_blocks=6):
         schedule = None
     else:
         surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
+        # Use select_related to reduce query count
         signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
@@ -38,8 +39,10 @@ def gen_schedule(user, num_blocks=6):
                 current_signup = None
                 current_signup_cancelled = False
 
+            # warning flag (red block text and signup link) if no signup today
+            # cancelled flag (red activity text) if cancelled
             flags = "locked" if b.locked else "open"
-            if (b.is_today() and not current_signup) or current_signup_cancelled:
+            if (b.is_today() and not current_signup):
                 flags += " warning"
             if current_signup_cancelled:
                 flags += " cancelled"
@@ -77,6 +80,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
     block = EighthBlock.objects.get_first_upcoming_block()
     if block is None:
         return [], False
+
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .filter(block__date__gte=block.date))
 
@@ -94,6 +98,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
             num_added += 1
 
         if num_added == 0:
+            # fake an entry for a block where there is no sponsorship
             acts.append({
                 "block": b,
                 "id": None,
@@ -119,6 +124,7 @@ def dashboard_view(request):
                                      .filter(expiration_date__gt=timezone.now())
                                      .prefetch_related("groups"))
 
+    # pagination
     if "start" in request.GET:
         start_num = int(request.GET.get("start"))
     else:

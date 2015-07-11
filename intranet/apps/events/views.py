@@ -18,8 +18,12 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def events_view(request):
+    """
+        Events homepage. Shows a list of events occurring in the next week, month, and future.
 
+    """
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+        # In production, go to not ready page.
         return render(request, "events/not_ready.html")
 
     viewable_events = (Event.objects
@@ -54,12 +58,17 @@ def events_view(request):
 
 @login_required
 def join_event_view(request, id):
+    """
+        Join event page. If a POST request, actually add or remove the attendance of
+        the current user. Otherwise, display a page with confirmation.
 
+        id: event id
+
+    """
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):
         return render(request, "events/not_ready.html")
 
     event = get_object_or_404(Event, id=id)
-    
 
     if request.method == "POST":
         if "attending" in request.POST:
@@ -81,6 +90,15 @@ def join_event_view(request, id):
 
 @login_required
 def event_roster_view(request, id):
+    """
+        Show the event roster. Users with hidden eighth period permissions will not be
+        displayed. Users will be able to view all other users, along with a count of the
+        number of hidden users. (Same as 8th roster page.) Admins will see a full roster
+        at the bottom.
+
+        id: event id
+
+    """
 
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):
         return render(request, "events/not_ready.html")
@@ -107,7 +125,11 @@ def event_roster_view(request, id):
 
 @login_required
 def add_event_view(request):
+    """
+        Add event page. Currently, there is no credential checking; any user may create
+        an event. This may change.
 
+    """
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):
         return render(request, "events/not_ready.html")
 
@@ -128,6 +150,13 @@ def add_event_view(request):
 
 @login_required
 def modify_event_view(request, id=None):
+    """
+        Modify event page. You may only modify an event if you were the creator or you are an
+        administrator.
+
+        id: event id
+
+    """
     event = get_object_or_404(Event, id=id)
 
     if not request.user.has_admin_permission('events') and event.user != request.user:
@@ -151,6 +180,13 @@ def modify_event_view(request, id=None):
 
 @login_required
 def delete_event_view(request, id):
+    """
+        Delete event page. You may only delete an event if you were the creator or you are an
+        administrator. Confirmation page if not POST.
+
+        id: event id
+
+    """
     event = get_object_or_404(Event, id=id)
     if not request.user.has_admin_permission('events') and event.user != request.user:
         raise exceptions.PermissionDenied
