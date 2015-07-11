@@ -23,6 +23,16 @@
             everyone
         {% endfor %}
     </div>
+
+    {% if event.announcement %}
+        Announcement: <a href="">{{ event.announcement.title }}</a>
+    {% endif %}
+
+
+    {% if event.scheduled_activity %}
+        Activity: <a href="{% url 'eighth_signup' event.scheduled_activity.block.id %}?activity={{ event.scheduled_activity.activity.id }}">{{ event.scheduled_activity }}</a>
+    {% endif %}
+
     <div class="event-content">
         {{ event.description|safe }}
     </div>

@@ -8,6 +8,7 @@ from .models import Event
 from .forms import EventForm
 from ..auth.decorators import events_admin_required
 from intranet import settings
+from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -127,8 +128,11 @@ def add_event_view(request):
 
 @events_admin_required
 def modify_event_view(request, id=None):
+    event = get_object_or_404(Event, id=id)
+    if not request.user.has_admin_permission('events') and event.user != request.user:
+        raise exceptions.PermissionDenied
+
     if request.method == "POST":
-        event = Event.objects.get(id=id)
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             obj = form.save(commit=False)
@@ -139,21 +143,23 @@ def modify_event_view(request, id=None):
         else:
             messages.error(request, "Error adding event.")
     else:
-        event = Event.objects.get(id=id)
         form = EventForm(instance=event)
     return render(request, "events/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
 @events_admin_required
 def delete_event_view(request, id):
+    event = get_object_or_404(Event, id=id)
+    if not request.user.has_admin_permission('events') and event.user != request.user:
+        raise exceptions.PermissionDenied
+
     if request.method == "POST":
         try:
-            Event.objects.get(id=id).delete()
+            event.delete()
             messages.success(request, "Successfully deleted event.")
         except Event.DoesNotExist:
             pass
 
         return redirect("events")
     else:
-        event = get_object_or_404(Event, id=id)
         return render(request, "events/delete.html", {"event": event})

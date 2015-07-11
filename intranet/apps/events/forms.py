@@ -13,4 +13,5 @@ class EventForm(forms.ModelForm):
                    "last_modified_time",
                    "user",
                    "scheduled_activity",
-                   "announcement"]
+                   "announcement",
+                   "attending"]
