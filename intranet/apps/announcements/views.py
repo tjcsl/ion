@@ -17,6 +17,18 @@ from .forms import AnnouncementForm, AnnouncementRequestForm
 logger = logging.getLogger(__name__)
 
 def email_send(text_template, html_template, data, subject, emails, headers=None):
+    """
+        Send an HTML/Plaintext email with the following fields.
+
+        text_template: URL to a Django template for the text email's contents
+        html_template: URL to a Django tempalte for the HTML email's contents
+        data: The context to pass to the templates
+        subject: The subject of the email
+        emails: The addresses to send the email to
+        headers: A dict of additional headers to send to the message
+
+    """
+
     text = get_template(text_template)
     html = get_template(html_template)
     text_content = text.render(data)

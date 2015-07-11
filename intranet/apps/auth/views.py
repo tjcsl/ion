@@ -66,6 +66,7 @@ class login_view(View):
         return index_view(request, force_login=True)
 
 def about_view(request):
+    """Show an about page with credits."""
     return render(request, "auth/about.html")
 
 
