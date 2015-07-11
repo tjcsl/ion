@@ -15,7 +15,7 @@
     </h3>
 
     <div class="event-metadata">
-        by {{ event.user.full_name|escape }} &bull; {{ event.time|fuzzy_date|capfirst }} &bull; {{ event.time|date:"l, F j, Y P"}} &bull; for
+        by {{ event.user.full_name|escape }} {% if event.show_fuzzy_date %}&bull; {{ event.time|fuzzy_date|capfirst }}{% endif %} &bull; {{ event.time|date:"l, F j, Y P"}} &bull; for
         {% for group in event.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}

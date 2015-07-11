@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from ..users.models import User
 from ..eighth.models import EighthScheduledActivity
 from ..announcements.models import Announcement
+from datetime import datetime
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import Manager, Q
@@ -50,6 +51,27 @@ class Event(models.Model):
     groups = models.ManyToManyField(Group, blank=True)
 
     attending = models.ManyToManyField(User, blank=True, related_name="attending")
+
+    def show_fuzzy_date(self):
+        """
+        Return whether the event is in the next or previous 2 weeks.
+        Determines whether to display the fuzzy date.
+
+        """
+        date = self.time.replace(tzinfo=None)
+        if date <= datetime.now():
+            diff = datetime.now() - date
+            if diff.days >= 14:
+                return False
+        else:
+            diff = date - datetime.now()
+            if diff.days >= 14:
+                return False
+
+        return True
+
+
+
 
     def __unicode__(self):
         return "{} - {}".format(self.title, self.time)
