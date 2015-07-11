@@ -32,11 +32,20 @@ def events_view(request):
     this_month = (this_week[1], this_week[1] + datetime.timedelta(days=31))
 
     context = {
-        "events": {
-            "This week": viewable_events.filter(time__gt=this_week[0], time__lt=this_week[1]),
-            "This month": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1]),
-            "Future": viewable_events.filter(time__gt=this_month[1])
-        },
+        "events": [
+            {
+                "title": "This week",
+                "events": viewable_events.filter(time__gt=this_week[0], time__lt=this_week[1])
+            },
+            {
+                "title": "This month",
+                "events": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1])
+            },
+            {
+                "title": "Future",
+                "events": viewable_events.filter(time__gt=this_month[1])
+            }
+        ],
         "is_events_admin": request.user.has_admin_permission('events')
     }
     return render(request, "events/home.html", context)
