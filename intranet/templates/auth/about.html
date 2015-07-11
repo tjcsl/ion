@@ -39,7 +39,9 @@
 
             if(mobileIndex == mobileMax-1) {
                 $("span", mobile).eq(0).slideDown();
-                $("span", mobile).show();
+                setTimeout(function() {
+                    $("span", mobile).show();
+                }, 500);
                 mobileIndex = 0;
             } else {
                 $("span", mobile).eq(mobileIndex).slideUp();
@@ -51,47 +53,53 @@
 {% endblock %}
 
 {% block body %}
-<ul class="nav">
-    <li>
-        <a href="{% url 'index' %}">
-            <i class="fa fa-arrow-left fa-2x"></i>
-            {% if request.user.is_authenticated %}
-                Dashboard
-            {% else %}
-                Login
-            {% endif %}
-        </a>
-    </li>
-</ul>
+{% if request.user.is_authenticated %}
+    <ul class="nav dashboard-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fa fa-arrow-left fa-2x"></i>
+                    Dashboard
+            </a>
+        </li>
+    </ul>
+{% else %}
+    <ul class="nav login-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fa fa-arrow-left fa-2x"></i>
+                    Login
+            </a>
+        </li>
+    </ul>
+{% endif %}
     <div class="center-wrapper">
         <div class="simulator-area">
             <div class="desktop-area">
                 <span>
-                    <img src="{% static 'img/promo/dashboard.png' %}" style="zoom: .5" />
+                    <img src="{% static 'img/promo/dashboard.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/eighth-signup.png' %}" style="zoom: .5" />
+                    <img src="{% static 'img/promo/eighth-signup.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/profile.png' %}" style="zoom: .5" />
-                    <br /><br /><br /><br />
+                    <img src="{% static 'img/promo/profile.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/search.png' %}" style="zoom: .7" />
+                    <img src="{% static 'img/promo/search.png' %}" />
                 </span>
             </div>
             <div class="mobile-area">
                 <span>
-                    <img src="{% static 'img/promo/dashboard-mobile.png' %}" style="zoom: .4" />
+                    <img src="{% static 'img/promo/dashboard-mobile.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" style="zoom: .4" />
+                    <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" style="zoom: .4">
+                    <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" />
                 </span>
                 <span>
-                    <img src="{% static 'img/promo/nav-mobile.png' %}" style="zoom: .4" />
+                    <img src="{% static 'img/promo/nav-mobile.png' %}" />
                 </span>
             </div>
         </div>
