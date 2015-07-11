@@ -51,6 +51,29 @@ def events_view(request):
     return render(request, "events/home.html", context)
 
 @login_required
+def join_event_view(request, id):
+
+    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+        return render(request, "events/not_ready.html")
+
+    event = get_object_or_404(Event, id=id)
+    
+
+    if request.method == "POST":
+        if "attending" in request.POST:
+            attending = request.POST.get("attending")
+            attending = (attending == "true")
+
+            if attending:
+                event.attending.add(request.user)
+            else:
+                event.attending.remove(request.user)
+
+            return redirect("events")
+
+    return render(request, "events/join_event.html", {"event": event})
+
+@login_required
 def add_event_view(request):
 
     if settings.PRODUCTION and not request.user.has_admin_permission('events'):

@@ -1,6 +1,5 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
-{% load dates %}
 
 {% block title %}
     {{ block.super}} - Events
@@ -32,34 +31,7 @@
         {% for category in events %}
             <h2>{{ category.title }}:</h2>
             {% for event in category.events %}
-                <div class="event" data-id="{{ event.id }}">
-                    <h3>
-                        {{ event.title }}
-                        {% if is_events_admin %}
-                            <div class="event-icon-wrapper">
-                                <a href="{% url 'modify_event' event.id %}">
-                                    <i class="event-icon fa fa-pencil"></i>
-                                </a>
-                                <a href="{% url 'delete_event' event.id %}" class="event-delete">
-                                    <i class="event-icon fa fa-trash-o"></i>
-                                </a>
-                            </div>
-                        {% endif %}
-                    </h3>
-
-                    <div class="event-metadata">
-                        by {{ event.user.full_name|escape }} &bull; {{ event.time|fuzzy_date|capfirst }} &bull; {{ event.time|date:"l, F j, Y P"}} &bull; for
-                        {% for group in event.groups.all %}
-                            {{ group }}
-                            {% if not forloop.last %},{% endif %}
-                        {% empty %}
-                            everyone
-                        {% endfor %}
-                    </div>
-                    <div class="event-content">
-                        {{ event.description|safe }}
-                    </div>
-                </div>
+                {% include "events/event.html" %}
             {% empty %}
                 <div class="event">
                     There are no events to display at this time.

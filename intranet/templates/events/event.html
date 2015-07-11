@@ -1,0 +1,35 @@
+{% load dates %}
+<div class="event" data-id="{{ event.id }}">
+    <h3>
+        {{ event.title }}
+        {% if is_events_admin %}
+            <div class="event-icon-wrapper">
+                <a href="{% url 'modify_event' event.id %}">
+                    <i class="event-icon fa fa-pencil"></i>
+                </a>
+                <a href="{% url 'delete_event' event.id %}" class="event-delete">
+                    <i class="event-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="event-metadata">
+        by {{ event.user.full_name|escape }} &bull; {{ event.time|fuzzy_date|capfirst }} &bull; {{ event.time|date:"l, F j, Y P"}} &bull; for
+        {% for group in event.groups.all %}
+            {{ group }}
+            {% if not forloop.last %},{% endif %}
+        {% empty %}
+            everyone
+        {% endfor %}
+    </div>
+    <div class="event-content">
+        {{ event.description|safe }}
+    </div>
+    <br />
+    {% if request.user in event.attending.all %}
+        <span class="user-attending">You are attending this event.</span>
+    {% else %}
+        <span class="user-not-attending">You are not attending this event.</span>
+    {% endif %}
+</div>

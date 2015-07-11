@@ -49,5 +49,7 @@ class Event(models.Model):
     
     groups = models.ManyToManyField(Group, blank=True)
 
+    attending = models.ManyToManyField(User, blank=True, related_name="attending")
+
     def __unicode__(self):
         return "{} - {}".format(self.title, self.time)

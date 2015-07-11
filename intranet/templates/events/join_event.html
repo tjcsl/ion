@@ -1,0 +1,50 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Join Event
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events">
+        <h2>Join Event</h2>
+
+        <p>Will you be attending this event?</p>
+
+        <table>
+        <tr>
+            <td>
+                <form action="" method="post" name="attend-form-{{ event.id }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="attending" value="true" />
+                    <input type="submit" value="Yes" />
+                </form>
+            </td>
+            <td>
+                <form action="" method="post" name="no-attend-form-{{ event.id }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="attending" value="false" />
+                    <input type="submit" value="No" />
+                </form>
+            </td>
+        </tr>
+        </table>
+
+        <div class="events-container">
+            {% include "events/event.html" %}
+        </div>
+    </div>
+{% endblock %}
