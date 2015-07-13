@@ -67,7 +67,7 @@ textarea[name=filetext] {
                 <input type="checkbox" name="user_id" value="{{ user.1.id }}" checked /> 
             </td>
             <td>
-                {{ user.1.display_name }} ({{ user.1.student_id }}, {{ user.1.grade.number }})
+                {% if user.1.display_name %}{{ user.1.display_name }}{% else %}{{ user.1.full_name }}{% endif %} ({{ user.1.student_id }}{% if user.1.grade.number %}, {{ user.1.grade.number }}{% elif user.1.is_teacher %}, Staff{% endif %})
             </td>
         </tr>
     {% empty %}
