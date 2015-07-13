@@ -5,7 +5,7 @@ from django.utils import timezone
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from ..announcements.models import Announcement
+from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import (
     EighthBlock, EighthSignup, EighthScheduledActivity
 )
@@ -151,8 +151,19 @@ def dashboard_view(request):
         sponsor_schedule = None
         no_attendance_today = None
 
+    announcements_admin = request.user.has_admin_permission("announcements")
+    if announcements_admin:
+        all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
+        awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
+        awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
+    else:
+        awaiting_approval = awaiting_approval = None
+
     context = {
         "announcements": announcements,
+        "announcements_admin": announcements_admin,
+        "awaiting_teacher": awaiting_teacher,
+        "awaiting_approval": awaiting_approval,
         "schedule": schedule,
         "no_signup_today": no_signup_today,
         "sponsor_schedule": sponsor_schedule,

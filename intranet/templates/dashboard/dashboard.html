@@ -51,45 +51,42 @@
                 </a>
             {% else %}
                 <a class="button announcement-request" href="{% url 'request_announcement' %}">
-                        <i class="fa fa-file-text-o"></i>
-                        Request Post
-                    </a>
-                </span>
+                    <i class="fa fa-file-text-o"></i>
+                    Request Post
+                </a>
             {% endif %}
-
-
-
+            </span>
     </div>
-    <div class="announcements-container">
-        {% for announcement in announcements %}
-            <div class="announcement" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
-                <h3>
-                    {{ announcement.title }}
-                    {% if request.user.is_announcements_admin %}
-                        <div class="announcement-icon-wrapper">
-                            <a href="{% url 'modify_announcement' announcement.id %}">
-                                <i class="announcement-icon fa fa-pencil"></i>
-                            </a>
-                            <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete">
-                                <i class="announcement-icon fa fa-trash-o"></i>
-                            </a>
-                        </div>
-                    {% endif %}
-                </h3>
 
-                <div class="announcement-metadata">
-                    by {{ announcement.get_author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
-                    {% for group in announcement.groups.all %}
-                        {{ group }}
-                        {% if not forloop.last %},{% endif %}
-                    {% empty %}
-                        everyone
+    <div class="announcements-container">
+        {% if announcements_admin %}
+            {% if awaiting_teacher or awaiting_approval %}
+                <div class="announcement">
+                {% if awaiting_approval %}
+                    <h3 style="color: orange">
+                    <i class="fa fa-exclamation-circle"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting</h3>
+                    <ul>
+                    {% for req in awaiting_approval %}
+                        <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
                     {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if awaiting_teacher %}
+                    <h3>
+                    <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending</h3>
+                    <ul>
+                    {% for req in awaiting_teacher %}
+                        <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, awaiting teacher approval</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
                 </div>
-                <div class="announcement-content">
-                    {{ announcement.content|safe }}
-                </div>
-            </div>
+            {% endif %}
+        {% endif %}
+
+
+        {% for announcement in announcements %}
+            {% include "announcements/announcement.html" %}
         {% empty %}
             <div class="announcement">
                 There are no announcements to display at this time.
