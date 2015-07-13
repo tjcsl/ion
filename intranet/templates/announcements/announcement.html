@@ -1,0 +1,29 @@
+{% load dates %}
+<div class="announcement" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
+    <h3>
+        {{ announcement.title }}
+        {% if request.user.is_announcements_admin %}
+            <div class="announcement-icon-wrapper">
+                <a href="{% url 'modify_announcement' announcement.id %}">
+                    <i class="announcement-icon fa fa-pencil"></i>
+                </a>
+                <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete">
+                    <i class="announcement-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="announcement-metadata">
+        by {{ announcement.get_author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
+        {% for group in announcement.groups.all %}
+            {{ group }}
+            {% if not forloop.last %},{% endif %}
+        {% empty %}
+            everyone
+        {% endfor %}
+    </div>
+    <div class="announcement-content">
+        {{ announcement.content|safe }}
+    </div>
+</div>

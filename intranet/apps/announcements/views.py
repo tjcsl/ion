@@ -180,10 +180,17 @@ def admin_approve_announcement_view(request, req_id):
                 for g in groups:
                     announcement.groups.add(g)
                 announcement.save()
+
+                req.posted = announcement
+                req.posted_by = request.user
+                req.save()
                 messages.success(request, "Successfully approved announcement request. It has been posted.")
                 return redirect("index")
             else:
-                messages.success(request, "You did not approve this request.")
+                req.rejected = True
+                req.posted_by = request.user
+                req.save()
+                messages.success(request, "You did not approve this request. It will be hidden.")
                 return redirect("index")
     
     form = AnnouncementRequestForm(instance=req)
@@ -218,6 +225,17 @@ def add_announcement_view(request):
         form = AnnouncementForm()
     return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
 
+@login_required
+def view_announcement_view(request, id):
+    """
+        View an announcement
+
+        id: announcement id
+
+    """
+    announcement = get_object_or_404(Announcement, id=id)
+
+    return render(request, "announcements/view.html", {"announcement": announcement})
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
