@@ -74,7 +74,10 @@
         Announcement Approval
     </h2>
     {% if req.posted %}
-        <b>This announcement was already approved and posted. <a href=""
+        <p>
+            <b>This announcement was already approved and posted: <a href="{% url 'view_announcement' req.posted.id %}">{{ req.posted }}</a></b>
+        </p>
+    {% endif %}
     {% if admin_approve %}
         <p><a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user }})</a> requested that this announcement be posted.</p>
         The following teachers were asked to approve this announcement:
