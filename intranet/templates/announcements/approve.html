@@ -75,7 +75,16 @@
     </h2>
     {% if req.posted %}
         <p>
-            <b>This announcement was already approved and posted: <a href="{% url 'view_announcement' req.posted.id %}">{{ req.posted }}</a></b>
+            <b style="font-size: 16px; color: green"><i class="fa fa-info-circle"></i> This announcement was already approved and posted{% if req.posted_by %} by {{ req.posted_by.full_name }}{% endif %}.</b><br />
+            <a href="{% url 'view_announcement' req.posted.id %}">{{ req.posted }}</a><br />
+            You do not have to do anything at this time.
+        </p>
+    {% endif %}
+
+    {% if req.posted %}
+        <p>
+            <b style="font-size: 16px; color: red"><i class="fa fa-exclamation-circle"></i> This announcement was already rejected{% if req.rejected_by %} by {{ req.rejected_by.full_name }}{% endif %}.</b><br />
+            You do not have to do anything at this time.
         </p>
     {% endif %}
     {% if admin_approve %}
@@ -114,17 +123,29 @@
     </tr>
     {% endif %}
     <tr>
-        <td>
-            &nbsp;<br />&nbsp;
+        <td colspan="2">
+            <br />
+            {% if admin_approve and req.teachers_approved.count < 1 %}
+                <b style="font-size: 16px; color: orange"><i class="fa fa-exclamation-circle"></i> This post has not yet been approved by a teacher.</b>
+                <br /><br />
+            {% endif %}
         </td>
     </tr>
+    </table>
+    {% if not req.posted %}
+    <table>
     <tr><td>
         <input type="submit" name="approve" value="{% if admin_approve %}Post{% else %}Approve{% endif %} Announcement" />
         </td>
         <td>
-        <a href="/" class="button" onclick="alert('If you have a severe objection to the contents of this announcement, please contact the Intranet administrators at intranet@tjhsst.edu.');">Reject Announcement</a>
+        <input type="submit" name="reject" value="Reject Announcement" onclick="return confirm('This will hide, but not delete, the request.')" />
         </td></tr>
     </table>
+    {% else %}
+    <p>
+        <b style="font-size: 16px"><i class="fa fa-info-circle"></i> This announcement was already approved and posted</b><br />
+    </p>
+    {% endif %}
     </form>
 </div>
 <script type="text/javascript">
