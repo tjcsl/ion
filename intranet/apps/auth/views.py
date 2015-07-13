@@ -27,8 +27,16 @@ def get_bg_pattern():
         "confectionary.png",
         "contemporary_china.png",
         "crossword.png",
-        "fresh_snow.png",
-        "light_grey.png"
+        #"fresh_snow.png",
+        "greyzz.png",
+        "light_grey.png",
+        "p6.png",
+        "pixel_weave.png",
+        "ps_neutral.png",
+        "pw_pattern.png",
+        "sos.png",
+        "squairy_light.png",
+        #"squared_metal.png"
     ]
     file_path = "img/patterns/"
 
