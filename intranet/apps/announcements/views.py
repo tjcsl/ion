@@ -5,6 +5,7 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
@@ -111,7 +112,8 @@ def request_announcement_view(request):
 @login_required
 def approve_announcement_view(request, req_id):
     """
-        The approve announcement page
+        The approve announcement page.
+        Teachers will be linked to this page from an email.
 
         req_id: The ID of the AnnouncementRequest
 
@@ -130,13 +132,67 @@ def approve_announcement_view(request, req_id):
             obj = form.save(commit=True)
             if "approve" in request.POST:
                 obj.teachers_approved.add(request.user)
-            obj.save()
-            messages.success(request, "Successfully approved announcement request.")
-            return redirect("index")
+                obj.save()
+                messages.success(request, "Successfully approved announcement request. An Intranet administrator "
+                                          "will review and post the announcement shortly.")
+            else:
+                obj.save()
+                messages.success(request, "You did not approve this request.")
+                return redirect("index")
     
     form = AnnouncementRequestForm(instance=req)
     context = {
-        "form": form
+        "form": form,
+        "req": req,
+        "admin_approve": False
+    }
+    return render(request, "announcements/approve.html", context)
+
+@announcements_admin_required
+def admin_approve_announcement_view(request, req_id):
+    """
+        The administrator approval announcement request page.
+        Admins will view this page through the UI.
+
+        req_id: The ID of the AnnouncementRequest
+
+    """
+    req = get_object_or_404(AnnouncementRequest, id=req_id)
+
+    requested_teachers = req.teachers_requested.all()
+    logger.debug(requested_teachers)
+
+    if request.method == "POST":
+        form = AnnouncementRequestForm(request.POST, instance=req)
+        if form.is_valid():
+            req = form.save(commit=True)
+            if "approve" in request.POST:
+                groups = []
+                if "groups" in request.POST:
+                    group_ids = request.POST.getlist("groups")
+                    groups = Group.objects.filter(id__in=group_ids)
+                logger.debug(groups)
+                announcement = Announcement.objects.create(title=req.title,
+                                                           content=req.content,
+                                                           author=req.author,
+                                                           user=req.user,
+                                                           expiration_date=req.expiration_date)
+                for g in groups:
+                    announcement.groups.add(g)
+                announcement.save()
+                messages.success(request, "Successfully approved announcement request. It has been posted.")
+                return redirect("index")
+            else:
+                messages.success(request, "You did not approve this request.")
+                return redirect("index")
+    
+    form = AnnouncementRequestForm(instance=req)
+    all_groups = Group.objects.all()
+    context = {
+        "form": form,
+        "req": req,
+        "admin_approve": True,
+        "all_groups": all_groups
     }
     return render(request, "announcements/approve.html", context)
 
