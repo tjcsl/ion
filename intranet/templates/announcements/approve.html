@@ -9,23 +9,20 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/announcement.form.js' %}"></script>
     <script type="text/javascript">
         $(function() {
-            $("select#id_groups").selectize({
-                plugins: ["remove_button"],
-                placeholder: "Everyone"
-            });
-
-            $("select#id_teachers_requested").selectize({
-                plugins: ["remove_button"]
-            });
+            var author = $("#id_author");
+            author.attr("placeholder", "{{ user.full_name|escape }}");
         });
     </script>
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
     <style type="text/css">
 
@@ -76,6 +73,8 @@
     <h2>
         Announcement Approval
     </h2>
+    {% if req.posted %}
+        <b>This announcement was already approved and posted. <a href=""
     {% if admin_approve %}
         <p><a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user }})</a> requested that this announcement be posted.</p>
         The following teachers were asked to approve this announcement:

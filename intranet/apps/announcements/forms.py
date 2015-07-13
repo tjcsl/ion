@@ -36,7 +36,9 @@ class AnnouncementRequestForm(forms.ModelForm):
             "The contents of the news post which will appear on Intranet."
         )
         self.fields["expiration_date"].help_text = (
-            "An expiration date for when this post should expire (be not visible).")
+            "An expiration date for when this post should expire (be not visible). "
+            "To never expire, keep the default value of January 1st, 3000."
+        )
         self.fields["notes"].help_text = (
             "Any information about this announcement you wish to share with the Intranet "
             "administrators and teachers selected above. If you want to restrict this posting "
