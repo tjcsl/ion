@@ -91,6 +91,9 @@ class AnnouncementRequest(models.Model):
 
     title = models.CharField(max_length=127)
     content = models.TextField()
+    author = models.CharField(max_length=63, blank=True)
+
+    expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
     notes = models.TextField()
 
     added = models.DateTimeField(auto_now_add=True)
