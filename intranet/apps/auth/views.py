@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import random
 import logging
 from intranet import settings
 from ..dashboard.views import dashboard_view
@@ -9,10 +10,29 @@ from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.templatetags.static import static
 from django.views.generic.base import View
 
 logger = logging.getLogger(__name__)
 
+
+def get_bg_pattern():
+    """
+    Choose a background pattern image.
+    One will be selected at random.
+    """
+    files = [
+        "brushed.png",
+        "concrete_seamless.png",
+        "confectionary.png",
+        "contemporary_china.png",
+        "crossword.png",
+        "fresh_snow.png",
+        "light_grey.png"
+    ]
+    file_path = "img/patterns/"
+
+    return static(file_path + random.choice(files))
 
 def index_view(request, auth_form=None, force_login=False):
     """Process and show the main login page or dashboard if logged in."""
@@ -24,7 +44,8 @@ def index_view(request, auth_form=None, force_login=False):
         data = {
             "auth_form": auth_form,
             "request": request,
-            "git_info": settings.GIT
+            "git_info": settings.GIT,
+            "bg_pattern": get_bg_pattern()
         }
         schedule = schedule_context(request)
         data.update(schedule)
