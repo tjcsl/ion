@@ -86,6 +86,11 @@ class AnnouncementRequest(models.Model):
             The teachers who have approved the request
         posted
             ForeignKey to Announcement if posted
+        posted_by
+            The user (administrator) that approved the request
+        rejected
+            Boolean describing whether the post was rejected by
+            an administrator. This will hide it.
 
     """
 
@@ -99,12 +104,16 @@ class AnnouncementRequest(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, related_name="user")
     
     teachers_requested = models.ManyToManyField(User, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(User, blank=True, related_name="teachers_approved")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True)
+    posted_by = models.ForeignKey(User, null=True, blank=True, related_name="posted_by")
+
+    rejected = models.BooleanField(default=False)
+    rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by")
 
     def __unicode__(self):
         return self.title
