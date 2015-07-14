@@ -56,3 +56,8 @@ Currently, the fixtures containing test data include Iodine data from the 2014-2
     >>> for blk in blks:
     ...     blk.date += relativedelta(months=+6)
     ...     blk.save()
+
+Increasing RAM
+==============
+
+With the default RAM size of 512MB, you may run into performance constraints. Additionally, ElasticSearch will not run with less than 1GB of RAM. It is highly recommended to bump the VM's amount of memory, through VirtualBox Manager, to at least 1.5GB.
