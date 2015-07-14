@@ -38,45 +38,50 @@
     <h2>
         Announcement Approval
     </h2>
-    {% if req.posted %}
-        <p>
-            <b style="font-size: 16px; color: green"><i class="fa fa-info-circle"></i> This announcement was already approved and posted{% if req.posted_by %} by {{ req.posted_by.full_name }}{% endif %}.</b><br />
-            <a href="{% url 'view_announcement' req.posted.id %}">{{ req.posted }}</a><br />
-            You do not have to do anything at this time.
-        </p>
-    {% endif %}
-
-    {% if req.posted %}
-        <p>
-            <b style="font-size: 16px; color: red"><i class="fa fa-exclamation-circle"></i> This announcement was already rejected{% if req.rejected_by %} by {{ req.rejected_by.full_name }}{% endif %}.</b><br />
-            You do not have to do anything at this time.
-        </p>
-    {% endif %}
-    {% if admin_approve %}
-        <p><a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user }})</a> requested that this announcement be posted.</p>
-        The following teachers were asked to approve this announcement:
-        <ul>
-        {% for teacher in req.teachers_requested.all %}
-            <li>{{ teacher.full_name }}</li>
-        {% empty %}
-            <li>(None)</li>
-        {% endfor %}
-        </ul>
-        The following teachers approved:
-        <ul>
-        {% for teacher in req.teachers_approved.all %}
-            <li>{{ teacher.full_name }}</li>
-        {% empty %}
-            <li>(None)</li>
-        {% endfor %}
-        </ul>
-        <br />
-    {% else %}
-        <p>{{ user.full_name }} ({{ user }}) has submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are included below.</p>
-        <p>You may edit the fields below if you would like to change what is submitted. Please note that pressing the 'Approve' button below will not automatically post the announcement; it will still have to be approved manually by an administrator.</p>
-    {% endif %}
+    
     <form action="" method="post">
     <table>
+    <tr>
+        <td colspan="2">
+        {% if req.posted %}
+            <p>
+                <b style="font-size: 16px; color: green"><i class="fa fa-info-circle"></i> This announcement was already approved and posted{% if req.posted_by %} by {{ req.posted_by.full_name }}{% endif %}.</b><br />
+                <a href="{% url 'view_announcement' req.posted.id %}">{{ req.posted }}</a><br />
+                You do not have to do anything at this time. Information about the request is displayed below.
+            </p>
+        {% endif %}
+
+        {% if req.rejected %}
+            <p>
+                <b style="font-size: 16px; color: red"><i class="fa fa-exclamation-circle"></i> This announcement was already rejected{% if req.rejected_by %} by {{ req.rejected_by.full_name }}{% endif %}.</b><br />
+                You do not have to do anything at this time. Information about the request is displayed below.
+            </p>
+        {% endif %}
+        {% if admin_approve %}
+            <p><a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user }})</a> requested that this announcement be posted.</p>
+            The following teachers were asked to approve this announcement:
+            <ul>
+            {% for teacher in req.teachers_requested.all %}
+                <li>{{ teacher.full_name }}</li>
+            {% empty %}
+                <li>(None)</li>
+            {% endfor %}
+            </ul>
+            The following teachers approved:
+            <ul>
+            {% for teacher in req.teachers_approved.all %}
+                <li>{{ teacher.full_name }}</li>
+            {% empty %}
+                <li>(None)</li>
+            {% endfor %}
+            </ul>
+            <br />
+        {% else %}
+            <p>{{ user.full_name }} ({{ user }}) submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are included below.</p>
+            <p>You may edit the fields below if you would like to change what is submitted. Please note that pressing the 'Approve' button below will not automatically post the announcement; it will still have to be approved manually by an administrator.</p>
+        {% endif %}
+        </td>
+    </tr>
     {% csrf_token %}
     {{ form.as_table }}
     {% if admin_approve %}

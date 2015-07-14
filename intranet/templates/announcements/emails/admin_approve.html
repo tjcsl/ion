@@ -5,15 +5,15 @@
     {{ req.content }}
 {% endautoescape %}
 <br />
-<b>Submitted by:</b> {{ req.user }}
+<b>Submitted by:</b> {{ req.user.full_name }} ({{ req.user.username }})
 <br />
-<b>Teachers Requested for Approval:</b> {% for teacher in req.teachers_requested %}
+<b>Teachers Requested for Approval:</b> {% for teacher in req.teachers_requested.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE
 {% endfor %}
 <br />
-<b>Teachers Approved:</b> {% for teacher in req.teachers_approved %}
+<b>Teachers Approved:</b> {% for teacher in req.teachers_approved.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE

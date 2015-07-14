@@ -7,15 +7,15 @@ Content:
     {{ req.content }}
 {% endautoescape %}
 
-Submitted by: {{ req.user }}
+Submitted by: {{ req.user.full_name }} ({{ req.user.username }})
 
-Teachers Requested for Approval: {% for teacher in req.teachers_requested %}
+Teachers Requested for Approval: {% for teacher in req.teachers_requested.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE
 {% endfor %}
 
-Teachers Approved: {% for teacher in req.teachers_approved %}
+Teachers Approved: {% for teacher in req.teachers_approved.all %}
     {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
 {% empty %}
 NONE
