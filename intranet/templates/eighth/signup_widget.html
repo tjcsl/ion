@@ -49,7 +49,15 @@
             </div>
             {% if block.is_today and block.signup_time %}
                 <div class="block-timeleft">
-                    Signups close <b>{{ block.signup_time|fuzzy_time }}</b> ({{ block.signup_time }})
+                    {% if block.signup_time_future %}
+                        Signups close <b>{{ block.signup_time|fuzzy_time }}</b> ({{ block.signup_time }})
+                    {% else %}
+                        {% if block.locked %}
+                            Signups are <b>locked</b>. Questions? Visit 8th Pd. Office
+                        {% else %}
+                            Signups are <b>closing</b>. Questions? Visit 8th Pd. Office
+                        {% endif %}
+                    {% endif %}
                 </div>
             {% endif %}
         </div>

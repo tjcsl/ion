@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.utils import timezone
 import logging
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from ..announcements.models import Announcement, AnnouncementRequest
@@ -57,7 +58,8 @@ def gen_schedule(user, num_blocks=6):
                 "date": b.date,
                 "flags": flags,
                 "is_today": b.is_today(),
-                "signup_time": b.signup_time
+                "signup_time": b.signup_time,
+                "signup_time_future": b.signup_time > datetime.now().time()
             }
             schedule.append(info)
 
