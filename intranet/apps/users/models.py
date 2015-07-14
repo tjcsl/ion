@@ -289,8 +289,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
         return ("{}, {} ".format(self.last_name, self.first_name) +
-                ("({}) ".format(self.nickname) if self.nickname else "") +
-                "({})".format(self.username if self.is_teacher else (self.student_id if self.student_id else self.id)))
+                "({})".format(self.student_id if self.student_id else self.username))
     
 
     @property

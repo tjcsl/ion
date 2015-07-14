@@ -6,7 +6,6 @@ from django import forms
 from django.db.models import Q
 from ....users.models import User
 from ...models import EighthActivity, EighthScheduledActivity
-
 logger = logging.getLogger(__name__)
 
 
@@ -96,7 +95,13 @@ class ActivityForm(forms.ModelForm):
         # Simple way to filter out teachers without hitting LDAP. This
         # shouldn't be a problem unless the username scheme changes and
         # the consequences of error are not significant.
-        self.fields["users_allowed"].queryset = (User.objects.get_students())
+
+        # TODO: What we would like to do here (from users.forms):
+        # self.fields["users_allowed"] = SortedUserMultipleChoiceField(queryset=User.objects.get_students())
+        # HOWEVER: this will result in LDAP information being queried for *all 1800 users.*
+        # We need a better way to accomplish this. The solution below works because it only prints
+        # the username field which doesn't require an LDAP query to access.
+        self.fields["users_allowed"].queryset = User.objects.get_students()
 
         self.fields["presign"].label = "48 Hour"
 
