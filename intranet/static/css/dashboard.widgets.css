@@ -156,22 +156,40 @@
 .block-signup,
 .block-sponsorship {
     position: absolute;
-    left: 130px;
+    left: 126px;
     width: 100%;
-    width: calc(100% - 200px);
+    width: calc(100% - 176px);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
+/* make room for lock/unlock icon */
 .block-signup.locked,
 .block-sponsorship.unlocked {
-    left: 118px;
+    left: 114px;
 }
 
-.block-sponsorship.attendance-taken {
+/* taken icon has a larger width */
+.eighth-block .block-sponsorship.attendance-taken {
     /* 13x13px not 8x13px */
-    left: 116px;
+    left: 112px;
+}
+
+/* make sure "No activity selected" always shows */
+.eighth-block .block-signup.no-activity-selected {
+    width: calc(100% - 168px);
+}
+
+/* make sure "Not sponsoring an activity" always shows;
+   there is no button on the right so it can take 100% */
+div.eighth-block .block-sponsorship.no-activity-selected {
+    width: 100%;
+}
+
+/* "Take Now" text results in overflows */
+.eighth-block.locked .block-sponsorship {
+    width: calc(100% - 195px);
 }
 
 .block-sponsorship.attendance-taken > i {
