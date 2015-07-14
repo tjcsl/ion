@@ -4,8 +4,7 @@ $(function() {
         var ths = $(this)[0];
         var score = this.getScoreFunction(search);
         return function(item) {
-            var lastquery = ths.lastQuery;
-            if(parseInt(item.value) == parseInt(lastquery)) {
+            if(parseInt(item.value) == parseInt(ths.lastQuery)) {
                 return 10000;
             }
             return score(item);
@@ -29,9 +28,10 @@ $(function() {
         plugins: ["remove_button"],
         maxOptions: 99999
     })});
+
     $("select[multiple!=multiple]").not(".remote-source").each(function(i, el){$(el).selectize({
         maxOptions: 99999
-    })})
+    })});
 
 
     var safeFieldRenderer = function(field) {
@@ -64,6 +64,11 @@ $(function() {
             option: safeFieldRenderer("full_name")
         }
     })});
+
+    // scroll to top on key down
+    $(".selectize-input > input").on("keydown", function() {
+        $(".selectize-dropdown-content", $(this).parent()).scrollTo();
+    });
 
     $(".selectize-loading").remove();
 
