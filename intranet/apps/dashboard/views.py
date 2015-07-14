@@ -119,7 +119,8 @@ def dashboard_view(request):
     if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = Announcement.objects.filter(expiration_date__gt=timezone.now())
+        announcements = (Announcement.objects.all()
+                                             .prefetch_related("groups"))
     else:
         # Only show announcements for groups that the user is enrolled in.
         announcements = (Announcement.objects

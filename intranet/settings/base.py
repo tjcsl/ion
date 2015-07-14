@@ -30,6 +30,7 @@ ADMINS = (
 )
 
 FEEDBACK_EMAIL = "intranet+feedback@tjhsst.edu"
+APPROVAL_EMAIL = "intranet+approval@tjhsst.edu"
 
 MANAGERS = ADMINS
 

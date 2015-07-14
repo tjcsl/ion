@@ -108,11 +108,16 @@ def request_announcement_view(request):
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
+        logger.debug(form.data)
         if form.is_valid():
             obj = form.save(commit=True)
             obj.user = request.user
             obj.save()
             teacher_ids = form.data["teachers_requested"]
+            # don't interpret as a character array
+            if type(teacher_ids) != list:
+                teacher_ids = [teacher_ids]
+            logger.debug(teacher_ids)
             teachers = User.objects.filter(id__in=teacher_ids)
 
             ann = AnnouncementRequest.objects.get(id=obj.id)
@@ -155,7 +160,7 @@ def approve_announcement_view(request, req_id):
                 obj.teachers_approved.add(request.user)
                 obj.save()
                 if not obj.admin_email_sent:
-                    admin_request_announcement_email(form, obj)
+                    admin_request_announcement_email(request, form, obj)
                     obj.admin_email_sent = True
                     obj.save()
 
