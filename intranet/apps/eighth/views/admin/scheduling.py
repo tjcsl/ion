@@ -279,8 +279,6 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             activity=source_activity
         )
 
-        num = source_scheduled_activity.members.count()
-
         dest_block = form_list[2].cleaned_data["block"]
         dest_activity = form_list[3].cleaned_data["activity"]
         dest_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -288,15 +286,47 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             activity=dest_activity
         )
 
-        source_scheduled_activity.eighthsignup_set.update(
-            scheduled_activity=dest_scheduled_activity
-        )
+        req = "source_act={}&dest_act={}".format(source_scheduled_activity.id, dest_scheduled_activity.id)
 
-        messages.success(self.request, "Successfully transfered {} students.".format(num))
-        return redirect("eighth_admin_dashboard")
+        return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
 
 transfer_students_view = eighth_admin_required(
     EighthAdminTransferStudentsWizard.as_view(
         EighthAdminTransferStudentsWizard.FORMS
     )
 )
+
+@eighth_admin_required
+def transfer_students_action(request):
+    """ Do the actual process of transferring students. """
+    if "source_act" in request.GET:
+        source_act = EighthScheduledActivity.objects.get(id=request.GET.get("source_act"))
+    elif "source_act" in request.POST:
+        source_act = EighthScheduledActivity.objects.get(id=request.POST.get("source_act"))
+    else:
+        raise Http404
+
+    if "dest_act" in request.GET:
+        dest_act = EighthScheduledActivity.objects.get(id=request.GET.get("dest_act"))
+    elif "dest_act" in request.POST:
+        dest_act = EighthScheduledActivity.objects.get(id=request.POST.get("dest_act"))
+    else:
+        raise Http404
+
+    num = source_act.members.count()
+
+    context = {
+        "admin_page_title": "Transfer Students",
+        "source_act": source_act,
+        "dest_act": dest_act,
+        "num": num
+    }
+
+    if request.method == "POST":
+        source_act.eighthsignup_set.update(
+            scheduled_activity=dest_act
+        )
+        messages.success(request, "Successfully transfered {} students.".format(num))
+        return redirect("eighth_admin_dashboard")
+    else:
+        return render(request, "eighth/admin/transfer_students.html", context)

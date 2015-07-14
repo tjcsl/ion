@@ -12,18 +12,35 @@
 {% endblock %}
 
 {% block admin_main %}
-    <form action="" method="post" name="wizard">{% csrf_token %}
-        {{ wizard.management_form }}
-        <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-        <br>
-        {{ wizard.form }}
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
-        {% endif %}
-        {% if wizard.steps.next %}
-            <input type="submit" value="Next"/>
-        {% else %}
-            <input type="submit" value="Transfer Students"/>
-        {% endif %}
-    </form>
+    {% if wizard %}
+        <form action="" method="post" name="wizard">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+            <br>
+            {{ wizard.form }}
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+            {% endif %}
+            {% if wizard.steps.next %}
+                <input type="submit" value="Next"/>
+            {% else %}
+                <input type="submit" value="Transfer Students"/>
+            {% endif %}
+        </form>
+    {% else %}
+        <p>Do you want to transfer <b>{{ num }} students</b> from:
+        <p><b>{{ source_act }}</b></p>
+        to:<br /><br />
+        <p><b>{{ dest_act }}</b></p>
+        <br />
+        <br />
+        <form action="{% url 'eighth_admin_transfer_students_action' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="source_act" value="{{ source_act.id }}" />
+            <input type="hidden" name="dest_act" value="{{ dest_act.id }}" />
+            <input type="hidden" name="confirm" value="true" />
+            <a href="{% url 'eighth_admin_dashboard' %}" class="button">Cancel</a>
+            <input type="submit" value="Transfer" />
+        </form>
+    {% endif %}
 {% endblock %}
