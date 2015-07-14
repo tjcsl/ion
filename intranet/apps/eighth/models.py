@@ -374,6 +374,10 @@ class EighthBlock(AbstractBaseEighthModel):
         """Does the block occur today?"""
         return datetime.date.today() == self.date
 
+    def signup_time_future(self):
+        """Is the signup time in the future?"""
+        return self.signup_time > datetime.datetime.now().time()
+
     @property
     def letter_width(self):
         return (len(self.block_letter) - 1) * 6 + 15

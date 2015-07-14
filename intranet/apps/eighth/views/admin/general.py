@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from datetime import datetime
 from six.moves import cPickle as pickle
 from six.moves.urllib.parse import unquote
 from django.contrib import messages
@@ -21,6 +21,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
     blocks_after_start_date = (EighthBlock.objects
                                           .filter(date__gte=start_date)
                                           .order_by("date"))
+    blocks_today = EighthBlock.objects.filter(date=datetime.now().date())
     groups = Group.objects.order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.select_related('user').order_by("last_name", "first_name")
@@ -32,6 +33,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "groups": groups,
         "rooms": rooms,
         "sponsors": sponsors,
+        "blocks_today": blocks_today,
 
         "admin_page_title": "Eighth Period Admin",
 

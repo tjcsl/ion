@@ -59,7 +59,7 @@ def gen_schedule(user, num_blocks=6):
                 "flags": flags,
                 "is_today": b.is_today(),
                 "signup_time": b.signup_time,
-                "signup_time_future": b.signup_time > datetime.now().time()
+                "signup_time_future": b.signup_time_future
             }
             schedule.append(info)
 

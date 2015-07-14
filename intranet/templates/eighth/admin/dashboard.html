@@ -1,4 +1,5 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load dates %}
 
 {% block js %}
     <script type="text/javascript">
@@ -48,6 +49,31 @@
         <td class="admin-section">
             <h3>Blocks</h3>
 
+            {% if blocks_today %}
+                <b>Today:</b>
+                <ul class="fa-ul blocks-today">
+                {% for blk in blocks_today %}
+                    <li>
+                        {% if blk.locked %}
+                            <a href="{% url 'eighth_admin_edit_block' blk.id %}">
+                                <i class="fa-li fa fa-lock"></i>
+                                <b>{{ blk.block_letter }} Block:</b></a> 
+                            Locked
+                        {% elif blk.signup_time_future %}
+                            <a href="{% url 'eighth_admin_edit_block' blk.id %}">
+                                <i class="fa-li fa fa-unlock"></i>
+                                <b>{{ blk.block_letter }} Block:</b></a> 
+                            Close time set to {{ blk.signup_time }}
+                        {% else %}
+                            <a href="{% url 'eighth_admin_edit_block' blk.id %}">
+                                <i class="fa-li fa fa-exclamation-triangle"></i>
+                                <b>{{ blk.block_letter }} Block:</b></a> 
+                            <b>Unlocked; close time set to {{ blk.signup_time }}</b>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
             <form id="add-block-form" action="{% url 'eighth_admin_add_block' %}" method="post" autocomplete="off">
                 <h4>Add Block</h4>
                 {% csrf_token %}
