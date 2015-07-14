@@ -30,10 +30,6 @@
             margin: 10px 0;
         }
 
-        .selectize-input {
-            width: calc(100% + 8px);
-        }
-
         .announcements table {
             width: 600px;
         }
@@ -44,17 +40,50 @@
 
         .announcements input {
             width: 100%;
+            width: calc(100% - 8px);
         }
 
-        @media (max-width: 810px) {
-            .announcements table, .announcements #cke_id_content {
+        .announcements .selectize-control {
+            width: 100%;
+        }
+
+        @media (max-width: 855px) {
+            .announcements table {
                 width: 342px !important;
+            }
+
+            .announcements #cke_id_content {
+                width: 295px !important;
+            }
+
+            .announcements input {
+                width: 295px;
+            }
+
+            .announcements .selectize-control {
+                width: 303px;
             }
         }
 
-        @media (max-width: 550px) {
-            .announcements table, .announcements #cke_id_content {
+        @media (max-width: 555px) {
+            .announcements table {
                 width: 400px !important;
+            }
+
+            .announcements #cke_id_content {
+                width: 222px !important;
+            }
+
+            .announcements input {
+                width: 222px;
+            }
+
+            .announcements .selectize-control {
+                width: 230px;
+            }
+
+            body {
+                padding-left: 14px;
             }
         }
     </style>
@@ -69,7 +98,7 @@
     <table>
     {% csrf_token %}
     {{ form.as_table }}
-    <tr><td><input type="submit" /></td></tr>
+    <tr><td colspan="2"><input type="submit" /></td></tr>
     </table>
     </form>
 </div>

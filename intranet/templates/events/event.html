@@ -49,36 +49,36 @@
     {% endif %}
 
 
-    <span class="signup-status">
-        People attending: {{ event.attending.count }}
-        <br />
-        <a href="{% url 'event_roster' event.id %}" class="button small-button">View Public Roster</a>
-    </span>
+    <div class="bottom-row">
+        <span class="signup-status">
+            People attending: {{ event.attending.count }}
+            <a href="{% url 'event_roster' event.id %}" class="button small-button view-roster-button">
+                View Roster
+            </a>
+        </span>
 
-    <br />
-    {% if request.user in event.attending.all %}
-        <span class="attend-status">
-            You are <b>attending</b> this event.
-            {% if show_attend %}
-                <br />
-                <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
-                    <i class="fa fa-times"></i>
-                    Don't Attend
-                </a>
-            {% endif %}
-        </span>
-    {% else %}
-        <span class="attend-status">
-            You are <b>not attending</b> this event.
-            {% if show_attend %}
-                <br />
-                <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
-                    <i class="fa fa-check"></i>
-                    Attend
-                </a>
-            {% endif %}
-        </span>
-    {% endif %}
+        {% if request.user in event.attending.all %}
+            <span class="attend-status">
+                You are <b style="color: green">attending</b> this event.
+                {% if show_attend %}
+                    <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
+                        <i class="fa fa-times"></i>
+                        Don't Attend
+                    </a>
+                {% endif %}
+            </span>
+        {% else %}
+            <span class="attend-status">
+                You are <b style="color: red">not attending</b> this event.
+                {% if show_attend %}
+                    <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
+                        <i class="fa fa-check"></i>
+                        Attend
+                    </a>
+                {% endif %}
+            </span>
+        {% endif %}
+    </div>
 
 
 </div>
