@@ -91,6 +91,9 @@ class AnnouncementRequest(models.Model):
         rejected
             Boolean describing whether the post was rejected by
             an administrator. This will hide it.
+        admin_email_sent
+            Boolean describing whether an email was sent to an
+            Intranet administrator to post the announcement.
 
     """
 
@@ -114,6 +117,8 @@ class AnnouncementRequest(models.Model):
 
     rejected = models.BooleanField(default=False)
     rejected_by = models.ForeignKey(User, null=True, blank=True, related_name="rejected_by")
+
+    admin_email_sent = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.title

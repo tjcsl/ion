@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from intranet import settings
@@ -70,12 +71,32 @@ def request_announcement_email(request, form, obj):
         "teachers": teachers,
         "user": request.user,
         "formdata": form.data,
-        "info_link": "announcements/approve/{}".format(obj.id)
+        "info_link": reverse("approve_announcement", args=[obj.id])
     }
-    email_send("announcements/teacher_approve_email.txt", 
-               "announcements/teacher_approve_email.html",
+    email_send("announcements/emails/teacher_approve.txt", 
+               "announcements/emails/teacher_approve.html",
                data, subject, emails)
 
+
+def admin_request_announcement_email(request, form, obj):
+    """
+        Send an admin announcement request email
+
+        form: The announcement request form
+        obj: The announcement request object
+
+    """
+
+    subject = "News Post Approval Needed ({})".format(obj.title)
+    emails = [settings.APPROVAL_EMAIL]
+    data = {
+        "req": obj,
+        "formdata": form.data,
+        "info_link": reverse("admin_approve_announcement", args=[obj.id])
+    }
+    email_send("announcements/emails/admin_approve.txt", 
+               "announcements/emails/admin_approve.html",
+               data, subject, emails)
 
 
 @login_required
@@ -133,8 +154,16 @@ def approve_announcement_view(request, req_id):
             if "approve" in request.POST:
                 obj.teachers_approved.add(request.user)
                 obj.save()
-                messages.success(request, "Successfully approved announcement request. An Intranet administrator "
-                                          "will review and post the announcement shortly.")
+                if not obj.admin_email_sent:
+                    admin_request_announcement_email(form, obj)
+                    obj.admin_email_sent = True
+                    obj.save()
+
+                    messages.success(request, "Successfully approved announcement request. An Intranet administrator "
+                                              "will review and post the announcement shortly. (Notification sent.)")
+                else:
+                    messages.success(request, "Successfully approved announcement request. An Intranet administrator "
+                                              "will review and post the announcement shortly.")
             else:
                 obj.save()
                 messages.success(request, "You did not approve this request.")
