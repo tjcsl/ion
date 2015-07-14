@@ -1,0 +1,26 @@
+<p>The following news post was approved by a sponsor and is in the approval queue:</p>
+<b>Title:</b> {{ formdata.title }}<br />
+<b>Content:</b><br />
+{% autoescape off %}
+    {{ req.content }}
+{% endautoescape %}
+<br />
+<b>Submitted by:</b> {{ req.user }}
+<br />
+<b>Teachers Requested for Approval:</b> {% for teacher in req.teachers_requested %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+<br />
+<b>Teachers Approved:</b> {% for teacher in req.teachers_approved %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+<br />
+<b>Notes:</b><br />
+{{ req.notes|linebreaks }}
+<br />
+<br />
+To approve or reject this posting, <a href="https://ion.tjhsst.edu{{ info_link }}">click on this link: https://ion.tjhsst.edu{{ info_link }}</a>.
