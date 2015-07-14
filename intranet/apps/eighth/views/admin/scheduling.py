@@ -58,7 +58,12 @@ def schedule_activity_view(request):
 
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
-                    instance.cancelled = not form["scheduled"].value()
+                    if not form["scheduled"].value():
+                        instance.cancelled = True
+                        instance.cancel()
+                    else:
+                        instance.cancelled = False
+                        instance.uncancel()
                     instance.save()
                 else:
                     # Instead of deleting and messing up attendance,
@@ -78,9 +83,12 @@ def schedule_activity_view(request):
                         logger.debug(all_sched_act)
                         for s in all_sched_act:
                             s.cancelled = True
+                            s.cancel()
                             s.save()
                     else:
                         schact.update(cancelled=True)
+                        for s in schact:
+                            s.cancel()
 
             messages.success(request, "Successfully updated schedule.")
 

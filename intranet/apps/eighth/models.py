@@ -838,9 +838,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Cancel an EighthScheduledActivity, and update the rooms and sponsors
         to be "CANCELLED."
         """
-        super(EighthScheduledActivity, self).save(*args, **kwargs)
+        #super(EighthScheduledActivity, self).save(*args, **kwargs)
 
-        logger.debug("Act cancelled: {}".format(self.cancelled))
+        logger.debug("Running cancel hooks: {}".format(self))
 
         if not self.cancelled:
             logger.debug("Cancelling {}".format(self))
@@ -856,11 +856,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.sponsors.all().delete()
             self.sponsors.add(cancelled_sponsor)
 
+        self.save()
+
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity, by removing the "CANCELLED" rooms
         and sponsors.
         """
+
+        logger.debug("Running uncancel hooks: {}".format(self))
         if self.cancelled:
             logger.debug("Uncancelling {}".format(self))
             self.cancelled = False
@@ -873,19 +877,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if cancelled_sponsor in list(self.sponsors.all()):
             self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
+        self.save()
+
     def save(self, *args, **kwargs):
         super(EighthScheduledActivity, self).save(*args, **kwargs)
-        """
-        logger.debug("SAVING. Cancelled: {}".format(self.cancelled))
-        logger.debug(self)
-        if self.cancelled:
-            self.cancel()
-        else:
-            self.uncancel()
-        logger.debug(self.cancelled)
-        logger.debug(self.rooms.all())
-        super(EighthScheduledActivity, self).save(*args, **kwargs)
-        """
+
 
     class Meta:
         unique_together = (("block", "activity"),)
