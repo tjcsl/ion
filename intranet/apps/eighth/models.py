@@ -683,8 +683,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 in_stickie = (EighthSignup.objects
                                           .filter(user=user,
                                                   scheduled_activity__activity__sticky=True,
-                                                  scheduled_activity__block__date=self.block.date,
-                                                  scheduled_activity__activity=self.activity)
+                                                  scheduled_activity__block__date=self.block.date)
                                           .exists())
             if in_stickie:
                 exception.Sticky = True
