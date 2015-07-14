@@ -56,7 +56,8 @@ def gen_schedule(user, num_blocks=6):
                 "locked": b.locked,
                 "date": b.date,
                 "flags": flags,
-                "is_today": b.is_today()
+                "is_today": b.is_today(),
+                "signup_time": b.signup_time
             }
             schedule.append(info)
 

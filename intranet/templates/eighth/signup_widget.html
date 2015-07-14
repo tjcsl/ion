@@ -1,3 +1,4 @@
+{% load dates %}
 <div class="widget eighth-widget">
     <div class="widget-title">
         <h2>
@@ -46,6 +47,11 @@
                     <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Sign Up</a>
                 {% endif %}
             </div>
+            {% if block.is_today and block.signup_time %}
+                <div class="block-timeleft">
+                    Signups close <b>{{ block.signup_time|fuzzy_time }}</b> ({{ block.signup_time }})
+                </div>
+            {% endif %}
         </div>
     {% empty %}
         <div class="eighth-block">
