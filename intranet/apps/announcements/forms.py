@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django import forms
 from .models import Announcement, AnnouncementRequest
 from ..users.models import User
-from ..users.forms import UserMultipleChoiceField
+from ..users.forms import SortedUserMultipleChoiceField
 
 class AnnouncementForm(forms.ModelForm):
     """
@@ -52,7 +52,7 @@ class AnnouncementRequestForm(forms.ModelForm):
             "administrators and teachers selected above. If you want to restrict this posting "
             "to a specific group of students, such as the Class of 2016, enter that request here."
         )
-        self.fields["teachers_requested"] = UserMultipleChoiceField(queryset=User.objects.get_teachers())
+        self.fields["teachers_requested"] = SortedUserMultipleChoiceField(queryset=User.objects.get_teachers())
         self.fields["teachers_requested"].label = "Sponsor"
         self.fields["teachers_requested"].help_text = (
             "The teacher(s) who will approve your announcement. They will be sent an email "

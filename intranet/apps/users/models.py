@@ -284,6 +284,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.common_name
 
     @property
+    def last_first(self):
+        """Return a name in the format of:
+            Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
+        """
+        return ("{}, {} ".format(self.last_name, self.first_name) +
+                ("({}) ".format(self.nickname) if self.nickname else "") +
+                "({})".format(self.username if self.is_teacher else (self.student_id if self.student_id else self.id)))
+    
+
+    @property
     def short_name(self):
         """Return short name (first name) of a user. This is required
         for subclasses of User.
