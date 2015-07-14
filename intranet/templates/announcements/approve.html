@@ -24,47 +24,12 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}">
     <style type="text/css">
-
-        div.cke_chrome {
-            margin: 10px 0;
-        }
-
-        .announcements table {
-            width: 600px;
-        }
-
-        .announcements input {
-            width: 100%;
-        }
-
-        @media (max-width: 810px) {
-            .announcements table, .announcements #cke_id_content {
-                width: 342px !important;
-            }
-        }
-
-        @media (max-width: 550px) {
-            .announcements table, .announcements #cke_id_content {
-                width: 400px !important;
-            }
-        }
-
-        ol li {
-            margin-left: 40px;
-            list-style-type: circle;
-        }
-
-        #cke_id_content {
-            width: 600px;
-            margin-bottom: -15px;
-        }
-
         .helptext {
             display: block;
             margin-bottom: 15px;
         }
-
     </style>
 {% endblock %}
 
@@ -93,14 +58,19 @@
         <ul>
         {% for teacher in req.teachers_requested.all %}
             <li>{{ teacher.full_name }}</li>
+        {% empty %}
+            <li>(None)</li>
         {% endfor %}
         </ul>
         The following teachers approved:
         <ul>
         {% for teacher in req.teachers_approved.all %}
             <li>{{ teacher.full_name }}</li>
+        {% empty %}
+            <li>(None)</li>
         {% endfor %}
         </ul>
+        <br />
     {% else %}
         <p>{{ user.full_name }} ({{ user }}) has submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are included below.</p>
         <p>You may edit the fields below if you would like to change what is submitted. Please note that pressing the 'Approve' button below will not automatically post the announcement; it will still have to be approved manually by an administrator.</p>
