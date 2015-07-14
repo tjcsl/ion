@@ -34,3 +34,24 @@ class ProfileEditForm(forms.Form):
                        "city",
                        "state",
                        "postal_code"]
+
+class UserChoiceField(forms.ModelChoiceField):
+    """
+    A ModelChoiceField that returns a user's full name instead
+    of their TJ username (which is the default string representation).
+
+    """
+
+    def label_from_instance(self, obj):
+        return obj.full_name
+
+
+class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
+    """
+    A ModelMultipleChoiceField that returns a user's full name instead
+    of their TJ username (which is the default string representation).
+
+    """
+
+    def label_from_instance(self, obj):
+        return obj.full_name

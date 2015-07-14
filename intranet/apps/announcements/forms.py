@@ -4,9 +4,13 @@ from __future__ import unicode_literals
 from django import forms
 from .models import Announcement, AnnouncementRequest
 from ..users.models import User
-
+from ..users.forms import UserMultipleChoiceField
 
 class AnnouncementForm(forms.ModelForm):
+    """
+    A form for generating an announcement.
+
+    """
 
     expiration_date = forms.DateTimeInput()
     class Meta:
@@ -21,6 +25,10 @@ class AnnouncementForm(forms.ModelForm):
 
 
 class AnnouncementRequestForm(forms.ModelForm):
+    """
+    A form for generating an announcement request.
+
+    """
 
     def __init__(self, *args, **kwargs):
         super(AnnouncementRequestForm, self).__init__(*args, **kwargs)
@@ -44,13 +52,13 @@ class AnnouncementRequestForm(forms.ModelForm):
             "administrators and teachers selected above. If you want to restrict this posting "
             "to a specific group of students, such as the Class of 2016, enter that request here."
         )
+        self.fields["teachers_requested"] = UserMultipleChoiceField(queryset=User.objects.get_teachers())
         self.fields["teachers_requested"].label = "Sponsor"
         self.fields["teachers_requested"].help_text = (
             "The teacher(s) who will approve your announcement. They will be sent an email "
             "with instructions on how to approve this post. Please do not select more than "
             "one or two."
         )
-        self.fields["teachers_requested"].queryset = (User.objects.get_teachers())
 
     class Meta:
         model = AnnouncementRequest

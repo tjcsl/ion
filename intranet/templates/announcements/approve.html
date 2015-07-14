@@ -102,7 +102,7 @@
         {% endfor %}
         </ul>
     {% else %}
-        <p>{{ user.full_name }} ({{ user }}) has requested that an Intranet announcement be posted, and has asked for you to approve its posting. The details of this announcement are included below.</p>
+        <p>{{ user.full_name }} ({{ user }}) has submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are included below.</p>
         <p>You may edit the fields below if you would like to change what is submitted. Please note that pressing the 'Approve' button below will not automatically post the announcement; it will still have to be approved manually by an administrator.</p>
     {% endif %}
     <form action="" method="post">
@@ -110,17 +110,17 @@
     {% csrf_token %}
     {{ form.as_table }}
     {% if admin_approve %}
-    <tr>
-        <th><b>Groups:</b></th>
-        <td>
-            Announcement requests do not contain a groups field. <b>You must manually enter groups here if you want to restrict this posting.</b><br />
-            <select name="groups" id="id_groups" multiple="multiple" placeholder="Everyone">
-            {% for grp in all_groups %}
-                <option value="{{ grp.id }}">{{ grp }}</option>
-            {% endfor %}
-            </select>
-        </td>
-    </tr>
+        <tr>
+            <th><b>Groups:</b></th>
+            <td>
+                Announcement requests do not contain a groups field. <b>You must manually enter groups here if you want to restrict this posting.</b><br />
+                <select name="groups" id="id_groups" multiple="multiple" placeholder="Everyone">
+                {% for grp in all_groups %}
+                    <option value="{{ grp.id }}">{{ grp }}</option>
+                {% endfor %}
+                </select>
+            </td>
+        </tr>
     {% endif %}
     <tr>
         <td colspan="2">
