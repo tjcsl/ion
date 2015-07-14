@@ -35,62 +35,34 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
-    <style type="text/css">
-
-        div.cke_chrome {
-            margin: 10px 0;
-        }
-
-        .events table {
-            width: 600px;
-        }
-
-        .events input {
-            width: 100%;
-            width: calc(100% - 8px);
-        }
-
-        .events .selectize-control {
-            width: 100%;
-        }
-
-        @media (max-width: 810px) {
-            .announcements table, .announcements #cke_id_content {
-                width: 342px !important;
-            }
-        }
-
-        @media (max-width: 550px) {
-            .announcements table, .announcements #cke_id_content {
-                width: 400px !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
 {% endblock %}
 
 {% block main %}
-<div class="events primary-content">
+<div class="events announcements primary-content">
     <h2>
         {{ action|title }} Event
     </h2>
-    {% if action == "add" %}
-        <p style="max-width: 700px">
-            It has been the decision of the Intranet administrators to allow for open event creation. You currently have the ability to create events and share them with the entire school community, if you so choose. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
-        </p>
-        <p style="max-width: 700px">
-            Events posted should relate directly to the TJ community. Examples of this include special club meetings, bake sales, and school sporting events.
-        </p>
-        <br />
-    {% endif %}
     <form action="/events/{{ action }}{% if id %}/{{ id }}{% endif %}" method="post">
     <table>
     {% csrf_token %}
+    <tr><td colspan="2">
+        {% if action == "add" %}
+            <p>
+                It has been the decision of the Intranet administrators to allow for open event creation. You currently have the ability to create events and share them with the entire school community, if you so choose. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
+            </p>
+            <p>
+                Events posted should relate directly to the TJ community. Examples of this include special club meetings, bake sales, and school sporting events.
+            </p>
+            <br />
+        {% endif %}
+    </td></tr>
     {{ form.as_table }}
-    <tr><td>
+    <tr><td colspan="2">
         {% if id %}
             <a href="{% url 'delete_event' id %}" class="button">Delete</a>
         {% endif %}
-        <input type="submit" /></td></tr>
+        <input type="submit" style="width: 150px" /></td></tr>
     </table>
     </form>
 </div>
