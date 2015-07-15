@@ -526,7 +526,8 @@ def add_member_to_group_view(request, group_id):
         for user in user_objects:
             user.groups.add(group)
             user.save()
-            next_url += "added={}&".format(user.id)
+            if len(user_objects) < 25:
+                next_url += "added={}&".format(user.id)
         messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
         return redirect(next_url)
 

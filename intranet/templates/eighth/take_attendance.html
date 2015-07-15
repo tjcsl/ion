@@ -78,7 +78,7 @@ $(function() {
                 <b>Activity:</b>
                 <select name="scheduled-activities" id="activity-select">
                 {% for schact in scheduled_activities %}
-                    <option value="{{ schact.id }}" {% if schact.id == scheduled_activity.id %} selected{% endif %}>
+                    <option value="{{ schact.id }}" {% if schact.id == scheduled_activity.id %} selected="selected"{% endif %}>
                         {{ schact.activity.id }}: {{ schact.title_with_flags }}
                     </option>
                 {% endfor %}
@@ -186,14 +186,14 @@ $(function() {
                                         {{ pass.user.last_name }}, {{ pass.user.first_name }}
                                     </a>
                                 </td>
-                                <td>
+                                <td class="user-link" data-user-id="{{ pass.user.id }}">
                                     {% if pass.user.student_id %}
                                         {{ pass.user.student_id }}
                                     {% else %}
                                         (Ion {{ pass.user.id }})
                                     {% endif %}
                                 </td>
-                                <td style="text-align: center">
+                                <td style="text-align: center" class="user-link" data-user-id="{{ pass.user.id }}">
                                     {{ pass.user.grade.number }}
                                 </td>
                                 <td>
@@ -260,12 +260,12 @@ $(function() {
                                             {{ member.name }}
                                         </a>
                                     </td>
-                                    <td>{% if member.student_id %}
+                                    <td class="user-link" data-user-id="{{ member.id }}">{% if member.student_id %}
                                         {{ member.student_id }}
                                     {% else %}
                                         (Ion {{ member.id }})
                                     {% endif %}</td>
-                                    <td style="text-align: center">{{ member.grade }}</td>
+                                    <td style="text-align: center" class="user-link" data-user-id="{{ member.id }}">{{ member.grade }}</td>
                                     <td>{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Present{% endif %}){% endif %}</td>
                                 </tr>
                             {% empty %}

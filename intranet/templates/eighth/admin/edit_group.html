@@ -39,14 +39,14 @@
 
         <form action="{% url 'eighth_admin_add_member_to_group' group.id %}" method="post">
             {% csrf_token %}
-            <label for="student-id"><b>Add user by search query</b></label>
+            <label for="student-id"><b>Add user(s) by search query</b></label>
             <br />
             {% if request.GET.error %}
             <p class="error-color">
                 {% if request.GET.error == "s" %}
                     Invalid student ID
                 {% elif request.GET.error == "n" %}
-                    No user exists with that student ID.
+                    No users match that query
                 {% endif %}
             </p>
             {% endif %}
@@ -62,8 +62,7 @@
 </table>
 
 <br />
-<br />
-<h3>{{ group.name }}: {{ members|length }} members</h3>
+<h2>{{ group.name }}: {{ members|length }} members</h2>
 <table data-sortable class="fancy-table">
     <thead>
         <tr>
