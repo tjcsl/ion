@@ -552,6 +552,7 @@ def add_member_to_group_view(request, group_id):
     else:
         users = [r["_source"] for r in results["hits"]["hits"]]
         context = {
+            "query": query,
             "users": users,
             "group": group,
             "admin_page_title": "Add Members to Group"
