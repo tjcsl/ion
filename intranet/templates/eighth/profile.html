@@ -111,7 +111,15 @@
             </td>
             <td>
                 {% if sch.signup.scheduled_activity.attendance_taken %}
-                    {% if sch.signup.was_absent %}No{% else %}Yes{% endif %}
+                    {% if sch.signup.was_absent %}
+                        No{% if request.user.is_eighth_admin and not sch.signup.pass_accepted %}: Pass Rejected{% endif %}
+                    {% else %}
+                        {% if sch.signup.after_deadline and not sch.signup.pass_accepted %}
+                            ----{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
+                        {% else %}
+                            Yes{% if request.user.is_eighth_admin and sch.signup.pass_accepted %}: Pass Accepted{% endif %}
+                        {% endif %}
+                    {% endif %}
                 {% else %}
                     &nbsp; &nbsp; &mdash;
                 {% endif %}
