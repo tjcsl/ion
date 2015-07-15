@@ -24,24 +24,24 @@
                 {{ block.date|date:"D, N j" }}
                 {% if block.locked %}
                     {% if block.current_signup %}
-                        <span class="block-signup locked{% if block.is_today %} today{% endif %}">
+                        <span class="block-signup locked{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You have signed up for this activity.{% endif %}">
                             <i class="fa fa-lock"></i>
                             {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                         </span>
                     {% else %}
-                         <span class="block-signup locked no-activity-selected{% if block.is_today %} today{% endif %}">
+                         <span class="block-signup locked no-activity-selected{% if block.is_today %} today{% endif %}" title="You have not selected an activity, and signups are locked. Questions? Ask 8th Pd. Office">
                             <i class="fa fa-lock"></i>
                             No activity selected
                         </span>
                     {% endif %}
                     <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Locked</a>
                 {% elif block.current_signup %}
-                    <span class="block-signup{% if block.is_today %} today{% endif %}">
+                    <span class="block-signup{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You have signed up for this activity.{% endif %}">
                         {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                     </span>
                     <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Change</a>
                 {% else %}
-                    <span class="block-signup no-activity-selected{% if block.is_today %} today{% endif %}">
+                    <span class="block-signup no-activity-selected{% if block.is_today %} today{% endif %}" title="You have not selected an activity.">
                         No activity selected
                     </span>
                     <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Sign Up</a>
@@ -58,6 +58,11 @@
                             Signups are <b>closing</b>. Questions? Visit 8th Pd. Office
                         {% endif %}
                     {% endif %}
+                </div>
+            {% endif %}
+            {% if block.current_signup_cancelled %}
+                <div class="block-info">
+                    <i class="fa fa-info-circle"></i> This activity was cancelled. {% if block.locked %}Visit 8th Pd. Office{% else %}Select another activity.{% endif %}
                 </div>
             {% endif %}
         </div>

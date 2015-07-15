@@ -176,10 +176,12 @@ class EighthActivity(AbstractBaseEighthModel):
         administrative, sticky, and deleted flags."""
         return self._name_with_flags(False)
 
-    def _name_with_flags(self, include_restricted):
+    def _name_with_flags(self, include_restricted, title=None):
         """Generate the name with flags."""
         name = "Special: " if self.special else ""
         name += self.name
+        if title:
+            name += " - {}".format(title)
         if include_restricted:
             name += " (R)" if self.restricted else ""
         name += " (BB)" if self.both_blocks else ""
@@ -492,8 +494,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         scheduled activity to the activity's name and flags.
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
-        name_with_flags = self.activity._name_with_flags(True) + cancelled_str
-        return name_with_flags if not self.title else "{} - {}".format(name_with_flags, self.title)
+        name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str
+        return name_with_flags
 
     def get_true_sponsors(self):
         """Get the sponsors for the scheduled activity, taking into account
@@ -525,7 +527,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         activity defaults and overrides.
 
         """
-
 
         rooms = self.rooms.all()
         if len(rooms) > 0:

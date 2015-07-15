@@ -48,6 +48,10 @@ def gen_schedule(user, num_blocks=6):
             if current_signup_cancelled:
                 flags += " cancelled"
 
+            if current_signup_cancelled:
+                # don't duplicate this info; already caught
+                current_signup = current_signup.replace(" (Cancelled)", "")
+
             info = {
                 "id": b.id,
                 "block": b,
