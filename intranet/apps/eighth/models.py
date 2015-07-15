@@ -582,6 +582,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return (now < (activity_date - presign_period))
 
+    def has_open_passes(self):
+        """Return whether there are passes that have not been acknowledged.
+
+        """
+        return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False)
+
     def get_viewable_members(self, user=None):
         """Get the list of members that you have permissions to view.
 

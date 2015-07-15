@@ -9,7 +9,7 @@
     </div>
     <div class="widget-content">
     {% for schact in sponsor_schedule %}
-        <div class="eighth-block{% if schact.block.is_today %} today{% endif %}{% if schact.activity and not schact.attendance_taken %} no-attendance{% endif %}{% if schact.activity %} clickable{% endif %}{% if schact.block.locked %} locked{% else %} unlocked{% endif %}">
+        <div class="eighth-block{% if schact.block.is_today %} today{% endif %}{% if schact.activity and not schact.attendance_taken %} no-attendance{% endif %}{% if schact.has_open_passes %} open-passes{% endif %}{% if schact.activity %} clickable{% endif %}{% if schact.block.locked %} locked{% else %} unlocked{% endif %}">
             <div class="block-header">
                 <span class="block-letter"{% if schact.block.letter_width %} style="width: {{ schact.block.letter_width }}px"{% endif %}>
                     {{ schact.block.block_letter }}
@@ -17,7 +17,11 @@
                 <span class="block-date">{{ schact.block.date|date:"D, N j" }}</span>
                 {% if schact.activity %}
 
-                    {% if schact.attendance_taken %}
+                    {% if schact.has_open_passes %}
+                        <span class="block-sponsorship open-passes">
+                            <i class="fa fa-info-circle" title="You have open passes."></i>{{ schact.full_title }}
+                        </span>
+                    {% elif schact.attendance_taken %}
                         <span class="block-sponsorship attendance-taken">
                             <i class="fa fa-check" title="You have taken attendance."></i>{{ schact.full_title }}
                         </span>
