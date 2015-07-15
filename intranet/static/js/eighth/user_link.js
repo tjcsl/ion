@@ -44,7 +44,7 @@ $(function() {
         userHide[uid] = setTimeout(function() {
             console.debug(uid, "OUT");
             $(".user-pic[data-user-id='" + uid + "']").fadeOut(100);
-        }, 200);
+        }, 500);
     });
 
     $(document).mousemove(function(e){
