@@ -1,5 +1,16 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        addGroup = function() {
+            $("#submit_button").attr("name", "add_group").click();
+        }
+    });
+    </script>
+{% endblock %}
+
 {% block css %}
     {{ block.super }}
     <style type="text/css">
@@ -38,7 +49,7 @@
 
 {% block admin_main %}
 
-<form action="" method="post" autocomplete="off">
+<form action="" method="post" autocomplete="off" name="edit_form">
     <table class="edit-table">
         {% csrf_token %}
         {{ form.as_table }}
@@ -48,7 +59,7 @@
                 {% if delete_url %}
                     <a class="button" href="{{ delete_url }}">Delete</a>
                 {% endif %}
-                <input type="submit" value="Save">
+                <input type="submit" value="Save" id="submit_button" />
             </td>
         </tr>
     </table>
@@ -94,7 +105,8 @@
             </ul>
         {% endif %}
     {% else %}
-        This activity is not restricted. All students may sign up for this activity.
+        This activity is not restricted. All students may sign up for this activity.<br />
+        <button onclick="addGroup()">Add and Assign Empty Group</button>
     {% endif %}
 
 </div>

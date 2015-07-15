@@ -5,6 +5,7 @@ from six.moves import cPickle as pickle
 import logging
 from django import http, forms
 from django.contrib import messages
+from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
@@ -48,6 +49,16 @@ def edit_activity_view(request, activity_id):
                 messages.error(request, error)
             else:
                 messages.success(request, "Successfully edited activity.")
+                if "add_group" in request.POST:
+                    grp_name = "Activity: {}".format(activity.name)
+                    grp, status = Group.objects.get_or_create(name=grp_name)
+                    logger.debug(grp)
+                    activity.restricted = True
+                    activity.groups_allowed.add(grp)
+                    activity.save()
+                    messages.success(request, "{} to '{}' group".format("Created and added" if status else "Added", grp_name))
+                    return redirect("eighth_admin_edit_group", grp.id)
+
                 return redirect("eighth_admin_edit_activity", activity_id)
         else:
             messages.error(request, "Error adding activity.")
