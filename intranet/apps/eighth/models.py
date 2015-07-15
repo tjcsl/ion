@@ -961,7 +961,7 @@ class EighthSignup(AbstractBaseEighthModel):
                                    "and the EighthScheduledActivity's block",)
             })
 
-    def remove_signup(self, user=None):
+    def remove_signup(self, user=None, force=False):
         """Attempt to remove the EighthSignup if the user has permission
         to do so."""
 
@@ -987,7 +987,7 @@ class EighthSignup(AbstractBaseEighthModel):
         if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky:
             exception.Sticky = True
 
-        if len(exception.messages()) > 0:
+        if len(exception.messages()) > 0 and not force:
             raise exception
         else:
             block = self.scheduled_activity.block

@@ -319,18 +319,32 @@ $(function() {
     $("button#unsignup-button").click(function() {
         var uid = $(this).attr("data-uid");
         var bid = $(this).attr("data-bid");
+        var force = $(this).attr("force");
 
+        var ths = $(this);
         $.ajax({
             url: $("#activity-detail").data("signup-endpoint"),
             type: "POST",
             data: {
                 "uid": uid,
                 "bid": bid,
-                "unsignup": true
+                "unsignup": true,
+                force: force
             },
             success: function(response) {
-                alert(response);
+                if(response.responseText) {
+                    alert($(response.responseText).text());
+                }
+                console.error(response);
                 location.reload();
+            },
+            error: function(response) {
+                if(response.responseText) {
+                    alert($(response.responseText).text());
+                }
+                console.error(response);
+                ths.attr("force", true);
+                ths.html(ths.html()+" (Force)");
             }
         });
     });

@@ -28,8 +28,13 @@ def eighth_signup_view(request, block_id=None):
 
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
-            uid = request.POST["uid"]
-            bid = request.POST["bid"]
+            uid = request.POST.get("uid")
+            bid = request.POST.get("bid")
+            force = request.POST.get("force")
+            if force == "true":
+                force = True
+            else:
+                force = False
 
             try:
                 user = User.get_user(id=uid)
@@ -40,7 +45,7 @@ def eighth_signup_view(request, block_id=None):
                 eighth_signup = (EighthSignup.objects
                                              .get(scheduled_activity__block__id=bid,
                                                   user__id=uid))
-                success_message = eighth_signup.remove_signup(request.user)
+                success_message = eighth_signup.remove_signup(request.user, force)
             except EighthSignup.DoesNotExist:
                 return http.HttpResponse("The signup did not exist.")
             except SignupException as e:
