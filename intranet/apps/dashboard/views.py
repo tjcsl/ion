@@ -161,7 +161,7 @@ def dashboard_view(request):
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
     else:
-        awaiting_approval = awaiting_approval = None
+        awaiting_approval = awaiting_teacher = None
 
     context = {
         "announcements": announcements,
