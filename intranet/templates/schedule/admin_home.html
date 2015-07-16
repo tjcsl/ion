@@ -13,7 +13,7 @@
         text-align: center;
     }
     .schedule-month {
-        width: 875px
+        width: 875px;
         height: 100%;
     }
 
@@ -126,6 +126,8 @@
                         </tr>
                     {% endfor %}
                     </table>
+                {% else %}
+                    <b>No schedule assigned.</b>
                 {% endif %}
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
                     <a class="button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
@@ -135,7 +137,8 @@
                         <i class='edit fa fa-pencil'></i>
                     </a>
                 </span>
-                
+            {% else %}
+                &nbsp;
             {% endif %}
             </td>
             {% endfor %}

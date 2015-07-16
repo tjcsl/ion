@@ -64,29 +64,44 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>Create Day Type</h2>
+        <h2>{% if daytype %}Edit{% else %}Create{% endif %} Day Type</h2>
         {% comment %}<table>
         {{ form.as_table }}
         </table>
         {% endcomment %}
         <form action="/schedule/daytype" method="post">
         {% csrf_token %}
+        {% if daytype %}
+            <input type="hidden" name="id" value="{{ daytype.id }}" />
+        {% endif %}
         <br /><br />
             <table class="bellschedule-table">
             <thead>
                 <tr>
                     <th colspan="2">
-                        <input id="id_name" name="name" placeholder="Day Name" />
+                        <input id="id_name" name="name" placeholder="Day Name" value="{% if daytype %}{{ daytype.name }}{% endif %}" />
                     </th>
                 </tr>
                 <tr>
                     <th colspan="2" class="special">
                         <label for="special">Special</label>
-                        <input type="checkbox" name="special" />
+                        <input type="checkbox" name="special"{% if daytype and daytype.special %} checked="checked"{% endif %} />
                     </th>
                 </tr>
             </thead>
             <tbody>
+            {% if daytype %}
+            {% for block in daytype.blocks.all %}
+                <tr{% if forloop.first %} class="tpl"{% endif %}>
+                    <th>
+                        <input type="text" name="block_name" value="{{ block.name }}" placeholder="Block Title" />
+                    </th>
+                    <td class="time">
+                        Start: <input type="time" name="block_start" value="{% if block.start.hour < 10 %}0{% endif %}{{ block.start }}" size="5" /><br />
+                        End: <input type="time" name="block_end" value="{% if block.end.hour < 10 %}0{% endif %}{{ block.end }}" size="5" />
+                    </td>
+                </tr>
+            {% empty %}
                 <tr class="tpl">
                     <th>
                         <input type="text" name="block_name" value="" placeholder="Block Title" />
@@ -96,11 +111,23 @@
                         End: <input type="time"name="block_end" value="" size="5" />
                     </td>
                 </tr>
+            {% endfor %}
+            {% else %}
+                <tr class="tpl">
+                    <th>
+                        <input type="text" name="block_name" value="" placeholder="Block Title" />
+                    </th>
+                    <td class="time">
+                        Start: <input type="time" name="block_start" value="" size="5" /><br />
+                        End: <input type="time"name="block_end" value="" size="5" />
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
             <tfoot>
                 <tr>
                     <td class="submit">
-                        <input type="submit" value="Create" class="button" />
+                        <input type="submit" value="{% if daytype %}Modify{% else %}Create{% endif %}" class="button" />
                     </td>
                     <td class="add">
                         <a class="button" onclick="add_block()">

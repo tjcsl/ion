@@ -5,12 +5,13 @@ import logging
 from datetime import datetime, timedelta
 import calendar
 from django.contrib import messages
-from django.shortcuts import render
-from .models import Block, DayType, Day
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect
+from .models import Block, DayType, Day, Time
 from .forms import DayTypeForm, DayForm
 
 logger = logging.getLogger(__name__)
-
+schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous() and u.has_admin_permission("schedule"))
 
 def date_format(date):
     try:
@@ -79,7 +80,7 @@ def schedule_context(request=None, date=None):
         }
     }
 
-
+# does NOT require login
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
@@ -104,7 +105,7 @@ def get_day_data(firstday, daynum):
 
     return data
 
-
+@schedule_admin_required
 def admin_home_view(request):
     if "month" in request.GET:
         month = request.GET.get("month")
@@ -130,7 +131,7 @@ def admin_home_view(request):
 
     return render(request, "schedule/admin_home.html", data)
 
-
+@schedule_admin_required
 def admin_add_view(request):
     if request.method == "POST":
         form = DayForm(request.POST)
@@ -144,34 +145,55 @@ def admin_add_view(request):
     }
     return render(request, "schedule/admin_add.html", context)
 
-
-def admin_daytype_view(request):
+@schedule_admin_required
+def admin_daytype_view(request, id=None):
     if request.method == "POST":
-        form = DayTypeForm(request.POST)
+        if "id" in request.POST:
+            id = request.POST["id"]
+        if id:
+            daytype = DayType.objects.get(id=id)
+            logger.debug("instance:", daytype)
+            form = DayTypeForm(request.POST, instance=daytype)
+        else:
+            daytype = None
+            form = DayTypeForm(request.POST)
         logger.debug(form)
         logger.debug(request.POST)
         if form.is_valid():
             model = form.save()
             """Add blocks"""
             blocks = zip(
-                request.POST['block_name'],
-                [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_start')],
-                [[int(j) for j in i.split(":")] for i in request.POST.getlist('block_end')]
+                request.POST.getlist('block_name'),
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9,0] for i in request.POST.getlist('block_start')],
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10,0] for i in request.POST.getlist('block_end')]
             )
-            form.blocks = []
+            logger.debug(blocks)
+            model.blocks.all().delete()
             for blk in blocks:
-                obj = Block.objects.get_or_create(
-                        name=blk[0],
-                        start__hour=blk[1][0],
-                        start__minute=blk[1][1],
-                        end__hour=blk[2][0],
-                        end__minute=blk[2][1]
+                logger.debug(blk)
+                start, scr = Time.objects.get_or_create(
+                    hour=blk[1][0],
+                    minute=blk[1][1]
                 )
-                model.blocks.add(obj)
+                end, ecr = Time.objects.get_or_create(
+                    hour=blk[2][0],
+                    minute=blk[2][1]
+                )
+                bobj, bcr = Block.objects.get_or_create(
+                        name=blk[0],
+                        start=start,
+                        end=end
+                )
+                model.blocks.add(bobj)
             model.save()
             messages.success(request, "Successfully added Day Type.")
+            return redirect("schedule_daytype", model.id)
         else:
             messages.error(request, "Error adding Day Type")
+    elif id:
+        daytype = DayType.objects.get(id=id)
+        form = DayTypeForm(instance=daytype)
     else:
+        daytype = None
         form = DayTypeForm()
-    return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": DayType.objects.all()[0]})
+    return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": daytype})
