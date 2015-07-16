@@ -163,6 +163,7 @@ def admin_daytype_view(request, id=None):
             model = form.save()
             """Add blocks"""
             blocks = zip(
+                request.POST.getlist('block_order'),
                 request.POST.getlist('block_name'),
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9,0] for i in request.POST.getlist('block_start')],
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10,0] for i in request.POST.getlist('block_end')]

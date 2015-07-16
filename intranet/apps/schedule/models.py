@@ -27,13 +27,14 @@ class Block(models.Model):
     name = models.CharField(max_length=100)
     start = models.ForeignKey('Time', related_name='blockstart')
     end = models.ForeignKey('Time', related_name='blockend')
+    order = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "{}: {}-{}".format(self.name, self.start, self.end)
 
     class Meta:
         unique_together = (("name", "start", "end"))
-        ordering = ("name", "start", "end")
+        ordering = ("order", "name", "start", "end")
 
 
 class CodeName(models.Model):
