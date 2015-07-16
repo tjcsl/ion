@@ -127,6 +127,15 @@ $(function() {
             window.activityDetailView.render();
 
             initUIElementBehavior();
+
+            if(typeof badgeClickUpdate != "undefined") {
+                badgeClickUpdate();
+            }
+
+            /* remove ?activity= from URL if able */
+            if(location.search.substring(0, 10) == "?activity=" && history.pushState) {
+                history.pushState(null, null, location.href.split("?activity=")[0]);
+            }
         }
     });
 
