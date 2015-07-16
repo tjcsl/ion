@@ -22,9 +22,9 @@ def events_view(request):
         Events homepage. Shows a list of events occurring in the next week, month, and future.
 
     """
-    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-        # In production, go to not ready page.
-        return render(request, "events/not_ready.html")
+    #if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+    #    # In production, go to not ready page.
+    #    return render(request, "events/not_ready.html")
 
     viewable_events = (Event.objects
                             .visible_to_user(request.user)
@@ -65,8 +65,8 @@ def join_event_view(request, id):
         id: event id
 
     """
-    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-        return render(request, "events/not_ready.html")
+    #if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+    #    return render(request, "events/not_ready.html")
 
     event = get_object_or_404(Event, id=id)
 
@@ -100,8 +100,8 @@ def event_roster_view(request, id):
 
     """
 
-    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-        return render(request, "events/not_ready.html")
+    #if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+    #    return render(request, "events/not_ready.html")
 
     event = get_object_or_404(Event, id=id)
     
@@ -130,8 +130,8 @@ def add_event_view(request):
         an event. This may change.
 
     """
-    if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-        return render(request, "events/not_ready.html")
+    #if settings.PRODUCTION and not request.user.has_admin_permission('events'):
+    #    return render(request, "events/not_ready.html")
 
     if request.method == "POST":
         form = EventForm(request.POST)
