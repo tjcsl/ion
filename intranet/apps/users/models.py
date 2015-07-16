@@ -284,6 +284,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.common_name
 
     @property
+    def display_name(self):
+        display_name = self.__getattr__("display_name")
+        if not display_name:
+            return self.full_name
+        return display_name
+    
+
+    @property
     def last_first(self):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
@@ -713,7 +721,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.permissions["self"]["showeighth"] if self.permissions and "self" in self.permissions and "showeighth" in self.permissions["self"] else False
+        return (self.permissions["self"]["showeighth"] if (
+                    self.permissions and
+                    "self" in self.permissions and
+                    "showeighth" in self.permissions["self"]
+                ) else False)
     
 
     @property
