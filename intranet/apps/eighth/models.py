@@ -315,6 +315,8 @@ class EighthBlock(AbstractBaseEighthModel):
             for either only block A or both blocks A1 and A2, then block A
             would override blocks A1 and A2, and blocks A1 and A2 would
             override block A.
+        comments
+            A short comments field displayed next to the block letter.
 
     """
 
@@ -327,6 +329,7 @@ class EighthBlock(AbstractBaseEighthModel):
     activities = models.ManyToManyField(EighthActivity,
                                         through="EighthScheduledActivity",
                                         blank=True)
+    comments = models.CharField(max_length=100, blank=True)
 
     override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 

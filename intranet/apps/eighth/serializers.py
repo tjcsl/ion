@@ -86,6 +86,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
     date = serializers.DateField()
     block_letter = serializers.CharField(max_length=10)
+    comments = serializers.CharField(max_length=100)
 
     def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, available_restricted_acts=None):
         activity = scheduled_activity.activity
