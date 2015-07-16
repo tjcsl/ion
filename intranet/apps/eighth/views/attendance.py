@@ -11,7 +11,7 @@ import csv
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from formtools.wizard.views import SessionWizardView
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
@@ -561,12 +561,11 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
 
 @login_required
-def eighth_absences_view(request):
-    if "user" in request.GET and request.user.is_eighth_admin:
-        try:
-            user = User.get_user(id=request.GET["user"])
-        except (User.DoesNotExist, ValueError):
-            raise http.Http404
+def eighth_absences_view(request, user_id=None):
+    if user_id and request.user.is_eighth_admin:
+        user = get_object_or_404(User, id=user_id)
+    elif "user" in request.GET and request.user.is_eighth_admin:
+        user = get_object_or_404(User, id=request.GET["user"])
     else:
         if request.user.is_student:
             user = request.user
