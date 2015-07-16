@@ -52,6 +52,12 @@
 
     .bellschedule-table td.submit > input {
         width: 100%;
+        width: calc(100% - 6px);
+    }
+
+    .bellschedule-table td.add > button {
+        width: 100%;
+        width: calc(100% - 8px);
     }
 
     </style>
@@ -59,21 +65,45 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/template" id="bellschedule-row-tpl">
+        <tr>
+            <td class="block-order">
+                <input type="text" name="block_order" value=1 placeholder="#" />
+            </td>
+            <th>
+                <input type="text" name="block_name" value="" placeholder="Block Title" />
+            </th>
+            <td class="time">
+                Start: <input type="time" name="block_start" value="" size="5" /><br />
+                End: <input type="time"name="block_end" value="" size="5" />
+            </td>
+            <td class="remove">
+                <button class="block-remove">
+                    <i class="fa fa-times"></i>
+                </button>
+            </td>
+        </tr>
+    </script>
+
     <script type="text/javascript">
     $(document).ready(function() {
         var num_blocks = 1;
-        var bt = $(".bellschedule-table tr.tpl").clone();
+        var bt = $($("#bellschedule-row-tpl").html()).clone();
         bt.removeClass("tpl");
         add_block = function() {
             var clone = bt.clone();
+            num_blocks = 0;
+            $("input[name=block_order]").each(function() {
+                num_blocks += 1;
+            });
             num_blocks += 1;
             console.debug(num_blocks);
             $("input[name=block_order]", clone).val(num_blocks);
             $(".bellschedule-table > tbody").append(clone);
-            updateButtons();
+            update_buttons();
         }
 
-        updateButtons = function() {
+        update_buttons = function() {
             $("button.block-remove").click(function() {
                 $(this).parent().parent().remove();
                 num_blocks = 0;
@@ -84,7 +114,12 @@
             });
         }
 
-        updateButtons();
+        $("button.block-add").click(function(event) {
+            event.preventDefault();
+            add_block();
+        });
+
+        update_buttons();
 
     })
     </script>
@@ -92,6 +127,9 @@
 
 {% block main %}
     <div class="primary-content">
+        <a href="{% url 'schedule_admin' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
         <h2>{% if daytype %}Edit{% else %}Create{% endif %} Day Type</h2>
         {% comment %}<table>
         {{ form.as_table }}
@@ -119,9 +157,9 @@
                 <tr>&nbsp;</tr>
             </thead>
             <tbody>
-            {% if daytype %}
+            {% if daytype and daytype.blocks.count > 0 %}
             {% for block in daytype.blocks.all %}
-                <tr{% if forloop.first %} class="tpl"{% endif %}>
+                <tr>
                     <td class="block-order">
                         <input type="text" name="block_order" value={{ block.order }} placeholder="#" />
                     </td>
@@ -138,27 +176,9 @@
                         </button>
                     </td>
                 </tr>
-            {% empty %}
-                <tr class="tpl">
-                    <td class="block-order">
-                        <input type="text" name="block_order" value=1 placeholder="#" />
-                    </td>
-                    <th>
-                        <input type="text" name="block_name" value="" placeholder="Block Title" />
-                    </th>
-                    <td class="time">
-                        Start: <input type="time" name="block_start" value="" size="5" /><br />
-                        End: <input type="time"name="block_end" value="" size="5" />
-                    </td>
-                    <td class="remove">
-                        <button class="block-remove">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </td>
-                </tr>
             {% endfor %}
             {% else %}
-                <tr class="tpl">
+                <tr>
                     <td class="block-order">
                         <input type="text" name="block_order" value=1 placeholder="#" />
                     </td>
@@ -183,9 +203,9 @@
                         <input type="submit" value="{% if daytype %}Modify{% else %}Create{% endif %}" class="button" />
                     </td>
                     <td class="add">
-                        <a class="button" onclick="add_block()">
+                        <button class="block-add">
                             <i class="fa fa-plus"></i> Add Block
-                        </a>
+                        </button>
                     </td>
                 </tr>
             </tfoot>

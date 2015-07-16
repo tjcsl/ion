@@ -173,15 +173,16 @@ def admin_daytype_view(request, id=None):
             for blk in blocks:
                 logger.debug(blk)
                 start, scr = Time.objects.get_or_create(
-                    hour=blk[1][0],
-                    minute=blk[1][1]
-                )
-                end, ecr = Time.objects.get_or_create(
                     hour=blk[2][0],
                     minute=blk[2][1]
                 )
+                end, ecr = Time.objects.get_or_create(
+                    hour=blk[3][0],
+                    minute=blk[3][1]
+                )
                 bobj, bcr = Block.objects.get_or_create(
-                        name=blk[0],
+                        order=blk[0],
+                        name=blk[1],
                         start=start,
                         end=end
                 )
