@@ -31,7 +31,7 @@ $(function() {
 
         events: {
             "click button#signup-button": "signupClickHandler",
-            "click button#roster-button": "rosterClickHandler"
+            "click a#roster-button": "rosterClickHandler"
         },
 
         render: function(){
@@ -56,6 +56,7 @@ $(function() {
         },
 
         rosterClickHandler: function(e) {
+            e.preventDefault();
             console.log(e.target);
             var target = e.target;
             var schact_id = this.model.attributes.scheduled_activity;
