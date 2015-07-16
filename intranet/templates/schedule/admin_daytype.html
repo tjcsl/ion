@@ -51,11 +51,13 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
-    jQuery(document).ready(function() {
+    $(document).ready(function() {
         var bt = $(".bellschedule-table tr.tpl").clone();
         bt.removeClass("tpl");
         add_block = function() {
-            $(".bellschedule-table > tbody").append(bt.clone());
+            var clone = bt.clone();
+
+            $(".bellschedule-table > tbody").append(clone);
         }
 
     })
@@ -88,38 +90,55 @@
                         <input type="checkbox" name="special"{% if daytype and daytype.special %} checked="checked"{% endif %} />
                     </th>
                 </tr>
+                <tr>&nbsp;</tr>
             </thead>
             <tbody>
             {% if daytype %}
             {% for block in daytype.blocks.all %}
                 <tr{% if forloop.first %} class="tpl"{% endif %}>
-                    <th>
+                    <th><input type="hidden" name="order" value={{ forloop.counter }} />
                         <input type="text" name="block_name" value="{{ block.name }}" placeholder="Block Title" />
                     </th>
                     <td class="time">
                         Start: <input type="time" name="block_start" value="{% if block.start.hour < 10 %}0{% endif %}{{ block.start }}" size="5" /><br />
                         End: <input type="time" name="block_end" value="{% if block.end.hour < 10 %}0{% endif %}{{ block.end }}" size="5" />
                     </td>
+                    <td class="remove">
+                        <button onclick="$(this).parent().parent().remove()">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td>
                 </tr>
             {% empty %}
                 <tr class="tpl">
-                    <th>
+                    
+                    <th><input type="hidden" name="order" value=1 />
                         <input type="text" name="block_name" value="" placeholder="Block Title" />
                     </th>
                     <td class="time">
                         Start: <input type="time" name="block_start" value="" size="5" /><br />
                         End: <input type="time"name="block_end" value="" size="5" />
                     </td>
+                    <td class="remove">
+                        <button onclick="$(this).parent().parent().remove()">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
             {% else %}
                 <tr class="tpl">
-                    <th>
+                    <th><input type="hidden" name="order" value=1 />
                         <input type="text" name="block_name" value="" placeholder="Block Title" />
                     </th>
                     <td class="time">
                         Start: <input type="time" name="block_start" value="" size="5" /><br />
                         End: <input type="time"name="block_end" value="" size="5" />
+                    </td>
+                    <td class="remove">
+                        <button onclick="$(this).parent().parent().remove()">
+                            <i class="fa fa-times"></i>
+                        </button>
                     </td>
                 </tr>
             {% endif %}
