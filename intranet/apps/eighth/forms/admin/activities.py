@@ -37,13 +37,18 @@ class ActivitySelectionForm(forms.Form):
                                                        .exclude(cancelled=True)
                                                        .filter(block=block)
                                                        .values_list("activity__id", flat=True))
-            queryset = EighthActivity.objects.filter(id__in=activity_ids)
+            queryset = (EighthActivity.objects.filter(id__in=activity_ids)
+                                              .order_by("name"))
         else:
             if sponsor is not None:
                 queryset = (EighthActivity.undeleted_objects
-                                          .filter(sponsors=sponsor))
+                                          .filter(sponsors=sponsor)
+                                          .order_by("name"))
             else:
-                queryset = EighthActivity.undeleted_objects.all()
+                queryset = (EighthActivity.undeleted_objects
+                                          .all()
+                                          .order_by("name"))
+
 
         self.fields["activity"] = ActivityDisplayField(queryset=queryset,
                                                        label=label,
