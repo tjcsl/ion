@@ -103,10 +103,8 @@ class login_view(View):
                 request.user.save()
                 request.session["first_login"] = True
 
-                if request.user.is_student:
-                    default_next_page = "welcome_student"
-                elif request.user.is_teacher:
-                    default_next_page = "welcome_teacher"
+                if request.user.is_student or request.user.is_teacher:
+                    default_next_page = "welcome"
                 else:
                     pass # exclude eighth office/special accounts
 
