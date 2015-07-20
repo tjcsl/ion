@@ -94,6 +94,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
 
+    # Local internal fields
+    first_login = models.DateTimeField(null=True)
+
+    # Local preference fields
+    receive_news_emails = models.BooleanField(default=False)
+    receive_eighth_emails = models.BooleanField(default=False)
+
     # Private dn cache
     _dn = None
 

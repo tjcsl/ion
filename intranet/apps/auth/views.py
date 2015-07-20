@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import os
 import random
 import logging
-from datetime import date
+from datetime import date, datetime
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
@@ -89,11 +89,24 @@ class login_view(View):
             if "KRB5CCNAME" in os.environ:
                 request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
             logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
+            logger.info("request.user: {}".format(request.user))
 
             default_next_page = "/"
             if request.user.startpage == "eighth":
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
+
+
+            if not request.user.first_login:
+                request.user.first_login = datetime.now()
+                request.session["first_login"] = True
+
+                if request.user.is_student:
+                    default_next_page = "welcome_student"
+                elif request.user.is_teacher:
+                    default_next_page = "welcome_teacher"
+                else:
+                    pass # exclude eighth office/special accounts
 
             next_page = request.GET.get("next", default_next_page)
             return redirect(next_page)
