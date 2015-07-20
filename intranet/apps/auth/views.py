@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import random
 import logging
+from datetime import date
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
@@ -42,7 +43,7 @@ def get_bg_pattern():
 
     return static(file_path + random.choice(files))
 
-def index_view(request, auth_form=None, force_login=False):
+def index_view(request, auth_form=None, force_login=False, added_context=None):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
         return dashboard_view(request)
@@ -57,6 +58,8 @@ def index_view(request, auth_form=None, force_login=False):
         }
         schedule = schedule_context(request)
         data.update(schedule)
+        if added_context is not None:
+            data.update(added_context)
         return render(request, "auth/login.html", data)
 
 
@@ -66,6 +69,14 @@ class login_view(View):
 
     def post(self, request):
         """Validate and process the login POST request."""
+
+        """Before September 1st, do not allow Class of [year+4] to log in."""
+        if (request.POST.get("username", "").startswith(str(date.today().year + 4)) and
+            date.today().month < 9):
+            return index_view(request, added_context={
+                "auth_message": "Your account is not yet active for use with this application."
+            })
+
         form = AuthenticateForm(data=request.POST)
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
