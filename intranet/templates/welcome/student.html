@@ -8,6 +8,17 @@
 {% block css %}
     {{ block.super }}
     <style type="text/css">
+
+    .header-cover {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        z-index: 99999;
+        cursor: default;
+    }
+
     .primary-content {
         max-width: 800px;
     }
@@ -76,16 +87,17 @@
         });
 
         $("#continue-step-3").click(function() {
-            location.href = "/";
+            location.href = "/welcome/done";
         })
     })
     </script>
 {% endblock %}
 
 {% block content %}
+    <div class="header-cover" title="Please complete the setup process."></div>
     <div class="primary-content" id="step-1">
         <h2>Welcome to the TJ Intranet</h2>
-        <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can begin to access the site's functionality, we ask that you please take a moment to update your information, as well as find out about the new features offered in Intranet version 3.</p>
+        <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can begin to access the site's functionality, we ask that you please take a moment to verify that your information is up to date, as well as find out about the changes in Intranet version 3.</p>
 
         <p>You are currently logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
         <p>You have the following email addresses on file:</p>
@@ -181,8 +193,9 @@
 
         <br />
         <br />
+        <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
         <p>We hope you enjoy Intranet. Thanks for reading and have a great year!</p>
 
-        <button id="continue-step-3">Finish</a>
+        <button id="continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
     </div>
 {% endblock %}

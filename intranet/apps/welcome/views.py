@@ -13,7 +13,7 @@ def student_welcome_view(request):
     if not request.user.is_student:
         return redirect("index")
     context = {
-        "first_login": request.session["first_login"]
+        "first_login": request.session["first_login"] if "first_login" in request.session else False
     }
     return render(request, "welcome/student.html", context)
 
@@ -22,9 +22,15 @@ def teacher_welcome_view(request):
     #if not request.is_teacher:
     #   return redirect("index")
     context = {
-        "first_login": request.session["first_login"]
+        "first_login": request.session["first_login"] if "first_login" in request.session else False
     }
     return render(request, "welcome/teacher.html", context)
+
+@login_required
+def done_welcome_view(request):
+    request.user.seen_welcome = True
+    request.user.save()
+    return redirect("index")
 
 @login_required
 def welcome_view(request):
