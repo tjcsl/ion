@@ -47,10 +47,14 @@ $(function() {
     <div class="primary-content">
         <div class="eighth-header">
             <h2>
-                {% if scheduled_activity.block.locked %}
-                    Take Attendance
+                {% if scheduled_activity %}
+                    {% if scheduled_activity.block.locked %}
+                        Take Attendance: {{ scheduled_activity }}
+                    {% else %}
+                        View Roster: {{ scheduled_activity }}
+                    {% endif %}
                 {% else %}
-                    View Roster
+                    Attendance/Roster
                 {% endif %}
             </h2>
 
@@ -165,7 +169,7 @@ $(function() {
                     </div>
                 {% endif %}
 
-                <div class="pass-container">
+                <div class="pass-container{% if request.user.is_eighth_admin %} eighth-admin{% endif %}{% if passes and scheduled_activity.block.locked %} has-passes{% endif %}">
                 {% if passes and scheduled_activity.block.locked %}
                     <h3 class="passes-notice"><i class="fa fa-exclamation-triangle"></i> Student Passes</h3>
                     <table class="take-passes">
@@ -225,23 +229,20 @@ $(function() {
                             </tr>
                         </tbody>
                     </table>
-                    
-                    <br />
-                    <br />
-                    <br />
                 {% else %}
                     <h3>Passes</h3>
-                    There are no passes to accept.
+                    <i class="fa fa-check" style="color:green"></i> There are no passes to accept.
                 {% endif %}
                 </div>
 
                 <form class="attendance-form" action="" method="post">
                     {% csrf_token %}
                     <table class="take-attendance-roster">
+                        {% if members %}
                         <thead>
                             <tr>
                                 {% if scheduled_activity.block.locked %}
-                                    <th><input type="checkbox" class="">Present</th>
+                                    <th><input type="checkbox" />Present</th>
                                 {% endif %}
                                 <th>Student</th>
                                 <th>Student ID</th>
@@ -249,6 +250,7 @@ $(function() {
                                 <th></th>
                             </tr>
                         </thead>
+                        {% endif %}
                         <tbody>
                             {% for member in members %}
                                 <tr>
@@ -266,12 +268,12 @@ $(function() {
                                         (Ion {{ member.id }})
                                     {% endif %}</td>
                                     <td style="text-align: center" class="user-link" data-user-id="{{ member.id }}">{{ member.grade }}</td>
-                                    <td>{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Present{% endif %}){% endif %}</td>
+                                    <td>{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Accepted{% endif %}){% endif %}</td>
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4">
-                                        There are no students signed up.
+                                    <td colspan="5">
+                                        <i class="fa fa-info-circle"></i> There are no signups.
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -285,14 +287,7 @@ $(function() {
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>
                                     <br />
                                 {% else %}
-                                    {% if not scheduled_activity.attendance_taken %}
-                                        <i class="fa fa-icon-right"></i>
-                                    {% endif %}
                                     <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
-                                    {% if not scheduled_activity.attendance_taken %}
-                                        <i class="fa fa-icon-left"></i>
-                                    {% endif %}
-
                                 {% endif %}
                                 </td>
                             </tr>
@@ -300,6 +295,7 @@ $(function() {
                     </table>
                 </form>
 
+                <br />
                 <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 {% if user.is_eighth_admin %}
                     <br />
