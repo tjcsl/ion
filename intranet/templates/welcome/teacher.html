@@ -99,8 +99,8 @@
         <h2>Welcome to the TJ Intranet</h2>
         <p>The TJ Intranet gives you access to eighth period attendance, announcements, and directory information. Before you can begin to access the site's functionality, we ask that you please take a moment to verify that your information is up to date, as well as find out about the changes in Intranet version 3.</p>
 
-        <p>You are currently logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
-        <p>You have the following email addresses on file:</p>
+        <p>You are currently logged in as: {{ request.user.full_name }}</p>
+        <p>You have the following custom email addresses on file:</p>
         <ul>
             {% for email in request.user.emails %}
             <li>{{ email }}</li>
@@ -113,6 +113,9 @@
         {% if request.user.tj_email %}
             <p>Your FCPS/TJ email is: <b>{{ request.user.tj_email }}</b></p>
         {% endif %}
+
+        <p>Please make sure these are all addresses that are correct. Students who view this information on your profile will expect that these addresses are correct.</p>
+        <p>After this setup process is over, please consider updating your email addresses through Preferences, which is accessed by clicking on your user icon in the top right corner.</p>
 
         <button id="continue-step-1">Continue</a>
     </div>
@@ -128,7 +131,7 @@
         </div>
 
         <div class="desktop-only">
-            <p>The largest change to Intranet is that the application is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="#">ion.tjhsst.edu</a>.</p>
+            <p>The largest change to Intranet is that the application is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>.</p>
             <br />
         </div>
 
