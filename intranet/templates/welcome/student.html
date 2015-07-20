@@ -1,0 +1,86 @@
+{% extends "page_with_header.html" %}
+
+{% block title %}
+    {{ block.super }} - Welcome
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    .primary-content {
+        max-width: 700px;
+    }
+
+    .primary-content#step-2,
+    .primary-content#step-3 {
+        display: none;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        $("#continue-step-1").click(function() {
+            $(".primary-content#step-1").hide();
+            $(".primary-content#step-2").show();
+        });
+
+        $("#continue-step-2").click(function() {
+            $(".primary-content#step-2").hide();
+            $(".primary-content#step-3").show();
+        });
+
+        $("#continue-step-3").click(function() {
+            location.href = "/";
+        })
+    })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="primary-content" id="step-1">
+        <h2>Welcome to the TJ Intranet</h2>
+        <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can begin to access the site's functionality, we ask that you please take a moment to update your information, as well as find out about the new features offered in Intranet version 3.</p>
+
+        <p>You are currently logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+        <p>You have the following email addresses on file:</p>
+        <ul>
+            {% for email in request.user.emails %}
+            <li>{{ email }}</li>
+            {% empty %}
+            <li>(None)</li>
+            {% endfor %}
+        </ul>
+        <br />
+
+        {% if request.user.emails %}
+            <p>Please make sure these are all addresses that you check regularly. It is frustrating when people list an email that they cannot be reached at.</p>
+            <p>After this setup process is over, please consider updating your email addresses through Preferences, which is accessed by clicking on your user icon in the top right corner.</p>
+        {% else %}
+            <p>You do not currently have any email addresses on file. After this setup process is over, please consider adding at least one email address to your account through Preferences, which is accessed by clicking on your user icon in the top right corner.
+        {% endif %}
+
+        <button id="continue-step-1">Continue</a>
+    </div>
+
+    <div class="primary-content" id="step-2">
+        <h2>TJ Email Accounts and Network Use</h2>
+        <p>All students at TJHSST are assigned their own email address for school purposes. This address is in the format [yourusername]@tjhsst.edu.</p>
+        <p><b>Your TJ email address is: {{ request.user.tj_email }}</b></p>
+        <p>You can access your "TJ email" by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use a desktop mail client such as Thunderbird to access your email <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">through IMAP or POP3</a>. Your TJ email credentials are the same as your Intranet credentials, as well as the username and password you use to log in to school computers.</p>
+
+        <p>If you primarily use a personal email account, it is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you receive all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:ahamilto@tjhsst.edu">ahamilto@tjhsst.edu</a>.</p>
+
+        <p>Use of TJHSST network resources is governed by the Fairfax County Public Schools Acceptable Use Policy for Student Network Access, <a href="http://www.fcps.edu/dss/ips/ssaw/SRR/2014-15SSR.pdf">part of the FCPS SR&amp;R</a>, as well as the <a href="https://www.tjhsst.edu/~ahamilto/tjhsst_network_user_guidelines.pdf">TJHSST Network User Guidelines</a>. TJHSST does not (currently) abide by the FCPS BYOD system; no device registration is necessary. Please use network resources responsibly. </p>
+
+        <button id="continue-step-2">Continue</a>
+    </div>
+
+    <div class="primary-content" id="step-3">
+        <h2>Intranet</h2>
+
+        <button id="continue-step-3">Finish</a>
+    </div>
+{% endblock %}

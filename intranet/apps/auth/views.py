@@ -98,7 +98,9 @@ class login_view(View):
 
 
             if not request.user.first_login:
+                logger.info("First login")
                 request.user.first_login = datetime.now()
+                request.user.save()
                 request.session["first_login"] = True
 
                 if request.user.is_student:
