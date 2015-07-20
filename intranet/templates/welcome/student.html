@@ -1,4 +1,5 @@
 {% extends "page_with_header.html" %}
+{% load staticfiles %}
 
 {% block title %}
     {{ block.super }} - Welcome
@@ -8,12 +9,54 @@
     {{ block.super }}
     <style type="text/css">
     .primary-content {
-        max-width: 700px;
+        max-width: 800px;
     }
 
     .primary-content#step-2,
     .primary-content#step-3 {
         display: none;
+    }
+
+    .credit-text {
+        display: table;
+        font-size: 10px;
+    }
+
+    .credit-section {
+        display: table-cell;
+        padding: 5px 10px;
+    }
+
+    img.mobile {
+        zoom: 0.6;
+    }
+
+    .mobile-only {
+        display: none;
+    }
+
+    @media (max-width: 815px) {
+        img.desktop {
+            display: none;
+        }
+
+        img.mobile {
+            zoom: 0.75;
+        }
+
+        .mobile-only {
+            display: inline;
+        }
+
+        .desktop-only {
+            display: none;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .credit-section {
+            display: block;
+        }
     }
     </style>
 {% endblock %}
@@ -73,13 +116,72 @@
 
         <p>If you primarily use a personal email account, it is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you receive all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:ahamilto@tjhsst.edu">ahamilto@tjhsst.edu</a>.</p>
 
-        <p>Use of TJHSST network resources is governed by the Fairfax County Public Schools Acceptable Use Policy for Student Network Access, <a href="http://www.fcps.edu/dss/ips/ssaw/SRR/2014-15SSR.pdf">part of the FCPS SR&amp;R</a>, as well as the <a href="https://www.tjhsst.edu/~ahamilto/tjhsst_network_user_guidelines.pdf">TJHSST Network User Guidelines</a>. TJHSST does not (currently) abide by the FCPS BYOD system; no device registration is necessary. Please use network resources responsibly. </p>
+        <p>Use of TJHSST network resources is governed by the Fairfax County Public Schools Acceptable Use Policy for Student Network Access, <a href="http://www.fcps.edu/dss/ips/ssaw/SRR/2014-15SSR.pdf">part of the FCPS SR&amp;R</a>, as well as the <a href="https://www.tjhsst.edu/~ahamilto/tjhsst_network_user_guidelines.pdf">TJHSST Network User Guidelines</a>. TJHSST does not (currently) abide by the FCPS BYOD system; no device registration is necessary. Please use network resources responsibly.</p>
 
         <button id="continue-step-2">Continue</a>
     </div>
 
     <div class="primary-content" id="step-3">
-        <h2>Intranet</h2>
+        <h2>How to Navigate</h2>
+
+
+        <div class="mobile-only">
+            <p>You appear to be using a mobile or other small-screened device. Good news! Intranet now fully supports your small screen. To access navigation items and the search bar, press the icon at the top left of the page. On the Eighth Period page, click the arrow to hide or unhide the schedule.</p>
+            <img src="http://127.0.0.1:8080/static/img/promo/nav-mobile.png" class="mobile" />
+            <br />
+        </div>
+
+        <div class="desktop-only">
+            <p>The largest change to Intranet is that the application is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="#">ion.tjhsst.edu</a>.</p>
+            <br />
+        </div>
+
+        <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as your current eighth period signups. To sign up for a block of eighth period, click the "Sign Up" button on the widget. If you have already selected an activity for this block, you may select "Change."</p>
+        <img src="{% static 'img/promo/dashboard.png' %}" alt="Dashboard page" class="desktop" />
+        <img src="{% static 'img/promo/dashboard-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" />
+
+        <br />
+        <br />
+        <br />
+
+        <p>This will take you to the Eighth Period homepage. On the top, you will see a listing showing all of the days containing a block of Eighth Period. Click on a block listed there to change the day you are viewing activities for.</p>
+        <p>On the left side of the screen, you will see a listing of all the eighth period activities scheduled. To search for a specific activity, use the search box above the listing.</p>
+        <p>To view more information about an activity, click on its name. More details about it will appear on the right. Buttons will appear that will allow you to "View Roster" or "Sign Up," if you are able. Some activities are restricted to certain groups, some are cancelled, and some fill up rather quickly. If you are unable to choose an activity to sign up for, a message will appear with an explanation.</p>
+        <img src="{% static 'img/promo/eighth-signup.png' %}" alt="Eighth Period signup page" class="desktop" />
+        <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" alt="Eighth Period signup page" class="mobile" />
+        <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" alt="Eighth Period signup information" class="mobile mobile-only" />
+        
+        <br />
+        <br />
+        <br />
+
+        <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
+        <img src="{% static 'img/promo/search.png' %}" alt="Student directory searching" class="desktop" />
+        
+        <div class="desktop-only">
+            <br />
+            <br />
+            <br />
+        </div>
+
+        <p>After selecting a user, you will be able to view their user page. If the user is a teacher, you will be able to see their class schedule, including which rooms they teach in during the day. If the user is a student, you will be able to view their student picture, emails, address, class schedule, and eighth period signups. However, some students restrict public access to this information, and information that has been hidden will not be visible to you. You also have the capability to restrict other students from viewing your information; visit the Preferences page to see what information others can view about you.</p>
+        <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" />
+
+        <br />
+        <br />
+        <br />
+
+        <h2>About Intranet</h2>
+
+        <p>Intranet is a student-built and student-run project that supports the Eighth Period activity program at TJHSST. Prior to the 1999-2000 school year, several students created a web-based solution for activity signups and management in order to efficiently automate what was previously a manual, pencil-and-paper system. This application soon became a critical part of the school's operations – giving students and staff access to additional functionality such as news, polls, a student directory, and filecenter – and in the early 2000s, Intranet2 (Iodine) was developed as an ambitious effort to create a more viable long-term solution. After nearly ten years of use, it was deemed necessary to create a new application: one that could be built for the computers, phones, and tablets available today while also having the foundation necessary to support future changes down the road. Ion is that project.</p>
+
+        <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, is now ready to be used during the 2015-2016 school year. While the application has now been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
+
+        {% include "credits.html" %}
+
+        <br />
+        <br />
+        <p>We hope you enjoy Intranet. Thanks for reading and have a great year!</p>
 
         <button id="continue-step-3">Finish</a>
     </div>
