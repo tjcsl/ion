@@ -119,7 +119,7 @@
                 {% if day.schedule %}
                     <em class="day {{ day.schedule.class }}">{{ day.schedule.name }}</em>
                     <table class="bellschedule-table">
-                    {% for blk in day.schedule.blocks %}
+                    {% for blk in day.schedule.blocks.all %}
                         <tr>
                             <th>{{ blk.name }}:</th>
                             <td> {{ blk.start }} - {{ blk.end }}</td>
@@ -133,9 +133,15 @@
                     <a class="button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
                         <i class='edit fa fa-exchange'></i>
                     </a>
-                    <a class="button" title="Custom Schedule">
-                        <i class='edit fa fa-pencil'></i>
-                    </a>
+                    {% if day.schedule %}
+                        <a href="{% url 'schedule_daytype' %}?date={{ day.date }}" class="button" title="Change Schedule">
+                            <i class='edit fa fa-pencil'></i>
+                        </a>
+                    {% else %}
+                        <a class="button" title="Custom Schedule">
+                            <i class='edit fa fa-star'></i>
+                        </a>
+                    {% endif %}
                 </span>
             {% else %}
                 &nbsp;

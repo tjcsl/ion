@@ -134,9 +134,16 @@ def admin_home_view(request):
 @schedule_admin_required
 def admin_add_view(request):
     if request.method == "POST":
+        date = request.POST.get("date")
+        day = Day.objects.filter(date=date)
+        if len(day) <= 1:
+            messages.success(request, "Deleted previous mapping on {}".format(date))
+            day.delete()
         form = DayForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Created mapping.")
+            redirect("schedule_admin")
     else:
         form = DayForm()
 
