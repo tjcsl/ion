@@ -10,17 +10,22 @@ $(function() {
         userImgs.push(i);
     });*/
 
-    $(".user-link").hover(function() {
+    $("body").append("<div class='user-pic-container'></div>");
+
+    $(".user-link[data-user-id]").hover(function() {
         var uid = $(this).attr("data-user-id");
-        if(userHide.hasOwnProperty(uid)) {
-            clearTimeout(userHide[uid]);
+        if(window.userHide.hasOwnProperty(uid)) {
+            clearTimeout(window.userHide[uid]);
+            window.userHide[uid] = null;
         }
-        console.debug(uid, "IN");
         var img = $("img.user-pic[data-user-id='" + uid + "']");
 
         if(img.length > 0) {
-            img.show();
+            img.fadeIn(100);
+            img.addClass("active");
+            console.debug(uid, "IN");
         } else {
+            console.debug(uid, "LOAD");
             var img = $("<img class='user-pic' />");
             img.attr("data-user-id", uid);
             img.attr("src", "/profile/picture/" + uid);
@@ -36,20 +41,24 @@ $(function() {
                 backgroundSize: "172px 215px",
                 backgroundRepeat: "no-repeat"
             });
-            $("body").append(img);
+            img.addClass("active");
+            img.fadeIn(100);
+            $(".user-pic-container").append(img);
         }
 
     }, function() {
         var uid = $(this).attr("data-user-id");
-        userHide[uid] = setTimeout(function() {
+        window.userHide[uid] = setTimeout(function() {
             console.debug(uid, "OUT");
-            $(".user-pic[data-user-id='" + uid + "']").fadeOut(100);
-        }, 500);
+            $(".user-pic[data-user-id='" + uid + "']").fadeOut(100).removeClass("active");
+        }, 350);
     });
 
     $(document).mousemove(function(e){
-        window.mouseX = e.pageX;
-        window.mouseY = e.pageY;
-        $("img.user-pic").css({left: e.pageX, top: e.pageY});
+        var posx = window.mouseX = e.pageX;
+        var posy = window.mouseY = e.pageY;
+        posx += 10;
+        posy -= 215 - 10;
+        $("img.user-pic.active").css({left: posx, top: posy});
     });
 })
