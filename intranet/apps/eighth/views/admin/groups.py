@@ -16,7 +16,7 @@ from ....search.views import get_search_results
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import QuickGroupForm, GroupForm, UploadGroupForm
-from ...models import EighthScheduledActivity, EighthSignup, EighthBlock
+from ...models import EighthScheduledActivity, EighthSignup, EighthBlock, EighthActivity
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -75,11 +75,13 @@ def edit_group_view(request, group_id):
             "grade": grade.number if user.grade else "Staff"
         })
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
+    linked_activities = EighthActivity.objects.filter(groups_allowed=group)
     context = {
         "group": group,
         "members": members,
         "edit_form": form,
         "added_ids": request.GET.getlist("added"),
+        "linked_activities": linked_activities,
         "admin_page_title": "Edit Group",
         "delete_url": reverse("eighth_admin_delete_group",
                               args=[group_id])

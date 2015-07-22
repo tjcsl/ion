@@ -63,6 +63,15 @@
 
 <br />
 <h2>{{ group.name }}: {{ members|length }} members</h2>
+{% if linked_activities %}
+    This group is on the restriction list for these activities:
+    <ul>
+    {% for act in linked_activities %}
+        <li><a href="{% url 'eighth_admin_edit_activity' act.id %}">{{ act }}</a></li>
+    {% endfor %}
+    </ul>
+    <br />
+{% endif %}
 <table data-sortable class="fancy-table">
     <thead>
         <tr>

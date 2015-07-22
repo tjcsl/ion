@@ -92,9 +92,13 @@
                 {% for group in activity.groups_allowed.all %}
                     <li><b>Group: {{ group }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
                     <ul>
-                        {% for member in group.user_set.all %}
-                            <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
-                        {% endfor %}
+                        {% if group.user_set.count < 50 %}
+                            {% for member in group.user_set.all %}
+                                <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Over 50 members, user list not shown</li>
+                        {% endif %}
                     </ul>
                     </li>
                 {% endfor %}

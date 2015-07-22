@@ -29,7 +29,7 @@
         <ul>
             {% for group in user.groups.all %}
                 <li>
-                    <a href="#{{ group.id }}">{{ group }}</a>
+                    <a href="{% if group_admin %}{% url 'eighth_admin_edit_group' group.id %}{% endif %}">{{ group }}</a>
                 </li>
             {% empty %}
                 (no groups)
@@ -41,7 +41,7 @@
             <ul>
                 {% for group in all_groups %}
                     <li>
-                        <a href="#{{ group.id }}">{{ group }}</a>
+                        <a href="{% if group_admin %}{% url 'eighth_admin_edit_group' group.id %}{% endif %}">{{ group }}</a>
                     </li>
                 {% empty %}
                     (no groups)
