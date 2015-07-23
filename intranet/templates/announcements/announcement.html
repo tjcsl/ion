@@ -1,5 +1,5 @@
 {% load dates %}
-<div class="announcement{% if announcement in request.user.announcements_hidden.all and not show_hidden %} hidden{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
+<div class="announcement{% if request.user in announcement.users_hidden.all %} hidden{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
         {{ announcement.title }}
 

@@ -330,10 +330,11 @@ def show_announcement_view(request):
     if request.method == "POST":
         announcement_id = request.POST.get("announcement_id")
         if announcement_id:
-            announcement = get_object_or_404(Announcement, id=announcement_id)
-            request.user.announcements_hidden.remove(announcement)
-            request.user.save()
-        return http.HttpResponse("OK")
+            announcement = Announcement.objects.get(id=announcement_id)
+            announcement.users_hidden.remove(request.user)
+            announcement.save()
+            return http.HttpResponse("Unhidden")
+        return http.Http404()
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
 
@@ -348,9 +349,10 @@ def hide_announcement_view(request):
     if request.method == "POST":
         announcement_id = request.POST.get("announcement_id")
         if announcement_id:
-            announcement = get_object_or_404(Announcement, id=announcement_id)
-            request.user.announcements_hidden.add(announcement)
-            request.user.save()
-        return http.HttpResponse("OK")
+            announcement = Announcement.objects.get(id=announcement_id)
+            announcement.users_hidden.add(request.user)
+            announcement.save()
+            return http.HttpResponse("Hidden")
+        return http.Http404()
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")

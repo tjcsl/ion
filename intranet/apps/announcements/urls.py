@@ -11,7 +11,7 @@ urlpatterns = [
     url(r"^/admin_approve/(?P<req_id>\d+)$", views.admin_approve_announcement_view, name="admin_approve_announcement"),
     url(r"^/modify/(?P<id>\d+)$", views.modify_announcement_view, name="modify_announcement"),
     url(r"^/delete/(?P<id>\d+)$", views.delete_announcement_view, name="delete_announcement"),
-    url(r"^/hide$", views.show_announcement_view, name="show_announcement"),
-    url(r"^/show$", views.hide_announcement_view, name="hide_announcement"),
+    url(r"^/show$", views.show_announcement_view, name="show_announcement"),
+    url(r"^/hide$", views.hide_announcement_view, name="hide_announcement"),
     url(r"^/(?P<id>\d+)$", views.view_announcement_view, name="view_announcement"),
 ]

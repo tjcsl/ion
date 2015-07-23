@@ -16,7 +16,7 @@ $(document).ready(function() {
 
         var hidden = announcement.hasClass("hidden");
         var action = hidden ? "show" : "hide";
-        $.post("/announcements/" + action + "?" + id, {id: id}, function(d) {
+        $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function(d) {
             console.info("Announcement "+id+" "+action);
         });
         if(action == "show") {
