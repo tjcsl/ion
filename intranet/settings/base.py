@@ -311,6 +311,14 @@ LOGGING = {
             "formatter": "access",
             "filename": "/var/log/ion/app_access.log",
             "delay": True
+        },
+        "auth_log": {
+            "level": "DEBUG",
+            "filters": ["require_debug_false"],
+            "class": "logging.FileHandler",
+            "formatter": "access",
+            "filename": "/var/log/ion/app_auth.log",
+            "delay": True
         }
     },
     "loggers": {
@@ -326,6 +334,11 @@ LOGGING = {
         },
         "intranet_access": {
             "handlers": ["console_access"] + (["access_log"] if (PRODUCTION and not TRAVIS) else []),
+            "level": "DEBUG",
+            "propagate": False
+        },
+        "intranet_auth": {
+            "handlers": ["console_access"] + (["auth_log"] if (PRODUCTION and not TRAVIS) else []),
             "level": "DEBUG",
             "propagate": False
         }

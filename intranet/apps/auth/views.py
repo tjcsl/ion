@@ -15,7 +15,29 @@ from django.templatetags.static import static
 from django.views.generic.base import View
 
 logger = logging.getLogger(__name__)
+auth_logger = logging.getLogger("intranet_auth")
 
+def log_auth(request, success):
+    if "HTTP_X_FORWARDED_FOR" in request.META:
+        ip = request.META["HTTP_X_FORWARDED_FOR"]
+    else:
+        ip = request.META.get("REMOTE_ADDR", "")
+
+    if type(ip) == set:
+        ip = ip[0]
+
+    username = request.POST.get("username", "unknown")
+
+    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(
+        ip,
+        username,
+        success,
+        datetime.now(),
+        request.get_full_path(),
+        request.META.get("HTTP_USER_AGENT", "")
+    )
+
+    auth_logger.info(log_line)
 
 def get_bg_pattern():
     """
@@ -78,6 +100,7 @@ class login_view(View):
             })
 
         form = AuthenticateForm(data=request.POST)
+
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
         else:
@@ -90,6 +113,8 @@ class login_view(View):
                 request.session["KRB5CCNAME"] = os.environ["KRB5CCNAME"]
             logger.info("Login succeeded as {}".format(request.POST.get("username", "unknown")))
             logger.info("request.user: {}".format(request.user))
+
+            log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
             default_next_page = "/"
             if request.user.startpage == "eighth":
@@ -111,6 +136,7 @@ class login_view(View):
             next_page = request.GET.get("next", default_next_page)
             return redirect(next_page)
         else:
+            log_auth(request, "failed")
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
             return index_view(request, auth_form=form)
 
