@@ -53,6 +53,9 @@ class Announcement(models.Model):
 
     expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
 
+    users_hidden = models.ManyToManyField(User, blank=True, related_name="announcements_hidden")
+    users_seen = models.ManyToManyField(User, blank=True, related_name="announcements_seen")
+
     def get_author(self):
         return self.author if self.author else self.user.full_name
 
