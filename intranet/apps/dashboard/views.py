@@ -169,6 +169,12 @@ def dashboard_view(request):
 
     user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
 
+    # add to users_seen
+    u = request.user
+    for ann in announcements:
+        u.announcements_seen.add(ann.user_map)
+    u.save()
+
     context = {
         "announcements": announcements,
         "announcements_admin": announcements_admin,
