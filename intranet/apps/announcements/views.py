@@ -331,8 +331,8 @@ def show_announcement_view(request):
         announcement_id = request.POST.get("announcement_id")
         if announcement_id:
             announcement = Announcement.objects.get(id=announcement_id)
-            announcement.users_hidden.remove(request.user)
-            announcement.save()
+            announcement.user_map.users_hidden.remove(request.user)
+            announcement.user_map.save()
             return http.HttpResponse("Unhidden")
         return http.Http404()
     else:
@@ -350,8 +350,8 @@ def hide_announcement_view(request):
         announcement_id = request.POST.get("announcement_id")
         if announcement_id:
             announcement = Announcement.objects.get(id=announcement_id)
-            announcement.users_hidden.add(request.user)
-            announcement.save()
+            announcement.user_map.users_hidden.add(request.user)
+            announcement.user_map.save()
             return http.HttpResponse("Hidden")
         return http.Http404()
     else:

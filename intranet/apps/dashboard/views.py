@@ -167,7 +167,7 @@ def dashboard_view(request):
     else:
         awaiting_approval = awaiting_teacher = None
 
-    user_hidden_announcements = request.user.announcements_hidden.all()
+    user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
 
     context = {
         "announcements": announcements,
