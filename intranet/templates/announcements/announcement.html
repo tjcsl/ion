@@ -1,17 +1,21 @@
 {% load dates %}
-<div class="announcement" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
+<div class="announcement{% if announcement in request.user.announcements_hidden.all and not show_hidden %} hidden{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
         {{ announcement.title }}
-        {% if request.user.is_announcements_admin %}
+
             <div class="announcement-icon-wrapper">
+                <a href="#" class="announcement-toggle">
+                    <i class="announcement-icon fa {% if announcement in request.user.announcements_hidden.all %}fa-toggle-off{% else %}fa-toggle-on{% endif %}"></i>
+                </a>
+            {% if request.user.is_announcements_admin %}
                 <a href="{% url 'modify_announcement' announcement.id %}">
                     <i class="announcement-icon fa fa-pencil"></i>
                 </a>
                 <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete">
                     <i class="announcement-icon fa fa-trash-o"></i>
                 </a>
+            {% endif %}
             </div>
-        {% endif %}
     </h3>
 
     <div class="announcement-metadata">

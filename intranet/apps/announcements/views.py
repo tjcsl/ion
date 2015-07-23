@@ -318,3 +318,39 @@ def delete_announcement_view(request, id):
     else:
         announcement = get_object_or_404(Announcement, id=id)
         return render(request, "announcements/delete.html", {"announcement": announcement})
+
+@login_required
+def show_announcement_view(request):
+    """
+        Unhide an announcement that was hidden by the logged-in user.
+
+        announcements_hidden in the user model is the related_name for
+        "users_hidden" in the announcement model.
+    """
+    if request.method == "POST":
+        announcement_id = request.POST.get("announcement_id")
+        if announcement_id:
+            announcement = get_object_or_404(Announcement, id=announcement_id)
+            request.user.announcements_hidden.remove(announcement)
+            request.user.save()
+        return http.HttpResponse("OK")
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+
+@login_required
+def hide_announcement_view(request):
+    """
+        Hide an announcement for the logged-in user.
+
+        announcements_hidden in the user model is the related_name for
+        "users_hidden" in the announcement model.
+    """
+    if request.method == "POST":
+        announcement_id = request.POST.get("announcement_id")
+        if announcement_id:
+            announcement = get_object_or_404(Announcement, id=announcement_id)
+            request.user.announcements_hidden.add(announcement)
+            request.user.save()
+        return http.HttpResponse("OK")
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
