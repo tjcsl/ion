@@ -21,10 +21,14 @@ $(document).ready(function() {
         });
         if(action == "show") {
             announcement.removeClass("hidden");
-            icon.removeClass("fa-toggle-off").addClass("fa-toggle-on");
+            icon.removeClass("fa-toggle-off")
+                .addClass("fa-toggle-on")
+                .attr("title", icon.attr("data-visible-title"));
         } else {
             announcement.addClass("hidden");
-            icon.removeClass("fa-toggle-on").addClass("fa-toggle-off");
+            icon.removeClass("fa-toggle-on")
+                .addClass("fa-toggle-off")
+                .attr("title", icon.attr("data-hidden-title"));;
         }
     })
 });

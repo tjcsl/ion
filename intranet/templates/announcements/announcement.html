@@ -6,7 +6,11 @@
             <div class="announcement-icon-wrapper">
             {% if hide_announcements %}
                 <a href="#" class="announcement-toggle">
-                    <i class="announcement-icon fa {% if announcement in user_hidden_announcements %}fa-toggle-off{% else %}fa-toggle-on{% endif %}"></i>
+                {% if announcement in user_hidden_announcements %}
+                    <i class="announcement-icon fa fa-toggle-off" title="You have hidden this announcement." data-visible-title="This announcement is visible." hidden-title="You have hidden this announcement."></i>
+                {% else %}
+                    <i class="announcement-icon fa fa-toggle-on" title="This announcement is visible." data-visible-title="This announcement is visible." data-hidden-title="You have hidden this announcement."></i>
+                {% endif %}
                 </a>
             {% endif %}
             {% if request.user.is_announcements_admin %}

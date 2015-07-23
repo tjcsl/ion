@@ -34,17 +34,17 @@
                             No activity selected
                         </span>
                     {% endif %}
-                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Locked</a>
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Signups are locked.">Locked</a>
                 {% elif block.current_signup %}
                     <span class="block-signup{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}The activity you signed up for was cancelled. Click to change.{% else %}You have signed up for this activity. Click to change.{% endif %}">
                         {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                     </span>
-                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Change</a>
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Click to change.">Change</a>
                 {% else %}
                     <span class="block-signup no-activity-selected{% if block.is_today %} today{% endif %}" title="You have not selected an activity. Click to change.">
                         No activity selected
                     </span>
-                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link">Sign Up</a>
+                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Click to sign up.">Sign Up</a>
                 {% endif %}
             </div>
             {% if block.is_today and block.signup_time %}
