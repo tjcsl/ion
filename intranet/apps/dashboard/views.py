@@ -130,7 +130,7 @@ def dashboard_view(request):
         announcements = (Announcement.objects
                                      .visible_to_user(request.user)
                                      .filter(expiration_date__gt=timezone.now())
-                                     .prefetch_related("groups"))
+                                     .prefetch_related("groups", "user"))
 
     # pagination
     if "start" in request.GET:
@@ -167,6 +167,8 @@ def dashboard_view(request):
     else:
         awaiting_approval = awaiting_teacher = None
 
+    user_hidden_announcements = request.user.announcements_hidden.all()
+
     context = {
         "announcements": announcements,
         "announcements_admin": announcements_admin,
@@ -180,6 +182,8 @@ def dashboard_view(request):
         "start_num": start_num,
         "end_num": end_num,
         "prev_page": start_num - display_num,
-        "more_announcements": more_announcements
+        "more_announcements": more_announcements,
+        "hide_announcements": True,
+        "user_hidden_announcements": user_hidden_announcements
     }
     return render(request, "dashboard/dashboard.html", context)
