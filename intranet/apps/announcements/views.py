@@ -298,3 +298,4 @@ def hide_announcement_view(request):
         return http.Http404()
     else:
         return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+

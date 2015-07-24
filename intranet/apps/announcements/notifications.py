@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import logging
 import requests
 from requests_oauthlib import OAuth1
+from django.contrib import messages
+from django.core import exceptions
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
@@ -86,7 +88,7 @@ def admin_request_announcement_email(request, form, obj):
 
     subject = "News Post Approval Needed ({})".format(obj.title)
     emails = [settings.APPROVAL_EMAIL]
-    base_url = requets.build_absolute_uri(reverse('index'))
+    base_url = request.build_absolute_uri(reverse('index'))
     data = {
         "req": obj,
         "formdata": form.data,
@@ -105,7 +107,7 @@ def announcement_posted_email(request, obj):
     """
 
     if settings.EMAIL_ANNOUNCEMENTS:
-        subject = "News: {}".format(obj.title)
+        subject = "Announcement: {}".format(obj.title)
         users = User.objects.filter(receive_news_emails=True)
         send_groups = obj.groups.all()
         emails = []
@@ -131,13 +133,21 @@ def announcement_posted_email(request, obj):
         logger.debug(users_send)
         logger.debug(emails)
 
-        base_url = requets.build_absolute_uri(reverse('index'))
+        if not settings.PRODUCTION and len(emails) > 3:
+            raise exceptions.PermissionDenied("You're about to email a lot of people, and you aren't in production!")
+            return
+
+        base_url = request.build_absolute_uri(reverse('index'))
         url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
         data = {
             "announcement": obj,
-            "link": url,
+            "info_link": url,
             "base_url": base_url
         }
+        email_send("announcements/emails/announcement_posted.txt",
+                   "announcements/emails/announcement_posted.html",
+                   data, subject, emails)
+        messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
         logger.debug("Emailing announcements disabled")
 
