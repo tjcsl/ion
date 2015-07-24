@@ -16,7 +16,9 @@ from ..users.models import User
 from .models import Announcement, AnnouncementRequest
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .notifications import (email_send, request_announcement_email,
-                            admin_request_announcement_email, notify_twitter)
+                            admin_request_announcement_email,
+                            announcement_posted_twitter,
+                            announcement_posted_email)
 
 logger = logging.getLogger(__name__)
 
@@ -30,32 +32,9 @@ def announcement_posted_hook(request, obj):
     """
     logger.debug("Announcement posted")
 
-    if obj.groups.count() == 0 and settings.TWITTER_KEYS:
-        logger.debug("Publicly available")
-        title = obj.title
-        title = title.replace("&nbsp;", " ")
-        url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
-        if len(title) <= 100:
-            content = re.sub('<[^>]*>', '', obj.content)
-            content = content.replace("&nbsp;", " ")
-            content_len = 139 - (len(title) + 2 + 3 + 3 + 22)
-            text = "{}: {}... - {}".format(title, content[:content_len], url)
-        else:
-            text = "{}... - {}".format(title[:110], url)
-        logger.debug("Posting tweet: {}".format(text))
+    announcement_posted_twitter(request, obj)
 
-        resp = notify_twitter(text)
-        respobj = json.loads(resp)
-
-        if respobj and "id" in respobj:
-            messages.success(request, "Posted tweet: {}".format(text))
-            messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
-        else:
-            messages.error(request, resp)
-            logger.debug(resp)
-            logger.debug(respobj)
-    else:
-        logger.debug("Not posting to Twitter")
+    announcement_posted_email(request, obj)
 
 
 @login_required

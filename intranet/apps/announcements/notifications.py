@@ -5,6 +5,7 @@ import logging
 import requests
 from requests_oauthlib import OAuth1
 from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from intranet import settings
 from ..users.models import User
@@ -61,11 +62,13 @@ def request_announcement_email(request, form, obj):
     for teacher in teachers:
         emails.append(teacher.tj_email)
     logger.debug(emails)
+    base_url = request.build_absolute_uri(reverse('index'))
     data = {
         "teachers": teachers,
         "user": request.user,
         "formdata": form.data,
-        "info_link": reverse("approve_announcement", args=[obj.id])
+        "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
+        "base_url": base_url
     }
     email_send("announcements/emails/teacher_approve.txt", 
                "announcements/emails/teacher_approve.html",
@@ -83,14 +86,89 @@ def admin_request_announcement_email(request, form, obj):
 
     subject = "News Post Approval Needed ({})".format(obj.title)
     emails = [settings.APPROVAL_EMAIL]
+    base_url = requets.build_absolute_uri(reverse('index'))
     data = {
         "req": obj,
         "formdata": form.data,
-        "info_link": reverse("admin_approve_announcement", args=[obj.id])
+        "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
+        "base_url": base_url
     }
     email_send("announcements/emails/admin_approve.txt", 
                "announcements/emails/admin_approve.html",
                data, subject, emails)
+
+def announcement_posted_email(request, obj):
+    """
+        Send a notification posted email
+
+        obj: The announcement object
+    """
+
+    if settings.EMAIL_ANNOUNCEMENTS:
+        subject = "News: {}".format(obj.title)
+        users = User.objects.filter(receive_news_emails=True)
+        send_groups = obj.groups.all()
+        emails = []
+        users_send = []
+        for u in users:
+            if len(send_groups) == 0:
+                # no groups, public.
+                em = u.emails[0] if u.emails and len(u.emails) >= 1 else u.tj_email
+                if em:
+                    emails.append(em)
+                users_send.append(u)
+            else:
+                # specific to a group
+                user_groups = u.groups.all()
+                if any(i in send_groups for i in user_groups):
+                    # group intersection exists
+                    em = u.emails[0] if u.emails and len(u.emails) >= 1 else u.tj_email
+                    if em:
+                        emails.append(em)
+                    users_send.append(u)
+
+
+        logger.debug(users_send)
+        logger.debug(emails)
+
+        base_url = requets.build_absolute_uri(reverse('index'))
+        url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+        data = {
+            "announcement": obj,
+            "link": url,
+            "base_url": base_url
+        }
+    else:
+        logger.debug("Emailing announcements disabled")
+
+
+def announcement_posted_twitter(request, obj):
+    if obj.groups.count() == 0 and settings.TWITTER_KEYS:
+        logger.debug("Publicly available")
+        title = obj.title
+        title = title.replace("&nbsp;", " ")
+        url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+        if len(title) <= 100:
+            content = re.sub('<[^>]*>', '', obj.content)
+            content = content.replace("&nbsp;", " ")
+            content_len = 139 - (len(title) + 2 + 3 + 3 + 22)
+            text = "{}: {}... - {}".format(title, content[:content_len], url)
+        else:
+            text = "{}... - {}".format(title[:110], url)
+        logger.debug("Posting tweet: {}".format(text))
+
+        resp = notify_twitter(text)
+        respobj = json.loads(resp)
+
+        if respobj and "id" in respobj:
+            messages.success(request, "Posted tweet: {}".format(text))
+            messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
+        else:
+            messages.error(request, resp)
+            logger.debug(resp)
+            logger.debug(respobj)
+    else:
+        logger.debug("Not posting to Twitter")
 
 
 def notify_twitter(status):

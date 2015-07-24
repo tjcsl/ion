@@ -11,6 +11,8 @@ DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 
+EMAIL_ANNOUNCEMENTS = True
+
 DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 
 SESSION_COOKIE_SECURE = True
