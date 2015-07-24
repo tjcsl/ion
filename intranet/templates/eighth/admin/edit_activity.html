@@ -7,6 +7,13 @@
         addGroup = function() {
             $("#submit_button").attr("name", "add_group").click();
         }
+
+        $("#activity-select").on("change", function() {
+            var v = $(this).val();
+            if(v && v.length > 0) {
+                location.href = './' + v;
+            }
+        });
     });
     </script>
 {% endblock %}
@@ -14,6 +21,10 @@
 {% block css %}
     {{ block.super }}
     <style type="text/css">
+.select-area .selectize-control {
+    max-width: 455px;
+}
+
 .edit-table .selectize-control {
     width: 300px;
 }
@@ -44,10 +55,42 @@
     }
 }
 
+@media (max-width: 582px) {
+    .select-area .selectize-control {
+        width: 100%;
+    }
+}
+
+@media (max-width: 468px) {
+    .select-area .selectize-control {
+        width: 416px;
+    }
+}
+
     </style>
 {% endblock %}
 
 {% block admin_main %}
+        <h4>Select an Activity:</h4>
+
+        <div class="select-area">
+            <select id="activity-select" placeholder="Select or search for an activity" autocomplete="off">
+                <option value="">Select or search for an activity</option>
+                {% for a in activities %}
+                    <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+                <a href="" class="button">
+                    Edit Activity
+                </a>
+                <a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ activity.id }}" class="button">
+                    Schedule Activity
+                </a>
+        </div>
+        <br />
 
 <form action="" method="post" autocomplete="off" name="edit_form">
     <table class="edit-table">

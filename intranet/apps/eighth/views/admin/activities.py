@@ -65,12 +65,14 @@ def edit_activity_view(request, activity_id):
     else:
         form = ActivityForm(instance=activity)
 
+    activities = EighthActivity.undeleted_objects.order_by("name")
     context = {
         "form": form,
         "admin_page_title": "Edit Activity",
         "delete_url": reverse("eighth_admin_delete_activity",
                               args=[activity_id]),
-        "activity": activity
+        "activity": activity,
+        "activities": activities
     }
 
     return render(request, "eighth/admin/edit_activity.html", context)
