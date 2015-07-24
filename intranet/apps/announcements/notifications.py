@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 import logging
-#import requests
-#from requests_oauthlib import OAuth1
-
+import requests
+from requests_oauthlib import OAuth1
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from intranet import settings
@@ -93,14 +92,19 @@ def admin_request_announcement_email(request, form, obj):
                "announcements/emails/admin_approve.html",
                data, subject, emails)
 
-"""
+
 def notify_twitter(status):
     url = 'https://api.twitter.com/1.1/statuses/update.json'
 
-    auth = OAuth1(settings.TWITTER_CONSUMER_KEY,
-                 settings.TWITTER_CONSUMER_SECRET,
-                 settings.TWITTER_ACCESS_TOKEN_KEY,
-                 settings.TWITTER_ACCESS_TOKEN_SECRET)
+    cfg = settings.TWITTER_KEYS
+
+    if not cfg:
+        return False
+
+    auth = OAuth1(cfg["consumer_key"],
+                 cfg["consumer_secret"],
+                 cfg["access_token_key"],
+                 cfg["access_token_secret"])
 
     data = {
         "status": status
@@ -109,4 +113,3 @@ def notify_twitter(status):
     req = requests.post(url, data=data, auth=auth)
 
     return req.text
-"""
