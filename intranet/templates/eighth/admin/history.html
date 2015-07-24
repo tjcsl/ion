@@ -1,0 +1,30 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load dates %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+<table class="fancy-table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Date/Time</th>
+            <th>Contents</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for historytype, items in history.items %}
+        {% for item in items %}
+        <tr>
+            <th>{{ historytype }}</th>
+            <td>{{ item.history_date }}</td>
+            <td>{{ item }}</td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

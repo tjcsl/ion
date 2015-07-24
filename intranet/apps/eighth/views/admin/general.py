@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pickle
 
 from urllib.parse import unquote
@@ -13,7 +12,7 @@ from django.shortcuts import redirect, render
 from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
 from ...forms.admin import rooms as room_forms
-from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, EighthScheduledActivity
 from ...utils import get_start_date, set_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -129,3 +128,19 @@ def cache_view(request):
 @eighth_admin_required
 def not_implemented_view(request, *args, **kwargs):
     raise NotImplementedError("This view has not been implemented yet.")
+
+
+@eighth_admin_required
+def history_view(request):
+    history_timeframe = datetime.now()-timedelta(minutes=15)
+    history = {
+        "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),
+        "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),
+        "EighthActivity": EighthActivity.history.filter(history_date__gt=history_timeframe),
+        "EighthBlock": EighthBlock.history.filter(history_date__gt=history_timeframe)
+    }
+    context = {
+        "history": history,
+        "admin_page_title": "Event History"
+    }
+    return render(request, "eighth/admin/history.html", context)

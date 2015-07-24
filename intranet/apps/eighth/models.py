@@ -7,6 +7,7 @@ from itertools import chain
 from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from simple_history.models import HistoricalRecords
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import formats
@@ -54,6 +55,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     online_attendance = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
 
+    history = HistoricalRecords()
+
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance"),)
         ordering = ("last_name", "first_name",)
@@ -86,6 +89,8 @@ class EighthRoom(AbstractBaseEighthModel):
     name = models.CharField(max_length=100)
     capacity = models.SmallIntegerField(default=28)
 
+    history = HistoricalRecords()
+
     unique_together = (("name", "capacity"),)
 
     @classmethod
@@ -115,7 +120,6 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
     def get_query_set(self):
         return (super(EighthActivityExcludeDeletedManager, self).get_query_set().exclude(deleted=True))
-
 
 class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
@@ -206,6 +210,8 @@ class EighthActivity(AbstractBaseEighthModel):
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
+
+    history = HistoricalRecords()
 
     def capacity(self):
         # Note that this is the default capacity if the
@@ -435,6 +441,8 @@ class EighthBlock(AbstractBaseEighthModel):
 
     override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 
+    history = HistoricalRecords()
+
     def save(self, *args, **kwargs):
         """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
@@ -638,6 +646,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
+
+    history = HistoricalRecords()
 
     @property
     def full_title(self):
@@ -1175,6 +1185,8 @@ class EighthSignup(AbstractBaseEighthModel):
         if self.has_conflict():
             raise ValidationError("EighthSignup already exists for this user on this block.")
         super(EighthSignup, self).save(*args, **kwargs)
+
+    history = HistoricalRecords()
 
     def validate_unique(self, *args, **kwargs):
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
