@@ -247,7 +247,8 @@ def activities_without_attendance_view(request):
         start_date = get_start_date(request)
         scheduled_activities = (block.eighthscheduledactivity_set
                                      .filter(block__date__gte=start_date,
-                                             attendance_taken=False))
+                                             attendance_taken=False)
+                                     .order_by("-activity__special", "activity__name")) # float special to top
 
         context["scheduled_activities"] = scheduled_activities
 
