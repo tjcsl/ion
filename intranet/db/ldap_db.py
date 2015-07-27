@@ -76,7 +76,20 @@ class LDAPConnection(object):
                 _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
                 logger.info("Successfully connected to LDAP.")
                 _thread_locals.simple_bind = False
-            except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS) as e:
+            except ldap.LOCAL_ERROR as e:
+                # try again
+                logger.info("Retrying connection to LDAP after local error")
+                try:
+                    auth_tokens = ldap.sasl.gssapi()
+                    _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
+                    logger.info("Successfully connected to LDAP.")
+                    _thread_locals.simple_bind = False
+                except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS) as e:
+                    _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+                    logger.warning("SASL bind failed - using simple bind")
+                    logger.warning(e)
+                    _thread_locals.simple_bind = True
+            except ldap.INVALID_CREDENTIALS as e:
                 _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
                 logger.warning("SASL bind failed - using simple bind")
                 logger.warning(e)
