@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from six.moves import cPickle as pickle
 import csv
 import logging
+import re
 from django import http
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -112,6 +113,30 @@ def get_user_info(key, val):
         u = User.objects.user_with_student_id(val)
         return [u] if u else []
 
+    if key == "name":
+        if re.match("^[A-Za-z ]*$", val):
+            vals = val.split(" ")
+            if len(vals) == 2:
+                u = User.objects.user_with_name(vals[0], vals[1])
+                if u:
+                    return [u]
+            elif len(vals) == 3:
+                u = User.objects.user_with_name(vals[0], vals[2])
+                if u:
+                    return [u]
+            elif len(vals) == 1:
+                # Try last name
+                u = User.objects.user_with_name(None, vals[0])
+                if u:
+                    return [u]
+                else:
+                    # Try first name
+                    u = User.objects.user_with_name(vals[0], None)
+                    if u:
+                        return [u]
+        return []
+
+
 
 def handle_group_input(filetext):
     logger.debug(filetext)
@@ -126,7 +151,7 @@ def find_users_input(lines):
         line = line.strip()
 
         # Try username, user id
-        for i in ["username", "id", "student_id"]:
+        for i in ["username", "id", "student_id", "name"]:
             r = get_user_info(i, line)
             if r:
                 sure_users.append([line, r[0]])

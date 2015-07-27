@@ -53,6 +53,47 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
+
+    def _ldap_and_string(self, opts):
+        """Combine LDAP queries with AND
+
+        e.x.: ["a=b"]        => "a=b"
+              ["a=b", "c=d"] => "(&(a=b)(c=d))"
+        """
+        if len(opts) == 1:
+            return opts[0]
+        else:
+            return "(&" + "".join(["({})".format(i) for i in opts]) + ")"
+
+    def user_with_name(self, given_name=None, sn=None):
+        """Get a unique user object by given name (first/nickname and last)."""
+        c = LDAPConnection()
+
+
+        if sn and not given_name:
+            results = c.search(settings.USER_DN,
+                           "sn={}".format(sn),
+                           ["dn"])
+        elif given_name:
+            query = ["givenName={}".format(given_name)]
+            if sn:
+                query.append("sn={}".format(sn))
+            results = c.search(settings.USER_DN,
+                               self._ldap_and_string(query),
+                               ["dn"])
+        
+            if len(results) == 0:
+                # Try their first name as a nickname
+                query[0] = "nickname={}".format(given_name)
+                results = c.search(settings.USER_DN,
+                                   self._ldap_and_string(query),
+                                   ["dn"])
+
+        if len(results) == 1:
+            return User.get_user(dn=results[0][0])
+
+        return None
+
     # Simple way to filter out teachers and students without hitting LDAP.
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
