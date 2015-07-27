@@ -46,9 +46,8 @@ textarea[name=filetext] {
     </form>
 
 {% elif stage == "parse" %}
-<h4>Check the boxes for the users you wish to import.</h4>
-    <b>Matched users:</b><br />
-    Click on column titles to sort.
+    <h3>There {% if sure_users|length == 1 %}was {{ sure_users|length }} user{% else %}were {{ sure_users|length }} users{% endif %} matched:</h3>
+    Check the boxes for the users you wish to import. Click on column titles to sort.
     <form action="" method="post">
     {% csrf_token %}
     <table data-sortable class="fancy-table">
@@ -77,7 +76,7 @@ textarea[name=filetext] {
     </table>
     <input type="submit" value="Add Users" />
     <br /><br />
-    <b>Unmatched users:</b><br />
+    <h3>There {% if unsure_users|length == 1 %}was {{ unsure_users|length }} user{% else %}were {{ unsure_users|length }} users{% endif %} not matched:</h3>
     Click on column titles to sort.
     <table data-sortable class="fancy-table">
     <thead>
