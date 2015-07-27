@@ -33,6 +33,14 @@
             everyone
         {% endfor %}
     </div>
+
+
+    {% if announcement.event_set.count > 0 and not event %}
+        {% for event in announcement.event_set.all %}
+            {% include "events/event.html" %}
+        {% endfor %}
+    {% endif %}
+
     <div class="announcement-content">
         {{ announcement.content|safe }}
     </div>
