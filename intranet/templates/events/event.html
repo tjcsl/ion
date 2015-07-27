@@ -1,4 +1,11 @@
 {% load dates %}
+
+{% if event.scheduled_activity and announcement %}
+    {% with schact=event.scheduled_activity %}
+        {% include "events/scheduled_activity.html" %}
+    {% endwith %}
+{% endif %}
+
 <div class="event" data-id="{{ event.id }}">
     <h3>
         {{ event.title }}
@@ -24,16 +31,17 @@
         {% endfor %}
     </div>
 
+    {% if event.scheduled_activity and not announcement %}
+        {% with schact=event.scheduled_activity %}
+            {% include "events/scheduled_activity.html" %}
+        {% endwith %}
+    {% endif %}
+
     {% if event.announcement and not announcement %}
         <!--Announcement: <a href="">{{ event.announcement.title }}</a>-->
         {% with announcement=event.announcement %}
             {% include "announcements/announcement.html" %}
         {% endwith %}
-    {% endif %}
-
-
-    {% if event.scheduled_activity %}
-        Activity: <a href="{% url 'eighth_signup' event.scheduled_activity.block.id %}?activity={{ event.scheduled_activity.activity.id }}">{{ event.scheduled_activity }}</a>
     {% endif %}
 
     <div class="event-content">
