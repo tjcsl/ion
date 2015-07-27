@@ -27,7 +27,7 @@
     {% endfor %}
 </select>
 
-{% if activity %}
+{% if "activity" in request.GET %}
     <h3>Schedule for {{ activity.name }}</h3>
     Click on column titles to sort.
     <table data-sortable class="fancy-table">
@@ -38,6 +38,7 @@
                 <th>Sponsors</th>
                 <th>Signups</th>
                 <th>Capacity</th>
+                <th>Comments</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +49,11 @@
                     <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
                     <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                     <td>{{ scheduled_activity.get_true_capacity }}</td>
+                    <td>{{ scheduled_activity.comments }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan=5>There were no results.</td>
                 </tr>
             {% endfor %}
         </tbody>
