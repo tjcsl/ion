@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import os
 import random
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
@@ -121,6 +121,9 @@ class login_view(View):
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
 
+            if request.user.is_eighthoffice:
+                """Eighthoffice's session should (almost) never expire."""
+                request.user.set_expiry(datetime.now() + timedelta(days=30))
 
             if not request.user.first_login:
                 logger.info("First login")
