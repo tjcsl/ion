@@ -27,6 +27,7 @@ urlpatterns = [
     url(r"^schedule", include("intranet.apps.schedule.urls")),
     url(r"^feedback", include("intranet.apps.feedback.urls")),
     url(r"^welcome", include("intranet.apps.welcome.urls")),
+    url(r"^notifications", include("intranet.apps.notifications.urls")),
 
     url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]
