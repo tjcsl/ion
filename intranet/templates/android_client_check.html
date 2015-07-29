@@ -1,0 +1,16 @@
+{% if is_android_client %}
+    <script type="text/javascript">
+        $(function() {
+            console.info("Android client");
+            $("body").addClass("mobile-app", "android-app", "android-webview");
+        {% if android_client_rand %}
+            if(typeof IonAndroidInterface != "undefined") {
+                console.info("Setting up ADM", "{{ android_client_rand }}");
+                IonAndroidInterface.gcmSetup("{{ android_client_rand }}");
+            } else {
+                console.error("No IonAndroidInterface");
+            }
+        {% endif %}
+        });
+    </script>
+{% endif %}

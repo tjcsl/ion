@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import re
+import logging
 
+logger = logging.getLogger(__name__)
 
 def nav_categorizer(request):
     """Determine which top-level nav category (left nav) a request
@@ -37,10 +39,29 @@ def mobile_app(request):
     ua = request.META.get('HTTP_USER_AGENT', '')
 
     if "IonAndroid" in ua:
+        logger.debug("IonAndroid")
         ctx["is_android_client"] = True
-        ctx["android_client_register"] = "appRegistered:False" in ua
+        registered = "appRegistered:False" in ua
+        registered = False
+
+
+        if request.user and request.user.is_authenticated() and not registered:
+            """Add/update NotificationConfig object"""
+            import binascii
+            import os
+            from intranet.apps.notifications.models import NotificationConfig
+            from datetime import datetime
+
+            rand = binascii.b2a_hex(os.urandom(32))
+            ncfg, created = NotificationConfig.objects.get_or_create(user__id=request.user.id)
+            ncfg.android_gcm_time = datetime.now()
+            ncfg.android_gcm_rand = rand
+            logger.debug("GCM random token generated: {}".format(rand))
+            ncfg.save()
+            ctx["android_client_rand"] = rand
+
     else:
-        ctx["is_android_client"] = True
+        ctx["is_android_client"] = False
         ctx["android_client_register"] = False
 
     return ctx
