@@ -42,7 +42,6 @@ def mobile_app(request):
         logger.debug("IonAndroid")
         ctx["is_android_client"] = True
         registered = "appRegistered:False" in ua
-        registered = False
 
 
         if request.user and request.user.is_authenticated() and not registered:

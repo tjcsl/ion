@@ -22,11 +22,13 @@ def android_setup_view(request):
         if "user_token" in request.POST and "gcm_token" in request.POST:
             user_token = request.POST.get("user_token")
             gcm_token = request.POST.get("gcm_token")
-            logger.debug(user_token, gcm_token)
+
+            logger.debug(user_token)
+            logger.debug(gcm_token)
             try:
                 ncfg = NotificationConfig.objects.get(android_gcm_rand=user_token)
             except NotificationConfig.DoesNotExist:
-                logger.debug("No pair for {}".format(user_token))
+                logger.debug("No pair")
                 return HttpResponse('{"error":"Invalid data."}', content_type="text/json")
 
             ncfg.android_gcm_token = gcm_token
