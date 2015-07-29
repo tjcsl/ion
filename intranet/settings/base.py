@@ -118,7 +118,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "intranet.apps.context_processors.nav_categorizer",
                 "intranet.apps.eighth.context_processors.start_date",
-                "intranet.apps.eighth.context_processors.absence_count"
+                "intranet.apps.eighth.context_processors.absence_count",
+                "intranet.apps.context_processors.mobile_app"
             ),
             "debug": True  # Only enabled if DEBUG is true as well
         }
@@ -249,6 +250,7 @@ INSTALLED_APPS = (
     "intranet.apps.groups",
     "intranet.apps.search",
     "intranet.apps.schedule",
+    "intranet.apps.notifications",
     "intranet.apps.users",
     "intranet.middleware.environment",
     "widget_tweaks",

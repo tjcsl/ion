@@ -56,9 +56,23 @@
 
     {% block head %}
     {% endblock %}
+
+    {% if is_android_client %}
+        <script type="text/javascript">
+            $(function() {
+                $("body").addClass("mobile-app", "android-app", "android-webview");
+            {% if request.user.is_authenticated %}
+                if(!!IonAndroidInterface) {
+                    IonAndroidInterface.gcmSetup("{{ request.user.username }}");
+                }
+            {% endif %}
+            });
+        </script>
+    {% endif %}
 </head>
 <body class="notransition{% block bodyclass %}{% endblock %}"{% block bodytag %}{% endblock %}>
     {% block body %}
     {% endblock %}
+
 </body>
 </html>

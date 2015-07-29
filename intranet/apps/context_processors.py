@@ -26,3 +26,21 @@ def nav_categorizer(request):
             return {"nav_category": category}
 
     return {"nav_category": ""}
+
+def mobile_app(request):
+    """Determine if the site is being displayed in a WebView from
+    a native application
+    """
+
+    ctx = {}
+
+    ua = request.META.get('HTTP_USER_AGENT', '')
+
+    if "IonAndroid" in ua:
+        ctx["is_android_client"] = True
+        ctx["android_client_register"] = "appRegistered:False" in ua
+    else:
+        ctx["is_android_client"] = True
+        ctx["android_client_register"] = False
+
+    return ctx
