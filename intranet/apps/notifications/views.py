@@ -46,13 +46,32 @@ def android_setup_view(request):
     return HttpResponse('{"error":"Invalid arguments."}', content_type="text/json")
 
 @login_required
+def gcm_list_view(request):
+    if not request.user.has_admin_permission("notifications"):
+        return redirect("index")
+    gcm_notifs = GCMNotification.objects.all().order_by("-time")
+    posts = []
+    for n in gcm_notifs:
+        posts.append({
+            "gcm": n,
+            "data": json.loads(n.sent_data)["data"]
+        })
+
+    context = {
+        "posts": posts
+    }
+
+    return render(request, "notifications/gcm_list.html", context)
+
+@login_required
 def gcm_post_view(request):
     if not request.user.has_admin_permission("notifications"):
         return redirect("index")
 
     nc_all = NotificationConfig.objects.all()
     context = {
-        "nc_all": nc_all
+        "nc_all": nc_all,
+        "has_tokens": (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
     }
 
     if request.method == "POST":
