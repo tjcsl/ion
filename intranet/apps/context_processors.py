@@ -42,19 +42,23 @@ def mobile_app(request):
         logger.debug("IonAndroid")
         ctx["is_android_client"] = True
         registered = "appRegistered:False" in ua
+        ctx["android_client_registered"] = registered
 
-
-        if request.user and request.user.is_authenticated() and not registered:
+        if request.user and request.user.is_authenticated():
             """Add/update NotificationConfig object"""
             import binascii
             import os
             from intranet.apps.notifications.models import NotificationConfig
             from datetime import datetime
 
-            rand = binascii.b2a_hex(os.urandom(32))
             ncfg, created = NotificationConfig.objects.get_or_create(user__id=request.user.id)
+            if not ncfg.android_gcm_rand:
+                rand = binascii.b2a_hex(os.urandom(32))
+                ncfg.android_gcm_rand = rand
+            else:
+                rand = ncfg.android_gcm_rand
             ncfg.android_gcm_time = datetime.now()
-            ncfg.android_gcm_rand = rand
+            
             logger.debug("GCM random token generated: {}".format(rand))
             ncfg.save()
             ctx["android_client_rand"] = rand

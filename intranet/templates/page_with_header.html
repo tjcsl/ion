@@ -19,6 +19,7 @@
     <script type="text/javascript" src="{% static 'js/common.header.js' %}"></script>
     {% if messages %}
         <script type="text/javascript">
+        window.addEventListener("load", function() {
         {% for message in messages %}
             {% if message.level >= 30 %}
                 Messenger().error("{{ message|escapejs }}");
@@ -28,6 +29,7 @@
                 Messenger().info("{{ message|escapejs }}");
             {% endif %}
         {% endfor %}
+        });
         </script>
     {% endif %}
         

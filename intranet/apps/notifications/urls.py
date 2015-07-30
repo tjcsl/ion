@@ -5,5 +5,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r"^/android/setup$", views.android_setup_view, name="notif_android_setup_view"),
+    url(r"^/android/setup$", views.android_setup_view, name="notif_android_setup"),
+    url(r"^/android/gcm_post$", views.gcm_post_view, name="notif_gcm_post")
 ]
