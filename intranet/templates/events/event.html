@@ -65,7 +65,7 @@
     {% endif %}
 
 
-    <div class="bottom-row">
+    <div class="bottom-row{% if show_attend %} show-attend{% endif %}">
         <span class="signup-status">
             People attending: {{ event.attending.count }}
             {% if show_attend %}
@@ -77,7 +77,7 @@
 
         {% if request.user in event.attending.all %}
             <span class="attend-status">
-                You are <b style="color: green">attending</b> this event.
+                You are <b style="color: green">attending</b> this event. 
                 {% if show_attend %}
                     <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
                         <i class="fa fa-times"></i>
@@ -87,7 +87,7 @@
             </span>
         {% else %}
             <span class="attend-status">
-                You are <b style="color: red">not attending</b> this event.
+                You are <b style="color: red">not attending</b> this event. 
                 {% if show_attend %}
                     <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
                         <i class="fa fa-check"></i>
