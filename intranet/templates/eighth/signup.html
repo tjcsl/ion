@@ -55,18 +55,21 @@
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        window.isDefaultPage = window.location.pathname.split("/eighth/signup")[1].length <= 1;
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
-    <script type="text/javascript">
-    $(function() {
-        {% if request.GET.activity %}
-            $("li[data-activity-id='{{ request.GET.activity|escape }}']").click()
-        {% endif %}
-    })
-    </script>
+
+    {% if request.GET.activity %}
+        <script type="text/javascript">
+        $(function() {
+                $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+        })
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
@@ -396,10 +399,12 @@
                 The listing on the left shows activities available on: <b style="white-space: nowrap">{{ block_info.date|date:"l, F j, Y" }} {{ block_info.block_letter }} Block.</b>
                 </p>
                 <p>
-                To change your signup for another day, start by choosing from the list of blocks above.
+                To change your signup for another day, select a block from the list above.
                 </p>
                 <p>
                 You may have to press the left and right arrow buttons to navigate through to the day on which the block occurs.
+                </p>
+                <p>The activity selections for the block will appear on the left. To view additional information or sign up for an activity, select it. Details will appear on the right.
                 </p>
                 <p>
                 To use the search function, type in the input box above the activity listing. You can enter substrings of the activity's name, sponsor(s), or room(s).

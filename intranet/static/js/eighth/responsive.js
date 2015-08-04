@@ -26,7 +26,7 @@ $(document).ready(function() {
 
         var width = $(window).width();
         var height = $(window).height();
-        if(width <= 500 && height <= 745) {
+        if(width <= 500 && height <= 745 && !window.isDefaultPage) {
             setTimeout(function() {
                 $(".eighth-signup .switch").click();
 
