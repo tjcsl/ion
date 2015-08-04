@@ -56,7 +56,8 @@
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
-        window.isDefaultPage = window.location.pathname.split("/eighth/signup")[1].length <= 1;
+        var pn = location.pathname.substring(7);
+        window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>

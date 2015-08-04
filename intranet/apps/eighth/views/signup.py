@@ -22,6 +22,7 @@ def eighth_signup_view(request, block_id=None):
 
     if block_id is None and "block" in request.GET:
         block_id = request.GET.get("block")
+        args = ""
         if "user" in request.GET:
             args = "user={}".format(request.GET.get("user"))
         return redirect("/eighth/signup/{}?{}".format(block_id, args))
