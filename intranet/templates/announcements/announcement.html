@@ -7,9 +7,9 @@
             {% if hide_announcements %}
                 <a href="#" class="announcement-toggle">
                 {% if announcement in user_hidden_announcements %}
-                    <i class="announcement-icon fa fa-toggle-off" title="You have hidden this announcement." data-visible-title="This announcement is visible." hidden-title="You have hidden this announcement."></i>
+                    <i class="announcement-icon fa fa-toggle-off" title="You have hidden this announcement. Click to show." data-visible-title="This announcement is visible. Click to hide." hidden-title="You have hidden this announcement. Click to show."></i>
                 {% else %}
-                    <i class="announcement-icon fa fa-toggle-on" title="This announcement is visible." data-visible-title="This announcement is visible." data-hidden-title="You have hidden this announcement."></i>
+                    <i class="announcement-icon fa fa-toggle-on" title="This announcement is visible. Click to hide." data-visible-title="This announcement is visible. Click to hide." data-hidden-title="You have hidden this announcement. Click to show."></i>
                 {% endif %}
                 </a>
             {% endif %}
@@ -25,7 +25,7 @@
     </h3>
 
     <div class="announcement-metadata">
-        by {{ announcement.get_author|escape }} &bull; {{ announcement.updated|fuzzy_date|capfirst }} &bull; to
+        by {{ announcement.get_author|escape }} &bull; {{ announcement.added|fuzzy_date|capfirst }} &bull; to
         {% for group in announcement.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}
