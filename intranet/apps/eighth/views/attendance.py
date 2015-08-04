@@ -138,7 +138,7 @@ admin_choose_scheduled_activity_view = (
     eighth_admin_required(_unsafe_choose_scheduled_activity_view)
 )
 
-
+@login_required
 def roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -159,6 +159,7 @@ def roster_view(request, scheduled_activity_id):
 
     return render(request, "eighth/roster.html", context)
 
+@login_required
 def raw_roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
