@@ -32,9 +32,12 @@ def announcement_posted_hook(request, obj):
     """
     logger.debug("Announcement posted")
 
-    announcement_posted_twitter(request, obj)
-
-    announcement_posted_email(request, obj)
+    if obj.notify_post:
+        logger.debug("Announcement notify on")
+        announcement_posted_twitter(request, obj)
+        announcement_posted_email(request, obj)
+    else:
+        logger.debug("Announcement notify off")
 
 
 @login_required
