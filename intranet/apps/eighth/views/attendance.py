@@ -343,7 +343,7 @@ def take_attendance_view(request, scheduled_activity_id):
 @attendance_taker_required
 def accept_pass_view(request, signup_id):
     if request.method != "POST":
-        return http.HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
     try:
         signup = EighthSignup.objects.get(id=signup_id)
@@ -392,7 +392,7 @@ def accept_pass_view(request, signup_id):
 @attendance_taker_required
 def accept_all_passes_view(request, scheduled_activity_id):
     if request.method != "POST":
-        return http.HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(

@@ -231,3 +231,7 @@ def forcemigrate(app=None):
         abort("No app name given.")
     local("./manage.py migrate {} --fake".format(app))
     local("./manage.py migrate {}".format(app))
+
+def inspect_decorators():
+    """Inspect decorators in views."""
+    local("grep -r 'def .*(request' intranet/apps/ -B1 | less")

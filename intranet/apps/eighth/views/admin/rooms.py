@@ -186,13 +186,13 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         end_block = form_list[1].cleaned_data["block"]
         return redirect("eighth_admin_room_utilization", start_block.id, end_block.id)
         
-
+@eighth_admin_required
 def room_utilization_action(request, start_id, end_id):
     try:
         start_block = EighthBlock.objects.get(id=start_id)
         end_block = EighthBlock.objects.get(id=end_id)
     except EighthBlock.DoesNotExist:
-        raise Http404
+        raise http.Http404
 
     sched_acts = (EighthScheduledActivity.objects
                                          .exclude(activity__deleted=True)

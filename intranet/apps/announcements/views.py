@@ -281,7 +281,7 @@ def show_announcement_view(request):
             return http.HttpResponse("Unhidden")
         return http.Http404()
     else:
-        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
 @login_required
 def hide_announcement_view(request):
@@ -300,5 +300,5 @@ def hide_announcement_view(request):
             return http.HttpResponse("Hidden")
         return http.Http404()
     else:
-        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
