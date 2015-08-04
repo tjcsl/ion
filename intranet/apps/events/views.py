@@ -109,7 +109,7 @@ def event_roster_view(request, id):
     viewable_roster = []
     num_hidden_members = 0
     for p in full_roster:
-        if p.can_view_eighth or p == request.user:
+        if p.can_view_eighth:
             viewable_roster.append(p)
         else:
             num_hidden_members += 1
