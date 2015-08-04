@@ -18,4 +18,11 @@ $(document).ready(function() {
         }
     });
 
+    $("input[type=submit]").click(function(e) {
+        e.preventDefault();
+        document.forms["auth_form"].submit();
+        $(this).val(" ").prop("disabled", "disabled");
+        var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
+    });
+
 });

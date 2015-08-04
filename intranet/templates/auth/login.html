@@ -21,6 +21,7 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -48,12 +49,13 @@
                     {{ auth_message }}
                     </div>
                 {% endif %}
-                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" method="post">
+                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" method="post" name="auth_form">
                     {% csrf_token %}
                     {% for field in auth_form %}
                         {{ field }}<br />
                     {% endfor %}
                     <input type="submit" value="Login" />
+                    <div class='spinner-container'></div>
                 </form>
             </div>
             <div class="schedule-outer">
