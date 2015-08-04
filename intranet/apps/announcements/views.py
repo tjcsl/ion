@@ -189,7 +189,7 @@ def add_announcement_view(request):
         form = AnnouncementForm(request.POST)
         logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save()
             obj.user = request.user
             obj.save()
             announcement_posted_hook(request, obj)
