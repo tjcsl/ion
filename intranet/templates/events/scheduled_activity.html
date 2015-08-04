@@ -1,5 +1,13 @@
 <div class="announcement scheduled-activity">
-    <h3>{{ schact.full_title }}</h3>
+    <h3>
+        {% if link_to_scheduled_activity %}
+            <a href="{% url 'eighth_signup' schact.block.id %}?activity={{ schact.activity.id }}" class="announcement-link">
+                {{ schact.full_title }}
+            </a>
+        {% else %}
+            {{ schact.full_title }}
+        {% endif %}
+    </h3>
     <div class="announcement-metadata">
         on {{ schact.block }} &bull; {{ schact.user_set|length }}/{{ schact.get_true_capacity }} signup{{ schact.user_set|length|pluralize }}
     </div>

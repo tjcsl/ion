@@ -3,16 +3,16 @@
     {{ announcement.author }}
 {% else %}
     {{ announcement.user.full_name }}
-{% endif %} posted a new announcement at {{ announcement.added|date:"l, F j, Y P"}}:
+{% endif %} posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
 </p>
 
 <h2>{{ announcement.title }}</h2>
 
 {% autoescape off %}
-{{ announcement.content }}
+{{ announcement.content|truncatewords_html:30 }}
 {% endautoescape %}
 
-<p>View this announcement: <a href="{{ info_link }}">{{ info_link }}</a></p>
+<p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
 
 
 <br />
@@ -26,7 +26,7 @@
             <td>
             <p style="font-size: 9pt">
                 This is an automated message sent from the <a href="{{ base_url }}">TJ Intranet system</a>.<br />
-                To unsubscribe, change the "Receive Announcement Emails" setting on your Preferences page.
+                To unsubscribe, change the "Recieve Announcement Emails" setting on your Preferences page.
             </p>
             </td>
         </tr>
@@ -34,5 +34,5 @@
 
 
 <p style="font-size: 9pt; color: gray">
-                Thomas Jefferson High School for Science and Technology<br />6560 Braddock Road<br />Alexandria, VA, 22312<br />(703) 750-8300
-            </p>
+    Thomas Jefferson High School for Science and Technology<br />6560 Braddock Road<br />Alexandria, VA, 22312<br />(703) 750-8300
+</p>

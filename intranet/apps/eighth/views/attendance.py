@@ -138,7 +138,7 @@ admin_choose_scheduled_activity_view = (
     eighth_admin_required(_unsafe_choose_scheduled_activity_view)
 )
 
-
+@login_required
 def roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -159,6 +159,7 @@ def roster_view(request, scheduled_activity_id):
 
     return render(request, "eighth/roster.html", context)
 
+@login_required
 def raw_roster_view(request, scheduled_activity_id):
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -343,7 +344,7 @@ def take_attendance_view(request, scheduled_activity_id):
 @attendance_taker_required
 def accept_pass_view(request, signup_id):
     if request.method != "POST":
-        return http.HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
     try:
         signup = EighthSignup.objects.get(id=signup_id)
@@ -392,7 +393,7 @@ def accept_pass_view(request, signup_id):
 @attendance_taker_required
 def accept_all_passes_view(request, scheduled_activity_id):
     if request.method != "POST":
-        return http.HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(

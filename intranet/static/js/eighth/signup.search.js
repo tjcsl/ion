@@ -1,14 +1,44 @@
 $(document).ready(function() {
 
+    searchDebug = false;
+
     eighthSearch = function() {
         var _st = +new Date();
         var searchStr = $(this).val().toLowerCase();
-        var searchSplit = $.trim(searchStr).split(" ");
+        searchStr = $.trim(searchStr);
+        var searchSplit = [];
+        if(searchStr.indexOf('"') != -1) {
+            var quoteSplit = searchStr.split('"');
+            for(var i=0; i<quoteSplit.length; i++) {
+                if(i == 0 || i == quoteSplit.length - 1) {
+                    // first and last entries aren't inside the quote
+                    var innerSplit = quoteSplit[i].split(" ");
+                    for(var j=0; j<innerSplit.length; j++) {
+                        var inw = innerSplit[j];
+                        if(inw.length > 0) {
+                            searchSplit.push($.trim(inw));
+                        }
+                    }
+                } else {
+                    searchSplit.push($.trim(quoteSplit[i]));
+                }
+            }
+        } else {
+            var spaceSplit = searchStr.split(" ");
+            for(var i=0; i<spaceSplit.length; i++) {
+                var spl = spaceSplit[i];
+                if(spl.length > 0) {
+                    searchSplit.push($.trim(spl));
+                }
+            }
+        }
 
         // console.log("query:", searchStr);
 
         var results = [];
         var activities = window.activityModels._byId;
+
+        var show_adminact = false;
 
         $("#activity-list li[data-activity-id]").each(function() {
             var aid = $(this).data("activity-id");
@@ -21,7 +51,7 @@ $(document).ready(function() {
                 var search = searchSplit[sp];
 
                 // blank entry
-                if(search.length < 1) {
+                if(search.length < 1 || search == '*') {
                     show = true;
                     results.push(aid);
                     continue; // skip
@@ -86,6 +116,7 @@ $(document).ready(function() {
                     // admin
                     if(cmd[1].substring(0,1) == "a" && activity.administrative == fl) {
                         show = true;
+                        show_adminact = true;
                     }
                     // presign
                     if(cmd[1].substring(0,1) == "p" && activity.presign == fl) {
@@ -106,6 +137,7 @@ $(document).ready(function() {
                     // selected
                     if(cmd[1].substring(0,2) == "se" && activity.selected == fl) {
                         show = true;
+                        show_adminact = true;
                     }
                 } else if(inv) {
                     show = !show;
@@ -190,7 +222,16 @@ $(document).ready(function() {
             $("#activity-list ul.search-noresults").hide();
         }
 
-        console.debug("search time:", +new Date - _st);
+        if(show_adminact) {
+            $("#activity-list").addClass("show-administrative");
+        } else {
+            $("#activity-list").removeClass("show-administrative");
+        }
+
+        var tm = (+new Date - _st);
+        if(searchDebug) {
+            console.info(searchSplit + " search time: " + tm);
+        }
 
     }
 

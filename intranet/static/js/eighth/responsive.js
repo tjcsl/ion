@@ -55,9 +55,20 @@ function activityPickerResize() {
     var h = $(window).height();
     var w = $(window).width();
     var p = $("#activity-picker");
-    var topInfo = $(".middle-wrapper").height() + $(".header").height() + 15; // 163
-    var btnDown = $(".primary-content").hasClass("viewing") && w <= 500 ? 0 : 120; // 120
-    var pixels = h - topInfo - btnDown;
+    var isProfile = $(".primary-content").hasClass("eighth-profile-signup");
+    if(isProfile) {
+        var topInfo = $(".middle-wrapper").height() + $(".header").height() + 15; // 163
+        var userInfo = $(".user-info-eighth").height() + 13; // 146 with 2
+        var pixels = h - topInfo - userInfo;
+        if(pixels < 475) {
+            pixels = 475;
+        }
+    } else {
+        /* regular /eighth/signup page */
+        var topInfo = $(".middle-wrapper").height() + $(".header").height() + 15; // 163
+        var btnDown = $(".primary-content").hasClass("viewing") && w <= 500 ? 0 : 120; // 120
+        var pixels = h - topInfo - btnDown;
+    }
     if(pixels < 300) {
         // minimum usable height
         pixels = 300;

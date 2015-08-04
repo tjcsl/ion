@@ -11,6 +11,7 @@ $(document).ready(function() {
     $(".announcement .announcement-toggle").click(function(e) {
         e.preventDefault();
         var announcement = $(this).parent().parent().parent();
+        var announcementContent = $(".announcement-toggle-content", announcement);
         var icon = $(this).children(0);
         var id = announcement.attr("data-id");
 
@@ -20,15 +21,21 @@ $(document).ready(function() {
             console.info("Announcement "+id+" "+action);
         });
         if(action == "show") {
-            announcement.removeClass("hidden");
             icon.removeClass("fa-toggle-off")
-                .addClass("fa-toggle-on")
-                .attr("title", icon.attr("data-visible-title"));
+                    .addClass("fa-toggle-on")
+                    .attr("title", icon.attr("data-visible-title"));
+            setTimeout(function() {
+                announcement.removeClass("hidden");
+            }, 450);
+            announcementContent.slideDown(350);
         } else {
-            announcement.addClass("hidden");
             icon.removeClass("fa-toggle-on")
-                .addClass("fa-toggle-off")
-                .attr("title", icon.attr("data-hidden-title"));;
+                    .addClass("fa-toggle-off")
+                    .attr("title", icon.attr("data-hidden-title"));;
+            setTimeout(function() {
+                announcement.addClass("hidden");
+            }, 450);
+            announcementContent.slideUp(350);
         }
     })
 });

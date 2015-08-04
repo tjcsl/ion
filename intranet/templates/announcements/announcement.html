@@ -1,7 +1,13 @@
 {% load dates %}
 <div class="announcement{% if hide_announcements and announcement in user_hidden_announcements %} hidden{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
-        {{ announcement.title }}
+        {% if link_to_announcement %}
+        <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
+            {{ announcement.title }}
+        </a>
+        {% else %}
+            {{ announcement.title }}
+        {% endif %}
 
             <div class="announcement-icon-wrapper">
             {% if hide_announcements %}
@@ -34,14 +40,17 @@
         {% endfor %}
     </div>
 
+    <div class="announcement-toggle-content">
+        {% if announcement.event_set.count > 0 and not event %}
+            {% for event in announcement.event_set.all %}
+                {% with link_to_event=1 %}
+                    {% include "events/event.html" %}
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
 
-    {% if announcement.event_set.count > 0 and not event %}
-        {% for event in announcement.event_set.all %}
-            {% include "events/event.html" %}
-        {% endfor %}
-    {% endif %}
-
-    <div class="announcement-content">
-        {{ announcement.content|safe }}
+        <div class="announcement-content">
+            {{ announcement.content|safe }}
+        </div>
     </div>
 </div>

@@ -1,16 +1,16 @@
-{% if announcement.author %}{{ announcement.author }}{% else %}{{ announcement.user.full_name }}{% endif %} posted a new announcement at {{ announcement.added|date:"l, F j, Y P"}}:
+{% if announcement.author %}{{ announcement.author }}{% else %}{{ announcement.user.full_name }}{% endif %} posted a new announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
 
 {{ announcement.title }}
 
 {% autoescape off %}
-{{ announcement.content }}
+{{ announcement.content|truncatewords_html:30 }}
 {% endautoescape %}
 
-View this announcement: {{ info_link }}
+View this announcement on Intranet: {{ info_link }}
 
 --
 This is an automated message sent from the TJ Intranet system ({{ base_url }}).
-To unsubscribe, change the "Receive Announcement Emails" setting on your Preferences page.
+To unsubscribe, change the "Recieve Announcement Emails" setting on your Preferences page.
 
 
 Thomas Jefferson High School for Science and Technology

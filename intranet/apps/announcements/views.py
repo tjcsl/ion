@@ -32,9 +32,12 @@ def announcement_posted_hook(request, obj):
     """
     logger.debug("Announcement posted")
 
-    announcement_posted_twitter(request, obj)
-
-    announcement_posted_email(request, obj)
+    if obj.notify_post:
+        logger.debug("Announcement notify on")
+        announcement_posted_twitter(request, obj)
+        announcement_posted_email(request, obj)
+    else:
+        logger.debug("Announcement notify off")
 
 
 @login_required
@@ -189,7 +192,7 @@ def add_announcement_view(request):
         form = AnnouncementForm(request.POST)
         logger.debug(form)
         if form.is_valid():
-            obj = form.save(commit=False)
+            obj = form.save()
             obj.user = request.user
             obj.save()
             announcement_posted_hook(request, obj)
@@ -278,7 +281,7 @@ def show_announcement_view(request):
             return http.HttpResponse("Unhidden")
         return http.Http404()
     else:
-        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
 @login_required
 def hide_announcement_view(request):
@@ -297,5 +300,5 @@ def hide_announcement_view(request):
             return http.HttpResponse("Hidden")
         return http.Http404()
     else:
-        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 

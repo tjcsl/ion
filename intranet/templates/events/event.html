@@ -1,14 +1,20 @@
 {% load dates %}
 
 {% if event.scheduled_activity and announcement %}
-    {% with schact=event.scheduled_activity %}
+    {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
         {% include "events/scheduled_activity.html" %}
     {% endwith %}
 {% endif %}
 
 <div class="event" data-id="{{ event.id }}">
     <h3>
-        {{ event.title }}
+        {% if link_to_event %}
+            <a href="{% url 'event' event.id %}" class="event-link">
+                {{ event.title }}
+            </a>
+        {% else %}    
+            {{ event.title }}
+        {% endif %}
         {% if is_events_admin or event.user == request.user %}
             <div class="event-icon-wrapper">
                 <a href="{% url 'modify_event' event.id %}">
@@ -32,14 +38,13 @@
     </div>
 
     {% if event.scheduled_activity and not announcement %}
-        {% with schact=event.scheduled_activity %}
+        {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
             {% include "events/scheduled_activity.html" %}
         {% endwith %}
     {% endif %}
 
     {% if event.announcement and not announcement %}
-        <!--Announcement: <a href="">{{ event.announcement.title }}</a>-->
-        {% with announcement=event.announcement %}
+        {% with announcement=event.announcement link_to_announcement=1 %}
             {% include "announcements/announcement.html" %}
         {% endwith %}
     {% endif %}
@@ -63,9 +68,11 @@
     <div class="bottom-row">
         <span class="signup-status">
             People attending: {{ event.attending.count }}
+            {% if show_attend %}
             <a href="{% url 'event_roster' event.id %}" class="button small-button view-roster-button">
                 View Roster
             </a>
+            {% endif %}
         </span>
 
         {% if request.user in event.attending.all %}

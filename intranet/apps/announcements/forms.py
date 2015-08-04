@@ -20,7 +20,8 @@ class AnnouncementForm(forms.ModelForm):
             "author",
             "content",
             "groups",
-            "expiration_date"
+            "expiration_date",
+            "notify_post"
         ]
 
 

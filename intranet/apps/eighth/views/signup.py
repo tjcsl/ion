@@ -175,7 +175,7 @@ def eighth_signup_view(request, block_id=None):
 @login_required
 def toggle_favorite_view(request):
     if request.method != "POST":
-        return http.HttpResponseNotAllowed(["POST"])
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
     if not ("aid" in request.POST and request.POST["aid"].isdigit()):
         http.HttpResponseBadRequest("Must specify an integer aid")
 
