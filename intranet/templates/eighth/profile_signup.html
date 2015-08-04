@@ -438,9 +438,67 @@
                 <ul class="all-activities"></ul>
             </div>
             <div id="activity-detail" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
-                <h3 class="empty-state">
-                    Select an activity
-                </h3>
+                <div class="empty-state">
+                    <center>
+                        <div>
+                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" />
+                        </div>
+                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                            {{ profile_user.full_name }}
+                            {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+                        </h2>
+                        <h3>
+                        {% if profile_user.is_student %}
+                            {% if profile_user.graduation_year %}
+                                {{ profile_user.grade|capfirst }}
+                                ({{ profile_user.graduation_year }})
+                            {% else %}
+                                Student
+                            {% endif %}
+                            {% if profile_user.absence_count > 0 or user.is_eighth_admin %}
+                                - <a href="{% url 'eighth_absences' %}?user={{ profile_user.id }}" style="color: red">
+                                    {{ profile_user.absence_count }} absence{{ profile_user.absence_count|pluralize }}
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            Staff
+                        {% endif %}
+                        </h3>
+
+                        <table class="user-info-contact">
+                            {% if profile_user.display_name %}
+                                <tr>
+                                    <th>Full Name</th>
+                                    <td>{{ profile_user.display_name }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Username</th>
+                                <td>{{ profile_user.ion_username }}</td>
+                            </tr>
+                            {% if profile_user.student_id %}
+                                <tr>
+                                    <th>Student ID</th>
+                                    <td>{{ profile_user.student_id }}</td>
+                                </tr>
+                            {% endif %}
+
+                            {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
+                                <tr>
+                                    <th>Counselor</th>
+                                    <td> {{ profile_user.counselor.last_name }} </td>
+                                </div>
+                            {% endif %}
+                            {% if request.user.is_eighth_admin %}
+                                <tr class="comments">
+                                    <th>Comments</th>
+                                    <td style="width: 400px">{{ profile_user.admin_comments|safe|linebreaksbr }}</td>
+                                </tr>
+                            {% endif %}
+
+                        </table>
+                    </center>
+                </div>
             </div>
         </div>
     </div>

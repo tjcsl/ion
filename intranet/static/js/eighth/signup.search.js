@@ -86,6 +86,9 @@ $(document).ready(function() {
                     // admin
                     if(cmd[1].substring(0,1) == "a" && activity.administrative == fl) {
                         show = true;
+                        $("#activity-list").addClass("show-administrative");
+                    } else {
+                        $("#activity-list").removeClass("show-administrative");
                     }
                     // presign
                     if(cmd[1].substring(0,1) == "p" && activity.presign == fl) {
