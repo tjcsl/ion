@@ -55,6 +55,9 @@
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        var pn = location.pathname.substring(7);
+        window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
     </script>
     <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
@@ -87,12 +90,52 @@
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
                 <% } %>
             </span>
-            <% var full_name = name_with_flags_for_user + (cancelled ? " (Cancelled)" : ""); %>
-            <span class="activity-name" title="<%= full_name %>"><%= full_name %></span>
+            <% var full_name = name_with_flags_for_user; %>
+            <span class="activity-name" title="<%= full_name %>">
+                <%= name %>
+                <% if (title) { %>
+                    - <%= title %>
+                <% } %>
+
+                <% if (special) { %>
+                    <span class="badge green">Special</span>
+                <% } %>
+
+                <% if (cancelled) { %>
+                    <span class="badge darkred">CANCELLED</span>
+                <% } %>
+
+                <% if (restricted_for_user) { %>
+                    <span class="badge purple">Restricted</span>
+                <% } %>
+
+                <% if (sticky) { %>
+                    <span class="badge orange">Sticky</span>
+                <% } %>
+
+                <% if (both_blocks) { %>
+                    <span class="badge blue">Both Blocks</span>
+                <% } %>
+
+                <% if (administrative) { %>
+                    <span class="badge">Admin</span>
+                <% } %>
+
+                <% if (presign) { %>
+                    <span class="badge yellow">48-hr</span>
+                <% } %>
+
+            </span>
             <% var sponsors_all = ""; %>
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
-            <span class="activity-sponsors" title="<%= sponsors_all %>"><%= sponsors_all %></span>
+            <span class="activity-sponsors" title="<%= sponsors_all %>">
+
+                <span class="activity-ids">
+                    <%= aid %>; #<%= this.model.attributes.scheduled_activity %> &mdash;
+                </span>
+                <%= sponsors_all %>
+            </span>
 
         {% endverbatim %}
     </script>
@@ -104,35 +147,46 @@
         </h3>
 
         <% if (cancelled) { %>
-            <span class="badge red">Cancelled</span>
+            <span class="badge darkred clickable" data-append-search="is:c">CANCELLED</span>
         <% } %>
 
         <% if (special) { %>
-            <span class="badge green">Special</span>
+            <span class="badge green clickable" data-append-search="is:sp">Special</span>
         <% } %>
 
         <% if (restricted_for_user) { %>
-            <span class="badge">Restricted</span>
-        <% } %>
-
-        <% if (administrative) { %>
-            <span class="badge">Administrative</span>
+            <span class="badge purple clickable" data-append-search="is:r">Restricted</span>
         <% } %>
 
         <% if (sticky) { %>
-            <span class="badge">Sticky</span>
+            <span class="badge orange clickable" data-append-search="is:st">Sticky</span>
         <% } %>
 
         <% if (both_blocks) { %>
-            <span class="badge">Both Blocks</span>
+            <span class="badge blue clickable" data-append-search="is:b">Both Blocks</span>
         <% } %>
 
-        <dl>
-            <% if (isEighthAdmin) { %>
-                <dt>Activity ID:</dt>
-                <dd><%= aid %></dd>
-            <% } %>
+        <% if (administrative) { %>
+            <span class="badge clickable" data-append-search="is:a">Administrative</span>
+        <% } %>
 
+        <% if (presign) { %>
+            <span class="badge yellow clickable" data-append-search="is:p">48-hr Presign</span>
+        <% } %>
+
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
+
+        <dl class="activityid">
+            <dt>Activity ID:</dt>
+            <dd><%= aid %></dd>
+        </dl>
+
+        <dl class="scheduledid">
+            <dt>Scheduled ID:</dt>
+            <dd><%= scheduled_activity_id %></dd>
+        </dl>
+
+        <dl>
             <% rooms = _.uniq(rooms)%>
             <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
             <dd>
@@ -182,9 +236,9 @@
                     <% if (!selected) {%>
                         <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
                             <% showingRosterButton = true %>
-                            <button id="roster-button" data-endpoint="/eighth/roster/raw">
+                            <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                                 View Roster
-                            </button>
+                            </a>
                             <button id="signup-button">
                                 Sign Up
                             </button>
@@ -207,9 +261,9 @@
                 </div>
             </div>
             <% if (!showingRosterButton) { %>
-                <button id="roster-button" data-endpoint="/eighth/roster/raw">
+                <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                     View Roster
-                </button>
+                </a>
             <% } %>
             <div id="roster-section">
             </div>
@@ -219,7 +273,7 @@
 
 
 
-    <div class="primary-content eighth-signup" data-next-url="{% url 'eighth_profile' profile_user.id %}">
+    <div class="primary-content eighth-signup eighth-profile-signup" data-next-url="{% url 'eighth_profile' profile_user.id %}">
         {% if request.user.is_eighth_admin %}
             <div class="eighth-header">
                 {% include "eighth/admin/start_date.html" %}
