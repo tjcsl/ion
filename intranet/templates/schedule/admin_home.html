@@ -5,9 +5,26 @@
     {{ block.super}} - Schedule
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+function modify_daytype_form() {
+    var v = $("select#modify_daytypes").val();
+    location.href = "{% url 'schedule_daytype' %}/" + v;
+    return false;
+}
+
+$(function() {
+    $("select#modify_daytypes").selectize();
+})
+    </script>
+{% endblock %}
+
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "css/schedule.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
     <style type="text/css">
     .primary-content h2 {
         text-align: center;
@@ -77,11 +94,45 @@
         display: none;
     }
 
+    #modify_daytypes,
+    form[name=modify_daytypes] .selectize-control {
+        width: 250px;
+        height: 40px !important;
+    }
+
+    .modify-daytype-table {
+        height: 40px;
+    }
+
+    .modify-daytype-table tr td {
+        padding: 0 5px;
+        vertical-align: middle;
+    }
+
     </style>
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
+        <form action="" name="modify_daytypes" onsubmit="return modify_daytype_form()">
+        <table class="modify-daytype-table">
+        <tr>
+            <td>
+                <select id="modify_daytypes">
+                    <option value="">Modify DayType</option>
+                {% for daytype in daytypes %}
+                    <option value="{{ daytype.id }}">{{ daytype }}</option>
+                {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="submit" value="Modify" />
+                <a href="{% url 'schedule_daytype' %}" class="button">Create</a>
+            </td>
+        </tr>
+        </table>
+        </form>
+
         <table class="schedule-month">
         <tbody>
         <tr>
@@ -151,5 +202,6 @@
         </tr>
         {% endfor %}
         </tbody>
+        </table>
     </div>
 {% endblock %}

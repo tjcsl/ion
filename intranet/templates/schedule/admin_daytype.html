@@ -131,11 +131,17 @@
             <i class="fa fa-arrow-left"></i> Back
         </a>
         <h2>{% if daytype %}Edit{% else %}Create{% endif %} Day Type</h2>
-        {% comment %}<table>
-        {{ form.as_table }}
-        </table>
-        {% endcomment %}
-        <form action="/schedule/daytype" method="post">
+
+        {% if daytype %}
+        <form action="{% url 'schedule_daytype' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ daytype.id }}" />
+            <input type="hidden" name="make_copy" value="1" />
+            <input type="submit" value="Make Copy" />
+        </form>
+        {% endif %}
+
+        <form action="{% url 'schedule_daytype' %}" method="post">
         {% csrf_token %}
         {% if daytype %}
             <input type="hidden" name="id" value="{{ daytype.id }}" />

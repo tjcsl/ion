@@ -129,9 +129,12 @@ def admin_home_view(request):
             week.append(get_day_data(firstday, d))
         sch.append(week)
 
+    daytypes = DayType.objects.all()
+
     data = {
         "month_name": month_name,
-        "sch": sch
+        "sch": sch,
+        "daytypes": daytypes
     }
 
     return render(request, "schedule/admin_home.html", data)
@@ -160,6 +163,19 @@ def admin_add_view(request):
 @schedule_admin_required
 def admin_daytype_view(request, id=None):
     if request.method == "POST":
+        if "id" in request.POST and request.POST.get("make_copy", None) is not None:
+            id = request.POST["id"]
+            daytype = DayType.objects.get(id=id)
+            blocks = daytype.blocks.all()
+            daytype.pk = None
+            daytype.name += " (Copy)"
+            daytype.save()
+            for blk in blocks:
+                daytype.blocks.add(blk)
+            daytype.save()
+            return redirect("schedule_daytype", daytype.id)
+
+
         if "id" in request.POST:
             id = request.POST["id"]
         if id:
