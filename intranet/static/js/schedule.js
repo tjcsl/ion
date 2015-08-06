@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
     scheduleBind = function() {
-        $(".schedule .schedule-left").click(function() {
+        $(".schedule-outer .schedule-left").click(function() {
             event.preventDefault();
             scheduleView(-1);
         });
 
-        $(".schedule .schedule-right").click(function() {
+        $(".schedule-outer .schedule-right").click(function() {
             event.preventDefault();
             scheduleView(1);
         });
@@ -41,7 +41,7 @@ $(document).ready(function() {
             history.pushState(null, null, url);
         }
 
-        $.get(endpoint, {"date": date}, function(d) {
+        $.get(endpoint, {"date": date, "no_outer": true}, function(d) {
             $(".schedule-outer").html(d);
             scheduleBind();
         });

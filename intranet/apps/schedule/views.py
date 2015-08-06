@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timedelta
 import calendar
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render, redirect
 from .models import Block, DayType, Day, Time
 from .forms import DayTypeForm, DayForm
@@ -85,6 +85,11 @@ def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
 
+# DOES require login
+@login_required
+def schedule_widget_view(request):
+    data = schedule_context(request)
+    return render(request, "schedule/widget.html", data)
 
 def get_day_data(firstday, daynum):
     if daynum == 0:
