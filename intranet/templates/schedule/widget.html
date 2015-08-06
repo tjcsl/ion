@@ -1,27 +1,63 @@
+{% load staticfiles %}
 {% load dates %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
 <div class="widget schedule-widget">
     <div class="widget-title">
         <h2>
             Bell Schedule
+            <span class="schedule-arrows">
+                <a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left"><i class="fa fa-chevron-left"></i></a>
+                {{ sched_ctx.date|date:"D, F j" }}
+
+                <a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right"><i class="fa fa-chevron-right"></i></a>
+            </span>
         </h2>
         <!--div class="info">
             <a href="{% url 'eighth_signup' %}" class="ui-link">View more blocks</a>
         </div-->
     </div>
-    <div class="widget-content">
-        {% include "schedule/view.html" %}
+    <div class="widget-content schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}">
+            {% if sched_ctx.dayobj %}
+                <h2>{{ sched_ctx.dayobj.day_type.name }}</h2>
+                {% for block in sched_ctx.blocks %}
+                <div class="eighth-block">
+                    <div class="block-header">
+                        {{ block.name }}
+                        <div class="block-signup">
+                            {{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            {% else %}
+                {% if sched_ctx.is_weekday %}
+                    No schedule available
+                {% else %}
+                    No school
+                {% endif %}
+            {% endif %}
+
     </div>
 </div>
 <style type="text/css">
 .schedule-widget {
     font-size: 13px;
-    text-align: center;
+}
+
+.schedule-arrows {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 175px;
+    margin-left: -87.5px;
 }
 
 .schedule-widget .schedule h2 {
     margin: 0;
     margin-bottom: -15px;
-    text-align: center;
 }
 
 .schedule-widget .bellschedule-table {
