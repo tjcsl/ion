@@ -19,17 +19,20 @@
     </div>
     <div class="widget-content schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}">
             {% if sched_ctx.dayobj %}
-                <h2>{{ sched_ctx.dayobj.day_type.name }}</h2>
                 {% for block in sched_ctx.blocks %}
-                <div class="eighth-block">
-                    <div class="block-header">
-                        {{ block.name }}
-                        <div class="block-signup">
-                            {{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}
-                            
+                    <div class="eighth-block">
+                        <div class="block-header">
+                            {% if forloop.first %}
+                                {{ sched_ctx.dayobj.day_type.name }}
+                            {% endif %}
+                            <div class="block-signup"{% if forloop.first %} style="top: 0"{% endif %}>
+                                {{ block.name }}
+                            </div>
+                            <a class="ui-link">
+                                {{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}
+                            </a>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
                 
             {% else %}
@@ -45,6 +48,17 @@
 <style type="text/css">
 .schedule-widget {
     font-size: 13px;
+}
+
+.widget-content.schedule .eighth-block,
+.widget-content.schedule .block-header,
+.widget-content.schedule .block-signup,
+.widget-content.schedule .ui-link {
+    height: 20px;
+}
+
+.widget-content.schedule {
+    padding-bottom: 10px;
 }
 
 .schedule-arrows {
@@ -82,4 +96,24 @@
     text-align: left;
 }
 
+@media (max-width: 960px) {
+    .schedule-arrows {
+        right: 0;
+        left: auto;
+    }
+}
+
+@media (max-width: 800px) {
+    .schedule-arrows {
+        right: auto;
+        left: 50%;
+    }
+}
+
+@media (max-width: 425px) {
+    .schedule-arrows {
+        right: 0;
+        left: auto;
+    }
+}
 </style>
