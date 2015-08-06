@@ -33,7 +33,7 @@ class Block(models.Model):
         return "{}: {}-{}".format(self.name, self.start, self.end)
 
     class Meta:
-        unique_together = (("name", "start", "end"))
+        unique_together = (("order", "name", "start", "end"))
         ordering = ("order", "name", "start", "end")
 
 
