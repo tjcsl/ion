@@ -1,0 +1,96 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load forms %}
+{% load math %}
+
+
+{% block title %}
+    {{ block.super }} - Preferences
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Preferences</h2>
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <h3>Personal Information</h3>
+            <table>
+                {% for field in personal_info_form %}
+                    {% if field|is_array_field %}
+                        <tr>
+                            <td>
+                                {% if field|field_array_index == 0 %}
+                                    {{ field.label_tag }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                            <td>
+                                {% if field|field_array_index != 0 %}
+                                    <td><a class="button"><i class="fa fa-times"></i></a></td>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if field|field_array_index == field|field_array_size|add:"-1" %}
+                            <tr>
+                                <td></td>
+                                <td><a class="button"><i class="fa fa-plus"></i> Add Another</a></td>
+                            </tr>
+                        {% endif %}
+
+                    {% else %}
+                        <tr>
+                            <td>{{ field.label_tag }}</td>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+            <br>
+            <h3>Preferred Picture</h3>
+            <p>Since the eighth period office and TJ faculty can always see your pictures, it is recommended that you choose your preferred picture even if you disable "Show Pictures" in Privacy Options.</p>
+
+            {% for choice in preferred_pic_form.preferred_picture %}
+                {{ choice.tag }} {{ choice.choice_label }}<br>
+            {% endfor %}
+
+            <br>
+
+            <h3>Privacy Options</h3>
+            <p>Note that all TJ staff can always view all of this information.</p>
+            <table class="privacy-options">
+                <thead>
+                    {% if request.user.is_student %}
+                        <th>Parent<br/>Permission</th>
+                    {% else %}
+                        <th>Can<br/>Enable</th>
+                    {% endif %}
+                    <th>Your<br/>Choice</th>
+                    <th></th>
+                </thead>
+                <tr>
+                    <td><input type="checkbox" disabled="disabled" checked="checked"></td>
+                    <td><input type="checkbox"></td>
+                    <td>Show ---</td>
+                </tr>
+            </table>
+
+            <br><br>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+{% endblock %}

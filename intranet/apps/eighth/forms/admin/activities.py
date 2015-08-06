@@ -13,6 +13,7 @@ class ActivityDisplayField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.aid, obj.name)
 
+
 class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.aid, obj.name)

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 import ldap
 import ldap.sasl
+from ldap.modlist import modifyModlist
 from threading import local
 from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
@@ -196,6 +197,21 @@ class LDAPConnection(object):
             raise
         return LDAPResult(r)
 
+    def set_attribute(self, dn, attribute, value):
+        old_entry = {
+            attribute: self.user_attributes(dn, [attribute]).first_result()
+        }
+
+        if isinstance(value, (list, tuple)):
+            value = [str(v) for v in value]
+
+        new_entry = {
+            attribute: value
+        }
+
+        mod = modifyModlist(old_entry, new_entry)
+        self.conn.modify_s(dn, mod)
+
 
 class LDAPResult(object):
 
@@ -219,7 +235,7 @@ class LDAPResult(object):
         elif isinstance(obj, tuple):
             return tuple(self.decode_obj(element) for element in obj)
         elif isinstance(obj, dict):
-            return dict({self.decode_obj(key): self.decode_obj(value) for key,value in obj.items()})
+            return dict({self.decode_obj(key): self.decode_obj(value) for key, value in obj.items()})
         else:
             try:
                 return obj.decode("utf-8")

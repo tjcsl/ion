@@ -25,10 +25,10 @@ urlpatterns = [
     url(r"^search", include("intranet.apps.search.urls")),
     url(r"^profile", include("intranet.apps.users.urls")),
     url(r"^schedule", include("intranet.apps.schedule.urls")),
+    url(r"^preferences", include("intranet.apps.preferences.urls")),
     url(r"^feedback", include("intranet.apps.feedback.urls")),
     url(r"^welcome", include("intranet.apps.welcome.urls")),
     url(r"^notifications", include("intranet.apps.notifications.urls")),
-    url(r"^prefs", include("intranet.apps.prefs.urls")),
 
     url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]

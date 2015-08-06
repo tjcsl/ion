@@ -338,7 +338,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not display_name:
             return self.full_name
         return display_name
-    
 
     @property
     def last_first(self):
@@ -347,7 +346,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return ("{}, {} ".format(self.last_name, self.first_name) +
                 "({})".format(self.student_id if self.student_id else self.username))
-    
 
     @property
     def short_name(self):
@@ -381,7 +379,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def tj_email(self):
         """
-        Get (or guess) a user's TJ email. If a fcps.edu or 
+        Get (or guess) a user's TJ email. If a fcps.edu or
         tjhsst.edu email is specified in their email list, use
         that. Otherwise, append the user's username to the proper
         email suffix, depending on whether they are a student or teacher.
@@ -392,13 +390,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if email.endswith(("@fcps.edu", "@tjhsst.edu")):
                     return email
 
-        if self.user_type == "tjhsstTeacher":
+        if self.is_teacher:
             domain = "fcps.edu"
         else:
             domain = "tjhsst.edu"
 
         return "{}@{}".format(self.username, domain)
-
 
     @property
     def grade(self):
@@ -684,7 +681,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                ["perm-showpictures-self",
                                                 "perm-showpictures"])
             default = default_result.first_result()
-            logger.debug(default)
             if "perm-showpictures" in default:
                 perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
 
@@ -725,7 +721,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
         """
-        key = ":".join([self.dn, 'user_info_permissions'])
+        key = ":".join([self.dn, "user_info_permissions"])
 
         cached = cache.get(key)
 
@@ -775,7 +771,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                     "self" in self.permissions and
                     "showeighth" in self.permissions["self"]
                 ) else False)
-    
 
     @property
     def is_eighth_admin(self):
@@ -946,6 +941,158 @@ class User(AbstractBaseUser, PermissionsMixin):
                 public = public and perms["self"][ldap_perm_name]
             return public
 
+    # Maps Python names for attributes to LDAP names and metadata
+    ldap_user_attributes = {
+        "ion_id": {
+            "ldap_name": "iodineUidNumber",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": False
+        },
+        "ion_username": {
+            "ldap_name": "iodineUid",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": False,
+            "can_set": False
+        },
+        "student_id": {
+            "ldap_name": "tjhsstStudentId",
+            "perm": "specialPerm_studentID",
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "common_name": {
+            "ldap_name": "cn",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "display_name": {
+            "ldap_name": "displayName",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "nickname": {
+            "ldap_name": "nickname",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "title": {
+            "ldap_name": "title",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "first_name": {
+            "ldap_name": "givenName",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "middle_name": {
+            "ldap_name": "middlename",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "last_name": {
+            "ldap_name": "sn",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "sex": {
+            "ldap_name": "gender",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "user_type": {
+            "ldap_name": "objectClass",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": False
+        },
+        "graduation_year": {
+            "ldap_name": "graduationYear",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": False
+        },
+        "preferred_photo": {
+            "ldap_name": "preferredPhoto",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "emails": {
+            "ldap_name": "mail",
+            "perm": None,
+            "is_list": True,
+            "cache": True,
+            "can_set": True
+        },
+        "home_phone": {
+            "ldap_name": "homePhone",
+            "perm": "showtelephone",
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "mobile_phone": {
+            "ldap_name": "mobile",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "other_phones": {
+            "ldap_name": "telephoneNumber",
+            "perm": None,
+            "is_list": True,
+            "cache": True,
+            "can_set": True
+        },
+        "webpages": {
+            "ldap_name": "webpage",
+            "perm": None,
+            "is_list": True,
+            "cache": True,
+            "can_set": True
+        },
+        "startpage": {
+            "ldap_name": "startpage",
+            "perm": None,
+            "is_list": False,
+            "cache": True,
+            "can_set": True
+        },
+        "admin_comments": {
+            "ldap_name": "eighthoffice-comments",
+            "perm": None,
+            "is_list": False,
+            "cache": False,
+            "can_set": True
+        }
+    }
+
     def __getattr__(self, name):
         """Return simple attributes of User
 
@@ -966,137 +1113,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        # This map essentially turns camelcase names into Python-style
-        # attribute names. The second  elements of the tuples indicateds
-        # whether the piece of information is restricted in LDAP (false
-        # if not protected, else the name of the permission).
-        user_attributes = {
-            "ion_id": {
-                "ldap_name": "iodineUidNumber",
-                "perm": None,
-                "is_list": False
-            },
-            "ion_username": {
-                "ldap_name": "iodineUid",
-                "perm": None,
-                "is_list": False
-            },
-            "student_id": {
-                "ldap_name": "tjhsstStudentId",
-                "perm": "specialPerm_studentID",
-                "is_list": False
-            },
-            "common_name": {
-                "ldap_name": "cn",
-                "perm": None,
-                "is_list": False
-            },
-            "display_name": {
-                "ldap_name": "displayName",
-                "perm": None,
-                "is_list": False
-            },
-            "nickname": {
-                "ldap_name": "nickname",
-                "perm": None,
-                "is_list": False
-            },
-            "title": {
-                "ldap_name": "title",
-                "perm": None,
-                "is_list": False
-            },
-            "first_name": {
-                "ldap_name": "givenName",
-                "perm": None,
-                "is_list": False
-            },
-            "middle_name": {
-                "ldap_name": "middlename",
-                "perm": None,
-                "is_list": False
-            },
-            "last_name": {
-                "ldap_name": "sn",
-                "perm": None,
-                "is_list": False
-            },
-            "sex": {
-                "ldap_name": "gender",
-                "perm": None,
-                "is_list": False
-            },
-            "user_type": {
-                "ldap_name": "objectClass",
-                "perm": None,
-                "is_list": False
-            },
-            "graduation_year": {
-                "ldap_name": "graduationYear",
-                "perm": None,
-                "is_list": False
-            },
-            "preferred_photo": {
-                "ldap_name": "preferredPhoto",
-                "perm": None,
-                "is_list": False
-            },
-            "emails": {
-                "ldap_name": "mail",
-                "perm": None,
-                "is_list": True
-            },
-            "home_phone": {
-                "ldap_name": "homePhone",
-                "perm": "showtelephone",
-                "is_list": False
-            },
-            "mobile_phone": {
-                "ldap_name": "mobile",
-                "perm": None,
-                "is_list": False
-            },
-            "other_phones": {
-                "ldap_name": "telephoneNumber",
-                "perm": None,
-                "is_list": True
-            },
-            # "google_talk": {
-            #     "ldap_name": "googleTalk",
-            #     "perm": None,
-            #     "is_list": False
-            # },
-            # "skype": {
-            #     "ldap_name": "skype",
-            #     "perm": None,
-            #     "is_list": False
-            # },
-            "webpages": {
-                "ldap_name": "webpage",
-                "perm": None,
-                "is_list": True
-            },
-            "startpage": {
-                "ldap_name": "startpage",
-                "perm": None,
-                "is_list": False
-            },
-            "admin_comments": {
-                "ldap_name": "eighthoffice-comments",
-                "perm": None,
-                "is_list": False,
-                "cache": False
-            }
-        }
-
-        if name not in user_attributes:
+        if name not in User.ldap_user_attributes:
             raise AttributeError("'User' has no attribute '{}'".format(name))
 
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
-        attr = user_attributes[name]
-        should_cache = "cache" not in attr or attr["cache"]
+        attr = User.ldap_user_attributes[name]
+        should_cache = attr["cache"]
         if should_cache:
             identifier = ":".join((self.dn, name))
             key = User.create_secure_cache_key(identifier)
@@ -1135,6 +1159,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
+    def set_ldap_attribute(self, name, value):
+        if ((name not in User.ldap_user_attributes) or
+                (not User.ldap_user_attributes[name]["can_set"])):
+            raise Exception("Can not set User attribute '{}'".format(name))
+
+        if self.dn is None:
+            raise Exception("Could not determine DN of User")
+
+        attr = User.ldap_user_attributes[name]
+        should_cache = attr["cache"]
+
+        if attr["is_list"] and not isinstance(value, (list, tuple)):
+            raise Exception("Expected list for attribute '{}'".format(name))
+
+        c = LDAPConnection()
+        field_name = attr["ldap_name"]
+        c.set_attribute(self.dn, field_name, value)
+
+        if should_cache:
+            identifier = ":".join((self.dn, name))
+            key = User.create_secure_cache_key(identifier)
+            cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
+
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an
@@ -1150,7 +1197,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_eighth_sponsor(self):
         """Return the :class:`EighthSponsor` that a given user is
         associated with.
-
         """
 
         from ..eighth.models import EighthSponsor
