@@ -95,6 +95,8 @@ class Announcement(models.Model):
 
     notify_post = models.BooleanField(default=True)
 
+    pinned = models.BooleanField(default=False)
+
     def get_author(self):
         return self.author if self.author else self.user.full_name
 
@@ -112,7 +114,7 @@ class Announcement(models.Model):
     
 
     class Meta:
-        ordering = ["-added"]
+        ordering = ["-pinned", "-added"]
 
 
 class AnnouncementRequest(models.Model):

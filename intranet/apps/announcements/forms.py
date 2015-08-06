@@ -12,6 +12,13 @@ class AnnouncementForm(forms.ModelForm):
 
     """
 
+    def __init__(self, *args, **kwargs):
+        super(AnnouncementForm, self).__init__(*args, **kwargs)
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for notifications "
+            "will receive an email. If the announcement is public, a link will be posted on Twitter."
+        )
+
     expiration_date = forms.DateTimeInput()
     class Meta:
         model = Announcement
@@ -21,7 +28,8 @@ class AnnouncementForm(forms.ModelForm):
             "content",
             "groups",
             "expiration_date",
-            "notify_post"
+            "notify_post",
+            "pinned"
         ]
 
 
