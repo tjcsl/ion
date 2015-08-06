@@ -54,7 +54,7 @@ class PrivacyOptionsForm(forms.Form):
         super(PrivacyOptionsForm, self).__init__(*args, **kwargs)
 
         def flag(label, default):
-            return forms.BooleanField(default=default, label=label)
+            return forms.BooleanField(initial=default, label=label)
 
         self.fields["showaddress"] = flag("Show Address", False)
         self.fields["showaddress-self"] = flag(None, False)
