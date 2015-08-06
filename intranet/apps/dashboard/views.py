@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from ..schedule.views import schedule_context
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import (
     EighthBlock, EighthSignup, EighthScheduledActivity
@@ -192,4 +193,6 @@ def dashboard_view(request):
         "hide_announcements": True,
         "user_hidden_announcements": user_hidden_announcements
     }
+    schedule = schedule_context(request)
+    context.update(schedule)
     return render(request, "dashboard/dashboard.html", context)
