@@ -69,6 +69,16 @@ def schedule_context(request=None, date=None):
     delta = -3 if date.isoweekday() == MONDAY else -1
     date_yesterday = date_format(date + timedelta(days=delta))
 
+    if request and request.user.is_eighth_admin:
+        try:
+            schedule_tomorrow = Day.objects.get(date=date_tomorrow)
+            if not schedule_tomorrow.day_type:
+                schedule_tomorrow = False
+        except Day.DoesNotExist:
+            schedule_tomorrow = False
+    else:
+        schedule_tomorrow = None
+
     return {
         "sched_ctx": {
             "dayobj": dayobj,
@@ -76,7 +86,8 @@ def schedule_context(request=None, date=None):
             "date": date,
             "is_weekday": is_weekday(date),
             "date_tomorrow": date_tomorrow,
-            "date_yesterday": date_yesterday
+            "date_yesterday": date_yesterday,
+            "schedule_tomorrow": schedule_tomorrow
         }
     }
 
