@@ -14,6 +14,7 @@ def preferences_view(request):
 
     context = {
         "personal_info_form": personal_info_form,
-        "preferred_pic_form": preferred_pic_form
+        "preferred_pic_form": preferred_pic_form,
+        "privacy_options_form": privacy_options_form
     }
     return render(request, "preferences/preferences.html", context)

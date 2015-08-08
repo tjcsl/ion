@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load forms %}
 {% load math %}
-
+{% load strings %}
 
 {% block title %}
     {{ block.super }} - Preferences
@@ -81,11 +81,29 @@
                     <th>Your<br/>Choice</th>
                     <th></th>
                 </thead>
-                <tr>
-                    <td><input type="checkbox" disabled="disabled" checked="checked"></td>
-                    <td><input type="checkbox"></td>
-                    <td>Show ---</td>
-                </tr>
+                {% for field in privacy_options_form %}
+                    <!--tr>
+                        <td><input type="checkbox" disabled="disabled" checked="checked"></td>
+                        <td><input type="checkbox"></td>
+                        <td>Show ---</td>
+                    </tr-->
+                    {% if not field.name|endswith:"-self" %}
+                        <tr>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                    {% else %}
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                            <td>
+                                {{ field.label }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             </table>
 
             <br><br>

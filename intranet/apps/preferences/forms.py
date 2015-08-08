@@ -56,14 +56,26 @@ class PrivacyOptionsForm(forms.Form):
         def flag(label, default):
             return forms.BooleanField(initial=default, label=label)
 
-        self.fields["showaddress"] = flag("Show Address", False)
-        self.fields["showaddress-self"] = flag(None, False)
+        self.fields["showaddress"] = flag(None, False)
+        self.fields["showaddress-self"] = flag("Show Address", False)
 
-        self.fields["showbirthday"] = flag("Show Birthday", False)
-        self.fields["showbirthday-self"] = flag(None, False)
+        self.fields["showphone"] = flag(None, False)
+        self.fields["showphone-self"] = flag("Show Phone", False)
+
+        self.fields["showbirthday"] = flag(None, False)
+        self.fields["showbirthday-self"] = flag("Show Birthday", False)
 
         pictures_label = "Show Pictures"
         if user.is_student:
             pictures_label += " on Import"
-        self.fields["showpictures"] = flag(pictures_label, False)
-        self.fields["showpictures-self"] = flag(None, False)
+        self.fields["showpictures"] = flag(None, False)
+        self.fields["showpictures-self"] = flag(pictures_label, False)
+
+        self.fields["showschedule"] = flag(None, False)
+        self.fields["showschedule-self"] = flag("Show Class Schedule", False)
+
+        self.fields["showeighth"] = flag(None, False)
+        self.fields["showeighth-self"] = flag("Show 8th Pd. Schedule", False)
+
+        #self.fields["showlocker"] = flag(None, False)
+        #self.fields["showlocker-self"] = flag("Show Locker", False)
