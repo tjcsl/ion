@@ -7,9 +7,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def preferences_view(request):
-    user = request.user
-
+def get_personal_info(user):
+    """Get a user's personal info attributes to pass as an initial
+       value to a PersonalInformationForm
+    """
     # number of additional phones (other_phones)
     num_phones = len(user.other_phones or [])
     num_emails = len(user.emails or [])
@@ -29,20 +30,23 @@ def preferences_view(request):
     for i in range(num_webpages):
         personal_info["webpage_{}".format(i)] = user.webpages[i]
 
-    logger.debug(personal_info)
+    return personal_info
 
-    personal_info_form = PersonalInformationForm(num_phones=num_phones,
-                                                 num_emails=num_emails,
-                                                 num_webpages=num_webpages,
-                                                 initial=personal_info)
+def get_preferred_pic(user):
+    """Get a user's preferred picture attributes to pass as an initial
+       value to a PreferredPictureForm.
+    """
 
     preferred_pic = {
         "preferred_photo": user.preferred_photo
     }
 
-    logger.debug(preferred_pic)
+    return get_preferred_pic
 
-    preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+def get_privacy_options(user):
+    """Get a user's privacy options to pass as an initial value to
+       a PrivacyOptionsForm.
+    """
 
     privacy_options = {}
 
@@ -59,8 +63,24 @@ def preferences_view(request):
             privacy_options["photoperm-{}".format(field)] = user.photo_permissions["parent"]
             privacy_options["photoperm-{}-{}".format(field, "self")] = user.photo_permissions["self"][field]
 
-    logger.debug(privacy_options)
+    return privacy_options
 
+def preferences_view(request):
+    user = request.user
+
+    personal_info = get_personal_info(user)
+    logger.debug(personal_info)
+    personal_info_form = PersonalInformationForm(num_phones=num_phones,
+                                                 num_emails=num_emails,
+                                                 num_webpages=num_webpages,
+                                                 initial=personal_info)
+
+    perferred_pic = get_preferred_pic(user)
+    logger.debug(preferred_pic)
+    preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+
+    privacy_options = get_privacy_options(user)
+    logger.debug(privacy_options)
     privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
 
     context = {

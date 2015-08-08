@@ -14,6 +14,15 @@ class PersonalInformationForm(forms.Form):
                  *args, **kwargs):
         super(PersonalInformationForm, self).__init__(*args, **kwargs)
 
+        if num_phones == 0:
+            num_phones = 1
+
+        if num_emails == 0:
+            num_emails = 1
+
+        if num_webpages == 0:
+            num_webpages = 1
+
         self.num_phones = num_phones
         self.num_emails = num_emails
         self.num_webpages = num_webpages
