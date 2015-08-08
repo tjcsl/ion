@@ -1189,6 +1189,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
 
     def clear_cache(self):
+        logger.debug("Clearing LDAP user cache for {}".format(self.dn))
         for attr in User.ldap_user_attributes:
             cache.delete(":".join((self.dn, attr)))
             cache.delete(User.create_secure_cache_key(":".join((self.dn, attr))))

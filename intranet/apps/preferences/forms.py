@@ -53,7 +53,7 @@ class PrivacyOptionsForm(forms.Form):
         super(PrivacyOptionsForm, self).__init__(*args, **kwargs)
 
         def flag(label, default):
-            return forms.BooleanField(initial=default, label=label)
+            return forms.BooleanField(initial=default, label=label, required=False)
 
         self.fields["showaddress"] = flag(None, False)
         self.fields["showaddress-self"] = flag("Show Address", False)
@@ -93,7 +93,7 @@ class NotificationOptionsForm(forms.Form):
         super(NotificationOptionsForm, self).__init__(*args, **kwargs)
         
         def flag(label, default):
-            return forms.BooleanField(initial=default, label=label)
+            return forms.BooleanField(initial=default, label=label, required=False)
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
         self.fields["receive_eighth_emails"] = flag("Receive Eighth Pd. Emails", False)
