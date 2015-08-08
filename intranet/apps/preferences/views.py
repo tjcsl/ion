@@ -43,6 +43,70 @@ def get_personal_info(user):
 
     return personal_info, num_fields
 
+def save_personal_info(request, user):
+    personal_info, num_fields = get_personal_info(user)
+    personal_info_form = PersonalInformationForm(num_fields=num_fields, data=request.POST, initial=personal_info)
+    logger.debug(personal_info_form)
+    if personal_info_form.is_valid():
+        logger.debug("Personal info: valid")
+        if personal_info_form.has_changed():
+            fields = personal_info_form.cleaned_data
+            logger.debug(fields)
+            single_fields = ["mobile_phone", "home_phone"]
+            multi_fields = {}
+            multi_fields_to_update = []
+
+            for field in fields:
+                if field not in single_fields:
+                    full_field_arr = field.rsplit("_", 1)
+                    full_field_name = full_field_arr[0]
+                    field_num = int(full_field_arr[1])
+
+                    if full_field_name in multi_fields:
+                        multi_fields[full_field_name][field_num] = fields[field]
+                    else:
+                        multi_fields[full_field_name] = {field_num: fields[field]}
+
+                if field in personal_info and personal_info[field] == fields[field]:
+                    logger.debug("{}: same ({})".format(field, fields[field]))
+                else:
+                    logger.debug("{}: new: {} from: {}".format(field,
+                                                              fields[field], 
+                                                              personal_info[field] if field in personal_info else None))
+                    if field in single_fields:
+                        if len(fields[field]) < 1:
+                            logger.debug("Field {} with blank value becomes None".format(field))
+                            fields[field] = None
+
+                        try:
+                            user.set_ldap_attribute(field, "{}".format(fields[field]))
+                        except Exception as e:
+                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                        else:
+                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
+                    else:
+                        logger.debug("Need to update {} because {} changed".format(full_field_name, field))
+                        multi_fields_to_update.append(full_field_name)
+
+            logger.debug(multi_fields_to_update)
+            for full_field in multi_fields_to_update:
+                ldap_full_field = "{}s".format(full_field)
+                field_vals = multi_fields[full_field].values()
+                for v in field_vals:
+                    if not v:
+                        field_vals.remove(v)
+
+                try:
+                    user.set_ldap_attribute(ldap_full_field, field_vals)
+                except Exception as e:
+                    messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                    logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                else:
+                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals))
+    return personal_info_form
+
+
 def get_preferred_pic(user):
     """Get a user's preferred picture attributes to pass as an initial
        value to a PreferredPictureForm.
@@ -53,6 +117,33 @@ def get_preferred_pic(user):
     }
 
     return preferred_pic
+
+def save_preferred_pic(request, user):
+    preferred_pic = get_preferred_pic(user)
+    logger.debug(preferred_pic)
+    preferred_pic_form = PreferredPictureForm(user, data=request.POST, initial=preferred_pic)
+    if preferred_pic_form.is_valid():
+        logger.debug("Preferred pic form: valid")
+        if preferred_pic_form.has_changed():
+            fields = preferred_pic_form.cleaned_data
+            logger.debug(fields)
+            for field in fields:
+                if field == "preferred_photo":
+                    if preferred_pic[field] == fields[field]:
+                        logger.debug("{}: same ({})".format(field, fields[field]))
+                    else:
+                        logger.debug("{}: new: {} from: {}".format(field,
+                                                              fields[field], 
+                                                              preferred_pic[field] if field in preferred_pic else None))
+                        try:
+                            user.set_ldap_attribute(field, fields[field])
+                        except Exception as e:
+                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                        else:
+                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
+    return preferred_pic_form
+
 
 def get_privacy_options(user):
     """Get a user's privacy options to pass as an initial value to
@@ -76,6 +167,32 @@ def get_privacy_options(user):
 
     return privacy_options
 
+def save_privacy_options(request, user):
+    privacy_options = get_privacy_options(user)
+    logger.debug(privacy_options)
+    privacy_options_form = PrivacyOptionsForm(user, data=request.POST, initial=privacy_options)
+    if privacy_options_form.is_valid():
+        logger.debug("Privacy options form: valid")
+        if privacy_options_form.has_changed():
+            fields = privacy_options_form.cleaned_data
+            logger.debug(fields)
+            for field in fields:
+                if field in privacy_options and privacy_options[field] == fields[field]:
+                    logger.debug("{}: same ({})".format(field, fields[field]))
+                else:
+                    logger.debug("{}: new: {} from: {}".format(field,
+                                                              fields[field], 
+                                                              privacy_options[field] if field in privacy_options else None))
+                    try:
+                        user.set_ldap_attribute(field, fields[field])
+                    except Exception as e:
+                        messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                        logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                    else:
+                        messages.success(request, "Set field {} to {}".format(field, fields[field]))
+    return privacy_options_form
+
+
 def get_notification_options(user):
     """Get a user's notification options to pass as an initial value to
        a NotificationOptionsForm.
@@ -87,6 +204,27 @@ def get_notification_options(user):
 
     return notification_options
 
+def save_notification_options(request, user):
+    notification_options = get_notification_options(user)
+    logger.debug(notification_options)
+    notification_options_form = NotificationOptionsForm(user, data=request.POST, initial=notification_options)
+    if notification_options_form.is_valid():
+        logger.debug("Notification options form: valid")
+        if notification_options_form.has_changed():
+            fields = notification_options_form.cleaned_data
+            logger.debug(fields)
+            for field in fields:
+                if field in notification_options and notification_options[field] == fields[field]:
+                    logger.debug("{}: same ({})".format(field, fields[field]))
+                else:
+                    logger.debug("{}: new: {} from: {}".format(field,
+                                                              fields[field], 
+                                                              notification_options[field] if field in notification_options else None))
+                    setattr(user, field, fields[field])
+                    user.save()
+                    messages.success(request, "Set field {} to {}".format(field, fields[field]))
+    return notification_options_form
+
 def preferences_view(request):
     """View and process updates to the preferences page.
     """
@@ -96,136 +234,11 @@ def preferences_view(request):
     user.clear_cache()
 
     if request.method == "POST":
-        personal_info, num_fields = get_personal_info(user)
-        personal_info_form = PersonalInformationForm(num_fields=num_fields, data=request.POST, initial=personal_info)
-        logger.debug(personal_info_form)
-        if personal_info_form.is_valid():
-            logger.debug("Personal info: valid")
-            if personal_info_form.has_changed():
-                fields = personal_info_form.cleaned_data
-                logger.debug(fields)
-                single_fields = ["mobile_phone", "home_phone"]
-                multi_fields = {}
-                multi_fields_to_update = []
-
-                for field in fields:
-                    if field not in single_fields:
-                        full_field_arr = field.rsplit("_", 1)
-                        full_field_name = full_field_arr[0]
-                        field_num = int(full_field_arr[1])
-
-                        if full_field_name in multi_fields:
-                            multi_fields[full_field_name][field_num] = fields[field]
-                        else:
-                            multi_fields[full_field_name] = {field_num: fields[field]}
-
-                    if field in personal_info and personal_info[field] == fields[field]:
-                        logger.debug("{}: same ({})".format(field, fields[field]))
-                    else:
-                        logger.debug("{}: new: {} from: {}".format(field,
-                                                                  fields[field], 
-                                                                  personal_info[field] if field in personal_info else None))
-                        if field in single_fields:
-                            if len(fields[field]) < 1:
-                                logger.debug("Field {} with blank value becomes None".format(field))
-                                fields[field] = None
-
-                            try:
-                                user.set_ldap_attribute(field, "{}".format(fields[field]))
-                            except Exception as e:
-                                messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                                logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
-                            else:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field]))
-                        else:
-                            logger.debug("Need to update {} because {} changed".format(full_field_name, field))
-                            multi_fields_to_update.append(full_field_name)
-
-                logger.debug(multi_fields_to_update)
-                for full_field in multi_fields_to_update:
-                    ldap_full_field = "{}s".format(full_field)
-                    field_vals = multi_fields[full_field].values()
-                    for v in field_vals:
-                        if not v:
-                            field_vals.remove(v)
-
-                    try:
-                        user.set_ldap_attribute(ldap_full_field, field_vals)
-                    except Exception as e:
-                        messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                        logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                    else:
-                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals))
-
-                logger.debug("Complete.")
-
-
-        preferred_pic = get_preferred_pic(user)
-        logger.debug(preferred_pic)
-        preferred_pic_form = PreferredPictureForm(user, data=request.POST, initial=preferred_pic)
-        if preferred_pic_form.is_valid():
-            logger.debug("Preferred pic form: valid")
-            if preferred_pic_form.has_changed():
-                fields = preferred_pic_form.cleaned_data
-                logger.debug(fields)
-                for field in fields:
-                    if field == "preferred_photo":
-                        if preferred_pic[field] == fields[field]:
-                            logger.debug("{}: same ({})".format(field, fields[field]))
-                        else:
-                            logger.debug("{}: new: {} from: {}".format(field,
-                                                                  fields[field], 
-                                                                  preferred_pic[field] if field in preferred_pic else None))
-                            try:
-                                user.set_ldap_attribute(field, fields[field])
-                            except Exception as e:
-                                messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                                logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
-                            else:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field]))
-
-        privacy_options = get_privacy_options(user)
-        logger.debug(privacy_options)
-        privacy_options_form = PrivacyOptionsForm(user, data=request.POST, initial=privacy_options)
-        if privacy_options_form.is_valid():
-            logger.debug("Privacy options form: valid")
-            if privacy_options_form.has_changed():
-                fields = privacy_options_form.cleaned_data
-                logger.debug(fields)
-                for field in fields:
-                    if field in privacy_options and privacy_options[field] == fields[field]:
-                        logger.debug("{}: same ({})".format(field, fields[field]))
-                    else:
-                        logger.debug("{}: new: {} from: {}".format(field,
-                                                                  fields[field], 
-                                                                  privacy_options[field] if field in privacy_options else None))
-                        try:
-                            user.set_ldap_attribute(field, fields[field])
-                        except Exception as e:
-                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
-                        else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
-
-
-        notification_options = get_notification_options(user)
-        logger.debug(notification_options)
-        notification_options_form = NotificationOptionsForm(user, data=request.POST, initial=notification_options)
-        if notification_options_form.is_valid():
-            logger.debug("Notification options form: valid")
-            if notification_options_form.has_changed():
-                fields = notification_options_form.cleaned_data
-                logger.debug(fields)
-                for field in fields:
-                    if field in notification_options and notification_options[field] == fields[field]:
-                        logger.debug("{}: same ({})".format(field, fields[field]))
-                    else:
-                        logger.debug("{}: new: {} from: {}".format(field,
-                                                                  fields[field], 
-                                                                  notification_options[field] if field in notification_options else None))
-                        setattr(user, field, fields[field])
-                        user.save()
-                        messages.success(request, "Set field {} to {}".format(field, fields[field]))
+        
+        personal_info_form = save_personal_info(request, user)
+        preferred_pic_form = save_preferred_pic(request, user)
+        privacy_options_form = save_privacy_options(request, user)
+        notification_options_form = save_notification_options(request, user)
 
     else:
         personal_info, num_fields = get_personal_info(user)
