@@ -72,7 +72,9 @@ $(function() {
 
     $(".selectize-loading").remove();
 
-    $("input.datepicker, input[name=date]").datepicker();
+    $("input.datepicker, input[name=date]").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
 
 
     // Set up dashboard links dependent on the status of <select> inputs
