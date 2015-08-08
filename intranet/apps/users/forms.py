@@ -2,6 +2,8 @@ from django import forms
 
 class ProfileEditForm(forms.Form):
     """A form containing editable fields in the User model."""
+    admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea)
+
     student_id = forms.IntegerField(label="FCPS Student ID")
     first_name = forms.CharField(label="First Name")
     middle_name = forms.CharField(label="Middle Name")
@@ -20,7 +22,8 @@ class ProfileEditForm(forms.Form):
     counselor_id = forms.IntegerField(label="Counselor ID")
     #locker = forms.CharField(label="Locker")
     
-    FIELDS = ["student_id",
+    FIELDS = ["admin_comments",
+              "student_id",
               "first_name",
               "middle_name",
               "last_name",

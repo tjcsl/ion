@@ -76,8 +76,8 @@ def edit_profile_view(request, user_id=None):
                 else:
                     messages.success(request, "Set field {} to {}".format(key, new_data[key]))
         user.save()
-
-    form = ProfileEditForm(initial=defaults)
+    else:
+        form = ProfileEditForm(initial=defaults)
 
     context = {
         "profile_user": user,
