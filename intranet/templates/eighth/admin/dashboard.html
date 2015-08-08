@@ -49,10 +49,10 @@
         <td class="admin-section">
             <h3>Blocks</h3>
 
-            {% if blocks_today %}
+            {% if blocks_next %}
                 <b>Today:</b>
-                <ul class="fa-ul blocks-today">
-                {% for blk in blocks_today %}
+                <ul class="fa-ul blocks-next">
+                {% for blk in blocks_next %}
                     <li>
                         {% if blk.locked %}
                             <a href="{% url 'eighth_admin_edit_block' blk.id %}">
@@ -69,7 +69,7 @@
                                 <i class="fa-li fa fa-exclamation-triangle"></i>
                                 <b>{{ blk.block_letter }} Block:</b></a> 
                             <b>Unlocked; close time set to {{ blk.signup_time }}</b>
-                        {% endif %}
+                        {% endif %} &mdash; {{ blk.num_signups }} signup{{ blk.num_signups|pluralize }}
                     </li>
                 {% endfor %}
                 </ul>

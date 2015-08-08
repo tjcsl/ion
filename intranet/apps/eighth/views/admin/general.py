@@ -21,7 +21,10 @@ def eighth_admin_dashboard_view(request, **kwargs):
     blocks_after_start_date = (EighthBlock.objects
                                           .filter(date__gte=start_date)
                                           .order_by("date"))
-    blocks_today = EighthBlock.objects.filter(date=datetime.now().date())
+    if blocks_after_start_date.count() == 0:
+        blocks_next = []
+    else:
+        blocks_next = EighthBlock.objects.filter(date=blocks_after_start_date[0].date)
     groups = Group.objects.order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.select_related('user').order_by("last_name", "first_name")
@@ -33,7 +36,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "groups": groups,
         "rooms": rooms,
         "sponsors": sponsors,
-        "blocks_today": blocks_today,
+        "blocks_next": blocks_next,
 
         "admin_page_title": "Eighth Period Admin",
 

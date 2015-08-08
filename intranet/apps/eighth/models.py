@@ -383,6 +383,10 @@ class EighthBlock(AbstractBaseEighthModel):
         """Is the signup time in the future?"""
         return self.signup_time > datetime.datetime.now().time()
 
+    def num_signups(self):
+        """ How many people have signed up?"""
+        return EighthSignup.objects.filter(scheduled_activity__block=self).count()
+
     @property
     def letter_width(self):
         return (len(self.block_letter) - 1) * 6 + 15

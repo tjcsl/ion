@@ -69,7 +69,7 @@ def schedule_context(request=None, date=None):
     delta = -3 if date.isoweekday() == MONDAY else -1
     date_yesterday = date_format(date + timedelta(days=delta))
 
-    if request and request.user.is_eighth_admin:
+    if request and request.user.is_authenticated() and request.user.is_eighth_admin:
         try:
             schedule_tomorrow = Day.objects.get(date=date_tomorrow)
             if not schedule_tomorrow.day_type:
