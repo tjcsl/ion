@@ -7,37 +7,24 @@ logger = logging.getLogger(__name__)
 
 
 class PersonalInformationForm(forms.Form):
-    def __init__(self,
-                 num_phones=1,
-                 num_emails=1,
-                 num_webpages=1,
-                 *args, **kwargs):
+    def __init__(self, num_fields, *args, **kwargs):
         super(PersonalInformationForm, self).__init__(*args, **kwargs)
 
-        if num_phones == 0:
-            num_phones = 1
+        self.num_phones = max(num_fields["phones"], 1)
+        self.num_emails = max(num_fields["emails"], 1)
+        self.num_webpages = max(num_fields["webpages"], 1)
 
-        if num_emails == 0:
-            num_emails = 1
+        for i in range(self.num_phones):
+            self.fields["other_phone_{}".format(i)] = forms.CharField(max_length=50, required=False, label="Other phone(s)")
 
-        if num_webpages == 0:
-            num_webpages = 1
+        for i in range(self.num_emails):
+            self.fields["email_{}".format(i)] = forms.EmailField(required=False, label="Email(s)")
 
-        self.num_phones = num_phones
-        self.num_emails = num_emails
-        self.num_webpages = num_webpages
+        for i in range(self.num_webpages):
+            self.fields["webpage_{}".format(i)] = forms.URLField(required=False, label="Webpage(s)")
 
-        for i in range(num_phones):
-            self.fields["other_phone_{}".format(i)] = forms.CharField(max_length=50, required=True, label="Other phone(s)")
-
-        for i in range(num_emails):
-            self.fields["email_{}".format(i)] = forms.EmailField(required=True, label="Email(s)")
-
-        for i in range(num_webpages):
-            self.fields["webpage_{}".format(i)] = forms.URLField(required=True, label="Webpage(s)")
-
-    mobile_phone = forms.CharField(max_length=50, required=True, label="Mobile phone")
-    home_phone = forms.CharField(max_length=50, required=True, label="Home phone")
+    mobile_phone = forms.CharField(max_length=50, required=False, label="Mobile phone")
+    home_phone = forms.CharField(max_length=50, required=False, label="Home phone")
 
 
 class PreferredPictureForm(forms.Form):
