@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from ..users.models import User
 from .forms import (
     PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm, NotificationOptionsForm
 )
@@ -225,6 +227,7 @@ def save_notification_options(request, user):
                     messages.success(request, "Set field {} to {}".format(field, fields[field]))
     return notification_options_form
 
+@login_required
 def preferences_view(request):
     """View and process updates to the preferences page.
     """
@@ -266,3 +269,30 @@ def preferences_view(request):
         "notification_options_form": notification_options_form
     }
     return render(request, "preferences/preferences.html", context)
+
+@login_required
+def privacy_options_view(request):
+    """View and edit privacy options for a user.
+    """
+    if "user" in request.GET:
+        user = User.objects.get(id=request.GET.get("user"))
+    elif "student_id" in request.GET:
+        user = User.objects.user_with_student_id(request.GET.get("student_id"))
+    else:
+        user = request.user
+
+    if not user:
+        messages.error(request, "Invalid user.")
+        user = request.user
+
+    if request.method == "POST":
+        privacy_options_form = save_privacy_options(request, user)
+    else:
+        privacy_options = get_privacy_options(user)
+        privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
+
+    context = {
+        "privacy_options_form": privacy_options_form,
+        "profile_user": user
+    }
+    return render(request, "preferences/privacy_options.html", context)

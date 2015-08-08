@@ -1,0 +1,101 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load forms %}
+{% load math %}
+{% load strings %}
+
+{% block title %}
+    {{ block.super }} - Preferences
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        $("#user_select").selectize();
+    })
+    </script>
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+    {% endif %}
+    <h2>Privacy Options</h2>
+
+    <br />
+
+    {% if request.user.is_eighth_admin %}
+        <form action="" method="get">
+        <table>
+            <tr>
+            <td style="line-height: 32px">
+                Enter Student ID:
+            </td>
+            <td>
+                <input type="text" name="student_id" value="{{ request.GET.student_id|default:""|escape }}" />
+            </td>
+            <td>
+                <input type="submit" value="Edit" />
+            </td>
+            </tr>
+        </table>
+        </form>
+        
+        <br />
+
+        <h3>Student: {{ profile_user.full_name }} ({{ profile_user.student_id|default:profile_user.id }})</h3>
+    {% endif %}
+
+    <section class="user-privacy-edit">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table class="privacy-options">
+                <thead>
+                    <th>Parent<br/>Permission</th>
+                    <th>Student<br/>Choice</th>
+                    <th></th>
+                </thead>
+                {% for field in privacy_options_form %}
+                    <!--tr>
+                        <td><input type="checkbox" disabled="disabled" checked="checked"></td>
+                        <td><input type="checkbox"></td>
+                        <td>Show ---</td>
+                    </tr-->
+                    {% if not field.name|endswith:"-self" %}
+                        <tr>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                    {% else %}
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                            <td>
+                                {{ field.label }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+            <br />
+
+            <button type="submit">Save</button>
+        </form>
+
+    </section>
+</div>
+{% endblock %}
