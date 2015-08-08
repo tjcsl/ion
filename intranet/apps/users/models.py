@@ -1175,6 +1175,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         if attr["is_list"] and not isinstance(value, (list, tuple)):
             raise Exception("Expected list for attribute '{}'".format(name))
 
+        # Possible issue with python ldap with unicode values
+        if isinstance(value, (unicode, str)):
+            value = str(value)
+
         c = LDAPConnection()
         field_name = attr["ldap_name"]
         c.set_attribute(self.dn, field_name, value)
