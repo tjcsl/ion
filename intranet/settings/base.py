@@ -252,6 +252,7 @@ INSTALLED_APPS = (
     "intranet.apps.schedule",
     "intranet.apps.notifications",
     "intranet.apps.users",
+    "intranet.apps.preferences",
     "intranet.middleware.environment",
     "widget_tweaks",
     "django_extensions",

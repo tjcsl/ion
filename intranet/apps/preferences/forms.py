@@ -74,6 +74,14 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["showpictures"] = flag(None, False)
         self.fields["showpictures-self"] = flag(pictures_label, False)
 
+        photos = user.photo_permissions["self"]
+
+        for i in range(4):
+            grade = Grade.names[i]
+            if photos[grade] is not None:
+                self.fields["photoperm-{}".format(grade)] = flag(None, False)
+                self.fields["photoperm-{}-self".format(grade)] = flag("Show {} Photo".format(grade.capitalize()), False)
+
         self.fields["showschedule"] = flag(None, False)
         self.fields["showschedule-self"] = flag("Show Class Schedule", False)
 

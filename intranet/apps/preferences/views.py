@@ -53,6 +53,12 @@ def preferences_view(request):
             else:
                 privacy_options[field] = user.permissions[ptype][field]
 
+    
+    for field in user.photo_permissions["self"]:
+        if field != "default": # photo_permissions["default"] is the same as show on import
+            privacy_options["photoperm-{}".format(field)] = user.photo_permissions["parent"]
+            privacy_options["photoperm-{}-{}".format(field, "self")] = user.photo_permissions["self"][field]
+
     logger.debug(privacy_options)
 
     privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
