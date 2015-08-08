@@ -211,6 +211,21 @@ def preferences_view(request):
         notification_options = get_notification_options(user)
         logger.debug(notification_options)
         notification_options_form = NotificationOptionsForm(user, data=request.POST, initial=notification_options)
+        if notification_options_form.is_valid():
+            logger.debug("Notification options form: valid")
+            if notification_options_form.has_changed():
+                fields = notification_options_form.cleaned_data
+                logger.debug(fields)
+                for field in fields:
+                    if field in notification_options and notification_options[field] == fields[field]:
+                        logger.debug("{}: same ({})".format(field, fields[field]))
+                    else:
+                        logger.debug("{}: new: {} from: {}".format(field,
+                                                                  fields[field], 
+                                                                  notification_options[field] if field in notification_options else None))
+                        setattr(user, field, fields[field])
+                        user.save()
+                        messages.success(request, "Set field {} to {}".format(field, fields[field]))
 
     else:
         personal_info, num_fields = get_personal_info(user)

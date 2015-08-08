@@ -82,7 +82,7 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["showschedule-self"] = flag("Show Class Schedule", False)
 
         self.fields["showeighth"] = flag(None, False)
-        self.fields["showeighth-self"] = flag("Show 8th Pd. Schedule", False)
+        self.fields["showeighth-self"] = flag("Show Eighth Period Schedule", False)
 
         #self.fields["showlocker"] = flag(None, False)
         #self.fields["showlocker-self"] = flag("Show Locker", False)
@@ -90,7 +90,7 @@ class PrivacyOptionsForm(forms.Form):
         if not user.is_ldap_admin:
             for name in self.fields:
                 if not name.endswith("-self"):
-                    self.fields[name].widget.attrs.update({ "disabled": "disabled" })
+                    self.fields[name].widget.attrs['class'] = 'disabled'
 
 
 class NotificationOptionsForm(forms.Form):
@@ -101,5 +101,5 @@ class NotificationOptionsForm(forms.Form):
             return forms.BooleanField(initial=default, label=label, required=False)
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
-        self.fields["receive_eighth_emails"] = flag("Receive Eighth Pd. Emails", False)
+        self.fields["receive_eighth_emails"] = flag("Receive Eighth Period Emails", False)
 

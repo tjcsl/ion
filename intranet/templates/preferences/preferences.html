@@ -43,6 +43,15 @@
         tr.remove();
     }
 
+    $(function() {
+        $("input.disabled").each(function() {
+            $(this).attr("data-state", $(this).prop("checked"));
+            $(this).click(function() {
+                $(this).prop("checked", $(this).attr("data-state"));
+            })
+        })
+    })
+
     </script>
 {% endblock %}
 
