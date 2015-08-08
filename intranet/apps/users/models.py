@@ -1188,6 +1188,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
 
+    def clear_cache(self):
+        for attr in User.ldap_user_attributes:
+            cache.delete(":".join((self.dn, attr)))
+            cache.delete(User.create_secure_cache_key(":".join((self.dn, attr))))
+
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an

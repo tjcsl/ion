@@ -86,3 +86,15 @@ class PrivacyOptionsForm(forms.Form):
 
         #self.fields["showlocker"] = flag(None, False)
         #self.fields["showlocker-self"] = flag("Show Locker", False)
+
+
+class NotificationOptionsForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        super(NotificationOptionsForm, self).__init__(*args, **kwargs)
+        
+        def flag(label, default):
+            return forms.BooleanField(initial=default, label=label)
+
+        self.fields["receive_news_emails"] = flag("Receive News Emails", False)
+        self.fields["receive_eighth_emails"] = flag("Receive Eighth Pd. Emails", False)
+

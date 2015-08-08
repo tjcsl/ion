@@ -38,6 +38,11 @@
         tr.before(newPr);
     }
 
+    remove_field = function(btn) {
+        var tr = $(btn).parent().parent();
+        tr.remove();
+    }
+
     </script>
 {% endblock %}
 
@@ -64,11 +69,9 @@
                             </td>
                             <td class="remove">
                                 {% if field|field_array_index != 0 %}
-                                    <td>
-                                        <button onclick="remove_field(this)">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                    </td>
+                                    <button onclick="remove_field(this);return false">
+                                        <i class="fa fa-times"></i>
+                                    </button>
                                 {% endif %}
                             </td>
                         </tr>
@@ -76,7 +79,7 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <button onclick="add_field(this)">
+                                    <button onclick="add_field(this);return false">
                                         <i class="fa fa-plus"></i> Add Another
                                     </button>
                                 </td>
@@ -142,7 +145,26 @@
                 {% endfor %}
             </table>
 
-            <br><br>
+            <br />
+
+            <h3>Notification Options</h3>
+            <p>Change how you receive notifications from Intranet.</p>
+            <table class="notification-options">
+                {% for field in notification_options_form %}
+                    <tr>
+                        <td>
+                            {{ field.errors }}
+                            {{ field }}
+                        </td>
+                        <td>
+                            {{ field.label }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <br />
+            <br />
 
             <button type="submit">Save</button>
         </form>

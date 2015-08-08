@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.shortcuts import render
 from .forms import (
-    PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm
+    PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm, NotificationOptionsForm
 )
 
 import logging
@@ -76,10 +76,24 @@ def get_privacy_options(user):
 
     return privacy_options
 
+def get_notification_options(user):
+    """Get a user's notification options to pass as an initial value to
+       a NotificationOptionsForm.
+    """
+
+    notification_options = {}
+    notification_options["receive_news_emails"] = user.receive_news_emails
+    notification_options["receive_eighth_emails"] = user.receive_eighth_emails
+
+    return notification_options
+
 def preferences_view(request):
     """View and process updates to the preferences page.
     """
     user = request.user
+
+    # Clear cache on every pageload
+    user.clear_cache()
 
     if request.method == "POST":
         personal_info, num_fields = get_personal_info(user)
@@ -170,9 +184,15 @@ def preferences_view(request):
         logger.debug(privacy_options)
         privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
 
+
+        notification_options = get_notification_options(user)
+        logger.debug(notification_options)
+        notification_options_form = NotificationOptionsForm(user, initial=notification_options)
+
     context = {
         "personal_info_form": personal_info_form,
         "preferred_pic_form": preferred_pic_form,
-        "privacy_options_form": privacy_options_form
+        "privacy_options_form": privacy_options_form,
+        "notification_options_form": notification_options_form
     }
     return render(request, "preferences/preferences.html", context)
