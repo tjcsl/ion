@@ -27,7 +27,8 @@ class PersonalInformationForm(forms.Form):
         for i in range(num_webpages):
             self.fields["webpage_{}".format(i)] = forms.URLField(required=True, label="Webpage(s)")
 
-    cell_phone = forms.CharField(max_length=50, required=True, label="Cell phone")
+    mobile_phone = forms.CharField(max_length=50, required=True, label="Mobile phone")
+    home_phone = forms.CharField(max_length=50, required=True, label="Home phone")
 
 
 class PreferredPictureForm(forms.Form):
@@ -43,6 +44,8 @@ class PreferredPictureForm(forms.Form):
             grade = Grade.names[i]
             if photos[grade] is not None:
                 self.PREFERRED_PICTURE_CHOICES += [(grade, grade.title() + " Photo")]
+
+
 
         self.fields["preferred_picture"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
                                                              widget=forms.RadioSelect(),
