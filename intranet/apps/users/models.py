@@ -324,6 +324,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
+        if perm == "ldap":
+            # not all of admin_all has LDAP permissions
+            return self.member_of("admin_ldap")
+
         return self.member_of("admin_all") or self.member_of("admin_" + perm)
 
     @property
@@ -784,6 +788,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.has_admin_permission('eighth')
+
+    @property
+    def is_ldap_admin(self):
+        """Checks if user is an LDAP admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission('ldap')
 
     @property
     def is_announcements_admin(self):

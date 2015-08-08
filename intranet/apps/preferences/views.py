@@ -187,6 +187,25 @@ def preferences_view(request):
         privacy_options = get_privacy_options(user)
         logger.debug(privacy_options)
         privacy_options_form = PrivacyOptionsForm(user, data=request.POST, initial=privacy_options)
+        if privacy_options_form.is_valid():
+            logger.debug("Privacy options form: valid")
+            if privacy_options_form.has_changed():
+                fields = privacy_options_form.cleaned_data
+                logger.debug(fields)
+                for field in fields:
+                    if field in privacy_options and privacy_options[field] == fields[field]:
+                        logger.debug("{}: same ({})".format(field, fields[field]))
+                    else:
+                        logger.debug("{}: new: {} from: {}".format(field,
+                                                                  fields[field], 
+                                                                  privacy_options[field] if field in privacy_options else None))
+                        try:
+                            user.set_ldap_attribute(field, fields[field])
+                        except Exception as e:
+                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                        else:
+                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
 
 
         notification_options = get_notification_options(user)
