@@ -1,0 +1,32 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Files
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Files{% if fs_type %}: {{ fs_type }}{% endif %}</h2>
+        <h3>Current directory: {{ cwd }}</h3>
+        {% if files %}
+            <table>
+            {% for file in files %}
+                <tr>
+                    <td>
+                    {{ file }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
