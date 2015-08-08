@@ -62,8 +62,8 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["showaddress"] = flag(None, False)
         self.fields["showaddress-self"] = flag("Show Address", False)
 
-        self.fields["showphone"] = flag(None, False)
-        self.fields["showphone-self"] = flag("Show Phone", False)
+        self.fields["showtelephone"] = flag(None, False)
+        self.fields["showtelephone-self"] = flag("Show Phone", False)
 
         self.fields["showbirthday"] = flag(None, False)
         self.fields["showbirthday-self"] = flag("Show Birthday", False)

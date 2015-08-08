@@ -2,6 +2,9 @@ from django.shortcuts import render
 from .forms import (
     PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def preferences_view(request):
@@ -26,6 +29,8 @@ def preferences_view(request):
     for i in range(num_webpages):
         personal_info["webpage_{}".format(i)] = user.webpages[i]
 
+    logger.debug(personal_info)
+
     personal_info_form = PersonalInformationForm(num_phones=num_phones,
                                                  num_emails=num_emails,
                                                  num_webpages=num_webpages,
@@ -35,8 +40,22 @@ def preferences_view(request):
         "preferred_photo": user.preferred_photo
     }
 
+    logger.debug(preferred_pic)
+
     preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
-    privacy_options_form = PrivacyOptionsForm(user)
+
+    privacy_options = {}
+
+    for ptype in user.permissions:
+        for field in user.permissions[ptype]:
+            if ptype == "self":
+                privacy_options["{}-{}".format(field, ptype)] = user.permissions[ptype][field]
+            else:
+                privacy_options[field] = user.permissions[ptype][field]
+
+    logger.debug(privacy_options)
+
+    privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
 
     context = {
         "personal_info_form": personal_info_form,

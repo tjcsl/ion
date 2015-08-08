@@ -736,11 +736,13 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                   "perm-showbirthday",
                                                   "perm-showschedule",
                                                   "perm-showeighth",
+                                                  "perm-showpictures",
                                                   "perm-showaddress-self",
                                                   "perm-showtelephone-self",
                                                   "perm-showbirthday-self",
                                                   "perm-showschedule-self",
                                                   "perm-showeighth-self",
+                                                  "perm-showpictures-self"
                                                   ])
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
