@@ -13,6 +13,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    add_field = function(btn) {
+        var tr = $(btn).parent().parent();
+        var pr = tr.prev();
+        var newPr = pr.clone();
+        var inp = $("input", newPr);
+        inp.val("");
+        var newName = inp.attr("name");
+        var r = newName.split("_");
+        newName = [parseInt(r.pop())+1, r.join("_")].reverse().join("_");
+        inp.attr("name", newName);
+        inp.attr("id", "id_" + newName);
+
+        $("td.label", newPr).html("");
+
+        var r = $("td.remove", newPr);
+        if(r.html().trim().length == 0) {
+            r.html('<button onclick="remove_field(this)"><i class="fa fa-times"></i></button>')
+        }
+
+        tr.before(newPr);
+    }
+
+    </script>
+{% endblock %}
+
 {% block main %}
     <div class="primary-content">
         <h2>Preferences</h2>
@@ -25,25 +53,33 @@
                 {% for field in personal_info_form %}
                     {% if field|is_array_field %}
                         <tr>
-                            <td>
+                            <td class="label">
                                 {% if field|field_array_index == 0 %}
                                     {{ field.label_tag }}
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="field">
                                 {{ field.errors }}
                                 {{ field }}
                             </td>
-                            <td>
+                            <td class="remove">
                                 {% if field|field_array_index != 0 %}
-                                    <td><a class="button"><i class="fa fa-times"></i></a></td>
+                                    <td>
+                                        <button onclick="remove_field(this)">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </td>
                                 {% endif %}
                             </td>
                         </tr>
                         {% if field|field_array_index == field|field_array_size|add:"-1" %}
                             <tr>
                                 <td></td>
-                                <td><a class="button"><i class="fa fa-plus"></i> Add Another</a></td>
+                                <td>
+                                    <button onclick="add_field(this)">
+                                        <i class="fa fa-plus"></i> Add Another
+                                    </button>
+                                </td>
                             </tr>
                         {% endif %}
 
