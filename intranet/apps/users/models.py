@@ -1176,10 +1176,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return None
 
-    def set_ldap_attribute(self, name, value):
-        if ((name not in User.ldap_user_attributes) or
-                (not User.ldap_user_attributes[name]["can_set"])):
-            raise Exception("Can not set User attribute '{}'".format(name))
+    def set_ldap_attribute(self, name, value, override_set=False):
+        """Set a user attribute in LDAP.
+        """
+        if name not in User.ldap_user_attributes:
+            raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
+        if not User.ldap_user_attributes[name]["can_set"] and not override_set:
+            raise Exception("Not allowed to set User attribute '{}'".format(name))
 
         if self.dn is None:
             raise Exception("Could not determine DN of User")
@@ -1202,6 +1205,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             identifier = ":".join((self.dn, name))
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
+
+    def set_raw_ldap_attribute(self, field_name, value):
+        """Set a raw user attribute in LDAP.
+        """
+        if self.dn is None:
+            raise Exception("Could not determine DN of User")
+
+        # Possible issue with python ldap with unicode values
+        if isinstance(value, (unicode, str)):
+            value = str(value)
+
+        c = LDAPConnection()
+        c.set_attribute(self.dn, field_name, value)
 
     def clear_cache(self):
         logger.debug("Clearing LDAP user cache for {}".format(self.dn))

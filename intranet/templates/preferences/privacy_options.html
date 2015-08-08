@@ -29,7 +29,11 @@
 {% block main %}
 <div class="primary-content">
 
-    {% if request.user.is_eighth_admin %}
+    {% if request.user.is_eighth_admin and request.GET.user %}
+        <a class="button" href="{% url 'eighth_profile' request.GET.user %}">
+            <i class="fa fa-arrow-left"></i>
+            Profile
+        </a>
     {% endif %}
     <h2>Privacy Options</h2>
 

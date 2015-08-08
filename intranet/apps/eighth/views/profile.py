@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 from datetime import datetime, timedelta
 from django import http
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from ....utils.serialization import safe_json
@@ -50,8 +51,30 @@ def edit_profile_view(request, user_id=None):
                 new_data[field] = new
         logger.debug(new_data)
 
+        RAW_LDAP_ATTRIBUTES = ["birthday", "street", "city", "state", "postal_code", "counselor"]
+        RAW_LDAP_OVERRIDE = {
+            "city": "l",
+            "state": "st",
+            "postal_code": "postalCode",
+            "counselor_id": "counselor"
+        }
+        OVERRIDE_SET = ["graduation_year"]
+
         for key in new_data:
-            setattr(user, key, new_data[key])
+            if key in RAW_LDAP_ATTRIBUTES:
+                if key in RAW_LDAP_OVERRIDE:
+                    key = RAW_LDAP_OVERRIDE[key]
+                logger.debug("Setting raw {}={}".format(key, new_data[key]))
+                user.set_raw_ldap_attribute(key, new_data[key])
+            else:
+                logger.debug("Setting regular {}={}".format(key, new_data[key]))
+                try:
+                    user.set_ldap_attribute(key, new_data[key], key in OVERRIDE_SET)
+                except Exception as e:
+                    messages.error(request, "Field {} with value {}: {}".format(key, new_data[key], e))
+                    logger.debug("Field {} with value {}: {}".format(key, new_data[key], e))
+                else:
+                    messages.success(request, "Set field {} to {}".format(key, new_data[key]))
         user.save()
 
     form = ProfileEditForm(initial=defaults)

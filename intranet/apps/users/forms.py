@@ -21,15 +21,15 @@ class ProfileEditForm(forms.Form):
     #locker = forms.CharField(label="Locker")
     
     FIELDS = ["student_id",
-               "first_name",
-               "middle_name",
-               "last_name",
-               "title",
-               "nickname",
-               "graduation_year",
-               "sex",
-               "birthday",
-               "home_phone"]
+              "first_name",
+              "middle_name",
+              "last_name",
+              "title",
+              "nickname",
+              "graduation_year",
+              "sex",
+              "birthday",
+              "home_phone"]
     ADDRESS_FIELDS = ["street",
                        "city",
                        "state",
