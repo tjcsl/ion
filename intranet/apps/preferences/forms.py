@@ -35,7 +35,7 @@ class PreferredPictureForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(PreferredPictureForm, self).__init__(*args, **kwargs)
         self.PREFERRED_PICTURE_CHOICES = [
-            ("default", "Auto-select the most recent photo"),
+            ("AUTO", "Auto-select the most recent photo"),
         ]
 
         photos = user.photo_permissions["self"]
@@ -47,7 +47,7 @@ class PreferredPictureForm(forms.Form):
 
 
 
-        self.fields["preferred_picture"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
+        self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
                                                              widget=forms.RadioSelect(),
                                                              required=True)
 

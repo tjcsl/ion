@@ -31,7 +31,11 @@ def preferences_view(request):
                                                  num_webpages=num_webpages,
                                                  initial=personal_info)
 
-    preferred_pic_form = PreferredPictureForm(user)
+    preferred_pic = {
+        "preferred_photo": user.preferred_photo
+    }
+
+    preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
     privacy_options_form = PrivacyOptionsForm(user)
 
     context = {
