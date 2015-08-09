@@ -186,6 +186,8 @@ def files_type(request, fstype=None):
                 "folder": sftp.isdir(f),
             })
 
+
+
     current_dir = sftp.pwd # current directory
     dir_list = current_dir.split("/")
     if len(dir_list) > 1 and len(dir_list[-1]) == 0:
@@ -194,6 +196,8 @@ def files_type(request, fstype=None):
 
     if len(parent_dir) == 0:
         parent_dir = "/"
+
+    files = sorted(files, key=lambda f: (not f["folder"], f["name"]))
 
     context = {
         "host": host,
@@ -285,3 +289,5 @@ def handle_file_upload(file, fstype, fsdir, sftp, username=None):
         messages.error(request, "Unable to upload: {}".format(e))
         return
 
+
+    messages.success(request, "Uploaded {} to {}".format(file.name, fsdir))
