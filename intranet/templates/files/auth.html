@@ -8,17 +8,23 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
-    <style type="text/css">
+{% endblock %}
 
-    </style>
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        $("input[name=password]").focus();
+    });
+    </script>
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
         <h2>Authentication</h2>
         <br />
-        <h3>In order to connect to this server, you need to re-enter your password:</h3>
-        <p>If you use a separate password to connect to this service, enter it here.</p>
+        <h3>In order to connect{% if request.GET.next %} to this server{% endif %}, you need to re-enter your password:</h3>
+        <p>If you use a separate password to connect{% if request.GET.next %} to this service{% endif %}, enter it here.</p>
 
         <form action="" method="post">
             {% csrf_token %}

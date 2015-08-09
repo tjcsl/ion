@@ -123,6 +123,8 @@ def files_type(request, fstype=None):
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
     except pysftp.SSHException as e:
         messages.error(request, e)
+        if str(e).startswith("Authentication failed"):
+            return redirect("files_auth")
         return redirect("files")
 
     if host.directory:
