@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.core.management.base import BaseCommand
-import elasticsearch
 from intranet import settings
 from intranet.apps.eighth.models import EighthActivity
 

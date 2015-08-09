@@ -275,6 +275,22 @@ class EighthBlockManager(models.Manager):
         block = self.order_by("date", "block_letter").filter(date__gte=now).first()
         return block
 
+    def get_next_upcoming_blocks(self):
+        """Gets the next upccoming blocks. (Finds the other blocks
+           that are occurring on the day of the first upcoming block.)
+            
+           Returns: A QuerySet of `EighthBlock` objects.
+
+        """
+
+        next_block = EighthBlock.objects.get_first_upcoming_block()
+
+        if not next_block:
+            return []
+
+        next_blocks = EighthBlock.objects.filter(date=next_block.date)
+        return next_blocks
+
     def get_current_blocks(self):
         try:
             first_upcoming_block = self.get_first_upcoming_block()
