@@ -194,7 +194,11 @@ def files_type(request, fstype=None):
     files = []
     for f in listdir:
         if not f.startswith("."):
-            stat = sftp.stat(f)
+            try:
+                stat = sftp.stat(f)
+            except:
+                # If we can't stat the file, don't show it
+                continue
             files.append({
                 "name": f,
                 "folder": sftp.isdir(f),
