@@ -24,7 +24,14 @@
         <a class="button" href="{% url 'files' %}">
             <i class="fa fa-arrow-left"></i> Filesystems
         </a>
-        <h2>Files{% if fs_type %}: {{ fs_type }}{% endif %}</h2>
+        <h2>
+            {% if host.linux %}
+                <i class="fa fa-linux"></i>
+            {% elif host.windows %}
+                <i class="fa fa-windows"></i>
+            {% endif %}
+            {{ host.name }} Files
+        </h2>
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list">
         {% if parent_dir %}

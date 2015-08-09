@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import StreamingHttpResponse
 from django.core.servers.basehttp import FileWrapper
 from django.shortcuts import render, redirect
-
+from .models import Host
 from . import cred
 
 logger = logging.getLogger(__name__)
@@ -27,35 +27,30 @@ def files_view(request):
         return render(request, "files/devel_message.html")
 
 
-    hosts_desc = {
-        "csl": "Computer Systems Lab",
-        "win": "Windows/LOCAL"
-    }
+    hosts = Host.objects.all()
 
     context = {
-        "hosts_desc": hosts_desc
+        "hosts": hosts
     }
     return render(request, "files/home.html", context)
 
 @login_required
 def files_type(request, fstype=None):
-    hosts = cred.HOSTS
-    hosts_desc = {
-        "csl": "Computer Systems Lab",
-        "win": "Windows/LOCAL"
-    }
-    if fstype and fstype in hosts:
-        host = hosts[fstype]
-    else:
-        messages.error(request, "Invalid host.")
+    
+    try:
+        host = Host.objects.get(code=fstype)
+    except Host.DoesNotExist:
+        messages.error(request, "Could not find host in database.")
         return redirect("files")
 
     try:
-        sftp = create_session(host, cred.USER, cred.PASS)
+        sftp = create_session(host.address, cred.USER, cred.PASS)
     except pysftp.SSHException as e:
         messages.error(request, e)
         return redirect("files")
 
+    if host.directory:
+        sftp.chdir(host.directory)
 
     default_dir = sftp.pwd
 
@@ -111,10 +106,10 @@ def files_type(request, fstype=None):
     parent_dir = "/".join(dir_list[:-1])
 
     context = {
+        "host": host,
         "files": files,
         "current_dir": current_dir,
-        "parent_dir": parent_dir if can_access_path(parent_dir) else None,
-        "fs_type": hosts_desc[fstype]
+        "parent_dir": parent_dir if can_access_path(parent_dir) else None
     }
 
     return render(request, "files/directory.html", context)

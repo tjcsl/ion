@@ -17,21 +17,23 @@
     <div class="primary-content">
         <h2>Files</h2>
         <h3>Connect to a filesystem:</h3>
-        {% for host, desc in hosts_desc.items %}
+        {% for host in hosts %}
             <div class="filesystem">
-            
-                <a href="{% url 'files_type' host %}">
-                    {% if host == "csl" %}
+
+                <a href="{% url 'files_type' host.code %}">
+                    {% if host.linux %}
                         <i class="fa fa-linux"></i> 
-                    {% elif host == "win" %}
+                    {% elif host.windows %}
                         <i class="fa fa-windows"></i> 
                     {% endif %}
 
                     <span>
-                        {{ desc }}
+                        {{ host.name }}
                     </span>
                 </a>
             </div>
+        {% empty %}
+            <p>There are no hosts available.</p>
         {% endfor %}
 
     </div>
