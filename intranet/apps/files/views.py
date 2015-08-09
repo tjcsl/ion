@@ -273,6 +273,8 @@ def files_upload(request, fstype=None):
             default_dir = sftp.pwd
 
             def can_access_path(fsdir):
+                if request.user.has_admin_permission('files'):
+                    return True
                 return normpath(fsdir).startswith(default_dir)
 
             fsdir = normpath(fsdir)
