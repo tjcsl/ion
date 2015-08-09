@@ -54,15 +54,6 @@ def files_type(request, fstype=None):
         messages.error(request, e)
         return redirect("files")
 
-    if "file" in request.GET:
-        # Download file
-        filepath = request.GET.get("file")
-        filepath = normpath(filepath)
-        if can_access_path(filepath):
-            tmp = tempfile.mkdtemp(prefix="ion_{}".format(request.user.username))
-            tmpdir = tmp.name
-            sftp.get(filepath, localpath=tmpdir)
-
 
     default_dir = sftp.pwd
 
@@ -70,6 +61,28 @@ def files_type(request, fstype=None):
         #if request.user.has_admin_permission('files'):
         #    return True
         return normpath(fsdir).startswith(default_dir)
+
+
+    if "file" in request.GET:
+        # Download file
+        filepath = request.GET.get("file")
+        filepath = normpath(filepath)
+        if can_access_path(filepath):
+            tmpdir = tempfile.mkdtemp(prefix="ion_{}".format(request.user.username))
+            sftp.get(filepath, localpath=tmpdir)
+            files = os.listdir(tmpdir)
+            logger.debug(files)
+            if len(files) == 1:
+                tmppath = "{}/{}".format(tmpdir, files[0])
+                logger.debug(tmppath)
+                basename = os.path.basename(tmppath)
+                tmpfile = open(tmppath, "r")
+                response = HttpResponse(FileWrapper(tmpfile.read()), content_type="application/octet-stream")
+                response["Content-Disposition"] = "attachment; filename={}".format(basename)
+                return response
+            else:
+                messages.error(request, "An error occurred downloading the file.")
+                return redirect("/files/{}/?dir={}".format(fstype, os.path.dirname(filepath)))
 
     fsdir = request.GET.get("dir")
     if fsdir:
