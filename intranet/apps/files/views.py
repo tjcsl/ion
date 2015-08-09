@@ -287,7 +287,8 @@ def files_upload(request, fstype=None):
     context = {
         "host": host,
         "remote_dir": fsdir,
-        "form": form
+        "form": form,
+        "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)
     }
     return render(request, "files/upload.html", context)
 
