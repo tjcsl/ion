@@ -6,40 +6,13 @@ import requests
 from requests_oauthlib import OAuth1
 from django.contrib import messages
 from django.core import exceptions
-from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from intranet import settings
+from ..notifications.emails import email_send
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
-
-
-def email_send(text_template, html_template, data, subject, emails, headers=None):
-    """
-        Send an HTML/Plaintext email with the following fields.
-
-        text_template: URL to a Django template for the text email's contents
-        html_template: URL to a Django tempalte for the HTML email's contents
-        data: The context to pass to the templates
-        subject: The subject of the email
-        emails: The addresses to send the email to
-        headers: A dict of additional headers to send to the message
-
-    """
-
-    text = get_template(text_template)
-    html = get_template(html_template)
-    text_content = text.render(data)
-    html_content = html.render(data)
-    subject = settings.EMAIL_SUBJECT_PREFIX + subject
-    headers = {} if headers is None else headers
-    msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
-    msg.attach_alternative(html_content, "text/html")
-    logger.debug(msg)
-    msg.send()
-
-    return msg
 
 
 def request_announcement_email(request, form, obj):
