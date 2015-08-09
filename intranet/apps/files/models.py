@@ -5,6 +5,33 @@ from django.db import models
 from django.db.models import Manager, Q
 from django.contrib.auth.models import Group
 
+"""
+    Sample TJ configuration:
+
+        Host.objects.create(name="Computer Systems Lab",
+                            code="csl",
+                            address="remote.tjhsst.edu",
+                            linux=True)
+
+        Host.objects.create(name="Home Folder (M)",
+                            code="tj03_m",
+                            address="tj03.local.tjhsst.edu",
+                            directory="{win}",
+                            windows=True)
+
+        Host.objects.create(name="Resources Drive (R)",
+                            code="tj03_r",
+                            address="tj03.local.tjhsst.edu",
+                            directory="/R/",
+                            windows=True)
+        
+        Host.objects.create(name="Windows Root",
+                            code="win",
+                            address="tj03.local.tjhsst.edu",
+                            windows=True)
+        
+"""
+
 class HostManager(Manager):
     def visible_to_user(self, user):
         """Get a list of hosts available to a given user.
