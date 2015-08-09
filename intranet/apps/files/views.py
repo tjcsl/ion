@@ -149,22 +149,16 @@ def files_type(request, fstype=None):
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
         if can_access_path(filepath):
-            tmpfile = tempfile.NamedTemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
-            tmppath = tmpfile.name
+            tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
             logger.debug(tmpfile)
-            logger.debug(tmppath)
-            sftp.get(filepath, localpath=tmppath)
-            try:
-                tmpopen = open(tmppath)
-            except IOError:
-                messages.error(request, "Unable to download {}".format(filebase))
-                return redirect("/files/{}/?dir={}".format(fstype, os.path.dirname(filepath)))
-            else:
-                chunk_size = 8192
-                response = StreamingHttpResponse(FileWrapper(tmpopen, chunk_size), content_type="application/octet-stream")
-                response['Content-Length'] = os.path.getsize(tmppath)
-                response["Content-Disposition"] = "attachment; filename={}".format(filebase)
-                return response
+            sftp.getfo(filepath, tmpfile)
+            
+            tmpfile.seek(0)
+            chunk_size = 8192
+            response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+            #response['Content-Length'] = tmpfile.tell()
+            response["Content-Disposition"] = "attachment; filename={}".format(filebase)
+            return response
 
     fsdir = request.GET.get("dir")
     if fsdir:
