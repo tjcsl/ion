@@ -142,7 +142,10 @@ def files_type(request, fstype=None):
     default_dir = sftp.pwd
 
     def can_access_path(fsdir):
-        return normpath(fsdir).startswith(default_dir)
+        if request.user.has_admin_permission('files'):
+            return True
+        else:
+            return normpath(fsdir).startswith(default_dir)
 
 
     if "file" in request.GET:
