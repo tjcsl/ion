@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
-from ... import settings
+from intranet import settings
 
 class UploadFileForm(forms.Form):
     def validate_size(obj):

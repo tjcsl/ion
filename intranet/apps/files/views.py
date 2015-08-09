@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from .models import Host
 from .forms import UploadFileForm
-from ... import settings
+from intranet import settings
 
 logger = logging.getLogger(__name__)
 
