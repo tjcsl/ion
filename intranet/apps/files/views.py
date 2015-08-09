@@ -42,6 +42,18 @@ def files_view(request):
 def files_auth(request):
     """Display authentication for filecenter."""
     if "password" in request.POST:
+        """
+            Encrypt the password with AES mode CFB.
+            Create a random 32 char key, stored in a CLIENT-side cookie.
+            Create a random 32 char IV, stored in a SERVER-side session.
+            Store the encrypted ciphertext in a SERVER-side session.
+
+            This ensures that neither side can decrypt the password without
+            the information stored on the other end of the request.
+
+            Both the server-side session variables and the client-side cookies
+            are deleted when the user logs out.
+        """
         key = Random.new().read(32)
         iv = Random.new().read(16)
         obj = AES.new(key, AES.MODE_CFB, iv)
@@ -69,6 +81,13 @@ def get_authinfo(request):
         ("files_text" not in request.session) or 
         ("files_key" not in request.COOKIES)):
         return False
+
+    """
+        Decrypt the password given the SERVER-side IV, SERVER-side
+        ciphertext, and CLIENT-side key.
+
+        See note above on why this is done.
+    """
 
     iv = base64.b64decode(request.session["files_iv"])
     text = base64.b64decode(request.session["files_text"])
@@ -127,6 +146,10 @@ def files_type(request, fstype=None):
         if "authentication" in error_msg:
             return redirect("files_auth")
         return redirect("files")
+    else:
+        # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+        authinfo = None
+        del authinfo
 
     if host.directory:
         host_dir = host.directory
@@ -152,13 +175,19 @@ def files_type(request, fstype=None):
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
         if can_access_path(filepath):
-            stat = sftp.stat(filepath)
+            try:
+                stat = sftp.stat(filepath)
+            except:
+                messages.error(request, "Unable to access {}".format(filebase))
+                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+
             if stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
             tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
             logger.debug(tmpfile)
+
             try:
                 sftp.getfo(filepath, tmpfile)
             except IOError as e:
@@ -259,6 +288,10 @@ def files_upload(request, fstype=None):
             except pysftp.SSHException as e:
                 messages.error(request, e)
                 return redirect("files")
+            else:
+                # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+                authinfo = None
+                del authinfo
 
             if host.directory:
                 host_dir = host.directory
