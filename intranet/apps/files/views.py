@@ -16,7 +16,6 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from .models import Host
-from . import cred
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +100,10 @@ def files_type(request, fstype=None):
         return redirect("files")
 
     if host.directory:
-        sftp.chdir(host.directory)
+        host_dir = host.directory
+        if "{}" in host_dir:
+            host_dir = host_dir.format(authinfo["username"])
+        sftp.chdir(host_dir)
 
     default_dir = sftp.pwd
 
@@ -143,7 +145,11 @@ def files_type(request, fstype=None):
             messages.error(request, "Access to the path you provided is restricted.")
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
-    listdir = sftp.listdir()
+    try:
+        listdir = sftp.listdir()
+    except IOError as e:
+        messages.error(request, e)
+        listdir = []
     files = []
     for f in listdir:
         if not f.startswith("."):
@@ -154,7 +160,12 @@ def files_type(request, fstype=None):
 
     current_dir = sftp.pwd # current directory
     dir_list = current_dir.split("/")
+    if len(dir_list) > 1 and len(dir_list[-1]) == 0:
+        dir_list.pop()
     parent_dir = "/".join(dir_list[:-1])
+
+    if len(parent_dir) == 0:
+        parent_dir = "/"
 
     context = {
         "host": host,

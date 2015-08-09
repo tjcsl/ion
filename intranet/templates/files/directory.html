@@ -33,7 +33,7 @@
         <a class="button" href="{% url 'files' %}">
             <i class="fa fa-arrow-left"></i> Filesystems
         </a>
-        
+
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list">
         {% if parent_dir %}
@@ -63,6 +63,12 @@
                     </a>
                 </td>
                 {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td>
+                    This directory is empty.
                 </td>
             </tr>
         {% endfor %}
