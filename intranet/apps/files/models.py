@@ -62,3 +62,6 @@ class Host(models.Model):
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.code)
+
+    class Meta:
+        ordering = ["-linux", "name"]
