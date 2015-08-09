@@ -19,6 +19,10 @@ def gen_schedule(user, num_blocks=6):
     """Generate a list of information about a block and a student's
     current activity signup.
 
+    Returns:
+        schedule
+        no_signup_today
+
     """
     no_signup_today = None
     schedule = []
@@ -78,6 +82,9 @@ def gen_sponsor_schedule(user, num_blocks=6):
     """Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
+    Returns:
+        sponsor_schedule
+        no_attendance_today
     """
 
     no_attendance_today = None
