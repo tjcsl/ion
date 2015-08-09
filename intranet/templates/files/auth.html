@@ -1,0 +1,30 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Files
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Authentication</h2>
+        <h3>In order to connect to this server, you need to re-enter your password:</h3>
+        <p>If you use a separate password to connect to this service, enter it here.</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="password" name="password" value="" />
+            <input type="submit" value="Login" />
+        </form>
+
+
+    </div>
+{% endblock %}

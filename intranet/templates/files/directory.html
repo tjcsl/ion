@@ -21,9 +21,6 @@
 
 {% block main %}
     <div class="primary-content">
-        <a class="button" href="{% url 'files' %}">
-            <i class="fa fa-arrow-left"></i> Filesystems
-        </a>
         <h2>
             {% if host.linux %}
                 <i class="fa fa-linux"></i>
@@ -32,6 +29,11 @@
             {% endif %}
             {{ host.name }} Files
         </h2>
+
+        <a class="button" href="{% url 'files' %}">
+            <i class="fa fa-arrow-left"></i> Filesystems
+        </a>
+        
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list">
         {% if parent_dir %}
