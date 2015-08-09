@@ -1,0 +1,43 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Files
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>
+            {% if host.linux %}
+                <i class="fa fa-linux"></i>
+            {% elif host.windows %}
+                <i class="fa fa-windows"></i>
+            {% endif %}
+            {{ host.name }} Files
+        </h2>
+
+        <a class="button" href="{% url 'files' %}">
+            <i class="fa fa-arrow-left"></i> {{ remote_dir }}
+        </a>
+
+        <h3>File Upload</h3>
+        <br />
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <input type="submit" value="Upload" />
+        </form>
+
+
+    </div>
+{% endblock %}

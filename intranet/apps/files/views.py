@@ -16,6 +16,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from .models import Host
+from .forms import UploadFileForm
 
 logger = logging.getLogger(__name__)
 
@@ -139,8 +140,6 @@ def files_type(request, fstype=None):
     default_dir = sftp.pwd
 
     def can_access_path(fsdir):
-        #if request.user.has_admin_permission('files'):
-        #    return True
         return normpath(fsdir).startswith(default_dir)
 
 
@@ -171,7 +170,11 @@ def files_type(request, fstype=None):
     if fsdir:
         fsdir = normpath(fsdir)
         if can_access_path(fsdir):
-            sftp.chdir(fsdir)
+            try:
+                sftp.chdir(host_dir)
+            except IOError as e:
+                messages.error(request, e)
+                return redirect("files")
         else:
             messages.error(request, "Access to the path you provided is restricted.")
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
@@ -206,4 +209,92 @@ def files_type(request, fstype=None):
     }
 
     return render(request, "files/directory.html", context)
+
+@login_required
+def files_upload(request, fstype=None):
+    fsdir = request.GET.get("dir", None)
+    if fsdir is None:
+        return redirect("files")
+
+    try:
+        host = Host.objects.get(code=fstype)
+    except Host.DoesNotExist:
+        messages.error(request, "Could not find host in database.")
+        return redirect("files")
+
+    if not host.visible_to(request.user):
+        messages.error(request, "You don't have permission to access this host.")
+        return redirect("files")
+
+    authinfo = get_authinfo(request)
+
+    if not authinfo:
+        return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
+
+
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                sftp = create_session(host.address, authinfo["username"], authinfo["password"])
+            except pysftp.SSHException as e:
+                messages.error(request, e)
+                return redirect("files")
+
+            if host.directory:
+                host_dir = host.directory
+                if "{}" in host_dir:
+                    host_dir = host_dir.format(authinfo["username"])
+                if "{win}" in host_dir:
+                    host_dir = windows_dir_format(host_dir, request.user)
+                try:
+                    sftp.chdir(host_dir)
+                except IOError as e:
+                    messages.error(request, e)
+                    return redirect("files")
+
+            default_dir = sftp.pwd
+
+            def can_access_path(fsdir):
+                return normpath(fsdir).startswith(default_dir)
+
+            fsdir = normpath(fsdir)
+            if not can_access_path(fsdir):
+                messages.error(request, "Access to the path you provided is restricted.")
+                return redirect("/files/{}/?dir={}".format(fstype, default_dir))
+
+            handle_file_upload(request.FILES['file'], fstype, fsdir, sftp)
+            return redirect("/files/{}/?dir={}".format(fstype, fsdir))
+    else:
+        form = UploadFileForm()
+    context = {
+        "remote_dir": remote_dir,
+        "form": form
+    }
+    return render(request, "files/upload.html", context)
+
+def handle_file_upload(file, fstype, fsdir, sftp):
+    tmpfile = tempfile.NamedTemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
+    tmpname = tmpfile.name
+    logger.debug(tmpname)
+    tmpopen = open(tmpfile.name, "wb+")
+    for chunk in file.chunks():
+        tmpopen.write(chunk)
+
+    try:
+        sftp.chdir(fsdir)
+    except IOError as e:
+        messages.error(request, e)
+        return
+
+    remote_path = "{}/{}".format(fsdir, file.name)
+    try:
+        sftp.put(tmpname, remote_path)
+    except IOError as e:
+        # Remote path does not exist
+        messages.error(request, e)
+        return
+    except OSError as e:
+        messages.error(request, "Unable to upload: {}".format(e))
+        return
 
