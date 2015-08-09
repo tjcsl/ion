@@ -17,15 +17,22 @@
     <div class="primary-content">
         <h2>Files</h2>
         <h3>Connect to a filesystem:</h3>
-        <ul>
         {% for host, desc in hosts_desc.items %}
-            <li>
+            <div class="filesystem">
+            
                 <a href="{% url 'files_type' host %}">
-                    {{ desc }}
+                    {% if host == "csl" %}
+                        <i class="fa fa-linux"></i> 
+                    {% elif host == "win" %}
+                        <i class="fa fa-windows"></i> 
+                    {% endif %}
+
+                    <span>
+                        {{ desc }}
+                    </span>
                 </a>
-            </li>
+            </div>
         {% endfor %}
-        </ul>
 
     </div>
 {% endblock %}

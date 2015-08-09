@@ -28,8 +28,8 @@ def files_view(request):
 
 
     hosts_desc = {
-        "csl": "Computer Systems Lab Filesystem",
-        "win": "Windows Filesystem"
+        "csl": "Computer Systems Lab",
+        "win": "Windows/LOCAL"
     }
 
     context = {
@@ -41,8 +41,8 @@ def files_view(request):
 def files_type(request, fstype=None):
     hosts = cred.HOSTS
     hosts_desc = {
-        "csl": "Computer Systems Lab Filesystem",
-        "win": "Windows Filesystem"
+        "csl": "Computer Systems Lab",
+        "win": "Windows/LOCAL"
     }
     if fstype and fstype in hosts:
         host = hosts[fstype]
