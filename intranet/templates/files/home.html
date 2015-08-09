@@ -15,18 +15,17 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>Files{% if fs_type %}: {{ fs_type }}{% endif %}</h2>
-        <h3>Current directory: {{ cwd }}</h3>
-        {% if files %}
-            <table>
-            {% for file in files %}
-                <tr>
-                    <td>
-                    {{ file }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </table>
-        {% endif %}
+        <h2>Files</h2>
+        <h3>Connect to a filesystem:</h3>
+        <ul>
+        {% for host, desc in hosts_desc.items %}
+            <li>
+                <a href="{% url 'files_type' host %}">
+                    {{ desc }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+
     </div>
 {% endblock %}

@@ -1,0 +1,62 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Files
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <a class="button" href="{% url 'files' %}">
+            <i class="fa fa-arrow-left"></i> Filesystems
+        </a>
+        <h2>Files{% if fs_type %}: {{ fs_type }}{% endif %}</h2>
+        <h3>Current directory: {{ current_dir }}</h3>
+        <table class="directory-list">
+        {% if parent_dir %}
+            <tr>
+                <td class="item folder">
+                    <a href="?dir={{ parent_dir }}">
+                        <i class="fa fa-reply"></i>
+                        Parent Directory
+                    </a>
+                </td>
+            </tr>
+        {% endif %}
+        {% for file in files %}
+            <tr>
+                {% if file.folder %}
+                <td class="item folder">
+                    <a href="?dir={{ current_dir }}/{{ file.name }}">
+                        <i class="fa fa-folder"></i>
+                        {{ file.name }}
+                    </a>
+                </td>
+                {% else %}
+                <td class="item file">
+                    <a href="?file={{ current_dir }}/{{ file.name }}">
+                        <i class="fa fa-file-o"></i>
+                        {{ file.name }}
+                    </a>
+                </td>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}
