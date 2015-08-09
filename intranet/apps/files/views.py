@@ -20,6 +20,7 @@ from .forms import UploadFileForm
 
 logger = logging.getLogger(__name__)
 
+MAX_DOWNLOAD_SIZE = 200*1024*1024
 
 def create_session(hostname, username, password):
     return pysftp.Connection(hostname, username=username, password=password)
@@ -123,7 +124,8 @@ def files_type(request, fstype=None):
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
     except pysftp.SSHException as e:
         messages.error(request, e)
-        if str(e).startswith("Authentication failed"):
+        error_msg = str(e).lower()
+        if "authentication" in error_msg:
             return redirect("files_auth")
         return redirect("files")
 
@@ -142,6 +144,8 @@ def files_type(request, fstype=None):
     default_dir = sftp.pwd
 
     def can_access_path(fsdir):
+        if request.user.has_admin_permission('files'):
+            return True
         return normpath(fsdir).startswith(default_dir)
 
 
@@ -151,9 +155,19 @@ def files_type(request, fstype=None):
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
         if can_access_path(filepath):
+            stat = sftp.stat(filepath)
+            if stat.st_size > MAX_DOWNLOAD_SIZE:
+                messages.error(request, "Too large to download (>200MB)")
+                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+
             tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
             logger.debug(tmpfile)
-            sftp.getfo(filepath, tmpfile)
+            try:
+                sftp.getfo(filepath, tmpfile)
+            except IOError as e:
+                messages.error(request, e)
+                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+
             content_len = tmpfile.tell()
             tmpfile.seek(0)
             chunk_size = 8192
@@ -183,9 +197,12 @@ def files_type(request, fstype=None):
     files = []
     for f in listdir:
         if not f.startswith("."):
+            stat = sftp.stat(f)
             files.append({
                 "name": f,
                 "folder": sftp.isdir(f),
+                "stat": stat,
+                "too_big": stat.st_size > MAX_DOWNLOAD_SIZE
             })
 
 
@@ -268,6 +285,7 @@ def files_upload(request, fstype=None):
     else:
         form = UploadFileForm()
     context = {
+        "host": host,
         "remote_dir": fsdir,
         "form": form
     }

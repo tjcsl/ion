@@ -60,11 +60,15 @@
                     </a>
                 </td>
                 {% else %}
-                <td class="item file">
-                    <a href="?file={{ current_dir }}/{{ file.name }}">
+                <td class="item file"{% for k, v in file.stat.items %} stat-{{ k }}="{{ v }}"{% endfor %}>
+                    {% if not file.too_big %}<a href="?file={{ current_dir }}/{{ file.name }}">{% endif %}
                         <i class="fa fa-file-o"></i>
                         {{ file.name }}
-                    </a>
+                    {% if not file.too_big %}</a>{% endif %}
+                    {% if file.too_big %}
+                        <br />
+                        &nbsp; &nbsp; &nbsp; <i class="fa fa-exclamation-triangle"></i> Too large to download (>200MB)
+                    {% endif %}
                 </td>
                 {% endif %}
                 </td>
