@@ -171,7 +171,7 @@ def files_type(request, fstype=None):
         fsdir = normpath(fsdir)
         if can_access_path(fsdir):
             try:
-                sftp.chdir(host_dir)
+                sftp.chdir(fsdir)
             except IOError as e:
                 messages.error(request, e)
                 return redirect("files")
@@ -263,18 +263,18 @@ def files_upload(request, fstype=None):
                 messages.error(request, "Access to the path you provided is restricted.")
                 return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
-            handle_file_upload(request.FILES['file'], fstype, fsdir, sftp)
+            handle_file_upload(request.FILES['file'], fstype, fsdir, sftp, request.user.username)
             return redirect("/files/{}/?dir={}".format(fstype, fsdir))
     else:
         form = UploadFileForm()
     context = {
-        "remote_dir": remote_dir,
+        "remote_dir": fsdir,
         "form": form
     }
     return render(request, "files/upload.html", context)
 
-def handle_file_upload(file, fstype, fsdir, sftp):
-    tmpfile = tempfile.NamedTemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
+def handle_file_upload(file, fstype, fsdir, sftp, username=None):
+    tmpfile = tempfile.NamedTemporaryFile(prefix="ion_{}_upload".format(username))
     tmpname = tmpfile.name
     logger.debug(tmpname)
     tmpopen = open(tmpfile.name, "wb+")
