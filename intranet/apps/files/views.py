@@ -30,7 +30,7 @@ def files_view(request):
         return render(request, "files/devel_message.html")
 
 
-    hosts = Host.objects.all()
+    hosts = Host.objects.visible_to_user(request.user)
 
     context = {
         "hosts": hosts
@@ -62,6 +62,8 @@ def files_auth(request):
 
 
 def get_authinfo(request):
+    """Get authentication info from the encrypted message.
+    """
     if (("files_iv" not in request.session) or 
         ("files_text" not in request.session) or 
         ("files_key" not in request.COOKIES)):
@@ -79,13 +81,36 @@ def get_authinfo(request):
         "password": password
     }
 
+def windows_dir_format(host_dir, user):
+    """Format a string for the location of the user's folder on the
+       Windows (TJ03) fileserver.
+    """
+    grade_folders = {
+        9: "Freshman M:",
+        10: "Sophomore M:",
+        11: "Junior M:",
+        12: "Senior M:"
+    }
+    grade = int(user.grade)
+    if grade in range(9, 13):
+        win_path = "{}/{}/".format(grade_folders[grade], user.username)
+    else:
+        win_path = ""
+    return host_dir.replace("{win}", win_path)
+
 @login_required
 def files_type(request, fstype=None):
-    
+    """Do all processing (directory listing, file downloads) for a
+       given filesystem.
+    """
     try:
         host = Host.objects.get(code=fstype)
     except Host.DoesNotExist:
         messages.error(request, "Could not find host in database.")
+        return redirect("files")
+
+    if not host.visible_to(request.user):
+        messages.error(request, "You don't have permission to access this host.")
         return redirect("files")
 
     authinfo = get_authinfo(request)
@@ -103,7 +128,13 @@ def files_type(request, fstype=None):
         host_dir = host.directory
         if "{}" in host_dir:
             host_dir = host_dir.format(authinfo["username"])
-        sftp.chdir(host_dir)
+        if "{win}" in host_dir:
+            host_dir = windows_dir_format(host_dir, request.user)
+        try:
+            sftp.chdir(host_dir)
+        except IOError as e:
+            messages.error(request, e)
+            return redirect("files")
 
     default_dir = sftp.pwd
 
