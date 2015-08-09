@@ -32,6 +32,9 @@ ADMINS = (
 FEEDBACK_EMAIL = "intranet+feedback@tjhsst.edu"
 APPROVAL_EMAIL = "intranet+approval@tjhsst.edu"
 
+FILES_MAX_UPLOAD_SIZE = 200*1024*1024
+FILES_MAX_DOWNLOAD_SIZE = 200*1024*1024
+
 MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False

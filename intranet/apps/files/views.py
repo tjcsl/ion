@@ -17,10 +17,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from .models import Host
 from .forms import UploadFileForm
+from ... import settings
 
 logger = logging.getLogger(__name__)
-
-MAX_DOWNLOAD_SIZE = 200*1024*1024
 
 def create_session(hostname, username, password):
     return pysftp.Connection(hostname, username=username, password=password)
@@ -156,7 +155,7 @@ def files_type(request, fstype=None):
         filebase = os.path.basename(filepath)
         if can_access_path(filepath):
             stat = sftp.stat(filepath)
-            if stat.st_size > MAX_DOWNLOAD_SIZE:
+            if stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
@@ -202,7 +201,7 @@ def files_type(request, fstype=None):
                 "name": f,
                 "folder": sftp.isdir(f),
                 "stat": stat,
-                "too_big": stat.st_size > MAX_DOWNLOAD_SIZE
+                "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
 
 
@@ -222,7 +221,8 @@ def files_type(request, fstype=None):
         "host": host,
         "files": files,
         "current_dir": current_dir,
-        "parent_dir": parent_dir if can_access_path(parent_dir) else None
+        "parent_dir": parent_dir if can_access_path(parent_dir) else None,
+        "max_download_mb": (settings.FILES_MAX_DOWNLOAD_SIZE / 1024 / 1024)
     }
 
     return render(request, "files/directory.html", context)

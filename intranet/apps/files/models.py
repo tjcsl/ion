@@ -13,6 +13,14 @@ from django.contrib.auth.models import Group
                             address="remote.tjhsst.edu",
                             linux=True)
 
+        afs = Host.objects.create(name="CSL AFS Root",
+                                  code="afs",
+                                  address="remote.tjhsst.edu",
+                                  directory="/afs/csl/",
+                                  linux=True)
+
+        afs.groups.add(Group.objects.get(name="admin_all"))
+
         Host.objects.create(name="Home Folder (M)",
                             code="tj03_m",
                             address="tj03.local.tjhsst.edu",
