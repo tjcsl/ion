@@ -152,11 +152,11 @@ def files_type(request, fstype=None):
             tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
             logger.debug(tmpfile)
             sftp.getfo(filepath, tmpfile)
-            
+            content_len = tmpfile.tell()
             tmpfile.seek(0)
             chunk_size = 8192
             response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
-            #response['Content-Length'] = tmpfile.tell()
+            response['Content-Length'] = content_len
             response["Content-Disposition"] = "attachment; filename={}".format(filebase)
             return response
 
@@ -268,13 +268,6 @@ def files_upload(request, fstype=None):
     return render(request, "files/upload.html", context)
 
 def handle_file_upload(file, fstype, fsdir, sftp, username=None):
-    tmpfile = tempfile.NamedTemporaryFile(prefix="ion_{}_upload".format(username))
-    tmpname = tmpfile.name
-    logger.debug(tmpname)
-    tmpopen = open(tmpfile.name, "wb+")
-    for chunk in file.chunks():
-        tmpopen.write(chunk)
-
     try:
         sftp.chdir(fsdir)
     except IOError as e:
@@ -283,7 +276,7 @@ def handle_file_upload(file, fstype, fsdir, sftp, username=None):
 
     remote_path = "{}/{}".format(fsdir, file.name)
     try:
-        sftp.put(tmpname, remote_path)
+        sftp.putfo(file, remote_path)
     except IOError as e:
         # Remote path does not exist
         messages.error(request, e)
