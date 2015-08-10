@@ -10,9 +10,6 @@ from .models import EighthBlock, EighthSignup
 logger = logging.getLogger(__name__)
 
 def signup_status_email(user, next_blocks):
-
-    subject = "Eighth Period Signup Status"
-
     em = user.emails[0] if user.emails and len(user.emails) >= 1 else user.tj_email
     if em:
         emails = [em]
@@ -46,6 +43,10 @@ def signup_status_email(user, next_blocks):
     if block_signup_time:
         block_signup_time = "{}:{}".format(block_signup_time.hour, block_signup_time.minute)
 
+    date_str = block_date.strftime("%A, %B %-d")
+
+    subject = "Signup Status for {}".format(date_str)
+
     # We can't build an absolute URI because this isn't being executed
     # in the context of a Django request
     base_url = "https://ion.tjhsst.edu/" #request.build_absolute_uri(reverse('index'))
@@ -53,6 +54,7 @@ def signup_status_email(user, next_blocks):
         "user": user,
         "blocks": blocks,
         "block_date": block_date,
+        "date_str": date_str,
         "block_signup_time": block_signup_time,
         "base_url": base_url,
         "issues": issues

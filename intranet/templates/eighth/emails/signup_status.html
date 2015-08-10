@@ -3,7 +3,7 @@
         These are your current signup selections
     {% else %}
         This is your current signup selection
-    {% endif %} for Eighth Period on {{ block_date }}.</p>
+    {% endif %} for Eighth Period on {{ block_date }}:</p>
 
 
 {% for blk in blocks %}
@@ -13,6 +13,7 @@
     {% else %}
         No activity selected
     {% endif %}
+    - <a href="{{ base_url }}eighth/{{ blk.block.id }}">Change Signup</a>
     <br />
     {% if blk.signup %}
         {% if blk.cancelled %}
@@ -41,10 +42,10 @@
     {% else %}
         {{ block_date }}. 
     {% endif %}
-{% else %}
-    <p>
-{% endif %}
-    Have a nice day!
     </p>
+{% endif %}
+<p>
+    Have a nice day!
+</p>
 
 {% include "email_footer.html" %}
