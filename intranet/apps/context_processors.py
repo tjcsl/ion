@@ -39,7 +39,8 @@ def mobile_app(request):
     ua = request.META.get('HTTP_USER_AGENT', '')
 
     if "IonAndroid: gcmFrame" in ua:
-        logger.debug("IonAndroid")
+        logger.debug("IonAndroid {}".format(request.user))
+
         ctx["is_android_client"] = True
         registered = "appRegistered:False" in ua
         ctx["android_client_registered"] = registered
