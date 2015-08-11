@@ -68,13 +68,24 @@ def gcm_post_view(request):
     if not request.user.has_admin_permission("notifications"):
         return redirect("index")
 
+    try:
+        has_tokens = (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
+    except AttributeError:
+        has_tokens = False
+
+
+    if not has_tokens:
+        messages.error(request, "GCM tokens not installed.")
+        return redirect("index")
+
     nc_all = NotificationConfig.objects.all()
     context = {
         "nc_all": nc_all,
-        "has_tokens": (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
+        "has_tokens": has_tokens
     }
 
     if request.method == "POST":
+
         nc_objs = []
         reg_ids = []
 
