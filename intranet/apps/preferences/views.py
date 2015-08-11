@@ -227,6 +227,24 @@ def save_notification_options(request, user):
                     messages.success(request, "Set field {} to {}".format(field, fields[field]))
     return notification_options_form
 
+def save_gcm_options(request, user):
+
+    if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token:
+        receive = ("receive_push_notifications" in request.POST)
+        if receive:
+            nc = user.notificationconfig
+            if nc.android_gcm_optout is True:
+                nc.android_gcm_optout = False
+                nc.save()
+                messages.success(request, "Enabled Android push notifications")
+        else:
+            nc = user.notificationconfig
+            if nc.android_gcm_optout is False:
+                nc.android_gcm_optout = True
+                nc.save()
+                messages.success(request, "Disabled Android push notifications")
+
+
 @login_required
 def preferences_view(request):
     """View and process updates to the preferences page.
@@ -242,6 +260,8 @@ def preferences_view(request):
         preferred_pic_form = save_preferred_pic(request, user)
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
+
+        save_gcm_options(request, user)
 
     else:
         personal_info, num_fields = get_personal_info(user)
