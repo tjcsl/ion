@@ -51,7 +51,7 @@ def mobile_app(request):
             from intranet.apps.notifications.models import NotificationConfig
             from datetime import datetime
 
-            ncfg, created = NotificationConfig.objects.get_or_create(user__id=request.user.id)
+            ncfg, created = NotificationConfig.objects.get_or_create(user=request.user)
             if not ncfg.android_gcm_rand:
                 rand = binascii.b2a_hex(os.urandom(32))
                 ncfg.android_gcm_rand = rand
