@@ -62,6 +62,46 @@
         <br>
         <form action="" method="post">
             {% csrf_token %}
+
+
+            <h3>Notification Options</h3>
+            <p>Change how you receive notifications from Intranet.</p>
+            <table class="notification-options">
+                {% for field in notification_options_form %}
+                    <tr>
+                        <td>
+                            {{ field.errors }}
+                            {{ field }}
+                        </td>
+                        <td>
+                            {{ field.label }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token %}
+                    <tr>
+                        <td>
+                            <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.android_gcm_optout %} checked {% endif %}/>
+                        </td>
+                        <td>
+                            Receive Push Notifications (Android)
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" disabled />
+                        </td>
+                        <td>
+                            Receive Push Notifications (Android)<br />
+                            &nbsp; &nbsp; (Install the TJ Intranet app to enable this option.)
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+
+            <br />
+
             <h3>Personal Information</h3>
             <table>
                 {% for field in personal_info_form %}
@@ -152,44 +192,6 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-            </table>
-
-            <br />
-
-            <h3>Notification Options</h3>
-            <p>Change how you receive notifications from Intranet.</p>
-            <table class="notification-options">
-                {% for field in notification_options_form %}
-                    <tr>
-                        <td>
-                            {{ field.errors }}
-                            {{ field }}
-                        </td>
-                        <td>
-                            {{ field.label }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token %}
-                    <tr>
-                        <td>
-                            <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.android_gcm_optout %} checked {% endif %}/>
-                        </td>
-                        <td>
-                            Receive Push Notifications (Android)
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" disabled />
-                        </td>
-                        <td>
-                            Receive Push Notifications (Android)<br />
-                            &nbsp; &nbsp; (Install the TJ Intranet app to enable this option.)
-                        </td>
-                    </tr>
-                {% endif %}
             </table>
 
             <br />

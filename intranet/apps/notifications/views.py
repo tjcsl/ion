@@ -78,7 +78,8 @@ def gcm_post_view(request):
         messages.error(request, "GCM tokens not installed.")
         return redirect("index")
 
-    nc_all = NotificationConfig.objects.all()
+    # exclude those with no GCM token and those who have opted out
+    nc_all = NotificationConfig.objects.exclude(android_gcm_token=None, android_gcm_optout=True)
     context = {
         "nc_all": nc_all,
         "has_tokens": has_tokens
@@ -98,7 +99,7 @@ def gcm_post_view(request):
             except NotificationConfig.DoesNotExist:
                 continue
 
-            if nc.android_gcm_token:
+            if nc.android_gcm_token and not nc.android_gcm_optout:
                 reg_ids.append(nc.android_gcm_token)
                 nc_objs.append(nc)
             else:
