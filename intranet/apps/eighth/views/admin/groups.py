@@ -338,16 +338,17 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
                     scheduled_activity=scheduled_activity
                 ))
         else:
+            all_instances = [scheduled_activity]
+            sibling = scheduled_activity.get_both_blocks_sibling()
+            if sibling:
+                all_instances.append(sibling)
+
             EighthSignup.objects.filter(
                 user__in=users,
-                scheduled_activity__block__date=block.date
+                scheduled_activity__in=all_instances
             ).delete()
             for user in users:
-                all_sched_acts = EighthScheduledActivity.objects.filter(
-                    block__date=block.date,
-                    activity=activity
-                )
-                for sched_act in all_sched_acts:
+                for sched_act in all_instances:
                     signup_bulk.append(EighthSignup(
                         user=user,
                         scheduled_activity=sched_act
