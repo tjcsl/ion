@@ -112,6 +112,7 @@
     <h2>Restriction List:</h2>
     {% if activity.administrative %}
         This activity is Administrative, so it will not appear in users' signup lists.<br />
+        {% if not activity.restricted %}<b>Students can still sign up for this activity, because it is not restricted.</b>{% endif %}
     {% endif %}
     {% if activity.restricted %}
         {% if not activity.groups_allowed.all and not activity.users_allowed.all and not activity.freshmen_allowed and not activity.sophomores_allowed and not activity.juniors_allowed and not activity.seniors_allowed %}
@@ -152,7 +153,11 @@
             </ul>
         {% endif %}
     {% else %}
-        This activity is not restricted. All students may sign up for this activity.<br />
+        This activity is not restricted. All students may sign up for this activity.
+    {% endif %}
+
+    {% if activity.groups_allowed.count == 0 %}
+        <br />
         <button onclick="addGroup()">Add and Assign Empty Group</button>
     {% endif %}
 

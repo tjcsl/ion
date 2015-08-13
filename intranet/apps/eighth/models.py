@@ -720,7 +720,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if inst == self:
                 continue
 
-            if inst.block_letter in ["A", "B"]:
+            if inst.block.block_letter in ["A", "B"]:
                 return inst
 
         return False
