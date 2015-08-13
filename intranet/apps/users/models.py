@@ -1134,7 +1134,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise AttributeError("'User' has no attribute '{}'".format(name))
 
         if self.dn is None:
-            raise Exception("Could not determine DN of User")
+            if not self.is_active:
+                return None
+
+            raise Exception("Could not determine DN of User with ID {}".format(self.id))
 
         attr = User.ldap_user_attributes[name]
         should_cache = attr["cache"]
