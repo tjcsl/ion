@@ -115,10 +115,57 @@ class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
 
     Attributes:
+        aid
+            The AID (activity ID), not the same as the activity's ID necessarily. By default,
+            it is the same as the assigned ID. However, it can be changed to any alphanumeric
+            string that is between 1-10 characters. Don't set to the internal ID of another
+            activity, or to the AID of another activity.
         name
-            The name of the activity.
+            The name of the activity, max length 100 characters.
+        description
+            The description of the activity, shown on the signup page below the other information.
+            Information on an EighthScheduledActivity basis can be found in the "comments" field
+            of that model. Max length 2000 characters.
         sponsors
-            The :class:`EighthSponsor`\s for the activity.
+            The default activity-level sponsors for the activity. On an EighthScheduledActivity basis,
+            you should NOT query this field. Use scheduled_activity.get_true_sponsors()
+        rooms
+            The default activity-level rooms for the activity. On an EighthScheduledActivity basis,
+            you should NOT query this field. Use scheduled_activity.get_true_rooms()
+        presign
+            If True, the activity can only be signed up for within 48 hours of the day that the activity
+            is scheduled.
+        one_a_day
+            If True, a student can only sign up for one instance of this activity per day.
+        both_blocks
+            If True, a signup for an EighthScheduledActivity during an A or B block will enforce and
+            automatically trigger a signup on the other block. Does not enforce signups for blocks other
+            than A and B.
+        sticky
+            If True, then students who sign up or are placed in this activity cannot switch out of it.
+            A sticky activity should also be restricted, unless you're mean.
+        special
+            If True, then the activity receives a special designation on the signup list, and is stuck
+            to the top of the list.
+        administrative
+            If True, then students cannot see the activity in their signup list. However, the activity still
+            exists in the system and can be seen by administrators. Students can still sign up for the activity
+            through the API -- this does not prevent students from signing up for it, and just merely hides it
+            from view. An administrative activity should be restricted.
+        users_allowed
+            Individual users allowed to sign up for this activity. Extensive use of this is discouraged; make
+            a group instead through the "Add and Assign Empty Group" button on the Edit Activity page. Only
+            takes effect if the activity is restricted.
+        groups_allowed
+            Individual groups allowed to sign up for this activity. Only takes effect if the activity is
+            restricted.
+        freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed
+            Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
+            takes effect if the activity is restricted.
+        favorites
+            A ManyToManyField of User objects who have favorited the activity.
+        deleted
+            Whether the activity still technically exists in the system, but was marked to be deleted.
 
     """
     objects = models.Manager()
@@ -648,6 +695,36 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return hidden_members
 
+    def get_both_blocks_sibling(self):
+        """If this is a both-blocks activity, get the other EighthScheduledActivity
+           object that occurs on the other block.
+
+           both_blocks means A and B block, NOT all of the blocks on that day.
+
+           Returns:
+                EighthScheduledActivity object if found
+                None if the activity cannot have a sibling
+                False if not found
+        """
+        if not self.activity.both_blocks:
+            return None
+
+        if not self.block.block_letter in ["A", "B"]:
+            # both_blocks is not currently implemented for blocks other than A and B
+            return None
+
+        other_instances = (EighthScheduledActivity.objects.filter(activity=self.activity,
+                                                                  block__date=self.block.date))
+
+        for inst in other_instances:
+            if inst == self:
+                continue
+
+            if inst.block_letter in ["A", "B"]:
+                return inst
+
+        return False
+
     def add_user(self, user, request=None, force=False):
         """Sign up a user to this scheduled activity if possible.
         This is where the magic happens.
@@ -670,11 +747,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     raise exception
 
             if self.activity.both_blocks:
-                # Find all schedulings of the same activity on the same day
-                # TODO: Should this only find the second (A or B) block on this day?
-                all_sched_act = (EighthScheduledActivity.objects
-                                                        .filter(block__date=self.block.date,
-                                                                activity=self.activity))
+                # Finds the other scheduling of the same activity on the same day
+                # See note above in get_both_blocks_sibling()
+                sibling = self.get_both_blocks_sibling()
+                if sibling:
+                    all_sched_act = [self, sibling]
+                else:
+                    all_sched_act = [self]
             else:
                 all_sched_act = [self]
 
@@ -713,7 +792,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 in_stickie = (EighthSignup.objects
                                           .filter(user=user,
                                                   scheduled_activity__activity__sticky=True,
-                                                  scheduled_activity__block__date=self.block.date)
+                                                  scheduled_activity__in=all_sched_act)
                                           .exists())
             if in_stickie:
                 exception.Sticky = True
@@ -802,9 +881,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 else:
                     # Clear out the other signups for this block if the user is
                     # switching out of a both-blocks activity
+                    sibling = self.get_both_blocks_sibling()
+                    all_sched_act = [self]
+                    if sibling:
+                        all_sched_act.append(sibling)
+
                     EighthSignup.objects.filter(
                         user=user,
-                        scheduled_activity__block__date=self.block.date
+                        scheduled_activity__in=all_sched_act
                     ).delete()
                     EighthSignup.objects.create(user=user,
                                                 scheduled_activity=self,
@@ -817,13 +901,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                             after_deadline=after_deadline)
         else:
 
-            all_sched_act = (EighthScheduledActivity.objects
-                                                    .filter(block__date=self.block.date,
-                                                            activity=self.activity))
+            sibling = self.get_both_blocks_sibling()
+            all_sched_act = [self]
+            if sibling:
+                all_sched_act.append(sibling)
 
             existing_signups = EighthSignup.objects.filter(
                 user=user,
-                scheduled_activity__block__date=self.block.date
+                scheduled_activity__in=all_sched_act
             )
 
             prev_data = {}

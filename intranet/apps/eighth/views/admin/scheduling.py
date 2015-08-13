@@ -104,13 +104,12 @@ def schedule_activity_view(request):
                     # If a both blocks activity, unschedule the other
                     # scheduled activities of it on the same day.
                     if schact and activity.both_blocks:
-                        all_sched_act = (EighthScheduledActivity.objects
-                                                                .filter(block__date=block.date, activity=activity))
-                        logger.debug(all_sched_act)
-                        for s in all_sched_act:
-                            s.cancelled = True
-                            s.cancel()
-                            s.save()
+                        other_act = schact[0].get_both_blocks_sibling()
+                        logger.debug("other_act: {}".format(other_act))
+                        if other_act:
+                            other_act.cancelled = True
+                            other_act.cancel()
+                            other_act.save()
                     else:
                         schact.update(cancelled=True)
                         for s in schact:
