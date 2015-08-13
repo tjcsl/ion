@@ -12,6 +12,8 @@ class ScheduledActivityForm(forms.ModelForm):
     # Whether the activity should actually be scheduled for the block
     scheduled = forms.BooleanField(required=False)
 
+    unschedule = forms.BooleanField(required=False)
+
     def __init__(self, *args, **kwargs):
         super(ScheduledActivityForm, self).__init__(*args, **kwargs)
 
@@ -30,6 +32,7 @@ class ScheduledActivityForm(forms.ModelForm):
         fields = [
             "cancelled",
             "scheduled",
+            "unschedule",
             "block",
             "activity",
             "rooms",

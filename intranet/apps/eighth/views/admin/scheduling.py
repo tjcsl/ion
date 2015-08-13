@@ -65,10 +65,29 @@ def schedule_activity_view(request):
                     else:
                         instance.cancelled = False
                         instance.uncancel()
+
+
+                    # If an activity has already been cancelled and the
+                    # unschedule checkbox has been checked, delete the
+                    # EighthScheduledActivity instance. If there are students
+                    # in the activity then error out.
+                    if form["unschedule"].value() and instance.cancelled:
+                        name = "{}".format(instance)
+                        count = instance.eighthsignup_set.count()
+                        logger.debug("Unschedule {} - signups {}".format(name, count))
+                        if count == 0:
+                            instance.delete()
+                            messages.success(request, "Unscheduled {}".format(name))
+
+                            continue # don't run instance.save()
+                        elif count == 1:
+                            messages.error(request, "Did not unschedule {} because there is {} student signed up.".format(name, count))
+                        else:
+                            messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
+
+
                     instance.save()
                 else:
-                    # Instead of deleting and messing up attendance,
-                    # cancel the scheduled activity if it was unscheduled
                     schact = EighthScheduledActivity.objects.filter(
                         block=block,
                         activity=activity
@@ -76,6 +95,12 @@ def schedule_activity_view(request):
                     logger.debug(block)
                     logger.debug(activity)
                     logger.debug(schact)
+
+                    # Instead of deleting and messing up attendance,
+                    # cancel the scheduled activity if it is unscheduled.
+                    # If the scheduled activity needs to be completely deleted,
+                    # the "Unschedule" box can be checked after it has been cancelled.
+
                     # If a both blocks activity, unschedule the other
                     # scheduled activities of it on the same day.
                     if schact and activity.both_blocks:

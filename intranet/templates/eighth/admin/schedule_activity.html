@@ -92,6 +92,7 @@
                             <a href="" onclick="return false" class="block-type">Fri B</a>
                         </div>
                     </th>
+                    <th><!-- Unschedule --></th>
                     <th>Rooms</th><th></th>
                     <th>Signups/Capacity</th><th></th>
                     <th>Sponsors</th><th></th>
@@ -141,6 +142,12 @@
                                     {% with bid=form.block.value %}
                                         {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
                                     {% endwith %}
+                                {% elif field.name == "unschedule" %}
+                                    {% if form.cancelled.value %}
+                                        <span style="white-space: nowrap">
+                                            {{ field }} Unschedule
+                                        </span>
+                                    {% endif %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
@@ -167,11 +174,6 @@
                                 </td>
                             {% endif %}
                         {% endfor %}
-                        {% if form.cancelled.value %}
-                            <td>
-                                <button onclick="return false">Unschedule</button>
-                            </td>
-                        {% endif %}
                     </tr>
 
                     {% if not forloop.last %}
