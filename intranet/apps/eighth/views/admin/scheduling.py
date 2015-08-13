@@ -75,8 +75,17 @@ def schedule_activity_view(request):
                         name = "{}".format(instance)
                         count = instance.eighthsignup_set.count()
                         logger.debug("Unschedule {} - signups {}".format(name, count))
-                        if count == 0:
+                        bb_ok = True
+                        if activity.both_blocks:
+                            sibling = instance.get_both_blocks_sibling()
+                            if sibling:
+                                if not sibling.eighthsignup_set.count() == 0:
+                                    bb_ok = False
+
+                        if count == 0 and bb_ok:
                             instance.delete()
+                            if sibling:
+                                sibling.delete()
                             messages.success(request, "Unscheduled {}".format(name))
 
                             continue # don't run instance.save()
