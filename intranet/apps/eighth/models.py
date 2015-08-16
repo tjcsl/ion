@@ -789,10 +789,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                   scheduled_activity__block=self.block)
                                           .exists())
             else:
+                all_blocks = []
+                for sch in all_sched_act:
+                    all_blocks.append(sch.block)
+
                 in_stickie = (EighthSignup.objects
                                           .filter(user=user,
                                                   scheduled_activity__activity__sticky=True,
-                                                  scheduled_activity__in=all_sched_act)
+                                                  scheduled_activity__block__in=all_blocks)
                                           .exists())
             if in_stickie:
                 exception.Sticky = True
