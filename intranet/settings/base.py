@@ -136,6 +136,7 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "maintenancemode.middleware.MaintenanceModeMiddleware",
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -244,6 +245,7 @@ INSTALLED_APPS = (
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "maintenancemode",
     "intranet.apps",
     "intranet.apps.announcements",
     "intranet.apps.api",
@@ -352,6 +354,7 @@ LOGGING = {
     }
 }
 
+MAINTENANCE_MODE = False
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"

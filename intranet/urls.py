@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 import django.contrib.admin
 from django.views.generic.base import RedirectView, TemplateView
-from intranet.apps.error.views import handle_404_view, handle_500_view
+from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
 
 django.contrib.admin.autodiscover()
 
@@ -44,3 +44,4 @@ if settings.SHOW_DEBUG_TOOLBAR:
 
 handler404 = handle_404_view
 handler500 = handle_500_view
+handler503 = handle_503_view # maintenance mode

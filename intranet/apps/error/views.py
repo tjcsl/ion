@@ -7,3 +7,8 @@ def handle_404_view(request):
 
 def handle_500_view(request):
     return render(request, "error/500.html", status=500)
+
+
+def handle_503_view(request):
+    # maintenance mode
+    return render(request, "error/503.html", status=503)
