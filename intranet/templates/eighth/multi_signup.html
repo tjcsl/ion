@@ -125,6 +125,15 @@
                     <span class="badge yellow">48-hr</span>
                 <% } %>
 
+                <% if (blocks.length == total_num_blocks) { %>
+                    <span class="badge">ALL</span>
+                <% } else { %>
+                    <% var blocks_all = ""; %>
+                    <% _.each(blocks, function(b) { blocks_all += b.id+", "; }); %>
+                    <% blocks_all = blocks_all.substring(0, blocks_all.length-2); %>
+                    <span class="badge"><%= blocks_all %></span>
+                <% } %>
+
             </span>
             <% var sponsors_all = ""; %>
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
@@ -210,9 +219,11 @@
                 <%}%>
             </dd>
 
-            <dt>Signups:</dt>
-            <dd>
-                <%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%>
+            <dt>Scheduled On:</dt>
+            <dd><br />
+            <% _.each(blocks, function(b) { %>
+                <b><%= b.id %></b>: <%= b.date %> <%= b.block_letter %> Block<br />
+            <% }); %>
             </dd>
 
             <% if (both_blocks) {%>
@@ -307,76 +318,17 @@
                                 </td>
                 </tr>
                 <tr class="desc">
-                    <th class="center checkbox">
-                        <input type="checkbox" />
-                    </th>
-                    <th>
-                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fa fa-caret-down"></i></a>
-                        <div class="select-blocks-popover closed">
-                            <a href="" onclick="return false" class="block-type">Mon B</a>
-                            <a href="" onclick="return false" class="block-type">Wed A</a>
-                            <a href="" onclick="return false" class="block-type">Wed B</a>
-                            <a href="" onclick="return false" class="block-type">Fri A</a>
-                            <a href="" onclick="return false" class="block-type">Fri B</a>
-                        </div>
-                    </th>
-                    <th class="center">Block</th>
-                    <th>Activity</th>
-                    <th>Teacher</th>
-                    <th>Room</th>
-                    <th></th>
+                    <th colspan="999">Activities scheduled on {{ blocks|length }} blocks:</th>
                 </tr>
             </thead>
-            {% for sch in eighth_schedule %}
-            {% if sch.block.date == active_block.date %}
-                <tr class="form-row"{% if sch.block == active_block %} style="background-color: yellow"{% endif %}>
-                    <td class="center checkbox">
-                        <input type="checkbox" name="block" value="{{ sch.block.id }}" />
-                    </td>
-                    <td>
-                        {{ sch.block.date|date:'D, N j, Y' }}
-                    </td>
-                    <td class="center">
-                        {{ sch.block.block_letter }}
-                    </td>
-                    {% if sch.signup %}
-                    <td>
-                    <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
-                        {{ sch.signup.scheduled_activity.full_title }}
-                    </a>
-                    </td>
-                    <td>
-                        {% for sponsor in sch.signup.scheduled_activity.get_true_sponsors %}
-                            {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
-                    </td>
-                    {% else %}
-                    <td colspan="3">
-                        <span class="no-activity-selected">No activity selected</span>
-                    </td>
-                    {% endif %}
-
-                    <td class="button-row">
-                        <a href="{% url 'eighth_profile_signup' profile_user.id sch.block.id %}" class="button"{% if sch.block == active_block %} style="visibility: hidden"{% endif %}>
-                            {% if sch.signup %}
-                                Change
-                            {% else %}
-                                Sign Up
-                            {% endif %}
-                        </a>
-                    </td>
-                </tr>
-            {% endif %}
-            {% empty %}
-                <tr>
-                <td colspan="7">
-                    You have reached a point beyond the last eighth period block that has been created.
+            <tr>
+            {% for block in blocks %}
+                <td>
+                    <b>Block ID: {{ block.id }}</b><br />
+                    {{ block.date|date:'D, N j, Y' }} {{ block.block_letter }} Block
                 </td>
-                </tr>
             {% endfor %}
+            </tr>
         </table>
     </form>
     </section>
@@ -410,7 +362,7 @@
                 </div>
                 {% if user.is_eighth_admin %}
                 <div class="unsignup">
-                    <button id="unsignup-button" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}">Remove Signup</button>
+                    <button id="unsignup-button" data-bid="{% for b in blocks %}{{ b.id }}{% if not forloop.last %},{% endif %}{% endfor %}" data-uid="{{ user.id }}">Remove Signups for All Blocks</button>
                 </div>
                 {% endif %}
 
@@ -437,7 +389,7 @@
                 <h5 class="sticky-header">All</h5>
                 <ul class="all-activities"></ul>
             </div>
-            <div id="activity-detail" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
+            <div id="activity-detail" data-bid="{% for b in blocks %}{{ b.id }}{% if not forloop.last %},{% endif %}{% endfor %}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_multi_signup' %}">
                 <div class="empty-state">
                     <center>
                         <div>

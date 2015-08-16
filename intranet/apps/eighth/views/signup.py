@@ -21,6 +21,10 @@ logger = logging.getLogger(__name__)
 def eighth_signup_view(request, block_id=None):
 
     if block_id is None and "block" in request.GET:
+        block_ids = request.GET.getlist("block")
+        if len(block_ids) > 1:
+            return redirect("/eighth/signup/multi?{}".format(request.META['QUERY_STRING']))
+
         block_id = request.GET.get("block")
         args = ""
         if "user" in request.GET:
@@ -171,6 +175,70 @@ def eighth_signup_view(request, block_id=None):
 
         return render(request, "eighth/signup.html", context)
 
+
+def eighth_multi_signup_view(request):
+    if request.method == "POST":
+        pass
+    else:
+        if "user" in request.GET and request.user.is_eighth_admin:
+            try:
+                user = User.get_user(id=request.GET["user"])
+            except (User.DoesNotExist, ValueError):
+                raise http.Http404
+        else:
+            if request.user.is_student:
+                user = request.user
+            else:
+                return redirect("eighth_admin_dashboard")
+
+        block_ids = request.GET.getlist("block")
+        blocks = []
+
+        for block_id in block_ids:
+            try:
+                block = (EighthBlock.objects
+                                    .prefetch_related("eighthscheduledactivity_set")
+                                    .get(id=block_id))
+                blocks.append(block)
+            except EighthBlock.DoesNotExist:
+                # The provided block_id is invalid
+                raise http.Http404
+
+        serializer_context = {
+            "request": request,
+            "user": user
+        }
+        blocks_info = []
+        activities = {}
+        for block in blocks:
+            block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
+            blocks_info.append(block_info)
+            acts = block_info["activities"]
+            for a in acts:
+                info = {
+                    "id": block.id,
+                    "date": block.date,
+                    "block_letter": block.block_letter
+                }
+                if a in activities:
+                    activities[a]["blocks"].append(info)
+                else:
+                    activities[a] = acts[a]
+                    activities[a]["blocks"] = [info]
+                    activities[a]["total_num_blocks"] = len(blocks)
+
+        logger.debug(activities)
+        context = {
+            "user": user,
+            "profile_user": user,
+            "real_user": request.user,
+            "block_info": block_info,
+            "activities_list": safe_json(activities),
+            "blocks": blocks,
+            "show_eighth_profile_link": True
+        }
+
+        return render(request, "eighth/multi_signup.html", context)
 
 @login_required
 def toggle_favorite_view(request):
