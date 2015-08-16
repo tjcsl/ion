@@ -180,31 +180,43 @@ def eighth_multi_signup_view(request):
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
             uid = request.POST.get("uid")
-            bid = request.POST.get("bid")
+            bids_comma = request.POST.get("bid")
             force = request.POST.get("force")
             if force == "true":
                 force = True
             else:
                 force = False
 
+            bids = bids_comma.split(",")
+
             try:
                 user = User.get_user(id=uid)
             except User.DoesNotExist:
                 return http.HttpResponseNotFound("Given user does not exist.")
 
-            try:
-                eighth_signup = (EighthSignup.objects
-                                             .get(scheduled_activity__block__id=bid,
-                                                  user__id=uid))
-                success_message = eighth_signup.remove_signup(request.user, force)
-            except EighthSignup.DoesNotExist:
-                return http.HttpResponse("The signup did not exist.")
-            except SignupException as e:
-                show_admin_messages = (request.user.is_eighth_admin and
-                                       not request.user.is_student)
-                return e.as_response(admin=show_admin_messages)
+            display_messages = []
+            status = 200
+            for bid in bids:
+                try:
+                    eighth_signup = (EighthSignup.objects
+                                                 .get(scheduled_activity__block__id=bid,
+                                                      user__id=uid))
+                    success_message = eighth_signup.remove_signup(request.user, force)
+                except EighthSignup.DoesNotExist:
+                    status = 403
+                    display_messages.append("{}: Signup did not exist.".format(bid))
 
-            return http.HttpResponse(success_message)
+                except SignupException as e:
+                    show_admin_messages = (request.user.is_eighth_admin and
+                                           not request.user.is_student)
+                    resp = e.as_response(admin=show_admin_messages)
+                    status = 403
+                    display_messages.append("{}: {}".format(bid, resp.content))
+
+                else:
+                    display_messages.append("{}: {}".format(bid, success_message))
+
+            return http.HttpResponse("\n".join(display_messages), status=status)
 
         for field in ("uid", "aid"):
             if not (field in request.POST and request.POST[field].isdigit()):
@@ -223,6 +235,7 @@ def eighth_multi_signup_view(request):
             return http.HttpResponseNotFound("Given user does not exist.")
 
         display_messages = []
+        status = 200
         for bid in bids:
             try:
                 scheduled_activity = (EighthScheduledActivity.objects
@@ -241,11 +254,12 @@ def eighth_multi_signup_view(request):
                     show_admin_messages = (request.user.is_eighth_admin and
                                            not request.user.is_student)
                     resp = e.as_response(admin=show_admin_messages)
+                    status = 403
                     display_messages.append("{}: {}".format(bid, resp.content))
                 else:
                     display_messages.append("{}: {}".format(bid, success_message))
 
-        return http.HttpResponse("<br />".join(display_messages))
+        return http.HttpResponse("<br />".join(display_messages), status=status)
     else:
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
