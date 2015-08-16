@@ -738,6 +738,22 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         exception = eighth_exceptions.SignupException()
 
+        if self.activity.both_blocks:
+            # Finds the other scheduling of the same activity on the same day
+            # See note above in get_both_blocks_sibling()
+            sibling = self.get_both_blocks_sibling()
+            if sibling:
+                all_sched_act = [self, sibling]
+            else:
+                all_sched_act = [self]
+
+            all_blocks = []
+            for sch in all_sched_act:
+                all_blocks.append(sch.block)
+        else:
+            all_sched_act = [self]
+            all_blocks = [self.block]
+
         if not force:
             # Check if the user who sent the request has the permissions
             # to change the target user's signups
@@ -745,17 +761,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if user != request.user and not request.user.is_eighth_admin:
                     exception.SignupForbidden = True
                     raise exception
-
-            if self.activity.both_blocks:
-                # Finds the other scheduling of the same activity on the same day
-                # See note above in get_both_blocks_sibling()
-                sibling = self.get_both_blocks_sibling()
-                if sibling:
-                    all_sched_act = [self, sibling]
-                else:
-                    all_sched_act = [self]
-            else:
-                all_sched_act = [self]
 
             # Check if the block has been locked
             for sched_act in all_sched_act:
@@ -789,10 +794,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                                   scheduled_activity__block=self.block)
                                           .exists())
             else:
-                all_blocks = []
-                for sch in all_sched_act:
-                    all_blocks.append(sch.block)
-
                 in_stickie = (EighthSignup.objects
                                           .filter(user=user,
                                                   scheduled_activity__activity__sticky=True,
@@ -885,14 +886,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 else:
                     # Clear out the other signups for this block if the user is
                     # switching out of a both-blocks activity
-                    sibling = self.get_both_blocks_sibling()
-                    all_sched_act = [self]
-                    if sibling:
-                        all_sched_act.append(sibling)
+                    signup_sibling = existing_signup.scheduled_activity.get_both_blocks_sibling()
+                    if signup_sibling:
+                        EighthSignup.objects.filter(
+                            user=user,
+                            scheduled_activity=signup_sibling
+                        ).delete()
 
                     EighthSignup.objects.filter(
                         user=user,
-                        scheduled_activity__in=all_sched_act
+                        scheduled_activity__block=self.block
                     ).delete()
                     EighthSignup.objects.create(user=user,
                                                 scheduled_activity=self,
@@ -905,14 +908,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                             after_deadline=after_deadline)
         else:
 
-            sibling = self.get_both_blocks_sibling()
-            all_sched_act = [self]
-            if sibling:
-                all_sched_act.append(sibling)
 
             existing_signups = EighthSignup.objects.filter(
                 user=user,
-                scheduled_activity__in=all_sched_act
+                scheduled_activity__block__in=all_blocks
             )
 
             prev_data = {}
