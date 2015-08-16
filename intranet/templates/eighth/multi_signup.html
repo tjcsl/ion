@@ -246,10 +246,6 @@
                 <% if (!cancelled) {%>
                     <% if (!selected) {%>
                         <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
-                            <% showingRosterButton = true %>
-                            <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
-                                View Roster
-                            </a>
                             <button id="signup-button">
                                 Sign Up
                             </button>
@@ -262,8 +258,6 @@
                     <%} else {%>
                         <% if (display_text.length > 0) {%>
                             <strong><%= display_text %></strong><br /><br />
-                        <% }else{ %>
-                            <strong>You are currently signed up for this activity.</strong>
                         <% } %>
                     <%}%>
                 <%}%>
@@ -271,11 +265,6 @@
                 <div class="error-feedback">
                 </div>
             </div>
-            <% if (!showingRosterButton) { %>
-                <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
-                    View Roster
-                </a>
-            <% } %>
             <div id="roster-section">
             </div>
         </dl>
@@ -284,7 +273,7 @@
 
 
 
-    <div class="primary-content eighth-signup eighth-profile-signup" data-next-url="{% url 'eighth_profile' profile_user.id %}">
+    <div class="primary-content eighth-signup eighth-profile-signup">
         {% if request.user.is_eighth_admin %}
             <div class="eighth-header">
                 {% include "eighth/admin/start_date.html" %}

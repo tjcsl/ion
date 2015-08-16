@@ -178,7 +178,74 @@ def eighth_signup_view(request, block_id=None):
 
 def eighth_multi_signup_view(request):
     if request.method == "POST":
-        pass
+        if "unsignup" in request.POST and "aid" not in request.POST:
+            uid = request.POST.get("uid")
+            bid = request.POST.get("bid")
+            force = request.POST.get("force")
+            if force == "true":
+                force = True
+            else:
+                force = False
+
+            try:
+                user = User.get_user(id=uid)
+            except User.DoesNotExist:
+                return http.HttpResponseNotFound("Given user does not exist.")
+
+            try:
+                eighth_signup = (EighthSignup.objects
+                                             .get(scheduled_activity__block__id=bid,
+                                                  user__id=uid))
+                success_message = eighth_signup.remove_signup(request.user, force)
+            except EighthSignup.DoesNotExist:
+                return http.HttpResponse("The signup did not exist.")
+            except SignupException as e:
+                show_admin_messages = (request.user.is_eighth_admin and
+                                       not request.user.is_student)
+                return e.as_response(admin=show_admin_messages)
+
+            return http.HttpResponse(success_message)
+
+        for field in ("uid", "aid"):
+            if not (field in request.POST and request.POST[field].isdigit()):
+                return http.HttpResponseBadRequest(field + " must be an "
+                                                   "integer")
+
+        uid = request.POST["uid"]
+        bids_comma = request.POST["bid"]
+        aid = request.POST["aid"]
+
+        bids = bids_comma.split(",")
+
+        try:
+            user = User.get_user(id=uid)
+        except User.DoesNotExist:
+            return http.HttpResponseNotFound("Given user does not exist.")
+
+        display_messages = []
+        for bid in bids:
+            try:
+                scheduled_activity = (EighthScheduledActivity.objects
+                                                             .exclude(activity__deleted=True)
+                                                             .exclude(cancelled=True)
+                                                             .get(block=bid,
+                                                                  activity=aid))
+
+            except EighthScheduledActivity.DoesNotExist:
+                display_messages.append("{}: Activity was not scheduled "
+                                                 "for block".format(bid))
+            else:
+                try:
+                    success_message = scheduled_activity.add_user(user, request)
+                except SignupException as e:
+                    show_admin_messages = (request.user.is_eighth_admin and
+                                           not request.user.is_student)
+                    resp = e.as_response(admin=show_admin_messages)
+                    display_messages.append("{}: {}".format(bid, resp.content))
+                else:
+                    display_messages.append("{}: {}".format(bid, success_message))
+
+        return http.HttpResponse("<br />".join(display_messages))
     else:
         if "user" in request.GET and request.user.is_eighth_admin:
             try:
