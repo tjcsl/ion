@@ -228,7 +228,6 @@ def save_notification_options(request, user):
     return notification_options_form
 
 def save_gcm_options(request, user):
-
     if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token:
         receive = ("receive_push_notifications" in request.POST)
         if receive:
@@ -261,7 +260,10 @@ def preferences_view(request):
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
 
-        save_gcm_options(request, user)
+        try:
+            save_gcm_options(request, user)
+        except AttributeError:
+            pass
 
     else:
         personal_info, num_fields = get_personal_info(user)
