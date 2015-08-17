@@ -56,7 +56,7 @@ class SortedUserChoiceField(forms.ModelChoiceField):
     """
 
     def label_from_instance(self, obj):
-        return obj.last_first
+        return obj.last_first_id
 
 
 class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
@@ -77,4 +77,4 @@ class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
     """
 
     def label_from_instance(self, obj):
-        return obj.last_first
+        return obj.last_first_id

@@ -252,9 +252,17 @@
                             {% for class in profile_user.classes %}
                                 <tr>
                                     <td>{{ class.periods|join:", " }} </td>
-                                    <td>{{ class.name }}</td>
+                                    <td>
+                                        <a href="{% url 'class_section' class.section_id %}">
+                                            {{ class.name }}
+                                        </a>
+                                    </td>
                                     {% if profile_user.is_student %}
-                                        <td>{{ class.teacher.last_name }}</td>
+                                        <td>
+                                            <a href="{% url 'user_profile' class.teacher.id %}">
+                                                {{ class.teacher.last_name }}
+                                            </a>
+                                        </td>
                                     {% endif %}
                                     <td>{{ class.room_number }}</td>
                                     <td>

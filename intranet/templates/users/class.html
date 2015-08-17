@@ -1,0 +1,140 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Class
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <style type="text/css">
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    section {
+        float: left;
+        padding: 0 100px 25px 0;
+    }
+
+    section:last-child {
+        padding-right: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if profile_user.is_student %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <section class="class-info">
+            <h2>{{ class.name }}</h2>
+            <h3>
+                {% if class.periods|length == 1 %}
+                    Period {{ class.periods.0 }}
+                {% else %}
+                    Periods {{ class.periods|join:", " }}
+                {% endif %}
+            </h3>
+            <h3>Teacher: <a href="{% url 'user_profile' class.teacher.id %}">
+                {{ class.teacher.first_name }} {{ class.teacher.last_name }}
+            </a></h3>
+            <h3>Room: {{ class.room_number }}</h3>
+            <h3>
+                {% if class.quarters|length == 4 %}
+                    Full Year
+                {% elif class.quarters|length == 2 %}
+                    {% if 1 in class.quarters and 2 in class.quarters %}
+                        First Semester
+                    {% else %}
+                        Second Semester
+                    {% endif %}
+                {% else %}
+                    Quarter{{ class.quarters|pluralize }}
+                    {{ class.quarters|join:", " }}
+                {% endif %}
+            </h3>
+        </section>
+
+        <section class="students-info">
+            Students in this class:
+            <table class="fancy-table zebra">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                {% for student in class.students %}
+                <tr>
+                    <td>
+                        <a href="{% url 'user_profile' student.id %}">
+                            {{ student.last_first }}
+                        </a>
+                    </td>
+                    <td>{{ student.grade.number }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="teacher-info">
+        Other classes taught by {{ class.teacher.first_name }} {{ class.teacher.last_name }}:
+        <table class="fancy-table zebra">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Name</th>
+                    <th>Room</th>
+                    <th>Quarters</th>
+                </tr>
+            </thead>
+            {% for tclass in class.teacher.classes %}
+            <tr>
+                <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                    {{ tclass.periods|join:", " }}
+                    {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                </td>
+                <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                    <a href="{% url 'class_section' tclass.section_id %}">
+                        {{ tclass.name }}
+                    </a>
+                    {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                </td>
+                <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                    {{ tclass.room_number }}
+                    {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                </td>
+                <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                    {% if tclass.quarters|length == 4 %}
+                        Full Year
+                    {% elif tclass.quarters|length == 2 %}
+                        {% if 1 in tclass.quarters and 2 in tclass.quarters %}
+                            First Semester
+                        {% else %}
+                            Second Semester
+                        {% endif %}
+                    {% else %}
+                        Quarter{{ tclass.quarters|pluralize }}
+                        {{ tclass.quarters|join:", " }}
+                    {% endif %}
+                    {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

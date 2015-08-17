@@ -8,7 +8,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
-from .models import User, Grade
+from .models import User, Grade, Class
 from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
 from intranet import settings
 
@@ -149,3 +149,25 @@ def picture_view(request, user_id, year=None):
         response.write(img)
 
         return response
+
+@login_required
+def class_section_view(request, section_id):
+    c = Class(id=section_id)
+
+    attrs = {
+        "name": c.name,
+        "students": sorted(c.students, key=lambda x: (x.last_name, x.first_name)),
+        "teacher": c.teacher,
+        "quarters": c.quarters,
+        "periods": c.periods,
+        "course_length": c.course_length,
+        "room_number": c.room_number,
+        "class_id": c.class_id,
+        "section_id": c.section_id
+    }
+
+    context = {
+        "class": attrs
+    }
+
+    return render(request, "users/class.html", context)
