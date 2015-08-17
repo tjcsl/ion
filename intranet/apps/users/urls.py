@@ -10,4 +10,5 @@ urlpatterns = [
     url(r"^/picture/(?P<user_id>\d+)(?:/(?P<year>freshman|sophomore|junior|senior))?$", views.picture_view, name="profile_picture"),
 
     url(ur"^/class/(?P<section_id>.*)?$", views.class_section_view, name="class_section"),
+    url(ur"^/room/(?P<room_id>.*)?$", views.class_room_view, name="class_room")
 ]

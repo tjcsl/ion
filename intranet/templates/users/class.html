@@ -52,7 +52,9 @@
             <h3>Teacher: <a href="{% url 'user_profile' class.teacher.id %}">
                 {{ class.teacher.first_name }} {{ class.teacher.last_name }}
             </a></h3>
-            <h3>Room: {{ class.room_number }}</h3>
+            <h3>Room: <a href="{% url 'class_room' class.room_number %}">
+                {{ class.room_number }}
+            </a></h3>
             <h3>
                 {% if class.quarters|length == 4 %}
                     Full Year
@@ -115,7 +117,9 @@
                         {% if class.section_id == tclass.section_id %}</b>{% endif %}
                     </td>
                     <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
-                        {{ tclass.room_number }}
+                        <a href="{% url 'class_room' tclass.room_number %}">
+                            {{ tclass.room_number }}
+                        </a>
                         {% if class.section_id == tclass.section_id %}</b>{% endif %}
                     </td>
                     <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
@@ -169,7 +173,9 @@
                         {% if class.section_id == tclass.section_id %}</b>{% endif %}
                     </td>
                     <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
-                        {{ tclass.room_number }}
+                        <a href="{% url 'class_room' tclass.room_number %}">
+                            {{ tclass.room_number }}
+                        </a>
                         {% if class.section_id == tclass.section_id %}</b>{% endif %}
                     </td>
                     <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}

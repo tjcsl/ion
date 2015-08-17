@@ -1,0 +1,89 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Class
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <style type="text/css">
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    section {
+        float: left;
+        padding: 0 100px 25px 0;
+    }
+
+    section:last-child {
+        padding-right: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if profile_user.is_student %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Room {{ room }}</h2>
+        <h3>The following classes reside in this room:</h3>
+        <table class="fancy-table zebra">
+            <thead>
+                <th>Period</th>
+                <th>Name</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Quarters</th>
+            </thead>
+            {% for class in classes %}
+                <tr>
+                    <td>{{ class.periods|join:", " }} </td>
+                    <td>
+                        <a href="{% url 'class_section' class.section_id %}">
+                            {{ class.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_profile' class.teacher.id %}">
+                            {{ class.teacher.last_name }}
+                        </a>
+                    </td>
+                    <td>{{ class.room_number }}</td>
+                    <td>
+                        {% if class.quarters|length == 4 %}
+                            Full Year
+                        {% elif class.quarters|length == 2 %}
+                            {% if 1 in class.quarters and 2 in class.quarters %}
+                                First Semester
+                            {% else %}
+                                Second Semester
+                            {% endif %}
+                        {% else %}
+                            Quarter{{ class.quarters|pluralize }}
+                            {{ class.quarters|join:", " }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No classes were found.</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
