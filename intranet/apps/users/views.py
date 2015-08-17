@@ -163,7 +163,8 @@ def class_section_view(request, section_id):
         "course_length": c.course_length,
         "room_number": c.room_number,
         "class_id": c.class_id,
-        "section_id": c.section_id
+        "section_id": c.section_id,
+        "sections": c.sections
     }
 
     context = {

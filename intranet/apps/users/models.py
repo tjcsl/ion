@@ -1404,6 +1404,27 @@ class Class(object):
         """
         return min(map(float, self.periods)) + (float(sum(self.quarters)) / 11)
 
+    @property
+    def sections(self):
+        """Returns a list of other Class objects which are of
+           the same class type.
+
+           Returns:
+               A list of class objects.
+        """
+        class_sections = ClassSections(id=self.class_id)
+
+        schedule = []
+        classes = class_sections.classes
+        # Sort in order
+        for class_object in classes:
+            sortvalue = class_object.sortvalue
+            schedule.append((sortvalue, class_object))
+
+        ordered_schedule = sorted(schedule, key=lambda e: e[0])
+        return list(zip(*ordered_schedule)[1]) # The class objects
+    
+
     def __getattr__(self, name):
         """Return simple attributes of Class
 
@@ -1491,6 +1512,49 @@ class Class(object):
     def __unicode__(self):
         return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
 
+class ClassSections(object):
+    """Represents a list of tjhsstClass LDAP objects.
+
+    Note that this is not a Django model, but rather an interface
+    to LDAP classes.
+
+    Attributes:
+        class_id
+            The class ID of the class(es) (tjhsstClassId)
+
+    """
+
+    def __init__(self, dn=None, id=None):
+        """Initialize the Class object.
+
+        Either dn or id is required.
+
+        Args:
+            id
+                The tjhsstClassId of the class.
+
+        """
+        self.dn = dn or "ou=schedule,dc=tjhsst,dc=edu"
+        self.id = id
+
+    @property
+    def classes(self):
+        """Returns a list of classes sections for the given class.
+
+        Returns:
+            List of Class objects
+
+        """
+        c = LDAPConnection()
+        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId"])
+
+        classes = []
+        for row in query:
+            dn = row[0]
+            c = Class(dn=dn)
+            classes.append(c)
+
+        return classes
 
 class Address(object):
 
