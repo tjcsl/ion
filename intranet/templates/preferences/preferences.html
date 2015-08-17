@@ -46,8 +46,14 @@
     $(function() {
         $("input.disabled").each(function() {
             $(this).attr("data-state", $(this).prop("checked"));
-            $(this).click(function() {
-                $(this).prop("checked", $(this).attr("data-state"));
+            $(this).click(function(e) {
+                e.preventDefault();
+                var state = $(this).attr("data-state");
+                if(!state) {
+                    $(this).removeProp("checked");
+                } else {
+                    $(this).prop("checked", state);
+                }
             })
         })
     })
