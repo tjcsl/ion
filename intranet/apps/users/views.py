@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from .models import User, Grade, Class
 from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
 from intranet import settings
-from intranet.db.ldap_db import LDAPConnection
+from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
 logger = logging.getLogger(__name__)
 
@@ -177,10 +177,13 @@ def class_section_view(request, section_id):
 @login_required
 def class_room_view(request, room_id):
     c = LDAPConnection()
+    room_id = LDAPFilter.escape(room_id)
+    
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu", 
                        "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id),
                        ["tjhsstSectionId"]
     )
+
 
     if len(classes) > 0:
         schedule = []

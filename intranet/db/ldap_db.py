@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 import ldap
 import ldap.sasl
+import ldap.filter
 from ldap.modlist import modifyModlist
 from threading import local
 from django.core.signals import request_finished
@@ -28,6 +29,10 @@ class LDAPFilter(object):
     @staticmethod
     def or_filter(*conditions):
         return LDAPFilter.operator("|", *conditions)
+
+    @staticmethod
+    def escape(text):
+        return ldap.filter.escape_filter_chars(text)
 
     @staticmethod
     def attribute_in_list(attribute, values):
