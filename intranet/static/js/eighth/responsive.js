@@ -1,3 +1,5 @@
+window.switchRun = false;
+window.eighthSwitchEvent = false;
 $(document).ready(function() {
     window.initEighthResponsive = function() {
         is_small = function() {
@@ -19,17 +21,24 @@ $(document).ready(function() {
             $("#activity-list li[data-activity-id]").removeClass("selected");
         })
 
-        $(".middle .switch").click(function() {
-            $(".primary-content").toggleClass("viewing");
-            activityPickerResize();
-        });
+        if(!window.eighthSwitchEvent) {
+            $(".middle .switch").click(function() {
+                console.debug("Block switch toggle");
+                $(".primary-content").toggleClass("viewing");
+                activityPickerResize();
+            });
+            window.eighthSwitchEvent = true;
+        }
 
         var width = $(window).width();
         var height = $(window).height();
-        if(width <= 500 && height <= 745 && !window.isDefaultPage) {
+        if(width <= 500 && height <= 745 && !window.isDefaultPage && !window.switchRun) {
             setTimeout(function() {
-                $(".eighth-signup .switch").click();
+                if(!window.switchRun) {
+                    $(".eighth-signup .switch").click();
+                }
 
+                window.switchRun = true;
                 setTimeout(function() {
                     activityPickerResize();
                 }, 450);
