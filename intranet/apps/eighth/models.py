@@ -445,7 +445,10 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def signup_time_future(self):
         """Is the signup time in the future?"""
-        return self.signup_time > datetime.datetime.now().time()
+        now = datetime.datetime.now()
+        return (now.date() < self.date or 
+                (self.date == now.date() and
+                 self.signup_time > now.time()))
 
     def num_signups(self):
         """ How many people have signed up?"""
