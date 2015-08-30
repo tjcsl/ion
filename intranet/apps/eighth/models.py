@@ -7,6 +7,7 @@ import datetime
 from django.db import models
 from django.db.models import Manager, Q
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.contrib.auth.models import Group as DjangoGroup
 from django.utils import formats
 from ..users.models import User
 from ..groups.models import Group
@@ -189,7 +190,7 @@ class EighthActivity(AbstractBaseEighthModel):
     users_allowed = models.ManyToManyField(User,
                                            related_name="restricted_activity_set",
                                            blank=True)
-    groups_allowed = models.ManyToManyField(Group,
+    groups_allowed = models.ManyToManyField(DjangoGroup,
                                             related_name="restricted_activity_set",
                                             blank=True)
 

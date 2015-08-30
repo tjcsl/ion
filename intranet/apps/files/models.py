@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 from ..groups.models import Group
@@ -61,7 +62,7 @@ class Host(models.Model):
     windows = models.BooleanField(default=False)
     linux = models.BooleanField(default=False)
 
-    groups_visible = models.ManyToManyField(Group, blank=True)
+    groups_visible = models.ManyToManyField(DjangoGroup, blank=True)
 
     def visible_to(self, user):
         if self.groups_visible.count() == 0:

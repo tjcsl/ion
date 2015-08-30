@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import Group as DjangoGroup
+from django.db import models
+from django.db.models import Manager, Q
 from ..users.models import User
 from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
 from ..announcements.models import Announcement
 from datetime import datetime
-from django.db import models
-from django.db.models import Manager, Q
 
 class Link(models.Model):
     """A link about an item (Facebook event link, etc).
@@ -48,7 +49,7 @@ class Event(models.Model):
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True)
     announcement = models.ForeignKey(Announcement, null=True, blank=True)
     
-    groups = models.ManyToManyField(Group, blank=True)
+    groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     attending = models.ManyToManyField(User, blank=True, related_name="attending")
 
