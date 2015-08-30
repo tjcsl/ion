@@ -11,10 +11,11 @@ from django.db import models
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, UserManager, Group)
+    AbstractBaseUser, PermissionsMixin, UserManager)
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
+from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
 

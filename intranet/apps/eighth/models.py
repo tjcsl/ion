@@ -6,10 +6,11 @@ import logging
 import datetime
 from django.db import models
 from django.db.models import Manager, Q
-from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.contrib.auth.models import Group as DjangoGroup
 from django.utils import formats
 from ..users.models import User
+from ..groups.models import Group
 from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
@@ -189,7 +190,7 @@ class EighthActivity(AbstractBaseEighthModel):
     users_allowed = models.ManyToManyField(User,
                                            related_name="restricted_activity_set",
                                            blank=True)
-    groups_allowed = models.ManyToManyField(Group,
+    groups_allowed = models.ManyToManyField(DjangoGroup,
                                             related_name="restricted_activity_set",
                                             blank=True)
 
@@ -444,7 +445,10 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def signup_time_future(self):
         """Is the signup time in the future?"""
-        return self.signup_time > datetime.datetime.now().time()
+        now = datetime.datetime.now()
+        return (now.date() < self.date or 
+                (self.date == now.date() and
+                 self.signup_time > now.time()))
 
     def num_signups(self):
         """ How many people have signed up?"""

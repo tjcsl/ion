@@ -7,11 +7,11 @@ import json
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from intranet import settings
 from ..auth.decorators import announcements_admin_required
+from ..groups.models import Group
 from ..users.models import User
 from .models import Announcement, AnnouncementRequest
 from .forms import AnnouncementForm, AnnouncementRequestForm
@@ -35,7 +35,10 @@ def announcement_posted_hook(request, obj):
     if obj.notify_post:
         logger.debug("Announcement notify on")
         announcement_posted_twitter(request, obj)
-        announcement_posted_email(request, obj)
+        if obj.notify_email_all:
+            announcement_posted_email(request, obj, True)
+        else:
+            announcement_posted_email(request, obj)
     else:
         logger.debug("Announcement notify off")
 

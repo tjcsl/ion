@@ -19,7 +19,13 @@ class AnnouncementForm(forms.ModelForm):
             "will receive an email. If the announcement is public, a link will be posted on Twitter."
         )
 
+        self.fields["notify_email_all"].help_text = (
+            "This will send an email notification to all of the users who can see this post. This option "
+            "does NOT take users' email notification preferences into account, so please use with care."
+        )
+
     expiration_date = forms.DateTimeInput()
+    notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
     class Meta:
         model = Announcement
         fields = [
@@ -29,6 +35,7 @@ class AnnouncementForm(forms.ModelForm):
             "groups",
             "expiration_date",
             "notify_post",
+            "notify_email_all",
             "pinned"
         ]
 

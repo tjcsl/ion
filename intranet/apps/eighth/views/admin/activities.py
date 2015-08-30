@@ -5,10 +5,10 @@ from six.moves import cPickle as pickle
 import logging
 from django import http, forms
 from django.contrib import messages
-from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
 from ...forms.admin.activities import QuickActivityForm, ActivityForm
 from ...models import EighthActivity
 

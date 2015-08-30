@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django import forms
-from django.contrib.auth.models import Group
+from ....groups.models import Group
 
 
 class QuickGroupForm(forms.ModelForm):
@@ -13,10 +13,11 @@ class QuickGroupForm(forms.ModelForm):
 
 
 class GroupForm(forms.ModelForm):
+    student_visible = forms.BooleanField(initial=False, required=False)
 
     class Meta:
         model = Group
-        fields = ["name"]
+        fields = ["name", "student_visible"]
 
 class UploadGroupForm(forms.Form):
     file = forms.FileField()

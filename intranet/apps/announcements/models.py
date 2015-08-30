@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-from django.contrib.auth.models import Group
+from ..groups.models import Group
 from ..users.models import User
 
 
@@ -89,7 +90,7 @@ class Announcement(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    groups = models.ManyToManyField(Group, blank=True)
+    groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
 

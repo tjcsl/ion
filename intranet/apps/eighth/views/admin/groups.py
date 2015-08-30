@@ -7,11 +7,11 @@ import logging
 import re
 from django import http
 from django.contrib import messages
-from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
 from ....users.models import User
 from ....search.views import get_search_results
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
@@ -54,13 +54,18 @@ def edit_group_view(request, group_id):
     if request.method == "POST":
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
+            if 'student_visible' in form.cleaned_data:
+                props = group.properties
+                props.student_visible = form.cleaned_data['student_visible']
+                props.save()
+
             form.save()
             messages.success(request, "Successfully edited group.")
             return redirect("eighth_admin_dashboard")
         else:
-            messages.error(request, "Error adding group.")
+            messages.error(request, "Error modifying group.")
     else:
-        form = GroupForm(instance=group)
+        form = GroupForm(instance=group, initial={"student_visible": group.properties.student_visible})
 
     users = group.user_set.all()
     members = []

@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    {{ block.super }} - Class
+    {{ block.super }} - All Classes
 {% endblock %}
 
 
@@ -30,8 +30,7 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>Room {{ room }}</h2>
-        <h3>The following classes reside in this room:</h3>
+        <h2>All Classes</h2>
         <table class="fancy-table zebra">
             <thead>
                 <th>Period</th>
@@ -53,7 +52,11 @@
                             {{ class.teacher.last_name }}
                         </a>
                     </td>
-                    <td>{{ class.room_number }}</td>
+                    <td>
+                        <a href="{% url 'class_room' class.room_number %}">
+                            {{ class.room_number }}
+                        </a>
+                    </td>
                     <td>
                         {% if class.quarters|length == 4 %}
                             Full Year
