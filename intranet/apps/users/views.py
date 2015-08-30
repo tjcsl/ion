@@ -205,3 +205,34 @@ def class_room_view(request, room_id):
     }
 
     return render(request, "users/class_room.html", context)
+
+@login_required
+def all_classes_view(request):
+    c = LDAPConnection()
+    
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", 
+                       "objectClass=tjhsstClass",
+                       ["tjhsstSectionId"]
+    )
+
+    logger.debug("{} classes found.".format(len(classes)))
+
+    if len(classes) > 0:
+        schedule = []
+        for row in classes:
+            class_dn = row[0]
+            class_object = Class(dn=class_dn)
+            sortvalue = class_object.sortvalue
+            schedule.append((sortvalue, class_object))
+
+        ordered_schedule = sorted(schedule, key=lambda e: e[0])
+        classes_objs = list(zip(*ordered_schedule)[1]) # The class objects
+    else:
+        classes_objs = []
+        raise Http404
+
+    context = {
+        "classes": classes_objs
+    }
+
+    return render(request, "users/all_classes.html", context)
