@@ -4,9 +4,9 @@ from datetime import datetime
 from six.moves import cPickle as pickle
 from six.moves.urllib.parse import unquote
 from django.contrib import messages
-from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
 from ...forms.admin import (
     activities as activity_forms, blocks as block_forms, groups as group_forms,
     rooms as room_forms, sponsors as sponsor_forms, general as general_forms)

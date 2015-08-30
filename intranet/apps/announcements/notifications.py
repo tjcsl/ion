@@ -72,7 +72,7 @@ def admin_request_announcement_email(request, form, obj):
                "announcements/emails/admin_approve.html",
                data, subject, emails)
 
-def announcement_posted_email(request, obj):
+def announcement_posted_email(request, obj, send_all=False):
     """
         Send a notification posted email
 
@@ -81,7 +81,11 @@ def announcement_posted_email(request, obj):
 
     if settings.EMAIL_ANNOUNCEMENTS:
         subject = "Announcement: {}".format(obj.title)
-        users = User.objects.filter(receive_news_emails=True)
+        if send_all:
+            users = User.objects.all()
+        else:
+            users = User.objects.filter(receive_news_emails=True)
+
         send_groups = obj.groups.all()
         emails = []
         users_send = []

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import Group
+from ....groups.models import Group
 from ....eighth.models import User
 
 

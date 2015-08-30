@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 from ..users.models import User
+from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
 from ..announcements.models import Announcement
 from datetime import datetime
-from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import Manager, Q
 

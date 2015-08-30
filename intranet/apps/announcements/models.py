@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
 from django.db.models import Manager, Q
-from django.contrib.auth.models import Group
+from ..groups.models import Group
 from ..users.models import User
 
 
