@@ -39,7 +39,7 @@ class GroupProperties(models.Model):
 
     """
     group = models.OneToOneField(Group)
-    student_visible = models.BooleanField(default=True)
+    student_visible = models.BooleanField(default=False)
 
 
 

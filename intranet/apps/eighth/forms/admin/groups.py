@@ -13,10 +13,11 @@ class QuickGroupForm(forms.ModelForm):
 
 
 class GroupForm(forms.ModelForm):
+    student_visible = forms.BooleanField(initial=False, required=False)
 
     class Meta:
         model = Group
-        fields = ["name"]
+        fields = ["name", "student_visible"]
 
 class UploadGroupForm(forms.Form):
     file = forms.FileField()
