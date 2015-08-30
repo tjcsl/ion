@@ -9,6 +9,7 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
     {% if profile_user.is_eighth_sponsor and profile_user.is_student %}
@@ -41,6 +42,7 @@
             });
         </script>
     {% endif %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -236,10 +238,10 @@
                     </table>
                 </div>
 
-                <section class="user-info-schedule">
+                <section class="user-info-schedule class-info">
                     {% if profile_user.classes %}
                         <h3>Schedule</h3>
-                        <table>
+                        <table class="fancy-table zebra" data-sortable>
                             <thead>
                                 <th>Period</th>
                                 <th>Name</th>
