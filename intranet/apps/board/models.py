@@ -21,7 +21,7 @@ class Board(models.Model):
     section_id = models.CharField(max_length=100, blank=True)
     group = models.OneToOneField(DjangoGroup, null=True)
 
-    posts = models.ManyToManyField("BoardPost", null=True)
+    posts = models.ManyToManyField("BoardPost", blank=True)
 
 
 class BoardPost(models.Model):
@@ -37,7 +37,7 @@ class BoardPost(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    comments = models.ManyToManyField("BoardPostComment", null=True)
+    comments = models.ManyToManyField("BoardPostComment", blank=True)
 
 class BoardPostComment(models.Model):
     """ A BoardPostComment is a comment on a BoardPost by a user in

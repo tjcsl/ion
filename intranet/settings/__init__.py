@@ -419,6 +419,7 @@ INSTALLED_APPS = [
     "intranet.apps.announcements",
     "intranet.apps.api",
     "intranet.apps.auth",
+    "intranet.apps.board",
     "intranet.apps.eighth",
     "intranet.apps.events",
     "intranet.apps.groups",
