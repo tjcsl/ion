@@ -52,7 +52,7 @@ class Board(models.Model):
         if self.activity:
             return self.activity.title
         elif self.class_id:
-            return self.class_obj.name
+            return "{}, Period {}".format(self.class_obj.name, ", ".join(self.class_obj.periods))
         elif self.section_id:
             c = self.section_obj.classes
             if len(c) > 0:
@@ -152,8 +152,17 @@ class BoardPost(models.Model):
 
     comments = models.ManyToManyField("BoardPostComment", blank=True)
 
+    @property
+    def board(self):
+        """ A BoardPost *should* only be on one Board, so find the first
+            object in board_set.
+        """
+        boards = self.board_set.all()
+        if len(boards) > 0:
+            return boards[0]
+
     def __unicode__(self):
-        return "{} by {}".format(title[:30], user)
+        return "{} by {}".format(self.title[:30], self.user)
 
 class BoardPostComment(models.Model):
     """ A BoardPostComment is a comment on a BoardPost by a user in
@@ -165,4 +174,4 @@ class BoardPostComment(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "Comment: {} by {}".format(content[:30], user)
+        return "Comment: {} by {}".format(self.content[:30], self.user)

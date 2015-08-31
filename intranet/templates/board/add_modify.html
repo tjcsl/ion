@@ -23,6 +23,9 @@
 
 {% block main %}
 <div class="board announcements primary-content">
+    <a class="button" href="javascript:history.go(-1)">
+        <i class="fa fa-arrow-left"></i> Back
+    </a>
     <h2>
         {{ action|title }} Board Post
     </h2>
@@ -37,7 +40,7 @@
             <p>
                 Please stay on topic.
                 {% if class %}
-                    <b>You are posting to the {{ class.name }} board.</b>
+                    <b>You are posting to the {{ class.name }}, Period {{ class.periods|join:"," }} class board.</b>
                 {% elif section %}
                     <b>You are posting to the {{ section.classes.0.name }} section board.</b>
                 {% endif %}

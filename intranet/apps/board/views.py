@@ -50,6 +50,7 @@ def class_feed(request, class_id):
         "board": board,
         "type": "class",
         "class_id": class_id,
+        "class_obj": class_obj,
         "posts": BoardPost.objects.filter(board__class_id=class_id)
     }
 
@@ -83,6 +84,7 @@ def section_feed(request, section_id):
         "board": board,
         "type": "section",
         "section_id": section_id,
+        "section": section,
         "posts": BoardPost.objects.filter(board__section_id=section_id)
     }
 

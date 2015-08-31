@@ -16,17 +16,23 @@
     </h3>
 
     <div class="boardpost-metadata">
-        {% if post.activity %}
-            in Activity: {{ post.activity }} &bull; 
-        {% elif post.class_id %}
-            in Class: {{ post.class_id }} &bull; 
-        {% elif post.section_id %}
-            in ClassSection: {{ post.section_id }} &bull;
-        {% elif post.group %}
-            in Group: {{ post.group }} &bull;
+    {% if show_type %}
+        {% if post.board.activity %}
+            Activity: {{ post.board.activity }} &bull; 
+        {% elif post.board.class_id %}
+            Class: <a href="{% url 'board_class' post.board.class_id %}">
+                {{ post.board.class_obj }}
+            </a> &bull; 
+        {% elif post.board.section_id %}
+            Class: <a href="{% url 'board_section' post.board.section_id %}">
+                {{ post.board.section_obj }}
+            </a> &bull;
+        {% elif post.board.group %}
+            Group: {{ post.board.group }} &bull;
         {% else %}
             Public &bull; 
         {% endif %}
+    {% endif %}
         by {{ post.user.full_name|escape }} &bull; {{ post.added|fuzzy_date|capfirst }}
     </div>
 
