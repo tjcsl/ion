@@ -54,7 +54,11 @@ class Board(models.Model):
         elif self.class_id:
             return self.class_obj.name
         elif self.section_id:
+            c = self.section_obj.classes
+            if len(c) > 0:
+                return c[0].name
             return self.section_id
+
         elif self.group:
             return self.group.title
         return None

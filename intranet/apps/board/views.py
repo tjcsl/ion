@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from ..auth.decorators import board_admin_required
 from ..groups.models import Group
-from ..users.models import User, Class
+from ..users.models import User, Class, ClassSections
 from .models import Board, BoardPost, BoardPostComment
 from .forms import BoardPostForm
 
@@ -60,7 +60,27 @@ def section_feed(request, section_id):
 
     """
 
+    # Check permissions
+    try:
+        section = ClassSections(id=section_id)
+        classes = section.classes
+        if len(classes) < 1:
+            raise http.Http404
+
+    except Exception:
+        raise http.Http404
+
+    try:
+        board = Board.objects.get(section_id=section_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(section_id=section_id)
+
+    if not board.has_member(request.user):
+        raise http.Http403
+
     context = {
+        "board": board,
         "type": "section",
         "section_id": section_id,
         "posts": BoardPost.objects.filter(board__section_id=section_id)
@@ -118,6 +138,61 @@ def class_feed_post(request, class_id):
         "board": board
     }
     return render(request, "board/add_modify.html", context)
+
+
+@login_required
+def section_feed_post(request, section_id):
+    """
+        Post to section feed.
+    """
+
+    # Check permissions
+    try:
+        section = ClassSections(id=section_id)
+        classes = section.classes
+        if len(classes) < 1:
+            raise http.Http404
+
+    except Exception:
+        raise http.Http404
+
+    try:
+        board = Board.objects.get(section_id=section_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(section_id=section_id)
+
+    if not board.has_member(request.user):
+        raise http.Http403
+
+    if request.method == "POST":
+        form = BoardPostForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+
+            board.posts.add(obj)
+            board.save()
+
+            messages.success(request, "Successfully added post.")
+            return redirect("board_class", args=(class_id,))
+        else:
+            messages.error(request, "Error adding post")
+    else:
+        form = BoardPostForm()
+
+    context = {
+        "form": form,
+        "action": "add",
+        "section": section,
+        "classes": classes,
+        "board": board
+    }
+    return render(request, "board/add_modify.html", context)
+
+
 
 @login_required
 def modify_post_view(request, id=None):
