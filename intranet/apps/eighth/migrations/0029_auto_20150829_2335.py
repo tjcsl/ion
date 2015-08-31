@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eighth', '0028_auto_20150829_2234'),
+        ('eighth', '0027_eighthblock_comments'),
     ]
 
     operations = [
