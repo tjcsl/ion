@@ -11,6 +11,7 @@ from ..auth.decorators import board_admin_required
 from ..groups.models import Group
 from ..users.models import User, Class
 from .models import Board, BoardPost, BoardPostComment
+from .forms import BoardPostForm
 
 logger = logging.getLogger(__name__)
 
@@ -66,3 +67,83 @@ def section_feed(request, section_id):
     }
 
     return render(request, "board/feed.html", context)
+
+
+
+
+@login_required
+def class_feed_post(request, class_id):
+    """
+        Post to class feed.
+    """
+
+    # Check permissions
+    class_obj = Class(id=class_id)
+    try:
+        name = class_obj.name
+    except Exception:
+        # The class doesn't actually exist
+        raise http.Http404
+
+    try:
+        board = Board.objects.get(class_id=class_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(class_id=class_id)
+
+    if not board.has_member(request.user):
+        raise http.Http403
+
+    if request.method == "POST":
+        form = BoardPostForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+
+            board.posts.add(obj)
+            board.save()
+
+            messages.success(request, "Successfully added post.")
+            return redirect("board_class", args=(class_id,))
+        else:
+            messages.error(request, "Error adding post")
+    else:
+        form = BoardPostForm()
+    context = {
+        "form": form,
+        "action": "add",
+        "class": class_obj,
+        "board": board
+    }
+    return render(request, "board/add_modify.html", context)
+
+@login_required
+def modify_post_view(request, id=None):
+    """
+        Modify post page. You may only modify an event if you were the creator or you are an
+        administrator.
+
+        id: post id
+
+    """
+    post = get_object_or_404(BoardPost, id=id)
+
+    if not request.user.has_admin_permission('board') and post.user != request.user:
+        raise exceptions.PermissionDenied
+
+    if request.method == "POST":
+        form = BoardPostForm(request.POST, instance=post)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully modified post.")
+            #return redirect("events")
+        else:
+            messages.error(request, "Error adding post.")
+    else:
+        form = BoardPostForm(instance=post)
+    return render(request, "board/add_modify.html", {"form": form, "action": "modify", "id": id})

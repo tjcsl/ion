@@ -21,23 +21,17 @@
         {{ board.type|title }} Feed: {{ board.type_title }}
     </h2>
     <div class="button-container">
-        <a href="?add=1" class="button">
+        <a href="{% url board.add_button_route board.add_button_arg %}" class="button">
             <i class="fa fa-plus"></i>
             Create Post
         </a>
     </div>
 
-    {% if "add" in request.GET %}
-
-
-    {% else %}
-        {% for post in posts %}
-            {% include "board/post.html" %}
-        {% empty %}
-            <p>There are no board posts! Press the button above to create one.</p>
-        {% endfor %}
-
-    {% endif %}
+    {% for post in posts %}
+        {% include "board/post.html" %}
+    {% empty %}
+        <p>There are no board posts! Press the button above to create one.</p>
+    {% endfor %}
     
 </div>
 {% endblock %}

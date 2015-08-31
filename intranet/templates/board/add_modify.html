@@ -1,0 +1,61 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Board Post
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="board announcements primary-content">
+    <h2>
+        {{ action|title }} Board Post
+    </h2>
+    <form action="" method="post">
+    <table>
+    {% csrf_token %}
+    <tr><td colspan="2">
+        {% if action == "add" %}
+            <p>
+                It has been the decision of the Intranet administrators to allow for open board posting. You currently have the ability to create posts and share them with the school community. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
+            </p>
+            <p>
+                Please stay on topic.
+                {% if class %}
+                    <b>You are posting to the {{ class.name }} board.</b>
+                {% endif %}
+            </p>
+            <br />
+        {% endif %}
+    </td></tr>
+    {{ form.as_table }}
+    <tr><td colspan="2">
+        {% if id %}
+            <a href="" class="button">Delete</a>
+        {% endif %}
+        <input type="submit" style="width: 150px" /></td></tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    CKEDITOR.replace("id_content", {
+        width: "600px"
+    });
+</script>
+{% endblock %}

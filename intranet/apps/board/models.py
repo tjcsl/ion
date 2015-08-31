@@ -72,6 +72,36 @@ class Board(models.Model):
         if self.type == "section":
             return ClassSections(id=self.section_id)
     
+    @property
+    def add_button_route(self):
+        """ Get the route name for the 'Post' button.
+        """
+        if self.type == "activity":
+            return "board_activity_post"
+        elif self.type == "class":
+            return "board_class_post"
+        elif self.type == "section":
+            return "board_section_post"
+        elif self.type == "group":
+            return "board_group_post"
+        return None
+
+    @property
+    def add_button_arg(self):
+        """ Get the argument for the route for the 'Post' button.
+            This is the ID of whatever type the board is for.
+        """
+        if self.type == "activity":
+            return self.activity.id
+        elif self.type == "class":
+            return self.class_id
+        elif self.type == "section":
+            return self.section_id
+        elif self.type == "group":
+            return self.group.id
+        return None
+    
+    
 
     def has_member(self, user):
         """ Determine whether a given user is a member of the board.
