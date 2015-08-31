@@ -22,30 +22,7 @@
     </h2>
 
     {% for post in posts %}
-        <div class="boardpost" data-id="{{ post.id }}">
-            <h3>
-                {{ post.title }}
-
-                {% if is_board_admin or post.user == request.user %}
-                    <div class="boardpost-icon-wrapper">
-                        <a href="">
-                            <i class="boardpost-icon fa fa-pencil"></i>
-                        </a>
-                        <a href="" class="boardpost-delete">
-                            <i class="boardpost-icon fa fa-trash-o"></i>
-                        </a>
-                    </div>
-                {% endif %}
-            </h3>
-
-            <div class="boardpost-metadata">
-                by {{ post.user.full_name|escape }} &bull; {{ post.added|fuzzy_date|capfirst }}
-            </div>
-
-            <div class="event-content">
-                {{ post.content|safe }}
-            </div>
-        </div>
+        {% include "board/post.html" %}
     {% empty %}
         <p>There are no board posts available to you at this time.</p>
     {% endfor %}

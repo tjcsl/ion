@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import Manager, Q
 from ..eighth.models import EighthActivity
 from ..groups.models import Group
-from ..users.models import User
+from ..users.models import User, Class, ClassSections
 
 class Board(models.Model):
     """A Board is a collection of BoardPosts for a specific
@@ -26,19 +26,80 @@ class Board(models.Model):
     @property
     def type(self):
         if self.activity:
-            return "activity", self.activity
+            return "activity"
         elif self.class_id:
-            return "class", self.class_id
+            return "class"
         elif self.section_id:
-            return "section", self.section_id
+            return "section"
         elif self.group:
-            return "group", self.group
-        return False, None
+            return "group"
+        return False
+
+    @property
+    def type_obj(self):
+        if self.activity:
+            return self.activity
+        elif self.class_id:
+            return self.class_id
+        elif self.section_id:
+            return self.section_id
+        elif self.group:
+            return self.group
+        return None
+
+    @property
+    def type_title(self):
+        if self.activity:
+            return self.activity.title
+        elif self.class_id:
+            return self.class_obj.name
+        elif self.section_id:
+            return self.section_id
+        elif self.group:
+            return self.group.title
+        return None
+    
+
+    @property
+    def class_obj(self):
+        """ Get the Class object if that is the type. """
+        if self.type == "class":
+            return Class(id=self.class_id)
+
+    @property
+    def section_obj(self):
+        """ Get the ClassSections object if that is the type. """
+        if self.type == "section":
+            return ClassSections(id=self.section_id)
+    
+
+    def has_member(self, user):
+        """ Determine whether a given user is a member of the board.
+            Because you can't always see all of the people in a class or section
+            due to permissions, you should only check whether the current user is
+            a member.
+        """
+        if self.type == "activity":
+            if self.activity.restricted:
+                return self.activity.id in EighthActivity.restricted_activities_available_to_user(user)
+            else:
+                return True
+        elif self.type == "class":
+            return user in self.class_obj.students
+        elif self.type == "section":
+            classes = self.section_obj.classes
+            for c in classes:
+                if user in c.students:
+                    return True
+            return False
+        elif self.type == "group":
+            return self.group.user_set.filter(id=user.id).count() > 0
+
+        return False
 
     def __unicode__(self):
-        t = self.type
-        if t:
-            return "{}: {}".format(t[0].capitalize(), t[1])
+        if self.type:
+            return "{}: {}".format(self.type.capitalize(), self.type_obj)
         
         return None
 

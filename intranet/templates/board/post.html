@@ -1,0 +1,35 @@
+<div class="boardpost" data-id="{{ post.id }}">
+    <h3>
+        {{ post.title }}
+
+        {% if is_board_admin or post.user == request.user %}
+            <div class="boardpost-icon-wrapper">
+                <a href="">
+                    <i class="boardpost-icon fa fa-pencil"></i>
+                </a>
+                <a href="" class="boardpost-delete">
+                    <i class="boardpost-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="boardpost-metadata">
+        {% if post.activity %}
+            in Activity: {{ post.activity }} &bull; 
+        {% elif post.class_id %}
+            in Class: {{ post.class_id }} &bull; 
+        {% elif post.section_id %}
+            in ClassSection: {{ post.section_id }} &bull;
+        {% elif post.group %}
+            in Group: {{ post.group }} &bull;
+        {% else %}
+            Public &bull; 
+        {% endif %}
+        by {{ post.user.full_name|escape }} &bull; {{ post.added|fuzzy_date|capfirst }}
+    </div>
+
+    <div class="event-content">
+        {{ post.content|safe }}
+    </div>
+</div>
