@@ -5,7 +5,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r"^$", views.home, name="board_home"),
+    url(r"^$", views.home, name="board"),
     url(ur"^/class/(?P<class_id>.*)?$", views.class_feed, name="board_class"),
     url(ur"^/post/class/(?P<class_id>.*)?$", views.class_feed_post, name="board_class_post"),
 

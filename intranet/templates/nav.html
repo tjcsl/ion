@@ -37,6 +37,19 @@
         </li>
 
         {% comment %}
+        {% if request.user.is_student %}
+            <li {% if nav_category == "board" %}class="selected"{% endif %}>
+                <a href="{% url 'board' %}">
+                    <i class="nav-icon" style="background: none">
+                        <i class="fa fa-file-text-o" style="font-size: 22px; line-height: 28px"></i>
+                    </i>
+                    Board
+                </a>
+            </li>
+        {% endif %}
+        {% endcomment %}
+
+        {% comment %}
         <li {% if nav_category == "groups" %}class="selected"{% endif %}>
             <a href="{% url 'groups' %}">
                 <i class="nav-icon groups-icon"></i>

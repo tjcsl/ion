@@ -21,10 +21,22 @@
         Board
     </h2>
 
+    <div class="your-classes">
+        <b>Your classes:</b><br />
+        {% for c in request.user.classes %}
+            <span style="white-space: nowrap">
+                 &nbsp; &bull; &nbsp;
+                 <a href="{% url 'board_class' c.section_id %}">{{ c }}</a>
+            </span>
+        {% endfor %}
+        <br />
+        <br />
+    </div>
+
     {% for post in posts %}
-    {% with show_type=1 %}
-        {% include "board/post.html" %}
-    {% endwith %}
+        {% with show_type=1 %}
+            {% include "board/post.html" %}
+        {% endwith %}
     {% empty %}
         <p>There are no board posts available to you at this time.</p>
     {% endfor %}

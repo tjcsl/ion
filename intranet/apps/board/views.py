@@ -19,8 +19,12 @@ def home(request):
     """ The homepage, showing all board posts available to you.
     """
 
+    classes = request.user.classes
+    section_ids = [c.section_id for c in classes]
+    posts = BoardPost.objects.filter(board__class_id__in=section_ids)
+
     context = {
-        "posts": BoardPost.objects.all()
+        "posts": posts
     }
 
     return render(request, "board/home.html", context)
@@ -46,12 +50,17 @@ def class_feed(request, class_id):
     if not board.has_member(request.user):
         raise http.Http403
 
+
+    posts = BoardPost.objects.filter(board__class_id=class_id)
+
+    posts |= BoardPost.objects.filter(board__section_id=class_obj.class_id)
+
     context = {
         "board": board,
         "type": "class",
         "class_id": class_id,
         "class_obj": class_obj,
-        "posts": BoardPost.objects.filter(board__class_id=class_id)
+        "posts": posts
     }
 
     return render(request, "board/feed.html", context)
@@ -179,7 +188,7 @@ def section_feed_post(request, section_id):
             board.save()
 
             messages.success(request, "Successfully added post.")
-            return redirect("board_class", args=(class_id,))
+            return redirect("board_section", args=(section_id,))
         else:
             messages.error(request, "Error adding post")
     else:
