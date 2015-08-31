@@ -1,0 +1,64 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Post Comment
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/board.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="board announcements primary-content">
+    <a class="button" href="javascript:history.go(-1)">
+        <i class="fa fa-arrow-left"></i> Back
+    </a>
+    <h2>
+        {{ action|title }} Post Comment
+    </h2>
+
+    {% include "board/post.html" %}
+
+    <form action="" method="post">
+    <table>
+    {% csrf_token %}
+    <tr><td colspan="2">
+        {% if action == "add" %}
+            <p>
+                It has been the decision of the Intranet administrators to allow for open board posting. You currently have the ability to create posts and share them with the school community. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
+            </p>
+            <p>
+                Please stay on topic.
+                {% if class %}
+                    <b>You are posting to the {{ class.name }}, Period {{ class.periods|join:"," }} class board.</b>
+                {% elif section %}
+                    <b>You are posting to the {{ section.classes.0.name }} section board.</b>
+                {% endif %}
+            </p>
+            <br />
+        {% endif %}
+    </td></tr>
+    {{ form.as_table }}
+    <tr><td colspan="2">
+        {% if id %}
+            <a href="" class="button">Delete</a>
+        {% endif %}
+        <input type="submit" style="width: 150px" /></td></tr>
+    </table>
+    </form>
+</div>
+{% endblock %}

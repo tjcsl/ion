@@ -11,10 +11,11 @@ from ..auth.decorators import board_admin_required
 from ..groups.models import Group
 from ..users.models import User, Class, ClassSections
 from .models import Board, BoardPost, BoardPostComment
-from .forms import BoardPostForm
+from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
+@login_required
 def home(request):
     """ The homepage, showing all board posts available to you.
     """
@@ -29,7 +30,7 @@ def home(request):
 
     return render(request, "board/home.html", context)
 
-
+@login_required
 def class_feed(request, class_id):
     """ The feed of a class.
 
@@ -65,6 +66,7 @@ def class_feed(request, class_id):
 
     return render(request, "board/feed.html", context)
 
+@login_required
 def section_feed(request, section_id):
     """ The feed of a section.
 
@@ -233,3 +235,43 @@ def modify_post_view(request, id=None):
     else:
         form = BoardPostForm(instance=post)
     return render(request, "board/add_modify.html", {"form": form, "action": "modify", "id": id})
+
+@login_required
+def comment_view(request, post_id):
+    """
+        Add a comment form page.
+    """
+
+    post = get_object_or_404(BoardPost, id=post_id)
+    board = post.board
+
+
+    if not board.has_member(request.user):
+        raise http.Http403
+
+    if request.method == "POST":
+        form = BoardPostCommentForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+
+            post.comments.add(obj)
+            post.save()
+
+            messages.success(request, "Successfully added comment.")
+            return redirect("board")
+        else:
+            messages.error(request, "Error adding post")
+    else:
+        form = BoardPostCommentForm()
+
+    context = {
+        "form": form,
+        "action": "add",
+        "post": post,
+        "board": board
+    }
+    return render(request, "board/comment.html", context)
+

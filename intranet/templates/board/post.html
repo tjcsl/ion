@@ -37,4 +37,16 @@
     <div class="event-content">
         {{ post.content|safe }}
     </div>
+
+    <a class="button small-button" href="{% url 'board_comment' post.id %}">
+        <i class="fa fa-comment-o"></i> Comment
+    </a> &nbsp; &nbsp; {{ post.comments.count }} comment{{ post.comments.count|pluralize }}<br />
+
+    <div class="boardpost-comments">
+    {% for c in post.comments.all %}
+        <div class="boardpost-comment">
+            <b>{{ c.user.full_name }}</b>: {{ c.content }}
+        </div>
+    {% endfor %}
+    </div>
 </div>

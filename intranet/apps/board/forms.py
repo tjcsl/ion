@@ -18,3 +18,14 @@ class BoardPostForm(forms.ModelForm):
                    "updated",
                    "user",
                    "comments"]
+
+class BoardPostCommentForm(forms.ModelForm):
+    content = forms.TextInput()
+
+    def __init__(self, *args, **kwargs):
+        super(forms.ModelForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = BoardPostComment
+        exclude = ["added",
+                   "user"]

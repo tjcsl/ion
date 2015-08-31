@@ -12,6 +12,8 @@ urlpatterns = [
     url(ur"^/section/(?P<section_id>.*)?$", views.section_feed, name="board_section"),
     url(ur"^/post/section/(?P<section_id>.*)?$", views.section_feed_post, name="board_section_post"),
 
+    url(r"^/comment/(?P<post_id>\d+)$", views.comment_view, name="board_comment"),
+
     #url(r"^/add$", views.add_post_view, name="add_boardpost"),
     url(r"^/modify/(?P<id>\d+)$", views.modify_post_view, name="modify_boardpost"),
 
