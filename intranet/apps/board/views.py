@@ -29,6 +29,10 @@ def class_feed(request, class_id):
     """ The feed of a class.
 
     """
+    try:
+        board = Board.objects.get(class_id=class_id)
+    except Board.DoesNotExist:
+        return render(request, "board/feed.html", {"class_id": class_id, "no_board": True})
 
     context = {
         "type": "class",
@@ -36,9 +40,9 @@ def class_feed(request, class_id):
         "posts": BoardPost.objects.filter(board__class_id=class_id)
     }
 
-    return render(requets, "board/feed.html", context)
+    return render(request, "board/feed.html", context)
 
-def class_feed(request, section_id):
+def section_feed(request, section_id):
     """ The feed of a section.
 
     """
@@ -49,4 +53,4 @@ def class_feed(request, section_id):
         "posts": BoardPost.objects.filter(board__section_id=section_id)
     }
 
-    return render(requets, "board/feed.html", context)
+    return render(request, "board/feed.html", context)

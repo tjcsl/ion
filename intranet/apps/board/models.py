@@ -23,6 +23,24 @@ class Board(models.Model):
 
     posts = models.ManyToManyField("BoardPost", blank=True)
 
+    @property
+    def type(self):
+        if self.activity:
+            return "activity", self.activity
+        elif self.class_id:
+            return "class", self.class_id
+        elif self.section_id:
+            return "section", self.section_id
+        elif self.group:
+            return "group", self.group
+        return False, None
+
+    def __unicode__(self):
+        t = self.type
+        if t:
+            return "{}: {}".format(t[0].capitalize(), t[1])
+        
+        return None
 
 class BoardPost(models.Model):
     """ A BoardPost is a post by a user in a specific Board.
@@ -39,6 +57,9 @@ class BoardPost(models.Model):
 
     comments = models.ManyToManyField("BoardPostComment", blank=True)
 
+    def __unicode__(self):
+        return "{} by {}".format(title[:30], user)
+
 class BoardPostComment(models.Model):
     """ A BoardPostComment is a comment on a BoardPost by a user in
         a specific Board.
@@ -47,3 +68,6 @@ class BoardPostComment(models.Model):
     content = models.TextField(max_length=1000)
     user = models.ForeignKey(User)
     added = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "Comment: {} by {}".format(content[:30], user)

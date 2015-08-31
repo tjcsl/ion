@@ -1,0 +1,36 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Board
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+<div class="board primary-content">
+    <h2>
+        Board
+    </h2>
+
+    {% for post in posts %}
+        <div class="board-post">
+            <h3>{{ post.title }}</h3>
+            By {{ post.user }} -
+            {{ post.added }}<br />
+
+            {{ post.content }}
+        </div>
+    {% empty %}
+        <p>There are no board posts available to you at this time.</p>
+    {% endfor %}
+    
+</div>
+{% endblock %}

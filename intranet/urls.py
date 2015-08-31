@@ -17,6 +17,7 @@ urlpatterns = [
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^", include("intranet.apps.auth.urls")),
     url(r"^announcements", include("intranet.apps.announcements.urls")),
+    url(r"^board", include("intranet.apps.board.urls")),
     url(r"^eighth", include("intranet.apps.eighth.urls")),
     url(r"^events", include("intranet.apps.events.urls")),
     url(r"^files", include("intranet.apps.files.urls")),
