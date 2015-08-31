@@ -6,7 +6,7 @@ import intranet.apps.groups.models
 
 
 class Migration(migrations.Migration):
-""" NOTE: You may need to run ./manage.py fake """
+    """ NOTE: You may need to run ./manage.py fake """
 
     dependencies = [
         ('auth', '0006_require_contenttypes_0002'),
