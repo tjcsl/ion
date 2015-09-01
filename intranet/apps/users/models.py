@@ -736,10 +736,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
         """
-        if not self.dn:
+        if self.dn is None:
             return False
 
-        key = ":".join([self.dn, "user_info_permissions"])
+        key = "{}:{}".format(self.dn, "user_info_permissions")
 
         cached = cache.get(key)
 
