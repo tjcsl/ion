@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+import re
 import logging
 import requests
 from requests_oauthlib import OAuth1
