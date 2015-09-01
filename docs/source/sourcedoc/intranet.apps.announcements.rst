@@ -36,6 +36,14 @@ intranet.apps.announcements.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.announcements.notifications module
+------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.notifications
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.announcements.serializers module
 ----------------------------------------------
 

@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     intranet.apps.eighth.forms
+    intranet.apps.eighth.management
     intranet.apps.eighth.views
 
 Submodules
@@ -40,6 +41,14 @@ intranet.apps.eighth.models module
 ----------------------------------
 
 .. automodule:: intranet.apps.eighth.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.eighth.notifications module
+-----------------------------------------
+
+.. automodule:: intranet.apps.eighth.notifications
     :members:
     :undoc-members:
     :show-inheritance:

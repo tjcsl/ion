@@ -4,6 +4,14 @@ intranet.apps.notifications package
 Submodules
 ----------
 
+intranet.apps.notifications.emails module
+-----------------------------------------
+
+.. automodule:: intranet.apps.notifications.emails
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.notifications.models module
 -----------------------------------------
 
@@ -16,6 +24,14 @@ intranet.apps.notifications.tests module
 ----------------------------------------
 
 .. automodule:: intranet.apps.notifications.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.notifications.urls module
+---------------------------------------
+
+.. automodule:: intranet.apps.notifications.urls
     :members:
     :undoc-members:
     :show-inheritance:

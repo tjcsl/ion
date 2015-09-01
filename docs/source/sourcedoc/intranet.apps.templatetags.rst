@@ -20,6 +20,14 @@ intranet.apps.templatetags.dictionaries module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.templatetags.forms module
+---------------------------------------
+
+.. automodule:: intranet.apps.templatetags.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.templatetags.math module
 --------------------------------------
 

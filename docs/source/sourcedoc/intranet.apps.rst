@@ -18,10 +18,12 @@ Subpackages
     intranet.apps.groups
     intranet.apps.notifications
     intranet.apps.polls
+    intranet.apps.preferences
     intranet.apps.schedule
     intranet.apps.search
     intranet.apps.templatetags
     intranet.apps.users
+    intranet.apps.welcome
 
 Submodules
 ----------

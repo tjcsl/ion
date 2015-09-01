@@ -12,6 +12,14 @@ intranet.utils.ical module
     :undoc-members:
     :show-inheritance:
 
+intranet.utils.serialization module
+-----------------------------------
+
+.. automodule:: intranet.utils.serialization
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.urls module
 --------------------------
 

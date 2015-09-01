@@ -4,6 +4,14 @@ intranet.apps.files package
 Submodules
 ----------
 
+intranet.apps.files.forms module
+--------------------------------
+
+.. automodule:: intranet.apps.files.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.files.models module
 ---------------------------------
 
