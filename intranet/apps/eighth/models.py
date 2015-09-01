@@ -671,7 +671,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         members = []
         for member in self.members.all():
             show = False
-            show = member.can_view_eighth
+            if member.dn and member.can_view_eighth:
+                show = member.can_view_eighth
+
             if user and user.is_eighth_admin:
                 show = True
             if member == user:
