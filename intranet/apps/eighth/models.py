@@ -294,6 +294,9 @@ class EighthActivity(AbstractBaseEighthModel):
         if update_aid:
             # Update aid with new ID and re-save
             self.aid = self.pk
+            # If save was originally called from create(), then we have force_insert=True.
+            # We need to filter that out to avoid a primary key conflict.
+            kwargs = {k: v for k,v in kwargs.items() if k != 'force_insert'}
             super(EighthActivity, self).save(*args, **kwargs)
 
     class Meta:
