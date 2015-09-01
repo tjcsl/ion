@@ -12,6 +12,14 @@ intranet.apps.events.admin module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.events.forms module
+---------------------------------
+
+.. automodule:: intranet.apps.events.forms
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.events.models module
 ----------------------------------
 
