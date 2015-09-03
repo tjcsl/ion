@@ -39,6 +39,9 @@ class SignupException(Exception):
     def __repr__(self):
         return "SignupException(" + ", ".join(self.errors) + ")"
 
+    def __str__(self):
+        return ", ".join(self.errors)
+
     def __setattr__(self, name, value):
         if name in SignupException._messages:
             if type(value) == list:
