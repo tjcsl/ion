@@ -161,6 +161,10 @@ def picture_view(request, user_id, year=None):
 @login_required
 def class_section_view(request, section_id):
     c = Class(id=section_id)
+    try:
+        name = c.name
+    except Exception:
+        raise Http404
 
     attrs = {
         "name": c.name,

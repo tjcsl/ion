@@ -34,3 +34,22 @@ DATABASES = {
         'HOST': url.hostname
     }
 }
+
+SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
+
+
+def debug_toolbar_callback(request):
+    """Show the debug toolbar to those with the Django staff permission, excluding
+       the Eighth Period office.
+    """
+    return (not request.is_ajax() and
+            request.user and
+            request.user.is_authenticated() and
+            request.user.is_staff() and
+            not request.user.id == 9999)
+
+if SHOW_DEBUG_TOOLBAR:
+
+    DEBUG_TOOLBAR_CONFIG.update({
+        "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
+    })

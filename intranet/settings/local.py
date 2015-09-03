@@ -67,45 +67,5 @@ INTERNAL_IPS = glob_list([
     "198.38.*.*"
 ])
 
-SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
-
-if SHOW_DEBUG_TOOLBAR:
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-    # Boolean value defines whether enabled by default
-    _panels = [
-        ("debug_toolbar.panels.versions.VersionsPanel", False),
-        ("debug_toolbar.panels.timer.TimerPanel", True),
-        # ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
-        ("debug_toolbar.panels.settings.SettingsPanel", False),
-        ("debug_toolbar.panels.headers.HeadersPanel", False),
-        ("debug_toolbar.panels.request.RequestPanel", False),
-        ("debug_toolbar.panels.sql.SQLPanel", True),
-        ("debug_toolbar.panels.staticfiles.StaticFilesPanel", False),
-        ("debug_toolbar.panels.templates.TemplatesPanel", False),
-        ("debug_toolbar.panels.signals.SignalsPanel", False),
-        ("debug_toolbar.panels.logging.LoggingPanel", True),
-        ("debug_toolbar.panels.redirects.RedirectsPanel", False),
-    ]
-
-    DEBUG_TOOLBAR_CONFIG = {
-        "INTERCEPT_REDIRECTS": False,
-        "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]
-    }
-
-    DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
-
-    MIDDLEWARE_CLASSES = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ] + MIDDLEWARE_CLASSES[:-1] + [
-        "intranet.middleware.templates.StripNewlinesMiddleware",
-    ] + MIDDLEWARE_CLASSES[-1:]
-
-    INSTALLED_APPS += (
-        "debug_toolbar",
-        "debug_toolbar_line_profiler",
-    )
-
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
