@@ -142,7 +142,8 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
-    "intranet.middleware.access_log.AccessLogMiddleWare"
+    "intranet.middleware.access_log.AccessLogMiddleWare",
+    "intranet.middleware.traceback.UserTracebackMiddleware"
 ]
 
 ROOT_URLCONF = "intranet.urls"
