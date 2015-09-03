@@ -35,8 +35,8 @@ def profile_view(request, user_id=None):
             
             if profile_user is None:
                 raise Http404
-            except User.DoesNotExist:
-                raise Http404
+        except User.DoesNotExist:
+            raise Http404
     else:
         profile_user = request.user
 
