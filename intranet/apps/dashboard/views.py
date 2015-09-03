@@ -132,13 +132,13 @@ def dashboard_view(request):
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
         announcements = (Announcement.objects.all()
-                                             .prefetch_related("groups"))
+                                             .prefetch_related("groups", "user", "event"))
     else:
         # Only show announcements for groups that the user is enrolled in.
         announcements = (Announcement.objects
                                      .visible_to_user(request.user)
                                      .filter(expiration_date__gt=timezone.now())
-                                     .prefetch_related("groups", "user"))
+                                     .prefetch_related("groups", "user", "event"))
 
     # pagination
     if "start" in request.GET:
@@ -177,11 +177,13 @@ def dashboard_view(request):
 
     user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
 
+    """ This isn't important and it adds a lot of overhead.
     # add to users_seen
     u = request.user
     for ann in announcements:
         u.announcements_seen.add(ann.user_map)
     u.save()
+    """
 
     context = {
         "announcements": announcements,

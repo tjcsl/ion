@@ -30,8 +30,12 @@ def profile_view(request, user_id=None):
         return redirect("eighth_profile", user_id=user_id)
 
     if user_id is not None:
-        profile_user = User.get_user(id=user_id)
-        if profile_user is None:
+        try:
+            profile_user = User.get_user(id=user_id)
+            
+            if profile_user is None:
+                raise Http404
+        except User.DoesNotExist:
             raise Http404
     else:
         profile_user = request.user
@@ -93,7 +97,10 @@ def picture_view(request, user_id, year=None):
             specified, use the preferred picture.
 
     """
-    user = User.get_user(id=user_id)
+    try:
+        user = User.get_user(id=user_id)
+    except User.DoesNotExist:
+        raise Http404
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
 
     if user is None:
@@ -154,6 +161,10 @@ def picture_view(request, user_id, year=None):
 @login_required
 def class_section_view(request, section_id):
     c = Class(id=section_id)
+    try:
+        name = c.name
+    except Exception:
+        raise Http404
 
     attrs = {
         "name": c.name,

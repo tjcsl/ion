@@ -47,7 +47,7 @@ class Event(models.Model):
     user = models.ForeignKey(User)
 
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True)
-    announcement = models.ForeignKey(Announcement, null=True, blank=True)
+    announcement = models.ForeignKey(Announcement, null=True, blank=True, related_name="event")
     
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
