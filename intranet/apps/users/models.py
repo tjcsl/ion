@@ -10,6 +10,7 @@ import re
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
+from django.core import exceptions
 from django.contrib.auth.models import (
     AbstractBaseUser, PermissionsMixin, UserManager)
 from django.core.signing import Signer
@@ -1151,7 +1152,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             if not self.is_active:
                 return None
 
-            raise Exception("Could not determine DN of User with ID {}".format(self.id))
+            raise exceptions.ObjectDoesNotExist("Could not determine DN of User with ID {} (requesting {})".format(self.id, name))
 
         attr = User.ldap_user_attributes[name]
         should_cache = attr["cache"]

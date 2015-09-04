@@ -11,6 +11,7 @@ from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.core import exceptions
 from django.templatetags.static import static
 from django.views.generic.base import View
 
@@ -117,6 +118,15 @@ class login_view(View):
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
             default_next_page = "/"
+
+            dn = request.user.dn
+            if dn is None or not dn:
+                do_logout(request)
+                return index_view(request, added_context={
+                    "auth_message": "Your account is disabled."
+                })
+
+
             if request.user.startpage == "eighth":
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
@@ -151,14 +161,18 @@ def about_view(request):
     """Show an about page with credits."""
     return render(request, "auth/about.html")
 
-
-def logout_view(request):
+def do_logout(request):
     """Clear the Kerberos cache and logout."""
     try:
         kerberos_cache = request.session["KRB5CCNAME"]
         os.system("/usr/bin/kdestroy -c " + kerberos_cache)
     except KeyError:
         pass
+
     logger.info("Destroying kerberos cache and logging out")
     logout(request)
+
+def logout_view(request):
+    """Clear the Kerberos cache and logout."""
+    do_logout(request)
     return redirect("/")
