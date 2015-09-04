@@ -58,8 +58,7 @@ sqlcmd(){
     sudo -u postgres psql -U postgres -d postgres -c "$@"
 }
 sqlcmd "CREATE DATABASE ion;"
-sqlcmd "CREATE USER ion;"
-sqlcmd "ALTER USER ion WITH PASSWORD '$(devconfig sql_password)';"
+sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';"
 sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 
