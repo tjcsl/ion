@@ -27,9 +27,6 @@ def create_session(hostname, username, password):
 @login_required
 def files_view(request):
     """The main filecenter view."""
-    if not request.user.has_admin_permission('files'):
-        return render(request, "files/devel_message.html")
-
 
     hosts = Host.objects.visible_to_user(request.user)
 
