@@ -33,9 +33,9 @@
     <form action="{% url 'eighth_admin_distribute_action' %}" method="post" onsubmit="return confirm('Are you sure you want to sign these users up for these activities?')">
         
         {% if users_type == "unsigned" %}
-            <p>These users have not signed up for any activities on {{ eighthblock }}.</p>
+            <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
         {% elif users_type == "group" %}
-            <b>Group:</b> {{ group }}<br />
+            <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br />
             <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a>
             <br />
         {% endif %}

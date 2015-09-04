@@ -230,6 +230,8 @@ $(function() {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }
+                } else if(xhr.status == 401) {
+                    location.reload();
                 } else {
                     console.error(xhr.responseText);
                     if (xhr.status == 401) {
