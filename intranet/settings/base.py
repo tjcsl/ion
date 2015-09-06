@@ -385,11 +385,11 @@ if SHOW_DEBUG_TOOLBAR:
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
-    MIDDLEWARE_CLASSES = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ] + MIDDLEWARE_CLASSES[:-1] + [
+    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:-1] + [
         "intranet.middleware.templates.StripNewlinesMiddleware",
-    ] + MIDDLEWARE_CLASSES[-1:]
+    ] + MIDDLEWARE_CLASSES[-1:] + [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
 
     INSTALLED_APPS += (
         "debug_toolbar",

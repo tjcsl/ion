@@ -45,14 +45,11 @@ def debug_toolbar_callback(request):
     if request.is_ajax():
         return False
 
-    try:
-        if (request.user and
-            request.user.is_authenticated() and
-            request.user.is_staff() and
-            not request.user.id == 9999):
-            return True
-    except Exception:
-        pass
+    if (hasattr(request, 'user') and
+        request.user.is_authenticated()):
+        return (request.user.is_staff and
+                not request.user.id == 9999 and
+                "debug" in request.GET)
 
     return False
 
