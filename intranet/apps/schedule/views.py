@@ -210,6 +210,7 @@ def admin_home_view(request):
     next_month = (firstday + timedelta(days=31)).strftime("%Y-%m")
     last_month = (firstday + timedelta(days=-31)).strftime("%Y-%m")
     
+    daytypes = DayType.objects.all()
 
     data = {
         "month_name": month_name,
@@ -217,7 +218,8 @@ def admin_home_view(request):
         "add_form": add_form,
         "this_month": this_month,
         "next_month": next_month,
-        "last_month": last_month
+        "last_month": last_month,
+        "daytypes": daytypes
     }
 
     return render(request, "schedule/admin_home.html", data)
