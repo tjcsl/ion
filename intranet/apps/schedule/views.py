@@ -182,25 +182,32 @@ def admin_add_view(request):
 @schedule_admin_required
 def admin_daytype_view(request, id=None):
     if request.method == "POST":
-        if "id" in request.POST and request.POST.get("make_copy", None) is not None:
-            id = request.POST["id"]
-            daytype = DayType.objects.get(id=id)
-            blocks = daytype.blocks.all()
-            daytype.pk = None
-            daytype.name += " (Copy)"
-            daytype.save()
-            for blk in blocks:
-                daytype.blocks.add(blk)
-            daytype.save()
-
-            if "return_url" in request.POST:
-                return HttpResponse(reverse("schedule_daytype", args=[daytype.id]))
-
-            return redirect("schedule_daytype", daytype.id)
-
-
+        
         if "id" in request.POST:
             id = request.POST["id"]
+
+            if "make_copy" in request.POST:
+                daytype = DayType.objects.get(id=id)
+                blocks = daytype.blocks.all()
+                daytype.pk = None
+                daytype.name += " (Copy)"
+                daytype.save()
+                for blk in blocks:
+                    daytype.blocks.add(blk)
+                daytype.save()
+
+                if "return_url" in request.POST:
+                    return HttpResponse(reverse("schedule_daytype", args=[daytype.id]))
+
+                return redirect("schedule_daytype", daytype.id)
+
+            if "delete" in request.POST:
+                daytype = DayType.objects.get(id=id)
+                name = "{}".format(daytype)
+                daytype.delete()
+                messages.success(request, "Deleted {}".format(name))
+                return redirect("schedule_admin")
+
         if id:
             daytype = DayType.objects.get(id=id)
             logger.debug("instance:", daytype)
