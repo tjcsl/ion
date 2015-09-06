@@ -96,6 +96,11 @@ def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
 
+# does NOT require login
+def schedule_embed(request):
+    data = schedule_context(request)
+    return render(request, "schedule/embed.html", data)
+
 # DOES require login
 @login_required
 def schedule_widget_view(request):
