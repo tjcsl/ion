@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import calendar
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import Block, DayType, Day, Time
 from .forms import DayTypeForm, DayForm
@@ -40,6 +42,7 @@ def schedule_context(request=None, date=None):
         date = decode_date(request.GET['date'])
     else:
         date = None
+
     if date is None:
         date = datetime.now()
 
@@ -189,6 +192,10 @@ def admin_daytype_view(request, id=None):
             for blk in blocks:
                 daytype.blocks.add(blk)
             daytype.save()
+
+            if "return_url" in request.POST:
+                return HttpResponse(reverse("schedule_daytype", args=[daytype.id]))
+
             return redirect("schedule_daytype", daytype.id)
 
 

@@ -17,7 +17,28 @@ function modify_daytype_form() {
 
 $(function() {
     $("select#modify_daytypes").selectize();
-})
+
+    $(".change-daytype-button").click(function(event) {
+        event.preventDefault();
+        console.debug("Change daytype", $(this))
+    });
+
+    $(".make-copy-button").click(function(event) {
+        event.preventDefault();
+        console.debug("Make copy", $(this));
+
+        if(!confirm("Make a copy of '" + $(this).attr("data-name") + "'?")) return;
+
+        $.post($(this).attr("data-endpoint"), {
+            "id": $(this).attr("data-id"),
+            "make_copy": 1,
+            "return_url": 1
+        }, function(r) {
+            console.info(r);
+            location.href = r;
+        });
+    })
+});
     </script>
 {% endblock %}
 
@@ -56,6 +77,7 @@ $(function() {
         margin-top: -22px; /* keep in line with day */
         text-align: center;
         font-weight: bold;
+        font-style: normal;
     }
 
     .schedule-month .bellschedule-table th {
@@ -73,8 +95,9 @@ $(function() {
         margin: 8px -40px;
         text-align: center;
         left: 50%;
-        width: 80px;
+        width: 120px;
         height: 30px;
+        margin-left: -60px;
     }
 
     .schedule-month > tbody > tr > td .buttons .button {
@@ -168,7 +191,11 @@ $(function() {
             {% if not day.empty %}
                 <b>{{ day.day }}.</b>
                 {% if day.schedule %}
-                    <em class="day {{ day.schedule.class }}">{{ day.schedule.name }}</em>
+                        <em class="day">
+                            <a href="{% url 'schedule_daytype' day.schedule.id %}" class="day-name {{ day.schedule.class_name }}">
+                                {{ day.schedule.name }}
+                            </a>
+                        </em>
                     <table class="bellschedule-table">
                     {% for blk in day.schedule.blocks.all %}
                         <tr>
@@ -181,18 +208,19 @@ $(function() {
                     <b>No schedule assigned.</b>
                 {% endif %}
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
-                    <a class="button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
+                    
+                    <a class="button change-daytype-button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
                         <i class='edit fa fa-exchange'></i>
                     </a>
+
                     {% if day.schedule %}
-                        <a href="{% url 'schedule_daytype' %}?date={{ day.date }}" class="button" title="Change Schedule">
-                            <i class='edit fa fa-pencil'></i>
-                        </a>
-                    {% else %}
-                        <a class="button" title="Custom Schedule">
-                            <i class='edit fa fa-star'></i>
+                        <a href="{% url 'schedule_daytype' day.schedule.id %}" class="button make-copy-button" title="Make Copy of Schedule" data-endpoint="{% url 'schedule_daytype' %}" data-id="{{ day.schedule.id }}" data-name="{{ day.schedule.name }}">
+                            <i class='edit fa fa-reply'></i>
                         </a>
                     {% endif %}
+                    <a class="button" title="Custom Schedule">
+                        <i class='edit fa fa-star'></i>
+                    </a>
                 </span>
             {% else %}
                 &nbsp;

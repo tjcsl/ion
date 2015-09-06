@@ -139,6 +139,13 @@
             <input type="hidden" name="make_copy" value="1" />
             <input type="submit" value="Make Copy" />
         </form>
+
+        <form action="{% url 'schedule_daytype' %}" method="post" onsubmit="return confirm('Are you sure you want to delete this day type?')">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ daytype.id }}" />
+            <input type="hidden" name="delete" value="1" />
+            <input type="submit" value="Delete" />
+        </form>
         {% endif %}
 
         <form action="{% url 'schedule_daytype' %}" method="post">
