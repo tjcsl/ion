@@ -8,6 +8,8 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.js' %}"></script>
+    
     <script type="text/javascript">
 function modify_daytype_form() {
     var v = $("select#modify_daytypes").val();
@@ -18,16 +20,32 @@ function modify_daytype_form() {
 $(function() {
     $("select#modify_daytypes").selectize();
 
+
+    $(".change-daytype-form #id_day_type").selectize();
+    $(".change-daytype-form #id_date").datepicker();
+
     $(".change-daytype-button").click(function(event) {
         event.preventDefault();
-        console.debug("Change daytype", $(this))
+        var td = $(this).parent().parent();
+        console.debug("Change daytype", td);
+        var pos = td.position();
+
+
+        var fm = $(".change-daytype-form");
+        fm.css(pos);
+        fm.show();
+        $("input[name=date]", fm).val($(this).attr("data-date"));
+
     });
 
     $(".make-copy-button").click(function(event) {
         event.preventDefault();
-        console.debug("Make copy", $(this));
+        console.debug("Make copy", $(this).parent().parent(), $(this).attr("data-id"));
 
-        if(!confirm("Make a copy of '" + $(this).attr("data-name") + "'?")) return;
+        if(!confirm("Press OK to make a copy of '" + $(this).attr("data-name") + "', or hit Cancel to modify the original")) {
+            location.href = $(this).attr("data-endpoint") + "/" + $(this).attr("data-id");
+            return;
+        }
 
         $.post($(this).attr("data-endpoint"), {
             "id": $(this).attr("data-id"),
@@ -45,6 +63,7 @@ $(function() {
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
     <style type="text/css">
     .primary-content h2 {
@@ -132,11 +151,46 @@ $(function() {
         vertical-align: middle;
     }
 
+    .change-daytype-form {
+        display: none;
+        position: absolute;
+        border: 1px solid black;
+        background: #f0f0f0;
+        height: 150px;
+        width: 215px;
+        margin-left: -20px;
+        z-index: 10;
+    }
+
+    .change-daytype-form tr {
+        height: 42px;
+    }
+
+    .change-daytype-form .close {
+        float: right;
+    }
+
     </style>
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
+        <div class="change-daytype-form">
+            <h2>Create Day Mapping</h2>
+            <form action="{% url 'schedule_add' %}" method="post">
+                {% csrf_token %}
+                <table>
+                    {{ add_form.as_table }}
+                    <tr><td colspan="2" style="padding-left: 5px">
+                        <input type="submit" value="Create Mapping" />
+                        <button class="close" onclick="$('.change-daytype-form').hide(); return false">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td></tr>
+                </table>
+            </form>
+        </div>
+
         <form action="" name="modify_daytypes" onsubmit="return modify_daytype_form()">
         <table class="modify-daytype-table">
         <tr>
@@ -209,7 +263,7 @@ $(function() {
                 {% endif %}
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
                     
-                    <a class="button change-daytype-button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}">
+                    <a class="button change-daytype-button" title="Change Day Type" href="{% url 'schedule_add' %}?date={{ day.formatted_date }}" data-endpoint="{% url 'schedule_add' %}" data-date="{{ day.formatted_date }}">
                         <i class='edit fa fa-exchange'></i>
                     </a>
 
@@ -218,7 +272,8 @@ $(function() {
                             <i class='edit fa fa-reply'></i>
                         </a>
                     {% endif %}
-                    <a class="button" title="Custom Schedule">
+
+                    <a href="{% url 'schedule_daytype' %}?assign_date={{ day.formatted_date }}" class="button" title="Custom Schedule">
                         <i class='edit fa fa-star'></i>
                     </a>
                 </span>

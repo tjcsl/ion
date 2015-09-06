@@ -148,12 +148,12 @@ def admin_home_view(request):
             week.append(get_day_data(firstday, d))
         sch.append(week)
 
-    daytypes = DayType.objects.all()
+    add_form = DayForm()
 
     data = {
         "month_name": month_name,
         "sch": sch,
-        "daytypes": daytypes
+        "add_form": add_form
     }
 
     return render(request, "schedule/admin_home.html", data)
@@ -164,13 +164,15 @@ def admin_add_view(request):
         date = request.POST.get("date")
         day = Day.objects.filter(date=date)
         if len(day) <= 1:
-            messages.success(request, "Deleted previous mapping on {}".format(date))
             day.delete()
         form = DayForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Created mapping.")
-            redirect("schedule_admin")
+            messages.success(request, "{} is now a {}".format(date, form.cleaned_data["day_type"]))
+            return redirect("schedule_admin")
+        else:
+            messages.success(request, "{} has no schedule assigned".format(date))
+            return redirect("schedule_admin")
     else:
         form = DayForm()
 
@@ -246,6 +248,18 @@ def admin_daytype_view(request, id=None):
                 )
                 model.blocks.add(bobj)
             model.save()
+
+            if "assign_date" in request.POST:
+                assign_date = request.POST.get("assign_date")
+                try:
+                    dayobj = Day.objects.get(date=assign_date)
+                except Day.DoesNotExist:
+                    dayobj = Day.objects.create(date=assign_date, day_type=model)
+                else:
+                    assign_date.day_type = model
+                    assign_date.save()
+                messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
+
             messages.success(request, "Successfully added Day Type.")
             return redirect("schedule_daytype", model.id)
         else:
@@ -256,4 +270,14 @@ def admin_daytype_view(request, id=None):
     else:
         daytype = None
         form = DayTypeForm()
-    return render(request, "schedule/admin_daytype.html", {"form": form, "action": "add", "daytype": daytype})
+
+    context = {
+        "form": form,
+        "action": "add",
+        "daytype": daytype
+    }
+
+    if "assign_date" in request.GET:
+        context["assign_date"] = request.GET.get("assign_date")
+
+    return render(request, "schedule/admin_daytype.html", context)
