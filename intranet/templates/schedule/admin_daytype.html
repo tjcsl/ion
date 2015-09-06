@@ -133,12 +133,26 @@
         <h2>{% if daytype %}Edit{% else %}Create{% endif %} Day Type</h2>
 
         {% if daytype %}
+        <table>
+            <tr>
+                <td>
         <form action="{% url 'schedule_daytype' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ daytype.id }}" />
             <input type="hidden" name="make_copy" value="1" />
             <input type="submit" value="Make Copy" />
         </form>
+                </td>
+                <td>
+        <form action="{% url 'schedule_daytype' %}" method="post" onsubmit="return confirm('Are you sure you want to delete this day type?')">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ daytype.id }}" />
+            <input type="hidden" name="delete" value="1" />
+            <input type="submit" value="Delete" />
+        </form>
+                </td>
+            </tr>
+        </table>
         {% endif %}
 
         <form action="{% url 'schedule_daytype' %}" method="post">
@@ -146,6 +160,12 @@
         {% if daytype %}
             <input type="hidden" name="id" value="{{ daytype.id }}" />
         {% endif %}
+
+        {% if assign_date %}
+            <input type="hidden" name="assign_date" value="{{ assign_date|escape }}" />
+            <b>Assigning to {{ assign_date|escape }}</b>
+        {% endif %}
+
         <br /><br />
             <table class="bellschedule-table">
             <thead>

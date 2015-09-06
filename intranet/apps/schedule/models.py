@@ -53,6 +53,25 @@ class DayType(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def class_name(self):
+        n = self.name.lower()
+        t = "other"
+
+        if "blue day" in n:
+            t = "blue"
+
+        if "red day" in n:
+            t = "red"
+
+        if "anchor day" in n:
+            t = "anchor"
+
+        if self.special:
+            return "day-type-{} day-special".format(t)
+        else:
+            return "day-type-{}".format(t)
+
     class Meta:
         ordering = ("name",)
 

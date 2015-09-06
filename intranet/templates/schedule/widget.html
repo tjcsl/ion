@@ -20,14 +20,20 @@
             <div class="eighth-block">
                 <div class="block-header">
                     {% if forloop.first %}
-                        <span class="block-daytype-name">{{ sched_ctx.dayobj.day_type.name }}</span>
+                        <span class="block-daytype-name day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</span>
                     {% endif %}
                     <div class="block-signup"{% if forloop.first %} style="top: 0"{% endif %}>
-                        {{ block.name }}
+                        {{ block.name }}:
                     </div>
                     <a class="ui-link">
                         {{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}
                     </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="eighth-block">
+                <div class="block-header">
+                    <span class="block-daytype-name day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</span>
                 </div>
             </div>
         {% endfor %}
@@ -51,9 +57,11 @@
     {% if user.is_eighth_admin %}
         <div class="schedule-admin">
             {% if sched_ctx.schedule_tomorrow %}
-                <span title="{{ sched_ctx.date_tomorrow }}">Tomorrow: {{ sched_ctx.schedule_tomorrow.day_type.name }}</span>
+                <span title="{{ sched_ctx.date_tomorrow }}">
+                    Tomorrow: <span class="{{ sched_ctx.schedule_tomorrow.day_type.class_name }}">{{ sched_ctx.schedule_tomorrow.day_type.name }}</span>
+                </span>
             {% else %}
-                <span style="color: red" title="{{ sched_ctx.date_tomorrow">No schedule tomorrow</b>
+                <span style="color: red" title="{{ sched_ctx.date_tomorrow"><i class="fa fa-exclamation-triangle"></i> No schedule tomorrow</b>
             {% endif %}
 
             <a href="{% url 'schedule_admin' %}" class="button small-button" style="float: right">Schedule Admin</a>
