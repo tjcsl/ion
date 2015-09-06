@@ -124,13 +124,68 @@ def get_day_data(firstday, daynum):
     try:
         dayobj = Day.objects.get(date=date)
         data["schedule"] = dayobj.day_type
+        data["dayobj"] = dayobj
     except Day.DoesNotExist:
         data["schedule"] = None
+        data["dayobj"] = None
 
     return data
 
 @schedule_admin_required
+def do_default_fill(request):
+    """Change all Mondays to 'Anchor Day'
+       Change all Tuesday/Thursdays to 'Blue Day'
+       Change all Wednesday/Fridays to 'Red Day'
+    """
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 4
+    anchor_day = DayType.objects.get(name="Anchor Day")
+    blue_day = DayType.objects.get(name="Blue Day")
+    red_day = DayType.objects.get(name="Red Day")
+    daymap = {
+        MONDAY: anchor_day,
+        TUESDAY: blue_day,
+        WEDNESDAY: red_day,
+        THURSDAY: blue_day,
+        FRIDAY: red_day
+    }
+
+    msgs = []
+
+    month = request.POST.get("month")
+    firstday = datetime.strptime(month, "%Y-%m")
+
+    yr, mn = month.split("-")
+    cal = calendar.monthcalendar(int(yr), int(mn))
+    for w in cal:
+        for d in w:
+            day = get_day_data(firstday, d)
+            logger.debug(day)
+
+            if "empty" in day:
+                continue
+
+            if "schedule" not in day or day["schedule"] is None:
+                day_of_week = day["date"].weekday()
+                if day_of_week in daymap:
+                    type_obj = daymap[day_of_week]
+
+                    day_obj = Day.objects.create(date=day["formatted_date"], day_type=type_obj)
+                    msg = "{} is now a {}".format(day["formatted_date"], day_obj.day_type)
+                    msgs.append(msg)
+                    messages.success(request, msg)
+
+    return redirect("schedule_admin")
+
+@schedule_admin_required
 def admin_home_view(request):
+    if "default_fill" in request.POST:
+        return do_default_fill(request)
+
+
     if "month" in request.GET:
         month = request.GET.get("month")
     else:
@@ -150,10 +205,19 @@ def admin_home_view(request):
 
     add_form = DayForm()
 
+
+    this_month = firstday.strftime("%Y-%m")
+    next_month = (firstday + timedelta(days=31)).strftime("%Y-%m")
+    last_month = (firstday + timedelta(days=-31)).strftime("%Y-%m")
+    
+
     data = {
         "month_name": month_name,
         "sch": sch,
-        "add_form": add_form
+        "add_form": add_form,
+        "this_month": this_month,
+        "next_month": next_month,
+        "last_month": last_month
     }
 
     return render(request, "schedule/admin_home.html", data)

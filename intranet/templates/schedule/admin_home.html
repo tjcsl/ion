@@ -17,6 +17,10 @@ function modify_daytype_form() {
     return false;
 }
 
+defaultFillWarning = function() {
+    return confirm("This operation will change all Mondays to 'Anchor Day,' Tuesday/Thursdays to 'Blue Day,' and Wednesday/Fridays to 'Red Day' on days that currently have no schedule in this month.\n\nThis operation cannot be undone. Continue?");
+}
+
 $(function() {
     $("select#modify_daytypes").selectize();
 
@@ -55,7 +59,8 @@ $(function() {
             console.info(r);
             location.href = r;
         });
-    })
+    });
+
 });
     </script>
 {% endblock %}
@@ -136,6 +141,10 @@ $(function() {
         display: none;
     }
 
+    form[name=modify_daytypes] {
+        display: inline-block;
+    }
+
     #modify_daytypes,
     form[name=modify_daytypes] .selectize-control {
         width: 250px;
@@ -167,6 +176,11 @@ $(function() {
     }
 
     .change-daytype-form .close {
+        float: right;
+    }
+
+    .schedule-methods {
+        display: inline-block;
         float: right;
     }
 
@@ -209,6 +223,15 @@ $(function() {
         </tr>
         </table>
         </form>
+
+        <div class="schedule-methods">
+            <form action="" method="post" onsubmit="return defaultFillWarning()">
+                {% csrf_token %}
+                <input type="hidden" name="default_fill" value="1" />
+                <input type="hidden" name="month" value="{{ this_month }}" />
+                <input type="submit" value="Fill Month with Defaults" />
+            </form>
+        </div>
 
         <table class="schedule-month">
         <tbody>
