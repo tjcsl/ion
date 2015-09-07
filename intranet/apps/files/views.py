@@ -15,6 +15,7 @@ from django.http import StreamingHttpResponse
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 from .models import Host
 from .forms import UploadFileForm
 from intranet import settings
@@ -36,6 +37,8 @@ def files_view(request):
     return render(request, "files/home.html", context)
 
 @login_required
+@sensitive_variables('message', 'key', 'iv', 'ciphertext')
+@sensitive_post_parameters('password')
 def files_auth(request):
     """Display authentication for filecenter."""
     if "password" in request.POST:
