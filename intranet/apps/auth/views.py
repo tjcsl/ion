@@ -14,6 +14,8 @@ from django.contrib.auth import login, logout
 from django.core import exceptions
 from django.templatetags.static import static
 from django.views.generic.base import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -66,6 +68,7 @@ def get_bg_pattern():
 
     return static(file_path + random.choice(files))
 
+@sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
     """Process and show the main login page or dashboard if logged in."""
     if request.user.is_authenticated() and not force_login:
@@ -90,6 +93,7 @@ class login_view(View):
 
     """Log in and redirect a user."""
 
+    @method_decorator(sensitive_post_parameters("password"))
     def post(self, request):
         """Validate and process the login POST request."""
 
@@ -153,6 +157,7 @@ class login_view(View):
             logger.info("Login failed as {}".format(request.POST.get("username", "unknown")))
             return index_view(request, auth_form=form)
 
+    @method_decorator(sensitive_post_parameters("password"))
     def get(self, request):
         """Redirect to the login page."""
         return index_view(request, force_login=True)
