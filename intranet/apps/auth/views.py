@@ -133,7 +133,7 @@ class login_view(View):
 
             if request.user.is_eighthoffice:
                 """Eighthoffice's session should (almost) never expire."""
-                request.user.set_expiry(datetime.now() + timedelta(days=30))
+                request.session.set_expiry(datetime.now() + timedelta(days=30))
 
             if not request.user.first_login:
                 logger.info("First login")
