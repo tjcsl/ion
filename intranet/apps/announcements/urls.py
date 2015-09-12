@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.view_announcements, name="view_announcements"),
-    url(r"^/archive$", views.view_announcements_archive, name="view_announcements_archive"),
+    url(r"^/archive$", views.view_announcements_archive, name="announcements_archive"),
     url(r"^/add$", views.add_announcement_view, name="add_announcement"),
     url(r"^/request$", views.request_announcement_view, name="request_announcement"),
     url(r"^/approve/(?P<req_id>\d+)$", views.approve_announcement_view, name="approve_announcement"),

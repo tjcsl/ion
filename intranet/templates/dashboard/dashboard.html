@@ -54,6 +54,14 @@
         <h2>{{ dashboard_header }}</h2>
 
             <span class="announcements-icon-wrapper">
+            {% if show_expired %}
+
+                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-bullhorn" style="width: 13px"></i> View New</a>
+                &nbsp;
+            {% elif not show_widgets %}
+                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-undo" style="width: 13px"></i> Dashboard</a>
+                &nbsp;
+            {% endif %}
             {% if request.user.is_announcements_admin %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
                     <i class="fa fa-plus"></i>
@@ -104,14 +112,14 @@
         {% endfor %}
 
         {% if start_num == 0 %}
-            <a href="?show_expired=true" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
+            <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
 
         {% if start_num > 0 %}
-            <a href="?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
+            <a href="{% url 'view_announcements' %}?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
         {% endif %}
         {% if more_announcements %}
-            <a href="?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
+            <a href="{% url 'view_announcements' %}?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
         {% endif %}
     </div>
 </div>

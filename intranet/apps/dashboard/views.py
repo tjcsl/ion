@@ -184,6 +184,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "hide_announcements": True,
         "user_hidden_announcements": user_hidden_announcements,
         "show_widgets": show_widgets,
+        "show_expired": show_expired,
         "dashboard_title": dashboard_title,
         "dashboard_header": dashboard_header
     }
