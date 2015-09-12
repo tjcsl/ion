@@ -125,20 +125,30 @@ def gen_sponsor_schedule(user, num_blocks=6):
 
 
 @login_required
-def dashboard_view(request):
+def dashboard_view(request, show_widgets=True, show_expired=False):
     """Process and show the dashboard."""
 
-    if request.user.has_admin_permission("announcements") and "show_all" in request.GET:
+    announcements_admin = request.user.has_admin_permission("announcements")
+
+    if not show_expired:
+        show_expired = ("show_expired" in request.GET)
+
+    if announcements_admin and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
         announcements = (Announcement.objects.all()
                                              .prefetch_related("groups", "user", "event"))
     else:
         # Only show announcements for groups that the user is enrolled in.
-        announcements = (Announcement.objects
+        if show_expired:
+            announcements = (Announcement.objects
                                      .visible_to_user(request.user)
-                                     .filter(expiration_date__gt=timezone.now())
                                      .prefetch_related("groups", "user", "event"))
+        else:
+            announcements = (Announcement.objects
+                                         .visible_to_user(request.user)
+                                         .filter(expiration_date__gt=timezone.now())
+                                         .prefetch_related("groups", "user", "event"))
 
     # pagination
     if "start" in request.GET:
@@ -151,31 +161,54 @@ def dashboard_view(request):
     more_announcements = ((announcements.count() - start_num) > display_num)
     announcements = announcements[start_num:end_num]
 
+    user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
+
     is_student = request.user.is_student
     eighth_sponsor = request.user.is_eighth_sponsor
 
+    context = {
+        "announcements": announcements,
+        "announcements_admin": announcements_admin,
+        "start_num": start_num,
+        "end_num": end_num,
+        "prev_page": start_num - display_num,
+        "more_announcements": more_announcements,
+        "hide_announcements": True,
+        "user_hidden_announcements": user_hidden_announcements,
+        "show_widgets": show_widgets
+    }
 
-    if is_student:
-        schedule, no_signup_today = gen_schedule(request.user)
-    else:
-        schedule = None
-        no_signup_today = None
 
-    if eighth_sponsor:
-        sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
-    else:
-        sponsor_schedule = None
-        no_attendance_today = None
+    if show_widgets:
+        if is_student:
+            schedule, no_signup_today = gen_schedule(request.user)
+        else:
+            schedule = None
+            no_signup_today = None
 
-    announcements_admin = request.user.has_admin_permission("announcements")
+        if eighth_sponsor:
+            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
+        else:
+            sponsor_schedule = None
+            no_attendance_today = None
+
+        context.update({
+            "schedule": schedule,
+            "no_signup_today": no_signup_today,
+            "sponsor_schedule": sponsor_schedule,
+            "no_attendance_today": no_attendance_today,
+            "eighth_sponsor": eighth_sponsor,
+        })
+
     if announcements_admin:
         all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    else:
-        awaiting_approval = awaiting_teacher = None
 
-    user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
+        context.update({
+            "awaiting_teacher": awaiting_teacher,
+            "awaiting_approval": awaiting_approval,
+        })
 
     """ This isn't important and it adds a lot of overhead.
     # add to users_seen
@@ -185,23 +218,6 @@ def dashboard_view(request):
     u.save()
     """
 
-    context = {
-        "announcements": announcements,
-        "announcements_admin": announcements_admin,
-        "awaiting_teacher": awaiting_teacher,
-        "awaiting_approval": awaiting_approval,
-        "schedule": schedule,
-        "no_signup_today": no_signup_today,
-        "sponsor_schedule": sponsor_schedule,
-        "no_attendance_today": no_attendance_today,
-        "eighth_sponsor": eighth_sponsor,
-        "start_num": start_num,
-        "end_num": end_num,
-        "prev_page": start_num - display_num,
-        "more_announcements": more_announcements,
-        "hide_announcements": True,
-        "user_hidden_announcements": user_hidden_announcements
-    }
     schedule = schedule_context(request)
     context.update(schedule)
     return render(request, "dashboard/dashboard.html", context)
