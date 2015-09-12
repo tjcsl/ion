@@ -15,7 +15,9 @@
         </div-->
     </div>
     <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
-        <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
+        {% if sched_ctx.dayobj.day_type.name %}
+            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
+        {% endif %}
         {% if sched_ctx.dayobj %}
             <table class="bellschedule-table">
             {% for block in sched_ctx.blocks %}
@@ -26,11 +28,13 @@
             {% endfor %}
             </table>
         {% else %}
-            {% if sched_ctx.is_weekday %}
-                No schedule available
-            {% else %}
-                No school
-            {% endif %}
+            <div class="bellschedule-blank-message">
+                {% if sched_ctx.is_weekday %}
+                    No schedule available
+                {% else %}
+                    No school
+                {% endif %}
+            </div>
         {% endif %}
 
 
