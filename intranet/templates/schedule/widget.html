@@ -15,44 +15,33 @@
         </div-->
     </div>
     <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
-    {% if sched_ctx.dayobj %}
-        {% for block in sched_ctx.blocks %}
-            <div class="eighth-block">
-                <div class="block-header">
-                    {% if forloop.first %}
-                        <span class="block-daytype-name day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</span>
-                    {% endif %}
-                    <div class="block-signup"{% if forloop.first %} style="top: 0"{% endif %}>
-                        {{ block.name|safe }}:
-                    </div>
-                    <a class="ui-link">
-                        {{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}
-                    </a>
-                </div>
-            </div>
-        {% empty %}
-            <div class="eighth-block">
-                <div class="block-header">
-                    <span class="block-daytype-name day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</span>
-                </div>
-            </div>
-        {% endfor %}
-        
-    {% else %}
-        {% if sched_ctx.is_weekday %}
-            <div class="eighth-block">
-                <div class="block-header">
-                    <span class="block-noschedule">No schedule available</span>
-                </div>
-            </div>
+        {% if sched_ctx.dayobj %}
+            <table class="bellschedule-table">
+                <thead>
+                    <tr>
+                        <td class="day-name-cell">
+                            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+            {% for block in sched_ctx.blocks %}
+                <tr>
+                    <td></td>
+                    <th class="block">{{ block.name|safe }}:</th>
+                    <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
+                </tr>
+            {% endfor %}
+            </table>
         {% else %}
-            <div class="eighth-block">
-                <div class="block-header">
-                    <span class="block-noschedule noschool">No school</span>
-                </div>
-            </div>
+            {% if sched_ctx.is_weekday %}
+                No schedule available
+            {% else %}
+                No school
+            {% endif %}
         {% endif %}
-    {% endif %}
+
 
     {% if user.is_eighth_admin %}
         <div class="schedule-admin">
