@@ -24,4 +24,26 @@ $(document).ready(function() {
         var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
     });
 
+    footerCheck = function() {
+        var win = $(window).height();
+        var pg = $(document).height();
+
+        if(pg - win > 20) {
+            $(".footer").css({
+                position: "absolute",
+                top: (pg - 20)+"px"
+            });
+        } else {
+            $(".footer").css({
+                position: "fixed",
+                top: "auto"
+            });
+        }
+    }
+
+    $(window).resize(function() {
+        footerCheck();
+    });
+    footerCheck();
+
 });
