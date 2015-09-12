@@ -54,12 +54,8 @@
         <h2>{{ dashboard_header }}</h2>
 
             <span class="announcements-icon-wrapper">
-            {% if show_expired %}
-
-                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-bullhorn" style="width: 13px"></i> View New</a>
-                &nbsp;
-            {% elif not show_widgets %}
-                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-undo" style="width: 13px"></i> Dashboard</a>
+            {% if show_expired or not show_widgets %}
+                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
             {% if request.user.is_announcements_admin %}
