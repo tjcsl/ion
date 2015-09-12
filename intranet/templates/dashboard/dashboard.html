@@ -3,7 +3,7 @@
 {% load dates %}
 
 {% block title %}
-    {{ block.super}} - Dashboard
+    {{ block.super }} - {{ dashboard_title }}
 {% endblock %}
 
 {% block css %}
@@ -35,20 +35,23 @@
 {% endblock %}
 
 {% block main %}
+
+{% if show_widgets %}
 <div class="widgets{% if eighth_sponsor and request.user.is_student %} student-sponsor{% endif %}">
-{% if request.user.is_student %}
-    {% include "eighth/signup_widget.html" %}
-{% endif %}
-{% if request.user.is_teacher or eighth_sponsor %}
-    {% include "eighth/sponsor_widget.html" %}
-{% endif %}
+    {% if request.user.is_student %}
+        {% include "eighth/signup_widget.html" %}
+    {% endif %}
+    {% if request.user.is_teacher or eighth_sponsor %}
+        {% include "eighth/sponsor_widget.html" %}
+    {% endif %}
 
-{% include "schedule/widget.html" %}
+    {% include "schedule/widget.html" %}
 </div>
+{% endif %}
 
-<div class="announcements primary-content">
+<div class="announcements primary-content{% if not show_widgets %} no-widgets{% endif %}">
     <div class="announcements-header">
-        <h2>Announcements</h2>
+        <h2>{{ dashboard_header }}</h2>
 
             <span class="announcements-icon-wrapper">
             {% if request.user.is_announcements_admin %}
@@ -99,6 +102,10 @@
                 There are no announcements to display at this time.
             </div>
         {% endfor %}
+
+        {% if start_num == 0 %}
+            <a href="?show_expired=true" class="button" style="float:left"><i class="fa fa-archive" style="width: 13px"></i> View Archive</a>
+        {% endif %}
 
         {% if start_num > 0 %}
             <a href="?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>

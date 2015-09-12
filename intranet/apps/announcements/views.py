@@ -13,6 +13,7 @@ from intranet import settings
 from ..auth.decorators import announcements_admin_required
 from ..groups.models import Group
 from ..users.models import User
+from ..dashboard.views import dashboard_view
 from .models import Announcement, AnnouncementRequest
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .notifications import (email_send, request_announcement_email,
@@ -21,6 +22,20 @@ from .notifications import (email_send, request_announcement_email,
                             announcement_posted_email)
 
 logger = logging.getLogger(__name__)
+
+@login_required
+def view_announcements(request):
+    """ Show the dashboard with only announcements.
+    """
+    return dashboard_view(request, show_widgets=False)
+
+
+@login_required
+def view_announcements_archive(request):
+    """ Show the dashboard with only announcements,
+        showing expired posts.
+    """
+    return dashboard_view(request, show_widgets=False, show_expired=True)
 
 def announcement_posted_hook(request, obj):
     """

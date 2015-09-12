@@ -166,6 +166,14 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     is_student = request.user.is_student
     eighth_sponsor = request.user.is_eighth_sponsor
 
+    if show_widgets:
+        dashboard_title = "Dashboard"
+        dashboard_header = "Announcements"
+    elif show_expired:
+        dashboard_title = dashboard_header = "Announcement Archive"
+    else:
+        dashboard_title = dashboard_header = "Announcements"
+
     context = {
         "announcements": announcements,
         "announcements_admin": announcements_admin,
@@ -175,7 +183,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "more_announcements": more_announcements,
         "hide_announcements": True,
         "user_hidden_announcements": user_hidden_announcements,
-        "show_widgets": show_widgets
+        "show_widgets": show_widgets,
+        "dashboard_title": dashboard_title,
+        "dashboard_header": dashboard_header
     }
 
 
