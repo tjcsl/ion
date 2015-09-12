@@ -15,17 +15,9 @@
         </div-->
     </div>
     <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
+        <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
         {% if sched_ctx.dayobj %}
             <table class="bellschedule-table">
-                <thead>
-                    <tr>
-                        <td class="day-name-cell">
-                            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
-                        </td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </thead>
             {% for block in sched_ctx.blocks %}
                 <tr>
                     <td></td>
