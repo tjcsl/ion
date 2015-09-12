@@ -134,7 +134,7 @@ def add_event_view(request):
     #    return render(request, "events/not_ready.html")
 
     if request.method == "POST":
-        form = EventForm(request.POST, all_groups=request.user.has_admin_permission('groups'))
+        form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission('groups'))
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
