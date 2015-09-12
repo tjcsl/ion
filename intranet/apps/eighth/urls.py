@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import include, url
-from .views import routers, signup, attendance, profile
+from .views import routers, signup, attendance, activities, profile
 from .views.admin import (
-    general, activities, blocks, groups, rooms, sponsors, scheduling)
+    general, blocks, groups, rooms, sponsors, scheduling)
 from .views.admin import attendance as admin_attendance
+from .views.admin import activities as admin_activities
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
@@ -29,19 +30,22 @@ urlpatterns = [
     url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
     url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
 
-    # Roster (for students)
+    # Roster (for students/teachers)
     url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
     url(r"^/roster/raw/(?P<scheduled_activity_id>\d+)$", attendance.raw_roster_view, name="eighth_raw_roster"),
+
+    # Activity Info (for students/teachers)
+    url(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
 ]
 
 eighth_admin_patterns = [
-    # Activities
-    url(r"^activities/add$", activities.add_activity_view, name="eighth_admin_add_activity"),
-    url(r"^activities/edit/(?P<activity_id>\d+)$", activities.edit_activity_view, name="eighth_admin_edit_activity"),
-    url(r"^activities/delete/(?P<activity_id>\d+)$", activities.delete_activity_view, name="eighth_admin_delete_activity"),
+    # admin_activities
+    url(r"^activities/add$", admin_activities.add_activity_view, name="eighth_admin_add_activity"),
+    url(r"^activities/edit/(?P<activity_id>\d+)$", admin_activities.edit_activity_view, name="eighth_admin_edit_activity"),
+    url(r"^activities/delete/(?P<activity_id>\d+)$", admin_activities.delete_activity_view, name="eighth_admin_delete_activity"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),
