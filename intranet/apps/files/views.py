@@ -157,11 +157,28 @@ def files_type(request, fstype=None):
             host_dir = host_dir.format(authinfo["username"])
         if "{win}" in host_dir:
             host_dir = windows_dir_format(host_dir, request.user)
-        try:
-            sftp.chdir(host_dir)
-        except IOError as e:
-            messages.error(request, e)
-            return redirect("files")
+            try:
+                sftp.chdir(host_dir)
+            except IOError as e:
+                if "NoSuchFile" in "{}".format(e):
+                    host_dir = "/"
+                    try:
+                        sftp.chdir(host_dir)
+                    except IOError as e2:
+                        messages.error(request, e)
+                        messages.error(request, "Root directory: {}".format(e2))
+                        return redirect("files")
+                    else:
+                        messages.error(request, "Unable to access home folder -- showing root directory instead.")
+                else:
+                    messages.error(request, e)
+                    return redirect("files")
+        else:
+            try:
+                sftp.chdir(host_dir)
+            except IOError as e:
+                messages.error(request, e)
+                return redirect("files")
 
     default_dir = sftp.pwd
 
