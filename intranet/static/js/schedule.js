@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
     scheduleBind = function() {
-        $(".schedule-outer .schedule-left").click(function() {
+        $(".schedule-outer .schedule-left").click(function(event) {
             event.preventDefault();
             scheduleView(-1);
         });
 
-        $(".schedule-outer .schedule-right").click(function() {
+        $(".schedule-outer .schedule-right").click(function(event) {
             event.preventDefault();
             scheduleView(1);
         });
