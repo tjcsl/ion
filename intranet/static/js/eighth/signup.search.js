@@ -117,6 +117,10 @@ $(document).ready(function() {
                     if(cmd[1].substring(0,1) == "b" && activity.both_blocks == fl) {
                         show = true;
                     }
+                    // oneaday
+                    if(cmd[1].substring(0,2) == "on" && activity.one_a_day == fl) {
+                        show = true;
+                    }
                     // favorite
                     if(cmd[1].substring(0,1) == "f" && activity.favorited == fl) {
                         show = true;
@@ -143,7 +147,7 @@ $(document).ready(function() {
                         show = true;
                     }
                     // open
-                    if(cmd[1].substring(0,1) == "o" && (activity.roster.count < activity.roster.capacity) == fl) {
+                    if(cmd[1].substring(0,2) == "op" && (activity.roster.count < activity.roster.capacity) == fl) {
                         show = true;
                     }
                     // selected
