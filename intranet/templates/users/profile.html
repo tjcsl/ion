@@ -34,6 +34,14 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('.preferred-user-picture img, .preferred-user-picture span').click(function() {
+                    $(".user-pictures img").each(function() {
+                        var src = $(this).attr("src");
+                        var datasrc = $(this).attr("data-src");
+                        console.debug($(this).attr("alt"), src);
+                        if(!src) {
+                            $(this).attr("src", datasrc);
+                        }
+                    })
                     $('.user-pictures').slideToggle();
                 });
                 $('.user-pictures').click(function() {
@@ -52,19 +60,19 @@
             <table>
                 <tr>
                     <td>
-                        <img class="freshman" src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture" />
+                        <img class="freshman" data-src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture" />
                         <br />Freshman
                     </td>
                     <td>
-                        <img class="sophomore" src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture" />
+                        <img class="sophomore" data-src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture" />
                         <br />Sophomore
                     </td>
                     <td>
-                        <img class="junior" src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture" />
+                        <img class="junior" data-src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture" />
                         <br />Junior
                     </td>
                     <td>
-                        <img class="senior" src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture" />
+                        <img class="senior" data-src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture" />
                         <br />Senior
                     </td>
                 </tr>
