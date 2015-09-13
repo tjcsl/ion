@@ -41,8 +41,26 @@
         <i class="fa fa-arrow-left"></i> Sign Up
     </a>
 
-    <h2>Activity: {{ activity }}</h2>
-    <dl>
+    <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
+    {% if activity.special %}
+            <span class="badge green">Special</span>
+    {% endif %}
+    {% if activity.restricted %}
+            <span class="badge purple">Restricted</span>
+    {% endif %}
+    {% if activity.sticky %}
+            <span class="badge orange">Sticky</span>
+    {% endif %}
+    {% if activity.both_blocks %}
+            <span class="badge blue">Both Blocks</span>
+    {% endif %}
+    {% if activity.administrative %}
+            <span class="badge">Administrative</span>
+    {% endif %}
+    {% if activity.presign %}
+            <span class="badge yellow">48-hr Presign</span>
+    {% endif %}
+    <dl style="padding-top: 10px">
         {% if activity.description %}
         <dt>Description:</dt>
         <dd style="width: 400px">{{ scheduled_activity.activity.description }}</dd>
@@ -110,15 +128,15 @@
             </tr>
         {% empty %}
             <tr>
-            <td>
-                This activity is not scheduled over the next two months.
+            <td colspan="4">
+                There were no blocks found.
             </td>
             </tr>
         {% endfor %}
         </tbody>
         </table>
         <br />
-        Please note that activity schedulings are not fixed, and may change.
+        Please note that activity schedules are not fixed, and may change.
     </section>
 
     
