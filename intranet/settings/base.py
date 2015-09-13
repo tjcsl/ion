@@ -30,7 +30,7 @@ ADMINS = (
 )
 
 FEEDBACK_EMAIL = "intranet+feedback@lists.tjhsst.edu"
-APPROVAL_EMAIL = "intranet+approval@lists.tjhsst.edu"
+APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 
 FILES_MAX_UPLOAD_SIZE = 200*1024*1024
 FILES_MAX_DOWNLOAD_SIZE = 200*1024*1024

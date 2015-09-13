@@ -33,6 +33,7 @@ def events_view(request):
         if "approve" in request.POST and is_events_admin:
             event_id = request.POST.get('approve')
             event = get_object_or_404(Event, id=event_id)
+            event.rejected = False
             event.approved = True
             event.approved_by = request.user
             event.save()
@@ -41,10 +42,11 @@ def events_view(request):
         if "reject" in request.POST and is_events_admin:
             event_id = request.POST.get('reject')
             event = get_object_or_404(Event, id=event_id)
+            event.approved = False
             event.rejected = True
             event.rejected_by = request.user
             event.save()
-            messages.success(request, "Approved event {}".format(event))
+            messages.success(request, "Rejected event {}".format(event))
 
     if is_events_admin and "show_all" in request.GET:
         viewable_events = (Event.objects
@@ -197,7 +199,6 @@ def add_event_view(request):
             obj.created_hook(request)
 
             obj.save()
-            messages.success(request, "Successfully added event.")
             return redirect("events")
         else:
             messages.error(request, "Error adding event")
