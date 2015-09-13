@@ -207,7 +207,8 @@ def add_event_view(request):
     context = {
         "form": form,
         "action": "add",
-        "action_title": "Add" if is_events_admin else "Submit"
+        "action_title": "Add" if is_events_admin else "Submit",
+        "is_events_admin": is_events_admin
     }
     return render(request, "events/add_modify.html", context)
 
@@ -221,8 +222,9 @@ def modify_event_view(request, id=None):
 
     """
     event = get_object_or_404(Event, id=id)
+    is_events_admin = request.user.has_admin_permission('events')
 
-    if not request.user.has_admin_permission('events') and event.user != request.user:
+    if not is_events_admin and event.user != request.user:
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
@@ -244,7 +246,8 @@ def modify_event_view(request, id=None):
         "form": form,
         "action": "modify",
         "action_title": "Modify",
-        "id": id
+        "id": id,
+        "is_events_admin": is_events_admin
     }
     return render(request, "events/add_modify.html", context)
 
