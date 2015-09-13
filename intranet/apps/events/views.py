@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import datetime
+import bleach
 from calendar import monthrange
 from .models import Event
 from .forms import EventForm
@@ -182,6 +183,9 @@ def add_event_view(request):
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
+            # SAFE HTML
+            obj.description = bleach.linkify(obj.description)
+
             if request.user.has_admin_permission('events'):
                 # auto-approve if admin
                 obj.approved = True
@@ -226,6 +230,8 @@ def modify_event_view(request, id=None):
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
+            # SAFE HTML
+            obj.description = bleach.linkify(obj.description)
             obj.save()
             messages.success(request, "Successfully modified event.")
             #return redirect("events")

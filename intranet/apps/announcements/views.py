@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import re
 import logging
 import json
+import bleach
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -71,6 +72,9 @@ def request_announcement_view(request):
         if form.is_valid():
             obj = form.save(commit=True)
             obj.user = request.user
+            # SAFE HTML
+            obj.content = bleach.linkify(obj.content)
+
             obj.save()
             teacher_ids = form.data["teachers_requested"]
             # don't interpret as a character array
@@ -115,6 +119,9 @@ def approve_announcement_view(request, req_id):
         form = AnnouncementRequestForm(request.POST, instance=req)
         if form.is_valid():
             obj = form.save(commit=True)
+            # SAFE HTML
+            obj.content = bleach.linkify(obj.content)
+            obj.save()
             if "approve" in request.POST:
                 obj.teachers_approved.add(request.user)
                 obj.save()
@@ -159,6 +166,8 @@ def admin_approve_announcement_view(request, req_id):
         form = AnnouncementRequestForm(request.POST, instance=req)
         if form.is_valid():
             req = form.save(commit=True)
+            # SAFE HTML
+            req.content = bleach.linkify(req.content)
             if "approve" in request.POST:
                 groups = []
                 if "groups" in request.POST:
@@ -212,6 +221,8 @@ def add_announcement_view(request):
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
+            # SAFE HTML
+            obj.content = bleach.linkify(obj.content)
             obj.save()
             announcement_posted_hook(request, obj)
             messages.success(request, "Successfully added announcement.")
@@ -246,7 +257,10 @@ def modify_announcement_view(request, id=None):
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
-            form.save()
+            obj = form.save()
+            # SAFE HTML
+            obj.content = bleach.linkify(obj.content)
+            obj.save()
             messages.success(request, "Successfully modified announcement.")
             return redirect("index")
         else:
