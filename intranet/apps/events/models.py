@@ -8,6 +8,7 @@ from ..users.models import User
 from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
 from ..announcements.models import Announcement
+from .notifications import event_approval_request
 from datetime import datetime
 
 class Link(models.Model):
@@ -110,6 +111,14 @@ class Event(models.Model):
                 return False
 
         return True
+
+
+    def created_hook(self, request):
+        """Run when an event is created.
+        """
+        if not request.user.has_admin_permission('events'):
+            # Send approval email
+            event_approval_request(request, self)
 
 
 

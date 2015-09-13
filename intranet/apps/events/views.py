@@ -166,12 +166,15 @@ def event_roster_view(request, id):
 @login_required
 def add_event_view(request):
     """
-        Add event page. Currently, there is no credential checking; any user may create
-        an event. This may change.
+        Add event page. Currently, there is an approval process for events.
+        If a user is an events administrator, they can create events directly.
+        Otherwise, their event is added in the system but must be approved.
 
     """
     #if settings.PRODUCTION and not request.user.has_admin_permission('events'):
     #    return render(request, "events/not_ready.html")
+
+    is_events_admin = request.user.has_admin_permission('events')
 
     if request.method == "POST":
         form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission('groups'))
@@ -179,6 +182,16 @@ def add_event_view(request):
         if form.is_valid():
             obj = form.save()
             obj.user = request.user
+            if request.user.has_admin_permission('events'):
+                # auto-approve if admin
+                obj.approved = True
+                obj.approved_by = request.user
+                messages.success(request, "Because you are an administrator, this event was auto-approved.")
+            else:
+                messages.success(request, "Your event needs to be approved by an administrator. If approved, it should "
+                                          "appear on Intranet within 24 hours.")
+            obj.created_hook(request)
+
             obj.save()
             messages.success(request, "Successfully added event.")
             return redirect("events")
@@ -186,7 +199,12 @@ def add_event_view(request):
             messages.error(request, "Error adding event")
     else:
         form = EventForm(all_groups=request.user.has_admin_permission('groups'))
-    return render(request, "events/add_modify.html", {"form": form, "action": "add"})
+    context = {
+        "form": form,
+        "action": "add",
+        "action_title": "Add" if is_events_admin else "Submit"
+    }
+    return render(request, "events/add_modify.html", context)
 
 @login_required
 def modify_event_view(request, id=None):
@@ -203,7 +221,7 @@ def modify_event_view(request, id=None):
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
-        form = EventForm(request.POST, instance=event, all_groups=request.user.has_admin_permission('groups'))
+        form = EventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission('groups'))
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
@@ -215,7 +233,13 @@ def modify_event_view(request, id=None):
             messages.error(request, "Error adding event.")
     else:
         form = EventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
-    return render(request, "events/add_modify.html", {"form": form, "action": "modify", "id": id})
+    context = {
+        "form": form,
+        "action": "modify",
+        "action_title": "Modify",
+        "id": id
+    }
+    return render(request, "events/add_modify.html", context)
 
 
 @login_required

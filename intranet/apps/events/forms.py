@@ -22,4 +22,8 @@ class EventForm(forms.ModelForm):
                    "scheduled_activity",
                    "announcement",
                    "attending",
-                   "links"]
+                   "links",
+                   "approved",
+                   "rejected",
+                   "approved_by",
+                   "rejected_by"]
