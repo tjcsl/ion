@@ -46,7 +46,14 @@ def get_personal_info(user):
     return personal_info, num_fields
 
 def save_personal_info(request, user):
-    personal_info, num_fields = get_personal_info(user)
+    personal_info, _num_fields = get_personal_info(user)
+    num_fields = {
+        "phones": sum([1 if "other_phone_" in name else 0 for name in request.POST]),
+        "emails": sum([1 if "email_" in name else 0 for name in request.POST]),
+        "webpages": sum([1 if "webpage_" in name else 0 for name in request.POST])
+    }
+    logger.debug(num_fields)
+    logger.debug(request.POST)
     personal_info_form = PersonalInformationForm(num_fields=num_fields, data=request.POST, initial=personal_info)
     logger.debug(personal_info_form)
     if personal_info_form.is_valid():
@@ -86,7 +93,7 @@ def save_personal_info(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) == str else ", ".join(fields[field])))
                     else:
                         logger.debug("Need to update {} because {} changed".format(full_field_name, field))
                         multi_fields_to_update.append(full_field_name)
@@ -105,7 +112,7 @@ def save_personal_info(request, user):
                     messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                     logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                 else:
-                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals))
+                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if type(field_vals) == str else ", ".join(field_vals)))
     return personal_info_form
 
 
@@ -143,7 +150,7 @@ def save_preferred_pic(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field]))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) == str else ", ".join(fields[field])))
     return preferred_pic_form
 
 
@@ -191,7 +198,7 @@ def save_privacy_options(request, user):
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field]))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) == str else ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -224,7 +231,7 @@ def save_notification_options(request, user):
                                                               notification_options[field] if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
-                    messages.success(request, "Set field {} to {}".format(field, fields[field]))
+                    messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) == str else ", ".join(fields[field])))
     return notification_options_form
 
 def save_gcm_options(request, user):
