@@ -26,9 +26,32 @@ def events_view(request):
     #    # In production, go to not ready page.
     #    return render(request, "events/not_ready.html")
 
-    viewable_events = (Event.objects
-                            .visible_to_user(request.user)
+    is_events_admin = request.user.has_admin_permission('events')
+
+    if request.method == "POST":
+        if "approve" in request.POST and is_events_admin:
+            event_id = request.POST.get('approve')
+            event = get_object_or_404(Event, id=event_id)
+            event.approved = True
+            event.approved_by = request.user
+            event.save()
+            messages.success(request, "Approved event {}".format(event))
+
+        if "reject" in request.POST and is_events_admin:
+            event_id = request.POST.get('reject')
+            event = get_object_or_404(Event, id=event_id)
+            event.rejected = True
+            event.rejected_by = request.user
+            event.save()
+            messages.success(request, "Approved event {}".format(event))
+
+    if is_events_admin and "show_all" in request.GET:
+        viewable_events = (Event.objects
                             .prefetch_related("groups"))
+    else:
+        viewable_events = (Event.objects
+                                .visible_to_user(request.user)
+                                .prefetch_related("groups"))
 
     # get date objects for week and month
     today = datetime.date.today()
@@ -36,22 +59,39 @@ def events_view(request):
     this_week = (delta, delta + datetime.timedelta(days=7))
     this_month = (this_week[1], this_week[1] + datetime.timedelta(days=31))
 
+    events_categories = [
+        {
+            "title": "This week",
+            "events": viewable_events.filter(time__gte=this_week[0], time__lt=this_week[1])
+        },
+        {
+            "title": "This month",
+            "events": viewable_events.filter(time__gte=this_month[0], time__lt=this_month[1])
+        },
+        {
+            "title": "Future",
+            "events": viewable_events.filter(time__gte=this_month[1])
+        }
+    ]
+
+    if is_events_admin:
+        unapproved_events = (Event.objects
+                                  .filter(approved=False, rejected=False)
+                                  .prefetch_related("groups"))
+        events_categories = [{
+            "title": "Awaiting Approval",
+            "events": unapproved_events
+        }] + events_categories
+
+    if is_events_admin and "show_all" in request.GET:
+        events_categories.append({
+            "title": "Past",
+            "events": viewable_events.filter(time__lt=this_week[0])
+        })
+
     context = {
-        "events": [
-            {
-                "title": "This week",
-                "events": viewable_events.filter(time__gt=this_week[0], time__lt=this_week[1])
-            },
-            {
-                "title": "This month",
-                "events": viewable_events.filter(time__gt=this_month[0], time__lt=this_month[1])
-            },
-            {
-                "title": "Future",
-                "events": viewable_events.filter(time__gt=this_month[1])
-            }
-        ],
-        "is_events_admin": request.user.has_admin_permission('events'),
+        "events": events_categories,
+        "is_events_admin": is_events_admin,
         "show_attend": True
     }
     return render(request, "events/home.html", context)

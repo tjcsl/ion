@@ -8,6 +8,7 @@
 
 <div class="event" data-id="{{ event.id }}">
     <h3>
+        {% if not event.approved %}<span style="color: red">UNAPPROVED:</span>{% endif %}
         {% if link_to_event %}
             <a href="{% url 'event' event.id %}" class="event-link">
                 {{ event.title }}
@@ -62,6 +63,27 @@
             {% csrf_token %}
             <input type="hidden" name="attending" value="true" />
         </form>
+    {% endif %}
+
+    {% if not event.approved and is_events_admin %}
+        <table>
+            <tr>
+                <td>
+                    <form action="{% url 'events' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="approve" value="{{ event.id }}" />
+                        <input type="submit" value="Approve" />
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'events' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="reject" value="{{ event.id }}" />
+                        <input type="submit" value="Reject" />
+                    </form>
+                </td>
+            </tr>
+        </table>
     {% endif %}
 
 
