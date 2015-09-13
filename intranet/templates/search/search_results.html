@@ -49,7 +49,15 @@
                         </td>
                     {% endif %}
                     <td>
-                        {% if user.gradyear %}Grade {{ user.gradyear|to_grade_number }}{% else %}Staff{% endif %}
+                        {% if user.gradyear %}
+                            {% if user.grade == 13 %}
+                                Graduate
+                            {% else %}
+                                Grade {{ user.grade }}
+                            {% endif %}
+                        {% else %}
+                            Staff
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

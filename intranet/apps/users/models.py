@@ -1635,10 +1635,22 @@ class Grade(object):
         """Return the grade's name (e.g. senior)"""
         return self._name
 
+    @property
+    def text(self):
+        """Return the grade's number as a string (e.g. Grade 12, Graduate)"""
+        if 9 <= self._number <= 12:
+            return "Grade {}".format(self._number)
+        else:
+            return self._name
+    
+
     def __int__(self):
         """Return the grade as a number (9-12)."""
         return self._number
 
     def __unicode__(self):
         """Return name of the grade."""
-        return self._name
+        return "{}".format(self.text)
+
+    def __str__(self):
+        return self.__unicode__()
