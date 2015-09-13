@@ -95,35 +95,37 @@
                 <% } %>
 
                 <% if (special) { %>
-                    <span class="badge green">Special</span>
+                    <span class="badge green" title="This is a special activity.">Special</span>
                 <% } %>
 
                 <% if (cancelled) { %>
-                    <span class="badge darkred">CANCELLED</span>
+                    <span class="badge darkred" title="This activity was cancelled.">CANCELLED</span>
                 <% } %>
 
                 <% if (restricted_for_user) { %>
-                    <span class="badge purple">Restricted</span>
+                    <span class="badge purple" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+                <% } else if (restricted) { %>
+                    <span class="badge green" title="You are authorized to sign up for this restricted activity.">Authorized</span>
                 <% } %>
 
-                <% if (sticky) { %>
-                    <span class="badge orange">Sticky</span>
+                <% if (sticky && (selected || isEighthAdmin)) { %>
+                    <span class="badge orange" title="You are stuck to this activity.">Sticky</span>
                 <% } %>
 
                 <% if (both_blocks) { %>
-                    <span class="badge blue">Both Blocks</span>
+                    <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
                 <% } %>
 
                 <% if (one_a_day) { %>
-                    <span class="badge lightblue">One a Day</span>
+                    <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
                 <% } %>
 
                 <% if (administrative) { %>
-                    <span class="badge">Admin</span>
+                    <span class="badge" title="This activity is administrative.">Admin</span>
                 <% } %>
 
                 <% if (presign) { %>
-                    <span class="badge yellow">48-hr</span>
+                    <span class="badge yellow" title="You may only sign up for this activity 48 hours in advance.">48-hr</span>
                 <% } %>
 
             </span>
@@ -150,35 +152,37 @@
         </h3>
 
         <% if (cancelled) { %>
-            <span class="badge darkred clickable" data-append-search="is:c">CANCELLED</span>
+            <span class="badge darkred clickable" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
         <% } %>
 
         <% if (special) { %>
-            <span class="badge green clickable" data-append-search="is:sp">Special</span>
+            <span class="badge green clickable" data-append-search="is:sp" title="This is a special activity.">Special</span>
         <% } %>
 
         <% if (restricted_for_user) { %>
-            <span class="badge purple clickable" data-append-search="is:r">Restricted</span>
+            <span class="badge purple clickable" data-append-search="is:r" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+        <% } else if (restricted) { %>
+            <span class="badge green clickable" data-append-search="is:au" title="You are authorized to sign up for this restricted activity.">Authorized</span>
         <% } %>
 
-        <% if (sticky) { %>
-            <span class="badge orange clickable" data-append-search="is:st">Sticky</span>
+        <% if (sticky && (selected || isEighthAdmin)) { %>
+            <span class="badge orange clickable" data-append-search="is:st" title="You are stuck to this activity.">Sticky</span>
         <% } %>
 
         <% if (both_blocks) { %>
-            <span class="badge blue clickable" data-append-search="is:b">Both Blocks</span>
+            <span class="badge blue clickable" data-append-search="is:b" title="This activity runs both blocks.">Both Blocks</span>
         <% } %>
 
         <% if (one_a_day) { %>
-            <span class="badge lightblue clickable" data-append-search="is:one">One a Day</span>
+            <span class="badge lightblue clickable" data-append-search="is:one" title="You may only sign up for this activity once per day.">One a Day</span>
         <% } %>
 
         <% if (administrative) { %>
-            <span class="badge clickable" data-append-search="is:a">Administrative</span>
+            <span class="badge clickable" data-append-search="is:ad" title="This activity is administrative.">Administrative</span>
         <% } %>
 
         <% if (presign) { %>
-            <span class="badge yellow clickable" data-append-search="is:p">48-hr Presign</span>
+            <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
         <% scheduled_activity_id = this.model.attributes.scheduled_activity %>

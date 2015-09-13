@@ -109,6 +109,10 @@ $(document).ready(function() {
                     if(cmd[1].substring(0,1) == "r" && activity.restricted == fl) {
                         show = true;
                     }
+                    // authorized
+                    if(cmd[1].substring(0,2) == "au" && activity.restricted == fl && activity.restricted_for_user == !fl) {
+                        show = true;
+                    }
                     // cancelled
                     if(cmd[1].substring(0,1) == "c" && activity.cancelled == fl) {
                         show = true;
@@ -130,7 +134,7 @@ $(document).ready(function() {
                         show = true;
                     }
                     // admin
-                    if(cmd[1].substring(0,1) == "a" && activity.administrative == fl) {
+                    if(cmd[1].substring(0,2) == "ad" && activity.administrative == fl) {
                         show = true;
                         show_adminact = true;
                     }
