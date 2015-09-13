@@ -1650,7 +1650,7 @@ class Grade(object):
 
     def __unicode__(self):
         """Return name of the grade."""
-        return "{}".format(self.text)
+        return self._name
 
     def __str__(self):
         return self.__unicode__()
