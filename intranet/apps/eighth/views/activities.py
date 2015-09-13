@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from datetime import datetime, timedelta
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -27,7 +28,9 @@ def activity_view(request, activity_id=None):
     )
 
     if first_block:
-        scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date)
+        two_months = datetime.now().date() + timedelta(days=62)
+        scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date,
+                                                           block__date__lte=two_months)
 
     context = {
         "activity": activity,

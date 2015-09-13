@@ -20,6 +20,10 @@
         float: left;
         padding-right: 5px;
     }
+
+    tr.cancelled, tr.cancelled th a {
+        color: red;
+    }
     </style>
 {% endblock %}
 
@@ -41,6 +45,12 @@
         <i class="fa fa-arrow-left"></i> Sign Up
     </a>
 
+    {% if request.user.is_eighth_admin %}
+        <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">
+            Edit Activity
+        </a>
+    {% endif %}
+
     <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
     {% if activity.special %}
             <span class="badge green">Special</span>
@@ -60,25 +70,26 @@
     {% if activity.presign %}
             <span class="badge yellow">48-hr Presign</span>
     {% endif %}
+
     <dl style="padding-top: 10px">
         {% if activity.description %}
-        <dt>Description:</dt>
-        <dd style="width: 400px">{{ scheduled_activity.activity.description }}</dd>
+            <dt>Description:</dt>
+            <dd style="width: 400px">{{ activity.description }}</dd>
         {% endif %}
-        <dd>{{ activity.description }}</dd>
-        <dt>Default Sponsors:</dt>
-        <dd>{% for sponsor in activity.sponsors.all %}
-                {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
-            {% empty %}
-                None
-            {% endfor %}</dd>
 
-        <dt>Default Rooms:</dt>
-        <dd>{% for sponsor in activity.rooms.all %}
-                {{ room }}{% if not forloop.last %}, {% endif %}
-            {% empty %}
-                None
-            {% endfor %}</dd>
+        {% if activity.sponsors.count > 0 %}
+            <dt>Default Sponsors:</dt>
+            <dd>{% for sponsor in activity.sponsors.all %}
+                    {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}</dd>
+        {% endif %}
+
+        {% if activity.rooms.count > 0 %}
+            <dt>Default Rooms:</dt>
+            <dd>{% for room in activity.rooms.all %}
+                    {{ room }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}</dd>
+        {% endif %}
         
     </dl>
 
@@ -96,7 +107,7 @@
         </thead>
         <tbody>
         {% for sch in scheduled_activities %}
-            <tr>
+            <tr{% if sch.cancelled %} class="cancelled"{% endif %}>
                 <th>
                     <a href="{% url 'eighth_signup' sch.block.id %}">
                         {{ sch.block }}
@@ -122,14 +133,18 @@
                 </td>
                 <td>
                     <a class="button" href="{% url 'eighth_signup' sch.block.id %}?activity={{ sch.activity.id }}">
-                        Sign Up
+                        {% if sch.cancelled or sch.block.locked %}
+                            View Info
+                        {% else %}
+                            Sign Up
+                        {% endif %}
                     </a>
                 </td>
             </tr>
         {% empty %}
             <tr>
             <td colspan="4">
-                There were no blocks found.
+                There were none found within the next two months.
             </td>
             </tr>
         {% endfor %}
