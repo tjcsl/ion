@@ -66,7 +66,7 @@
     {% endif %}
 
     {% if is_events_admin %}
-        <table style="color: grey">
+        <table class="event-approve-table">
             <tr>
                 <td>
                 {% if not event.approved %}
@@ -80,13 +80,13 @@
                 {% endif %}
                 </td>
                 <td>
-                {% if not event.rejected %}
+                {% if not event.approved %}
                     <form action="{% url 'events' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="reject" value="{{ event.id }}" />
                         <input type="submit" value="Reject" class="small-button" />
                     </form>
-                {% else %}
+                {% elif event.rejected %}
                     Rejected by {{ event.rejected_by.full_name }}.
                 {% endif %}
                 </td>
