@@ -322,8 +322,8 @@ def admin_daytype_view(request, id=None):
                 except Day.DoesNotExist:
                     dayobj = Day.objects.create(date=assign_date, day_type=model)
                 else:
-                    assign_date.day_type = model
-                    assign_date.save()
+                    dayobj.day_type = model
+                    dayobj.save()
                 messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
 
             messages.success(request, "Successfully added Day Type.")
