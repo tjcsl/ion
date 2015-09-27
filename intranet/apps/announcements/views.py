@@ -52,7 +52,12 @@ def announcement_posted_hook(request, obj):
     if obj.notify_post:
         logger.debug("Announcement notify on")
         announcement_posted_twitter(request, obj)
-        if obj.notify_email_all:
+        try:
+            notify_all = obj.notify_email_all
+        except AttributeError:
+            notify_all = False
+
+        if notify_all:
             announcement_posted_email(request, obj, True)
         else:
             announcement_posted_email(request, obj)
