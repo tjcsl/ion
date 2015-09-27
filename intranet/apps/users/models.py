@@ -100,8 +100,17 @@ class UserManager(UserManager):
         """Return a list of user objects who have a birthday on a given date."""
         c = LDAPConnection()
 
+        month = int(month)
+        if month < 10:
+            month = "0"+str(month)
+
+        day = int(day)
+        if day < 10:
+            day = "0"+str(day)
+
+        search_query = "birthday=*{}{}".format(month, day)
         results = c.search(settings.USER_DN,
-                        "birthday=*{}{}".format(int(month), int(day)),
+                        search_query,
                         ["dn"])
 
         users = []
@@ -630,16 +639,20 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     @property
-    def age(self):
+    def age(self, date=None):
         """Returns a user's age, based on their birthday.
+           Optional date argument to find their age on a given day.
 
         Returns:
             integer
 
         """
+        if not date:
+            date = datetime.now()
+
         b = self.birthday
         if b:
-            return int((datetime.now() - b).days / 365)
+            return int((date - b).days / 365)
 
         return None
     

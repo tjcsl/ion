@@ -128,6 +128,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
 def find_birthdays(request):
     """Return information on user birthdays."""
     today = datetime.now().date()
+    actual_today = datetime.now().date()
     custom = False
     if "birthday_month" in request.GET and "birthday_day" in request.GET:
         try:
@@ -142,13 +143,17 @@ def find_birthdays(request):
         "custom": custom,
         "today": {
             "date": today,
-            "users": User.objects.users_with_birthday(today.month, today.day)
+            "users": User.objects.users_with_birthday(today.month, today.day),
+            "inc": 0
         },
         "tomorrow": {
             "date": tomorrow,
-            "users": User.objects.users_with_birthday(tomorrow.month, tomorrow.day)
+            "users": User.objects.users_with_birthday(tomorrow.month, tomorrow.day),
+            "inc": 1
         }
     }
+
+
 
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False):

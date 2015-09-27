@@ -73,7 +73,7 @@
                 <td>
                 {% for u in day.users %}
                     <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a> ({{ u.grade.name|title }})
-                    {% if u.age %}turns {{ u.age }}!{% endif %}
+                    {% if u.age %}turns {{ u.age|add:day.inc }}!{% endif %}
                     {% if not forloop.last %}<br />{% endif %}
                 {% empty %}
                     No birthdays!
@@ -92,7 +92,7 @@
                     <td>
                     {% for u in day.users %}
                         <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a> ({{ u.grade.name|title }})
-                        {% if u.age %}turns {{ u.age }}!{% endif %}
+                        {% if u.age %}turns {{ u.age|add:day.inc }}!{% endif %}
                         {% if not forloop.last %}<br />{% endif %}
                     {% empty %}
                         No birthdays!
