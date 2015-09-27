@@ -83,13 +83,10 @@ def request_announcement_view(request):
         logger.debug(form.data)
         if form.is_valid():
             teacher_objs = form.cleaned_data["teachers_requested"]
-            # don't interpret as a character array
-            #if type(teacher_ids) == unicode or type(teacher_ids) == str or type(teacher_ids) == int:
-            #    teacher_ids = [teacher_ids]
             logger.debug("teacher objs:")
             logger.debug(teacher_objs)
 
-            if len(teacher_ids) > 2:
+            if len(teacher_objs) > 2:
                 messages.error(request, "Please select a maximum of 2 teachers to approve this post.")
             else:
                 obj = form.save(commit=True)
@@ -100,7 +97,7 @@ def request_announcement_view(request):
                 obj.save()
 
                 ann = AnnouncementRequest.objects.get(id=obj.id)
-                logger.debug(teachers)
+                logger.debug(teacher_objs)
                 for teacher in teacher_objs:
                     ann.teachers_requested.add(teacher)
                 ann.save()
@@ -203,8 +200,8 @@ def admin_approve_announcement_view(request, req_id):
                 req.posted_by = request.user
                 req.save()
 
-                announcement_approved_hook(request, announcement)
-                announcement_posted_hook(request, announcement, req)
+                announcement_approved_hook(request, announcement, req)
+                announcement_posted_hook(request, announcement)
 
                 messages.success(request, "Successfully approved announcement request. It has been posted.")
                 return redirect("index")
