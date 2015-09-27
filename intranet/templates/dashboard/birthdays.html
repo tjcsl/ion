@@ -1,7 +1,14 @@
-<div class="widget extra-widget birthdays-widget">
+<div class="widget extra-widget birthdays-widget" id="birthdays">
+    {% if "birthday_month" in request.GET %}
+        <script>
+        $(function() {
+            $("body").addClass("show-extra-widgets")
+        });
+        </script>
+    {% endif %}
     <style type="text/css">
     .birthdays-widget .widget-content {
-        padding: 5px;
+        padding: 5px 15px;
     }
 
     .birthdays-widget .widget-content table {
@@ -49,7 +56,7 @@
         </h2>
 
         <div class="info">
-            <form action="" method="get">
+            <form action="/#birthdays" method="get">
                 <input class="birthday-field" name="birthday_month" value="{{ birthdays.today.date.month }}" /><span class="slash">/</span><input class="birthday-field" name="birthday_day" value="{{ birthdays.today.date.day }}" />
                 <input type="submit" value="View Birthdays" class="small-button" />
             </form>
@@ -60,7 +67,8 @@
             <tr>
             {% with birthdays.today as day %}
                 <th>
-                    Today:<br />{{ day.date }}
+                    {% if not birthdays.custom %}Today:<br />{% endif %}
+                    {{ day.date|date:"F j" }}
                 </th>
                 <td>
                 {% for u in day.users %}
@@ -74,23 +82,26 @@
 
               {% endwith %}
             </tr>
-            <tr>
-            {% with birthdays.tomorrow as day %}
-                <th style="padding-top: 10px">
-                    Tomorrow:<br />{{ day.date }}
-                </th>
-                <td>
-                {% for u in day.users %}
-                    <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a> ({{ u.grade.name|title }})
-                    {% if u.age %}turns {{ u.age }}!{% endif %}
-                    {% if not forloop.last %}<br />{% endif %}
-                {% empty %}
-                    No birthdays!
-                {% endfor %}
-                </td>
+            {% if not birthdays.custom %}
+                <tr>
+                {% with birthdays.tomorrow as day %}
+                    <th style="padding-top: 10px">
+                        Tomorrow:<br />
+                        {{ day.date|date:"F j" }}
+                    </th>
+                    <td>
+                    {% for u in day.users %}
+                        <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a> ({{ u.grade.name|title }})
+                        {% if u.age %}turns {{ u.age }}!{% endif %}
+                        {% if not forloop.last %}<br />{% endif %}
+                    {% empty %}
+                        No birthdays!
+                    {% endfor %}
+                    </td>
 
-              {% endwith %}
-            </tr>
+                  {% endwith %}
+                </tr>
+            {% endif %}
         </table>
     </div>
 </div>

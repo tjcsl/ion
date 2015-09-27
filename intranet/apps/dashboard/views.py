@@ -125,12 +125,21 @@ def gen_sponsor_schedule(user, num_blocks=6):
     logger.debug(acts)
     return acts, no_attendance_today
 
-def find_birthdays():
+def find_birthdays(request):
     """Return information on user birthdays."""
     today = datetime.now().date()
+    custom = False
+    if "birthday_month" in request.GET and "birthday_day" in request.GET:
+        try:
+            today = datetime(2000, int(request.GET["birthday_month"]), int(request.GET["birthday_day"])).date()
+            custom = True
+        except Exception:
+            pass
+    
     tomorrow = today + timedelta(days=1)
 
     return {
+        "custom": custom,
         "today": {
             "date": today,
             "users": User.objects.users_with_birthday(today.month, today.day)
@@ -206,7 +215,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "dashboard_header": dashboard_header,
         "senior_graduation": settings.SENIOR_GRADUATION,
         "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
-        "birthdays": find_birthdays()
+        "birthdays": find_birthdays(request)
     }
 
 
