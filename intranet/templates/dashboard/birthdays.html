@@ -7,14 +7,53 @@
     .birthdays-widget .widget-content table {
         width: 100%;
     }
+
+    .birthdays-widget .widget-title form {
+        display: inline;
+        float: right;
+    }
+
+    .birthdays-widget .birthday-field {
+        background: transparent;
+        border: 1px solid rgb(216,216,216);
+        padding: 2px 4px;
+        width: 14px;
+        text-align: center;
+    }
+
+    .birthdays-widget input[name="birthday_month"] {
+        margin-right: -3px;
+        border-right: 0;
+        padding-right: 5px;
+        text-align: right;
+    }
+
+    .birthdays-widget .slash {
+        color: black;
+    }
+
+    .birthdays-widget input[name="birthday_day"] {
+        margin-left: -2px;
+        border-left: 0;
+        text-align: left;
+    }
+
+    .birthdays-widget input[type="submit"] {
+        margin-top: 0;
+    }
+
     </style>
     <div class="widget-title">
         <h2>
             Birthdays
         </h2>
+
         <div class="info">
-            
-    </div>
+            <form action="" method="get">
+                <input class="birthday-field" name="birthday_month" value="{{ birthdays.today.date.month }}" /><span class="slash">/</span><input class="birthday-field" name="birthday_day" value="{{ birthdays.today.date.day }}" />
+                <input type="submit" value="View Birthdays" class="small-button" />
+            </form>
+        </div>
     </div>
     <div class="widget-content">
         <table>
