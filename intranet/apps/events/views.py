@@ -224,7 +224,7 @@ def modify_event_view(request, id=None):
     event = get_object_or_404(Event, id=id)
     is_events_admin = request.user.has_admin_permission('events')
 
-    if not is_events_admin and event.user != request.user:
+    if not is_events_admin:
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
@@ -262,7 +262,7 @@ def delete_event_view(request, id):
 
     """
     event = get_object_or_404(Event, id=id)
-    if not request.user.has_admin_permission('events') and event.user != request.user:
+    if not request.user.has_admin_permission('events'):
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
