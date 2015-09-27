@@ -431,3 +431,6 @@ GIT = {
     "commit_date": _get_current_commit_date(),
     "commit_github_url": _get_current_commit_github_url()
 }
+
+SENIOR_GRADUATION = "June 18 2016 19:00:00"
+SENIOR_GRADUATION_YEAR = 2016

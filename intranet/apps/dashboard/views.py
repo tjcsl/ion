@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from intranet import settings
 from ..schedule.views import schedule_context
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import (
@@ -186,7 +187,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "show_widgets": show_widgets,
         "show_expired": show_expired,
         "dashboard_title": dashboard_title,
-        "dashboard_header": dashboard_header
+        "dashboard_header": dashboard_header,
+        "senior_graduation": settings.SENIOR_GRADUATION,
+        "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
     }
 
 
