@@ -3,6 +3,10 @@
     .birthdays-widget .widget-content {
         padding: 5px;
     }
+
+    .birthdays-widget .widget-content table {
+        width: 100%;
+    }
     </style>
     <div class="widget-title">
         <h2>
@@ -13,24 +17,41 @@
     </div>
     </div>
     <div class="widget-content">
-        {% with birthdays.today as day %}
-            <b>Today ({{ day.date }}):</b>
-            {% for u in day.users %}
-                <a href="{% url 'profile' u.id %}">{{ u.full_name }}</a>{% if not forloop.last %}, {% endif %}
-            {% empty %}
-                No birthdays!
-            {% endfor %}
-            <br />
-        {% endwith %}
+        <table>
+            <tr>
+            {% with birthdays.today as day %}
+                <th>
+                    Today:<br />{{ day.date }}
+                </th>
+                <td>
+                {% for u in day.users %}
+                    <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a>
+                    {% if u.age %}({{ u.age }}){% endif %}
+                    {% if not forloop.last %}<br />{% endif %}
+                {% empty %}
+                    No birthdays!
+                {% endfor %}
+                </td>
 
-        {% with birthdays.tomorrow as day %}
-            <b>Tomorrow ({{ day.date }}):</b>
-            {% for u in day.users %}
-                <a href="{% url 'profile' u.id %}">{{ u.full_name }}</a>{% if not forloop.last %}, {% endif %}
-            {% empty %}
-                No birthdays!
-            {% endfor %}
-            <br />
-        {% endwith %}
+              {% endwith %}
+            </tr>
+            <tr>
+            {% with birthdays.tomorrow as day %}
+                <th style="padding-top: 10px">
+                    Tomorrow:<br />{{ day.date }}
+                </th>
+                <td>
+                {% for u in day.users %}
+                    <a href="{% url 'user_profile' u.id %}">{{ u.full_name }}</a>
+                    {% if u.age %}({{ u.age }}){% endif %}
+                    {% if not forloop.last %}<br />{% endif %}
+                {% empty %}
+                    No birthdays!
+                {% endfor %}
+                </td>
+
+              {% endwith %}
+            </tr>
+        </table>
     </div>
 </div>
