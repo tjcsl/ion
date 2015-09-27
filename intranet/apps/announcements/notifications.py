@@ -73,6 +73,63 @@ def admin_request_announcement_email(request, form, obj):
                "announcements/emails/admin_approve.html",
                data, subject, emails)
 
+def announcement_approved_email(request, obj, req):
+    """
+        Email the requested teachers and submitter whenever an
+        administrator approves an announcement request.
+
+        obj: the Announcement object
+        req: the AnnouncementRequest object
+
+    """
+    subject = "Announcement Approved: {}".format(obj.title)
+
+    """ Email to teachers who approved. """
+    teachers = req.teachers_approved.all()
+    
+
+    teacher_emails = []
+    for u in teachers:
+        em = u.tj_email
+        if em:
+            teacher_emails.append(em)
+
+    base_url = request.build_absolute_uri(reverse('index'))
+    url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
+
+    if len(teacher_emails) > 0:
+        data = {
+            "announcement": obj,
+            "request": req,
+            "info_link": url,
+            "base_url": base_url,
+            "role": "approved"
+        }
+        email_send("announcements/emails/announcement_approved.txt",
+                   "announcements/emails/announcement_approved.html",
+                   data, subject, teacher_emails)
+        messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
+
+    """ Email to submitter. """
+    submitter = req.user
+    submitter_email = submitter.tj_email
+    if submitter_email:
+        submitter_emails = [submitter_email]
+        data = {
+            "announcement": obj,
+            "request": req,
+            "info_link": url,
+            "base_url": base_url,
+            "role": "submitted"
+        }
+        email_send("announcements/emails/announcement_approved.txt",
+                   "announcements/emails/announcement_approved.html",
+                   data, subject, submitter_emails)
+        messages.success(request, "Sent teacher approved email to {} users".format(len(submitter_emails)))
+
+
+
+
 def announcement_posted_email(request, obj, send_all=False):
     """
         Send a notification posted email
