@@ -1,0 +1,36 @@
+<div class="widget extra-widget birthdays-widget">
+    <style type="text/css">
+    .birthdays-widget .widget-content {
+        padding: 5px;
+    }
+    </style>
+    <div class="widget-title">
+        <h2>
+            Birthdays
+        </h2>
+        <div class="info">
+            
+    </div>
+    </div>
+    <div class="widget-content">
+        {% with birthdays.today as day %}
+            <b>Today ({{ day.date }}):</b>
+            {% for u in day.users %}
+                <a href="{% url 'profile' u.id %}">{{ u.full_name }}</a>{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No birthdays!
+            {% endfor %}
+            <br />
+        {% endwith %}
+
+        {% with birthdays.tomorrow as day %}
+            <b>Tomorrow ({{ day.date }}):</b>
+            {% for u in day.users %}
+                <a href="{% url 'profile' u.id %}">{{ u.full_name }}</a>{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No birthdays!
+            {% endfor %}
+            <br />
+        {% endwith %}
+    </div>
+</div>

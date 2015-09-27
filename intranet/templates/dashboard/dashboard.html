@@ -20,6 +20,7 @@
 
     <script type="text/javascript" src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dashboard/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/dashboard/announcements.js' %}"></script>
 
     <style type="text/css">
@@ -44,12 +45,13 @@
     {% if request.user.is_teacher or eighth_sponsor %}
         {% include "eighth/sponsor_widget.html" %}
     {% endif %}
-    <div class="extra-widgets">
-        {% include "schedule/widget.html" %}
-        {% if request.user.grade.number == 12 %}
-            {% include "dashboard/seniors.html" %}
-        {% endif %}
-    </div>
+    {% include "schedule/widget.html" %}
+
+    <button class="widget extra-widgets-show">Show more widgets</button>
+    {% include "dashboard/birthdays.html" %}
+    {% if request.user.grade.number == 12 %}
+        {% include "dashboard/seniors.html" %}
+    {% endif %}
 </div>
 {% endif %}
 

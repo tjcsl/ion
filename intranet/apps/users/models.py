@@ -96,6 +96,21 @@ class UserManager(UserManager):
 
         return None
 
+    def users_with_birthday(self, month, day):
+        """Return a list of user objects who have a birthday on a given date."""
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                        "birthday=*{}{}".format(int(month), int(day)),
+                        ["dn"])
+
+        users = []
+        for res in results:
+            users.append(User.get_user(dn=res[0]))
+
+
+        return users
+
     # Simple way to filter out teachers and students without hitting LDAP.
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
@@ -613,6 +628,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         else:
             return None
+
+    @property
+    def age(self):
+        """Returns a user's age, based on their birthday.
+
+        Returns:
+            integer
+
+        """
+        b = self.birthday
+        if b:
+            return int((datetime.now() - b).days / 365)
+
+        return None
+    
 
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.

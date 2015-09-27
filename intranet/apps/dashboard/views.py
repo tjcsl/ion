@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 from django.utils import timezone
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from intranet import settings
+from ..users.models import User
 from ..schedule.views import schedule_context
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import (
@@ -124,6 +125,21 @@ def gen_sponsor_schedule(user, num_blocks=6):
     logger.debug(acts)
     return acts, no_attendance_today
 
+def find_birthdays():
+    """Return information on user birthdays."""
+    today = datetime.now().date()
+    tomorrow = today + timedelta(days=1)
+
+    return {
+        "today": {
+            "date": today,
+            "users": User.objects.users_with_birthday(today.month, today.day)
+        },
+        "tomorrow": {
+            "date": tomorrow,
+            "users": User.objects.users_with_birthday(tomorrow.month, tomorrow.day)
+        }
+    }
 
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False):
@@ -189,7 +205,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "dashboard_title": dashboard_title,
         "dashboard_header": dashboard_header,
         "senior_graduation": settings.SENIOR_GRADUATION,
-        "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
+        "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+        "birthdays": find_birthdays()
     }
 
 
