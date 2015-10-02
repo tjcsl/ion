@@ -5,6 +5,7 @@ from django.utils import timezone
 import logging
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.shortcuts import render
 from intranet import settings
 from ..users.models import User
@@ -132,26 +133,55 @@ def find_birthdays(request):
     custom = False
     if "birthday_month" in request.GET and "birthday_day" in request.GET:
         try:
-            today = datetime(2000, int(request.GET["birthday_month"]), int(request.GET["birthday_day"])).date()
+            today = datetime(today.year, int(request.GET["birthday_month"]), int(request.GET["birthday_day"])).date()
             custom = True
         except Exception:
             pass
-    
-    tomorrow = today + timedelta(days=1)
 
-    return {
-        "custom": custom,
-        "today": {
-            "date": today,
-            "users": User.objects.users_with_birthday(today.month, today.day),
-            "inc": 0
-        },
-        "tomorrow": {
-            "date": tomorrow,
-            "users": User.objects.users_with_birthday(tomorrow.month, tomorrow.day),
-            "inc": 1
+    key = "birthdays:{}".format(today)
+
+    cached = cache.get(key)
+
+    if cached:
+        logger.debug("Birthdays on {} loaded "
+                     "from cache.".format(today))
+        logger.debug(cached)
+        return cached
+    else:
+        logger.debug("Loading and caching birthday info for {}".format(today))
+        tomorrow = today + timedelta(days=1)
+
+        data = {
+            "custom": custom,
+            "today": {
+                "date": today,
+                "users": [{
+                    "id": u.id,
+                    "full_name": u.full_name,
+                    "grade": {
+                        "name": u.grade.name
+                    },
+                    "age": u.age
+                } for u in User.objects.users_with_birthday(today.month, today.day)],
+                "inc": 0
+            },
+            "tomorrow": {
+                "date": tomorrow,
+                "users": [{
+                    "id": u.id,
+                    "full_name": u.full_name,
+                    "grade": {
+                        "name": u.grade.name
+                    },
+                    "age": u.age
+                } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
+                "inc": 1
+            }
         }
-    }
+        cache.set(key, data, timeout=60 * 60 * 24)
+        return data
+
+
 
 
 
