@@ -176,7 +176,7 @@ $(function() {
 
                 {% if passes and scheduled_activity.block.locked %}
                     <div class="passes-notice">
-                        <i class="fa fa-exclamation-triangle"></i> Accept/Reject Student Passes
+                        <i class="fa fa-exclamation-triangle"></i> Unacknowledged Student Passes
                     </div>
                 {% endif %}
 
@@ -190,7 +190,11 @@ $(function() {
                                 <th>Student ID</th>
                                 <th>Grade</th>
                                 <th>Time</th>
-                                <th>Accept/Reject</th>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
+                                    <th>Accept/Reject</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -214,6 +218,9 @@ $(function() {
                                 <td>
                                     {{ pass.last_modified_time|fuzzy_date }}
                                 </td>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
                                 <td class="form">
                                     <form name="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
                                         {% csrf_token %}
@@ -224,6 +231,7 @@ $(function() {
                                         <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="reject"><i class="fa fa-times"></i></a>
                                     </form>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                             <tr class="pass-button-row">
@@ -231,18 +239,24 @@ $(function() {
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
                                 <td>
                                     <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post" onsubmit="return confirm('Accept passes for and mark {{ passes|length }} student{{ passes|pluralize }} present?')">
                                         {% csrf_token %}
                                         <input type="submit" class="button accept-all-passes" value="Accept All">
                                     </form>
                                 </td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>
                 {% else %}
                     <h3>Passes</h3>
-                    <i class="fa fa-check" style="color:green"></i> There are no passes to accept.
+                    <span class="no-passes">
+                        <i class="fa fa-check"></i> There are no passes to accept.
+                    </span>
                 {% endif %}
                 </div>
 

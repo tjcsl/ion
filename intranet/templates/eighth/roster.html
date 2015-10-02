@@ -50,13 +50,15 @@
 
     <h2>Roster for <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">{{ scheduled_activity.full_title }}</a> on {{ scheduled_activity.block }}:</h2>
     <dl>
-        <dt>Rooms:</dt>
+        <dt>Room{{ scheduled_activity.get_true_rooms|pluralize }}:</dt>
         <dd>{% for room in scheduled_activity.get_true_rooms %}
                 {{ room.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}None
             {% endfor %}</dd>
         <dt>Sponsors:</dt>
         <dd>{% for sponsor in scheduled_activity.get_true_sponsors %}
                 {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}None
             {% endfor %}</dd>
         {% if scheduled_activity.comments %}
         <dt>Comments:</dt>
