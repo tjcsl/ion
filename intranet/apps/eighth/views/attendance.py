@@ -64,7 +64,15 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     def get_form_kwargs(self, step):
         kwargs = {}
         if step == "block":
-            if not self.request.user.is_eighth_admin:
+            if "show_all_blocks" in self.request.GET:
+                now = datetime.now().date()
+                """ Only show blocks after September 1st of the current school year """
+                if now.month < 9:
+                    now = datetime(now.year-1, 9, 1).date()
+                else:
+                    now = datetime(now.year, 9, 1).date()
+                kwargs.update({"exclude_before_date": now})
+            elif not self.request.user.is_eighth_admin:
                 now = datetime.now().date()
                 kwargs.update({"exclude_before_date": now})
             else:
