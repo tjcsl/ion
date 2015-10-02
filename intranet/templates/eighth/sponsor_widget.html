@@ -29,6 +29,10 @@
                         <span class="block-sponsorship locked" title="You can take attendance now.">
                             <i class="fa fa-arrow-right"></i>{{ schact.full_title }}
                         </span>
+                    {% elif schact.block.attendance_locked %}
+                        <span class="block-sponsorship unlocked" title="This block has an attendance lock.">
+                            <i class="fa fa-arrow-right"></i>{{ schact.full_title }}
+                        </span>
                     {% else %}
                         <span class="block-sponsorship unlocked" title="The block has not been locked.">
                             <i class="fa fa-unlock-alt"></i>
@@ -40,6 +44,8 @@
                         Modify
                     {% elif schact.block.locked %}
                         Take Now
+                    {% elif schact.block.attendance_locked %}
+                        Locked
                     {% else %}
                         View
                     {% endif %}

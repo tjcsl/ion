@@ -453,6 +453,13 @@ class EighthBlock(AbstractBaseEighthModel):
                 (self.date == now.date() and
                  self.signup_time > now.time()))
 
+    def attendance_locked(self):
+        """Is it past 10PM on the day of the block?"""
+        now = datetime.datetime.now()
+        return (now.date() > self.date or
+                (now.date() == self.date and
+                 now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0)))
+
     def num_signups(self):
         """ How many people have signed up?"""
         return EighthSignup.objects.filter(scheduled_activity__block=self).count()

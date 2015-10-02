@@ -125,6 +125,11 @@ $(function() {
                 {% endif %}
             </form>
         {% else %}
+            {% if scheduled_activity.block.attendance_locked %}
+                <div style="font-weight: bold; font-size: {% if request.user.is_eighthoffice %}12px{% else %}18px{% endif %}; color: red">
+                    Taking attendance on this block has been locked.
+                </div>
+            {% endif %}
             <div class="attendance-container">
                 <table class="key-value-table activity-attributes">
                 {% if not request.user.is_eighth_admin %}
