@@ -85,8 +85,10 @@ def delinquent_students_view(request):
                     "end"]
 
     if set(request.GET.keys()).intersection(set(query_params)):
+        # attendance MUST have been taken on the activity for the absence to be valid
         delinquents = (EighthSignup.objects
                                    .filter(was_absent=True,
+                                           scheduled_activity__attendance_taken=True,
                                            scheduled_activity__block__date__gte=start_date_filter,
                                            scheduled_activity__block__date__lte=end_date_filter)
                                    .values("user")
