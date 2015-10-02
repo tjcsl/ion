@@ -39,7 +39,8 @@ $(function() {
                 background: 'url("' + window.defaultPic + '")',
                 backgroundClip: "content-box",
                 backgroundSize: "172px 215px",
-                backgroundRepeat: "no-repeat"
+                backgroundRepeat: "no-repeat",
+                zIndex: 9001
             });
             img.addClass("active");
             img.fadeIn(100);
