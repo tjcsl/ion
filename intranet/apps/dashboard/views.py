@@ -131,9 +131,19 @@ def find_birthdays(request):
     today = datetime.now().date()
     actual_today = datetime.now().date()
     custom = False
+    yr_inc = 0
     if "birthday_month" in request.GET and "birthday_day" in request.GET:
         try:
-            today = datetime(today.year, int(request.GET["birthday_month"]), int(request.GET["birthday_day"])).date()
+            mon = int(request.GET["birthday_month"])
+            day = int(request.GET["birthday_day"])
+            yr = today.year
+
+            """ If searching a date that already happened this year, skip to the next year. """
+            if mon < today.month or (mon == today.month and day < today.day):
+                yr += 1
+                yr_inc = 1
+
+            today = datetime(yr, mon, day).date()
             custom = True
         except Exception:
             pass
@@ -161,7 +171,7 @@ def find_birthdays(request):
                     "grade": {
                         "name": u.grade.name
                     },
-                    "age": u.age
+                    "age": u.age + yr_inc
                 } for u in User.objects.users_with_birthday(today.month, today.day)],
                 "inc": 0
             },
