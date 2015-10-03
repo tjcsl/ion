@@ -20,16 +20,10 @@ class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
 
 class ActivitySelectionForm(forms.Form):
 
-    def __init__(self, label="Activity", block=None, sponsor=None, without_sponsor_field=False, *args, **kwargs):
+    def __init__(self, label="Activity", block=None, sponsor=None, *args, **kwargs):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
         if block is not None:
-            activity_ids_no_sponsor = (EighthScheduledActivity.objects
-                                                   .exclude(activity__deleted=True)
-                                                   .exclude(cancelled=True)
-                                                   .filter(block=block)
-                                                   .values_list("activity__id", flat=True))
-
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) |
                                      (Q(sponsors=None) &
@@ -39,35 +33,28 @@ class ActivitySelectionForm(forms.Form):
                                                        .filter(sponsoring_filter)
                                                        .values_list("activity__id", flat=True))
             else:
-                activity_ids = activity_ids_no_sponsor
-
-
+                activity_ids = (EighthScheduledActivity.objects
+                                                       .exclude(activity__deleted=True)
+                                                       .exclude(cancelled=True)
+                                                       .filter(block=block)
+                                                       .values_list("activity__id", flat=True))
             queryset = (EighthActivity.objects.filter(id__in=activity_ids)
                                               .order_by("name"))
-
-            queryset_no_sponsor = (EighthActivity.objects.filter(id__in=activity_ids_no_sponsor)
-                                                         .order_by("name"))
         else:
-
-            queryset_no_sponsor = (EighthActivity.undeleted_objects
-                                                 .all()
-                                                 .order_by("name"))
             if sponsor is not None:
                 queryset = (EighthActivity.undeleted_objects
                                           .filter(sponsors=sponsor)
                                           .order_by("name"))
             else:
-                queryset = queryset_no_sponsor
+                queryset = (EighthActivity.undeleted_objects
+                                          .all()
+                                          .order_by("name"))
 
 
         self.fields["activity"] = ActivityDisplayField(queryset=queryset,
                                                        label=label,
-                                                       empty_label="Select an activity" if not sponsor else "Select an activity you are sponsoring")
+                                                       empty_label="Select an activity")
 
-        if without_sponsor_field:
-            self.fields["activity_without_sponsor"] = ActivityDisplayField(queryset=queryset_no_sponsor,
-                                                                           label=label,
-                                                                           empty_label="Select another activity")
 
 class QuickActivityForm(forms.ModelForm):
 

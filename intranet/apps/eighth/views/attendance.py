@@ -11,6 +11,7 @@ import csv
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from formtools.wizard.views import SessionWizardView
 from reportlab.lib import colors
@@ -41,10 +42,10 @@ def should_show_activity_list(wizard):
         activities = wizard.get_form("activity").fields["activity"].queryset
         if activities.count() == 1:
             wizard.default_activity = activities[0]
-            #return False
+            return False
         if activities.count() == 0:
             wizard.no_activities = True
-            #return False
+            return False
     return True
 
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
@@ -88,8 +89,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             except (EighthSponsor.DoesNotExist, AttributeError):
                 sponsor = None
 
-            if not (self.request.user.is_eighth_admin or (sponsor is None)):
-                self.sponsor = sponsor # don't include in kwargs
+            #if not (self.request.user.is_eighth_admin or (sponsor is None)):
+            #    kwargs.update({"sponsor": sponsor})
 
         labels = {
             "block": "Select a block",
@@ -104,6 +105,30 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         context = super(EighthAttendanceSelectScheduledActivityWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
+
+        block = self.get_cleaned_data_for_step("block")
+        if block:
+            block = block["block"]
+            try:
+                sponsor = self.request.user.eighthsponsor
+            except (EighthSponsor.DoesNotExist, AttributeError):
+                sponsor = None
+
+            if sponsor and not self.request.user.is_eighthoffice:
+                context.update({"sponsor_block": block})
+                logger.debug("sponsor block: {}".format(block))
+
+                sponsoring_filter = (Q(sponsors=sponsor) |
+                                     (Q(sponsors=None) &
+                                      Q(activity__sponsors=sponsor)))
+                sponsored_activities = (EighthScheduledActivity.objects
+                                                               .filter(block=block)
+                                                               .filter(sponsoring_filter)
+                                                               .order_by("activity__name"))
+
+                context.update({"sponsored_activities": sponsored_activities})
+                logger.debug(sponsored_activities)
+
 
         return context
 
