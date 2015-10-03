@@ -105,8 +105,8 @@ $(function() {
             <br />
         {% endif %}
 
-        {% if request.GET.na %}
-            <strong>You are not sponsoring any activities for the block you selected.</strong>
+        {% if no_edit_perm %}
+            <strong>You are not a sponsor for this activity, so you can only view the roster.</strong>
             <br />
         {% endif %}
 
@@ -122,6 +122,43 @@ $(function() {
             <form action="" method="post">
                 {% csrf_token %}
                 {{ wizard.management_form }}
+
+                {% if sponsor_block %}
+                    <br />
+                    {% if sponsored_activities %}
+                        <b>You are sponsoring the following activities on {{ sponsor_block }}:</b><br />
+                        <table class="fancy-table sponsoring-wizard-table">
+                            <tbody>
+                        {% for schact in sponsored_activities %}
+                            <tr>
+                                <th>
+                                    {{ schact.full_title }}
+                                </th>
+                                <td>
+                                    <a href='{% url "eighth_take_attendance" schact.id %}' class='button'>
+                                        {% if schact.block.attendance_locked and not request.user.is_eighth_admin %}
+                                            View Attendance
+                                        {% elif schact.block.locked %}
+                                            Take Attendance
+                                        {% else %}
+                                            View Roster
+                                        {% endif %}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <b>You are not sponsoring any activities on {{ sponsor_block }}.
+                        {% if not request.user.is_eighth_admin %}
+                            You can only view activity rosters.
+                        {% endif %}</b><br />
+                    {% endif %}
+                    <br />
+                    <br />
+                {% endif %}
+
                 {{ wizard.form }}
                 {% if wizard.steps.prev %}
                     <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
