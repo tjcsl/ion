@@ -41,16 +41,16 @@ def should_show_activity_list(wizard):
         activities = wizard.get_form("activity").fields["activity"].queryset
         if activities.count() == 1:
             wizard.default_activity = activities[0]
-            return False
+            #return False
         if activities.count() == 0:
             wizard.no_activities = True
-            return False
+            #return False
     return True
 
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     FORMS = [
         ("block", BlockSelectionForm),
-        ("activity", ActivitySelectionForm),
+        ("activity", ActivitySelectionForm)
     ]
 
     TEMPLATES = {
@@ -89,7 +89,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 sponsor = None
 
             if not (self.request.user.is_eighth_admin or (sponsor is None)):
-                kwargs.update({"sponsor": sponsor})
+                self.sponsor = sponsor # don't include in kwargs
 
         labels = {
             "block": "Select a block",
@@ -109,6 +109,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
     def done(self, form_list, **kwargs):
         logger.debug("debug called in attendance")
+
         if hasattr(self, "no_activities"):
             response = redirect("eighth_attendance_choose_scheduled_activity")
             response["Location"] += "?na=1"
@@ -202,13 +203,17 @@ def take_attendance_view(request, scheduled_activity_id):
 
     if request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user):
         logger.debug("User has permission to edit")
+        edit_perm = True
     else:
         logger.debug("User does not have permission to edit")
-        return render(request, "error/403.html", {
-            "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
-        }, status=403)
+        edit_perm = False
 
     if request.method == "POST":
+
+        if not edit_perm:
+            return render(request, "error/403.html", {
+                "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
+            }, status=403)
 
         if "admin" in request.path:
             url_name = "eighth_admin_take_attendance"
@@ -297,7 +302,8 @@ def take_attendance_view(request, scheduled_activity_id):
             "scheduled_activity": scheduled_activity,
             "passes": passes,
             "members": members,
-            "p": pass_users
+            "p": pass_users,
+            "no_edit_perm": not edit_perm
         }
 
         if request.user.is_eighth_admin:
