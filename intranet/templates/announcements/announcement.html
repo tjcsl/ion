@@ -1,5 +1,5 @@
 {% load dates %}
-<div class="announcement{% if hide_announcements and announcement in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
+<div class="announcement{% if hide_announcements and announcement.id in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
         {% if announcement.pinned %}
             <i class="fa fa-thumb-tack" title="This announcement is pinned to the top."></i>
@@ -15,7 +15,7 @@
             <div class="announcement-icon-wrapper">
             {% if hide_announcements %}
                 <a href="#" class="announcement-toggle">
-                {% if announcement in user_hidden_announcements %}
+                {% if announcement.id in user_hidden_announcements %}
                     <i class="announcement-icon fa fa-toggle-off" title="You have hidden this announcement. Click to show." data-visible-title="This announcement is visible. Click to hide." hidden-title="You have hidden this announcement. Click to show."></i>
                 {% else %}
                     <i class="announcement-icon fa fa-toggle-on" title="This announcement is visible. Click to hide." data-visible-title="This announcement is visible. Click to hide." data-hidden-title="You have hidden this announcement. Click to show."></i>

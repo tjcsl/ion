@@ -36,7 +36,7 @@ def gen_schedule(user, num_blocks=6):
     else:
         surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
         # Use select_related to reduce query count
-        signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
+        signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity")
         block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
         for b in surrounding_blocks:
@@ -51,7 +51,8 @@ def gen_schedule(user, num_blocks=6):
             # warning flag (red block text and signup link) if no signup today
             # cancelled flag (red activity text) if cancelled
             flags = "locked" if b.locked else "open"
-            if (b.is_today() and not current_signup):
+            blk_today = b.is_today()
+            if (blk_today and not current_signup):
                 flags += " warning"
             if current_signup_cancelled:
                 flags += " cancelled"
@@ -69,13 +70,13 @@ def gen_schedule(user, num_blocks=6):
                 "locked": b.locked,
                 "date": b.date,
                 "flags": flags,
-                "is_today": b.is_today(),
+                "is_today": blk_today,
                 "signup_time": b.signup_time,
                 "signup_time_future": b.signup_time_future
             }
             schedule.append(info)
 
-            if b.is_today() and not current_signup:
+            if blk_today and not current_signup:
                 no_signup_today = True
 
     return schedule, no_signup_today
@@ -125,6 +126,7 @@ def gen_sponsor_schedule(user, num_blocks=6):
 
     logger.debug(acts)
     return acts, no_attendance_today
+
 
 def find_birthdays(request):
     """Return information on user birthdays."""
@@ -192,14 +194,13 @@ def find_birthdays(request):
         return data
 
 
-
-
-
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False):
     """Process and show the dashboard."""
 
-    announcements_admin = request.user.has_admin_permission("announcements")
+    user = request.user
+
+    announcements_admin = user.has_admin_permission("announcements")
 
     if not show_expired:
         show_expired = ("show_expired" in request.GET)
@@ -207,35 +208,45 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     if announcements_admin and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
-        announcements = (Announcement.objects.all()
-                                             .prefetch_related("groups", "user", "event"))
+        announcements = (Announcement.objects.all())
     else:
         # Only show announcements for groups that the user is enrolled in.
         if show_expired:
             announcements = (Announcement.objects
-                                     .visible_to_user(request.user)
-                                     .prefetch_related("groups", "user", "event"))
+                                     .visible_to_user(user))
         else:
             announcements = (Announcement.objects
-                                         .visible_to_user(request.user)
-                                         .filter(expiration_date__gt=timezone.now())
-                                         .prefetch_related("groups", "user", "event"))
+                                         .visible_to_user(user)
+                                         .filter(expiration_date__gt=timezone.now()))
 
     # pagination
     if "start" in request.GET:
-        start_num = int(request.GET.get("start"))
+        try:
+            start_num = int(request.GET.get("start"))
+        except ValueError:
+            start_num = 0
     else:
         start_num = 0
 
     display_num = 15
     end_num = start_num + display_num
     more_announcements = ((announcements.count() - start_num) > display_num)
-    announcements = announcements[start_num:end_num]
+    try:
+        announcements_sorted = announcements[start_num:end_num]
+    except (ValueError, AssertionError):
+        announcements_sorted = announcements[:display_num]
+    else:
+        announcements = announcements_sorted
 
-    user_hidden_announcements = Announcement.objects.hidden_announcements(request.user)
+    announcements = announcements.prefetch_related("groups", "user", "event")
 
-    is_student = request.user.is_student
-    eighth_sponsor = request.user.is_eighth_sponsor
+    user_hidden_announcements = (Announcement.objects.hidden_announcements(user)
+                                                     .values_list("id", flat=True))
+
+    is_student = user.is_student
+    is_teacher = user.is_teacher
+    is_senior = (user.grade.number == 12)
+    eighth_sponsor = user.is_eighth_sponsor
 
     if show_widgets:
         dashboard_title = "Dashboard"
@@ -258,31 +269,33 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "show_expired": show_expired,
         "dashboard_title": dashboard_title,
         "dashboard_header": dashboard_header,
-        "senior_graduation": settings.SENIOR_GRADUATION,
-        "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
-        "birthdays": find_birthdays(request)
+        "is_student": is_student,
+        "is_teacher": is_teacher,
+        "is_senior": is_senior
     }
 
 
     if show_widgets:
         if is_student:
-            schedule, no_signup_today = gen_schedule(request.user)
-        else:
-            schedule = None
-            no_signup_today = None
+            schedule, no_signup_today = gen_schedule(user)
+            context.update({
+                "schedule": schedule,
+                "no_signup_today": no_signup_today,
+                "senior_graduation": settings.SENIOR_GRADUATION,
+                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
+            })
 
         if eighth_sponsor:
-            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(request.user)
-        else:
-            sponsor_schedule = None
-            no_attendance_today = None
+            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(user)
+            context.update({
+                "sponsor_schedule": sponsor_schedule,
+                "no_attendance_today": no_attendance_today
+            })
 
         context.update({
-            "schedule": schedule,
-            "no_signup_today": no_signup_today,
-            "sponsor_schedule": sponsor_schedule,
-            "no_attendance_today": no_attendance_today,
             "eighth_sponsor": eighth_sponsor,
+            "birthdays": find_birthdays(request),
+            "sched_ctx": schedule_context(request)["sched_ctx"]
         })
 
     if announcements_admin:
@@ -295,14 +308,4 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             "awaiting_approval": awaiting_approval,
         })
 
-    """ This isn't important and it adds a lot of overhead.
-    # add to users_seen
-    u = request.user
-    for ann in announcements:
-        u.announcements_seen.add(ann.user_map)
-    u.save()
-    """
-
-    schedule = schedule_context(request)
-    context.update(schedule)
     return render(request, "dashboard/dashboard.html", context)

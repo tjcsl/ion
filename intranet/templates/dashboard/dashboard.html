@@ -39,10 +39,10 @@
 
 {% if show_widgets %}
 <div class="widgets{% if eighth_sponsor and request.user.is_student %} student-sponsor{% endif %}">
-    {% if request.user.is_student %}
+    {% if is_student %}
         {% include "eighth/signup_widget.html" %}
     {% endif %}
-    {% if request.user.is_teacher or eighth_sponsor %}
+    {% if is_teacher or eighth_sponsor %}
         {% include "eighth/sponsor_widget.html" %}
     {% endif %}
     {% include "schedule/widget.html" %}
@@ -51,7 +51,7 @@
     {% include "dashboard/birthdays.html" %}
     {% include "dashboard/links.html" %}
     
-    {% if request.user.grade.number == 12 %}
+    {% if is_senior %}
         {% include "dashboard/seniors.html" %}
     {% endif %}
 </div>
@@ -66,7 +66,7 @@
                 <a href="{% url 'index' %}" class="button" style="float:left"><i class="fa fa-arrow-left" style="width: 11px"></i> Dashboard</a>
                 &nbsp;
             {% endif %}
-            {% if request.user.is_announcements_admin %}
+            {% if announcements_admin %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
                     <i class="fa fa-plus"></i>
                     Add
