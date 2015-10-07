@@ -245,7 +245,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     is_student = user.is_student
     is_teacher = user.is_teacher
-    is_senior = (user.grade.number == 12)
+    is_senior = (user.grade.number == 12) if user.grade and user.grade.number else False
     eighth_sponsor = user.is_eighth_sponsor
 
     if show_widgets:
