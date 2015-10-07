@@ -253,7 +253,9 @@ $(function() {
                                     {{ pass.user.grade.number }}
                                 </td>
                                 <td>
-                                    {{ pass.last_modified_time|fuzzy_date }}
+                                    {% if pass.last_modified_time %}
+                                        {{ pass.last_modified_time|fuzzy_date }}
+                                    {% endif %}
                                 </td>
                                 {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
 

@@ -111,7 +111,11 @@ def windows_dir_format(host_dir, user):
         11: "Junior M:",
         12: "Senior M:"
     }
-    grade = int(user.grade)
+    if user and user.grade:
+        grade = int(user.grade)
+    else:
+        return host_dir
+
     if grade in range(9, 13):
         win_path = "{}/{}/".format(grade_folders[grade], user.username)
     else:
