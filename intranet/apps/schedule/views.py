@@ -6,9 +6,11 @@ from datetime import datetime, timedelta
 import calendar
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from intranet import settings
 from .models import Block, DayType, Day, Time
 from .forms import DayTypeForm, DayForm
 
@@ -53,45 +55,55 @@ def schedule_context(request=None, date=None):
             while not is_weekday(date):
                 date += timedelta(days=1)
 
-    try:
-        dayobj = Day.objects.select_related("day_type").get(date=date)
-    except Day.DoesNotExist:
-        dayobj = None
-
-    if dayobj is not None:
-        blocks = (dayobj.day_type
-                        .blocks
-                        .order_by("start__hour", "start__minute"))
+    date_fmt = date_format(date)
+    key = "bell_schedule:{}".format(date_fmt)
+    cached = cache.get(key)
+    if cached:
+        logger.debug("Returning schedule context for {} from cache.".format(date_fmt))
+        return cached
     else:
-        blocks = []
-
-    delta = 3 if date.isoweekday() == FRIDAY else 1
-    date_tomorrow = date_format(date + timedelta(days=delta))
-
-    delta = -3 if date.isoweekday() == MONDAY else -1
-    date_yesterday = date_format(date + timedelta(days=delta))
-
-    if request and request.user.is_authenticated() and request.user.is_eighth_admin:
         try:
-            schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
-            if not schedule_tomorrow.day_type:
-                schedule_tomorrow = False
+            dayobj = Day.objects.select_related("day_type").get(date=date)
         except Day.DoesNotExist:
-            schedule_tomorrow = False
-    else:
-        schedule_tomorrow = None
+            dayobj = None
 
-    return {
-        "sched_ctx": {
-            "dayobj": dayobj,
-            "blocks": blocks,
-            "date": date,
-            "is_weekday": is_weekday(date),
-            "date_tomorrow": date_tomorrow,
-            "date_yesterday": date_yesterday,
-            "schedule_tomorrow": schedule_tomorrow
+        if dayobj is not None:
+            blocks = (dayobj.day_type
+                            .blocks
+                            .order_by("start__hour", "start__minute"))
+        else:
+            blocks = []
+
+        delta = 3 if date.isoweekday() == FRIDAY else 1
+        date_tomorrow = date_format(date + timedelta(days=delta))
+
+        delta = -3 if date.isoweekday() == MONDAY else -1
+        date_yesterday = date_format(date + timedelta(days=delta))
+
+        if request and request.user.is_authenticated() and request.user.is_eighth_admin:
+            try:
+                schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
+                if not schedule_tomorrow.day_type:
+                    schedule_tomorrow = False
+            except Day.DoesNotExist:
+                schedule_tomorrow = False
+        else:
+            schedule_tomorrow = None
+
+        data = {
+            "sched_ctx": {
+                "dayobj": dayobj,
+                "blocks": blocks,
+                "date": date,
+                "is_weekday": is_weekday(date),
+                "date_tomorrow": date_tomorrow,
+                "date_yesterday": date_yesterday,
+                "schedule_tomorrow": schedule_tomorrow
+            }
         }
-    }
+        cache.set(key, data, timeout=settings.CACHE_AGE['bell_schedule'])
+        logger.debug("Cached schedule context for {}".format(date_fmt))
+        return data
 
 # does NOT require login
 def schedule_view(request):
@@ -177,10 +189,19 @@ def do_default_fill(request):
                     msgs.append(msg)
     return render(request, "schedule/fill.html", {"msgs": msgs})
 
+def delete_cache():
+    cache.delete_pattern("bell_schedule:*")
+    logger.debug("Deleted bell schedule cache.")
+
 @schedule_admin_required
 def admin_home_view(request):
     if "default_fill" in request.POST:
         return do_default_fill(request)
+
+    if "delete_cache" in request.POST:
+        delete_cache()
+        messages.success(request, "Deleted schedule cache manually")
+        return redirect("schedule_admin")
 
 
     if "month" in request.GET:
@@ -224,6 +245,7 @@ def admin_home_view(request):
 @schedule_admin_required
 def admin_add_view(request):
     if request.method == "POST":
+        delete_cache()
         date = request.POST.get("date")
         day = Day.objects.filter(date=date)
         if len(day) <= 1:
@@ -247,7 +269,7 @@ def admin_add_view(request):
 @schedule_admin_required
 def admin_daytype_view(request, id=None):
     if request.method == "POST":
-        
+        delete_cache()
         if "id" in request.POST:
             id = request.POST["id"]
 

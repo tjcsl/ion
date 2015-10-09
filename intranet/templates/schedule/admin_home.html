@@ -225,11 +225,16 @@ $(function() {
         </form>
 
         <div class="schedule-methods">
-            <form action="" method="post" onsubmit="return defaultFillWarning()">
+            <form action="" method="post" onsubmit="return defaultFillWarning()" style="display: inline">
                 {% csrf_token %}
                 <input type="hidden" name="default_fill" value="1" />
                 <input type="hidden" name="month" value="{{ this_month }}" />
                 <input type="submit" value="Fill Month with Defaults" />
+            </form>
+            <form action="" method="post" style="display: inline">
+                {% csrf_token %}
+                <input type="hidden" name="delete_cache" value="1" />
+                <input type="submit" value="Clear Cache" class="small-button" />
             </form>
         </div>
 
