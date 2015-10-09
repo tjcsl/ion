@@ -56,7 +56,7 @@ class KerberosAuthenticationBackend(object):
 
         try:
             realm = settings.CSL_REALM
-            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm))
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
             kinit.expect(":")
             kinit.sendline(password)
             kinit.expect(pexpect.EOF)
@@ -69,7 +69,7 @@ class KerberosAuthenticationBackend(object):
         if exitstatus != 0:
             realm = settings.AD_REALM
             try:
-                kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm))
+                kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
                 kinit.expect(":", timeout=5)
                 kinit.sendline(password)
                 kinit.expect(pexpect.EOF)
