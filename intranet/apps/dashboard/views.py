@@ -109,7 +109,13 @@ def gen_sponsor_schedule(user, num_blocks=6, surrounding_blocks=None):
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .filter(block__in=surrounding_blocks))
-    sponsoring_block_map = {sa.block.id: sa for sa in activities_sponsoring}
+    sponsoring_block_map = {}
+    for sa in activities_sponsoring:
+        bid = sa.block.id
+        if bid in sponsoring_block_map:
+            sponsoring_block_map[bid] += [sa]
+        else:
+            sponsoring_block_map[bid] = [sa]
 
     for b in surrounding_blocks:
         num_added = 0
