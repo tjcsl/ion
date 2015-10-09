@@ -54,14 +54,13 @@ def schedule_context(request=None, date=None):
                 date += timedelta(days=1)
 
     try:
-        dayobj = Day.objects.get(date=date)
+        dayobj = Day.objects.get(date=date).select_related("day_type", "day_type__blocks", "day_type__blocks__start", "day_type__blocks__end")
     except Day.DoesNotExist:
         dayobj = None
 
     if dayobj is not None:
         blocks = (dayobj.day_type
                         .blocks
-                        .select_related("start", "end")
                         .order_by("start__hour", "start__minute"))
     else:
         blocks = []
@@ -74,7 +73,7 @@ def schedule_context(request=None, date=None):
 
     if request and request.user.is_authenticated() and request.user.is_eighth_admin:
         try:
-            schedule_tomorrow = Day.objects.get(date=date_tomorrow)
+            schedule_tomorrow = Day.objects.get(date=date_tomorrow).select_related("day_type")
             if not schedule_tomorrow.day_type:
                 schedule_tomorrow = False
         except Day.DoesNotExist:
