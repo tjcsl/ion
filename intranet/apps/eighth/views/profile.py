@@ -94,17 +94,20 @@ def get_profile_context(request, user_id=None, date=None):
     else:
         profile_user = request.user
 
-    if profile_user != request.user and not request.user.is_eighth_admin:
-        return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
+    if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
+        return False
 
-    custom_date_set = False
-    if date:
-        custom_date_set = True
-    elif "date" in request.GET:
-        date = request.GET.get("date")
-        date = datetime.strptime(date, "%Y-%m-%d")
-        custom_date_set = True
-    else:
+    try:
+        custom_date_set = False
+        if date:
+            custom_date_set = True
+        elif "date" in request.GET:
+            date = request.GET.get("date")
+            date = datetime.strptime(date, "%Y-%m-%d")
+            custom_date_set = True
+        else:
+            date = datetime.now()
+    except Exception:
         date = datetime.now()
 
     date_end = date + timedelta(days=14)
@@ -155,17 +158,21 @@ def get_profile_context(request, user_id=None, date=None):
                                                                    .filter(block__date__gte=start_date)
                                                                    .order_by("block__date",
                                                                              "block__block_letter"))
+        eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
         logger.debug("Eighth sponsor {}".format(sponsor))
 
-        context.update({"eighth_sponsor_schedule": eighth_sponsor_schedule})
+        context["eighth_sponsor_schedule"] = eighth_sponsor_schedule
 
     return context
 
 @login_required
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
-    return render(request, "eighth/profile.html", context)
+    if context:
+        return render(request, "eighth/profile.html", context)
+    else:
+        return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
 @login_required
 def profile_signup_view(request, user_id=None, block_id=None):
@@ -216,5 +223,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "active_block_current_signup": active_block_current_signup,
         "show_eighth_profile_link": True
     }
-    context.update(get_profile_context(request, user_id, block.date))
+    profile_ctx = get_profile_context(request, user_id, block.date)
+    if profile_ctx:
+        context.update(profile_ctx)
     return render(request, "eighth/profile_signup.html", context)

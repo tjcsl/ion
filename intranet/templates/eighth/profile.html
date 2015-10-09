@@ -36,7 +36,7 @@
             Eighth Period - {{ date_now }}
         </h3>
         {% if skipped_ahead %}
-            There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
+            There were no blocks the week of {{ date_now }}.{% if eighth_schedule %} Skipped to the next block in the future.{% endif %}
         {% endif %}
     {% if profile_user.is_student %}
         <table class="eighth-table {% if eighth_schedule %}zebra{% endif %} checkboxes-grid">
@@ -62,6 +62,8 @@
                     </span>
                 </td>
             </tr>
+
+            {% if eighth_schedule %}
             <tr class="desc">
                 <th class="center checkbox">
                     <input type="checkbox" />
@@ -83,6 +85,7 @@
                 <th>Attended</th>
                 <th></th>
             </tr>
+            {% endif %}
         </thead>
         {% for sch in eighth_schedule %}
         <tr class="form-row">
@@ -139,12 +142,6 @@
                 </a>
             </td>
         </tr>
-        {% empty %}
-            <tr>
-            <td colspan="7">
-                You have reached a point beyond the last eighth period block that has been created.
-            </td>
-            </tr>
         {% endfor %}
         </table>
     {% else %}
@@ -156,6 +153,7 @@
         <section class="user-info-eighth sponsor">
             <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsored Activities{% endif %}</h3>
             <table data-sortable class="fancy-table">
+                {% if eighth_sponsor_schedule %}
                 <thead>
                     <tr>
                         <th>Block</th>
@@ -166,6 +164,7 @@
                         <th>Capacity</th>
                     </tr>
                 </thead>
+                {% endif %}
                 <tbody>
                     {% for scheduled_activity in eighth_sponsor_schedule %}
                         <tr>
@@ -175,6 +174,12 @@
                             <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
                             <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                             <td>{{ scheduled_activity.get_true_capacity }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">
+                                This user is not sponsoring any activities in the future.
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
