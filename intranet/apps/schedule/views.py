@@ -54,7 +54,7 @@ def schedule_context(request=None, date=None):
                 date += timedelta(days=1)
 
     try:
-        dayobj = Day.objects.get(date=date).select_related("day_type", "day_type__blocks", "day_type__blocks__start", "day_type__blocks__end")
+        dayobj = Day.objects.select_related("day_type").get(date=date)
     except Day.DoesNotExist:
         dayobj = None
 
@@ -73,7 +73,7 @@ def schedule_context(request=None, date=None):
 
     if request and request.user.is_authenticated() and request.user.is_eighth_admin:
         try:
-            schedule_tomorrow = Day.objects.get(date=date_tomorrow).select_related("day_type")
+            schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
             if not schedule_tomorrow.day_type:
                 schedule_tomorrow = False
         except Day.DoesNotExist:
@@ -175,9 +175,7 @@ def do_default_fill(request):
                     day_obj = Day.objects.create(date=day["formatted_date"], day_type=type_obj)
                     msg = "{} is now a {}".format(day["formatted_date"], day_obj.day_type)
                     msgs.append(msg)
-                    messages.success(request, msg)
-
-    return redirect("schedule_admin")
+    return render(request, "schedule/fill.html", {"msgs": msgs})
 
 @schedule_admin_required
 def admin_home_view(request):

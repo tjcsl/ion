@@ -1,0 +1,26 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Schedule - {{ date }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <a href="{% url 'schedule_admin' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+        <h2>Fill Action</h2>
+        {% for msg in msgs %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
