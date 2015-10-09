@@ -90,12 +90,15 @@
             {% endif %}
 
 
-            {% if request.user.is_eighth_admin %}
+            {% if request.user.is_eighth_admin or request.user.is_teacher %}
                 <center>
-                    <br /><br /><br />
-                    <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
                     <br />
-                    <a href="/profile/{{ profile_user.id }}?clear_cache=1&full=1" class="button small-button" title="Clear cached information for this user.">Clear Cache</a> &nbsp;
+                    <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
+                    {% if request.user.is_eighth_admin %}
+                        <br />
+                        <a href="/profile/{{ profile_user.id }}?clear_cache=1&full=1" class="button small-button" title="Clear cached information for this user.">Clear Cache</a> &nbsp;
+                    {% endif %}
+                    <br />
                 </center>
             {% endif %}
         </div>
@@ -136,7 +139,7 @@
                             <th>Username</th>
                             <td>{{ profile_user.ion_username }}</td>
                         </tr>
-                        {% if request.user.is_teacher %}
+                        {% if request.user.is_teacher and profile_user.student_id %}
                             <tr>
                                 <th>Student ID</th>
                                 <td>{{ profile_user.student_id }}</td>
