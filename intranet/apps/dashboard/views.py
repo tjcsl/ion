@@ -31,11 +31,8 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     schedule = []
 
     if surrounding_blocks is None:
-        block = EighthBlock.objects.get_first_upcoming_block()
-        if block is None:
-            return [], False
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
-        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
     if len(surrounding_blocks) == 0:
         return None, False
 
@@ -86,7 +83,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     return schedule, no_signup_today
 
 
-def gen_sponsor_schedule(user, num_blocks=6, surrounding_blocks=None):
+def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None):
     """Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
@@ -98,14 +95,11 @@ def gen_sponsor_schedule(user, num_blocks=6, surrounding_blocks=None):
     no_attendance_today = None
     acts = []
 
-    sponsor = user.get_eighth_sponsor()
+    if sponsor is None:
+        sponsor = user.get_eighth_sponsor()
 
     if surrounding_blocks is None:
-        block = EighthBlock.objects.get_first_upcoming_block()
-        if block is None:
-            return [], False
-
-        surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .filter(block__in=surrounding_blocks))
@@ -251,7 +245,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     else:
         announcements = announcements_sorted
 
-    announcements = announcements.prefetch_related("groups", "user", "event")
+    announcements = announcements.select_related("user").prefetch_related("groups", "event")
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user)
                                                      .values_list("id", flat=True))
@@ -259,7 +253,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     is_student = user.is_student
     is_teacher = user.is_teacher
     is_senior = (user.grade.number == 12) if user.grade and user.grade.number else False
-    eighth_sponsor = user.is_eighth_sponsor
+    eighth_sponsor = user.get_eighth_sponsor()
 
     if show_widgets:
         dashboard_title = "Dashboard"
@@ -291,11 +285,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     if show_widgets:
         if is_student or eighth_sponsor:
             num_blocks = 6
-            block = EighthBlock.objects.get_first_upcoming_block()
-            if block is None:
-                surrounding_blocks = []
-            else:
-                surrounding_blocks = [block] + list(block.next_blocks()[:num_blocks-1])
+            surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
         if is_student:
             schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
@@ -307,7 +297,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             })
 
         if eighth_sponsor:
-            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(user, num_blocks, surrounding_blocks)
+            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
             context.update({
                 "sponsor_schedule": sponsor_schedule,
                 "no_attendance_today": no_attendance_today

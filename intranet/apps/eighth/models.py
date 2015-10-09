@@ -308,6 +308,27 @@ class EighthActivity(AbstractBaseEighthModel):
 
 class EighthBlockManager(models.Manager):
 
+    def get_upcoming_blocks(self, max_number=-1):
+        """Gets the X number of upcoming blocks (that will take place
+        in the future). If there is no block in the future, the most
+        recent block will be returned.
+
+        Returns: A QuerySet of `EighthBlock` objects
+
+        """
+
+        now = datetime.datetime.now()
+
+        # Show same day if it's before 17:00
+        if now.hour < 17:
+            now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        blocks = self.order_by("date", "block_letter").filter(date__gte=now)
+        if max_number > 0:
+            return blocks[:max_number]
+
+        return blocks
+
     def get_first_upcoming_block(self):
         """Gets the first upcoming block (the first block that will
         take place in the future). If there is no block in the future,
@@ -325,6 +346,7 @@ class EighthBlockManager(models.Manager):
 
         block = self.order_by("date", "block_letter").filter(date__gte=now).first()
         return block
+
 
     def get_next_upcoming_blocks(self):
         """Gets the next upccoming blocks. (Finds the other blocks

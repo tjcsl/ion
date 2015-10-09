@@ -126,16 +126,33 @@ class UserManager(UserManager):
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
-        usernums = User.objects.filter(username__startswith="2")
-        # Add possible exceptions handling here
-        return usernums
+        key = "users:students"
+        cached = cache.get(key)
+        if cached:
+            logger.debug("Using cached User.get_students")
+            return cached
+        else:
+            usernums = User.objects.filter(username__startswith="2")
+            # Add possible exceptions handling here
+            logger.debug("Set cache for User.get_students")
+            cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
+            return usernums
+
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
-        usernonums = User.objects.exclude(username__startswith="2")
-        usernonums = usernonums | User.objects.filter(id=31863)
-        # Add possible exceptions handling here
-        return usernonums
+        key = "users:teachers"
+        cached = cache.get(key)
+        if cached:
+            logger.debug("Using cached User.get_teachers")
+            return cached
+        else:
+            usernonums = User.objects.exclude(username__startswith="2")
+            # Add possible exceptions handling here
+            usernonums = usernonums | User.objects.filter(id=31863)
+            logger.debug("Set cache for User.get_teachers")
+            cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
+            return usernonums
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -385,7 +402,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return ("{}, {} ".format(self.last_name, self.first_name) +
                ("({}) ".format(self.nickname) if self.nickname else "") +
-               ("({})".format(self.student_id if self.student_id else self.username)))
+               ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
 
     @property
     def short_name(self):
