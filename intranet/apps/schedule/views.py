@@ -70,6 +70,7 @@ def schedule_context(request=None, date=None):
         if dayobj is not None:
             blocks = (dayobj.day_type
                             .blocks
+                            .select_related("start", "end")
                             .order_by("start__hour", "start__minute"))
         else:
             blocks = []
