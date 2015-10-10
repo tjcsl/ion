@@ -35,6 +35,8 @@ APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 FILES_MAX_UPLOAD_SIZE = 200*1024*1024
 FILES_MAX_DOWNLOAD_SIZE = 200*1024*1024
 
+CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
+
 MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
