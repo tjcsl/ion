@@ -154,6 +154,23 @@ class UserManager(UserManager):
             cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
             return usernonums
 
+    def get_teachers_sorted(self):
+        """Get teachers sorted by last name."""
+        teachers = self.get_teachers()
+        teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
+        teachers.sort(key=lambda u: (u[0], u[1]))
+        for t in teachers:
+            if t[0] is None or t[0] == u"." or t[0] == ".":
+                teachers.remove(t)
+        # Hack to return QuerySet in given order
+        id_list = [t[2] for t in teachers]
+        clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(id_list)])
+        ordering = 'CASE %s END' % clauses
+        queryset = User.objects.filter(id__in=id_list).extra(
+            select={'ordering': ordering}, order_by=('ordering',))
+        return queryset
+
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -400,9 +417,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
-        return ("{}, {} ".format(self.last_name, self.first_name) +
+        return ("{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "") +
                ("({}) ".format(self.nickname) if self.nickname else "") +
                ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
+
+    @property
+    def last_first_initial(self):
+        """Return a name in the format of:
+            Lastname, F [(Nickname)]
+        """
+        return ("{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") +
+               ("({}) ".format(self.nickname) if self.nickname else ""))
 
     @property
     def short_name(self):

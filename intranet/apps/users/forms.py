@@ -78,3 +78,13 @@ class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     def label_from_instance(self, obj):
         return obj.last_first_id
+
+class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
+    """
+    A ModelMultipleChoiceField that returns a user's Last, First initial instead
+    of their TJ username (which is the default string representation).
+
+    """
+
+    def label_from_instance(self, obj):
+        return obj.last_first_initial

@@ -25,6 +25,7 @@ $(function() {
 
     // for approval page
     $("select#id_teachers_requested").selectize({
-        plugins: ["remove_button"]
+        plugins: ["remove_button"],
+        maxItems: 2
     });
 });
