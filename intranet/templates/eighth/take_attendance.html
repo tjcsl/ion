@@ -150,26 +150,35 @@ $(function() {
                             </tbody>
                         </table>
                     {% else %}
-                        <b>You are not sponsoring any activities on {{ sponsor_block }}.
-                        {% if not request.user.is_eighth_admin %}
-                            You can only view activity rosters.
-                        {% endif %}</b><br />
+                        <b>
+                        {% if sponsor_block.date_in_past %}
+                            You did not sponsor any activities on {{ sponsor_block }}.
+                        {% else %}
+                            You are not sponsoring any activities on {{ sponsor_block }}.
+                        {% endif %}
+                        </b><br />
                     {% endif %}
                     <br />
                     <br />
                 {% endif %}
 
-                {{ wizard.form }}
-                {% if wizard.steps.prev %}
-                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
-                {% endif %}
-                {% if wizard.steps.next %}
-                    <label>
-                        <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if "show_all_blocks" in request.GET %} checked{% endif %}/> Show Past Blocks
-                    </label><br />
-                    <input type="submit" value="Next" />
+                {% if not sponsor_block or request.user.is_eighth_admin %}
+                    {{ wizard.form }}
+                    {% if wizard.steps.prev %}
+                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
+                    {% endif %}
+                    {% if wizard.steps.next %}
+                        <label>
+                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if "show_all_blocks" in request.GET %} checked{% endif %}/> Show Past Blocks
+                        </label><br />
+                        <input type="submit" value="Next" />
+                    {% else %}
+                        <input type="submit" value="{% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}"/>
+                    {% endif %}
                 {% else %}
-                    <input type="submit" value="{% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}"/>
+                    {% if wizard.steps.prev %}
+                        <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="button">Back</a>
+                    {% endif %}
                 {% endif %}
             </form>
         {% else %}

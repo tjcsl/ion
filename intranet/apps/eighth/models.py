@@ -475,6 +475,11 @@ class EighthBlock(AbstractBaseEighthModel):
                 (self.date == now.date() and
                  self.signup_time > now.time()))
 
+    def date_in_past(self):
+        """Is the block's date in the past? (Has it not yet happened?)"""
+        now = datetime.datetime.now()
+        return (now.date() > self.date)
+
     def attendance_locked(self):
         """Is it past 10PM on the day of the block?"""
         now = datetime.datetime.now()
