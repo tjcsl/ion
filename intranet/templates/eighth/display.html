@@ -1,0 +1,420 @@
+{% extends "page_base.html" %}
+{% load staticfiles %}
+{% load math %}
+{% load strings %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.core.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/messenger/build/css/messenger.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/messenger/build/css/messenger-theme-flat.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/jquery-ui-1.11.0.custom/jquery-ui.min.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
+    {% if not real_user.is_eighth_admin %}
+    <style type="text/css">
+    #activity-list:not(.show-administrative) li[data-administrative=true] {
+        display: none;
+    }
+    dl.scheduledid {
+        display: none;
+    }
+
+    #activity-list li .activity-ids {
+        display: none;
+    }
+    </style>
+    {% endif %}
+    <style type="text/css">
+    #activity-list {
+        width: 100%;
+        height: 100%;
+        top: 0;
+    }
+
+    .eighth-signup .middle h2, .eighth-signup .middle h4 {
+        display: inline;
+        padding-right: 5px;
+    }
+
+    .eighth-signup .middle {
+        height: 20px;
+    }
+
+    {% if no_detail %}
+        #activity-list li.selected {
+            background-color: inherit;
+            font-weight: normal;
+        }
+
+        #activity-list li:nth-child(odd).selected {
+            background-color: rgba(0,0,0,0.05);
+        }
+    {% endif %}
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
+    <script type="text/javascript" src="{% static 'vendor/jquery-ui-1.11.0.custom/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/responsive.core.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/common.header.js' %}"></script>
+    {% if messages %}
+        <script type="text/javascript">
+        window.addEventListener("load", function() {
+        {% for message in messages %}
+            {% if message.level >= 30 %}
+                Messenger().error("{{ message|escapejs }}");
+            {% elif message.level == 25 %}
+                Messenger().success("{{ message|escapejs }}");
+            {% else %}
+                Messenger().info("{{ message|escapejs }}");
+            {% endif %}
+        {% endfor %}
+        });
+        </script>
+    {% endif %}
+
+    </script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/json2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/backbone-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script type="text/javascript">
+        window.loadModels = function() {
+            window.activityModels = new eighth.ActivityList();
+            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
+
+            data = _.values(jsonData);
+
+            if(data.length < 1) {
+                console.log("Empty dataset")
+                $(function() {
+                    $("ul.all-activities").append("<p>There are no activities available for signup at this time.</p>");
+                });
+            }
+            activityModels.reset(data);
+            _.each(activityModels.models, function(activity) {
+                activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup }}");
+            });
+
+            window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
+        }
+        window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        var pn = location.pathname.substring(7);
+        window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
+    </script>
+    <script type="text/javascript" src="{% static 'js/eighth/responsive.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
+
+    {% if request.GET.activity %}
+        <script type="text/javascript">
+        $(function() {
+                $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+        })
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <script type="text/template" id="activity-list-row-template">
+        {% verbatim %}
+            <span class="activity-icons">
+                <span class="activity-icon fav <% if (favorited) { %>fav-sel<% } %>"></span>
+                <% if (cancelled) { %>
+                    <span class="activity-icon cancelled"></span>
+                <% } else if (restricted_for_user) { %>
+                    <span class="activity-icon restricted"></span>
+                <% } else { %>
+                    <% var pieNumber = Math.min(Math.round(roster.count / roster.capacity * 10), 10); %>
+                    <span class="activity-icon pie-<%= pieNumber %>"></span>
+                <% } %>
+            </span>
+            <% var full_name = name_with_flags_for_user; %>
+            <span class="activity-name" title="<%= full_name %>">
+                <%= name %>
+                <% if (title) { %>
+                    - <%= title %>
+                <% } %>
+
+                <% if (special) { %>
+                    <span class="badge green" title="This is a special activity.">Special</span>
+                <% } %>
+
+                <% if (cancelled) { %>
+                    <span class="badge darkred" title="This activity was cancelled.">CANCELLED</span>
+                <% } %>
+
+                <% if (restricted_for_user) { %>
+                    <span class="badge purple" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+                <% } else if (restricted) { %>
+                    <span class="badge green" title="You are authorized to sign up for this restricted activity.">Authorized</span>
+                <% } %>
+
+                <% if (sticky && (selected || isEighthAdmin)) { %>
+                    <span class="badge orange" title="You are stuck to this activity.">Sticky</span>
+                <% } %>
+
+                <% if (both_blocks) { %>
+                    <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
+                <% } %>
+
+                <% if (one_a_day) { %>
+                    <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
+                <% } %>
+
+                <% if (administrative) { %>
+                    <span class="badge" title="This activity is administrative.">Admin</span>
+                <% } %>
+
+                <% if (presign) { %>
+                    <span class="badge yellow" title="You may only sign up for this activity 48 hours in advance.">48-hr</span>
+                <% } %>
+
+            </span>
+            <% var sponsors_all = ""; %>
+            <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
+            <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
+            <span class="activity-sponsors" title="<%= sponsors_all %>">
+
+                <span class="activity-ids">
+                    <%= aid %>; #<%= this.model.attributes.scheduled_activity %> &mdash;
+                </span>
+                <%= sponsors_all %>
+            </span>
+
+        {% endverbatim %}
+    </script>
+
+    <script type="text/template" id="activity-details-template">
+        {% verbatim %}
+        <h3>
+            <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
+                <%= name %><% if (title) { %> - <%= title %><% } %>
+            </a>
+        </h3>
+
+        <% if (cancelled) { %>
+            <span class="badge darkred clickable" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
+        <% } %>
+
+        <% if (special) { %>
+            <span class="badge green clickable" data-append-search="is:sp" title="This is a special activity.">Special</span>
+        <% } %>
+
+        <% if (restricted_for_user) { %>
+            <span class="badge purple clickable" data-append-search="is:r" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+        <% } else if (restricted) { %>
+            <span class="badge green clickable" data-append-search="is:au" title="You are authorized to sign up for this restricted activity.">Authorized</span>
+        <% } %>
+
+        <% if (sticky && (selected || isEighthAdmin)) { %>
+            <span class="badge orange clickable" data-append-search="is:st" title="You are stuck to this activity.">Sticky</span>
+        <% } %>
+
+        <% if (both_blocks) { %>
+            <span class="badge blue clickable" data-append-search="is:b" title="This activity runs both blocks.">Both Blocks</span>
+        <% } %>
+
+        <% if (one_a_day) { %>
+            <span class="badge lightblue clickable" data-append-search="is:one" title="You may only sign up for this activity once per day.">One a Day</span>
+        <% } %>
+
+        <% if (administrative) { %>
+            <span class="badge clickable" data-append-search="is:ad" title="This activity is administrative.">Administrative</span>
+        <% } %>
+
+        <% if (presign) { %>
+            <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
+        <% } %>
+
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
+
+        <dl class="activityid">
+            <dt>Activity ID:</dt>
+            <dd><%= aid %></dd>
+        </dl>
+
+        <dl class="scheduledid">
+            <dt>Scheduled ID:</dt>
+            <dd><%= scheduled_activity_id %></dd>
+        </dl>
+
+        <dl>
+            <% rooms = _.uniq(rooms)%>
+            <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
+            <dd>
+
+                <% if (rooms.length != 0) {%>
+                        <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
+                <%} else {%>
+                    None
+                    <br />
+                <%}%>
+            </dd>
+
+            <% sponsors = _.uniq(sponsors) %>
+            <dt>Sponsor<% if (sponsors.length > 1) { %>s<% } %>:</dt>
+            <dd>
+                <% if (sponsors.length != 0) {%>
+                        <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
+                <%} else {%>
+                    None
+                    <br />
+                <%}%>
+            </dd>
+
+            <dt>Signups:</dt>
+            <dd>
+                <%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%>
+            </dd>
+
+            <% if (both_blocks) {%>
+                <div>This activity runs both blocks.</div>
+            <%}%>
+
+            <% if (comments) {%>
+                <br />
+                <dt>Comments:</dt><dd><%= comments %></dd>
+            <%}%>
+
+            <% if (description) {%>
+                <br />
+                <p><%= description %></p>
+            <%}%>
+
+
+            <div id="signup-section">
+                <% var showingRosterButton = false %>
+                <% if (!cancelled) {%>
+                    <% if (!selected) {%>
+                        <% if (roster.capacity == -1 || (roster.count < roster.capacity) || isEighthAdmin) {%>
+                            <% showingRosterButton = true %>
+                            <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                                View Roster
+                            </a>
+                            <button id="signup-button">
+                                Sign Up
+                            </button>
+                            <div id="signup-spinner-container">
+                                <div id="signup-spinner"></div>
+                            </div>
+                        <%} else { %>
+                            <strong>This activity is full.</strong>
+                        <%}%>
+                    <%} else {%>
+                        <% if (display_text.length > 0) {%>
+                            <strong><%= display_text %></strong><br /><br />
+                        <% }else{ %>
+                            <strong>You are currently signed up for this activity.</strong>
+                        <% } %>
+                    <%}%>
+                <%}%>
+
+                <div class="error-feedback">
+                </div>
+            </div>
+            <% if (!showingRosterButton) { %>
+                <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                    View Roster
+                </a>
+                <div id="signup-spinner-container">
+                    <div id="signup-spinner"></div>
+                </div>
+            <% } %>
+            <div id="roster-section">
+            </div>
+        </dl>
+        {% endverbatim %}
+    </script>
+
+
+    <div class="primary-content eighth-signup">
+
+        <div class="days-container"></div>
+        {% if not no_detail %}
+            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
+                <h3 class="empty-state">
+                    Select an activity
+                </h3><br />
+                <p>
+                The listing on the left shows activities available on: <b style="white-space: nowrap">{{ block_info.date|date:"l, F j, Y" }} {{ block_info.block_letter }} Block.</b>
+                </p>
+                <p>
+                To change your signup for another day, select a block from the list above.
+                </p>
+                <p>
+                You may have to press the left and right arrow buttons to navigate through to the day on which the block occurs.
+                </p>
+                <p>The activity selections for the block will appear on the left. To view additional information or sign up for an activity, click on it. Details will appear on the right.
+                </p>
+                <p>
+                To use the search function, type in the input box above the activity listing. You can enter substrings of the activity's name, sponsor(s), or room(s).
+                </p>
+                <p>
+                You may also search for flags, such as Restricted, Special, and Sticky. To do this, use the syntax <em>is:restricted</em>, <em>is:special</em>, or <em>is:sticky</em>.
+                </p>
+                <p>
+                To exclude results, use the minus operator. For example, to hide activities that are restricted and thus not available to you, type <em style="white-space: nowrap">-is:restricted</em>.
+                </p>
+            </div>
+        {% endif %}
+        <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
+            {% if not no_title %}
+                <div class="middle-wrapper">
+                    <div class="middle">
+                        <div class="block-title">
+                            <h2>
+                                {% if active_block.locked %}
+                                    <i class="fa fa-lock"></i>
+                                {% endif %}
+                                {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                            </h2>
+                            <h4>
+                                {% if block_info.block_letter %}
+                                    {% if block_info.block_letter|contains_digit %}
+                                        Block {{ block_info.block_letter }}
+                                    {% else %}
+                                        {{ block_info.block_letter }} Block
+                                    {% endif %}
+                                {% endif %}
+                                {% if block_info.comments %}
+                                <span class="block-comments">
+                                    <span>&mdash; </span>{{ block_info.comments }}
+                                </span>
+                                {% endif %}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <h5 class="sticky-header favorites-header">Favorites</h5>
+            <ul class="favorite-activities"></ul>
+            <h5 class="sticky-header all-header">All</h5>
+            <ul class="all-activities"></ul>
+            <ul class="search-noresults">
+                <li>
+                    <span class="activity-name">
+                        No results found. Try your search again.
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

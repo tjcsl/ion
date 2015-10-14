@@ -175,6 +175,91 @@ def eighth_signup_view(request, block_id=None):
 
         return render(request, "eighth/signup.html", context)
 
+@login_required
+def eighth_display_view(request, block_id=None):
+    if block_id is None:
+        next_block = EighthBlock.objects.get_first_upcoming_block()
+        if next_block is not None:
+            block_id = next_block.id
+        else:
+            last_block = EighthBlock.objects.order_by("date").last()
+            if last_block is not None:
+                block_id = last_block.id
+
+    if "user" in request.GET and request.user.is_eighth_admin:
+        try:
+            user = User.get_user(id=request.GET["user"])
+        except (User.DoesNotExist, ValueError):
+            raise http.Http404
+    else:
+        if request.user.is_student:
+            user = request.user
+        else:
+            return redirect("eighth_admin_dashboard")
+
+    try:
+        block = (EighthBlock.objects
+                            .prefetch_related("eighthscheduledactivity_set")
+                            .get(id=block_id))
+    except EighthBlock.DoesNotExist:
+        if EighthBlock.objects.count() == 0:
+            # No blocks have been added yet
+            return render(request, "eighth/signup.html", {"no_blocks": True})
+        else:
+            # The provided block_id is invalid
+            raise http.Http404
+
+    surrounding_blocks = block.get_surrounding_blocks()
+    schedule = []
+
+    signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
+    block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
+
+    for b in surrounding_blocks:
+        info = {
+            "id": b.id,
+            "title": b,
+            "block_letter": b.block_letter,
+            "block_letter_width": (len(b.block_letter) - 1) * 6 + 15,
+            "current_signup": getattr(block_signup_map.get(b.id, {}), "activity", None),
+            "current_signup_cancelled": getattr(block_signup_map.get(b.id, {}), "cancelled", False),
+            "locked": b.locked
+        }
+
+        if len(schedule) and schedule[-1]["date"] == b.date:
+            schedule[-1]["blocks"].append(info)
+        else:
+            day = {}
+            day["date"] = b.date
+            day["blocks"] = []
+            day["blocks"].append(info)
+            schedule.append(day)
+
+    serializer_context = {
+        "request": request,
+        "user": user
+    }
+    block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
+    block_info["schedule"] = schedule
+
+    try:
+        active_block_current_signup = block_signup_map[int(block_id)].activity.id
+    except KeyError:
+        active_block_current_signup = None
+
+    context = {
+        "user": user,
+        "real_user": request.user,
+        "block_info": block_info,
+        "activities_list": safe_json(block_info["activities"]),
+        "active_block": block,
+        "active_block_current_signup": active_block_current_signup,
+        "no_title": ("no_title" in request.GET),
+        "no_detail": ("no_detail" in request.GET)
+    }
+
+    return render(request, "eighth/display.html", context)
+
 
 def eighth_multi_signup_view(request):
     if request.method == "POST":

@@ -39,6 +39,8 @@ urlpatterns = [
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
+
+    url(r"^/display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
 ]
 
 eighth_admin_patterns = [
