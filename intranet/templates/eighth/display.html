@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
-    {% if not real_user.is_eighth_admin %}
     <style type="text/css">
     #activity-list:not(.show-administrative) li[data-administrative=true] {
         display: none;
@@ -29,9 +28,7 @@
     #activity-list li .activity-ids {
         display: none;
     }
-    </style>
-    {% endif %}
-    <style type="text/css">
+
     #activity-list {
         width: 100%;
         height: 100%;
@@ -55,6 +52,12 @@
 
         #activity-list li:nth-child(odd).selected {
             background-color: rgba(0,0,0,0.05);
+        }
+    {% endif %}
+
+    {% if no_rooms %}
+        #activity-list li .activity-rooms {
+            display: none;
         }
     {% endif %}
 
@@ -196,6 +199,12 @@
                     <%= aid %>; #<%= this.model.attributes.scheduled_activity %> &mdash;
                 </span>
                 <%= sponsors_all %>
+            </span>
+
+            <span class="activity-rooms">
+                <% if (rooms.length != 0) {%>
+                    <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%> 
+                <%}%>
             </span>
 
         {% endverbatim %}
