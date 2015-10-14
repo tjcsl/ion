@@ -12,7 +12,7 @@ import os
 import datetime
 
 # Run this on iodine.tjhsst.edu
-
+start_date = "2015-09-01"
 csl_realm = "CSL.TJHSST.EDU"
 host = "iodine.tjhsst.edu"
 ldap_realm = "CSL.TJHSST.EDU"
@@ -73,7 +73,7 @@ sponsor_pks = []
 room_pks = []
 
 ########## BLOCKS ##########
-cur.execute("SELECT * FROM eighth_blocks WHERE date > '2014-09-01';")
+cur.execute("SELECT * FROM eighth_blocks WHERE date > '{}';".format(start_date))
 rows = cur.fetchall()
 
 for row in rows:
@@ -246,7 +246,7 @@ print("Scheduled activities complete")
 
 ########## SIGNUPS ##########
 block_pk_str = ",".join(map(str, block_pks))
-cur.execute("SELECT * FROM eighth_activity_map WHERE bid IN ({}) LIMIT 5000".format(block_pk_str))
+cur.execute("SELECT * FROM eighth_activity_map WHERE bid IN ({})".format(block_pk_str))
 rows = cur.fetchall()
 
 for pk, row in enumerate(rows):
@@ -293,7 +293,7 @@ print("Signups complete")
 print("Users complete")
 
 ########## ANNOUNCEMENTS ##########
-cur.execute("SELECT * FROM news WHERE posted > '2014-09-01';")
+cur.execute("SELECT * FROM news WHERE posted > '{}';".format(start_date))
 rows = cur.fetchall()
 news = []
 for row in rows:
