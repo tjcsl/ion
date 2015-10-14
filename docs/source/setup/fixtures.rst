@@ -55,7 +55,7 @@ Load the announcements fixtures (optional).
 .. code-block:: bash
     $ ./manage.py loaddata fixtures/announcements/announcements.json
 
-Delete old blocks, and "Z-HAS NOT SELECTED AN ACTIVITY" activity.
+Delete old blocks, and "Z-HAS NOT SELECTED AN ACTIVITY" activity. Make all "Z-" activities administrative.
 .. code-block:: bash
     $ ./manage.py shell_plus
 Python 2.7.6 (default, Jun 22 2015, 17:58:13)
@@ -64,5 +64,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
 >>> EighthBlock.objects.filter(date__lt="2015-09-01").delete()
 >>> EighthActivity.objects.get(id=999).delete()
+>>> EighthActivity.objects.filter(Q(name__istartswith="z-")|Q(name__istartswith="z -")).update(administrative=True)
 
     
