@@ -136,9 +136,9 @@ class login_view(View):
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
 
-            if request.user.is_eighthoffice:
-                """Eighthoffice's session should (almost) never expire."""
-                request.session.set_expiry(timezone.now() + timedelta(days=30))
+            #if request.user.is_eighthoffice:
+            #    """Eighthoffice's session should (almost) never expire."""
+            #    request.session.set_expiry(timezone.now() + timedelta(days=30))
 
             if not request.user.first_login:
                 logger.info("First login")
