@@ -58,7 +58,7 @@ $(function() {
     $(document).mousemove(function(e){
         var posx = window.mouseX = e.pageX;
         var posy = window.mouseY = e.pageY;
-        posx += 10;
+        posx += 75;
         posy -= 215 - 10;
         $("img.user-pic.active").css({left: posx, top: posy});
     });
