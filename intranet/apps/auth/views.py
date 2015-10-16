@@ -14,6 +14,7 @@ from django.contrib.auth import login, logout
 from django.core import exceptions
 from django.templatetags.static import static
 from django.views.generic.base import View
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -137,7 +138,7 @@ class login_view(View):
 
             if request.user.is_eighthoffice:
                 """Eighthoffice's session should (almost) never expire."""
-                request.session.set_expiry(datetime.now() + timedelta(days=30))
+                request.session.set_expiry(timezone.now() + timedelta(days=30))
 
             if not request.user.first_login:
                 logger.info("First login")

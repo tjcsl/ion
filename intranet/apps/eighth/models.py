@@ -721,9 +721,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return sorted(members, key=lambda u: (u.last_name, u.first_name))
 
     def get_hidden_members(self, user=None):
-        """Get the number of members that you do not have permission to view.
+        """Get the members that you do not have permission to view.
 
-        Returns: Number of members hidden based on preferences
+        Returns: List of members hidden based on their permission preferences
         """
         hidden_members = []
         for member in self.members.all():
