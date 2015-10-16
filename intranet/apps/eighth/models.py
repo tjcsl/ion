@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from itertools import chain
 import logging
 import datetime
+from intranet import settings
 from django.db import models
 from django.db.models import Manager, Q
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
