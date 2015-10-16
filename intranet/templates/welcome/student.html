@@ -1,4 +1,4 @@
-{% extends "page_with_header.html" %}
+{% extends "page_with_nav.html" %}
 {% load staticfiles %}
 
 {% block title %}
@@ -8,29 +8,11 @@
 {% block css %}
     {{ block.super }}
     <style type="text/css">
-
-    .header-cover {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        z-index: 99999;
-        cursor: default;
-    }
-
-    .header .right,
-    .header .search {
-        display: none;
-    }
-
     .primary-content {
         max-width: 800px;
-        margin-left: 0;
     }
 
-    .primary-content#step-2,
-    .primary-content#step-3 {
+    .primary-content#step-2 {
         display: none;
     }
 
@@ -101,77 +83,74 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
     <script type="text/javascript">
     $(function() {
-        $("#continue-step-1").click(function() {
+        $(".continue-step-1").click(function() {
             $(".primary-content#step-1").hide();
             $(".primary-content#step-2").show();
+            $(document).scrollTo("0px");
         });
 
-        $("#continue-step-2").click(function() {
-            $(".primary-content#step-2").hide();
-            $(".primary-content#step-3").show();
+        $(".skip-tutorial").click(function() {
+            $(document).scrollTo("#about-intranet");
         });
 
-        $("#continue-step-3").click(function() {
+        $(".continue-step-2").click(function() {
             location.href = "/welcome/done";
         })
     })
     </script>
 {% endblock %}
 
-{% block content %}
-    <div class="header-cover" title="Please complete the setup process."></div>
+{% block main %}
     <div class="primary-content" id="step-1">
         <h2>Welcome to the TJ Intranet</h2>
-        <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can begin to access the site's functionality, we ask that you please take a moment to verify that your information is up to date, as well as find out about the changes in Intranet version 3.</p>
+        <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
 
-        <p>You are currently logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
-        <p>You have the following email addresses on file:</p>
+        <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+        <p>Email addresses on file:</p>
         <ul>
             {% for email in request.user.emails %}
             <li>{{ email }}</li>
             {% empty %}
-            <li>(None)</li>
+            <li>(No custom addresses)</li>
             {% endfor %}
         </ul>
+        
         <br />
 
         {% if request.user.emails %}
-            <p>Please make sure these are all addresses that you check regularly. It is frustrating when people list an email that they cannot be reached at.</p>
-            <p>After this setup process is over, please consider updating your email addresses through Preferences, which is accessed by clicking on your user icon in the top right corner.</p>
+            <p>Please make sure that you check these accounts regularly. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
         {% else %}
-            <p>You do not currently have any email addresses on file. After this setup process is over, please consider adding at least one email address to your account through Preferences, which is accessed by clicking on your user icon in the top right corner.
+            <p>You don't currently have any custom email addresses on file. Go to Preferences, accessed by clicking on your user icon in the top right corner, to add an email address to your profile.</p>
         {% endif %}
 
-        <button id="continue-step-1">Continue</a>
+        
+        <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
+
+        <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:sysadmins@lists.tjhsst.edu">sysadmins@lists.tjhsst.edu</a>.</p>
+        <center>
+            <button id="continue-step-1" class="continue-step-1">What's New in Ion <i class="fa fa-arrow-right"></i></button>
+        </center>
     </div>
 
     <div class="primary-content" id="step-2">
-        <h2>TJ Email Accounts and Network Use</h2>
-        <p>All students at TJHSST are assigned their own email address for school purposes. This address is in the format [yourusername]@tjhsst.edu.</p>
-        <p><b>Your TJ email address is: {{ request.user.tj_email }}</b></p>
-        <p>You can access your "TJ email" by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use a desktop mail client such as Thunderbird to access your email <a href="https://livedoc.tjhsst.edu/wiki/Accessing_your_TJ_Email" target="_blank">through IMAP or POP3</a>. Your TJ email credentials are the same as your Intranet credentials, as well as the username and password you use to log in to school computers.</p>
+        <h2>
+            How to Navigate &nbsp; &nbsp;
+            <button class="skip-tutorial small-button">Skip tutorial</button>
+        </h2>
 
-        <p>If you primarily use a personal email account, it is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you receive all of the messages sent to your account. <a href="https://livedoc.tjhsst.edu/wiki/Forwarding_your_TJ_Email" target="_blank">Follow these instructions to set this up.</a> If you have any questions about this setup process, email <a href="mailto:ahamilto@tjhsst.edu">ahamilto@tjhsst.edu</a>.</p>
-
-        <p>Use of TJHSST network resources is governed by the Fairfax County Public Schools Acceptable Use Policy for Student Network Access, <a href="http://www.fcps.edu/dss/ips/ssaw/SRR/2014-15SSR.pdf">part of the FCPS SR&amp;R</a>, as well as the <a href="https://www.tjhsst.edu/~ahamilto/tjhsst_network_user_guidelines.pdf">TJHSST Network User Guidelines</a>. Please use network resources responsibly.</p>
-
-        <button id="continue-step-2">Continue</a>
-    </div>
-
-    <div class="primary-content" id="step-3">
-        <h2>How to Navigate</h2>
-
+        
 
         <div class="mobile-only">
-            <p>You appear to be using a mobile or other small-screened device. Good news! Intranet now fully supports your small screen. To access navigation items and the search bar, press the icon at the top left of the page. On the Eighth Period page, click the arrow to hide or unhide the schedule.</p>
+            <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo. On the Eighth Period page, click the arrow to hide or unhide the schedule.</p>
             <img src="{% static 'img/promo/nav-mobile.png' %}" class="mobile" />
             <br />
         </div>
 
         <div class="desktop-only">
-            <p>The largest change to Intranet is that the application is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>.</p>
+            <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
             <br />
         </div>
 
@@ -205,13 +184,12 @@
         <p>After selecting a user, you will be able to view their user page. If the user is a teacher, you will be able to see their class schedule, including which rooms they teach in during the day. If the user is a student, you will be able to view their student picture, emails, address, class schedule, and eighth period signups. However, some students restrict public access to this information, and information that has been hidden will not be visible to you. You also have the capability to restrict other students from viewing your information; visit the Preferences page to see what information others can view about you.</p>
         <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" />
 
+        <span id="about-intranet" name="about-intranet"></span>
         <br />
         <br />
         <br />
 
         <h2>About Intranet</h2>
-
-        <p>Intranet is a student-built and student-run project that supports the Eighth Period activity program at TJHSST. Prior to the 1999-2000 school year, several students created a web-based solution for activity signups and management in order to efficiently automate what was previously a manual, pencil-and-paper system. This application soon became a critical part of the school's operations – giving students and staff access to additional functionality such as news, polls, a student directory, and filecenter – and in the early 2000s, Intranet2 (Iodine) was developed as an ambitious effort to create a more viable long-term solution. After nearly ten years of use, it was deemed necessary to create a new application: one that could be built for the computers, phones, and tablets available today while also having the foundation necessary to support future changes down the road. Ion is that project.</p>
 
         <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, is now ready to be used during the 2015-2016 school year. While the application has now been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
 
@@ -219,9 +197,10 @@
 
         <br />
         <br />
-        <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
-        <p>We hope you enjoy Intranet. Thanks for reading and have a great year!</p>
-
-        <button id="continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
+        <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessible by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
+        <p>Thanks for reading and have a great year!</p>
+        <center>
+            <button id="continue-step-2" class="continue-step-2"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</button>
+        </center>
     </div>
 {% endblock %}

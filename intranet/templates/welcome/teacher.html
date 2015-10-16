@@ -1,4 +1,4 @@
-{% extends "page_with_header.html" %}
+{% extends "page_with_nav.html" %}
 {% load staticfiles %}
 
 {% block title %}
@@ -8,29 +8,11 @@
 {% block css %}
     {{ block.super }}
     <style type="text/css">
-
-    .header-cover {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        z-index: 99999;
-        cursor: default;
-    }
-
-    .header .right,
-    .header .search {
-        display: none;
-    }
-
     .primary-content {
         max-width: 800px;
-        margin-left: 0;
     }
 
-    .primary-content#step-2,
-    .primary-content#step-3 {
+    .primary-content#step-2 {
         display: none;
     }
 
@@ -101,77 +83,83 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
     <script type="text/javascript">
     $(function() {
-        $("#continue-step-1").click(function() {
+        $(".continue-step-1").click(function() {
             $(".primary-content#step-1").hide();
             $(".primary-content#step-2").show();
+            $(document).scrollTo("0px");
         });
 
-        $("#continue-step-2").click(function() {
-            $(".primary-content#step-2").hide();
-            $(".primary-content#step-3").show();
+        $(".skip-tutorial").click(function() {
+            $(document).scrollTo("#about-intranet");
         });
 
-        $("#continue-step-3").click(function() {
+        $(".continue-step-2").click(function() {
             location.href = "/welcome/done";
         })
     })
     </script>
 {% endblock %}
 
-{% block content %}
-    <div class="header-cover" title="Please complete the setup process."></div>
+{% block main %}
     <div class="primary-content" id="step-1">
         <h2>Welcome to the TJ Intranet</h2>
-        <p>The TJ Intranet gives you access to eighth period attendance, announcements, and directory information. Before you can begin to access the site's functionality, we ask that you please take a moment to verify that your information is up to date, as well as find out about the changes in Intranet version 3.</p>
+        <p>The TJ Intranet gives you access to eighth period attendance, announcements, directory information, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
 
-        <p>You are currently logged in as: {{ request.user.full_name }}</p>
-        <p>You have the following custom email addresses on file:</p>
+        <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+        <p>Email addresses on file:</p>
         <ul>
             {% for email in request.user.emails %}
             <li>{{ email }}</li>
             {% empty %}
-            <li>(None)</li>
+            <li>(No custom addresses)</li>
             {% endfor %}
         </ul>
+        
         <br />
 
         {% if request.user.tj_email %}
             <p>Your FCPS/TJ email is: <b>{{ request.user.tj_email }}</b></p>
         {% endif %}
 
-        <p>Please make sure these are all addresses that are correct. Students who view this information on your profile will often expect to be able to reach you with the information listed.</p>
-        <p>After this setup process is over, please consider updating your email addresses through Preferences, which is accessed by clicking on your user icon in the top right corner.</p>
+        <p>Please make sure these are all addresses that are correct. Students who view this information on your profile will often expect to be able to reach you with the information listed. Go to Preferences, accessed by clicking on your user icon in the top right corner, to modify the email addresses shown on your profile.</p>
 
-        <button id="continue-step-1">Continue</a>
+        <center>
+            <button id="continue-step-1" class="continue-step-1">What's New in Ion <i class="fa fa-arrow-right"></i></button>
+        </center>
     </div>
 
     <div class="primary-content" id="step-2">
-        <h2>How to Navigate</h2>
+        <h2>
+            How to Navigate &nbsp; &nbsp;
+            <button class="skip-tutorial small-button">Skip tutorial</button>
+        </h2>
 
+        
 
         <div class="mobile-only">
-            <p>You appear to be using a mobile or other small-screened device. Good news! Intranet now fully supports your small screen. To access navigation items and the search bar, press the icon at the top left of the page.</p>
+            <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
             <img src="{% static 'img/promo/nav-mobile.png' %}" class="mobile" />
-            <br />
         </div>
 
         <div class="desktop-only">
-            <p>The largest change to Intranet is that the application is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>.</p>
-            <br />
+            <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
         </div>
 
-        <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as the activities you are sponsoring. If you are able to take attendance, the text "Take Now" will appear in green. You can click on this link to take attendance.</p>
-        <p>If you have already taken attendance, press "Modify" to view the attendance listing again. Otherwise, if signups for the eighth period block are still open, you can press "View" to see the students who have currently signed up for your activity.</p>
+        <div class="desktop-only">
+            <p>On the left side of the page is the navigation bar. To view old activity rosters, click on Eighth. To view events in the TJ community, click on Events.</p>
+        </div>
+
+        <p>After logging in, you can easily take attendance for the activities you are sponsoring. Click on the activity's name for the correct day to take attendance. If you are able to take attendance, the text "Take Now" will appear in green; otherwise, you can view the current roster. If the icon is orange, then there is information awaiting your attention.</p>
         <img src="{% static 'img/promo/dashboard-teacher.png' %}" alt="Dashboard page" class="desktop" />
         <img src="{% static 'img/promo/dashboard-teacher-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" />
 
         <br />
         <br />
-        <br />
 
-        <p>After selecting an activity you are sponsoring, you will see the "Take Attendance" page. If the signup period has not ended, and you are unable to take attendance yet, you will only be able to view the roster. If there are student passes from the Eighth Period Office, you should accept or reject them first. Accepting a pass marks the student as present.</p>
+        <p>After selecting an activity you are sponsoring, you will see the "Take Attendance" page. In instances where you cannot take attendance, you will be able to view the roster. Student passes from the Eighth Period Office will appear if necessary. Accepting a pass marks the student as present.</p>
         <p>When taking attendance, select the checkbox on the left of the student's name. If you mouse over a student, a popup will appear with their picture, if it is available. You can use this functionality to visually identify students more easily.</p>
         <p>If you have any questions on the attendance process, please ask the Eighth Period Office.</p>
         <img src="{% static 'img/promo/eighth-attendance.png' %}" alt="Eighth Period signup page" class="desktop" />
@@ -190,7 +178,7 @@
             <br />
         </div>
 
-        <p>After selecting a user, you will be able to view their user page. If the user is a teacher, you will be able to see their class schedule, including which rooms they teach in during the day. If the user is a student, you will be able to view their student picture, emails, address, class schedule, and eighth period signups. <b>As a teacher, you will be able to view all of the available information about a student</b>, regardless of whether they want it publicly visible or not. Please keep this in mind.</p>
+        <p>After selecting a user, you will be able to view their user page. <b>As a teacher, you will be able to view all of the available information about a student</b>, regardless of whether they want it publicly visible or not. Please keep this in mind.</p>
         <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" />
 
         <br />
@@ -199,21 +187,16 @@
 
         <h2>About Intranet</h2>
 
-        <p>Intranet is a student-built and student-run project that supports the Eighth Period activity program at TJHSST. Prior to the 1999-2000 school year, several students created a web-based solution for activity signups and management in order to efficiently automate what was previously a manual, pencil-and-paper system. This application soon became a critical part of the school's operations – giving students and staff access to additional functionality such as news, polls, a student directory, and filecenter – and in the early 2000s, Intranet2 (Iodine) was developed as an ambitious effort to create a more viable long-term solution. After nearly ten years of use, it was deemed necessary to create a new application: one that could be built for the computers, phones, and tablets available today while also having the foundation necessary to support future changes down the road. Ion is that project.</p>
-
         <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, is now ready to be used during the 2015-2016 school year. While the application has now been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
 
         {% include "credits.html" %}
 
         <br />
         <br />
-        <button id="continue-step-2">Finish</button>
-    </div>
-
-    <div class="primary-content" id="step-3">
         <p><b>Teachers,</b> we are looking for your feedback in order to make your experience better. As students, we have attempted to make the teacher-specific features easier to use, but you are the ones who use this functionality on a daily basis. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, or email <a href="mailto:intranet@tjhsst.edu" target="_blank">intranet@tjhsst.edu</a> with your questions, comments, and concerns. Thanks!</p>
-        <p>We hope you enjoy Intranet. Thanks for reading and have a great year!</p>
-
-        <button id="continue-step-3"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</a>
+        <p>Thanks for reading and have a great year!</p>
+        <center>
+            <button id="continue-step-2" class="continue-step-2"><i class="fa fa-tachometer fa-2x"></i><br />Go to Dashboard</button>
+        </center>
     </div>
 {% endblock %}
