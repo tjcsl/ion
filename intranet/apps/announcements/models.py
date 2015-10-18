@@ -118,6 +118,9 @@ class Announcement(EsIndexable, models.Model):
     class Meta:
         ordering = ["-pinned", "-added"]
 
+    class Elasticsearch(EsIndexable.Elasticsearch):
+        fields = ["title", "content", "id"]
+
 
 class AnnouncementRequest(models.Model):
 

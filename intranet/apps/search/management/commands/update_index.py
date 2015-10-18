@@ -127,3 +127,4 @@ class Command(BaseCommand):
 
         self.stdout.write("Indexing announcements..")
         Announcement.es.create_index()
+        Announcement.es.reindex_all()

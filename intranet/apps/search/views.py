@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from ..announcements.models import Announcement
 from ..users.models import User
 from ..users.views import profile_view
 
@@ -86,6 +87,7 @@ def search_view(request):
     is_admin = (not request.user.is_student and request.user.is_eighth_admin)
 
     if q:
+        """ User search """
         if q.isdigit() and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
             # Match exact student ID if the input looks like an ID
             u = User.objects.user_with_student_id(q)
@@ -103,10 +105,14 @@ def search_view(request):
         if is_admin:
             users = sorted(users, key=lambda u: (u["last"], u["first"]))
 
+        """ Announcements """
+        announcements = Announcement.es.search(q)
+
         context = {
             "query_error": query_error,
             "search_query": q,
-            "search_results": users  # Not actual user objects
+            "search_results": users,  # Not actual user objects
+            "announcements": announcements # Not actual announcement objects
         }
     else:
         context = {

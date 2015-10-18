@@ -24,6 +24,7 @@
     </form>
     <br>
     {% if search_results %}
+        <h3>Users</h3>
         {{ search_results|length }} result{{ search_results|pluralize }}
         <table class="list-table">
             {% for user in search_results %}
@@ -63,6 +64,7 @@
             {% endfor %}
         </table>
     {% elif search_query %}
+        <h3>Users</h3>
         <b>No results.</b>
     {% endif %}
     {% if query_error %}
@@ -71,6 +73,27 @@
         <br>
         <br>
     {% endif %}
+
+    {% if search_query %}
+        <br /><br />
+        <h3>Announcements</h3>
+        {% if announcements %}
+        <table class="list-table">
+            {% for a in announcements %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'view_announcement' a.id %}">
+                            {{ a.title }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
 
 
     {% if "tips" in request.GET or query_error or not search_query %}
