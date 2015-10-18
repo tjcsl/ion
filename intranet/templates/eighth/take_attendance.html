@@ -293,7 +293,7 @@ $(function() {
                                 <td>
                                     <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post" onsubmit="return confirm('Accept passes for and mark {{ passes|length }} student{{ passes|pluralize }} present?')">
                                         {% csrf_token %}
-                                        <input type="submit" class="button accept-all-passes" value="Accept All">
+                                        <input type="submit" class="button accept-all-passes print-hide" value="Accept All">
                                     </form>
                                 </td>
                                 {% endif %}
@@ -351,7 +351,7 @@ $(function() {
                                 </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
+                        <tfoot class="print-hide">
                             <tr>
                                 <td colspan="5">
                                 {% if not scheduled_activity.block.locked %}
@@ -380,11 +380,11 @@ $(function() {
                 </form>
 
                 <br />
-                <a class="button" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
+                <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
                 {% if user.is_eighth_admin %}
                     <br />
                     <br />
-                    <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');">
+                    <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
                         {% csrf_token %}
                         <input type="hidden" name="clear_attendance_bit" value="true" />
                         <input type="submit" value="Clear Attendance Bit" style="font-size: 10px; padding: 3px 5px" />
