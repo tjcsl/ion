@@ -133,7 +133,7 @@ class Announcement(EsIndexable, models.Model):
         ordering = ["-pinned", "-added"]
 
     class Elasticsearch(EsIndexable.Elasticsearch):
-        fields = ["title", "content", "id"]
+        fields = ["title", "content", "pinned", "added", "id"]
 
 
 class AnnouncementRequest(models.Model):
