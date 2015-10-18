@@ -315,6 +315,7 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
 
         return scheduled_activities
 
+    @property
     def is_active(self):
         """Return whether an activity is "active."
            An activity is considered to be active if it

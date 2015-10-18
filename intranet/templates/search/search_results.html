@@ -78,6 +78,7 @@
         <br /><br />
         <h3>Announcements</h3>
         {% if announcements %}
+        {{ announcements|length }} result{{ announcements|pluralize }}
         <table class="list-table announcements-table">
             {% for a in announcements %}
                 <tr>
@@ -99,34 +100,21 @@
         <br /><br />
         <h3>Activities</h3>
         {% if activities %}
+        {{ activities|length }} result{{ activities|pluralize }}
         <table class="list-table activities-table">
             {% for a in activities %}
-                {% if request.user.is_eighth_admin and not "only_active" in request.GET %}
-                    <tr>
-                        <td class="list-item">
-                            <a href="{% url 'eighth_activity' a.id %}">
-                                {{ a.name }}
-                            </a>
-                            {% if a.description %}
-                                <br />
-                                &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
-                            {% endif %}
-                                {% if not a.is_active %}<b>(INACTIVE)</b>{% endif %}
-                        </td>
-                    </tr>
-                {% elif a.is_active %}
-                    <tr>
-                        <td class="list-item">
-                            <a href="{% url 'eighth_activity' a.id %}">
-                                {{ a.name }}
-                            </a>
-                            {% if a.description %}
-                                <br />
-                                &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'eighth_activity' a.id %}">
+                            {{ a.name }}
+                        </a>
+                        {% if a.description %}
+                            <br />
+                            &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
+                        {% endif %}
+                        {% if not a.is_active %}<b>(INACTIVE)</b>{% endif %}
+                    </td>
+                </tr>
             {% endfor %}
         </table>
         {% else %}

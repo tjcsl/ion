@@ -116,6 +116,18 @@ class Announcement(EsIndexable, models.Model):
                 announcement=self
             )
     
+    @property
+    def is_this_year(self):
+        """Return whether the announcement was created after September 1st
+           of this school year."""
+        now = datetime.now().date()
+        ann = self.added.date()
+        if now.month < 9:
+            return ((ann.year == now.year and ann.month < 9) or
+                    (ann.year == now.year - 1 and ann.month >= 9))
+        else:
+            return (ann.year == now.year and ann.month >= 9)
+
 
     class Meta:
         ordering = ["-pinned", "-added"]
