@@ -93,7 +93,10 @@ def save_personal_info(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                            try:
+                                messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                            except Exception as e:
+                                messages.error(request, "Field {}: {}".format(field, e))
                     else:
                         logger.debug("Need to update {} because {} changed".format(full_field_name, field))
                         multi_fields_to_update.append(full_field_name)
@@ -263,7 +266,10 @@ def preferences_view(request):
     if request.method == "POST":
         
         personal_info_form = save_personal_info(request, user)
-        preferred_pic_form = save_preferred_pic(request, user)
+        if user.is_student:
+            preferred_pic_form = save_preferred_pic(request, user)
+        else:
+            preferred_pic_form = None
         privacy_options_form = save_privacy_options(request, user)
         notification_options_form = save_notification_options(request, user)
 
@@ -278,9 +284,13 @@ def preferences_view(request):
         personal_info_form = PersonalInformationForm(num_fields=num_fields,
                                                      initial=personal_info)
 
-        preferred_pic = get_preferred_pic(user)
-        logger.debug(preferred_pic)
-        preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+        if user.is_student:
+            preferred_pic = get_preferred_pic(user)
+            logger.debug(preferred_pic)
+            preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+        else:
+            preferred_pic = None
+            preferred_pic_form = None
 
         privacy_options = get_privacy_options(user)
         logger.debug(privacy_options)
