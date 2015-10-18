@@ -49,7 +49,7 @@
             }
             activityModels.reset(data);
             _.each(activityModels.models, function(activity) {
-                activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup }}");
+                activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup|escape }}");
             });
 
             window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
@@ -68,6 +68,12 @@
         <script type="text/javascript">
         $(function() {
                 $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+        })
+        </script>
+    {% elif active_block_current_signup %}
+        <script type="text/javascript">
+        $(function() {
+                $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
         })
         </script>
     {% endif %}
