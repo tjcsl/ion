@@ -20,13 +20,13 @@ def absence_count(request):
     """Add the absence count to the context for students."""
 
     if request.user.is_authenticated() and request.user.is_student:
-        notif = request.session.get('eighth_absence_notif_seen', False)
-        if not notif:
+        notif_seen = request.session.get('eighth_absence_notif_seen', False)
+        if not notif_seen:
             request.session['eighth_absence_notif_seen'] = True
 
         return {
             "eighth_absence_count": request.user.absence_count(),
-            "eighth_absence_notif": not notif
+            "eighth_absence_notif": not notif_seen
         }
 
     return {}
