@@ -26,7 +26,7 @@
     {% if search_results %}
         <h3>Users</h3>
         {{ search_results|length }} result{{ search_results|pluralize }}
-        <table class="list-table">
+        <table class="list-table users-table">
             {% for user in search_results %}
                 <tr>
                     <td class="list-item">
@@ -78,13 +78,33 @@
         <br /><br />
         <h3>Announcements</h3>
         {% if announcements %}
-        <table class="list-table">
+        <table class="list-table announcements-table">
             {% for a in announcements %}
                 <tr>
                     <td class="list-item">
                         <a href="{% url 'view_announcement' a.id %}">
                             {{ a.title }}
-                        </a>
+                        </a> - {{ a.content|truncatechars_html:"50"|safe }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
+    {% if search_query %}
+        <br /><br />
+        <h3>Activities</h3>
+        {% if activities %}
+        <table class="list-table activities-table">
+            {% for a in activities %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'eighth_activity' a.id %}">
+                            {{ a.name }}
+                        </a> - {{ a.description|truncatechars_html:"50"|safe }}
                     </td>
                 </tr>
             {% endfor %}

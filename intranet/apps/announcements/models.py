@@ -81,6 +81,8 @@ class Announcement(EsIndexable, models.Model):
             An attribute corresponding with an AnnouncementUserMap object.
             A new object is automatically created if it does not exist.
 
+        This model is indexed by Elasticsearch.
+
     """
 
     objects = AnnouncementManager()

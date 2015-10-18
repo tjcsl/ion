@@ -7,6 +7,7 @@ import elasticsearch
 from intranet import settings
 from intranet.db import ldap_db
 from intranet.apps.announcements.models import Announcement
+from intranet.apps.eighth.models import EighthActivity
 from intranet.apps.users.models import Grade
 
 
@@ -15,6 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         # Destroy kerberos tickets to force simple auth
+        self.stdout.write("Destroying kerberos ticket to force simple auth")
         os.system("kdestroy")
 
         attributes = [
@@ -128,3 +130,8 @@ class Command(BaseCommand):
         self.stdout.write("Indexing announcements..")
         Announcement.es.create_index()
         Announcement.es.reindex_all()
+
+        self.stdout.write("Indexing activities..")
+        EighthActivity.es.create_index()
+        EighthActivity.es.reindex_all()
+

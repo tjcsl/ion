@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from ..announcements.models import Announcement
+from ..eighth.models import EighthActivity
 from ..users.models import User
 from ..users.views import profile_view
 
@@ -108,11 +109,15 @@ def search_view(request):
         """ Announcements """
         announcements = Announcement.es.search(q)
 
+        """ Activities """
+        activities = EighthActivity.es.search(q)
+
         context = {
             "query_error": query_error,
             "search_query": q,
             "search_results": users,  # Not actual user objects
-            "announcements": announcements # Not actual announcement objects
+            "announcements": announcements, # Not actual announcement objects
+            "activities": activities # Not actual EighthActivity objects
         }
     else:
         context = {
