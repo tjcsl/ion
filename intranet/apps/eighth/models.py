@@ -307,7 +307,8 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
         """Return EighthScheduledActivity's of this activity
            within the next two months.
         """
-        two_months = datetime.now().date() + timedelta(days=62)
+        first_block = EighthBlock.objects.get_first_upcoming_block()
+        two_months = datetime.datetime.now().date() + datetime.timedelta(days=62)
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=self)
         scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date,
                                                            block__date__lte=two_months)

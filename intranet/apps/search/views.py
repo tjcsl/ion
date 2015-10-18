@@ -110,14 +110,16 @@ def search_view(request):
         announcements = Announcement.es.search(q)
 
         """ Activities """
-        activities = EighthActivity.es.search(q)
+        activities_map = EighthActivity.es.search(q)
+        activities_ids = [a["id"] for a in activities_map]
+        activities = EighthActivity.objects.filter(id__in=activities_ids)
 
         context = {
             "query_error": query_error,
             "search_query": q,
             "search_results": users,  # Not actual user objects
             "announcements": announcements, # Not actual announcement objects
-            "activities": activities # Not actual EighthActivity objects
+            "activities": activities # EighthActivity objects
         }
     else:
         context = {

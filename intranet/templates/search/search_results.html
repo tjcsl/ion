@@ -83,8 +83,9 @@
                 <tr>
                     <td class="list-item">
                         <a href="{% url 'view_announcement' a.id %}">
-                            {{ a.title }}
-                        </a> - {{ a.content|truncatechars_html:"50"|safe }}
+                            {{ a.title|safe }}
+                        </a><br />
+                        &nbsp; &nbsp; {{ a.content|truncatechars_html:"50"|striptags }}
                     </td>
                 </tr>
             {% endfor %}
@@ -100,13 +101,32 @@
         {% if activities %}
         <table class="list-table activities-table">
             {% for a in activities %}
-                <tr>
-                    <td class="list-item">
-                        <a href="{% url 'eighth_activity' a.id %}">
-                            {{ a.name }}
-                        </a> - {{ a.description|truncatechars_html:"50"|safe }}
-                    </td>
-                </tr>
+                {% if request.user.is_eighth_admin and not "only_active" in request.GET %}
+                    <tr>
+                        <td class="list-item">
+                            <a href="{% url 'eighth_activity' a.id %}">
+                                {{ a.name }}
+                            </a>
+                            {% if a.description %}
+                                <br />
+                                &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
+                            {% endif %}
+                                {% if not a.is_active %}<b>(INACTIVE)</b>{% endif %}
+                        </td>
+                    </tr>
+                {% elif a.is_active %}
+                    <tr>
+                        <td class="list-item">
+                            <a href="{% url 'eighth_activity' a.id %}">
+                                {{ a.name }}
+                            </a>
+                            {% if a.description %}
+                                <br />
+                                &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </table>
         {% else %}
