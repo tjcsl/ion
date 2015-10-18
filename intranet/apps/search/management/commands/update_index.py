@@ -6,11 +6,12 @@ from django.core.management.base import BaseCommand
 import elasticsearch
 from intranet import settings
 from intranet.db import ldap_db
+from intranet.apps.announcements.models import Announcement
 from intranet.apps.users.models import Grade
 
 
 class Command(BaseCommand):
-    help = "Updates the ElasticSearch index with user data"
+    help = "Updates the ElasticSearch index with user and announcement data"
 
     def handle(self, **options):
         # Destroy kerberos tickets to force simple auth
@@ -123,3 +124,6 @@ class Command(BaseCommand):
             if i % 100 == 0:
                 self.stdout.write("Indexed {} users".format(i))
         self.stdout.write("Indexing complete")
+
+        self.stdout.write("Indexing announcements..")
+        Announcement.es.create_index()

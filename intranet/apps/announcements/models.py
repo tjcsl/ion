@@ -5,6 +5,7 @@ from datetime import datetime
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+from django_elasticsearch.models import EsIndexable
 from ..groups.models import Group
 from ..users.models import User
 
@@ -61,7 +62,7 @@ class AnnouncementUserMap(models.Model):
     def __unicode__(self):
         return "UserMap: {}".format(self.announcement.title)
 
-class Announcement(models.Model):
+class Announcement(EsIndexable, models.Model):
 
     """Represents an announcement.
 
