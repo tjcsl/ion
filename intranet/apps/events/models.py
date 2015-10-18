@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+from django_elasticsearch.models import EsIndexable
 from ..users.models import User
 from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
@@ -33,42 +34,45 @@ class EventManager(Manager):
                                      Q(groups__isnull=True) |
                                      Q(user=user)))
 
-class Event(models.Model):
+class Event(EsIndexable, models.Model):
     """An event available to the TJ community.
 
-    title
-        The title for the event
-    description
-        A description about the event
-    links
-        Not currently used
-    created_time
-        Time created (automatically set)
-    last_modified_time
-        Time last modified (automatically set)
-    time
-        The date and time of the event
-    location
-        Where the event is located
-    user
-        The user who created the event.
-    scheduled_activity
-        An EighthScheduledActivity that should be linked with the event.
-    announcement
-        An Announcement that should be linked with the event.
-    groups
-        Groups that the event is visible to.
-    attending
-        A ManyToManyField of User objects that are attending the event.
-    approved
-        Boolean, whether the event has been approved and will be displayed.
-    approved_by
-        ForeignKey to User object, the user who approved the event.
-    rejected
-        Boolean, whether the event was rejected and shouldn't be shown in the
-        list of events that need to be approved.
-    rejected_by
-        ForeignKey to User object, the user who rejected the event.
+        title
+            The title for the event
+        description
+            A description about the event
+        links
+            Not currently used
+        created_time
+            Time created (automatically set)
+        last_modified_time
+            Time last modified (automatically set)
+        time
+            The date and time of the event
+        location
+            Where the event is located
+        user
+            The user who created the event.
+        scheduled_activity
+            An EighthScheduledActivity that should be linked with the event.
+        announcement
+            An Announcement that should be linked with the event.
+        groups
+            Groups that the event is visible to.
+        attending
+            A ManyToManyField of User objects that are attending the event.
+        approved
+            Boolean, whether the event has been approved and will be displayed.
+        approved_by
+            ForeignKey to User object, the user who approved the event.
+        rejected
+            Boolean, whether the event was rejected and shouldn't be shown in the
+            list of events that need to be approved.
+        rejected_by
+            ForeignKey to User object, the user who rejected the event.
+
+        This model is indexed by Elasticsearch.
+
     """
     objects = EventManager()
 
@@ -120,6 +124,17 @@ class Event(models.Model):
             # Send approval email
             event_approval_request(request, self)
 
+    @property
+    def is_this_year(self):
+        """Return whether the event was created after September 1st
+           of this school year."""
+        now = datetime.now().date()
+        ann = self.created_time.date()
+        if now.month < 9:
+            return ((ann.year == now.year and ann.month < 9) or
+                    (ann.year == now.year - 1 and ann.month >= 9))
+        else:
+            return (ann.year == now.year and ann.month >= 9)
 
 
 
@@ -128,3 +143,6 @@ class Event(models.Model):
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
         else:
             return "{} - {}".format(self.title, self.time)
+
+    class Elasticsearch(EsIndexable.Elasticsearch):
+        fields = ["title", "description", "id"]

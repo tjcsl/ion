@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from ..announcements.models import Announcement
+from ..events.models import Event
 from ..eighth.models import EighthActivity
 from ..users.models import User
 from ..users.views import profile_view
@@ -115,6 +116,15 @@ def search_view(request):
             if a.is_this_year:
                 announcements.append(a)
 
+        """ Events """
+        events_map = Event.es.search(q)
+        events_ids = [a["id"] for a in events_map]
+        events_all = Event.objects.filter(id__in=events_ids)
+        events = []
+        for e in events_all:
+            if e.is_this_year:
+                events.append(e)
+
         """ Activities """
         activities_map = EighthActivity.es.search(q)
         activities_ids = [a["id"] for a in activities_map]
@@ -130,6 +140,7 @@ def search_view(request):
             "search_query": q,
             "search_results": users,  # Not actual user objects
             "announcements": announcements, # Announcement objects
+            "events": events, # Event objects
             "activities": activities # EighthActivity objects
         }
     else:

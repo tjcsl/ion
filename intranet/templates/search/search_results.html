@@ -98,6 +98,28 @@
 
     {% if search_query %}
         <br /><br />
+        <h3>Events</h3>
+        {% if events %}
+        {{ events|length }} result{{ events|pluralize }}
+        <table class="list-table events-table">
+            {% for a in events %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'event' a.id %}">
+                            {{ a.title|safe }}
+                        </a><br />
+                        &nbsp; &nbsp; {{ a.description|truncatechars_html:"50"|striptags }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
+    {% if search_query %}
+        <br /><br />
         <h3>Activities</h3>
         {% if activities %}
         {{ activities|length }} result{{ activities|pluralize }}
