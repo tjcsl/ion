@@ -10,7 +10,11 @@
         <tbody>
         {% for user in viewable_members %}
             <tr class="item-row">
-                <td>{{ user.last_name }}, {{ user.first_name }}</td>
+                <td>
+                <a href="{% url 'user_profile' user.id %}">
+                    {{ user.last_name }}, {{ user.first_name }}
+                </a>
+                </td>
                 <td>{{ user.grade.number }}</td>
             </tr>
         {% empty %}
