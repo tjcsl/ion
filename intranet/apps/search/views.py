@@ -98,10 +98,6 @@ def search_view(request):
 
         query_error, results = get_search_results(q)
 
-        if results["hits"]["total"] == 1:
-            user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
-            return redirect("user_profile", user_id=user_id)
-
         users = [r["_source"] for r in results["hits"]["hits"]]
 
         if is_admin:
@@ -134,6 +130,13 @@ def search_view(request):
         for a in activities_all:
             if (only_active and a.is_active) or not only_active:
                 activities.append(a)
+
+
+        if results["hits"]["total"] == 1:
+            no_other_results = (not announcements and not events and not activities)
+            if request.user.is_eighthoffice or no_other_results:
+                user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
+                return redirect("user_profile", user_id=user_id)
 
         context = {
             "query_error": query_error,
