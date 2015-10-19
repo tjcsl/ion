@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block js %}
-    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
     {{ block.super }}
     <script type="text/javascript">
         $(function() {
@@ -77,7 +77,7 @@
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
     <style type="text/css">
 #room-util-table tr.cancelled {
@@ -170,7 +170,7 @@
             <thead>
                 <tr>
                     {% if show.block %}<th style="min-width: 150px">Block</th>{% endif %}
-                    {% if show.rooms %}<th>Rooms</th>{% endif %}
+                    {% if show.rooms %}<th data-sortable-type="numeric">Rooms</th>{% endif %}
                     {% if show.aid %}<th>AID</th>{% endif %}
                     {% if show.activity %}<th>Activity</th>{% endif %}
                     {% if show.sponsors %}<th>Sponsors</th>{% endif %}
@@ -184,7 +184,9 @@
                 {% for sched_act in scheduled_activities %}
                     <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %} {% if sched_act.activity.restricted %}restricted{% endif %}">
                         {% if show.block %}
-                            <td>{{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})</td>
+                            <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
+                                {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
+                            </td>
                         {% endif %}
                         {% if show.rooms %}
                             <td>{{ sched_act.get_true_rooms|join:", " }}</td>
