@@ -115,7 +115,9 @@ class UserManager(UserManager):
 
         users = []
         for res in results:
-            users.append(User.get_user(dn=res[0]))
+            u = User.get_user(dn=res[0])
+            if u.attribute_is_visible("showbirthday"):
+                users.append(u)
 
 
         return users
