@@ -132,7 +132,7 @@ class UserManager(UserManager):
             logger.debug("Using cached User.get_students")
             return cached
         else:
-            usernums = User.objects.filter(username__startswith="2")
+            usernonums = User.objects.filter(username__startswith="2")
             # Add possible exceptions handling here
             logger.debug("Set cache for User.get_students")
             cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
