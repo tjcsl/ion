@@ -84,6 +84,8 @@ def edit_activity_id(request, activity_id):
     except EighthActivity.DoesNotExist:
         raise http.Http404
 
+    old_id = activity.id
+
     if request.method == "POST" and "new_id" in request.POST:
         new_id = request.POST["new_id"]
         new_id = int(new_id)
@@ -93,10 +95,12 @@ def edit_activity_id(request, activity_id):
             except Exception as e:
                 messages.error(request, "Error changing ID: {}".format(e))
             else:
+                messages.success(request, "Changed ID from {} to {}".format(old_id, new_id))
                 return redirect("eighth_admin_edit_activity", new_id)
 
     activities = EighthActivity.undeleted_objects.order_by("name")
     context = {
+        "admin_page_title": "Edit Activity ID: {}".format(activity),
         "activity": activity,
         "activities": activities,
         "available_ids": EighthActivity.available_ids()

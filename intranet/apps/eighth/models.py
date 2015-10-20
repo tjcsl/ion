@@ -282,14 +282,11 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
     def available_ids(cls):
         ID_MIN = 1
         ID_MAX = 3200
-        available = []
-        for i in range(ID_MIN, ID_MAX):
-            try:
-                EighthActivity.objects.get(id=i)
-            except EighthActivity.DoesNotExist:
-                available.append(i)
-
-        return available
+        nums = [i for i in range(ID_MIN, ID_MAX)]
+        used = [row[0] for row in EighthActivity.objects.values_list("id")]
+        avail = set(nums) - set(used)
+        return list(avail)
+        
 
     def change_id_to(self, new_id):
         """ Changes the internal ID field. """
