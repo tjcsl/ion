@@ -20,7 +20,12 @@ def add_activity_view(request):
     if request.method == "POST":
         form = QuickActivityForm(request.POST)
         if form.is_valid():
-            activity = form.save()
+            new_id = request.POST.get("id", "default")
+            if new_id == "default":
+                activity = form.save()
+            else:
+                activity = (EighthActivity.objects.create(name=form.cleaned_data["name"],
+                                                          id=int(new_id)))
             messages.success(request, "Successfully added activity.")
             return redirect("eighth_admin_edit_activity",
                             activity_id=activity.id)
@@ -29,7 +34,12 @@ def add_activity_view(request):
             request.session["add_activity_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
-        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+        context = {
+            "admin_page_title": "Add Activity",
+            "form": QuickActivityForm(),
+            "available_ids": EighthActivity.available_ids()
+        }
+        return render(request, "eighth/admin/add_activity.html", context)
 
 
 @eighth_admin_required
@@ -80,7 +90,7 @@ def edit_activity_view(request, activity_id):
 @eighth_admin_required
 def edit_activity_id(request, activity_id):
     raise http.Http404
-    
+
     try:
         activity = EighthActivity.undeleted_objects.get(id=activity_id)
     except EighthActivity.DoesNotExist:

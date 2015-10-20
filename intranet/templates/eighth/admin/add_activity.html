@@ -1,0 +1,42 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+
+<form id="add-activity-form" action="{% url 'eighth_admin_add_activity' %}" method="post" autocomplete="off">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <th>ID</th>
+            <td>
+                <select name="id" style="width: 134px">
+                    <option value="default">Default</option>
+                    {% for i in available_ids %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="right-buttons">
+                <input type="submit" value="Add">
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
