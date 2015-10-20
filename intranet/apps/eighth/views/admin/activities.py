@@ -85,18 +85,26 @@ def delete_activity_view(request, activity_id=None):
     except EighthActivity.DoesNotExist:
         raise http.Http404
 
+    perm_delete = False
+    if activity.deleted and "perm" in request.GET:
+        perm_delete = True
+
     if request.method == "POST":
-        activity.deleted = True
-        activity.save()
+        if perm_delete:
+            activity.delete()
+        else:
+            activity.deleted = True
+            activity.save()
         messages.success(request, "Successfully deleted activity.")
         return redirect("eighth_admin_dashboard")
     else:
         context = {
             "admin_page_title": "Delete Activity",
             "item_name": activity.name,
-            "help_text": "Deleting will not destroy past attendance data for this "
-                         "activity. The activity will just be marked as deleted "
-                         "and hidden from non-attendance views."
+            "help_text": ("Deleting will not destroy past attendance data for this "
+                          "activity. The activity will just be marked as deleted "
+                          "and hidden from non-attendance views." if not perm_delete
+                          else "This will destroy past attendance data.")
         }
 
         return render(request, "eighth/admin/delete_form.html", context)

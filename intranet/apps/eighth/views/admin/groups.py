@@ -590,6 +590,13 @@ def add_member_to_group_view(request, group_id):
         return redirect(next_url + "?error=s")
 
     query = request.POST["query"]
+    from_sid = User.objects.user_with_student_id(query)
+    if from_sid:
+        from_sid.groups.add(group)
+        from_sid.save()
+        messages.success(request, "Successfully added user \"{}\" to the group.".format(from_sid.full_name))
+        return redirect(next_url + "?added=" + str(from_sid.id))
+
     errors, results = get_search_results(query)
     logger.debug(results)
     if results["hits"]["total"] == 1:

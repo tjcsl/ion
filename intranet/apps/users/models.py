@@ -152,7 +152,7 @@ class UserManager(UserManager):
             # Add possible exceptions handling here
             logger.debug("Set cache for User.get_students")
             cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
-            return usernums
+            return usernonums
 
 
     def get_teachers(self):
