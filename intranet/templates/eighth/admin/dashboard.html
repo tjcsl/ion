@@ -45,9 +45,74 @@
             </ul>
 
         </td>
+
+        <td class="admin-section attendance">
+            <h3>Attendance</h3>
+            <ul class="fa-ul">
+                <li><a href="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}"><i class="fa-li fa fa-check-square"></i>View/take attendance</a></li>
+                <li><a href="{% url 'eighth_admin_view_delinquent_students' %}"><i class="fa-li fa fa-gavel"></i>View absence information (delinquent students)</a></li>
+                <li><a href="{% url 'eighth_admin_view_after_deadline_signups' %}"><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
+                <li><a href="{% url 'eighth_admin_view_open_passes' %}"><i class="fa-li fa fa-moon-o"></i>View list of open passes</a></li>
+                <li><a href="{% url 'eighth_admin_view_activities_without_attendance' %}"><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
+                <li><a href="{% url 'eighth_admin_migrate_outstanding_passes' %}"><i class="fa-li fa fa-ban"></i>Migrate all outstanding passes</a></li>
+                <li><a href="{% url 'eighth_admin_export_out_of_building_schedules' %}"><i class="fa-li fa fa-building-o"></i>Export out-of-building schedules</a></li>
+            </ul>
+        </td>
+
+        
+    </tr>
+    <tr>
+        <td class="admin-section">
+            <h3>Groups</h3>
+
+            <h4>Group List</h4>
+            <select id="group-select" placeholder="Select or search for a group">
+                <option value="">Select or search for a group</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}{% if group.properties.student_visible %} (Student-visible){% endif %}</option>
+                {% endfor %}
+            </select>
+
+            <div class="right-buttons">
+                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_edit_group' url_id_placeholder %}" class="button">Edit Group</a>
+                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_signup_group' url_id_placeholder %}" class="button">Register Group for Activity</a>
+                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_distribute_group' url_id_placeholder %}" class="button">Distribute Group</a>
+            </div>
+
+
+
+            <form id="add-group-form" action="{% url 'eighth_admin_add_group' %}" method="post" autocomplete="off">
+                <h4>Add Group</h4>
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <th>Name:</th>
+                        <td>{{ add_group_form.name }}</td>
+                        <td class="right-buttons">
+                            <input type="submit" value="Add">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+
+            {% comment %}
+            <h4>Class Group Actions</h4>
+            <select id="class-group-select" placeholder="Select or search for a group">
+                <option value="">Select or search for a group</option>
+                <option value="9">Freshmen</option>
+                <option value="10">Sophomores</option>
+                <option value="11">Juniors</option>
+                <option value="12">Seniors</option>
+            </select>
+
+            <div class="right-buttons">
+                <a class="dynamic-link button" data-select="class-group-select" data-href-pattern="{% url 'eighth_admin_edit_group' url_id_placeholder %}" class="button">Sign Up for Activity</a>
+            </div>
+            {% endcomment %}
+        </td>
+
         <td class="admin-section">
             <h3>Blocks</h3>
-            {% comment %}
             {% if blocks_next %}
                 <b>{{ blocks_next_date }}:</b>
                 <ul class="fa-ul blocks-next">
@@ -73,7 +138,6 @@
                 {% endfor %}
                 </ul>
             {% endif %}
-            {% endcomment %}
 
             <form id="add-block-form" action="{% url 'eighth_admin_add_block' %}" method="post" autocomplete="off">
                 <h4>Add Block</h4>
@@ -84,9 +148,9 @@
                         <td colspan="2" class="right-buttons">
                             <table>
                                 <tr>
-                                    <td style="width: 176px">
+                                    <td style="width: 186px">
                                         <ul class="fa-ul">
-                                            <li><a href="{% url 'eighth_admin_add_multiple_blocks' %}"><i class="fa-li fa fa-list-alt"></i>Modify blocks by day</a></li>
+                                            <li><a href="{% url 'eighth_admin_add_multiple_blocks' %}"><i class="fa-li fa fa-list-alt"></i>Add/remove block by day</a></li>
                                         </ul>
                                     </td>
                                     <td>
@@ -114,72 +178,27 @@
             </div>
 
         </td>
-    </tr>
-    <tr>
-        <td class="admin-section">
-            <h3>Groups</h3>
 
-            <form id="add-group-form" action="{% url 'eighth_admin_add_group' %}" method="post" autocomplete="off">
-                <h4>Add Group</h4>
-                {% csrf_token %}
-                <table>
-                    <tr>
-                        <th>Name:</th>
-                        <td>{{ add_group_form.name }}</td>
-                        <td class="right-buttons">
-                            <input type="submit" value="Add">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-
-            <h4>Regular Group Actions</h4>
-            <select id="group-select" placeholder="Select or search for a group">
-                <option value="">Select or search for a group</option>
-                {% for group in groups %}
-                    <option value="{{ group.id }}">{{ group.name }}{% if group.properties.student_visible %} (Student-visible){% endif %}</option>
-                {% endfor %}
-            </select>
-
-            <div class="right-buttons">
-                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_signup_group' url_id_placeholder %}" class="button">Sign Up for Activity</a>
-                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_distribute_group' url_id_placeholder %}" class="button">Distribute Signups</a>
-                <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_edit_group' url_id_placeholder %}" class="button">Edit Group</a>
-            </div>
-
-            {% comment %}
-            <h4>Class Group Actions</h4>
-            <select id="class-group-select" placeholder="Select or search for a group">
-                <option value="">Select or search for a group</option>
-                <option value="9">Freshmen</option>
-                <option value="10">Sophomores</option>
-                <option value="11">Juniors</option>
-                <option value="12">Seniors</option>
-            </select>
-
-            <div class="right-buttons">
-                <a class="dynamic-link button" data-select="class-group-select" data-href-pattern="{% url 'eighth_admin_edit_group' url_id_placeholder %}" class="button">Sign Up for Activity</a>
-            </div>
-            {% endcomment %}
-        </td>
-
-        <td class="admin-section attendance">
-            <h3>Attendance</h3>
-            <ul class="fa-ul">
-                <li><a href="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}"><i class="fa-li fa fa-check-square"></i>View/take attendance</a></li>
-                <li><a href="{% url 'eighth_admin_view_delinquent_students' %}"><i class="fa-li fa fa-gavel"></i>View absence information (delinquent students)</a></li>
-                <li><a href="{% url 'eighth_admin_view_after_deadline_signups' %}"><i class="fa-li fa fa-clock-o"></i>View list of after-deadline signups</a></li>
-                <li><a href="{% url 'eighth_admin_view_open_passes' %}"><i class="fa-li fa fa-moon-o"></i>View list of open passes</a></li>
-                <li><a href="{% url 'eighth_admin_view_activities_without_attendance' %}"><i class="fa-li fa fa-frown-o"></i>View activities that haven't taken attendance</a></li>
-                <li><a href="{% url 'eighth_admin_migrate_outstanding_passes' %}"><i class="fa-li fa fa-ban"></i>Migrate all outstanding passes</a></li>
-                <li><a href="{% url 'eighth_admin_export_out_of_building_schedules' %}"><i class="fa-li fa fa-building-o"></i>Export out-of-building schedules</a></li>
-            </ul>
-        </td>
+        
     </tr>
     <tr>
 
         <td class="admin-section">
             <h3>Sponsors</h3>
+
+
+            <h4>Sponsor Actions</h4>
+            <select id="sponsor-select" placeholder="Select or search for a sponsor">
+                <option value="">Select or search for a sponsor</option>
+                {% for sponsor in sponsors %}
+                    <option value="{{ sponsor.id }}">{{ sponsor.name }}{% if sponsor.user.id %} (User {{ sponsor.user.id }}){% else %} (No user){% endif %}</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_sponsor_schedule' url_id_placeholder %}" class="button">View Schedule</a>
+                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_edit_sponsor' url_id_placeholder %}" class="button">Edit Sponsor</a>
+            </div>
+
 
             <form id="add-sponsor-form" action="{% url 'eighth_admin_add_sponsor' %}" method="post" autocomplete="off">
                 <h4>Add Sponsor</h4>
@@ -193,18 +212,6 @@
                     </tr>
                 </table>
             </form>
-
-            <h4>Sponsor Actions</h4>
-            <select id="sponsor-select" placeholder="Select or search for a sponsor">
-                <option value="">Select or search for a sponsor</option>
-                {% for sponsor in sponsors %}
-                    <option value="{{ sponsor.id }}">{{ sponsor.name }}{% if sponsor.user.id %} (User {{ sponsor.user.id }}){% else %} (No user){% endif %}</option>
-                {% endfor %}
-            </select>
-            <div class="right-buttons">
-                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_sponsor_schedule' url_id_placeholder %}" class="button">View Schedule</a>
-                <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_edit_sponsor' url_id_placeholder %}" class="button">Edit Sponsor</a>
-            </div>
         </td>
         
         <td class="admin-section">
