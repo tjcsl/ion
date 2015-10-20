@@ -278,6 +278,19 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
 
         return list(activities)
 
+    @classmethod
+    def available_ids(cls):
+        ID_MIN = 1
+        ID_MAX = 3200
+        available = []
+        for i in range(ID_MIN, ID_MAX):
+            try:
+                EighthActivity.objects.get(id=i)
+            except EighthActivity.DoesNotExist:
+                available.append(i)
+
+        return available
+
     def change_id_to(self, new_id):
         """ Changes the internal ID field. """
         self.id = self.pk = new_id

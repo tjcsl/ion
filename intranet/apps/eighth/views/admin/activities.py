@@ -77,6 +77,31 @@ def edit_activity_view(request, activity_id):
 
     return render(request, "eighth/admin/edit_activity.html", context)
 
+@eighth_admin_required
+def edit_activity_id(request, activity_id):
+    try:
+        activity = EighthActivity.undeleted_objects.get(id=activity_id)
+    except EighthActivity.DoesNotExist:
+        raise http.Http404
+
+    if request.method == "POST" and "new_id" in request.POST:
+        new_id = request.POST["new_id"]
+        new_id = int(new_id)
+        if new_id:
+            try:
+                activity.change_id_to(new_id)
+            except Exception as e:
+                messages.error(request, "Error changing ID: {}".format(e))
+            else:
+                return redirect("eighth_admin_edit_activity", new_id)
+
+    activities = EighthActivity.undeleted_objects.order_by("name")
+    context = {
+        "activity": activity,
+        "activities": activities,
+        "available_ids": EighthActivity.available_ids()
+    }
+    return render(request, "eighth/admin/edit_activity_id.html", context)
 
 @eighth_admin_required
 def delete_activity_view(request, activity_id=None):

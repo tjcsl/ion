@@ -1,0 +1,56 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+        <h4>Select an Activity:</h4>
+
+        <div class="select-area">
+            <select id="activity-select" placeholder="Select or search for an activity" autocomplete="off">
+                <option value="">Select or search for an activity</option>
+                {% for a in activities %}
+                    <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+                <a href="{% url 'eighth_admin_edit_activity' activity.id %}" class="button">
+                    Edit Activity
+                </a>
+                <a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ activity.id }}" class="button">
+                    Schedule Activity
+                </a>
+        </div>
+        <br />
+<p>Change the activity ID for {{ activity }}</p>
+<form action="" method="post" autocomplete="off" name="edit_form">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Choose an available ID:</th>
+            <td>
+                <select name="new_id">
+                {% for i in available_ids %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Change ID" />
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+
+{% endblock %}
