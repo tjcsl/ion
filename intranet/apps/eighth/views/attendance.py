@@ -311,7 +311,7 @@ def take_attendance_view(request, scheduled_activity_id):
         for user in users:
             members.append({
                 "id": user.id,
-                "name": user.last_name + ", " + user.first_name,
+                "name": user.last_first(), # includes nickname
                 "grade": user.grade.number,
                 "present": (scheduled_activity.attendance_taken and
                             (user.id not in absent_user_ids)),
