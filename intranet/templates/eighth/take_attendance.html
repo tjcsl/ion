@@ -311,8 +311,16 @@ $(function() {
                 <form class="attendance-form" action="" method="post">
                     {% csrf_token %}
                     <table class="take-attendance-roster">
-                        {% if members %}
                         <thead>
+                            {% if request.user.is_eighth_admin %}
+                            <tr>
+                                <td colspan="4">
+                                    <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if members %}
                             <tr>
                                 {% if show_checkboxes %}
                                     <th><input type="checkbox" />Present</th>
@@ -322,8 +330,9 @@ $(function() {
                                 <th>Grade</th>
                                 <th></th>
                             </tr>
+                            {% endif %}
+
                         </thead>
-                        {% endif %}
                         <tbody>
                             {% for member in members %}
                                 <tr>
