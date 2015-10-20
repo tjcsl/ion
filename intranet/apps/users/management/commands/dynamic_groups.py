@@ -8,16 +8,19 @@ from intranet.apps.groups.models import Group
 
 
 class Command(BaseCommand):
-    help = "Update dynamic groups."
+    help = "Update dynamic groups, and ensure that all students have an entry in the database."
 
     def handle(self, **options):
         """ Create "Class of 20[16-19]" groups """
+
+        students_grp, _ = Group.objects.get_or_create(name="Students")
         for gr in [2016, 2017, 2018, 2019]:
-            users = User.objects.filter(username__startswith="{}".format(gr))
+            users = User.objects.users_in_year(gr)
             grp, _ = Group.objects.get_or_create(name="Class of {}".format(gr))
-            self.stdout.write("{}: {} users".format(gr, users.count()))
+            self.stdout.write("{}: {} users".format(gr, len(users)))
             for u in users:
                 u.groups.add(grp)
+                u.groups.add(students_grp)
                 u.save()
             self.stdout.write("{}: Processed".format(gr))
 

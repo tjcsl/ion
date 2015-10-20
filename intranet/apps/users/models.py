@@ -7,7 +7,7 @@ import logging
 import ldap
 import os
 import re
-from django.db import models
+from django.db import models, utils
 from django.conf import settings
 from django.core.cache import cache
 from django.core import exceptions
@@ -55,6 +55,20 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
+
+    def users_in_year(self, year):
+        """ Get a list of users in a specific graduation year. """
+        c = LDAPConnection()
+
+        results = c.search(settings.USER_DN,
+                           "graduationYear={}".format(year),
+                           ["dn"])
+
+        users = []
+        for user in results:
+            users.append(User.get_user(dn=user[0]))
+
+        return users
 
     def _ldap_and_string(self, opts):
         """Combine LDAP queries with AND
