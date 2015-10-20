@@ -253,10 +253,13 @@ def take_attendance_view(request, scheduled_activity_id):
 
             return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
-        if not scheduled_activity.block.locked:
+        if not scheduled_activity.block.locked and not request.user.is_eighth_admin:
             return render(request, "error/403.html", {
                 "reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."
             }, status=403)
+
+        if not scheduled_activity.block.locked and request.user.is_eighth_admin:
+            messages.success(request, "Note: Taking attendance on an unlocked block.")
 
         present_user_ids = list(request.POST.keys())
 
