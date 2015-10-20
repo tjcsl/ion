@@ -14,9 +14,18 @@ class Command(BaseCommand):
         """ Create "Class of 20[16-19]" groups """
 
         students_grp, _ = Group.objects.get_or_create(name="Students")
+        sg_prop = students_grp.properties
+        sg_prop.student_visible = True
+        sg_prop.save()
+        students_grp.save()
+
         for gr in [2016, 2017, 2018, 2019]:
             users = User.objects.users_in_year(gr)
             grp, _ = Group.objects.get_or_create(name="Class of {}".format(gr))
+            grp_prop = grp.properties
+            grp_prop.student_visible = True
+            grp_prop.save()
+            grp.save()
             self.stdout.write("{}: {} users".format(gr, len(users)))
             for u in users:
                 u.groups.add(grp)
