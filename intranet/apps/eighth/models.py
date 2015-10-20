@@ -176,7 +176,7 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    aid = models.CharField(max_length=10, blank=True) # Should be unique
+    """aid = models.CharField(max_length=10, blank=True) # Should be unique"""
     name = models.CharField(max_length=100)  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
@@ -216,6 +216,11 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
         rooms = self.rooms.all()
         return EighthRoom.total_capacity_of_rooms(rooms)
 
+    @property
+    def aid(self):
+        """ The publicly visible activity ID """
+        return self.id
+    
     @property
     def name_with_flags(self):
         """Return the activity name with special, both blocks,
@@ -273,10 +278,11 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
 
         return list(activities)
 
+    """
     def save(self, *args, **kwargs):
-        """When saving the model, update the AID to
-        be the internal ID if it is blank or None.
-        """
+        #When saving the model, update the AID to
+        #be the internal ID if it is blank or None.
+        
         update_aid = False
 
 
@@ -302,6 +308,16 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
             # We need to filter that out to avoid a primary key conflict.
             kwargs = {k: v for k,v in kwargs.items() if k != 'force_insert'}
             super(EighthActivity, self).save(*args, **kwargs)
+    """
+
+    def change_id_to(self, new_id):
+        """ Changes the internal ID field. """
+        self.id = self.pk = new_id
+        try:
+            self.save()
+        except ValidationError:
+            self.id = self.pk = self.aid = new_id
+            self.save()
 
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity

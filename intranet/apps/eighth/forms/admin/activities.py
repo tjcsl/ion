@@ -120,7 +120,7 @@ class ActivityForm(forms.ModelForm):
             "description",
             "sponsors",
             "rooms",
-            "aid",
+            "id",
             "presign",
             "one_a_day",
             "both_blocks",

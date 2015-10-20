@@ -10,6 +10,7 @@ class Command(BaseCommand):
     help = "Check if there are any blank AIDs, and replace them with their current internal ID number."
 
     def handle(self, **options):
+        """
         all_activities = EighthActivity.objects.all()
         for act in all_activities:
             if not act.aid:
@@ -18,5 +19,5 @@ class Command(BaseCommand):
                 act.save()
             else:
                 self.stdout.write("{}\t{}\tOK.".format(act.id, act))
-
+        """
         self.stdout.write("Done.")
