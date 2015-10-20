@@ -8,10 +8,17 @@
             $("#submit_button").attr("name", "add_group").click();
         }
 
-        $("#activity-select").on("change", function() {
-            var v = $(this).val();
+        $("a#edit-activity").click(function() {
+            var v = $("#activity-select").val();
             if(v && v.length > 0) {
                 location.href = './' + v;
+            }
+        });
+
+        $("a#schedule-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '/eighth/admin/scheduling/schedule?activity=' + v;
             }
         });
     });
@@ -80,15 +87,12 @@
                     <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
                 {% endfor %}
             </select>
-        </div>
-
-        <div>
-                <a href="" class="button">
-                    Edit Activity
-                </a>
-                <a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ activity.id }}" class="button">
-                    Schedule Activity
-                </a>
+            <a id="edit-activity" class="button">
+                Edit
+            </a>
+            <a id="schedule-activity" class="button">
+                Schedule
+            </a>
         </div>
         <br />
 
@@ -99,7 +103,7 @@
         <tr>
             <td class="right-buttons" colspan=2>
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
-                <a class="button" href="{% url 'eighth_admin_edit_activity_id' activity.id %}">Edit ID</a>
+                <!--a class="button" href="{% url 'eighth_admin_edit_activity_id' activity.id %}">Edit ID</a-->
                 {% if delete_url %}
                     {% if activity.deleted %}
                         <a class="button" href="{{ delete_url }}?perm=1" style="color: red">Permanent Delete</a>

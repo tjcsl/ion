@@ -79,6 +79,8 @@ def edit_activity_view(request, activity_id):
 
 @eighth_admin_required
 def edit_activity_id(request, activity_id):
+    raise http.Http404
+    
     try:
         activity = EighthActivity.undeleted_objects.get(id=activity_id)
     except EighthActivity.DoesNotExist:

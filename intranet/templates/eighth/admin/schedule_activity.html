@@ -13,6 +13,24 @@
         window.all_rooms = _.values(all_rooms_lookup);
     </script>
 
+    <script type="text/javascript">
+    $(function() {
+        $("a#schedule-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '?activity=' + v;
+            }
+        });
+
+        $("a#edit-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '/eighth/admin/activities/edit/' + v;
+            }
+        });
+    });
+    </script>
+
     <script type="text/javascript" src="{% static 'js/eighth/schedule.js' %}"></script>
 {% endblock %}
 
@@ -32,18 +50,19 @@
         <table>
             <tr>
                 <td>
-                    <select id="activity-select" class="url-param-selector" data-param="activity" placeholder="Select or search for an activity" autocomplete="off">
+                    <select id="activity-select" placeholder="Select or search for an activity" autocomplete="off">
                         <option value="">Select or search for an activity</option>
                         {% for a in activities %}
-                            <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+                            <option value="{{ a.id }}"{% if a == activity %} selected style="font-weight: bold"{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
                         {% endfor %}
                     </select>
                 </td>
-                {% if activity %}
                     <td style="vertical-align: top">
-                        <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">Edit Activity</a>
+                        <a class="button" id="schedule-activity">Schedule</a>
+                        {% if activity %}
+                                <a class="button" id="edit-activity">Edit</a>
+                        {% endif %}
                     </td>
-                {% endif %}
             </tr>
         </table>
 

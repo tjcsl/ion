@@ -289,13 +289,9 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
         
 
     def change_id_to(self, new_id):
-        """ Changes the internal ID field. """
-        self.id = self.pk = new_id
-        try:
-            self.save()
-        except ValidationError:
-            self.id = self.pk = self.aid = new_id
-            self.save()
+        """ Changes the internal ID field.
+            Possible solution: https://djangosnippets.org/snippets/2691/ """
+        EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
 
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity
