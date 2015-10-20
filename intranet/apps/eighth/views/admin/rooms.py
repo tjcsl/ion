@@ -191,16 +191,23 @@ def room_utilization_action(request, start_id, end_id):
     try:
         start_block = EighthBlock.objects.get(id=start_id)
         end_block = EighthBlock.objects.get(id=end_id)
+
+        one_block = (start_id == end_id)
     except EighthBlock.DoesNotExist:
         raise http.Http404
 
     sched_acts = (EighthScheduledActivity.objects
-                                         .exclude(activity__deleted=True)
+                                         .exclude(activity__deleted=True))
                                         #.exclude(cancelled=True) # include cancelled activities
-                                         .filter(block__date__gte=start_block.date,
-                                                 block__date__lte=end_block.date)
-                                         .order_by("block__date",
-                                                   "block__block_letter"))
+    if not one_block:
+         sched_acts = (sched_acts.filter(block__date__gte=start_block.date,
+                                         block__date__lte=end_block.date))
+    else:
+        sched_acts = sched_acts.filter(block=start_block)
+
+    sched_acts = (sched_acts.order_by("block__date",
+                                      "block__block_letter"))
+
     all_rooms = EighthRoom.objects.all().order_by("name")
 
     room_ids = request.GET.getlist("room")
