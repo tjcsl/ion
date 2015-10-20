@@ -331,7 +331,8 @@ def take_attendance_view(request, scheduled_activity_id):
             "passes": passes,
             "members": members,
             "p": pass_users,
-            "no_edit_perm": not edit_perm
+            "no_edit_perm": not edit_perm,
+            "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin)
         }
 
         if request.user.is_eighth_admin:

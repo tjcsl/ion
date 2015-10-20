@@ -314,7 +314,7 @@ $(function() {
                         {% if members %}
                         <thead>
                             <tr>
-                                {% if scheduled_activity.block.locked %}
+                                {% if show_checkboxes %}
                                     <th><input type="checkbox" />Present</th>
                                 {% endif %}
                                 <th>Student</th>
@@ -327,7 +327,7 @@ $(function() {
                         <tbody>
                             {% for member in members %}
                                 <tr>
-                                    {% if scheduled_activity.block.locked %}
+                                    {% if show_checkboxes %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
                                     {% endif %}
                                     <td class="user-link" data-user-id="{{ member.id }}">
