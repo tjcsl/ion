@@ -329,8 +329,29 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         except Group.DoesNotExist:
             raise http.Http404
 
-        users = group.user_set.all()
+        query = "?schact={}".format(scheduled_activity.id)
+        return redirect(reverse("eighth_admin_signup_group_action", args=[group.id]) + query)
 
+eighth_admin_signup_group = eighth_admin_required(
+    EighthAdminSignUpGroupWizard.as_view(
+        EighthAdminSignUpGroupWizard.FORMS
+    )
+)
+
+def eighth_admin_signup_group_action(request, group_id):
+    schact_id = request.GET["schact"]
+
+    try:
+        scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
+        block = scheduled_activity.block
+        activity = scheduled_activity.activity
+        group = Group.objects.get(id=group_id)
+    except (EighthScheduledActivity.DoesNotExist, Group.DoesNotExist):
+        raise http.Http404
+
+    users = group.user_set.all()
+
+    if "confirm" in request.POST:
         signup_bulk = []
         if not activity.both_blocks:
             EighthSignup.objects.filter(
@@ -361,14 +382,14 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 
         EighthSignup.objects.bulk_create(signup_bulk)
 
-        messages.success(self.request, "Successfully signed up group for activity.")
+        messages.success(request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
 
-eighth_admin_signup_group = eighth_admin_required(
-    EighthAdminSignUpGroupWizard.as_view(
-        EighthAdminSignUpGroupWizard.FORMS
-    )
-)
+    return render(request, "eighth/admin/sign_up_group.html", {
+        "scheduled_activity": scheduled_activity,
+        "group": group,
+        "users_num": users.count()
+    })
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):

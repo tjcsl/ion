@@ -12,31 +12,42 @@
 {% endblock %}
 
 {% block admin_main %}
-    <form action="" method="post" name="wizard">{% csrf_token %}
-        {{ wizard.management_form }}
-        <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-        
+    {% if wizard %}
+        <form action="" method="post" name="wizard">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+            
 
-        {% if block_obj %}
-            <b>Block:</b> {{ block_obj }}
-            <br />
-            {% if block_obj.locked %}
-            This block is locked. This action would result in an after-deadline signup.
-            <br />
+            {% if block_obj %}
+                <b>Block:</b> {{ block_obj }}
+                <br />
+                {% if block_obj.locked %}
+                This block is locked. This action would result in an after-deadline signup.
+                <br />
+                {% endif %}
+                <br />
             {% endif %}
-            <br />
-        {% endif %}
 
-        {{ wizard.form }}
+            {{ wizard.form }}
 
 
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
-        {% endif %}
-        {% if wizard.steps.next %}
-            <input type="submit" value="Next"/>
-        {% else %}
-            <input type="submit" value="Sign Up Group"/>
-        {% endif %}
-    </form>
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+            {% endif %}
+            {% if wizard.steps.next %}
+                <input type="submit" value="Next"/>
+            {% else %}
+                <input type="submit" value="Sign Up Group"/>
+            {% endif %}
+        </form>
+    {% else %}
+        <h2>Confirm</h2>
+        <p>Are you sure you want to sign up <b>{{ users_num }} users</b> in group <b>{{ group }}</b> for <b>{{ scheduled_activity }}</b>?</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="confirm" value="true" />
+            <input type="submit" value="Confirm" />
+            <a href="/eighth/admin" class="button">Cancel</button>
+        </form>
+    {% endif %}
 {% endblock %}
