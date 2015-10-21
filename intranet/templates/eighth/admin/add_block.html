@@ -1,0 +1,125 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    #add-block-form th {
+        width: 83px;
+    }
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+<p>Check boxes to add a block, uncheck boxes to remove.</p>
+<form id="add-block-form" action="{% url 'eighth_admin_add_block' %}" method="post" autocomplete="off" onsubmit="return check_submit(this)">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>
+                <label for="id_date">Date:</label>
+            </th>
+            <td>
+                <input id="id_date" name="date" type="text" value="{% if date %}{{ date }}{% endif %}" />
+            </td>
+        </tr>
+        {% if show_letters %}
+        <input type="hidden" name="modify_blocks" value="true" />
+        <tr>
+            <th><label for="blocks">Block letters:</label></th>
+            <td>
+                <table>
+                <tr>
+                {% for letter in letters %}
+                    <td>
+                    <input type="checkbox" name="blocks" value="{{ letter.name }}" {% if letter.exists %}checked{% endif %}/> {{ letter.name }}
+                    </td>
+                    {% if forloop.counter|divisibleby:4 %}</tr><tr>{% endif %}
+                {% endfor %}
+                </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th><label>Add custom:</label></th>
+            <td>
+                <input type="text" name="blocks" size="12" maxlength="10" />
+            </td>
+        </tr>
+        <tr>
+            <td class="right-buttons" colspan=2>
+                <input type="submit" value="Change" />
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <script type="text/javascript">
+$(function() {
+    $("#id_date").on("change", function(d) {
+        console.debug($(this).val());
+        location.search = "date=" + $(this).val();
+    });
+});
+
+{% if show_letters %}
+var original_letters = {
+    {% for letter in letters %}
+    "{{ letter.name }}": {% if letter.exists %}true{% else %}false{% endif%}
+    {% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+var current_letters = {};
+for(i in original_letters) current_letters[i] = original_letters[i];
+$(function() {
+    $("input[name=blocks][type=checkbox]").click(function() {
+        var val = $(this).val();
+        var chk = $(this).prop("checked");
+        console.debug(val, chk);
+        current_letters[val] = chk;
+    });
+});
+check_submit = function() {
+    
+    var val = $("input[name=blocks][type=text]").val();
+    console.debug(val, "text");
+    if(val) {
+        current_letters[val] = true;
+    }
+
+    var txt = "";
+    var date = $("#id_date").val();
+    for(ltr in current_letters) {
+        if(current_letters[ltr] != original_letters[ltr]) {
+            txt += (current_letters[ltr] ? "Add" : "Remove") + " block "+ltr+"\n";
+        }
+    }
+    console.debug(txt);
+    if(txt.length > 0) {
+        if(!confirm("The following changes are about to be made for "+date+".\n\n"+txt+"\nShould these actions be completed?")) {
+            if(val) delete current_letters[val];
+            return false;
+        }
+    }
+    return true;
+}
+{% endif %}
+
+    </script>
+</form>
+{% comment %}
+<div style="position: absolute;top: 300px">
+    <h2>Create Custom Block</h2>
+    <form id="add-block-form" action="{% url 'eighth_admin_add_block' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <table>
+            {{ add_block_form.as_table }}
+            <tr>
+                <td colspan="2" class="right-buttons">
+                    <input type="submit" value="Add" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% endcomment %}
+{% endblock %}

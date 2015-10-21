@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @eighth_admin_required
 def add_block_view(request):
-    if request.method == "POST":
+    if request.method == "POST" and "custom_block" in request.POST:
         form = QuickBlockForm(request.POST)
         if form.is_valid():
             form.save()
@@ -29,12 +29,7 @@ def add_block_view(request):
         else:
             messages.error(request, "Error adding block.")
             request.session["add_block_form"] = pickle.dumps(form)
-            return redirect("eighth_admin_dashboard")
-    else:
-        return http.HttpResponseNotAllowed(["POST"], "405: METHOD NOT ALLOWED")
-
-@eighth_admin_required
-def add_multiple_blocks_view(request):
+    
     date = None
     show_letters = None
 
@@ -57,10 +52,14 @@ def add_multiple_blocks_view(request):
             logger.debug(letters)
             logger.debug(current_letters)
             for l in letters:
+                if len(l) == 0:
+                    continue
                 if l not in current_letters:
                     EighthBlock.objects.create(date=fmtdate, block_letter=l)
                     messages.success(request, "Successfully added {} Block on {}".format(l, fmtdate))
             for l in current_letters:
+                if len(l) == 0:
+                    continue
                 if l not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
@@ -71,6 +70,12 @@ def add_multiple_blocks_view(request):
     visible_blocks = ["A","B","C","D","E","F","G","H"]
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
+        for l in visible_blocks:
+            exists = onday.filter(block_letter=l)
+            letters.append({
+                "name": l,
+                "exists": exists
+            })
         for blk in onday:
             if blk.block_letter not in visible_blocks:
                 visible_blocks.append(blk.block_letter)
@@ -78,22 +83,17 @@ def add_multiple_blocks_view(request):
                     "name": blk.block_letter,
                     "exists": True
                 })
-        for l in visible_blocks:
-            exists = onday.filter(block_letter=l)
-            letters.append({
-                "name": l,
-                "exists": exists
-            })
 
 
     context = {
-        "admin_page_title": "Modify Blocks by Day",
+        "admin_page_title": "Add or Remove Blocks",
         "date": date,
         "letters": letters,
-        "show_letters": show_letters
+        "show_letters": show_letters,
+        "add_block_form": QuickBlockForm
     }
 
-    return render(request, "eighth/admin/add_multiple_blocks.html", context)
+    return render(request, "eighth/admin/add_block.html", context)
 
 
 @eighth_admin_required

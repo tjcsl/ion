@@ -53,7 +53,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
 
     forms = {
         #"add_activity_form": activity_forms.QuickActivityForm,
-        "add_block_form": block_forms.QuickBlockForm,
+        #"add_block_form": block_forms.QuickBlockForm,
         "add_group_form": group_forms.QuickGroupForm,
         "add_room_form": room_forms.RoomForm,
         "add_sponsor_form": sponsor_forms.SponsorForm
