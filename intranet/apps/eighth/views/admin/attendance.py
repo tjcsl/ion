@@ -165,12 +165,12 @@ def after_deadline_signup_view(request):
     end_date = request.GET.get("end", "")
 
     try:
-        start_date = datetime.strptime(start_date, "%m/%d/%Y")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
     except ValueError:
         start_date = get_start_date(request)
 
     try:
-        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
     except ValueError:
         end_date = start_date + timedelta(days=7)
 
