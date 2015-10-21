@@ -11,6 +11,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from .models import User, Grade, Class
 from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
+from ..eighth.utils import get_start_date
 from intranet import settings
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
@@ -51,6 +52,7 @@ def profile_view(request, user_id=None):
 
     eighth_schedule = []
     start_block = EighthBlock.objects.get_first_upcoming_block()
+
     if start_block:
         blocks = [start_block] + list(start_block.next_blocks(num_blocks-1))
     else:
@@ -67,19 +69,12 @@ def profile_view(request, user_id=None):
 
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
-
-        logger.debug("Eighth sponsor {}".format(sponsor))
-
-        eighth_sponsor_schedule = []
-        if start_block:
-            activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                                    .filter(block__date__gt=start_block.date))
-            logger.debug(activities_sponsoring)
-            surrounding_blocks = [start_block] + list(start_block.next_blocks()[:num_blocks-1])
-            for b in surrounding_blocks:
-                sponsored_for_block = activities_sponsoring.filter(block=b)
-                for schact in sponsored_for_block:
-                    eighth_sponsor_schedule.append(schact)
+        start_date = get_start_date(request)
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                                   .filter(block__date__gte=start_date)
+                                                                   .order_by("block__date",
+                                                                             "block__block_letter"))
+        eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
     else:
         eighth_sponsor_schedule = None

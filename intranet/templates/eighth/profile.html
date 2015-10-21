@@ -162,18 +162,28 @@
                         <th>Room</th>
                         <th>Signups</th>
                         <th>Capacity</th>
+                        {% if request.user.is_eighth_admin %}
+                            <th></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 {% endif %}
                 <tbody>
                     {% for scheduled_activity in eighth_sponsor_schedule %}
                         <tr>
-                            <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                            <th>{{ scheduled_activity.block.date|date:"D, M d, Y" }} ({{ scheduled_activity.block.block_letter }})</th>
                             <td>{{ scheduled_activity.activity.name_with_flags }}</td>
                             <td>{{ scheduled_activity.comments }}</td>
                             <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
                             <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                             <td>{{ scheduled_activity.get_true_capacity }}</td>
+                            {% if request.user.is_eighth_admin %}
+                                <td>
+                                    <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button small-button">
+                                        {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
+                                    </a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% empty %}
                         <tr>
