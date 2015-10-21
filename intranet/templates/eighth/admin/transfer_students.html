@@ -21,18 +21,19 @@
             {% if wizard.steps.prev %}
                 <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
             {% endif %}
-            {% if wizard.steps.next %}
-                <input type="submit" value="Next"/>
-            {% else %}
-                <input type="submit" value="Transfer Students"/>
-            {% endif %}
+            {% comment %}
+                {% if wizard.steps.next %}
+                    <input type="submit" value="Next"/>
+                {% else %}
+                    <input type="submit" value="Transfer Students"/>
+                {% endif %}
+            {% endcomment %}
         </form>
     {% else %}
         <p>Do you want to transfer <b>{{ num }} students</b> from:
         <p><b>{{ source_act }}</b></p>
         to:<br /><br />
         <p><b>{{ dest_act }}</b></p>
-        <br />
         <br />
         <form action="{% url 'eighth_admin_transfer_students_action' %}" method="post">
             {% csrf_token %}

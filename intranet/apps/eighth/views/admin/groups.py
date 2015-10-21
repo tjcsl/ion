@@ -412,6 +412,7 @@ def eighth_admin_signup_group_action(request, group_id):
         return redirect("eighth_admin_dashboard")
 
     return render(request, "eighth/admin/sign_up_group.html", {
+        "admin_page_title": "Confirm Group Signup",
         "scheduled_activity": scheduled_activity,
         "group": group,
         "users_num": users.count()
@@ -432,6 +433,16 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.group_id = kwargs.get('group_id', None)
+        try:
+            self.group = Group.objects.get(id=self.group_id)
+        except Group.DoesNotExist:
+            raise http.Http404
+
+        return super(EighthAdminDistributeGroupWizard,
+                     self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self, step):
         kwargs = {}
@@ -456,6 +467,8 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminDistributeGroupWizard,
                         self).get_context_data(form=form, **kwargs)
+
+        context.update({"group": self.group})
         context.update({"admin_page_title": "Distribute Group Members Among Activities"})
         return context
 

@@ -50,19 +50,18 @@
         <table>
             <tr>
                 <td>
-                    <select id="activity-select" placeholder="Select or search for an activity" autocomplete="off">
+                    <select id="activity-select" class="url-param-selector" data-param="activity" placeholder="Select or search for an activity" autocomplete="off">
                         <option value="">Select or search for an activity</option>
                         {% for a in activities %}
                             <option value="{{ a.id }}"{% if a == activity %} selected style="font-weight: bold"{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
                         {% endfor %}
                     </select>
                 </td>
+                {% if activity %}
                     <td style="vertical-align: top">
-                        <a class="button" id="schedule-activity">Schedule</a>
-                        {% if activity %}
-                                <a class="button" id="edit-activity">Edit</a>
-                        {% endif %}
+                        <a class="button" id="edit-activity">Edit Activity</a>
                     </td>
+                {% endif %}
             </tr>
         </table>
 

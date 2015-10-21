@@ -30,72 +30,72 @@
 
 {% block admin_main %}
     {% if show_selection %}
-    <form action="{% url 'eighth_admin_distribute_action' %}" method="post" onsubmit="return confirm('Are you sure you want to sign these users up for these activities?')">
-        
-        {% if users_type == "unsigned" %}
-            <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
-        {% elif users_type == "group" %}
-            <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br />
-            <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a>
+        <form action="{% url 'eighth_admin_distribute_action' %}" method="post" onsubmit="return confirm('Are you sure you want to sign these users up for these activities?')">
+            
+            {% if users_type == "unsigned" %}
+                <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
+            {% elif users_type == "group" %}
+                <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br />
+                <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a> &nbsp; 
+            {% endif %}
+            <button onclick="distribute(); return false">Evenly Distribute</button>
             <br />
-        {% endif %}
-        <button onclick="distribute(); return false">Evenly Distribute</button>
-        <br />
-        <input type="hidden" name="users" value="true" />
-        <input type="submit" value="Finish" />
-        {% csrf_token %}
-        <br />
-        Click on column titles to sort.
-        <table data-sortable class="distribute-group-grid fancy-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Student ID</th>
-                    <th>Grade</th>
+            <br />
+            <input type="hidden" name="users" value="true" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
+            <input type="submit" value="Register Users" />
+            {% csrf_token %}
+            <br />
+            Click on column titles to sort.
+            <table data-sortable class="distribute-group-grid fancy-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Grade</th>
+                        {% for sch in schacts %}
+                        <th>
+                            {{ sch.activity }}<br />
+                            {{ sch.block }}<br />
+                            <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}" />
+                        </th>
+                        {% empty %}
+                        <th>No activities found.</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                <tr class="user-row">
+                    <td>{{ user.last_name }}, {{ user.first_name }}{% if user.nickname %} ({{ user.nickname }}){% endif %}</td>
+                    <td>{{ user.student_id }}</td>
+                    <td>{{ user.grade.number }}</td>
                     {% for sch in schacts %}
-                    <th>
-                        {{ sch.activity }}<br />
-                        {{ sch.block }}<br />
-                        <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}" />
-                    </th>
-                    {% empty %}
-                    <th>No activities found.</th>
+                    <td>
+                        <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}" />
+                    </td>
                     {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-            <tr class="user-row">
-                <td>{{ user.last_name }}, {{ user.first_name }}{% if user.nickname %} ({{ user.nickname }}){% endif %}</td>
-                <td>{{ user.student_id }}</td>
-                <td>{{ user.grade.number }}</td>
-                {% for sch in schacts %}
-                <td>
-                    <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}" />
-                </td>
+                {% empty %}
+                    <td>No users found.</td>
                 {% endfor %}
-            </tr>
-            {% empty %}
-                <td>No users found.</td>
-            {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <input type="submit" value="Finish" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
+            <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false" />
     {% else %}
-    <form method="post" name="wizard">{% csrf_token %}
-        {{ wizard.management_form }}
-        <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-        <br>
-        {{ wizard.form }}
-        {% if wizard.steps.prev %}
-            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
-        {% endif %}
-        {% if wizard.steps.next %}
-            <input type="submit" value="Next"/>
-        {% else %}
-            <input type="submit" value="Distribute Group" onclick="showWaitScreen()" />
-        {% endif %}
+        <form method="post" name="wizard">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+            <p>Group: <b>{{ group }}</b></p>
+            {{ wizard.form }}
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+            {% endif %}
+            {% if wizard.steps.next %}
+                <!--input type="submit" value="Next"/-->
+            {% else %}
+                <input type="submit" value="Distribute Group" onclick="showWaitScreen()" />
+            {% endif %}
     {% endif %}
     </form>
 {% endblock %}
