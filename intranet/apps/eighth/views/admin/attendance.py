@@ -272,6 +272,7 @@ def migrate_outstanding_passes_view(request):
                                                           deleted=False))
         activity.restricted = True
         activity.sticky = True
+        activity.administrative = True
 
         if not activity.description:
             activity.description = ("Pass received from the 8th period "
