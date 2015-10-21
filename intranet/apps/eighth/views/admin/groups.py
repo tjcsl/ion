@@ -146,14 +146,32 @@ def get_user_info(key, val):
 def handle_group_input(filetext):
     logger.debug(filetext)
     lines = filetext.splitlines()
+
     return find_users_input(lines)
-    
+
 def find_users_input(lines):
     sure_users = []
     unsure_users = []
     for line in lines:
         done = False
         line = line.strip()
+
+        if "," in line:
+            parts = line.split(",")
+            if len(parts) == 3:
+                for part in parts:
+                    if len(part) == 7:
+                        # Try student ID
+                        u = User.objects.user_with_student_id(part)
+                        if u:
+                            sure_users.append([line, u])
+                            done = True
+                            break
+            else:
+                line = " ".join(parts)
+
+            if done:
+                continue
 
         # Try username, user id
         for i in ["username", "id", "student_id", "name"]:
@@ -162,6 +180,14 @@ def find_users_input(lines):
                 sure_users.append([line, r[0]])
                 done = True
                 break
+
+        if not done and " " in line:
+            # Reverse
+            new_line = " ".join(line.split(" ")[::-1])
+            r = get_user_info("name", new_line)
+            if r:
+                sure_users.append([line, r[0]])
+                done = True
 
         if not done:
             unsure_users.append([line, r])
