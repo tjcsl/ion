@@ -27,12 +27,21 @@ from ...users.models import User
 from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import EighthScheduledActivity, EighthSponsor, EighthSignup, EighthBlock
+from ..models import EighthScheduledActivity, EighthActivity, EighthSponsor, EighthSignup, EighthBlock
 
 logger = logging.getLogger(__name__)
 
 
 def should_show_activity_list(wizard):
+    if "default_activity" in wizard.request.GET:
+        act_id = wizard.request.GET["default_activity"]
+        default_activity = EighthActivity.objects.filter(id=act_id)
+        logger.debug(default_activity)
+
+        if default_activity.count() == 1:
+            wizard.default_activity = default_activity[0]
+            return False
+
     if wizard.request.user.is_eighth_admin:
         return True
 
