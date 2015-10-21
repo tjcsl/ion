@@ -20,5 +20,5 @@ class RoomForm(forms.ModelForm):
         model = EighthRoom
         fields = ["name", "capacity"]
         widgets = {
-            "capacity": forms.TextInput()
+            "capacity": forms.TextInput(attrs={'size': 4})
         }

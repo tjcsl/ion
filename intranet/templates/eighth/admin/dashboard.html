@@ -196,19 +196,6 @@
         <td class="admin-section">
             <h3>Rooms</h3>
 
-            <form id="add-room-form" action="{% url 'eighth_admin_add_room' %}" method="post" autocomplete="off">
-                <h4>Add Room</h4>
-                {% csrf_token %}
-                <table>
-                    {{ add_room_form.as_table }}
-                    <tr>
-                        <td class="right-buttons" colspan=2>
-                            <input type="submit" value="Add">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-
             <h4>Room Actions</h4>
             <select id="room-select" placeholder="Select or search for a room">
                 <option value="">Select or search for a room</option>
@@ -225,6 +212,26 @@
                 <li><a href="{% url 'eighth_admin_room_utilization_for_block' %}"><i class="fa-li fa fa-map-marker"></i>View room utilization for a specific block</a></li>
                 <li><a href="{% url 'eighth_admin_room_utilization' %}"><i class="fa-li fa fa-arrows-h"></i>View room utilization across blocks</a></li>
             </ul>
+
+
+
+            <form id="add-room-form" action="{% url 'eighth_admin_add_room' %}" method="post" autocomplete="off">
+                <h4>Add Room</h4>
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <th><label>Name:</label></th>
+                        <td>{{ add_room_form.name }}</td>
+                        <th><label>Capacity:</label></th>
+                        <td>{{ add_room_form.capacity }}</td>
+                    </tr>
+                    <tr>
+                        <td class="right-buttons" colspan=4>
+                            <input type="submit" value="Add">
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </td>
     </tr>
     <tr>
