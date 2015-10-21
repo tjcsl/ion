@@ -24,9 +24,12 @@ def add_sponsor_view(request):
         else:
             messages.error(request, "Error adding sponsor.")
             request.session["add_sponsor_form"] = pickle.dumps(form)
-            return redirect("eighth_admin_dashboard")
-    else:
-        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+    
+    context = {
+        "admin_page_title": "Add Sponsor",
+        "form": SponsorForm
+    }
+    return render(request, "eighth/admin/add_sponsor.html", context)
 
 
 @eighth_admin_required
