@@ -42,8 +42,8 @@ $(document).ready(function() {
     }
 
     $(window).resize(function() {
-        footerCheck();
+        //footerCheck();
     });
-    footerCheck();
+    //footerCheck();
 
 });
