@@ -148,11 +148,14 @@ class UserManager(UserManager):
             logger.debug("Using cached User.get_students")
             return cached
         else:
-            usernonums = User.objects.filter(username__startswith="2")
+            try:
+                users = Group.objects.get(name="Students").user_set.count()
+            except Group.DoesNotExist:
+                users = User.objects.filter(username__startswith="2")
             # Add possible exceptions handling here
             logger.debug("Set cache for User.get_students")
-            cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
-            return usernonums
+            cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
+            return users
 
 
     def get_teachers(self):
@@ -163,20 +166,20 @@ class UserManager(UserManager):
             logger.debug("Using cached User.get_teachers")
             return cached
         else:
-            usernonums = User.objects.exclude(username__startswith="2")
+            users = User.objects.exclude(username__startswith="2")
             # Add possible exceptions handling here
-            usernonums = usernonums | User.objects.filter(id=31863)
+            users = users | User.objects.filter(id=31863)
             logger.debug("Set cache for User.get_teachers")
-            cache.set(key, usernonums, timeout=settings.CACHE_AGE['users_list'])
-            return usernonums
+            cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
+            return users
 
     def get_teachers_sorted(self):
-        """Get teachers sorted by last name."""
+        """Get teachers sorted by last name. This is used for the announcement request page."""
         teachers = self.get_teachers()
         teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
         teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
-            if t[0] is None or t[0] == u"." or t[0] == ".":
+            if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011]:
                 teachers.remove(t)
         # Hack to return QuerySet in given order
         id_list = [t[2] for t in teachers]
