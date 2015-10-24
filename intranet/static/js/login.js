@@ -24,26 +24,32 @@ $(document).ready(function() {
         var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
     });
 
-    footerCheck = function() {
-        var win = $(window).height();
-        var pg = $(document).height();
+    $(".title h1").dblclick(function() {
+        var n = $("span.letter-n", $(this));
+        if(n.length == 0) {
+            $(this).html("TJ Intra<span class='letter-n'>n</span>et");
+            $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3' preload></audio>");
+            $(".title h1 .letter-n").css({"cursor": "pointer"}).click(function() {
+                document.querySelector("#tdfw").play();
+                $(".logo").addClass("flip180");
+                $(this).parent().addClass("scaleflip");
+                var e = $("input, .schedule, .footer a");
 
-        if(pg - win > 20) {
-            $(".footer").css({
-                position: "absolute",
-                top: (pg - 20)+"px"
-            });
-        } else {
-            $(".footer").css({
-                position: "fixed",
-                top: "auto"
+                var p = $(this).parent().parent();
+                var s = $("input[type=submit]");
+                p.addClass("bounce");
+
+                setTimeout(function() {
+                    e.addClass("pulse");
+                    s.removeClass("pulse").addClass("wobble");
+                    setTimeout(function() {
+                        e.removeClass("pulse");
+                        p.removeClass("bounce");
+                        s.removeClass("wobble");
+                    }, 5000)
+                }, 6000);
             });
         }
-    }
-
-    $(window).resize(function() {
-        //footerCheck();
     });
-    //footerCheck();
 
 });
