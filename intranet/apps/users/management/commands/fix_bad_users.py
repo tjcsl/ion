@@ -21,7 +21,7 @@ class Command(BaseCommand):
         self.stdout.write(", ".join([str(u) for u in bad_users]))
         self.stdout.write("Delete them?")
         raw_input("Press enter to continue, Ctrl-C to cancel..")
-        #for u in bad_users:
-        #    User.objects.get(id=u).delete()
+        for u in bad_users:
+            User.objects.get(id=u).delete()
 
         self.stdout.write("Done.")
