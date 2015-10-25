@@ -45,9 +45,11 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         if current_sched_act:
             current_signup = current_sched_act.title_with_flags
             current_signup_cancelled = current_sched_act.cancelled
+            current_signup_sticky = current_sched_act.activity.sticky
         else:
             current_signup = None
             current_signup_cancelled = False
+            current_signup_sticky = False
 
         # warning flag (red block text and signup link) if no signup today
         # cancelled flag (red activity text) if cancelled
@@ -68,6 +70,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             "block_letter": b.block_letter,
             "current_signup": current_signup,
             "current_signup_cancelled": current_signup_cancelled,
+            "current_signup_sticky": current_signup_sticky,
             "locked": b.locked,
             "date": b.date,
             "flags": flags,

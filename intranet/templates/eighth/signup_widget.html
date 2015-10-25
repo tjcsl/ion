@@ -24,7 +24,7 @@
                 {{ block.date|date:"D, N j" }}
                 {% if block.locked %}
                     {% if block.current_signup %}
-                        <span class="block-signup locked{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You have signed up for this activity.{% endif %}">
+                        <span class="block-signup locked{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You {% if block.current_signup_sticky %}are stuck to this activity. Questions? Ask 8th Pd. Office{% else %}have signed up for this activity.{% endif %}{% endif %}">
                             <i class="fa fa-lock"></i>
                             {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                         </span>
@@ -36,10 +36,14 @@
                     {% endif %}
                     <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Signups are locked.">Locked</a>
                 {% elif block.current_signup %}
-                    <span class="block-signup{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}The activity you signed up for was cancelled. Click to change.{% else %}You have signed up for this activity. Click to change.{% endif %}">
+                    <span class="block-signup{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}The activity you signed up for was cancelled. Click to change.{% else %}You {% if block.current_signup_sticky %}are stuck to this activity. Questions? Ask 8th Pd. Office{% else %}have signed up for this activity. Click to change.{% endif %}{% endif %}">
                         {% if block.current_signup_cancelled %}Cancelled - {% endif %}{{ block.current_signup }}
                     </span>
-                    <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Click to change.">Change</a>
+                    {% if block.current_signup_sticky %}
+                        <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="You are stuck to this activity. Click to view other activities.">Stickied</a>
+                    {% else %}
+                        <a href="{% url 'eighth_signup' block.id %}" class="ui-link" title="Click to change.">Change</a>
+                    {% endif %}
                 {% else %}
                     <span class="block-signup no-activity-selected{% if block.is_today %} today{% endif %}" title="You have not selected an activity. Click to change.">
                         No activity selected
