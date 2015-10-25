@@ -25,12 +25,10 @@ textarea[name=filetext] {
 {% block admin_main %}
 
 {% if stage == "upload" %}
-    <p style="width: 500px">Either upload a file or enter text in the box below containing either Student IDs (e.x. 1231234), Ion IDs (31863), or TJ usernames (2016jwoglom), separated by line breaks.</p>
-    <p>CSV files with Student IDs or only student names are also supported.</p>
+    <h3>Upload Info</h3>
+    <p style="width: 600px">Upload a file containing either Student IDs (e.x. 1231234), Ion IDs (31863), or TJ usernames (2016jwoglom), separated by line breaks. CSV files with Student IDs or only student names are also supported.</p>
     <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="file"><b>Upload File:</b></label>
-        <br /><br />
         {{ form.file }}
         <br /><br />
         <input type="submit" value="Upload" />
@@ -38,6 +36,8 @@ textarea[name=filetext] {
     <br />
     <hr />
     <br />
+    <h3>Enter Info</h3>
+    <p style="width: 600px">Enter text in the box below containing either Student IDs (e.x. 1231234), Ion IDs (31863), or TJ usernames (2016jwoglom), separated by line breaks.</p>
     <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="filetext"><b>Enter text:</b></label><br />
@@ -45,7 +45,37 @@ textarea[name=filetext] {
         <br />
         <input type="submit" value="Read Data" />
     </form>
-
+    <br />
+    <hr />
+    <br />
+    <h3>Import From Group</h3>
+    <p style="width: 500px">Select a group to import members from. This process cannot be undone.</p>
+    <form action="" method="post" autocomplete="off">
+        {% csrf_token %}
+        <select id="group-select" placeholder="Select or search for a group" name="import_group">
+            <option value="">Select or search for a group</option>
+            {% for grp in all_groups %}
+                {% if grp.id != group.id %}
+                    <option value="{{ grp.id }}">{{ grp.name }}{% if grp.properties.student_visible %} (Student-visible){% endif %}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <input type="submit" value="Import Members From Group" />
+    </form>
+{% elif stage == "import_confirm" %}
+    <p>Are you sure you want to add {{ num_users }} members of {{ import_group }}?</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="import_group" value="{{ import_group.id }}" />
+        <input type="hidden" name="import_confirm" value="true" />
+        <input type="submit" value="Import Members From Group" />
+    </form>
+    <br />
+    <ul>
+    {% for member in import_group.user_set.all %}
+        <li>{{ member.full_name }} ({{ member.student_id }})</li>
+    {% endfor %}
+    </ul>
 {% elif stage == "parse" %}
     <h3>There {% if sure_users|length == 1 %}was {{ sure_users|length }} user{% else %}were {{ sure_users|length }} users{% endif %} matched:</h3>
     Check the boxes for the users you wish to import. Click on column titles to sort.

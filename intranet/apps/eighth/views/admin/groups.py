@@ -229,16 +229,37 @@ def upload_group_members_view(request, group_id):
                     num_added += 1
             messages.success(request, "{} added to group {}".format(num_added, group))
             return redirect("eighth_admin_edit_group", group.id)
+        elif "import_group" in request.POST:
+            try:
+                import_group = Group.objects.get(id=request.POST["import_group"])
+            except Group.DoesNotExist:
+                raise http.Http404
+            num_users = import_group.user_set.count()
+            if "import_confirm" in request.POST:
+                for member in import_group.user_set.all():
+                    member.groups.add(group)
+                    member.save()
+                messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
+                return redirect("eighth_admin_edit_group", group.id)
+            return render(request, "eighth/admin/upload_group.html", {
+                "admin_page_title": "Import Group Members: {}".format(group),
+                "stage": "import_confirm",
+                "group": group,
+                "import_group": import_group,
+                "num_users": num_users
+            })
 
 
     else:
         form = UploadGroupForm()
+    all_groups = Group.objects.order_by("name")
     context = {
-        "admin_page_title": "Upload Group Info",
+        "admin_page_title": "Upload/Import Group Members: {}".format(group),
         "form": form,
         "stage": stage,
         "data": data,
-        "group": group
+        "group": group,
+        "all_groups": all_groups
     }
 
     if filetext:
