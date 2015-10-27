@@ -43,7 +43,7 @@
 
 {% block admin_main %}
 
-<form method="post" action="" class="schedule-form">
+<form method="post" action="" class="schedule-form" onkeypress="return event.keyCode != 13">
     <div class="schedule-activity-head">
         <h4>Select an Activity:</h4>
 
@@ -82,7 +82,8 @@
                     <option value="down">Down</option>
                 </select>
             </div>
-            <div class="propagate-method">
+            <div class="propagate-method" style="display: none">
+                <!-- Always uses new -->
                  <b>Propagate Method:</b>
                  <select onchange="window.updatePropagateMethod(this.value)">
                     <option value="only_new" default>New</option>
