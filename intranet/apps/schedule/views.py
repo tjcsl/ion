@@ -207,11 +207,16 @@ def admin_home_view(request):
 
     if "month" in request.GET:
         month = request.GET.get("month")
+    elif "schedule_month" in request.session:
+        month = request.session["schedule_month"]
     else:
         month = datetime.now().strftime("%Y-%m")
 
+    request.session["schedule_month"] = month
+
     firstday = datetime.strptime(month, "%Y-%m")
     month_name = firstday.strftime("%B")
+    year_name = firstday.strftime("%Y")
 
     yr, mn = month.split("-")
     cal = calendar.monthcalendar(int(yr), int(mn))
@@ -233,6 +238,7 @@ def admin_home_view(request):
 
     data = {
         "month_name": month_name,
+        "year_name": year_name,
         "sch": sch,
         "add_form": add_form,
         "this_month": this_month,
