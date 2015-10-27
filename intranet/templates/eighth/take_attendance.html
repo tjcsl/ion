@@ -119,7 +119,7 @@ $(function() {
         {% endif %}
 
         {% if wizard %}
-            <form action="" method="post">
+            <form action="" method="post" name="wizard-form">
                 {% csrf_token %}
                 {{ wizard.management_form }}
 
@@ -184,6 +184,15 @@ $(function() {
                     {% if wizard.steps.prev %}
                         <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="button">Back</a>
                     {% endif %}
+                {% endif %}
+
+
+                {% if redirect_block_id %}
+                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
+                    <script>
+                        document.forms["wizard-form"].action = '/eighth/admin/attendance';
+                        document.forms["wizard-form"].submit()
+                    </script>
                 {% endif %}
             </form>
         {% else %}

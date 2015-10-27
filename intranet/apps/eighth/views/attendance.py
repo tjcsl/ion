@@ -140,7 +140,9 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
                 context.update({"sponsored_activities": sponsored_activities})
                 logger.debug(sponsored_activities)
-
+        elif "block" in self.request.GET:
+            block_id = self.request.GET["block"]
+            context["redirect_block_id"] = block_id
 
         return context
 
