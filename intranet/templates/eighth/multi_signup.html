@@ -129,7 +129,7 @@
                     <span class="badge">ALL</span>
                 <% } else { %>
                     <% var blocks_all = ""; %>
-                    <% _.each(blocks, function(b) { blocks_all += b.id+", "; }); %>
+                    <% _.each(blocks, function(b) { blocks_all += b.short_text+", "; }); %>
                     <% blocks_all = blocks_all.substring(0, blocks_all.length-2); %>
                     <span class="badge"><%= blocks_all %></span>
                 <% } %>
@@ -222,7 +222,7 @@
             <dt>Scheduled On:</dt>
             <dd><br />
             <% _.each(blocks, function(b) { %>
-                <b><%= b.id %></b>: <%= b.date %> <%= b.block_letter %> Block<br />
+                <b><%= b.short_text %></b>: <%= b.date_text %> <%= b.block_letter %> Block<br />
             <% }); %>
             </dd>
 
@@ -273,7 +273,7 @@
 
 
 
-    <div class="primary-content eighth-signup eighth-profile-signup">
+    <div class="primary-content eighth-signup eighth-profile-signup" data-next-url="{% url 'eighth_profile' profile_user.id %}">
         {% if request.user.is_eighth_admin %}
             <div class="eighth-header">
                 {% include "eighth/admin/start_date.html" %}
@@ -296,9 +296,9 @@
             <table class="eighth-table {% if eighth_schedule %}zebra{% endif %}">
             <thead>
                 <tr>
-                    <td class="button-container" colspan="7" style="text-align: center">
+                    <td class="button-container" colspan="7">
                         {% if show_eighth_profile_link %}
-                            <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
+                            <a href="{% url 'eighth_profile' profile_user.id %}" class="button"><i class="fa fa-arrow-left"></i> Eighth Profile</a> &nbsp;
                         {% endif %}
                         <a href="/profile/{{ profile_user.id }}?full=1" class="button">View All Info</a> &nbsp;
                         {% if request.user.is_eighth_admin %}
@@ -307,14 +307,16 @@
                                 </td>
                 </tr>
                 <tr class="desc">
-                    <th colspan="999">Activities scheduled on {{ blocks|length }} blocks:</th>
+                    <th colspan="999">Showing activities scheduled on {{ blocks|length }} blocks:</th>
                 </tr>
             </thead>
             <tr>
-            {% for block in blocks %}
+            {% for s in block_signups %}
                 <td>
-                    <b>Block ID: {{ block.id }}</b><br />
-                    {{ block.date|date:'D, N j, Y' }} {{ block.block_letter }} Block
+                    <b>{{ s.block.short_text }}</b><br />
+                    {{ s.block.date|date:'D, N j, Y' }} {{ s.block.block_letter }} Block
+                    <br />
+                    <b>Signup:</b> {% if s.signup %}{{ s.signup.scheduled_activity.full_title }}{% else %}None{% endif %}
                 </td>
             {% endfor %}
             </tr>

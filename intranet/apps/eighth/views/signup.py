@@ -324,6 +324,10 @@ def eighth_multi_signup_view(request):
         status = 200
         for bid in bids:
             try:
+                btxt = EighthBlock.objects.get(id=bid).short_text
+            except EighthBlock.DoesNotExist:
+                return http.HttpResponse("{}: Block did not exist.".format(bid), status=403)
+            try:
                 scheduled_activity = (EighthScheduledActivity.objects
                                                              .exclude(activity__deleted=True)
                                                              .exclude(cancelled=True)
@@ -332,7 +336,7 @@ def eighth_multi_signup_view(request):
 
             except EighthScheduledActivity.DoesNotExist:
                 display_messages.append("{}: Activity was not scheduled "
-                                                 "for block".format(bid))
+                                                 "for block".format(btxt))
             else:
                 try:
                     success_message = scheduled_activity.add_user(user, request)
@@ -341,9 +345,9 @@ def eighth_multi_signup_view(request):
                                            not request.user.is_student)
                     resp = e.as_response(admin=show_admin_messages)
                     status = 403
-                    display_messages.append("{}: {}".format(bid, resp.content))
+                    display_messages.append("{}: {}".format(btxt, resp.content))
                 else:
-                    display_messages.append("{}: {}".format(bid, success_message))
+                    display_messages.append("{}: {}".format(btxt, success_message))
 
         return http.HttpResponse("<br />".join(display_messages), status=status)
     else:
@@ -359,25 +363,29 @@ def eighth_multi_signup_view(request):
                 return redirect("eighth_admin_dashboard")
 
         block_ids = request.GET.getlist("block")
-        blocks = []
-
-        for block_id in block_ids:
-            try:
-                block = (EighthBlock.objects
-                                    .prefetch_related("eighthscheduledactivity_set")
-                                    .get(id=block_id))
-                blocks.append(block)
-            except EighthBlock.DoesNotExist:
-                # The provided block_id is invalid
-                raise http.Http404
+        try:
+            blocks = EighthBlock.objects.select_related().filter(id__in=block_ids)
+        except EighthBlock.DoesNotExist:
+            raise http.Http404
 
         serializer_context = {
             "request": request,
             "user": user
         }
         blocks_info = []
+        block_signups = []
         activities = {}
         for block in blocks:
+            try:
+                signup = EighthSignup.objects.get(user=user, scheduled_activity__block=block)
+            except EighthSignup.DoesNotExist:
+                signup = False
+
+            block_signups.append({
+                "block": block,
+                "signup": signup
+            })
+
             block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
             blocks_info.append(block_info)
             acts = block_info["activities"]
@@ -385,7 +393,9 @@ def eighth_multi_signup_view(request):
                 info = {
                     "id": block.id,
                     "date": block.date,
-                    "block_letter": block.block_letter
+                    "date_text": block.date.strftime('%a, %b %-d, %Y'),
+                    "block_letter": block.block_letter,
+                    "short_text": block.short_text
                 }
                 if a in activities:
                     activities[a]["blocks"].append(info)
@@ -394,14 +404,14 @@ def eighth_multi_signup_view(request):
                     activities[a]["blocks"] = [info]
                     activities[a]["total_num_blocks"] = len(blocks)
 
-        logger.debug(activities)
+        #logger.debug(activities)
         context = {
             "user": user,
             "profile_user": user,
             "real_user": request.user,
-            "block_info": block_info,
             "activities_list": safe_json(activities),
             "blocks": blocks,
+            "block_signups": block_signups,
             "show_eighth_profile_link": True
         }
 

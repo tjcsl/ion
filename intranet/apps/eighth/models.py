@@ -520,6 +520,12 @@ class EighthBlock(AbstractBaseEighthModel):
         else:
             return "{} Block".format(self.block_letter)
 
+    @property
+    def short_text(self):
+        """ Display the date and block letter (mm/dd B, e.x. "9/1 B") """
+        return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
+    
+
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
         return "{} ({})".format(formatted_date, self.block_letter)
