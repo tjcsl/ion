@@ -284,23 +284,33 @@ def eighth_multi_signup_view(request):
             status = 200
             for bid in bids:
                 try:
+                    btxt = EighthBlock.objects.get(id=bid).short_text
+                except EighthBlock.DoesNotExist:
+                    return http.HttpResponse("{}: Block did not exist.".format(bid), status=403)
+                except ValueError:
+                    return http.HttpResponse("{}: Invalid block ID.".format(bid), status=403)
+
+                try:
                     eighth_signup = (EighthSignup.objects
                                                  .get(scheduled_activity__block__id=bid,
                                                       user__id=uid))
                     success_message = eighth_signup.remove_signup(request.user, force)
                 except EighthSignup.DoesNotExist:
                     status = 403
-                    display_messages.append("{}: Signup did not exist.".format(bid))
+                    display_messages.append("{}: Signup did not exist.".format(btxt))
 
                 except SignupException as e:
                     show_admin_messages = (request.user.is_eighth_admin and
                                            not request.user.is_student)
                     resp = e.as_response(admin=show_admin_messages)
                     status = 403
-                    display_messages.append("{}: {}".format(bid, resp.content))
+                    display_messages.append("{}: {}".format(btxt, resp.content))
+
+                except Exception:
+                    display_messages.append("{}: Unknown error.".format(btxt))
 
                 else:
-                    display_messages.append("{}: {}".format(bid, success_message))
+                    display_messages.append("{}: {}".format(btxt, success_message))
 
             return http.HttpResponse("\n".join(display_messages), status=status)
 
