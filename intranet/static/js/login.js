@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     $("input[type=submit]").click(function(e) {
         document.forms["auth_form"].submit();
-        $(this).val("  ").prop("disabled", "disabled");
+        $(this).addClass("load-spinner").val("  ").prop("disabled", "disabled");
         var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
     });
 
