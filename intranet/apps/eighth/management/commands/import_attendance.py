@@ -41,12 +41,15 @@ class Command(BaseCommand):
                             other_abs_su = EighthSignup.objects.create(user=usr,
                                                                        scheduled_activity=other_abs_sch,
                                                                        was_absent=True)
-                            self.stdout.write("{} Signup created: {}".format(usr, other_abs_su))
+                            self.stdout.write("{} Signup on {} created: {}".format(usr, bid,other_abs_su))
                         else:
-                            su = usr_signup[0]
-                            su.was_absent = True
-                            su.save()
-                            self.stdout.write("{} Signup modified: {}".format(usr, usr_signup[0]))
+                            s = usr_signup[0]
+                            s.was_absent = True
+                            s.save()
+                            sa = s.scheduled_activity
+                            sa.attendance_taken=True
+                            sa.save()
+                            self.stdout.write("{} Signup on {} modified: {}".format(usr, bid,usr_signup[0]))
 
 
         
