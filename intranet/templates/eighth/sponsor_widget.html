@@ -9,7 +9,7 @@
     </div>
     <div class="widget-content">
     {% for schact in sponsor_schedule %}
-        <div class="eighth-block{% if schact.block.is_today %} today{% endif %}{% if schact.activity and not schact.attendance_taken %} no-attendance{% endif %}{% if schact.has_open_passes %} open-passes{% endif %}{% if schact.activity %} clickable{% endif %}{% if schact.block.locked %} locked{% else %} unlocked{% endif %}{% if not schact.block.attendance_locked %} no-attendance-lock{% endif %}">
+        <div class="eighth-block{% if schact.block.is_today %} today{% endif %}{% if schact.activity and not schact.attendance_taken %} no-attendance{% endif %}{% if schact.has_open_passes %} open-passes{% endif %}{% if schact.activity %} clickable{% endif %}{% if schact.block.locked %} locked{% else %} unlocked{% endif %}{% if schact.block.locked and not schact.block.attendance_locked %} no-attendance-lock{% endif %}">
             <div class="block-header">
                 <span class="block-letter">
                     {{ schact.block.block_letter }}
