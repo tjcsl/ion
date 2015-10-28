@@ -1030,7 +1030,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.cancelled:
             logger.debug("Cancelling {}".format(self))
             self.cancelled = True
-
+        self.save()
+        # NOT USED. Was broken anyway.
+        """
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
         cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
         if cancelled_room not in list(self.rooms.all()):
@@ -1042,6 +1044,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.sponsors.add(cancelled_sponsor)
 
         self.save()
+        """
 
 
     def uncancel(self):
@@ -1053,7 +1056,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.cancelled:
             logger.debug("Uncancelling {}".format(self))
             self.cancelled = False
-
+        self.save()
+        # NOT USED. Was broken anyway.
+        """
         cancelled_room = EighthRoom.objects.get_or_create(name="CANCELLED", capacity=0)[0]
         cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name="", last_name="CANCELLED")[0]
         if cancelled_room in list(self.rooms.all()):
@@ -1063,6 +1068,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.sponsors.filter(id=cancelled_sponsor.id).delete()
 
         self.save()
+        """
 
     def save(self, *args, **kwargs):
         super(EighthScheduledActivity, self).save(*args, **kwargs)
