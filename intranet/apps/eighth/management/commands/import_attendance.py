@@ -43,8 +43,9 @@ class Command(BaseCommand):
                                                                        was_absent=True)
                             self.stdout.write("{} Signup created: {}".format(usr, other_abs_su))
                         else:
-                            usr_signup[0].was_absent = True
-                            usr_signup[0].save()
+                            su = usr_signup[0]
+                            su.was_absent = True
+                            su.save()
                             self.stdout.write("{} Signup modified: {}".format(usr, usr_signup[0]))
 
 

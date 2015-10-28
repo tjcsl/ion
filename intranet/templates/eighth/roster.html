@@ -48,6 +48,10 @@
         <i class="fa fa-arrow-left"></i> Sign Up
     </a>
 
+    {% if request.user.is_eighth_admin %}
+        <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button">View/Modify Attendance</a>
+    {% endif %}
+
     <h2>Roster for <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">{{ scheduled_activity.full_title }}</a> on {{ scheduled_activity.block }}:</h2>
     <dl>
         <dt>Room{{ scheduled_activity.get_true_rooms|pluralize }}:</dt>

@@ -356,7 +356,7 @@ def take_attendance_view(request, scheduled_activity_id):
                                                                       .exclude(cancelled=True))
             logger.debug(context["scheduled_activities"])
             context["blocks"] = (EighthBlock.objects
-                                            .filter(date__gte=get_start_date(request))
+                                            #.filter(date__gte=get_start_date(request))
                                             .order_by("date"))
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
