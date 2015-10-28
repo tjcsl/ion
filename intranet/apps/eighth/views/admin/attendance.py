@@ -117,6 +117,8 @@ def delinquent_students_view(request):
             return include
 
         delinquents = list(filter(filter_by_grade, delinquents))
+        # most absences at top
+        delinquents = sorted(delinquents, key=lambda x: (-1 * x["absences"], x["user"].last_name))
     else:
         delinquents = None
 

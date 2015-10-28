@@ -53,11 +53,11 @@
     <br>
     {% if delinquents != None %}
         Click on column titles to sort.
-        <table data-sortable>
+        <table data-sortable class="fancy-table">
             <thead>
                 <tr>
                     <th>Student</th>
-                    <th>Student ID</th>
+                    <th>ID</th>
                     <th>Absences</th>
                     <th>Grade</th>
                     <th>Counselor</th>
@@ -86,8 +86,8 @@
                             {{ delinquent.user.counselor.last_name }}
                         </td>
                         <td>
-                            <a href="mailto:{{ delinquent.user.username }}@tjhsst.edu">
-                                {{ delinquent.user.username }}@tjhsst.edu
+                            <a href="mailto:{{ delinquent.user.tj_email }}">
+                                {{ delinquent.user.tj_email }}
                             </a>
                         <td>
                             {% if delinquent.user.emails.0 %}

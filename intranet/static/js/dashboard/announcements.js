@@ -8,8 +8,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".announcement .announcement-toggle").click(function(e) {
-        e.preventDefault();
+    announcementToggle = function() {
         var announcement = $(this).parent().parent().parent();
         var announcementContent = $(".announcement-toggle-content", announcement);
         var icon = $(this).children(0);
@@ -37,5 +36,11 @@ $(document).ready(function() {
             }, 450);
             announcementContent.slideUp(350);
         }
+    };
+
+    $(".announcement h3").click(function(e) {
+        e.preventDefault();
+        var btn = $(".announcement-toggle", $(this));
+        announcementToggle.call(btn);
     })
 });
