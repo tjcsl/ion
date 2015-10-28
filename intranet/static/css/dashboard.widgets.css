@@ -58,12 +58,18 @@
     right: 8px;
 }
 
-/* when widget is resized next to announcements,
-   the text nearly goes over the box */
 @media (max-width: 960px) {
+
+    /* when widget is resized next to announcements,
+       the text nearly goes over the box */
     .widget.eighth-widget .info,
     .widget.sponsor-widget .info {
         font-size: 11px;
+    }
+
+    /* move buttons over a few pixels */
+    .block-header a {
+        margin-right: -4px;
     }
 }
 
@@ -177,10 +183,10 @@
 .block-signup,
 .block-sponsorship {
     position: absolute;
-    left: 126px;
+    left: 114px;
     width: 100%;
     /* "Modify" text */
-    width: calc(100% - 165px);
+    width: calc(100% - 167px);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -188,27 +194,13 @@
 
 /* Attendance Locked/Signup Unlocked */
 
-/* make room for lock/unlock icon */
-.block-signup.locked,
-.block-sponsorship.unlocked-with-icon {
-    left: 114px;
-}
-
-.eighth-block .block-sponsorship.locked {
-    left: 113px;
-}
-
-.block-sponsorship.locked > i {
-    padding-right: 2px;
-}
-
 /* "View Roster" text results in overflows */
 .eighth-block.unlocked .block-sponsorship {
     width: calc(100% - 200px);
 }
 
 .eighth-block.no-attendance.locked .block-sponsorship {
-    width: calc(100% - 192px);
+    width: calc(100% - 187px);
 }
 
 .eighth-block.no-attendance.locked .block-date,
@@ -244,11 +236,6 @@
 }
 
 /* No Act Selected */
-
-/* make sure "No activity selected" always shows */
-.eighth-block .block-signup.no-activity-selected {
-    width: calc(100% - 168px);
-}
 
 .block-signup.no-activity-selected.today {
     color: rgb(255, 72, 72); /* red */
@@ -341,7 +328,7 @@ div.eighth-block.open-passes > div.block-header > .block-letter {
     color: rgb(72,72,72);
     display: inline-block;
     line-height: 18px;
-    padding: 0 5px;
+    padding: 0 3px;
     margin: 5px 0; /*0 -4px;*/
     color: rgb(72, 72, 72);
 
@@ -382,12 +369,24 @@ a.btn-link:link, a.btn-link:visited, a.btn-link:hover, a.btn-link:active {
     color: rgb(72, 72, 72);
 }
 
-.eighth-widget span > a.btn-link {
-    width: 38px;
+.eighth-widget .block-header a.btn-link {
+    width: 37px;
+}
+
+.sponsor-widget .block-header a.btn-link {
+    width: 66px;
+}
+
+.block-header a.btn-link {
     text-align: center;
 }
 
-.sponsor-widget span > a.btn-link {
-    width: 58px;
-    text-align: center;
+.block-header i.fa-arrow-right {
+    /* make arrow take less space */
+    margin: 0 -2px 0 0;
+}
+
+.block-header i.fa-check {
+    /* make check take less space */
+    margin: 0 -3px 0 -2px;
 }

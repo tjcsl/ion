@@ -4,7 +4,7 @@
             Your Activity Schedule
         </h2>
         <div class="info">
-            <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="ui-link">View more blocks</a>
+            <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="btn-link">View more blocks</a>
         </div>
     </div>
     <div class="widget-content">
@@ -19,15 +19,15 @@
 
                     {% if schact.has_open_passes %}
                         <span class="block-sponsorship open-passes" title="You have open student passes.">
-                            <i class="fa fa-info-circle"></i>{{ schact.full_title }}
+                            {{ schact.full_title }}
                         </span>
                     {% elif schact.attendance_taken %}
                         <span class="block-sponsorship attendance-taken" title="You have taken attendance.">
-                            <i class="fa fa-check"></i>{{ schact.full_title }}
+                            {{ schact.full_title }}
                         </span>
                     {% elif schact.block.locked %}
                         <span class="block-sponsorship locked" title="You can take attendance now.">
-                            <i class="fa fa-arrow-right"></i>{{ schact.full_title }}
+                            {{ schact.full_title }}
                         </span>
                     {% elif schact.block.attendance_locked %}
                         <span class="block-sponsorship unlocked" title="This block has an attendance lock.">
@@ -38,13 +38,17 @@
                             {{ schact.full_title }}
                         </span>
                     {% endif %}
-                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take ui-link">
-                    {% if schact.attendance_taken %}
-                        Modify
+                    <a href="{% url 'eighth_take_attendance' schact.id %}" class="block-attendance-take btn-link">
+                    {% if schact.has_open_passes %}
+                        <i class="fa fa-info-circle"></i>
+                        View Pass
+                    {% elif schact.attendance_taken %}
+                        <i class="fa fa-check"></i>
+                        Attendance
                     {% elif schact.block.locked %}
+                        <i class="fa fa-arrow-right"></i>
                         Attendance
                     {% elif schact.block.attendance_locked %}
-                        <!--Locked-->
                         View Roster
                     {% else %}
                         View Roster
