@@ -335,7 +335,8 @@ def take_attendance_view(request, scheduled_activity_id):
                 "had_pass": user.id in pass_users,
                 "pass_present": (not scheduled_activity.attendance_taken and
                                  user.id in pass_users and
-                                 user.id not in absent_user_ids)
+                                 user.id not in absent_user_ids),
+                "email": user.tj_email
             })
 
         members.sort(key=lambda m: m["name"])
@@ -363,22 +364,27 @@ def take_attendance_view(request, scheduled_activity_id):
             response["Content-Disposition"] = "attachment; filename=\"attendance.csv\""
 
             writer = csv.writer(response)
-            writer.writerow(["Activity",
-                             "Block",
+            writer.writerow(["Block",
+                             "Activity",
+                             "Name",
+                             "Student ID",
+                             "Grade",
+                             "Email",
                              "Locked",
                              "Rooms",
                              "Sponsors",
                              "Attendance Taken",
                              "Present",
-                             "Had Pass",
-                             "Name",
-                             "Student ID",
-                             "Grade"])
+                             "Had Pass"])
             for member in members:
                 row = []
                 logger.debug(member)
-                row.append(str(scheduled_activity.activity))
                 row.append(str(scheduled_activity.block))
+                row.append(str(scheduled_activity.activity))
+                row.append(member["name"])
+                row.append(member["id"])
+                row.append(member["grade"])
+                row.append(member["email"])
                 row.append(scheduled_activity.block.locked)
                 rooms = scheduled_activity.get_true_rooms()
                 row.append(", ".join(["{} ({})".format(room.name, room.capacity) for room in rooms]))
@@ -388,9 +394,6 @@ def take_attendance_view(request, scheduled_activity_id):
                 row.append(member["present"] if scheduled_activity.block.locked else "N/A")
 
                 row.append(member["had_pass"] if scheduled_activity.block.locked else "N/A")
-                row.append(member["name"])
-                row.append(member["id"])
-                row.append(member["grade"])
                 writer.writerow(row)
 
             return response
