@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import os
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from ..db.ldap_db import LDAPConnection
@@ -25,8 +26,11 @@ class CheckLDAPBindMiddleware:
             #if request.user.is_eighth_admin:
             #    logger.info("Simple bind being used: staying logged in because eighth admin.")
             #    return response
-
+            response
+            messages.error(request, "LDAP Error: only obtained a simple bind. This may affect access of directory information.")
+            """
             logger.info("Simple bind being used: Destroying kerberos cache and logging out")
+
             try:
                 kerberos_cache = request.session["KRB5CCNAME"]
                 os.system("/usr/bin/kdestroy -c " + kerberos_cache)
@@ -39,5 +43,6 @@ class CheckLDAPBindMiddleware:
             response["Location"] = urls.add_get_parameters(
                 url, {"next": request.path}, percent_encode=False)
             return response
+            """
 
         return response
