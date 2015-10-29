@@ -134,7 +134,7 @@ def search_view(request):
         """
 
         if results["hits"]["total"] == 1:
-            no_other_results = (not announcements and not events and not activities)
+            no_other_results = True #(not announcements and not events and not activities)
             if request.user.is_eighthoffice or no_other_results:
                 user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
                 return redirect("user_profile", user_id=user_id)
