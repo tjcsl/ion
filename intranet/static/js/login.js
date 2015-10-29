@@ -29,23 +29,26 @@ $(document).ready(function() {
         if(n.length == 0) {
             $(this).html("TJ Intra<span class='letter-n'>n</span>et");
             $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3' preload></audio>");
-            $(".title h1 .letter-n").css({"cursor": "pointer"}).click(function() {
+            $(".title h1 .letter-n").css({"cursor": "pointer"}).dblclick(function() {
                 document.querySelector("#tdfw").play();
-                $(".logo").addClass("flip180");
-                $(this).parent().addClass("scaleflip");
                 var e = $("input, .schedule, .footer a");
-
+                var ip = $(this).parent();
                 var p = $(this).parent().parent();
                 var s = $("input[type=submit]");
                 p.addClass("bounce");
 
                 setTimeout(function() {
+
+                    $(".logo").addClass("flip180");
+                    ip.addClass("scaleflip");
                     e.addClass("pulse");
                     s.removeClass("pulse").addClass("wobble");
                     setTimeout(function() {
                         e.removeClass("pulse");
                         p.removeClass("bounce");
                         s.removeClass("wobble");
+                        $(".logo").removeClass("flip180");
+                        ip.removeClass("scaleflip");
                     }, 5000)
                 }, 6000);
             });
