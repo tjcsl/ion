@@ -197,12 +197,14 @@ def roster_view(request, scheduled_activity_id):
 
     viewable_members = scheduled_activity.get_viewable_members(request.user)
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
+    is_sponsor = scheduled_activity.user_is_sponsor(request.user)
     logger.debug(viewable_members)
     context = {
         "scheduled_activity": scheduled_activity,
         "viewable_members": viewable_members,
         "num_hidden_members": num_hidden_members,
-        "signups": signups
+        "signups": signups,
+        "is_sponsor": is_sponsor
     }
 
     return render(request, "eighth/roster.html", context)

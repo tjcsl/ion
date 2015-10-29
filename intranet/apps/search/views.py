@@ -103,7 +103,8 @@ def search_view(request):
         if is_admin:
             users = sorted(users, key=lambda u: (u["last"], u["first"]))
 
-        """ Announcements """
+        """
+        # Announcements 
         announcements_map = Announcement.es.search(q)
         announcements_ids = [a["id"] for a in announcements_map]
         announcements_all = Announcement.objects.filter(id__in=announcements_ids)
@@ -112,7 +113,7 @@ def search_view(request):
             if a.is_this_year:
                 announcements.append(a)
 
-        """ Events """
+        # Events
         events_map = Event.es.search(q)
         events_ids = [a["id"] for a in events_map]
         events_all = Event.objects.filter(id__in=events_ids)
@@ -121,7 +122,7 @@ def search_view(request):
             if e.is_this_year:
                 events.append(e)
 
-        """ Activities """
+        # Activities
         activities_map = EighthActivity.es.search(q)
         activities_ids = [a["id"] for a in activities_map]
         activities_all = EighthActivity.objects.filter(id__in=activities_ids)
@@ -130,7 +131,7 @@ def search_view(request):
         for a in activities_all:
             if (only_active and a.is_active) or not only_active:
                 activities.append(a)
-
+        """
 
         if results["hits"]["total"] == 1:
             no_other_results = (not announcements and not events and not activities)
@@ -142,9 +143,9 @@ def search_view(request):
             "query_error": query_error,
             "search_query": q,
             "search_results": users,  # Not actual user objects
-            "announcements": announcements, # Announcement objects
-            "events": events, # Event objects
-            "activities": activities # EighthActivity objects
+            #"announcements": announcements, # Announcement objects
+            #"events": events, # Event objects
+            #"activities": activities # EighthActivity objects
         }
     else:
         context = {
