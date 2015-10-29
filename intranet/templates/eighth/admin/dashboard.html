@@ -20,7 +20,6 @@
         <td class="admin-section">
             <h3>Activities</h3>
 
-            <h4>Edit/Schedule Activity</h4>
             <select id="activity-select" placeholder="Select or search for an activity">
                 <option value="">Select or search for an activity</option>
                 {% for activity in all_activities %}
@@ -32,10 +31,11 @@
                 <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_schedule_activity' %}?activity={{ url_id_placeholder }}" class="button">Schedule Activity</a>
 
                 <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_edit_activity' url_id_placeholder %}" class="button">Edit Activity</a>
+                <a class="button" href="{% url 'eighth_admin_add_activity' %}">Add Activity</a>
             </div>
 
             <ul class="fa-ul">
-                <li><a href="{% url 'eighth_admin_add_activity' %}"><i class="fa fa-li fa-plus-square"></i>Add Activity</a></li>
+                <!--<li><a href="{% url 'eighth_admin_add_activity' %}"><i class="fa fa-li fa-plus-square"></i>Add Activity</a></li>-->
                 <!--li><a href="{% url 'eighth_admin_schedule_activity' %}"><i class="fa-li fa fa-list-alt"></i>Schedule an activity</a></li-->
                 <li><a href="{% url 'eighth_admin_view_activity_schedule' %}"><i class="fa-li fa fa-calendar"></i>View when an activity is scheduled</a></li>
                 <li><a href="{% url 'eighth_admin_transfer_students' %}"><i class="fa-li fa fa-share"></i>Transfer students from one scheduled activity to another</a></li>
@@ -63,7 +63,6 @@
         <td class="admin-section">
             <h3>Groups</h3>
 
-            <h4>Group List</h4>
             <select id="group-select" placeholder="Select or search for a group">
                 <option value="">Select or search for a group</option>
                 {% for group in groups %}
@@ -112,7 +111,6 @@
         <td class="admin-section">
             <h3>Rooms</h3>
 
-            <h4>Room Actions</h4>
             <select id="room-select" placeholder="Select or search for a room">
                 <option value="">Select or search for a room</option>
                 {% for room in rooms %}
@@ -154,7 +152,6 @@
         <td class="admin-section">
             <h3>Sponsors</h3>
 
-            <h4>Sponsor Actions</h4>
             <select id="sponsor-select" placeholder="Select or search for a sponsor">
                 <option value="">Select or search for a sponsor</option>
                 {% for sponsor in sponsors %}
@@ -173,6 +170,18 @@
 
         <td class="admin-section">
             <h3>Blocks</h3>
+
+            <select id="block-select" placeholder="Select or search for a block">
+                <option value="">Select or search for a block</option>
+                {% for block in blocks_after_start_date %}
+                    <option value="{{ block.id }}">{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }}){% if block.locked %} (Locked){% endif %}</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_print_block_rosters' url_id_placeholder %}" class="button">Print Rosters</a>
+                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Edit Block</a>
+            </div>
+
             {% if blocks_next %}
                 <b>{{ blocks_next_date }}:</b>
                 <ul class="fa-ul blocks-next">
@@ -204,17 +213,6 @@
                 </ul>
             {% endif %}
 
-            <h4>Block Actions</h4>
-            <select id="block-select" placeholder="Select or search for a block">
-                <option value="">Select or search for a block</option>
-                {% for block in blocks_after_start_date %}
-                    <option value="{{ block.id }}">{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }}){% if block.locked %} (Locked){% endif %}</option>
-                {% endfor %}
-            </select>
-            <div class="right-buttons">
-                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_print_block_rosters' url_id_placeholder %}" class="button">Print Rosters</a>
-                <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Edit Block</a>
-            </div>
         </td>
         
     </tr>

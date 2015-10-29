@@ -39,8 +39,14 @@ $(document).ready(function() {
     };
 
     $(".announcement h3").click(function(e) {
-        e.preventDefault();
+        if(e.target != this) {
+            return;
+        }
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
+    });
+
+    $(".announcement h3 .announcement-toggle").click(function() {
+        announcementToggle.call($(this));
     })
 });
