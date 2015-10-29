@@ -85,7 +85,8 @@
             <tr style="{% if member.id in added_ids %}font-weight: bold;{% endif %}">
                 <td><a href="{% url 'user_profile' member.id %}">{{ member.last_name }}, {{ member.first_name }}</a></td>
                 <td>{% if member.student_id %}{{ member.student_id }}{% else %}Ion ID: {{ member.id }}{% endif %}</td>
-                <td>{% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
+                <td>{% if member.email %}
+                    <a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}</td>
                 <td>{{ member.grade }}</td>
                 <td>
                     <form action="{% url 'eighth_admin_remove_member_from_group' group.id member.id %}" method="post">

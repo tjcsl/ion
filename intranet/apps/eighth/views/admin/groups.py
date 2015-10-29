@@ -77,7 +77,7 @@ def edit_group_view(request, group_id):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "student_id": user.student_id,
-            "email": emails[0] if emails else "",
+            "email": user.tj_email if user.tj_email else emails[0] if emails else "",
             "grade": grade.number if user.grade else "Staff"
         })
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
@@ -313,7 +313,7 @@ def download_group_csv_view(request, group_id):
         grade = user.grade
         row.append(grade.number if grade else "Staff")
         emails = user.emails
-        row.append(emails[0] if emails else None)
+        row.append(user.tj_email if user.tj_email else emails[0] if emails else None)
         writer.writerow(row)
 
     return response
@@ -460,7 +460,10 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         try:
             self.group = Group.objects.get(id=self.group_id)
         except Group.DoesNotExist:
-            raise http.Http404
+            if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
+                self.group = False
+            else:
+                raise http.Http404
 
         return super(EighthAdminDistributeGroupWizard,
                      self).dispatch(request, *args, **kwargs)
@@ -488,8 +491,13 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminDistributeGroupWizard,
                         self).get_context_data(form=form, **kwargs)
+        if self.group:
+            context.update({"group": self.group})
+        
+        if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
+            context.update({"users_type": "unsigned"})
+            context.update({"group": False})
 
-        context.update({"group": self.group})
         context.update({"admin_page_title": "Distribute Group Members Among Activities"})
         return context
 
