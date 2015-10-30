@@ -352,7 +352,7 @@ def admin_daytype_view(request, id=None):
                     dayobj.save()
                 messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
 
-            messages.success(request, "Successfully added Day Type.")
+            messages.success(request, "Successfully {} Day Type.".format("modified" if id else "added"))
             return redirect("schedule_daytype", model.id)
         else:
             messages.error(request, "Error adding Day Type")
