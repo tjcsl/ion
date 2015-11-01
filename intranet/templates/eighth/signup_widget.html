@@ -18,10 +18,14 @@
     {% for block in schedule %}
         <div class="eighth-block clickable {{ block.flags }}">
             <div class="block-header">
-                <span class="block-letter">
-                    {{ block.block_letter }}
+                <span class="block-letter-date">
+                    <span class="block-letter">
+                        {{ block.block_letter }}
+                    </span>
+                    <span class="block-date">
+                        {{ block.date|date:"D, N j" }}
+                    </span>
                 </span>
-                {{ block.date|date:"D, N j" }}
                 {% if block.locked %}
                     {% if block.current_signup %}
                         <span class="block-signup locked{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}Your signup was cancelled. Questions? Ask 8th Pd. Office{% else %}You {% if block.current_signup_sticky %}are stuck to this activity. Questions? Ask 8th Pd. Office{% else %}have signed up for this activity.{% endif %}{% endif %}">
