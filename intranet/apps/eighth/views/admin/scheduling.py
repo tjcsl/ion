@@ -61,10 +61,8 @@ def schedule_activity_view(request):
                     # created and cancelled
                     if not form["scheduled"].value():
                         instance.cancelled = True
-                        instance.cancel()
                     else:
                         instance.cancelled = False
-                        instance.uncancel()
 
 
                     # If an activity has already been cancelled and the
@@ -118,12 +116,9 @@ def schedule_activity_view(request):
                         logger.debug("other_act: {}".format(other_act))
                         if other_act:
                             other_act.cancelled = True
-                            other_act.cancel()
                             other_act.save()
                     else:
                         schact.update(cancelled=True)
-                        for s in schact:
-                            s.cancel()
 
             messages.success(request, "Successfully updated schedule.")
 

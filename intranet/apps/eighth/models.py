@@ -1020,8 +1020,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return success_message
 
     def cancel(self):
-        """Cancel an EighthScheduledActivity, and update the rooms and sponsors
-        to be "CANCELLED."
+        """Cancel an EighthScheduledActivity.
+        This does nothing besides set the cancelled flag and save the object.
         """
         #super(EighthScheduledActivity, self).save(*args, **kwargs)
 
@@ -1048,11 +1048,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
 
     def uncancel(self):
-        """Uncancel an EighthScheduledActivity, by removing the "CANCELLED" rooms
-        and sponsors.
+        """Uncancel an EighthScheduledActivity.
+        This does nothing besides unset the cancelled flag and save the object.
         """
 
-        logger.debug("Running uncancel hooks: {}".format(self))
         if self.cancelled:
             logger.debug("Uncancelling {}".format(self))
             self.cancelled = False
