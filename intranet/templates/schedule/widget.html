@@ -16,7 +16,7 @@
     </div>
     <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
         {% if sched_ctx.dayobj.day_type.name %}
-            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name }}</h2>
+            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name|safe }}</h2>
         {% endif %}
         {% if sched_ctx.dayobj %}
             <table class="bellschedule-table">
@@ -42,7 +42,7 @@
         <div class="schedule-admin">
             {% if sched_ctx.schedule_tomorrow %}
                 <span title="{{ sched_ctx.date_tomorrow }}">
-                    Tomorrow: <span class="day-name {{ sched_ctx.schedule_tomorrow.day_type.class_name }}">{{ sched_ctx.schedule_tomorrow.day_type.name }}</span>
+                    Tomorrow: <span class="day-name {{ sched_ctx.schedule_tomorrow.day_type.class_name }}">{{ sched_ctx.schedule_tomorrow.day_type.name|safe }}</span>
                 </span>
             {% else %}
                 <span style="color: red" title="{{ sched_ctx.date_tomorrow"><i class="fa fa-exclamation-triangle"></i> No schedule tomorrow</b>
