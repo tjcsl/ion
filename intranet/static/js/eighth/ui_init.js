@@ -44,6 +44,7 @@ $(function() {
         valueField: "id",
         labelField: "description",
         searchField: "description",
+        sortField: "description",
         options: window.all_rooms,
         load: function(query, callback) {
             callback(window.all_rooms);
@@ -55,6 +56,7 @@ $(function() {
         valueField: "id",
         labelField: "full_name",
         searchField: "full_name",
+        sortField: "full_name",
         options: window.all_sponsors,
         load: function(query, callback) {
             callback(window.all_sponsors);
