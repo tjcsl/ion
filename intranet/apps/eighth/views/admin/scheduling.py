@@ -76,6 +76,7 @@ def schedule_activity_view(request):
                         count = instance.eighthsignup_set.count()
                         logger.debug("Unschedule {} - signups {}".format(name, count))
                         bb_ok = True
+                        sibling = False
                         if activity.both_blocks:
                             sibling = instance.get_both_blocks_sibling()
                             if sibling:
