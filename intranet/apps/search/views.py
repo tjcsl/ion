@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from intranet.db.ldap_db import LDAPConnection
 from ..announcements.models import Announcement
 from ..events.models import Event
 from ..eighth.models import EighthActivity
@@ -16,72 +17,59 @@ from ..users.views import profile_view
 logger = logging.getLogger(__name__)
 
 
+def do_ldap_query(q):
+    c = LDAPConnection()
+    result_dns = []
+
+    if q.isdigit():
+        query = "(&(|(tjhsstStudentId={0})(iodineUidNumber={0}))(objectClass=*))".format(q)
+        res = c.search(settings.USER_DN, query, [])
+        for row in res:
+            dn = row[0]
+            result_dns.append(dn)
+    else:
+        parts = q.split(" ")
+
+        i = 0
+        for p in parts:
+            query = ("(&(|(givenName=*{0})"
+                         "(givenName={0}*)"
+                         "(sn=*{0})"
+                         "(sn={0}*)"
+                         "(iodineUid=*{0})"
+                         "(iodineUid={0}*)"
+                         "(mname=*{0})"
+                         "(mname={0}*)"
+                         "(nickname=*{0})"
+                         "(nickname={0}*)"
+                         ")(objectClass=*))".format(p))
+
+            res = c.search(settings.USER_DN, query, [])
+            new_dns = []
+            for row in res:
+                dn = row[0]
+                if i == 0:
+                    new_dns.append(dn)
+                elif dn in result_dns:    
+                    new_dns.append(dn)
+
+            result_dns = new_dns
+            i += 1
+
+    users = []
+    for dn in result_dns:
+        user = User.get_user(dn=dn)
+        users.append(user)
+
+    return users
+    
+
 def get_search_results(q):
     query_error = False
-    es = elasticsearch.Elasticsearch()
+    
+    users = do_ldap_query(q)
 
-    # Convert "[123 to 345]" to "[123 TO 345]"
-    q = re.sub(r'\[(\d+|\*) +([Tt][Oo]) +(\d+|\*)\]', r'[\1 TO \3]', q.rstrip())
-
-    q = re.compile(' and ', re.IGNORECASE).sub(' && ', q)
-    q = re.compile(' or ', re.IGNORECASE).sub(' || ', q)
-    q = re.compile('not ', re.IGNORECASE).sub(' !', q)
-
-    def search(query):
-        return es.search(index="ion", body=query, size=99999)
-
-    query = {
-        "query": {
-            "multi_match": {
-                "query": q,
-                "fields": [
-                    "ion_id",
-                    "ion_username",
-                    "graduation_year",
-                    "common_name"
-                ],
-                "type": "phrase_prefix",
-                "lenient": True
-            }
-        }
-    }
-
-    results = search(query)
-    # logger.debug(results)
-
-    if results["hits"]["total"] == 0:
-        fuzzy_like_this_query = {
-            "query": {
-                "fuzzy_like_this": {
-                    "like_text": q,
-                    "fuzziness": 0.8
-                }
-            }
-        }
-        if re.match(r"^[A-Za-z0-9 ]+$", q):
-            query = fuzzy_like_this_query
-            results = search(query)
-        else:
-            query = {
-                "query": {
-                    "query_string": {
-                        "query": q,
-                        "lenient": True,
-                        "allow_leading_wildcard": False
-                    }
-                }
-            }
-            try:
-                results = search(query)
-            except Exception as e:
-                logger.debug(e)
-                query_error = True
-                query = fuzzy_like_this_query
-                results = search(query)
-
-    logger.debug(query)
-    return query_error, results
-
+    return False, users
 
 @login_required
 def search_view(request):
@@ -96,12 +84,10 @@ def search_view(request):
             if u is not None:
                 return profile_view(request, user_id=u.id)
 
-        query_error, results = get_search_results(q)
-
-        users = [r["_source"] for r in results["hits"]["hits"]]
+        query_error, users = get_search_results(q)
 
         if is_admin:
-            users = sorted(users, key=lambda u: (u["last"], u["first"]))
+            users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
         """
         # Announcements 
@@ -133,10 +119,10 @@ def search_view(request):
                 activities.append(a)
         """
 
-        if results["hits"]["total"] == 1:
+        if len(users) == 1:
             no_other_results = True #(not announcements and not events and not activities)
             if request.user.is_eighthoffice or no_other_results:
-                user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
+                user_id = users[0].id
                 return redirect("user_profile", user_id=user_id)
 
         context = {
