@@ -113,7 +113,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        #"APP_DIRS": True,
+        "APP_DIRS": True,
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
             "context_processors": (
@@ -126,12 +126,13 @@ TEMPLATES = [
                 "intranet.apps.eighth.context_processors.absence_count",
                 "intranet.apps.context_processors.mobile_app"
             ),
-            "debug": True,  # Only enabled if DEBUG is true as well
+            "debug": True  # Only enabled if DEBUG is true as well
         }
     },
 ]
 
 MIDDLEWARE_CLASSES = [
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -141,12 +142,11 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
     "intranet.middleware.access_log.AccessLogMiddleWare",
-    "intranet.middleware.traceback.UserTracebackMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "intranet.middleware.traceback.UserTracebackMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
@@ -340,7 +340,7 @@ LOGGING = {
             "delay": True
         },
         "error_log": {
-            "level": "ERROR",
+            "level": "DEBUG",
             "filters": ["require_debug_false"],
             "class": "logging.FileHandler",
             "formatter": "access",
