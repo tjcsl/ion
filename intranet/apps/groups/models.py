@@ -19,7 +19,6 @@ class GroupManager(auth_models.GroupManager):
 
         return Group.objects.filter(id__in=group_ids)
 
-
 class Group(auth_models.Group):
     """ This Group model is really just the default Django
         django.contrib.auth.models.Group, but with a "properties"
@@ -46,8 +45,11 @@ class Group(auth_models.Group):
 
     @property
     def properties(self):
-        obj, created = GroupProperties.objects.get_or_create(group=self)
-        return obj
+        if self.groupproperties:
+            return self.groupproperties
+        else:
+            obj, created = GroupProperties.objects.get_or_create(group=self)
+            return obj
 
     class Meta:
         proxy = True
