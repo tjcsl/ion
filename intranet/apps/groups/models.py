@@ -45,11 +45,12 @@ class Group(auth_models.Group):
 
     @property
     def properties(self):
-        if self.groupproperties:
-            return self.groupproperties
-        else:
-            obj, created = GroupProperties.objects.get_or_create(group=self)
-            return obj
+        try:
+            props = self.groupproperties
+        except GroupProperties.DoesNotExist:
+            props, created = GroupProperties.objects.get_or_create(group=self)
+        
+        return props
 
     class Meta:
         proxy = True
