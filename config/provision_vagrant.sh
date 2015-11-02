@@ -25,6 +25,7 @@ apt-get -y install python-pip
 pip install virtualenv
 pip install virtualenvwrapper
 apt-get -y install python-dev
+apt-get -y install libjpeg8-dev
 
 # LDAP
 apt-get -y install ldap-utils
