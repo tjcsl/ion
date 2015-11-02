@@ -127,12 +127,6 @@ TEMPLATES = [
                 "intranet.apps.context_processors.mobile_app"
             ),
             "debug": True,  # Only enabled if DEBUG is true as well
-            "loaders": [
-                ("django.template.loaders.cached.Loader", [
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                ]),
-            ]
         }
     },
 ]
