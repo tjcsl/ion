@@ -235,3 +235,7 @@ def forcemigrate(app=None):
 def inspect_decorators():
     """Inspect decorators in views."""
     local("grep -r 'def .*(request' intranet/apps/ -B1 | less")
+
+def generate_docs():
+    """Build Sphinx documentation."""
+    local("sphinx-build -W -b html docs/source docs/build")

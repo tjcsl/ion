@@ -43,6 +43,10 @@ Developing for Intranet
 - :doc:`Workflow<developing/workflow>`
 - :doc:`Coding Style Guide<developing/styleguide>`
 
+Using Intranet as a Developer
+-----------------------------
+- `API Root <https://ion.tjhsst.edu/api/>`_
+- `API Demo <https://www.tjhsst.edu/~2016jwoglom/ion-api-demo.html>`_
 
 Source Code Documentation
 -------------------------
