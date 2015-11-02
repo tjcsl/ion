@@ -113,7 +113,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "APP_DIRS": True,
+        #"APP_DIRS": True,
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
             "context_processors": (
@@ -126,7 +126,13 @@ TEMPLATES = [
                 "intranet.apps.eighth.context_processors.absence_count",
                 "intranet.apps.context_processors.mobile_app"
             ),
-            "debug": True  # Only enabled if DEBUG is true as well
+            "debug": True,  # Only enabled if DEBUG is true as well
+            "loaders": [
+                ("django.template.loaders.cached.Loader", [
+                    "django.template.loaders.filesystem.Loader",
+                    "django.template.loaders.app_directories.Loader",
+                ]),
+            ]
         }
     },
 ]
@@ -294,10 +300,10 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
     "formatters": {
-        # "verbose": {
-        #     "format": "%(levelname)s %(asctime)s %(module)s"
-        #               "%(process)d %(thread)d %(message)s"
-        # },
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s"
+                      "%(process)d %(thread)d %(message)s"
+        },
         "simple": {
             "format": "%(levelname)s: %(message)s"
         },
@@ -342,11 +348,17 @@ LOGGING = {
             "formatter": "access",
             "filename": "/var/log/ion/app_auth.log",
             "delay": True
-        }
+        },
+        "gunicorn": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": "/var/log/ion/gunicorn_errors.log"
+        },
     },
     "loggers": {
         "django.request": {
-            "handlers": ["mail_admins"],
+            "handlers": ["mail_admins", "gunicorn"],
             "level": "ERROR",
             "propagate": True,
         },
@@ -364,6 +376,11 @@ LOGGING = {
             "handlers": ["console_access"] + (["auth_log"] if (PRODUCTION and not TRAVIS) else []),
             "level": "DEBUG",
             "propagate": False
+        },
+        "gunicorn.errors": {
+            "handlers": ["gunicorn"],
+            "level": "DEBUG",
+            "propagate": True
         }
     }
 }

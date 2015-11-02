@@ -65,3 +65,5 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG.update({
         "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
     })
+
+# MIDDLEWARE_CLASSES += ('intranet.middleware.profiler.ProfileMiddleware',)
