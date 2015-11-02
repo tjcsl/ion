@@ -51,12 +51,6 @@ Load the activities fixtures.
 
     $ ./manage.py loaddata fixtures/eighth/activities.json
 
-IMPORTANT!! Imported activities will have no "AID" field, so you must run:
-
-.. code-block:: bash
-
-    $ ./manage.py fix_aids
-
 Load the scheduled activities fixtures.
 Note: this takes around 3 minutes to import, much longer than the previous fixtures.
 
