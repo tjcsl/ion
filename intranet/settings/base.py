@@ -133,6 +133,7 @@ TEMPLATES = [
 
 MIDDLEWARE_CLASSES = [
     "intranet.middleware.url_slashes.FixSlashes",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -274,6 +275,7 @@ INSTALLED_APPS = (
     "intranet.middleware.environment",
     "widget_tweaks",
     "django_extensions",
+    "corsheaders"
 )
 
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
@@ -409,6 +411,12 @@ if SHOW_DEBUG_TOOLBAR:
 
 
 MAINTENANCE_MODE = False
+
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?://)?(\w+\.)?tjhsst\.edu$'
+)
+
+CORS_URLS_REGEX = r'^/api/.*$'
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
