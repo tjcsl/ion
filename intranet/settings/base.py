@@ -133,7 +133,6 @@ TEMPLATES = [
 
 MIDDLEWARE_CLASSES = [
     "intranet.middleware.url_slashes.FixSlashes",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -146,7 +145,8 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",
     "intranet.middleware.access_log.AccessLogMiddleWare",
-    "intranet.middleware.traceback.UserTracebackMiddleware"
+    "intranet.middleware.traceback.UserTracebackMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
@@ -412,6 +412,7 @@ if SHOW_DEBUG_TOOLBAR:
 
 MAINTENANCE_MODE = False
 
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?(\w+\.)?tjhsst\.edu$'
 )
