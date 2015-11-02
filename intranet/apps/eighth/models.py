@@ -292,7 +292,8 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
     def change_id_to(self, new_id):
         """ Changes the internal ID field.
             Possible solution: https://djangosnippets.org/snippets/2691/ """
-        EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
+        # EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
+        pass
 
     def get_active_schedulings(self):
         """Return EighthScheduledActivity's of this activity

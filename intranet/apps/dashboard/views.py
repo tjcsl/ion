@@ -105,6 +105,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+                                                            .select_related("block")
                                                             .filter(block__in=surrounding_blocks))
     sponsoring_block_map = {}
     for sa in activities_sponsoring:

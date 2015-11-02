@@ -28,7 +28,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
 
     def fetch_scheduled_on(self, act):
         scheduled_on = {}
-        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act)
+        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block")
 
         user = self.context.get("user", self.context["request"].user)
         favorited_activities = set(user.favorited_activity_set
