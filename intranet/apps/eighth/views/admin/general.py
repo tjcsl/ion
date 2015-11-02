@@ -27,7 +27,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
     else:
         blocks_next_date = blocks_after_start_date[0].date
         blocks_next = EighthBlock.objects.filter(date=blocks_next_date)
-    groups = Group.objects.order_by("name")
+    groups = Group.objects.prefetch_related("user_set", "groupproperties").order_by("name")
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.select_related('user').order_by("last_name", "first_name")
 
