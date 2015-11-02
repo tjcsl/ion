@@ -154,12 +154,60 @@ def delinquent_students_view(request):
             row.append(delinquent["user"].grade.number)
             counselor = delinquent["user"].counselor
             row.append(counselor.last_name if counselor else "")
-            row.append("{}@tjhsst.edu".format(delinquent["user"].username))
+            row.append("{}".format(delinquent["user"].tj_email))
             row.append(delinquent["user"].emails[0] if delinquent["user"].emails and len(delinquent["user"].emails) > 0 else "")
             writer.writerow(row)
 
         return response
 
+@eighth_admin_required
+def no_signups_roster(request, block_id):
+    try:
+        block = EighthBlock.objects.get(id=block_id)
+    except EighthBlock.DoesNotExist:
+        raise http.Http404
+
+    unsigned = block.get_unsigned_students()
+    unsigned = sorted(unsigned, key=lambda u: (u.last_name, u.first_name))
+
+    if request.resolver_match.url_name == "eighth_admin_no_signups_roster":
+        context = {
+            "eighthblock": block,
+            "users": unsigned,
+
+            "admin_page_title": "No Signups Roster"
+        }
+
+        return render(request, "eighth/admin/no_signups_roster.html", context)
+    else:
+        response = http.HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"no_signups_roster.csv\""
+        writer = csv.writer(response)
+        writer.writerow(["Block ID",
+                         "Block Date",
+                         "Last Name",
+                         "First Name",
+                         "Student ID",
+                         "Grade",
+                         "Counselor",
+                         "TJ Email",
+                         "Other Email"])
+
+        for user in unsigned:
+            row = []
+            row.append("{}".format(block.id))
+            row.append("{}".format(block))
+            row.append(user.last_name)
+            row.append(user.first_name)
+            row.append(user.student_id)
+            row.append(user.grade.number)
+            counselor = user.counselor
+            row.append(counselor.last_name if counselor else "")
+            row.append("{}".format(user.tj_email))
+            row.append(user.emails[0] if user.emails and len(user.emails) > 0 else "")
+            writer.writerow(row)
+
+        return response
 
 @eighth_admin_required
 def after_deadline_signup_view(request):

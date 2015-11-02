@@ -202,7 +202,10 @@
                                 <i class="fa-li fa fa-exclamation-triangle"></i>
                                 <b>{{ blk.block_letter }} Block:</b></a> 
                             <b>Unlocked; close time set to {{ blk.signup_time }}</b>
-                        {% endif %} &mdash; {{ blk.num_signups }} signup{{ blk.num_signups|pluralize }}
+                        {% endif %} &mdash; 
+                        <a href="{% url 'eighth_admin_no_signups_roster' blk.id %}">
+                            <b>{{ blk.num_signups }}</b>/{{ signup_users_count }} signup{{ blk.num_signups|pluralize }}
+                        </a>
                     </li>
                 {% endfor %}
                     <li><a href="{% url 'eighth_admin_add_block' %}"><i class="fa-li fa fa-list-alt"></i>Add or remove blocks</a></li>

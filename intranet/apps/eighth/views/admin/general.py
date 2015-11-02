@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
+from ....users.models import User
 from ...forms.admin import (
     activities as activity_forms, blocks as block_forms, groups as group_forms,
     rooms as room_forms, sponsors as sponsor_forms, general as general_forms)
@@ -31,6 +32,8 @@ def eighth_admin_dashboard_view(request, **kwargs):
     rooms = EighthRoom.objects.all()
     sponsors = EighthSponsor.objects.select_related('user').order_by("last_name", "first_name")
 
+    signup_users_count = User.objects.get_students().count()
+
     context = {
         "start_date": start_date,
         "all_activities": all_activities,
@@ -40,6 +43,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "sponsors": sponsors,
         "blocks_next": blocks_next,
         "blocks_next_date": blocks_next_date,
+        "signup_users_count": signup_users_count,
 
         "admin_page_title": "Eighth Period Admin",
 

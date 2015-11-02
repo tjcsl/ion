@@ -491,9 +491,22 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminDistributeGroupWizard,
                         self).get_context_data(form=form, **kwargs)
+
+        block = self.get_cleaned_data_for_step("block")
+
         if self.group:
             context.update({"group": self.group})
+        elif block:
+            unsigned = block["block"].get_unsigned_students()
+            context.update({
+                "users": unsigned,
+                "eighthblock": block["block"]
+            })
         
+        if "block" in self.request.GET:
+            block_id = self.request.GET["block"]
+            context["redirect_block_id"] = block_id
+
         if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
             context.update({"users_type": "unsigned"})
             context.update({"group": False})

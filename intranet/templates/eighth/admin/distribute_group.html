@@ -86,7 +86,14 @@
         <form method="post" name="wizard">{% csrf_token %}
             {{ wizard.management_form }}
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-            <p>Group: <b>{{ group }}</b></p>
+            {% if group %}
+                <p>Group: <b>{{ group }}</b></p>
+            {% elif eighthblock %}
+                <p>{% if users %}{{ users|length }} user{{ users|length|pluralize }}{% else %} 0 users{% endif %} have not signed up for any activities on {{ eighthblock }}.</p>
+            {% else %}
+                <p>Users who have not signed up for an activity</p>
+            {% endif %}
+
             {{ wizard.form }}
             {% if wizard.steps.prev %}
                 <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
@@ -96,6 +103,14 @@
             {% else %}
                 <input type="submit" value="Distribute Group" onclick="showWaitScreen()" />
             {% endif %}
+
+            {% if redirect_block_id %}
+                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
+                    <script>
+                        document.forms["wizard"].action = location.href.split("?")[0];
+                        document.forms["wizard"].submit()
+                    </script>
+                {% endif %}
     {% endif %}
     </form>
 {% endblock %}

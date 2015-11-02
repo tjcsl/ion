@@ -511,6 +511,10 @@ class EighthBlock(AbstractBaseEighthModel):
         """ How many people have signed up?"""
         return EighthSignup.objects.filter(scheduled_activity__block=self).count()
 
+    def get_unsigned_students(self):
+        """ Return a list of Users who haven't signed up for an activity. """
+        return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
+
     @property
     def letter_width(self):
         return (len(self.block_letter) - 1) * 6 + 15

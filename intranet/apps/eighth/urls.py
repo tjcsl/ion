@@ -79,6 +79,8 @@ eighth_admin_patterns = [
     url(r"^attendance/clear_absences/(?P<signup_id>\d+)$", admin_attendance.clear_absence_view, name="eighth_admin_clear_absence"),
     url(r"^attendance/open_passes$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes"),
     url(r"^attendance/open_passes/csv$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes_csv"),
+    url(r"^attendance/no_signups/(?P<block_id>\d+)$", admin_attendance.no_signups_roster, name="eighth_admin_no_signups_roster"),
+    url(r"^attendance/no_signups/csv/(?P<block_id>\d+)$", admin_attendance.no_signups_roster, name="eighth_admin_no_signups_csv"),
 
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
