@@ -372,7 +372,7 @@ LOGGING = {
             "propagate": False
         },
         "gunicorn.errors": {
-            "handlers": ["gunicorn"],
+            "handlers": ["console_access"] + (["gunicorn"] if (PRODUCTION and not TRAVIS) else []),
             "level": "DEBUG",
             "propagate": True
         }
