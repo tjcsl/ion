@@ -33,12 +33,12 @@ from ..groups.models import Group
                             address="tj03.local.tjhsst.edu",
                             directory="/R/",
                             windows=True)
-        
+
         Host.objects.create(name="Windows Root",
                             code="win",
                             address="tj03.local.tjhsst.edu",
                             windows=True)
-        
+
 """
 
 

@@ -28,7 +28,7 @@ def log_auth(request, success):
     else:
         ip = request.META.get("REMOTE_ADDR", "")
 
-    if type(ip) == set:
+    if isinstance(ip, set):
         ip = ip[0]
 
     username = request.POST.get("username", "unknown")

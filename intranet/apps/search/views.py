@@ -91,7 +91,7 @@ def search_view(request):
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
         """
-        # Announcements 
+        # Announcements
         announcements_map = Announcement.es.search(q)
         announcements_ids = [a["id"] for a in announcements_map]
         announcements_all = Announcement.objects.filter(id__in=announcements_ids)

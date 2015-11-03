@@ -73,12 +73,12 @@ class ProfileMiddleware(object):
                 sum += time
                 file = fields[6].split(":")[0]
 
-                if not file in mystats:
+                if file not in mystats:
                     mystats[file] = 0
                 mystats[file] += time
 
                 group = self.get_group(file)
-                if not group in mygroups:
+                if group not in mygroups:
                     mygroups[group] = 0
                 mygroups[group] += time
 

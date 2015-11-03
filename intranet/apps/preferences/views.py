@@ -95,7 +95,7 @@ def save_personal_info(request, user):
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
                             except Exception as e:
                                 messages.error(request, "Field {}: {}".format(field, e))
                     else:
@@ -116,7 +116,7 @@ def save_personal_info(request, user):
                     messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                     logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                 else:
-                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if type(field_vals) != list else ", ".join(field_vals)))
+                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
     return personal_info_form
 
 
@@ -155,7 +155,7 @@ def save_preferred_pic(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
     return preferred_pic_form
 
 
@@ -203,7 +203,7 @@ def save_privacy_options(request, user):
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -237,7 +237,7 @@ def save_notification_options(request, user):
                                                                notification_options[field] if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
-                    messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
+                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
     return notification_options_form
 
 

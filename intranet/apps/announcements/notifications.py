@@ -27,7 +27,7 @@ def request_announcement_email(request, form, obj):
 
     logger.debug(form.data)
     teacher_ids = form.data["teachers_requested"]
-    if type(teacher_ids) != list:
+    if not isinstance(teacher_ids, list):
         teacher_ids = [teacher_ids]
     logger.debug(teacher_ids)
     teachers = User.objects.filter(id__in=teacher_ids)

@@ -45,7 +45,7 @@ class SignupException(Exception):
 
     def __setattr__(self, name, value):
         if name in SignupException._messages:
-            if type(value) == list:
+            if isinstance(value, list):
                 self.errors.add(name)
                 self.desc_errors[name] = value
             elif value:

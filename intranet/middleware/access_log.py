@@ -17,7 +17,7 @@ class AccessLogMiddleWare(object):
         else:
             ip = request.META.get("REMOTE_ADDR", ""),
 
-        if type(ip) == set:
+        if isinstance(ip, set):
             ip = ip[0]
 
         log_line = "{} - {} - [{}] \"{}\" \"{}\"".format(
