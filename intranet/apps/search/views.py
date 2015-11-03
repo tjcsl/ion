@@ -11,41 +11,153 @@ from intranet.db.ldap_db import LDAPConnection
 from ..announcements.models import Announcement
 from ..events.models import Event
 from ..eighth.models import EighthActivity
-from ..users.models import User
+from ..users.models import User, Grade
 from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
 
 
-def do_ldap_query(q):
+def do_ldap_query(q, admin=False):
     c = LDAPConnection()
     result_dns = []
 
+    # If only a digit, search for student ID and user ID
     if q.isdigit():
-        query = "(&(|(tjhsstStudentId={0})(iodineUidNumber={0}))(objectClass=*))".format(q)
+        query = ("(&(|(tjhsstStudentId={0})"
+                     "(iodineUidNumber={0})"
+                     ")(objectClass=*))").format(q)
+        
+        logger.debug("Running LDAP query: {}".format(query))
+
         res = c.search(settings.USER_DN, query, [])
         for row in res:
             dn = row[0]
             result_dns.append(dn)
+    elif ":" in q:
+        # A mapping between search keys and LDAP entires
+        map_attrs = {
+            "firstname": ("givenname", "nickname",),
+            "first": ("givenname", "nickname",),
+            "lastname": ("sn",),
+            "last": ("sn",),
+            "nick": ("nickname",),
+            "name": ("sn", "mname", "givenname", "nickname",),
+            "city": ("l",),
+            "town": ("l",),
+            "middlename": ("mname",),
+            "middle": ("mname",),
+            "phone": ("homephone", "mobile",),
+            "homephone": ("homephone",),
+            "cell": ("mobile",),
+            "address": ("street",),
+            "zip": ("postalcode",),
+            "grade": ("graduationYear",),
+            "gradyear": ("graduationYear",),
+            "email": ("mail",),
+            "studentid": ("tjhsstStudentId",),
+            "sex": ("sex",),
+            "gender": ("sex",)
+        }
+
+        inner = ""
+        parts = q.split(" ")
+        # split each word
+        for p in parts:
+            # Check for less than/greater than, and replace =
+            sep = "="
+            if ":" in p:
+                cat, val = p.split(":")
+            elif "=" in p:
+                cat, val = p.split("=")
+            elif "<" in p:
+                cat, val = p.split("<")
+                sep = "<="
+            elif ">" in p:
+                cat, val = p.split(">")
+                sep = ">="
+            else:
+                # Fall back on regular searching (there's no key)
+
+                # Wildcards are already implied at the start and end
+                if p.endswith("*"):
+                    p = p[:-1]
+                if p.startswith("*"):
+                    p = p[1:]
+
+                if len(p) == 0:
+                    continue
+
+                inner += (("(|(givenName=*{0})"
+                           "(givenName={0}*)"
+                           "(sn=*{0})"
+                           "(sn={0}*)"
+                           "(iodineUid=*{0})"
+                           "(iodineUid={0}*)") +
+                          ("(mname=*{0})"
+                           "(mname={0}*)" if admin else "") +
+                          ("(nickname=*{0})"
+                           "(nickname={0}*)"
+                           ")")).format(p)
+
+                continue # skip rest of processing
+
+            cat = cat.lower()
+            val = val.lower()
+
+            # fix grade, because LDAP only stores graduation year
+            if cat == "grade" and val.isdigit():
+                val = "{}".format(Grade.year_from_grade(int(val)))
+
+            # if an invalid key, ignore
+            if cat not in map_attrs:
+                continue
+
+            attrs = map_attrs[cat]
+
+            inner += "(|"
+            # for each of the possible LDAP fields, add to the search query
+            for attr in attrs:
+                inner += "({}{}{})".format(attr, sep, val)
+            inner += ")"
+        
+        query = "(&{}(objectClass=*))".format(inner)
+
+        logger.debug("Running LDAP query: {}".format(query))
+
+        res = c.search(settings.USER_DN, query, [])
+        for row in res:
+            dn = row[0]
+            result_dns.append(dn)
+
     else:
         parts = q.split(" ")
-
+        # split on each word
         i = 0
         for p in parts:
-            query = ("(&(|(givenName=*{0})"
-                     "(givenName={0}*)"
-                     "(sn=*{0})"
-                     "(sn={0}*)"
-                     "(iodineUid=*{0})"
-                     "(iodineUid={0}*)"
-                     "(mname=*{0})"
-                     "(mname={0}*)"
-                     "(nickname=*{0})"
-                     "(nickname={0}*)"
-                     ")(objectClass=*))".format(p))
+            if p.endswith("*"):
+                p = p[:-1]
+            if p.startswith("*"):
+                p = p[1:]
+
+            # Search for first, last, middle, nickname uid, with implied
+            # wildcard at beginning and end
+            query = (("(&(|(givenName=*{0})"
+                          "(givenName={0}*)"
+                          "(sn=*{0})"
+                          "(sn={0}*)"
+                          "(iodineUid=*{0})"
+                          "(iodineUid={0}*)") +
+                         ("(mname=*{0})"
+                          "(mname={0}*)" if admin else "") +
+                         ("(nickname=*{0})"
+                          "(nickname={0}*)"
+                          ")(objectClass=*))")).format(p)
+
+            logger.debug("Running LDAP query: {}".format(query))
 
             res = c.search(settings.USER_DN, query, [])
             new_dns = []
+            # if multiple words, delete those that weren't in previous searches
             for row in res:
                 dn = row[0]
                 if i == 0:
@@ -56,6 +168,7 @@ def do_ldap_query(q):
             result_dns = new_dns
             i += 1
 
+    # loop through the DNs saved and get actual user objects
     users = []
     for dn in result_dns:
         user = User.get_user(dn=dn)
@@ -64,18 +177,16 @@ def do_ldap_query(q):
     return users
 
 
-def get_search_results(q):
+def get_search_results(q, admin=False):
     query_error = False
-
-    users = do_ldap_query(q)
-
+    users = do_ldap_query(q, admin)
     return False, users
 
 
 @login_required
 def search_view(request):
     q = request.GET.get("q", "").strip()
-    is_admin = (not request.user.is_student and request.user.is_eighth_admin)
+    is_admin = (not request.user.is_student and request.user.is_eighthoffice)
 
     if q:
         """ User search """
@@ -85,7 +196,7 @@ def search_view(request):
             if u is not None:
                 return profile_view(request, user_id=u.id)
 
-        query_error, users = get_search_results(q)
+        query_error, users = get_search_results(q, request.user.is_eighthoffice)
 
         if is_admin:
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))

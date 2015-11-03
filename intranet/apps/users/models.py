@@ -1740,6 +1740,26 @@ class Grade(object):
             return "Grade {}".format(self._number)
         else:
             return self._name
+    
+    @classmethod
+    def grade_from_year(cls, graduation_year):
+        today = datetime.now()
+        if today.month >= 7:
+            current_senior_year = today.year + 1
+        else:
+            current_senior_year = today.year
+
+        return current_senior_year - graduation_year + 12
+
+    @classmethod
+    def year_from_grade(cls, grade):
+        today = datetime.now()
+        if today.month >= 7:
+            current_senior_year = today.year + 1
+        else:
+            current_senior_year = today.year
+
+        return current_senior_year + 12 - grade
 
     def __int__(self):
         """Return the grade as a number (9-12)."""
