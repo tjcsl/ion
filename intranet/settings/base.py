@@ -197,29 +197,31 @@ CACHES = {
     },
 }
 
+if not TRAVIS:
+    CACHEOPS_REDIS = {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "db": 1,
+        "socket_timeout": 1
+    }
 
-CACHEOPS_REDIS = {
-    "host": "127.0.0.1",
-    "port": 6379,
-    "db": 1,
-    "socket_timeout": 1
-}
+    CACHEOPS_DEGRADE_ON_FAILURE = True
 
-CACHEOPS_DEFAULTS = {
-    "ops": "all",
-    "timeout": 24*60*60
-}
+    CACHEOPS_DEFAULTS = {
+        "ops": "all",
+        "timeout": 24*60*60
+    }
 
-CACHEOPS = {
-    "eighth.*": {
-        "timeout": 60*60
-    },
-    "announcements.*": {},
-    "events.*": {},
-    "groups.*": {},
-    "users.*": {},
-    "auth.*": {}
-}
+    CACHEOPS = {
+        "eighth.*": {
+            "timeout": 60*60
+        },
+        "announcements.*": {},
+        "events.*": {},
+        "groups.*": {},
+        "users.*": {},
+        "auth.*": {}
+    }
 
 
 # LDAP configuration
