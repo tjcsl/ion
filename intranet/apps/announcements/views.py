@@ -25,6 +25,7 @@ from .notifications import (email_send, request_announcement_email,
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def view_announcements(request):
     """ Show the dashboard with only announcements.
@@ -38,6 +39,7 @@ def view_announcements_archive(request):
         showing expired posts.
     """
     return dashboard_view(request, show_widgets=False, show_expired=True)
+
 
 def announcement_posted_hook(request, obj):
     """
@@ -63,6 +65,7 @@ def announcement_posted_hook(request, obj):
             announcement_posted_email(request, obj)
     else:
         logger.debug("Announcement notify off")
+
 
 def announcement_approved_hook(request, obj, req):
     """
@@ -116,6 +119,7 @@ def request_announcement_view(request):
         form = AnnouncementRequestForm()
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
 
+
 @login_required
 def approve_announcement_view(request, req_id):
     """
@@ -157,7 +161,7 @@ def approve_announcement_view(request, req_id):
                 obj.save()
                 messages.success(request, "You did not approve this request.")
                 return redirect("index")
-    
+
     form = AnnouncementRequestForm(instance=req)
     context = {
         "form": form,
@@ -165,6 +169,7 @@ def approve_announcement_view(request, req_id):
         "admin_approve": False
     }
     return render(request, "announcements/approve.html", context)
+
 
 @announcements_admin_required
 def admin_approve_announcement_view(request, req_id):
@@ -216,7 +221,7 @@ def admin_approve_announcement_view(request, req_id):
                 req.save()
                 messages.success(request, "You did not approve this request. It will be hidden.")
                 return redirect("index")
-    
+
     form = AnnouncementRequestForm(instance=req)
     all_groups = Group.objects.all()
     context = {
@@ -252,6 +257,7 @@ def add_announcement_view(request):
         form = AnnouncementForm()
     return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
 
+
 @login_required
 def view_announcement_view(request, id):
     """
@@ -263,6 +269,7 @@ def view_announcement_view(request, id):
     announcement = get_object_or_404(Announcement, id=id)
 
     return render(request, "announcements/view.html", {"announcement": announcement})
+
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
@@ -315,6 +322,7 @@ def delete_announcement_view(request, id):
         announcement = get_object_or_404(Announcement, id=id)
         return render(request, "announcements/delete.html", {"announcement": announcement})
 
+
 @login_required
 def show_announcement_view(request):
     """
@@ -334,6 +342,7 @@ def show_announcement_view(request):
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
+
 @login_required
 def hide_announcement_view(request):
     """
@@ -352,4 +361,3 @@ def hide_announcement_view(request):
         return http.Http404()
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
-

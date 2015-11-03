@@ -7,7 +7,8 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.views import exception_handler
 from rest_framework.response import Response
-from ..eighth import exceptions as eighth_exceptions 
+from ..eighth import exceptions as eighth_exceptions
+
 
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
@@ -25,4 +26,3 @@ def custom_exception_handler(exc, context):
         response = Response({'details': ['Unknown error occurred.']}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return response
-

@@ -17,6 +17,7 @@ from ..serializers import EighthBlockDetailSerializer
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)

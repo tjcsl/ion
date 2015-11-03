@@ -19,6 +19,7 @@ class GroupManager(auth_models.GroupManager):
 
         return Group.objects.filter(id__in=group_ids)
 
+
 class Group(auth_models.Group):
     """ This Group model is really just the default Django
         django.contrib.auth.models.Group, but with a "properties"
@@ -49,7 +50,7 @@ class Group(auth_models.Group):
             props = self.groupproperties
         except GroupProperties.DoesNotExist:
             props, created = GroupProperties.objects.get_or_create(group=self)
-        
+
         return props
 
     class Meta:
@@ -70,8 +71,6 @@ class GroupProperties(models.Model):
     """
     group = models.OneToOneField(Group)
     student_visible = models.BooleanField(default=False)
-
-
 
     def __unicode__(self):
         return "{}".format(self.group)

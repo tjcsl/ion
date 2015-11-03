@@ -175,6 +175,7 @@ def eighth_signup_view(request, block_id=None):
 
         return render(request, "eighth/signup.html", context)
 
+
 @login_required
 def eighth_display_view(request, block_id=None):
     if block_id is None:
@@ -346,7 +347,7 @@ def eighth_multi_signup_view(request):
 
             except EighthScheduledActivity.DoesNotExist:
                 display_messages.append("{}: Activity was not scheduled "
-                                                 "for block".format(btxt))
+                                        "for block".format(btxt))
             else:
                 try:
                     success_message = scheduled_activity.add_user(user, request)
@@ -414,7 +415,7 @@ def eighth_multi_signup_view(request):
                     activities[a]["blocks"] = [info]
                     activities[a]["total_num_blocks"] = len(blocks)
 
-        #logger.debug(activities)
+        # logger.debug(activities)
         context = {
             "user": user,
             "profile_user": user,
@@ -426,6 +427,7 @@ def eighth_multi_signup_view(request):
         }
 
         return render(request, "eighth/multi_signup.html", context)
+
 
 @login_required
 def toggle_favorite_view(request):

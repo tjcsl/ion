@@ -19,5 +19,6 @@ class GroupForm(forms.ModelForm):
         model = Group
         fields = ["name", "student_visible"]
 
+
 class UploadGroupForm(forms.Form):
     file = forms.FileField()

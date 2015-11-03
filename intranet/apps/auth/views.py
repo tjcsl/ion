@@ -21,6 +21,7 @@ from django.views.decorators.debug import sensitive_variables, sensitive_post_pa
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
 
+
 def log_auth(request, success):
     if "HTTP_X_FORWARDED_FOR" in request.META:
         ip = request.META["HTTP_X_FORWARDED_FOR"]
@@ -42,6 +43,7 @@ def log_auth(request, success):
     )
 
     auth_logger.info(log_line)
+
 
 def get_bg_pattern():
     """
@@ -68,6 +70,7 @@ def get_bg_pattern():
     file_path = "img/patterns/"
 
     return static(file_path + random.choice(files))
+
 
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
@@ -100,7 +103,7 @@ class login_view(View):
 
         """Before September 1st, do not allow Class of [year+4] to log in."""
         if (request.POST.get("username", "").startswith(str(date.today().year + 4)) and
-            date.today().month < 9):
+                date.today().month < 9):
             return index_view(request, added_context={
                 "auth_message": "Your account is not yet active for use with this application."
             })
@@ -131,12 +134,11 @@ class login_view(View):
                     "auth_message": "Your account is disabled."
                 })
 
-
             if request.user.startpage == "eighth":
                 """Default to eighth admin view (for eighthoffice)."""
                 default_next_page = "eighth_admin_dashboard"
 
-            #if request.user.is_eighthoffice:
+            # if request.user.is_eighthoffice:
             #    """Eighthoffice's session should (almost) never expire."""
             #    request.session.set_expiry(timezone.now() + timedelta(days=30))
 
@@ -149,7 +151,7 @@ class login_view(View):
                 if request.user.is_student or request.user.is_teacher:
                     default_next_page = "welcome"
                 else:
-                    pass # exclude eighth office/special accounts
+                    pass  # exclude eighth office/special accounts
 
             next_page = request.GET.get("next", default_next_page)
             return redirect(next_page)
@@ -163,9 +165,11 @@ class login_view(View):
         """Redirect to the login page."""
         return index_view(request, force_login=True)
 
+
 def about_view(request):
     """Show an about page with credits."""
     return render(request, "auth/about.html")
+
 
 def do_logout(request):
     """Clear the Kerberos cache and logout."""
@@ -177,6 +181,7 @@ def do_logout(request):
 
     logger.info("Destroying kerberos cache and logging out")
     logout(request)
+
 
 def logout_view(request):
     """Clear the Kerberos cache and logout."""

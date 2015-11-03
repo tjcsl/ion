@@ -44,4 +44,4 @@ if settings.SHOW_DEBUG_TOOLBAR:
 
 handler404 = handle_404_view
 handler500 = handle_500_view
-handler503 = handle_503_view # maintenance mode
+handler503 = handle_503_view  # maintenance mode

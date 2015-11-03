@@ -9,6 +9,7 @@ from .models import EighthBlock, EighthSignup
 
 logger = logging.getLogger(__name__)
 
+
 def signup_status_email(user, next_blocks):
     em = user.emails[0] if user.emails and len(user.emails) >= 1 else user.tj_email
     if em:
@@ -49,7 +50,7 @@ def signup_status_email(user, next_blocks):
 
     # We can't build an absolute URI because this isn't being executed
     # in the context of a Django request
-    base_url = "https://ion.tjhsst.edu/" #request.build_absolute_uri(reverse('index'))
+    base_url = "https://ion.tjhsst.edu/"  # request.build_absolute_uri(reverse('index'))
     data = {
         "user": user,
         "blocks": blocks,

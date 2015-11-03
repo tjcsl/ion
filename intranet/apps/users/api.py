@@ -8,6 +8,7 @@ from intranet.apps.search.views import get_search_results
 from .models import User, Class
 from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
 
+
 class ProfileDetail(generics.RetrieveAPIView):
     """API endpoint that retrieves an Ion profile
 
@@ -26,17 +27,19 @@ class ProfileDetail(generics.RetrieveAPIView):
         serializer = self.get_serializer(user)
         return Response(serializer.data)
 
+
 class ClassDetail(generics.RetrieveAPIView):
     """API endpoint that retrieves details of a TJHSST class
     """
     serializer_class = ClassSerializer
     permission_classes = (IsAuthenticated,)
-    
+
     def retrieve(self, request, *args, **kwargs):
         cl = Class(id=kwargs['pk'])
 
         serializer = self.get_serializer(cl)
         return Response(serializer.data)
+
 
 class Search(generics.RetrieveAPIView):
     """API endpoint that retrieves the results of a search for Ion users
@@ -65,4 +68,3 @@ class Search(generics.RetrieveAPIView):
                 response.append(CounselorTeacherSerializer(user, context={'request': request}).data)
 
         return self.get_paginated_response(response)
-

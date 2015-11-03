@@ -11,6 +11,7 @@ from datetime import datetime
 from ..notifications.emails import email_send
 from intranet import settings
 
+
 def event_approval_request(request, event):
     subject = "Event Approval Request from {}".format(event.user)
     emails = [settings.APPROVAL_EMAIL]
@@ -21,7 +22,6 @@ def event_approval_request(request, event):
         "info_link": request.build_absolute_uri(reverse("event", args=[event.id])),
         "base_url": base_url
     }
-
 
     email_send("events/emails/admin_approve.txt",
                "events/emails/admin_approve.html",

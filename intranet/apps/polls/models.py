@@ -98,7 +98,7 @@ class Answer_Votes(models.Model):  # record of total selection of a given answer
     users = models.ManyToManyField(User)
     choice = models.ForeignKey(Choice)
     votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
-    is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers 
+    is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers
 
     def __unicode__(self):
         return self.choice

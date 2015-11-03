@@ -9,6 +9,7 @@ from django import template
 register = template.Library()
 logger = logging.getLogger(__name__)
 
+
 @register.filter(expects_localtime=True)
 def fuzzy_time(time):
     """Formats a :class:`datetime.time` object relative to the current time
@@ -16,6 +17,7 @@ def fuzzy_time(time):
     d = datetime_date.today()
     dt = datetime.combine(d, time)
     return fuzzy_date(dt)
+
 
 @register.filter(expects_localtime=True)
 def fuzzy_date(date):

@@ -17,6 +17,7 @@ from .forms import DayTypeForm, DayForm
 logger = logging.getLogger(__name__)
 schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous() and u.has_admin_permission("schedule"))
 
+
 def date_format(date):
     try:
         d = date.strftime("%Y-%m-%d")
@@ -107,26 +108,33 @@ def schedule_context(request=None, date=None):
         return data
 
 # does NOT require login
+
+
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
 
 # does NOT require login
+
+
 def schedule_embed(request):
     data = schedule_context(request)
     return render(request, "schedule/embed.html", data)
 
 # DOES require login
+
+
 @login_required
 def schedule_widget_view(request):
     data = schedule_context(request)
     return render(request, "schedule/widget.html", data)
 
+
 def get_day_data(firstday, daynum):
     if daynum == 0:
         return {"empty": True}
 
-    date = firstday + timedelta(days=daynum-1)
+    date = firstday + timedelta(days=daynum - 1)
     data = {
         "day": daynum,
         "formatted_date": date_format(date),
@@ -142,6 +150,7 @@ def get_day_data(firstday, daynum):
         data["dayobj"] = None
 
     return data
+
 
 @schedule_admin_required
 def do_default_fill(request):
@@ -190,9 +199,11 @@ def do_default_fill(request):
                     msgs.append(msg)
     return render(request, "schedule/fill.html", {"msgs": msgs})
 
+
 def delete_cache():
     cache.delete_pattern("bell_schedule:*")
     logger.debug("Deleted bell schedule cache.")
+
 
 @schedule_admin_required
 def admin_home_view(request):
@@ -203,7 +214,6 @@ def admin_home_view(request):
         delete_cache()
         messages.success(request, "Deleted schedule cache manually")
         return redirect("schedule_admin")
-
 
     if "month" in request.GET:
         month = request.GET.get("month")
@@ -229,11 +239,10 @@ def admin_home_view(request):
 
     add_form = DayForm()
 
-
     this_month = firstday.strftime("%Y-%m")
     next_month = (firstday + timedelta(days=31)).strftime("%Y-%m")
     last_month = (firstday + timedelta(days=-31)).strftime("%Y-%m")
-    
+
     daytypes = DayType.objects.all()
 
     data = {
@@ -248,6 +257,7 @@ def admin_home_view(request):
     }
 
     return render(request, "schedule/admin_home.html", data)
+
 
 @schedule_admin_required
 def admin_add_view(request):
@@ -272,6 +282,7 @@ def admin_add_view(request):
         "form": form
     }
     return render(request, "schedule/admin_add.html", context)
+
 
 @schedule_admin_required
 def admin_daytype_view(request, id=None):
@@ -317,8 +328,8 @@ def admin_daytype_view(request, id=None):
             blocks = zip(
                 request.POST.getlist('block_order'),
                 request.POST.getlist('block_name'),
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9,0] for i in request.POST.getlist('block_start')],
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10,0] for i in request.POST.getlist('block_end')]
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist('block_start')],
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist('block_end')]
             )
             logger.debug(blocks)
             model.blocks.all().delete()
@@ -333,10 +344,10 @@ def admin_daytype_view(request, id=None):
                     minute=blk[3][1]
                 )
                 bobj, bcr = Block.objects.get_or_create(
-                        order=blk[0],
-                        name=blk[1],
-                        start=start,
-                        end=end
+                    order=blk[0],
+                    name=blk[1],
+                    start=start,
+                    end=end
                 )
                 model.blocks.add(bobj)
             model.save()

@@ -160,6 +160,7 @@ def delinquent_students_view(request):
 
         return response
 
+
 @eighth_admin_required
 def no_signups_roster(request, block_id):
     try:
@@ -208,6 +209,7 @@ def no_signups_roster(request, block_id):
             writer.writerow(row)
 
         return response
+
 
 @eighth_admin_required
 def after_deadline_signup_view(request):
@@ -300,7 +302,7 @@ def activities_without_attendance_view(request):
         scheduled_activities = (block.eighthscheduledactivity_set
                                      .filter(block__date__gte=start_date,
                                              attendance_taken=False)
-                                     .order_by("-activity__special", "activity__name")) # float special to top
+                                     .order_by("-activity__special", "activity__name"))  # float special to top
 
         context["scheduled_activities"] = scheduled_activities
 

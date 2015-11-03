@@ -33,5 +33,4 @@ class Command(BaseCommand):
                 u.save()
             self.stdout.write("{}: Processed".format(gr))
 
-
         self.stdout.write("Done.")

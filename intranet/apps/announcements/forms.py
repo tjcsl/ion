@@ -6,6 +6,7 @@ from .models import Announcement, AnnouncementRequest
 from ..users.models import User
 from ..users.forms import SortedTeacherMultipleChoiceField
 
+
 class AnnouncementForm(forms.ModelForm):
     """
     A form for generating an announcement.
@@ -26,6 +27,7 @@ class AnnouncementForm(forms.ModelForm):
 
     expiration_date = forms.DateTimeInput()
     notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
+
     class Meta:
         model = Announcement
         fields = [

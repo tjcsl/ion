@@ -87,6 +87,7 @@ def edit_activity_view(request, activity_id):
 
     return render(request, "eighth/admin/edit_activity.html", context)
 
+
 @eighth_admin_required
 def edit_activity_id(request, activity_id):
     raise http.Http404
@@ -118,6 +119,7 @@ def edit_activity_id(request, activity_id):
         "available_ids": EighthActivity.available_ids()
     }
     return render(request, "eighth/admin/edit_activity_id.html", context)
+
 
 @eighth_admin_required
 def delete_activity_view(request, activity_id=None):

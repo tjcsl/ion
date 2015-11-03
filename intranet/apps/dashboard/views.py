@@ -224,7 +224,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         # Only show announcements for groups that the user is enrolled in.
         if show_expired:
             announcements = (Announcement.objects
-                                     .visible_to_user(user))
+                             .visible_to_user(user))
         else:
             announcements = (Announcement.objects
                                          .visible_to_user(user)
@@ -284,7 +284,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "is_teacher": is_teacher,
         "is_senior": is_senior
     }
-
 
     if show_widgets:
         if is_student or eighth_sponsor:

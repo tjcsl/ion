@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def nav_categorizer(request):
     """Determine which top-level nav category (left nav) a request
     falls under
@@ -28,6 +29,7 @@ def nav_categorizer(request):
             return {"nav_category": category}
 
     return {"nav_category": ""}
+
 
 def mobile_app(request):
     """Determine if the site is being displayed in a WebView from
@@ -59,7 +61,7 @@ def mobile_app(request):
             else:
                 rand = ncfg.android_gcm_rand
             ncfg.android_gcm_time = datetime.now()
-            
+
             logger.debug("GCM random token generated: {}".format(rand))
             ncfg.save()
             ctx["android_client_rand"] = rand

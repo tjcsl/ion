@@ -13,6 +13,7 @@ from .forms import FeedbackForm
 
 logger = logging.getLogger(__name__)
 
+
 def send_feedback_email(request, data):
     comments = data["comments"]
     data["user"] = request.user
@@ -24,6 +25,7 @@ def send_feedback_email(request, data):
         "Reply-To": "{}; {}".format(email, settings.FEEDBACK_EMAIL)
     }
     email_send("feedback/email.txt", "feedback/email.html", data, "Feedback from {}".format(request.user), [settings.FEEDBACK_EMAIL], headers)
+
 
 @login_required
 def send_feedback_view(request):

@@ -46,7 +46,7 @@ def request_announcement_email(request, form, obj):
         "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
         "base_url": base_url
     }
-    email_send("announcements/emails/teacher_approve.txt", 
+    email_send("announcements/emails/teacher_approve.txt",
                "announcements/emails/teacher_approve.html",
                data, subject, emails)
 
@@ -69,9 +69,10 @@ def admin_request_announcement_email(request, form, obj):
         "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
         "base_url": base_url
     }
-    email_send("announcements/emails/admin_approve.txt", 
+    email_send("announcements/emails/admin_approve.txt",
                "announcements/emails/admin_approve.html",
                data, subject, emails)
+
 
 def announcement_approved_email(request, obj, req):
     """
@@ -86,7 +87,6 @@ def announcement_approved_email(request, obj, req):
 
     """ Email to teachers who approved. """
     teachers = req.teachers_approved.all()
-    
 
     teacher_emails = []
     for u in teachers:
@@ -128,8 +128,6 @@ def announcement_approved_email(request, obj, req):
         messages.success(request, "Sent teacher approved email to {} users".format(len(submitter_emails)))
 
 
-
-
 def announcement_posted_email(request, obj, send_all=False):
     """
         Send a notification posted email
@@ -163,7 +161,6 @@ def announcement_posted_email(request, obj, send_all=False):
                     if em:
                         emails.append(em)
                     users_send.append(u)
-
 
         logger.debug(users_send)
         logger.debug(emails)
@@ -225,9 +222,9 @@ def notify_twitter(status):
         return False
 
     auth = OAuth1(cfg["consumer_key"],
-                 cfg["consumer_secret"],
-                 cfg["access_token_key"],
-                 cfg["access_token_secret"])
+                  cfg["consumer_secret"],
+                  cfg["access_token_key"],
+                  cfg["access_token_secret"])
 
     data = {
         "status": status

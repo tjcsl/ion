@@ -32,8 +32,8 @@ ADMINS = (
 FEEDBACK_EMAIL = "intranet+feedback@lists.tjhsst.edu"
 APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 
-FILES_MAX_UPLOAD_SIZE = 200*1024*1024
-FILES_MAX_DOWNLOAD_SIZE = 200*1024*1024
+FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
+FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
 CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 
@@ -203,7 +203,7 @@ CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
 LDAP_REALM = "CSL.TJHSST.EDU"
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
-KINIT_TIMEOUT = 15 # seconds for pexpect
+KINIT_TIMEOUT = 15  # seconds for pexpect
 
 AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
 # AUTHUSER_PASSWORD
@@ -399,7 +399,6 @@ if SHOW_DEBUG_TOOLBAR:
         "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]
     }
 
-
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
     MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:-1] + [
@@ -422,6 +421,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 )
 
 CORS_URLS_REGEX = r'^/api/.*$'
+
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
@@ -458,4 +458,4 @@ GIT = {
 
 SENIOR_GRADUATION = "June 18 2016 19:00:00"
 SENIOR_GRADUATION_YEAR = 2016
-ATTENDANCE_LOCK_HOUR = 20 # 10PM
+ATTENDANCE_LOCK_HOUR = 20  # 10PM

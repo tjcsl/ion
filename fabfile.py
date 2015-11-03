@@ -69,10 +69,10 @@ def runserver(port=8080,
                    WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(),
                    LOG_LEVEL=log_level):
         local("./manage.py runserver{} 0.0.0.0:{}{}".format(
-                "_plus" if werkzeug.lower() == "yes" else "",
-                port,
-                " --insecure" if insecure.lower() == "yes" else ""
-            )
+            "_plus" if werkzeug.lower() == "yes" else "",
+            port,
+            " --insecure" if insecure.lower() == "yes" else ""
+        )
         )
 
 
@@ -232,9 +232,11 @@ def forcemigrate(app=None):
     local("./manage.py migrate {} --fake".format(app))
     local("./manage.py migrate {}".format(app))
 
+
 def inspect_decorators():
     """Inspect decorators in views."""
     local("grep -r 'def .*(request' intranet/apps/ -B1 | less")
+
 
 def generate_docs():
     """Build Sphinx documentation."""

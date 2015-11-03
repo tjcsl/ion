@@ -85,6 +85,7 @@ def edit_profile_view(request, user_id=None):
     }
     return render(request, "eighth/edit_profile.html", context)
 
+
 def get_profile_context(request, user_id=None, date=None):
     if user_id:
         try:
@@ -155,9 +156,9 @@ def get_profile_context(request, user_id=None, date=None):
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
         eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                                   .filter(block__date__gte=start_date)
-                                                                   .order_by("block__date",
-                                                                             "block__block_letter"))
+                                   .filter(block__date__gte=start_date)
+                                   .order_by("block__date",
+                                             "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
         logger.debug("Eighth sponsor {}".format(sponsor))
@@ -166,6 +167,7 @@ def get_profile_context(request, user_id=None, date=None):
 
     return context
 
+
 @login_required
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
@@ -173,6 +175,7 @@ def profile_view(request, user_id=None):
         return render(request, "eighth/profile.html", context)
     else:
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
+
 
 @login_required
 def profile_signup_view(request, user_id=None, block_id=None):

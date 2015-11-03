@@ -139,4 +139,3 @@ class Command(BaseCommand):
         self.stdout.write("Indexing activities..")
         EighthActivity.es.create_index()
         EighthActivity.es.reindex_all()
-

@@ -55,7 +55,6 @@ class UserManager(UserManager):
             return User.get_user(dn=results[0][0])
         return None
 
-
     def users_in_year(self, year):
         """ Get a list of users in a specific graduation year. """
         c = LDAPConnection()
@@ -85,11 +84,10 @@ class UserManager(UserManager):
         """Get a unique user object by given name (first/nickname and last)."""
         c = LDAPConnection()
 
-
         if sn and not given_name:
             results = c.search(settings.USER_DN,
-                           "sn={}".format(sn),
-                           ["dn"])
+                               "sn={}".format(sn),
+                               ["dn"])
         elif given_name:
             query = ["givenName={}".format(given_name)]
             if sn:
@@ -97,7 +95,7 @@ class UserManager(UserManager):
             results = c.search(settings.USER_DN,
                                self._ldap_and_string(query),
                                ["dn"])
-        
+
             if len(results) == 0:
                 # Try their first name as a nickname
                 query[0] = "nickname={}".format(given_name)
@@ -116,23 +114,22 @@ class UserManager(UserManager):
 
         month = int(month)
         if month < 10:
-            month = "0"+str(month)
+            month = "0" + str(month)
 
         day = int(day)
         if day < 10:
-            day = "0"+str(day)
+            day = "0" + str(day)
 
         search_query = "birthday=*{}{}".format(month, day)
         results = c.search(settings.USER_DN,
-                        search_query,
-                        ["dn"])
+                           search_query,
+                           ["dn"])
 
         users = []
         for res in results:
             u = User.get_user(dn=res[0])
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
-
 
         return users
 
@@ -156,7 +153,6 @@ class UserManager(UserManager):
             logger.debug("Set cache for User.get_students")
             cache.set(key, users, timeout=settings.CACHE_AGE['users_list'])
             return users
-
 
     def get_teachers(self):
         """Get user objects that are teachers (quickly)."""
@@ -188,7 +184,6 @@ class UserManager(UserManager):
         queryset = User.objects.filter(id__in=id_list).extra(
             select={'ordering': ordering}, order_by=('ordering',))
         return queryset
-
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -423,13 +418,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         return display_name
 
     property
+
     def last_first(self):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
         """
         return ("{}, {} ".format(self.last_name, self.first_name) +
-               ("({})".format(self.nickname) if self.nickname else ""))
-
+                ("({})".format(self.nickname) if self.nickname else ""))
 
     @property
     def last_first_id(self):
@@ -437,8 +432,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
         return ("{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "") +
-               ("({}) ".format(self.nickname) if self.nickname else "") +
-               ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
+                ("({}) ".format(self.nickname) if self.nickname else "") +
+                ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
 
     @property
     def last_first_initial(self):
@@ -446,7 +441,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Lastname, F [(Nickname)]
         """
         return ("{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") +
-               ("({}) ".format(self.nickname) if self.nickname else ""))
+                ("({}) ".format(self.nickname) if self.nickname else ""))
 
     @property
     def short_name(self):
@@ -716,7 +711,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return int((date - b).days / 365)
 
         return None
-    
 
     def photo_binary(self, photo_year):
         """Returns the binary data for a user's picture.
@@ -892,10 +886,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return (self.permissions["self"]["showeighth"] if (
-                    self.permissions and
-                    "self" in self.permissions and
-                    "showeighth" in self.permissions["self"]
-                ) else False)
+            self.permissions and
+            "self" in self.permissions and
+            "showeighth" in self.permissions["self"]
+        ) else False)
 
     @property
     def is_eighth_admin(self):
@@ -1531,8 +1525,7 @@ class Class(object):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        return list(zip(*ordered_schedule)[1]) # The class objects
-    
+        return list(zip(*ordered_schedule)[1])  # The class objects
 
     def __getattr__(self, name):
         """Return simple attributes of Class
@@ -1621,6 +1614,7 @@ class Class(object):
     def __unicode__(self):
         return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
 
+
 class ClassSections(object):
     """Represents a list of tjhsstClass LDAP objects.
 
@@ -1664,6 +1658,7 @@ class ClassSections(object):
             classes.append(c)
 
         return classes
+
 
 class Address(object):
 
@@ -1723,7 +1718,6 @@ class Grade(object):
         if self._number is None:
             self._number = 13
 
-
     @property
     def number(self):
         """Return the grade as a number (9-12).
@@ -1746,7 +1740,6 @@ class Grade(object):
             return "Grade {}".format(self._number)
         else:
             return self._name
-    
 
     def __int__(self):
         """Return the grade as a number (9-12)."""

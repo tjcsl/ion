@@ -13,6 +13,7 @@ def handle_503_view(request):
     # maintenance mode
     return render(request, "error/503.html", status=503)
 
+
 def handle_csrf_view(request, reason):
     # CSRF failure view
     return render(request, "error/csrf.html", {

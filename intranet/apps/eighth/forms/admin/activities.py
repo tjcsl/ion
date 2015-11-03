@@ -10,13 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 class ActivityDisplayField(forms.ModelChoiceField):
+
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.aid, obj.name)
 
 
 class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
+
     def label_from_instance(self, obj):
         return "{}: {}".format(obj.aid, obj.name)
+
 
 class ActivitySelectionForm(forms.Form):
 
@@ -50,7 +53,6 @@ class ActivitySelectionForm(forms.Form):
                                           .all()
                                           .order_by("name"))
 
-
         self.fields["activity"] = ActivityDisplayField(queryset=queryset,
                                                        label=label,
                                                        empty_label="Select an activity")
@@ -61,6 +63,7 @@ class QuickActivityForm(forms.ModelForm):
     class Meta:
         model = EighthActivity
         fields = ["name"]
+
 
 class ActivityMultiSelectForm(forms.Form):
     activities = ActivityMultiDisplayField(queryset=None)

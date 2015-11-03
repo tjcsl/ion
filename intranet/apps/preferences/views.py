@@ -45,6 +45,7 @@ def get_personal_info(user):
 
     return personal_info, num_fields
 
+
 def save_personal_info(request, user):
     personal_info, _num_fields = get_personal_info(user)
     num_fields = {
@@ -80,8 +81,8 @@ def save_personal_info(request, user):
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
                     logger.debug("{}: new: {} from: {}".format(field,
-                                                              fields[field], 
-                                                              personal_info[field] if field in personal_info else None))
+                                                               fields[field],
+                                                               personal_info[field] if field in personal_info else None))
                     if field in single_fields:
                         if len(fields[field]) < 1:
                             logger.debug("Field {} with blank value becomes None".format(field))
@@ -130,6 +131,7 @@ def get_preferred_pic(user):
 
     return preferred_pic
 
+
 def save_preferred_pic(request, user):
     preferred_pic = get_preferred_pic(user)
     logger.debug(preferred_pic)
@@ -145,8 +147,8 @@ def save_preferred_pic(request, user):
                         logger.debug("{}: same ({})".format(field, fields[field]))
                     else:
                         logger.debug("{}: new: {} from: {}".format(field,
-                                                              fields[field], 
-                                                              preferred_pic[field] if field in preferred_pic else None))
+                                                                   fields[field],
+                                                                   preferred_pic[field] if field in preferred_pic else None))
                         try:
                             user.set_ldap_attribute(field, fields[field])
                         except Exception as e:
@@ -171,13 +173,13 @@ def get_privacy_options(user):
             else:
                 privacy_options[field] = user.permissions[ptype][field]
 
-    
     for field in user.photo_permissions["self"]:
-        if field != "default": # photo_permissions["default"] is the same as show on import
+        if field != "default":  # photo_permissions["default"] is the same as show on import
             privacy_options["photoperm-{}".format(field)] = user.photo_permissions["parent"]
             privacy_options["photoperm-{}-{}".format(field, "self")] = user.photo_permissions["self"][field]
 
     return privacy_options
+
 
 def save_privacy_options(request, user):
     privacy_options = get_privacy_options(user)
@@ -193,8 +195,8 @@ def save_privacy_options(request, user):
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
                     logger.debug("{}: new: {} from: {}".format(field,
-                                                              fields[field], 
-                                                              privacy_options[field] if field in privacy_options else None))
+                                                               fields[field],
+                                                               privacy_options[field] if field in privacy_options else None))
                     try:
                         user.set_ldap_attribute(field, fields[field])
                     except Exception as e:
@@ -216,6 +218,7 @@ def get_notification_options(user):
 
     return notification_options
 
+
 def save_notification_options(request, user):
     notification_options = get_notification_options(user)
     logger.debug(notification_options)
@@ -230,12 +233,13 @@ def save_notification_options(request, user):
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
                     logger.debug("{}: new: {} from: {}".format(field,
-                                                              fields[field], 
-                                                              notification_options[field] if field in notification_options else None))
+                                                               fields[field],
+                                                               notification_options[field] if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
                     messages.success(request, "Set field {} to {}".format(field, fields[field] if type(field[field]) != list else ", ".join(fields[field])))
     return notification_options_form
+
 
 def save_gcm_options(request, user):
     if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token:
@@ -264,7 +268,7 @@ def preferences_view(request):
     user.clear_cache()
 
     if request.method == "POST":
-        
+
         personal_info_form = save_personal_info(request, user)
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
@@ -296,7 +300,6 @@ def preferences_view(request):
         logger.debug(privacy_options)
         privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
 
-
         notification_options = get_notification_options(user)
         logger.debug(notification_options)
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
@@ -308,6 +311,7 @@ def preferences_view(request):
         "notification_options_form": notification_options_form
     }
     return render(request, "preferences/preferences.html", context)
+
 
 @login_required
 def privacy_options_view(request):

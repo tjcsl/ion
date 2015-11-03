@@ -14,6 +14,8 @@ from django.shortcuts import redirect, render
 import logging
 
 logger = logging.getLogger(__name__)
+
+
 @csrf_exempt
 def android_setup_view(request):
     """Set up a GCM session.
@@ -45,6 +47,7 @@ def android_setup_view(request):
             return HttpResponse('{"success":"Now registered."}', content_type="text/json")
     return HttpResponse('{"error":"Invalid arguments."}', content_type="text/json")
 
+
 @login_required
 def gcm_list_view(request):
     if not request.user.has_admin_permission("notifications"):
@@ -63,6 +66,7 @@ def gcm_list_view(request):
 
     return render(request, "notifications/gcm_list.html", context)
 
+
 @login_required
 def gcm_post_view(request):
     if not request.user.has_admin_permission("notifications"):
@@ -72,7 +76,6 @@ def gcm_post_view(request):
         has_tokens = (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
     except AttributeError:
         has_tokens = False
-
 
     if not has_tokens:
         messages.error(request, "GCM tokens not installed.")

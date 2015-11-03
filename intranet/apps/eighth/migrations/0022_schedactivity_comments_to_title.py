@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='eighthscheduledactivity',
             old_name='comments',
-	    new_name='title'
+            new_name='title'
         ),
     ]

@@ -33,16 +33,16 @@ def do_ldap_query(q):
         i = 0
         for p in parts:
             query = ("(&(|(givenName=*{0})"
-                         "(givenName={0}*)"
-                         "(sn=*{0})"
-                         "(sn={0}*)"
-                         "(iodineUid=*{0})"
-                         "(iodineUid={0}*)"
-                         "(mname=*{0})"
-                         "(mname={0}*)"
-                         "(nickname=*{0})"
-                         "(nickname={0}*)"
-                         ")(objectClass=*))".format(p))
+                     "(givenName={0}*)"
+                     "(sn=*{0})"
+                     "(sn={0}*)"
+                     "(iodineUid=*{0})"
+                     "(iodineUid={0}*)"
+                     "(mname=*{0})"
+                     "(mname={0}*)"
+                     "(nickname=*{0})"
+                     "(nickname={0}*)"
+                     ")(objectClass=*))".format(p))
 
             res = c.search(settings.USER_DN, query, [])
             new_dns = []
@@ -50,7 +50,7 @@ def do_ldap_query(q):
                 dn = row[0]
                 if i == 0:
                     new_dns.append(dn)
-                elif dn in result_dns:    
+                elif dn in result_dns:
                     new_dns.append(dn)
 
             result_dns = new_dns
@@ -62,14 +62,15 @@ def do_ldap_query(q):
         users.append(user)
 
     return users
-    
+
 
 def get_search_results(q):
     query_error = False
-    
+
     users = do_ldap_query(q)
 
     return False, users
+
 
 @login_required
 def search_view(request):
@@ -120,7 +121,7 @@ def search_view(request):
         """
 
         if len(users) == 1:
-            no_other_results = True #(not announcements and not events and not activities)
+            no_other_results = True  # (not announcements and not events and not activities)
             if request.user.is_eighthoffice or no_other_results:
                 user_id = users[0].id
                 return redirect("user_profile", user_id=user_id)

@@ -18,6 +18,7 @@ from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
 
+
 @eighth_admin_required
 def add_room_view(request):
     if request.method == "POST":
@@ -185,7 +186,8 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         start_block = form_list[0].cleaned_data["block"]
         end_block = form_list[1].cleaned_data["block"]
         return redirect("eighth_admin_room_utilization", start_block.id, end_block.id)
-        
+
+
 @eighth_admin_required
 def room_utilization_action(request, start_id, end_id):
     try:
@@ -198,10 +200,10 @@ def room_utilization_action(request, start_id, end_id):
 
     sched_acts = (EighthScheduledActivity.objects
                                          .exclude(activity__deleted=True))
-                                        #.exclude(cancelled=True) # include cancelled activities
+    #.exclude(cancelled=True) # include cancelled activities
     if not one_block:
-         sched_acts = (sched_acts.filter(block__date__gte=start_block.date,
-                                         block__date__lte=end_block.date))
+        sched_acts = (sched_acts.filter(block__date__gte=start_block.date,
+                                        block__date__lte=end_block.date))
     else:
         sched_acts = sched_acts.filter(block=start_block)
 

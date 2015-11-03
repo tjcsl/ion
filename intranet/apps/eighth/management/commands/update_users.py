@@ -11,5 +11,5 @@ class Command(BaseCommand):
     help = "Input users into the database who have not logged in already"
 
     def handle(self, **options):
-        users = [User.objects.user_with_ion_id(i) for i in range(14203,14681)] + [User.objects.user_with_ion_id(i) for i in range(31416,35000)]
+        users = [User.objects.user_with_ion_id(i) for i in range(14203, 14681)] + [User.objects.user_with_ion_id(i) for i in range(31416, 35000)]
         self.stdout.write("Looped through {} IDs.".format(len(users)))

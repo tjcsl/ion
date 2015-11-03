@@ -18,6 +18,7 @@ from ...serializers import EighthBlockDetailSerializer
 
 logger = logging.getLogger(__name__)
 
+
 @eighth_admin_required
 def add_block_view(request):
     if request.method == "POST" and "custom_block" in request.POST:
@@ -29,7 +30,7 @@ def add_block_view(request):
         else:
             messages.error(request, "Error adding block.")
             request.session["add_block_form"] = pickle.dumps(form)
-    
+
     date = None
     show_letters = None
 
@@ -64,10 +65,8 @@ def add_block_view(request):
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
 
-
-
     letters = []
-    visible_blocks = ["A","B","C","D","E","F","G","H"]
+    visible_blocks = ["A", "B", "C", "D", "E", "F", "G", "H"]
     if show_letters:
         onday = EighthBlock.objects.filter(date=fmtdate)
         for l in visible_blocks:
@@ -83,7 +82,6 @@ def add_block_view(request):
                     "name": blk.block_letter,
                     "exists": True
                 })
-
 
     context = {
         "admin_page_title": "Add or Remove Blocks",

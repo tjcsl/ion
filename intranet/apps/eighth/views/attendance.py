@@ -57,6 +57,7 @@ def should_show_activity_list(wizard):
             return False
     return True
 
+
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     FORMS = [
         ("block", BlockSelectionForm),
@@ -78,7 +79,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 now = datetime.now().date()
                 """ Only show blocks after September 1st of the current school year """
                 if now.month < 9:
-                    now = datetime(now.year-1, 9, 1).date()
+                    now = datetime(now.year - 1, 9, 1).date()
                 else:
                     now = datetime(now.year, 9, 1).date()
                 kwargs.update({"exclude_before_date": now})
@@ -101,7 +102,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             except (EighthSponsor.DoesNotExist, AttributeError):
                 sponsor = None
 
-            #if not (self.request.user.is_eighth_admin or (sponsor is None)):
+            # if not (self.request.user.is_eighth_admin or (sponsor is None)):
             #    kwargs.update({"sponsor": sponsor})
 
         labels = {
@@ -186,6 +187,7 @@ admin_choose_scheduled_activity_view = (
     eighth_admin_required(_unsafe_choose_scheduled_activity_view)
 )
 
+
 @login_required
 def roster_view(request, scheduled_activity_id):
     try:
@@ -209,6 +211,7 @@ def roster_view(request, scheduled_activity_id):
 
     return render(request, "eighth/roster.html", context)
 
+
 @login_required
 def raw_roster_view(request, scheduled_activity_id):
     try:
@@ -229,6 +232,7 @@ def raw_roster_view(request, scheduled_activity_id):
     }
 
     return render(request, "eighth/roster-list.html", context)
+
 
 @attendance_taker_required
 def take_attendance_view(request, scheduled_activity_id):
@@ -330,7 +334,7 @@ def take_attendance_view(request, scheduled_activity_id):
         for user in users:
             members.append({
                 "id": user.id,
-                "name": user.last_first(), # includes nickname
+                "name": user.last_first(),  # includes nickname
                 "grade": user.grade.number if user.grade else None,
                 "present": (scheduled_activity.attendance_taken and
                             (user.id not in absent_user_ids)),
@@ -358,7 +362,7 @@ def take_attendance_view(request, scheduled_activity_id):
                                                                       .exclude(cancelled=True))
             logger.debug(context["scheduled_activities"])
             context["blocks"] = (EighthBlock.objects
-                                            #.filter(date__gte=get_start_date(request))
+                                 #.filter(date__gte=get_start_date(request))
                                             .order_by("date"))
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
@@ -551,7 +555,6 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
             block_letter_width = 0.3 * inch
             block_letter_width += (0.2 * inch) * (len(block_letter) - 1)
             block_letter_style = "BlockLetterSmallest"
-
 
         header_data = [[
             Paragraph("<b>Activity ID: {}<br />Scheduled ID: {}</b>".format(sact.activity.id, sact.id), styles["Normal"]),

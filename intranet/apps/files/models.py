@@ -41,7 +41,9 @@ from ..groups.models import Group
         
 """
 
+
 class HostManager(Manager):
+
     def visible_to_user(self, user):
         """Get a list of hosts available to a given user.
 
@@ -50,6 +52,7 @@ class HostManager(Manager):
 
         return Host.objects.filter(Q(groups_visible__in=user.groups.all()) |
                                    Q(groups_visible__isnull=True))
+
 
 class Host(models.Model):
     objects = HostManager()

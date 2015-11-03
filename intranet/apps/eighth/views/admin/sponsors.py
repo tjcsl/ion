@@ -24,7 +24,7 @@ def add_sponsor_view(request):
         else:
             messages.error(request, "Error adding sponsor.")
             request.session["add_sponsor_form"] = pickle.dumps(form)
-    
+
     context = {
         "admin_page_title": "Add Sponsor",
         "form": SponsorForm
@@ -108,8 +108,6 @@ def sponsor_schedule_view(request, sponsor_id):
         activity_id = request.GET.get('activity')
         activity = EighthActivity.objects.get(id=activity_id)
         sched_acts = sched_acts.filter(activity=activity)
-    
-
 
     context = {
         "scheduled_activities": sched_acts,

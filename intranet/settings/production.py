@@ -47,7 +47,7 @@ def debug_toolbar_callback(request):
         return False
 
     if (hasattr(request, 'user') and
-        request.user.is_authenticated()):
+            request.user.is_authenticated()):
         return (request.user.is_staff and
                 not request.user.id == 9999 and
                 "debug" in request.GET)

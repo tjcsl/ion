@@ -34,14 +34,13 @@ def profile_view(request, user_id=None):
     if user_id is not None:
         try:
             profile_user = User.get_user(id=user_id)
-            
+
             if profile_user is None:
                 raise Http404
         except User.DoesNotExist:
             raise Http404
     else:
         profile_user = request.user
-
 
     if "clear_cache" in request.GET and request.user.is_eighth_admin:
         profile_user.clear_cache()
@@ -54,7 +53,7 @@ def profile_view(request, user_id=None):
     start_block = EighthBlock.objects.get_first_upcoming_block()
 
     if start_block:
-        blocks = [start_block] + list(start_block.next_blocks(num_blocks-1))
+        blocks = [start_block] + list(start_block.next_blocks(num_blocks - 1))
     else:
         blocks = []
 
@@ -71,9 +70,9 @@ def profile_view(request, user_id=None):
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
         eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                                   .filter(block__date__gte=start_date)
-                                                                   .order_by("block__date",
-                                                                             "block__block_letter"))
+                                   .filter(block__date__gte=start_date)
+                                   .order_by("block__date",
+                                             "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
     else:
@@ -160,6 +159,7 @@ def picture_view(request, user_id, year=None):
 
         return response
 
+
 @login_required
 def class_section_view(request, section_id):
     c = Class(id=section_id)
@@ -187,16 +187,16 @@ def class_section_view(request, section_id):
 
     return render(request, "users/class.html", context)
 
+
 @login_required
 def class_room_view(request, room_id):
     c = LDAPConnection()
     room_id = LDAPFilter.escape(room_id)
-    
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", 
+
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id),
                        ["tjhsstSectionId"]
-    )
-
+                       )
 
     if len(classes) > 0:
         schedule = []
@@ -207,7 +207,7 @@ def class_room_view(request, room_id):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1]) # The class objects
+        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
     else:
         classes_objs = []
         raise Http404
@@ -219,14 +219,15 @@ def class_room_view(request, room_id):
 
     return render(request, "users/class_room.html", context)
 
+
 @login_required
 def all_classes_view(request):
     c = LDAPConnection()
-    
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", 
+
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "objectClass=tjhsstClass",
                        ["tjhsstSectionId"]
-    )
+                       )
 
     logger.debug("{} classes found.".format(len(classes)))
 
@@ -239,7 +240,7 @@ def all_classes_view(request):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1]) # The class objects
+        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
     else:
         classes_objs = []
         raise Http404

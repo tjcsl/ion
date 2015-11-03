@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class PersonalInformationForm(forms.Form):
+
     def __init__(self, num_fields, *args, **kwargs):
         super(PersonalInformationForm, self).__init__(*args, **kwargs)
 
@@ -28,6 +29,7 @@ class PersonalInformationForm(forms.Form):
 
 
 class PreferredPictureForm(forms.Form):
+
     def __init__(self, user, *args, **kwargs):
         super(PreferredPictureForm, self).__init__(*args, **kwargs)
         self.PREFERRED_PICTURE_CHOICES = [
@@ -41,14 +43,13 @@ class PreferredPictureForm(forms.Form):
             if photos[grade] is not None:
                 self.PREFERRED_PICTURE_CHOICES += [(grade, grade.title() + " Photo")]
 
-
-
         self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES,
-                                                             widget=forms.RadioSelect(),
-                                                             required=True)
+                                                           widget=forms.RadioSelect(),
+                                                           required=True)
 
 
 class PrivacyOptionsForm(forms.Form):
+
     def __init__(self, user, *args, **kwargs):
         super(PrivacyOptionsForm, self).__init__(*args, **kwargs)
 
@@ -94,12 +95,12 @@ class PrivacyOptionsForm(forms.Form):
 
 
 class NotificationOptionsForm(forms.Form):
+
     def __init__(self, user, *args, **kwargs):
         super(NotificationOptionsForm, self).__init__(*args, **kwargs)
-        
+
         def flag(label, default):
             return forms.BooleanField(initial=default, label=label, required=False)
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
         self.fields["receive_eighth_emails"] = flag("Receive Eighth Period Emails", False)
-

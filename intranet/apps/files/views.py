@@ -22,8 +22,10 @@ from intranet import settings
 
 logger = logging.getLogger(__name__)
 
+
 def create_session(hostname, username, password):
     return pysftp.Connection(hostname, username=username, password=password)
+
 
 @login_required
 def files_view(request):
@@ -35,6 +37,7 @@ def files_view(request):
         "hosts": hosts
     }
     return render(request, "files/home.html", context)
+
 
 @login_required
 @sensitive_variables('message', 'key', 'iv', 'ciphertext')
@@ -77,9 +80,9 @@ def files_auth(request):
 def get_authinfo(request):
     """Get authentication info from the encrypted message.
     """
-    if (("files_iv" not in request.session) or 
-        ("files_text" not in request.session) or 
-        ("files_key" not in request.COOKIES)):
+    if (("files_iv" not in request.session) or
+            ("files_text" not in request.session) or
+            ("files_key" not in request.COOKIES)):
         return False
 
     """
@@ -101,6 +104,7 @@ def get_authinfo(request):
         "password": password
     }
 
+
 def windows_dir_format(host_dir, user):
     """Format a string for the location of the user's folder on the
        Windows (TJ03) fileserver.
@@ -121,6 +125,7 @@ def windows_dir_format(host_dir, user):
     else:
         win_path = ""
     return host_dir.replace("{win}", win_path)
+
 
 @login_required
 def files_type(request, fstype=None):
@@ -189,7 +194,6 @@ def files_type(request, fstype=None):
     def can_access_path(fsdir):
         return normpath(fsdir).startswith(default_dir)
 
-
     if "file" in request.GET:
         # Download file
         filepath = request.GET.get("file")
@@ -256,9 +260,7 @@ def files_type(request, fstype=None):
                 "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
 
-
-
-    current_dir = sftp.pwd # current directory
+    current_dir = sftp.pwd  # current directory
     dir_list = current_dir.split("/")
     if len(dir_list) > 1 and len(dir_list[-1]) == 0:
         dir_list.pop()
@@ -278,6 +280,7 @@ def files_type(request, fstype=None):
     }
 
     return render(request, "files/directory.html", context)
+
 
 @login_required
 def files_upload(request, fstype=None):
@@ -299,7 +302,6 @@ def files_upload(request, fstype=None):
 
     if not authinfo:
         return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
-
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -348,6 +350,7 @@ def files_upload(request, fstype=None):
     }
     return render(request, "files/upload.html", context)
 
+
 def handle_file_upload(file, fstype, fsdir, sftp, request=None):
     try:
         sftp.chdir(fsdir)
@@ -365,6 +368,5 @@ def handle_file_upload(file, fstype, fsdir, sftp, request=None):
     except OSError as e:
         messages.error(request, "Unable to upload: {}".format(e))
         return
-
 
     messages.success(request, "Uploaded {} to {}".format(file.name, fsdir))

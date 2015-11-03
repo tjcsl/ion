@@ -12,13 +12,16 @@ from ..announcements.models import Announcement
 from .notifications import event_approval_request
 from datetime import datetime
 
+
 class Link(models.Model):
     """A link about an item (Facebook event link, etc).
     """
     url = models.URLField(max_length=2000)
     title = models.CharField(max_length=100)
 
+
 class EventManager(Manager):
+
     def visible_to_user(self, user):
         """Get a list of visible events for a given user (usually
         request.user).
@@ -33,6 +36,7 @@ class EventManager(Manager):
                              .filter(Q(groups__in=user.groups.all()) |
                                      Q(groups__isnull=True) |
                                      Q(user=user)))
+
 
 class Event(EsIndexable, models.Model):
     """An event available to the TJ community.
@@ -88,7 +92,7 @@ class Event(EsIndexable, models.Model):
 
     scheduled_activity = models.ForeignKey(EighthScheduledActivity, null=True, blank=True)
     announcement = models.ForeignKey(Announcement, null=True, blank=True, related_name="event")
-    
+
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     attending = models.ManyToManyField(User, blank=True, related_name="attending")
@@ -116,7 +120,6 @@ class Event(EsIndexable, models.Model):
 
         return True
 
-
     def created_hook(self, request):
         """Run when an event is created.
         """
@@ -135,8 +138,6 @@ class Event(EsIndexable, models.Model):
                     (ann.year == now.year - 1 and ann.month >= 9))
         else:
             return (ann.year == now.year and ann.month >= 9)
-
-
 
     def __unicode__(self):
         if not self.approved:

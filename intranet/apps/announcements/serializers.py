@@ -6,6 +6,7 @@ from rest_framework import serializers
 from intranet.apps.users.models import User
 from .models import Announcement
 
+
 class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_announcements_detail")
     user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)

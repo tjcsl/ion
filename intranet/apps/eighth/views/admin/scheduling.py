@@ -64,7 +64,6 @@ def schedule_activity_view(request):
                     else:
                         instance.cancelled = False
 
-
                     # If an activity has already been cancelled and the
                     # unschedule checkbox has been checked, delete the
                     # EighthScheduledActivity instance. If there are students
@@ -87,12 +86,11 @@ def schedule_activity_view(request):
                                 sibling.delete()
                             messages.success(request, "Unscheduled {}".format(name))
 
-                            continue # don't run instance.save()
+                            continue  # don't run instance.save()
                         elif count == 1:
                             messages.error(request, "Did not unschedule {} because there is {} student signed up.".format(name, count))
                         else:
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
-
 
                     instance.save()
                 else:

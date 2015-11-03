@@ -46,5 +46,5 @@ class Command(BaseCommand):
                     u.save()
                 act.groups_allowed.add(grp)
                 act.save()
-        
+
         self.stdout.write("Done.")

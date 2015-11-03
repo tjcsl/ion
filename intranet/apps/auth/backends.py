@@ -35,7 +35,6 @@ class KerberosAuthenticationBackend(object):
 
         """
 
-
         def kinit_timeout_handle(username, realm):
             """Check if the user exists before we throw an error.
             If the user does not exist in LDAP, only throw a warning.
@@ -121,7 +120,7 @@ class KerberosAuthenticationBackend(object):
                 # Shouldn't happen
                 logger.error("User {} successfully authenticated but not found "
                              "in LDAP.".format(username))
-                
+
                 user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
                 return user
 

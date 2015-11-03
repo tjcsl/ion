@@ -100,16 +100,18 @@ def edit_group_view(request, group_id):
 
     return render(request, "eighth/admin/edit_group.html", context)
 
+
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
         filetext += chunk
     return filetext
 
+
 def get_user_info(key, val):
     if key in ["username", "id"]:
         try:
-            u = User.objects.filter(**{ key: val })
+            u = User.objects.filter(**{key: val})
         except ValueError:
             return []
         return u
@@ -142,12 +144,12 @@ def get_user_info(key, val):
         return []
 
 
-
 def handle_group_input(filetext):
     logger.debug(filetext)
     lines = filetext.splitlines()
 
     return find_users_input(lines)
+
 
 def find_users_input(lines):
     sure_users = []
@@ -199,6 +201,7 @@ def find_users_input(lines):
 
     return sure_users, unsure_users
 
+
 @eighth_admin_required
 def upload_group_members_view(request, group_id):
     try:
@@ -248,7 +251,6 @@ def upload_group_members_view(request, group_id):
                 "import_group": import_group,
                 "num_users": num_users
             })
-
 
     else:
         form = UploadGroupForm()
@@ -355,7 +357,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(EighthAdminSignUpGroupWizard,
                         self).get_context_data(form=form, **kwargs)
-        
+
         block = self.get_cleaned_data_for_step("block")
         if block:
             context.update({"block_obj": block["block"]})
@@ -384,6 +386,7 @@ eighth_admin_signup_group = eighth_admin_required(
         EighthAdminSignUpGroupWizard.FORMS
     )
 )
+
 
 def eighth_admin_signup_group_action(request, group_id):
     schact_id = request.GET["schact"]
@@ -502,7 +505,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 "users": unsigned,
                 "eighthblock": block["block"]
             })
-        
+
         if "block" in self.request.GET:
             block_id = self.request.GET["block"]
             context["redirect_block_id"] = block_id
@@ -536,7 +539,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         if "group_id" in kwargs:
             gid = kwargs["group_id"]
             args += "&group={}".format(gid)
-        
+
         if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
             args += "&unsigned=1&block={}".format(block.id)
 
@@ -623,7 +626,6 @@ def eighth_admin_distribute_action(request):
             if "limit" in request.GET:
                 users = users[0:int(request.GET.get('limit'))]
 
-
         # Sort by last name
         users = sorted(list(users), key=lambda x: x.last_name)
 
@@ -666,7 +668,6 @@ def add_member_to_group_view(request, group_id):
         messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
         return redirect(next_url)
 
-
     if "query" not in request.POST:
         return redirect(next_url + "?error=s")
 
@@ -700,8 +701,6 @@ def add_member_to_group_view(request, group_id):
             "admin_page_title": "Add Members to Group"
         }
         return render(request, "eighth/admin/possible_students_add_group.html", context)
-
-    
 
 
 @eighth_admin_required

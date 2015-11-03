@@ -1,5 +1,6 @@
 from django import forms
 
+
 class ProfileEditForm(forms.Form):
     """A form containing editable fields in the User model."""
     admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea)
@@ -21,7 +22,7 @@ class ProfileEditForm(forms.Form):
     postal_code = forms.CharField(label="ZIP")
     counselor_id = forms.IntegerField(label="Counselor ID")
     #locker = forms.CharField(label="Locker")
-    
+
     FIELDS = ["admin_comments",
               "student_id",
               "first_name",
@@ -34,9 +35,10 @@ class ProfileEditForm(forms.Form):
               "birthday",
               "home_phone"]
     ADDRESS_FIELDS = ["street",
-                       "city",
-                       "state",
-                       "postal_code"]
+                      "city",
+                      "state",
+                      "postal_code"]
+
 
 class UserChoiceField(forms.ModelChoiceField):
     """
@@ -47,6 +49,7 @@ class UserChoiceField(forms.ModelChoiceField):
 
     def label_from_instance(self, obj):
         return obj.full_name
+
 
 class SortedUserChoiceField(forms.ModelChoiceField):
     """
@@ -69,6 +72,7 @@ class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return obj.full_name
 
+
 class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
     """
     A ModelMultipleChoiceField that returns a user's Last, First name instead
@@ -78,6 +82,7 @@ class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     def label_from_instance(self, obj):
         return obj.last_first_id
+
 
 class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
     """

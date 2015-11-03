@@ -8,6 +8,7 @@ from intranet import settings
 
 logger = logging.getLogger(__name__)
 
+
 def email_send(text_template, html_template, data, subject, emails, headers=None):
     """
         Send an HTML/Plaintext email with the following fields.

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from ..users.models import User
 from django.db import models
 
+
 class NotificationConfig(models.Model):
     user = models.OneToOneField(User)
     android_gcm_token = models.CharField(max_length=250, blank=True, null=True)
@@ -13,6 +14,7 @@ class NotificationConfig(models.Model):
 
     def __unicode__(self):
         return "{}".format(self.user)
+
 
 class GCMNotification(models.Model):
     multicast_id = models.CharField(max_length=250)

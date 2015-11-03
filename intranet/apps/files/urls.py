@@ -11,5 +11,5 @@ urlpatterns = [
     url(r"^/(?P<fstype>\w+)$", views.files_type, name="files_type"),
     url(r"^/(?P<fstype>\w+)/upload$", views.files_upload, name="files_upload"),
     url(r"^/(?P<fstype>\w+)?dir=(?P<fsdir>\w+)$", views.files_type, name="files_type_dir"),
-    
+
 ]

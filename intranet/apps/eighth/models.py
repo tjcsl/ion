@@ -17,6 +17,7 @@ from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractBaseEighthModel(models.Model):
     """Abstract base model that includes created and last modified times."""
 
@@ -100,7 +101,7 @@ class EighthRoom(AbstractBaseEighthModel):
         return capacity
 
     def __unicode__(self):
-        #return "{} ({})".format(self.name, self.capacity)
+        # return "{} ({})".format(self.name, self.capacity)
         return "{}".format(self.name)
 
     class Meta:
@@ -221,7 +222,7 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
     def aid(self):
         """ The publicly visible activity ID """
         return self.id
-    
+
     @property
     def name_with_flags(self):
         """Return the activity name with special, both blocks,
@@ -287,7 +288,6 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
         used = [row[0] for row in EighthActivity.objects.values_list("id")]
         avail = set(nums) - set(used)
         return list(avail)
-        
 
     def change_id_to(self, new_id):
         """ Changes the internal ID field.
@@ -367,11 +367,10 @@ class EighthBlockManager(models.Manager):
         block = self.order_by("date", "block_letter").filter(date__gte=now).first()
         return block
 
-
     def get_next_upcoming_blocks(self):
         """Gets the next upccoming blocks. (Finds the other blocks
            that are occurring on the day of the first upcoming block.)
-            
+
            Returns: A QuerySet of `EighthBlock` objects.
 
         """
@@ -432,7 +431,7 @@ class EighthBlock(AbstractBaseEighthModel):
     objects = EighthBlockManager()
 
     date = models.DateField(null=False)
-    signup_time = models.TimeField(default=datetime.time(12,30))
+    signup_time = models.TimeField(default=datetime.time(12, 30))
     block_letter = models.CharField(max_length=10)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
@@ -491,7 +490,7 @@ class EighthBlock(AbstractBaseEighthModel):
     def signup_time_future(self):
         """Is the signup time in the future?"""
         now = datetime.datetime.now()
-        return (now.date() < self.date or 
+        return (now.date() < self.date or
                 (self.date == now.date() and
                  self.signup_time > now.time()))
 
@@ -530,7 +529,6 @@ class EighthBlock(AbstractBaseEighthModel):
     def short_text(self):
         """ Display the date and block letter (mm/dd B, e.x. "9/1 B") """
         return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
-    
 
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
@@ -981,7 +979,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                             after_deadline=after_deadline)
         else:
 
-
             existing_signups = EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__in=all_blocks
@@ -1051,7 +1048,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         self.save()
         """
 
-
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.
         This does nothing besides unset the cancelled flag and save the object.
@@ -1076,7 +1072,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def save(self, *args, **kwargs):
         super(EighthScheduledActivity, self).save(*args, **kwargs)
-
 
     class Meta:
         unique_together = (("block", "activity"),)
@@ -1194,7 +1189,6 @@ class EighthSignup(AbstractBaseEighthModel):
         self.was_absent = True
         self.pass_accepted = True
         self.save()
-
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
