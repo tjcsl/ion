@@ -150,55 +150,7 @@
 
     {% if "tips" in request.GET or query_error or not search_query %}
         <h3>Advanced Search Tips</h3>
-        <p>
-            <b>Operators</b>
-            <table>
-                <tr>
-                    <td><em>&amp;&amp;</em></td>
-                    <td>signifies AND operation</td>
-                </tr>
-                <tr>
-                    <td><em>||</em></td>
-                    <td>signifies OR operation</td>
-                </tr>
-                <tr>
-                    <td><em>!</em></td>
-                    <td>negates a single expression</td>
-                </tr>
-                <tr>
-                    <td><em>+</em></td>
-                    <td>indicates a term must be present</td>
-                </tr>
-                <tr>
-                    <td><em>-</em></td>
-                    <td>indicates a term must not be present</td>
-                </tr>
-                <tr>
-                    <td><em>"..."</em></td>
-                    <td>wraps a number of tokens to signify a phrase for searching (e.g. <em>"my search"</em>)</td>
-                </tr>
-                <tr>
-                    <td><em>(...)</em></td>
-                    <td>signifies precedence</td>
-                </tr>
-                <tr>
-                    <td><em>~N</em></td>
-                    <td>after a word signifies edit distance (fuzziness)</td>
-                </tr>
-                <tr>
-                    <td><em>~N</em></td>
-                    <td>after a phrase signifies slop amount</td>
-                </tr>
-                <tr>
-                    <td><em>/.../</em></td>
-                    <td>indicates a regular expression is enclosed between the slashes (leading wildcards not allowed)</td>
-                </tr>
-                <tr>
-                    <td><em>[... TO ...]</em></td>
-                    <td>indicates a range of numbers (e.g. <em>[2015 TO 2017]</em>)</td>
-                </tr>
-            </table>
-        </p>
+
         <p>
             <b>Searchable Fields</b>
             <ul>
@@ -223,9 +175,9 @@
             <b>Examples</b>
             <ul>
                 <li>
-                    To find all members of the class of 2015:
+                    To find all members of the class of 2016:
                     <br>
-                    <em class="search-example">gradyear:2015</em>
+                    <em class="search-example">gradyear:2016</em>
                 </li>
                 <li>
                     To find all females:
@@ -233,19 +185,19 @@
                     <em class="search-example">sex:female</em>
                 </li>
                 <li>
-                    To find all males in the class of 2015:
+                    To find all males in the class of 2016:
                     <br>
-                    <em class="search-example">gradyear:2015 &amp;&amp; sex:male</em>
+                    <em class="search-example">gradyear:2016 sex:male</em>
                 </li>
                 <li>
-                    To find all people without an "e" in their last name but not in their first name who graduate between 2015 and 2017:
+                    To find senior girls with first names containing "an" followed by "a":
                     <br>
-                    <em class="search-example">first:/[^e]+/ &amp;&amp; !(last:/[^e]+/) &amp;&amp; gradyear:[2015 TO 2017]</em>
+                    <em class="search-example">first:an*a sex:female grade:12</em>
                 </li>
                 <li>
-                    To find people with username collisions:
+                    To find juniors who live in Falls Church <i>(use "*" in place of spaces)</i>:
                     <br>
-                    <em class="search-example">username:/[0-9]{4}[a-z]+[0-9]/</em>
+                    <em class="search-example">city:falls*church grade:11</em>
                 </li>
             </ul>
         </p>

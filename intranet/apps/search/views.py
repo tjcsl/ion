@@ -40,6 +40,7 @@ def do_ldap_query(q, admin=False):
             "lastname": ("sn",),
             "last": ("sn",),
             "nick": ("nickname",),
+            "nickname": ("nickname",),
             "name": ("sn", "mname", "givenname", "nickname",),
             "city": ("l",),
             "town": ("l",),
@@ -55,7 +56,9 @@ def do_ldap_query(q, admin=False):
             "email": ("mail",),
             "studentid": ("tjhsstStudentId",),
             "sex": ("sex",),
-            "gender": ("sex",)
+            "gender": ("sex",),
+            "id": ("iodineUidNumber",),
+            "username": ("iodineUid",)
         }
 
         inner = ""
@@ -106,6 +109,10 @@ def do_ldap_query(q, admin=False):
             # fix grade, because LDAP only stores graduation year
             if cat == "grade" and val.isdigit():
                 val = "{}".format(Grade.year_from_grade(int(val)))
+
+            # replace sex:male with sex:m and sex:female with sex:f
+            if cat == "sex" or cat == "gender":
+                val = val[:1]
 
             # if an invalid key, ignore
             if cat not in map_attrs:
