@@ -1,6 +1,7 @@
 {% extends "eighth/admin/eighth_admin_page_base.html" %}
 {% load dates %}
 {% load staticfiles %}
+{% load cacheops %}
 
 {% block js %}
     <script type="text/javascript">
@@ -20,12 +21,14 @@
         <td class="admin-section">
             <h3>Activities</h3>
 
+            {% cached_as all_activities 0 dash_activities %}
             <select id="activity-select" placeholder="Select or search for an activity">
                 <option value="">Select or search for an activity</option>
                 {% for activity in all_activities %}
                     <option value="{{ activity.id }}" data-name="{{ activity.name_with_flags }}">{{ activity.aid }}: {{ activity.name_with_flags }}</option>
                 {% endfor %}
             </select>
+            {% endcached_as %}
             <div class="right-buttons">
 
                 <a class="dynamic-link button" data-select="activity-select" data-href-pattern="{% url 'eighth_admin_schedule_activity' %}?activity={{ url_id_placeholder }}" class="button">Schedule Activity</a>
@@ -63,12 +66,14 @@
         <td class="admin-section">
             <h3>Groups</h3>
 
+            {% cached_as groups 0 dash_groups %}
             <select id="group-select" placeholder="Select or search for a group">
                 <option value="">Select or search for a group</option>
                 {% for group in groups %}
                     <option value="{{ group.id }}">{{ group.name }}{% if group.properties.student_visible %} (Student-visible){% endif %} -- {{ group.user_set.count }} members</option>
                 {% endfor %}
             </select>
+            {% endcached_as %}
 
             <div class="right-buttons">
                 <a class="dynamic-link button" data-select="group-select" data-href-pattern="{% url 'eighth_admin_edit_group' url_id_placeholder %}" class="button">Edit Group</a>
@@ -111,12 +116,15 @@
         <td class="admin-section">
             <h3>Rooms</h3>
 
+            {% cached_as rooms 0 dash_rooms %}
             <select id="room-select" placeholder="Select or search for a room">
                 <option value="">Select or search for a room</option>
                 {% for room in rooms %}
                     <option value="{{ room.id }}">{{ room.name }} ({{ room.capacity }})</option>
                 {% endfor %}
             </select>
+            {% endcached_as %}
+
             <div class="right-buttons">
                 <a class="dynamic-link button" data-select="room-select" data-href-pattern="{% url 'eighth_admin_edit_room' url_id_placeholder %}" class="button">Edit Room</a>
             </div>
@@ -152,12 +160,15 @@
         <td class="admin-section">
             <h3>Sponsors</h3>
 
+            {% cached_as sponsors 0 dash_sponsors %}
             <select id="sponsor-select" placeholder="Select or search for a sponsor">
                 <option value="">Select or search for a sponsor</option>
                 {% for sponsor in sponsors %}
                     <option value="{{ sponsor.id }}">{{ sponsor.name }}{% if sponsor.user.id %} (User {{ sponsor.user.id }}){% else %} (No user){% endif %}</option>
                 {% endfor %}
             </select>
+            {% endcached_as %}
+
             <div class="right-buttons">
                 <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_sponsor_schedule' url_id_placeholder %}" class="button">View Schedule</a>
                 <a class="dynamic-link button" data-select="sponsor-select" data-href-pattern="{% url 'eighth_admin_edit_sponsor' url_id_placeholder %}" class="button">Edit Sponsor</a>
@@ -176,17 +187,21 @@
         <td class="admin-section">
             <h3>Blocks</h3>
 
+            {% cached_as blocks_after_start_date 0 dash_blocks %}
             <select id="block-select" placeholder="Select or search for a block">
                 <option value="">Select or search for a block</option>
                 {% for block in blocks_after_start_date %}
                     <option value="{{ block.id }}">{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }}){% if block.locked %} (Locked){% endif %}</option>
                 {% endfor %}
             </select>
+            {% endcached_as %}
+
             <div class="right-buttons">
                 <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_print_block_rosters' url_id_placeholder %}" class="button">Print Rosters</a>
                 <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Edit Block</a>
             </div>
 
+            {% cached_as blocks_next 0 dash_blocks_next %}
             {% if blocks_next %}
                 <b>{{ blocks_next_date }}:</b>
                 <ul class="fa-ul blocks-next">
@@ -220,6 +235,7 @@
                     <li><a href="{% url 'eighth_admin_add_block' %}"><i class="fa-li fa fa-list-alt"></i>Add or remove blocks</a></li>
                 </ul>
             {% endif %}
+            {% endcached_as %}
 
         </td>
         
