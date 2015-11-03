@@ -197,6 +197,31 @@ CACHES = {
     },
 }
 
+
+CACHEOPS_REDIS = {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "db": 1,
+    "socket_timeout": 1
+}
+
+CACHEOPS_DEFAULTS = {
+    "ops": "all",
+    "timeout": 24*60*60
+}
+
+CACHEOPS = {
+    "eighth.*": {
+        "timeout": 60*60
+    },
+    "announcements.*": {},
+    "events.*": {},
+    "groups.*": {},
+    "users.*": {},
+    "auth.*": {}
+}
+
+
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory Realm
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
@@ -275,7 +300,8 @@ INSTALLED_APPS = (
     "intranet.middleware.environment",
     "widget_tweaks",
     "django_extensions",
-    "corsheaders"
+    "corsheaders",
+    "cacheops"
 )
 
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
