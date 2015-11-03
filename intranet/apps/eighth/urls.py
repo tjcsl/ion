@@ -116,6 +116,7 @@ eighth_admin_patterns = [
     url(r"^sponsors/schedule/(?P<sponsor_id>\d+)$", sponsors.sponsor_schedule_view, name="eighth_admin_sponsor_schedule"),
 
     url(r"^startdate$", general.edit_start_date_view, name="eighth_admin_edit_start_date"),
+    url(r"^cache$", general.cache_view, name="eighth_admin_cache"),
 
 ]
 

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from cacheops import invalidate_all
 from datetime import datetime
 from six.moves import cPickle as pickle
 from six.moves.urllib.parse import unquote
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from intranet import settings
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ....users.models import User
@@ -106,6 +109,37 @@ def edit_start_date_view(request):
         "admin_page_title": "Change Start Date"
     }
     return render(request, "eighth/admin/edit_start_date.html", context)
+
+
+@eighth_admin_required
+def cache_view(request):
+    if request.method == "POST":
+        if "invalidate_all" in request.POST:
+            invalidate_all()
+            messages.success(request, "Invalidated all of the cache")
+
+    try:
+        opts = settings.CACHEOPS
+        default = settings.CACHEOPS_DEFAULTS
+    except AttributeError:
+        opts = default = None
+
+    cache = {}
+
+    for ctype in opts:
+        c = ctype.split(".")[0]
+        if "timeout" in opts[ctype]:
+            to = opts[ctype]["timeout"]
+        else:
+            to = default["timeout"]
+        cache[c] = int(to / (60 * 60))
+
+    context = {
+        "admin_page_title": "Cache Configuration",
+        "cache_length": cache
+    }
+    return render(request, "eighth/admin/cache.html", context)
+
 
 
 @eighth_admin_required
