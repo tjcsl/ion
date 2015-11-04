@@ -173,12 +173,12 @@
                 <tr>
                     {% if show.block %}<th style="min-width: 150px">Block</th>{% endif %}
                     {% if show.rooms %}<th data-sortable-type="numeric">Rooms</th>{% endif %}
-                    {% if show.aid %}<th>AID</th>{% endif %}
+                    {% if show.aid %}<th style="min-width: 45px">AID</th>{% endif %}
                     {% if show.activity %}<th>Activity</th>{% endif %}
+                    {% if show.comments %}<th style="min-width: 92px">Comments</th>{% endif %}
                     {% if show.sponsors %}<th>Sponsors</th>{% endif %}
-                    {% if show.signups %}<th>Signups</th>{% endif %}
-                    {% if show.capacity %}<th>Capacity</th>{% endif %}
-                    {% if show.comments %}<th>Comments</th>{% endif %}
+                    {% if show.signups %}<th style="min-width: 72px">Signups</th>{% endif %}
+                    {% if show.capacity %}<th style="min-width: 77px">Capacity</th>{% endif %}
                     {% if show.admin_comments %}<th>Admin Comments</th>{% endif %}
                 </tr>
             </thead>
@@ -199,6 +199,9 @@
                         {% if show.activity %}
                             <td>{{ sched_act.title_with_flags }}</td>
                         {% endif %}
+                        {% if show.comments %}
+                            <td>{{ sched_act.comments }}</td>
+                        {% endif %}
                         {% if show.sponsors %}
                             <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
                         {% endif %}
@@ -207,9 +210,6 @@
                         {% endif %}
                         {% if show.capacity %}
                             <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
-                        {% endif %}
-                        {% if show.comments %}
-                            <td>{{ sched_act.comments }}</td>
                         {% endif %}
                         {% if show.admin_comments %}
                             <td>{{ sched_act.admin_comments }}</td>

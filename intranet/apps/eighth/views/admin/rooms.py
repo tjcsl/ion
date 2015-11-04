@@ -224,9 +224,9 @@ def room_utilization_action(request, start_id, end_id):
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
-    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity", "comments", "admin_comments"]
-    show_opts_defaults = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
-    show_opts_hidden = ["comments", "admin_comments"]
+    show_opts =          ["block", "rooms", "aid", "activity", "comments", "sponsors", "signups", "capacity", "admin_comments"]
+    show_opts_defaults = ["block", "rooms", "aid", "activity", "comments", "sponsors", "signups", "capacity"]
+    show_opts_hidden =   ["admin_comments"]
     if len(show_vals) == 0:
         show = {name: True for name in show_opts_defaults}
         show.update({name: False for name in show_opts_hidden})
