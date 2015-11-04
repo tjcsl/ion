@@ -99,8 +99,8 @@ class EighthRoom(AbstractBaseEighthModel):
         return capacity
 
     def __unicode__(self):
-        # return "{} ({})".format(self.name, self.capacity)
-        return "{}".format(self.name)
+        return "{} ({})".format(self.name, self.capacity)
+        # return "{}".format(self.name)
 
     class Meta:
         ordering = ("name",)

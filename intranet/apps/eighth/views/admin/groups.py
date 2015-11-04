@@ -52,6 +52,14 @@ def edit_group_view(request, group_id):
         raise http.Http404
 
     if request.method == "POST":
+        if "remove_all" in request.POST:
+            users = group.user_set.all()
+            num = users.count()
+            for u in users:
+                group.user_set.remove(u)
+            group.save()
+            messages.success(request, "Successfully deleted {} members of the group.".format(num))
+            return redirect("eighth_admin_edit_group", group.id)
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             if 'student_visible' in form.cleaned_data:
