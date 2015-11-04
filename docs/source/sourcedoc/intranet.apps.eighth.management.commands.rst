@@ -4,10 +4,18 @@ intranet.apps.eighth.management.commands package
 Submodules
 ----------
 
-intranet.apps.eighth.management.commands.fix_aids module
---------------------------------------------------------
+intranet.apps.eighth.management.commands.import_attendance module
+-----------------------------------------------------------------
 
-.. automodule:: intranet.apps.eighth.management.commands.fix_aids
+.. automodule:: intranet.apps.eighth.management.commands.import_attendance
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.eighth.management.commands.import_permissions module
+------------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.import_permissions
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,13 +1,6 @@
 intranet.apps.search package
 ============================
 
-Subpackages
------------
-
-.. toctree::
-
-    intranet.apps.search.management
-
 Submodules
 ----------
 
@@ -23,6 +16,14 @@ intranet.apps.search.urls module
 --------------------------------
 
 .. automodule:: intranet.apps.search.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.apps.search.utils module
+---------------------------------
+
+.. automodule:: intranet.apps.search.utils
     :members:
     :undoc-members:
     :show-inheritance:

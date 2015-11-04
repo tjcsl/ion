@@ -36,6 +36,14 @@ intranet.middleware.ldap_db module
     :undoc-members:
     :show-inheritance:
 
+intranet.middleware.profiler module
+-----------------------------------
+
+.. automodule:: intranet.middleware.profiler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.middleware.templates module
 ------------------------------------
 
@@ -48,6 +56,14 @@ intranet.middleware.threadlocals module
 ---------------------------------------
 
 .. automodule:: intranet.middleware.threadlocals
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.middleware.traceback module
+------------------------------------
+
+.. automodule:: intranet.middleware.traceback
     :members:
     :undoc-members:
     :show-inheritance:
