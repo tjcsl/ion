@@ -3,10 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from datetime import datetime
-try:
-    from io import BytesIO
-except ImportError:
-    from cStringIO import StringIO as BytesIO
+from six import BytesIO
 import csv
 from django import http
 from django.contrib import messages
