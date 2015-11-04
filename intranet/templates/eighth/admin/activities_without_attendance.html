@@ -28,7 +28,7 @@
 </select>
 
 {% if chosen_block %}
-    Click on column titles to sort.
+    Click on column titles to sort. Showing {{ scheduled_activities|length }} result{{ scheduled_activities|length|pluralize }}.
     <table data-sortable class="fancy-table">
         <thead>
             <tr>
@@ -43,7 +43,11 @@
             {% for scheduled_activity in scheduled_activities %}
                 <tr>
                     <td>{{ scheduled_activity.activity.aid }}</td>
-                    <td>{{ scheduled_activity.activity.name_with_flags }}</td>
+                    <td>
+                        <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">
+                            {{ scheduled_activity.activity.name_with_flags }}
+                        </a>
+                    </td>
                     <td>{{ scheduled_activity.get_true_sponsors|join:", "}}</td>
                     <td>{{ scheduled_activity.members.count }} / {{ scheduled_activity.get_true_capacity }}</td>
                     <td>

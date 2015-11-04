@@ -52,7 +52,11 @@
                 <tr>
                     <td>{{ signup.scheduled_activity.block.date }}</td>
                     <td>{{ signup.scheduled_activity.block.block_letter }}</td>
-                    <td>{{ signup.scheduled_activity.activity.name_with_flags }}</td>
+                    <td>
+                        <a href="{% url 'eighth_activity' signup.scheduled_activity.activity.id %}">
+                            {{ signup.scheduled_activity.full_title }}
+                        </a>
+                    </td>
                     <td>{{ signup.scheduled_activity.activity.id }}</td>
                     <td>{{ signup.scheduled_activity.get_true_sponsors|join:", " }}</td>
                     {% if request.user.is_eighth_admin %}
@@ -65,9 +69,9 @@
                     {% endif %}
                 </tr>
             {% empty %}
-                <tfoot>
-                    <tr><td colspan="5">{% if request.user == user %}You have no absences.{% else %}No absences.{% endif %}</td></tr>
-                </tfoot>
+                
+                    <tr><td colspan="5">{% if request.user == user %}<i class="fa fa-smile-o"></i> You have no absences.{% else %}No absences.{% endif %}</td></tr>
+                
             {% endfor %}
         </table>
         <br />

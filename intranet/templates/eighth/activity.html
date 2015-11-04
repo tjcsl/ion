@@ -53,25 +53,29 @@
 
     <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
     {% if activity.special %}
-        <span class="badge green">Special</span>
+        <span class="badge green" title="This is a special activity.">Special</span>
     {% endif %}
     {% if activity.restricted %}
-        <span class="badge purple">Restricted</span>
+        <span class="badge purple" title="This activity is restricted to those on the authorized list.">Restricted</span>
     {% endif %}
     {% if activity.sticky %}
-        <span class="badge orange">Sticky</span>
+        <span class="badge orange" title="This activity is sticky: if placed in it, you cannot change your selection.">Sticky</span>
     {% endif %}
     {% if activity.both_blocks %}
-        <span class="badge blue">Both Blocks</span>
+        <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
     {% endif %}
     {% if activity.one_a_day %}
-        <span class="badge lightblue">One a Day</span>
+        <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
     {% endif %}
     {% if activity.administrative %}
-        <span class="badge">Administrative</span>
+        <span class="badge" title="This activity is administrative.">Administrative</span>
     {% endif %}
     {% if activity.presign %}
-        <span class="badge yellow">48-hr Presign</span>
+        <span class="badge yellow" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
+    {% endif %}
+
+    {% if not activity.is_active %}
+        <h3 title="This activity isn't scheduled in the next two months."><i class="fa fa-info-circle"></i> This activity isn't active.</h3>
     {% endif %}
 
     <dl style="padding-top: 10px">
@@ -110,7 +114,7 @@
         </thead>
         <tbody>
         {% for sch in scheduled_activities %}
-            <tr{% if sch.cancelled %} class="cancelled"{% endif %}>
+            <tr{% if sch.cancelled %} class="cancelled"{% endif %} data-scheduled-id="{{ sch.id }}">
                 <th>
                     <a href="{% url 'eighth_signup' sch.block.id %}">
                         {{ sch.block }}
@@ -135,13 +139,19 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <a class="button" href="{% url 'eighth_signup' sch.block.id %}?activity={{ sch.activity.id }}">
-                        {% if sch.cancelled or sch.block.locked %}
-                            View Info
-                        {% else %}
-                            Sign Up
-                        {% endif %}
-                    </a>
+                    {% if request.user.is_student %}
+                        <a class="button" href="{% url 'eighth_signup' sch.block.id %}?activity={{ sch.activity.id }}">
+                            {% if sch.cancelled or sch.block.locked %}
+                                View Info
+                            {% else %}
+                                Sign Up
+                            {% endif %}
+                        </a>
+                    {% else %}
+                        <a class="button" href="{% url 'eighth_take_attendance' sch.id %}">
+                            View Roster
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% empty %}
