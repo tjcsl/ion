@@ -52,7 +52,7 @@ class BlockForm(forms.ModelForm):
             "date",
             "block_letter",
             "locked",
-            #"override_blocks",
+            # "override_blocks",
             "signup_time",
             "comments"
         ]

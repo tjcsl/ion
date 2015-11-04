@@ -85,8 +85,8 @@ class PrivacyOptionsForm(forms.Form):
         self.fields["showeighth"] = flag(None, False)
         self.fields["showeighth-self"] = flag("Show Eighth Period Schedule", False)
 
-        #self.fields["showlocker"] = flag(None, False)
-        #self.fields["showlocker-self"] = flag("Show Locker", False)
+        # self.fields["showlocker"] = flag(None, False)
+        # self.fields["showlocker-self"] = flag("Show Locker", False)
 
         if not user.is_ldap_admin:
             for name in self.fields:

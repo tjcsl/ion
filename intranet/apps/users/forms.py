@@ -21,7 +21,7 @@ class ProfileEditForm(forms.Form):
     state = forms.CharField(label="State")
     postal_code = forms.CharField(label="ZIP")
     counselor_id = forms.IntegerField(label="Counselor ID")
-    #locker = forms.CharField(label="Locker")
+    # locker = forms.CharField(label="Locker")
 
     FIELDS = ["admin_comments",
               "student_id",

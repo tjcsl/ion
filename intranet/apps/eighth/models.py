@@ -447,9 +447,9 @@ class EighthBlock(AbstractBaseEighthModel):
         """Get the next blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("date", "block_letter")
-                             .filter(Q(date__gt=self.date)
-                                     | (Q(date=self.date)
-                                        & Q(block_letter__gt=self.block_letter))
+                             .filter(Q(date__gt=self.date) |
+                                     (Q(date=self.date) &
+                                      Q(block_letter__gt=self.block_letter))
                                      ))
         if quantity == -1:
             return blocks
@@ -459,9 +459,9 @@ class EighthBlock(AbstractBaseEighthModel):
         """Get the previous blocks in order."""
         blocks = (EighthBlock.objects
                              .order_by("-date", "-block_letter")
-                             .filter(Q(date__lt=self.date)
-                                     | (Q(date=self.date)
-                                        & Q(block_letter__lt=self.block_letter))
+                             .filter(Q(date__lt=self.date) |
+                                     (Q(date=self.date) &
+                                      Q(block_letter__lt=self.block_letter))
                                      ))
         if quantity == -1:
             return reversed(blocks)
@@ -774,7 +774,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.activity.both_blocks:
             return None
 
-        if not self.block.block_letter in ["A", "B"]:
+        if self.block.block_letter not in ["A", "B"]:
             # both_blocks is not currently implemented for blocks other than A and B
             return None
 
@@ -1019,7 +1019,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Cancel an EighthScheduledActivity.
         This does nothing besides set the cancelled flag and save the object.
         """
-        #super(EighthScheduledActivity, self).save(*args, **kwargs)
+        # super(EighthScheduledActivity, self).save(*args, **kwargs)
 
         logger.debug("Running cancel hooks: {}".format(self))
 
