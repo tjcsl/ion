@@ -11,7 +11,6 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.contrib.auth.models import Group as DjangoGroup
 from django.utils import formats
 from ..users.models import User
-from ..groups.models import Group
 from . import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)

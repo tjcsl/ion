@@ -4,16 +4,12 @@ from __future__ import unicode_literals
 import logging
 import datetime
 import bleach
-from calendar import monthrange
 from .models import Event
 from .forms import EventForm
-from ..auth.decorators import events_admin_required
-from intranet import settings
 from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 

@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 import logging
 
-from rest_framework import generics, views, status, permissions
-from .models import Announcement, AnnouncementManager
+from rest_framework import generics, permissions
+from .models import Announcement
 from .serializers import AnnouncementSerializer
 
 logger = logging.getLogger(__name__)

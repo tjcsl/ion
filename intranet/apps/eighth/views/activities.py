@@ -3,16 +3,11 @@ from __future__ import unicode_literals
 
 import logging
 from datetime import datetime, timedelta
-from django import http
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from ....utils.serialization import safe_json
-from ...users.models import User
-from ..exceptions import SignupException
+from django.shortcuts import render, get_object_or_404
 from ..models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
+    EighthBlock, EighthScheduledActivity, EighthActivity
 )
-from ..serializers import EighthBlockDetailSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +24,7 @@ def activity_view(request, activity_id=None):
     )
 
     if first_block:
-        two_months = datetime.now().date() + timedelta(days=62)
+        two_months = datetime.now().date() + timedelta(weeks=8)
         scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date,
                                                            block__date__lte=two_months)
 

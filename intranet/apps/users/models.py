@@ -6,9 +6,8 @@ import hashlib
 import logging
 import ldap
 import os
-import re
 from six import text_type
-from django.db import models, utils
+from django.db import models
 from django.conf import settings
 from django.core.cache import cache
 from django.core import exceptions

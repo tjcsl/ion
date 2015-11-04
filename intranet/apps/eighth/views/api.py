@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import logging
-import json
 
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from rest_framework import generics, views, status
 from rest_framework.response import Response
 from intranet.apps.users.models import User

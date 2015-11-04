@@ -6,7 +6,6 @@ import uuid
 import os
 import logging
 from django.contrib.auth.hashers import check_password
-from django.core import exceptions
 from intranet import settings
 from ..users.models import User
 

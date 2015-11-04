@@ -4,19 +4,17 @@ from __future__ import unicode_literals
 import os
 import random
 import logging
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from intranet import settings
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
-from django.core import exceptions
 from django.templatetags.static import static
 from django.views.generic.base import View
-from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
+from django.views.decorators.debug import sensitive_post_parameters
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")

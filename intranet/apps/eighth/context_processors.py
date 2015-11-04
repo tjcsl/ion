@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from .utils import get_start_date
-from .models import EighthSignup
 
 
 def start_date(request):

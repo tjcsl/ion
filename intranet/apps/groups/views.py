@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import Http404
-# from ..users.models import User
 from .forms import GroupForm
 from .models import Group
 logger = logging.getLogger(__name__)

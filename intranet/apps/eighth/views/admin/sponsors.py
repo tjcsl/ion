@@ -5,7 +5,6 @@ from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models import Q
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm

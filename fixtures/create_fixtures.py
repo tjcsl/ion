@@ -73,7 +73,7 @@ bad_sa = []
 sponsor_pks = []
 room_pks = []
 
-########## BLOCKS ##########
+# BLOCKS #
 cur.execute("SELECT * FROM eighth_blocks WHERE date > '{}';".format(start_date))
 rows = cur.fetchall()
 
@@ -95,7 +95,7 @@ eighth_objects = []
 print("Blocks complete")
 
 
-########## SPONSORS ##########
+# SPONSORS #
 cur.execute("SELECT * FROM eighth_sponsors;")
 rows = cur.fetchall()
 seen_uids = set()
@@ -147,7 +147,7 @@ eighth_objects = []
 print("Sponsors complete")
 # print(sponsor_pks)
 
-########## ROOMS ##########
+# ROOMS #
 cur.execute("SELECT * FROM eighth_rooms;")
 rows = cur.fetchall()
 
@@ -168,7 +168,7 @@ eighth_objects = []
 print("Rooms complete")
 
 
-########## ACTIVITIES ##########
+# ACTIVITIES #
 cur.execute("SELECT * FROM eighth_activities;")
 rows = cur.fetchall()
 
@@ -205,7 +205,7 @@ json.dump(eighth_objects, f_activities)
 eighth_objects = []
 print("Activities complete")
 
-########## SCHEDULED ACTIVITIES ##########
+# SCHEDULED ACTIVITIES #
 cur.execute("SELECT * FROM eighth_block_map WHERE bid >= 2355;")
 rows = cur.fetchall()
 
@@ -245,7 +245,7 @@ json.dump(eighth_objects, f_s_activities)
 eighth_objects = []
 print("Scheduled activities complete")
 
-########## SIGNUPS ##########
+# SIGNUPS #
 block_pk_str = ",".join(map(str, block_pks))
 cur.execute("SELECT * FROM eighth_activity_map WHERE bid IN ({})".format(block_pk_str))
 rows = cur.fetchall()
@@ -293,7 +293,7 @@ user_objects = []
 print("Signups complete")
 print("Users complete")
 
-########## ANNOUNCEMENTS ##########
+# ANNOUNCEMENTS #
 cur.execute("SELECT * FROM news WHERE posted > '{}';".format(start_date))
 rows = cur.fetchall()
 news = []

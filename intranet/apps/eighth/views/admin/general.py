@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from cacheops import invalidate_all
-from datetime import datetime
 from six.moves import cPickle as pickle
 from six.moves.urllib.parse import unquote
 from django.contrib import messages

@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.contrib.auth.models import Group as DjangoGroup
 from django.core.urlresolvers import reverse
-from django.db import models
-from django.db.models import Manager, Q
-from ..users.models import User
-from ..announcements.models import Announcement
-from datetime import datetime
 from ..notifications.emails import email_send
 from intranet import settings
 

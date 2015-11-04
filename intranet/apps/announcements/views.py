@@ -1,23 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import re
 import logging
-import json
 import bleach
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from intranet import settings
 from ..auth.decorators import announcements_admin_required
 from ..groups.models import Group
-from ..users.models import User
 from ..dashboard.views import dashboard_view
 from .models import Announcement, AnnouncementRequest
 from .forms import AnnouncementForm, AnnouncementRequestForm
-from .notifications import (email_send, request_announcement_email,
+from .notifications import (request_announcement_email,
                             admin_request_announcement_email,
                             announcement_posted_twitter,
                             announcement_posted_email,

@@ -8,7 +8,6 @@ from requests_oauthlib import OAuth1
 from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
-from django.template.loader import get_template
 from intranet import settings
 from ..notifications.emails import email_send
 from ..users.models import User

@@ -2,13 +2,11 @@
 from __future__ import unicode_literals
 
 import logging
-from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from intranet import settings
 from ..notifications.emails import email_send
-from ..users.models import User
 from .forms import FeedbackForm
 
 logger = logging.getLogger(__name__)

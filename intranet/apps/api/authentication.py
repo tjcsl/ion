@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import base64
 from rest_framework import authentication, exceptions
 from intranet.apps.auth.backends import KerberosAuthenticationBackend
 

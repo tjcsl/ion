@@ -5,7 +5,6 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 from ..users.models import User
-from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
 from ..announcements.models import Announcement
 from .notifications import event_approval_request

@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 
 import logging
-from intranet import settings
-from ..users.models import User
 from ..notifications.emails import email_send
-from .models import EighthBlock, EighthSignup
+from .models import EighthSignup
 
 logger = logging.getLogger(__name__)
 

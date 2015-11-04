@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
-from intranet import settings
 from intranet.apps.eighth.models import EighthBlock, EighthSignup
 from intranet.apps.eighth.notifications import signup_status_email
 from intranet.apps.users.models import User

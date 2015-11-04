@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django import forms
 from .models import Event
 from ..groups.models import Group
-from ..users.models import User
 
 
 class EventForm(forms.ModelForm):

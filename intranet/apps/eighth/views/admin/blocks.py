@@ -11,10 +11,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import QuickBlockForm, BlockForm
-from ...forms.admin.activities import ScheduledActivityMultiSelectForm
 from ...models import EighthBlock, EighthScheduledActivity
 from ..attendance import generate_roster_pdf
-from ...serializers import EighthBlockDetailSerializer
 
 logger = logging.getLogger(__name__)
 
