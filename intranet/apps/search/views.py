@@ -10,6 +10,7 @@ from intranet.db.ldap_db import LDAPConnection
 from ..announcements.models import Announcement
 from ..events.models import Event
 from ..eighth.models import EighthActivity
+from ..search.utils import get_query
 from ..users.models import User, Grade
 from ..users.views import profile_view
 
@@ -189,6 +190,33 @@ def get_search_results(q, admin=False):
     return False, users
 
 
+def do_activities_search(q):
+    filter_query = get_query(q, ["name", "description"])
+    entires = EighthActivity.objects.filter(filter_query).order_by("name")
+    final_entires = []
+    for e in entires:
+        if e.is_active:
+            final_entires.append(e)
+    return final_entires
+
+def do_announcements_search(q):
+    filter_query = get_query(q, ["title"])
+    entires = Announcement.objects.filter(filter_query).order_by("title")
+    final_entires = []
+    for e in entires:
+        if e.is_this_year:
+            final_entires.append(e)
+    return final_entires
+
+def do_events_search(q):
+    filter_query = get_query(q, ["title"])
+    entires = Event.objects.filter(filter_query).order_by("title")
+    final_entires = []
+    for e in entires:
+        if e.is_this_year:
+            final_entires.append(e)
+    return final_entires
+
 @login_required
 def search_view(request):
     q = request.GET.get("q", "").strip()
@@ -207,38 +235,16 @@ def search_view(request):
         if is_admin:
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
-        """
-        # Announcements
-        announcements_map = Announcement.es.search(q)
-        announcements_ids = [a["id"] for a in announcements_map]
-        announcements_all = Announcement.objects.filter(id__in=announcements_ids)
-        announcements = []
-        for a in announcements:
-            if a.is_this_year:
-                announcements.append(a)
+        activities = do_activities_search(q)
+        announcements = do_announcements_search(q)
+        events = do_events_search(q)
 
-        # Events
-        events_map = Event.es.search(q)
-        events_ids = [a["id"] for a in events_map]
-        events_all = Event.objects.filter(id__in=events_ids)
-        events = []
-        for e in events_all:
-            if e.is_this_year:
-                events.append(e)
-
-        # Activities
-        activities_map = EighthActivity.es.search(q)
-        activities_ids = [a["id"] for a in activities_map]
-        activities_all = EighthActivity.objects.filter(id__in=activities_ids)
-        activities = []
-        only_active = (request.user.is_eighth_admin and "only_active" in request.GET) or not request.user.is_eighth_admin
-        for a in activities_all:
-            if (only_active and a.is_active) or not only_active:
-                activities.append(a)
-        """
+        logger.debug(activities)
+        logger.debug(announcements)
+        logger.debug(events)
 
         if len(users) == 1:
-            no_other_results = True  # (not announcements and not events and not activities)
+            no_other_results = (not activities and not announcements)
             if request.user.is_eighthoffice or no_other_results:
                 user_id = users[0].id
                 return redirect("user_profile", user_id=user_id)
@@ -246,10 +252,10 @@ def search_view(request):
         context = {
             "query_error": query_error,
             "search_query": q,
-            "search_results": users,  # Not actual user objects
-            #"announcements": announcements, # Announcement objects
-            #"events": events, # Event objects
-            #"activities": activities # EighthActivity objects
+            "search_results": users,  # User objects
+            "announcements": announcements, # Announcement objects
+            "events": events, # Event objects
+            "activities": activities # EighthActivity objects
         }
     else:
         context = {

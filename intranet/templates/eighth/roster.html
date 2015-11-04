@@ -43,10 +43,11 @@
         </div>
     {% endif %}
 
-
+    {% if request.user.is_student %}
     <a href="{% url 'eighth_signup' scheduled_activity.block.id %}?activity={{ scheduled_activity.activity.id }}" class="button">
         <i class="fa fa-arrow-left"></i> Sign Up
     </a>
+    {% endif %}
 
     {% if request.user.is_eighth_admin or is_sponsor %}
         <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button">View/Modify Attendance</a>

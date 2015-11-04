@@ -75,7 +75,32 @@
         <br>
         <br>
     {% endif %}
-{% comment %}
+
+    {% if search_query %}
+        <br /><br />
+        <h3>Activities</h3>
+        {% if activities %}
+        {{ activities|length }} result{{ activities|pluralize }}
+        <table class="list-table activities-table">
+            {% for a in activities %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'eighth_activity' a.id %}">
+                            {{ a.name }}
+                        </a>
+                        {% if a.description %}
+                            <br />
+                            &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
     {% if search_query %}
         <br /><br />
         <h3>Announcements</h3>
@@ -119,33 +144,6 @@
             <b>No results.</b>
         {% endif %}
     {% endif %}
-
-    {% if search_query %}
-        <br /><br />
-        <h3>Activities</h3>
-        {% if activities %}
-        {{ activities|length }} result{{ activities|pluralize }}
-        <table class="list-table activities-table">
-            {% for a in activities %}
-                <tr>
-                    <td class="list-item">
-                        <a href="{% url 'eighth_activity' a.id %}">
-                            {{ a.name }}
-                        </a>
-                        {% if a.description %}
-                            <br />
-                            &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
-                        {% endif %}
-                        {% if not a.is_active %}<b>(INACTIVE)</b>{% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-        {% else %}
-            <b>No results.</b>
-        {% endif %}
-    {% endif %}
-{% endcomment %}
 
 
     {% if "tips" in request.GET or query_error or not search_query %}
