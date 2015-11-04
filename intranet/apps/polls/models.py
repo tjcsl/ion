@@ -48,7 +48,7 @@ class Question(models.Model):
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
 
     def is_writing(self):
-        return (self.TYPE == FREE_RESP or self.TYPE == SHORT_RESP)
+        return (self.TYPE == Question.FREE_RESP or self.TYPE == Question.SHORT_RESP)
 
     def trunc_question(self):
         if len(self.question) > 15:

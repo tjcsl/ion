@@ -106,7 +106,7 @@ def gcm_post_view(request):
                 reg_ids.append(nc.android_gcm_token)
                 nc_objs.append(nc)
             else:
-                fail_ids.append(uid)
+                fail_ids.append(ncid)
 
         logger.debug(nc_objs)
         logger.debug(reg_ids)

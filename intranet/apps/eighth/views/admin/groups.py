@@ -96,7 +96,7 @@ def edit_group_view(request, group_id):
     if "possible_student" in request.GET:
         student_ids = request.GET.getlist("possible_student")
         possible_students = User.objects.get(id__in=student_ids)
-        context["possible_students"] = students
+        context["possible_students"] = possible_students
 
     return render(request, "eighth/admin/edit_group.html", context)
 
@@ -530,7 +530,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 schact = EighthScheduledActivity.objects.get(block=block, activity=act)
                 schact_ids.append(schact.id)
             except EighthScheduledActivity.DoesNotExist:
-                raise Http404
+                raise http.Http404
 
         args = ""
         for said in schact_ids:

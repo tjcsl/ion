@@ -7,6 +7,7 @@ import logging
 import ldap
 import os
 import re
+from six import text_type
 from django.db import models, utils
 from django.conf import settings
 from django.core.cache import cache
@@ -1310,7 +1311,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise Exception("Expected list for attribute '{}'".format(name))
 
         # Possible issue with python ldap with unicode values
-        if isinstance(value, (unicode, str)):
+        # FIXME: move to ldap3
+        if isinstance(value, text_type):
             value = str(value)
 
         c = LDAPConnection()
@@ -1328,8 +1330,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
-        # Possible issue with python ldap with unicode values
-        if isinstance(value, (unicode, str)):
+        # Possible issue with python-ldap with unicode values
+        # FIXME: move to ldap3
+        if isinstance(value, text_type):
             value = str(value)
 
         c = LDAPConnection()

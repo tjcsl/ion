@@ -142,7 +142,6 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 def find_birthdays(request):
     """Return information on user birthdays."""
     today = datetime.now().date()
-    actual_today = datetime.now().date()
     custom = False
     yr_inc = 0
     if "birthday_month" in request.GET and "birthday_day" in request.GET:

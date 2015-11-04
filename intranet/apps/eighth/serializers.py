@@ -31,10 +31,10 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
         scheduled_on = {}
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block")
 
-        user = self.context.get("user", self.context["request"].user)
-        favorited_activities = set(user.favorited_activity_set
-                                       .values_list("id", flat=True))
-        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
+        # user = self.context.get("user", self.context["request"].user)
+        # favorited_activities = set(user.favorited_activity_set
+        #                               .values_list("id", flat=True))
+        # available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         for scheduled_activity in scheduled_activities:
             scheduled_on[scheduled_activity.block.id] = {
@@ -353,7 +353,7 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     def block_info(self, scheduled_activity):
         return {
             "id": scheduled_activity.block.id,
-            "date": signup.scheduled_activity.block.date,
+            "date": scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail",
                            args=[scheduled_activity.block.id],
                            request=self.context["request"])

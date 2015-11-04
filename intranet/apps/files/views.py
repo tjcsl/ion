@@ -155,15 +155,14 @@ def files_type(request, fstype=None):
         if "authentication" in error_msg:
             return redirect("files_auth")
         return redirect("files")
-    else:
+    finally:
         # Delete the stored credentials, so they aren't mistakenly used or accessed later.
-        authinfo = None
         del authinfo
 
     if host.directory:
         host_dir = host.directory
         if "{}" in host_dir:
-            host_dir = host_dir.format(authinfo["username"])
+            host_dir = host_dir.format(request.user.username)
         if "{win}" in host_dir:
             host_dir = windows_dir_format(host_dir, request.user)
             try:

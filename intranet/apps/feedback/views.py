@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from intranet import settings
-from ..announcements.views import email_send
+from ..notifications.emails import email_send
 from ..users.models import User
 from .forms import FeedbackForm
 
@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 def send_feedback_email(request, data):
-    comments = data["comments"]
     data["user"] = request.user
     email = request.user.emails[0] if len(request.user.emails) > 0 else request.user.tj_email
     data["email"] = email

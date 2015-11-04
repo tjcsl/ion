@@ -94,10 +94,10 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
             block_title = ("Take Attendance" if block.locked else "View Roster")
 
-            try:
-                sponsor = self.request.user.eighthsponsor
-            except (EighthSponsor.DoesNotExist, AttributeError):
-                sponsor = None
+            # try:
+            #    sponsor = self.request.user.eighthsponsor
+            # except (EighthSponsor.DoesNotExist, AttributeError):
+            #    sponsor = None
 
             # if not (self.request.user.is_eighth_admin or (sponsor is None)):
             #    kwargs.update({"sponsor": sponsor})

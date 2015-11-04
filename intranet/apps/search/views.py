@@ -185,7 +185,6 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
-    query_error = False
     users = do_ldap_query(q, admin)
     return False, users
 

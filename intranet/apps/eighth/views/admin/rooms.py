@@ -130,7 +130,6 @@ def room_sanity_check_view(request):
 def room_utilization_for_block_view(request):
     blocks = EighthBlock.objects.all()
     block_id = request.GET.get("block", None)
-    block = None
 
     if block_id:
         return redirect("eighth_admin_room_utilization", block_id, block_id)

@@ -41,7 +41,7 @@ class KerberosAuthenticationBackend(object):
             """
 
             try:
-                user = User.get_user(username=username)
+                User.get_user(username=username)
             except User.DoesNotExist:
                 logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
                 return

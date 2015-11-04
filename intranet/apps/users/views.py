@@ -164,7 +164,7 @@ def picture_view(request, user_id, year=None):
 def class_section_view(request, section_id):
     c = Class(id=section_id)
     try:
-        name = c.name
+        c.name
     except Exception:
         raise Http404
 

@@ -10,6 +10,7 @@ import ldap.sasl
 import sys
 import os
 import datetime
+from six.moves import input
 
 # Run this on iodine.tjhsst.edu
 start_date = "2015-09-01"
@@ -58,7 +59,7 @@ f_announcements = open("fixtures/announcements/announcements.json", "w")
 
 con = mdb.connect("localhost",
                   "iodine",
-                  raw_input("Iodine MySQL password: "),
+                  input("Iodine MySQL password: "),
                   "iodine")
 
 cur = con.cursor()
