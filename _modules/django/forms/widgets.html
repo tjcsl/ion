@@ -1,0 +1,1067 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>django.forms.widgets &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for django.forms.widgets</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">HTML Widget classes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.forms.utils</span> <span class="kn">import</span> <span class="n">flatatt</span><span class="p">,</span> <span class="n">to_current_timezone</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">formats</span><span class="p">,</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">django.utils.datastructures</span> <span class="kn">import</span> <span class="n">MergeDict</span><span class="p">,</span> <span class="n">MultiValueDict</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">force_text</span><span class="p">,</span> <span class="n">python_2_unicode_compatible</span>
+<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">conditional_escape</span><span class="p">,</span> <span class="n">format_html</span><span class="p">,</span> <span class="n">html_safe</span>
+<span class="kn">from</span> <span class="nn">django.utils.safestring</span> <span class="kn">import</span> <span class="n">mark_safe</span>
+<span class="kn">from</span> <span class="nn">django.utils.six.moves.urllib.parse</span> <span class="kn">import</span> <span class="n">urljoin</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&#39;Media&#39;</span><span class="p">,</span> <span class="s">&#39;MediaDefiningClass&#39;</span><span class="p">,</span> <span class="s">&#39;Widget&#39;</span><span class="p">,</span> <span class="s">&#39;TextInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;EmailInput&#39;</span><span class="p">,</span> <span class="s">&#39;URLInput&#39;</span><span class="p">,</span> <span class="s">&#39;NumberInput&#39;</span><span class="p">,</span> <span class="s">&#39;PasswordInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;HiddenInput&#39;</span><span class="p">,</span> <span class="s">&#39;MultipleHiddenInput&#39;</span><span class="p">,</span> <span class="s">&#39;ClearableFileInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;FileInput&#39;</span><span class="p">,</span> <span class="s">&#39;DateInput&#39;</span><span class="p">,</span> <span class="s">&#39;DateTimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;TimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;Textarea&#39;</span><span class="p">,</span> <span class="s">&#39;CheckboxInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Select&#39;</span><span class="p">,</span> <span class="s">&#39;NullBooleanSelect&#39;</span><span class="p">,</span> <span class="s">&#39;SelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;RadioSelect&#39;</span><span class="p">,</span>
+    <span class="s">&#39;CheckboxSelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;MultiWidget&#39;</span><span class="p">,</span>
+    <span class="s">&#39;SplitDateTimeWidget&#39;</span><span class="p">,</span> <span class="s">&#39;SplitHiddenDateTimeWidget&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">MEDIA_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;css&#39;</span><span class="p">,</span> <span class="s">&#39;js&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@html_safe</span>
+<span class="nd">@python_2_unicode_compatible</span>
+<span class="k">class</span> <span class="nc">Media</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">media</span><span class="p">:</span>
+            <span class="n">media_attrs</span> <span class="o">=</span> <span class="n">media</span><span class="o">.</span><span class="n">__dict__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">media_attrs</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_css</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_js</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MEDIA_TYPES</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;add_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="n">media_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;render_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MEDIA_TYPES</span><span class="p">])))</span>
+
+    <span class="k">def</span> <span class="nf">render_js</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">format_html</span><span class="p">(</span>
+                <span class="s">&#39;&lt;script type=&quot;text/javascript&quot; src=&quot;{}&quot;&gt;&lt;/script&gt;&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_js</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">render_css</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># To keep rendering order consistent, we can&#39;t just iterate over items().</span>
+        <span class="c"># We need to sort the keys, and iterate over the sorted list.</span>
+        <span class="n">media</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_css</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">[[</span>
+            <span class="n">format_html</span><span class="p">(</span>
+                <span class="s">&#39;&lt;link href=&quot;{}&quot; type=&quot;text/css&quot; media=&quot;{}&quot; rel=&quot;stylesheet&quot; /&gt;&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">medium</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_css</span><span class="p">[</span><span class="n">medium</span><span class="p">]</span>
+        <span class="p">]</span> <span class="k">for</span> <span class="n">medium</span> <span class="ow">in</span> <span class="n">media</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">absolute_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s">&#39;http://&#39;</span><span class="p">,</span> <span class="s">&#39;https://&#39;</span><span class="p">,</span> <span class="s">&#39;/&#39;</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">STATIC_URL</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># backwards compatibility</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_URL</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">STATIC_URL</span>
+        <span class="k">return</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="s">&quot;Returns a Media object that only contains media of the given type&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MEDIA_TYPES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Media</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">):</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)})</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;Unknown media type &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_js</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_js</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_js</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_css</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">medium</span><span class="p">,</span> <span class="n">paths</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_css</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">medium</span><span class="p">)</span> <span class="ow">or</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_css</span><span class="p">[</span><span class="n">medium</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_css</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">medium</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">combined</span> <span class="o">=</span> <span class="n">Media</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MEDIA_TYPES</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">combined</span><span class="p">,</span> <span class="s">&#39;add_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">combined</span><span class="p">,</span> <span class="s">&#39;add_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">combined</span>
+
+
+<span class="k">def</span> <span class="nf">media_property</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_media</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Get the media property of the superclass, if it exists</span>
+        <span class="n">sup_cls</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">sup_cls</span><span class="o">.</span><span class="n">media</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">Media</span><span class="p">()</span>
+
+        <span class="c"># Get the media definition for this class</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;Media&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">definition</span><span class="p">:</span>
+            <span class="n">extend</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="s">&#39;extend&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">extend</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">extend</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">base</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">Media</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">medium</span> <span class="ow">in</span> <span class="n">extend</span><span class="p">:</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">base</span><span class="p">[</span><span class="n">medium</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">m</span> <span class="o">+</span> <span class="n">Media</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Media</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">base</span>
+    <span class="k">return</span> <span class="nb">property</span><span class="p">(</span><span class="n">_media</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MediaDefiningClass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metaclass for classes that can have media definitions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="n">new_class</span> <span class="o">=</span> <span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">MediaDefiningClass</span><span class="p">,</span> <span class="n">mcs</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="s">&#39;media&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="n">new_class</span><span class="o">.</span><span class="n">media</span> <span class="o">=</span> <span class="n">media_property</span><span class="p">(</span><span class="n">new_class</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_class</span>
+
+
+<span class="nd">@html_safe</span>
+<span class="nd">@python_2_unicode_compatible</span>
+<span class="k">class</span> <span class="nc">SubWidget</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Some widgets are made of multiple HTML elements -- namely, RadioSelect.</span>
+<span class="sd">    This is a class that represents the &quot;inner&quot; HTML element of a widget.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_widget</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_widget</span> <span class="o">=</span> <span class="n">parent_widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_widget</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Widget</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">MediaDefiningClass</span><span class="p">)):</span>
+    <span class="n">needs_multipart_form</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># Determines does this widget need multipart form</span>
+    <span class="n">is_localized</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">is_required</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span> <span class="o">==</span> <span class="s">&#39;hidden&#39;</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;input_type&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">subwidgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Yields all &quot;subwidgets&quot; of this widget. Used only by RadioSelect to</span>
+<span class="sd">        allow template access to individual &lt;input type=&quot;radio&quot;&gt; buttons.</span>
+
+<span class="sd">        Arguments are the same as for render().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">yield</span> <span class="n">SubWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns this Widget rendered as HTML, as a Unicode string.</span>
+
+<span class="sd">        The &#39;value&#39; given is not guaranteed to be valid input, so subclass</span>
+<span class="sd">        implementations should program defensively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;subclasses of Widget must provide a render() method&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">build_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extra_attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="s">&quot;Helper function for building an attribute dictionary.&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_attrs</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra_attrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attrs</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a dictionary of data and this widget&#39;s name, returns the value</span>
+<span class="sd">        of this widget. Returns None if it&#39;s not provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the HTML ID attribute of this Widget for use by a &lt;label&gt;,</span>
+<span class="sd">        given the ID of the field. Returns None if no ID is available.</span>
+
+<span class="sd">        This hook is necessary because some widgets have multiple HTML</span>
+<span class="sd">        elements and, thus, multiple IDs. In that case, this method should</span>
+<span class="sd">        return an ID value that corresponds to the first ID in the widget&#39;s</span>
+<span class="sd">        tags.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">id_</span>
+
+
+<span class="k">class</span> <span class="nc">Input</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all &lt;input&gt; widgets (except type=&#39;checkbox&#39; and</span>
+<span class="sd">    type=&#39;radio&#39;, which are special).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># Subclasses must define this.</span>
+
+    <span class="k">def</span> <span class="nf">_format_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_localized</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">formats</span><span class="o">.</span><span class="n">localize_input</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+            <span class="c"># Only add the &#39;value&#39; attribute if a value is non-empty.</span>
+            <span class="n">final_attrs</span><span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_value</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;input{} /&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">TextInput</span><span class="p">(</span><span class="n">Input</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;text&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TextInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NumberInput</span><span class="p">(</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;number&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">EmailInput</span><span class="p">(</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;email&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">URLInput</span><span class="p">(</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;url&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">PasswordInput</span><span class="p">(</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;password&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">render_value</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PasswordInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_value</span> <span class="o">=</span> <span class="n">render_value</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">PasswordInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">HiddenInput</span><span class="p">(</span><span class="n">Input</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;hidden&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">MultipleHiddenInput</span><span class="p">(</span><span class="n">HiddenInput</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A widget that handles &lt;input type=&quot;hidden&quot;&gt; for fields that have a list</span>
+<span class="sd">    of values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultipleHiddenInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="c"># choices can be any iterable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">choices</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">input_attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">force_text</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="o">**</span><span class="n">final_attrs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+                <span class="c"># An ID attribute was given. Add a numeric index as a suffix</span>
+                <span class="c"># so that the inputs don&#39;t all have the same ID attribute.</span>
+                <span class="n">input_attrs</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;input{} /&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">input_attrs</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">MultiValueDict</span><span class="p">,</span> <span class="n">MergeDict</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FileInput</span><span class="p">(</span><span class="n">Input</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;file&#39;</span>
+    <span class="n">needs_multipart_form</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FileInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="s">&quot;File widgets take data from FILES, not POST&quot;</span>
+        <span class="k">return</span> <span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+
+<span class="n">FILE_INPUT_CONTRADICTION</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">ClearableFileInput</span><span class="p">(</span><span class="n">FileInput</span><span class="p">):</span>
+    <span class="n">initial_text</span> <span class="o">=</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;Currently&#39;</span><span class="p">)</span>
+    <span class="n">input_text</span> <span class="o">=</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;Change&#39;</span><span class="p">)</span>
+    <span class="n">clear_checkbox_label</span> <span class="o">=</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;Clear&#39;</span><span class="p">)</span>
+
+    <span class="n">template_with_initial</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s">&#39;</span><span class="si">%(initial_text)s</span><span class="s">: &lt;a href=&quot;</span><span class="si">%(initial_url)s</span><span class="s">&quot;&gt;</span><span class="si">%(initial)s</span><span class="s">&lt;/a&gt; &#39;</span>
+        <span class="s">&#39;</span><span class="si">%(clear_template)s</span><span class="s">&lt;br /&gt;</span><span class="si">%(input_text)s</span><span class="s">: </span><span class="si">%(input)s</span><span class="s">&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">template_with_clear</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%(clear)s</span><span class="s"> &lt;label for=&quot;</span><span class="si">%(clear_checkbox_id)s</span><span class="s">&quot;&gt;</span><span class="si">%(clear_checkbox_label)s</span><span class="s">&lt;/label&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">clear_checkbox_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given the name of the file input, return the name of the clear checkbox</span>
+<span class="sd">        input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#39;-clear&#39;</span>
+
+    <span class="k">def</span> <span class="nf">clear_checkbox_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given the name of the clear checkbox input, return the HTML id for it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#39;_id&#39;</span>
+
+    <span class="k">def</span> <span class="nf">is_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return whether value is considered to be initial value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&#39;url&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_template_substitution_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return value-related substitutions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;initial&#39;</span><span class="p">:</span> <span class="n">conditional_escape</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+            <span class="s">&#39;initial_url&#39;</span><span class="p">:</span> <span class="n">conditional_escape</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">url</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">substitutions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;initial_text&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_text</span><span class="p">,</span>
+            <span class="s">&#39;input_text&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_text</span><span class="p">,</span>
+            <span class="s">&#39;clear_template&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+            <span class="s">&#39;clear_checkbox_label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_checkbox_label</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%(input)s</span><span class="s">&#39;</span>
+        <span class="n">substitutions</span><span class="p">[</span><span class="s">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClearableFileInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_initial</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_with_initial</span>
+            <span class="n">substitutions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_template_substitution_values</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_required</span><span class="p">:</span>
+                <span class="n">checkbox_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_checkbox_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">checkbox_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_checkbox_id</span><span class="p">(</span><span class="n">checkbox_name</span><span class="p">)</span>
+                <span class="n">substitutions</span><span class="p">[</span><span class="s">&#39;clear_checkbox_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conditional_escape</span><span class="p">(</span><span class="n">checkbox_name</span><span class="p">)</span>
+                <span class="n">substitutions</span><span class="p">[</span><span class="s">&#39;clear_checkbox_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conditional_escape</span><span class="p">(</span><span class="n">checkbox_id</span><span class="p">)</span>
+                <span class="n">substitutions</span><span class="p">[</span><span class="s">&#39;clear&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CheckboxInput</span><span class="p">()</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">checkbox_name</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="n">checkbox_id</span><span class="p">})</span>
+                <span class="n">substitutions</span><span class="p">[</span><span class="s">&#39;clear_template&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_with_clear</span> <span class="o">%</span> <span class="n">substitutions</span>
+
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="n">template</span> <span class="o">%</span> <span class="n">substitutions</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">upload</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClearableFileInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_required</span> <span class="ow">and</span> <span class="n">CheckboxInput</span><span class="p">()</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_checkbox_name</span><span class="p">(</span><span class="n">name</span><span class="p">)):</span>
+
+            <span class="k">if</span> <span class="n">upload</span><span class="p">:</span>
+                <span class="c"># If the user contradicts themselves (uploads a new file AND</span>
+                <span class="c"># checks the &quot;clear&quot; checkbox), we return a unique marker</span>
+                <span class="c"># object that FileField will turn into a ValidationError.</span>
+                <span class="k">return</span> <span class="n">FILE_INPUT_CONTRADICTION</span>
+            <span class="c"># False signals to clear any existing value, as opposed to just None</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="n">upload</span>
+
+
+<span class="k">class</span> <span class="nc">Textarea</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Use slightly better defaults than HTML&#39;s 20x2 box</span>
+        <span class="n">default_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;cols&#39;</span><span class="p">:</span> <span class="s">&#39;40&#39;</span><span class="p">,</span> <span class="s">&#39;rows&#39;</span><span class="p">:</span> <span class="s">&#39;10&#39;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="n">default_attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Textarea</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">default_attrs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;textarea{}&gt;</span><span class="se">\r\n</span><span class="s">{}&lt;/textarea&gt;&#39;</span><span class="p">,</span>
+                           <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">),</span>
+                           <span class="n">force_text</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">DateTimeBaseInput</span><span class="p">(</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="n">format_key</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">supports_microseconds</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DateTimeBaseInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">format</span> <span class="k">if</span> <span class="n">format</span> <span class="k">else</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_format_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">formats</span><span class="o">.</span><span class="n">localize_input</span><span class="p">(</span><span class="n">value</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">or</span> <span class="n">formats</span><span class="o">.</span><span class="n">get_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format_key</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">DateInput</span><span class="p">(</span><span class="n">DateTimeBaseInput</span><span class="p">):</span>
+    <span class="n">format_key</span> <span class="o">=</span> <span class="s">&#39;DATE_INPUT_FORMATS&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">DateTimeInput</span><span class="p">(</span><span class="n">DateTimeBaseInput</span><span class="p">):</span>
+    <span class="n">format_key</span> <span class="o">=</span> <span class="s">&#39;DATETIME_INPUT_FORMATS&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">TimeInput</span><span class="p">(</span><span class="n">DateTimeBaseInput</span><span class="p">):</span>
+    <span class="n">format_key</span> <span class="o">=</span> <span class="s">&#39;TIME_INPUT_FORMATS&#39;</span>
+
+
+<span class="c"># Defined at module level so that CheckboxInput is picklable (#17976)</span>
+<span class="k">def</span> <span class="nf">boolean_check</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="n">v</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CheckboxInput</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">check_test</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CheckboxInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="c"># check_test is a callable that takes a value and returns True</span>
+        <span class="c"># if the checkbox should be checked for that value.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_test</span> <span class="o">=</span> <span class="n">boolean_check</span> <span class="k">if</span> <span class="n">check_test</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">check_test</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;checkbox&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_test</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">final_attrs</span><span class="p">[</span><span class="s">&#39;checked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;checked&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">True</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
+            <span class="c"># Only add the &#39;value&#39; attribute if a value is non-empty.</span>
+            <span class="n">final_attrs</span><span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;input{} /&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="c"># A missing value means False because HTML form submission does not</span>
+            <span class="c"># send results for unselected checkboxes.</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c"># Translate true and false strings to boolean values.</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;true&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;false&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Select</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="n">allow_multiple_selected</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Select</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="c"># choices can be any iterable, but we may need to render this widget</span>
+        <span class="c"># multiple times. Thus, collapse it into a list so it can be consumed</span>
+        <span class="c"># more than once.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;select{}&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">))]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_options</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="p">[</span><span class="n">value</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&lt;/select&gt;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">render_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_choices</span><span class="p">,</span> <span class="n">option_value</span><span class="p">,</span> <span class="n">option_label</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">option_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">option_value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">option_value</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">option_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">option_value</span> <span class="ow">in</span> <span class="n">selected_choices</span><span class="p">:</span>
+            <span class="n">selected_html</span> <span class="o">=</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39; selected=&quot;selected&quot;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_multiple_selected</span><span class="p">:</span>
+                <span class="c"># Only allow for a single selection.</span>
+                <span class="n">selected_choices</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">option_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selected_html</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;option value=&quot;{}&quot;{}&gt;{}&lt;/option&gt;&#39;</span><span class="p">,</span>
+                           <span class="n">option_value</span><span class="p">,</span>
+                           <span class="n">selected_html</span><span class="p">,</span>
+                           <span class="n">force_text</span><span class="p">(</span><span class="n">option_label</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">render_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="n">selected_choices</span><span class="p">):</span>
+        <span class="c"># Normalize to strings.</span>
+        <span class="n">selected_choices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">force_text</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">selected_choices</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">option_value</span><span class="p">,</span> <span class="n">option_label</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span> <span class="n">choices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">option_label</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;optgroup label=&quot;{}&quot;&gt;&#39;</span><span class="p">,</span> <span class="n">force_text</span><span class="p">(</span><span class="n">option_value</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">option_label</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_option</span><span class="p">(</span><span class="n">selected_choices</span><span class="p">,</span> <span class="o">*</span><span class="n">option</span><span class="p">))</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&lt;/optgroup&gt;&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_option</span><span class="p">(</span><span class="n">selected_choices</span><span class="p">,</span> <span class="n">option_value</span><span class="p">,</span> <span class="n">option_label</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NullBooleanSelect</span><span class="p">(</span><span class="n">Select</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Select Widget intended to be used with NullBooleanField.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">((</span><span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;Unknown&#39;</span><span class="p">)),</span>
+                   <span class="p">(</span><span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;Yes&#39;</span><span class="p">)),</span>
+                   <span class="p">(</span><span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;No&#39;</span><span class="p">)))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NullBooleanSelect</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">{</span><span class="bp">True</span><span class="p">:</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">:</span> <span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="s">&#39;3&#39;</span><span class="p">}[</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">NullBooleanSelect</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="bp">True</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s">&#39;True&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="s">&#39;False&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="bp">False</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SelectMultiple</span><span class="p">(</span><span class="n">Select</span><span class="p">):</span>
+    <span class="n">allow_multiple_selected</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;select multiple=&quot;multiple&quot;{}&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">))]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_options</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&lt;/select&gt;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">MultiValueDict</span><span class="p">,</span> <span class="n">MergeDict</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+
+<span class="nd">@html_safe</span>
+<span class="nd">@python_2_unicode_compatible</span>
+<span class="k">class</span> <span class="nc">ChoiceInput</span><span class="p">(</span><span class="n">SubWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An object used by ChoiceFieldRenderer that represents a single</span>
+<span class="sd">    &lt;input type=&#39;$input_type&#39;&gt;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># Subclasses must define this</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choice_value</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choice_label</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">choice</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&quot;_</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_for_label</span><span class="p">:</span>
+            <span class="n">label_for</span> <span class="o">=</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39; for=&quot;{}&quot;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_for_label</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label_for</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">attrs</span><span class="p">)</span> <span class="k">if</span> <span class="n">attrs</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span>
+            <span class="s">&#39;&lt;label{}&gt;{} {}&lt;/label&gt;&#39;</span><span class="p">,</span> <span class="n">label_for</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">attrs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_label</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_checked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_value</span>
+
+    <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">choice_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_checked</span><span class="p">():</span>
+            <span class="n">final_attrs</span><span class="p">[</span><span class="s">&#39;checked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;checked&#39;</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s">&#39;&lt;input{} /&gt;&#39;</span><span class="p">,</span> <span class="n">flatatt</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RadioChoiceInput</span><span class="p">(</span><span class="n">ChoiceInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;radio&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RadioChoiceInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CheckboxChoiceInput</span><span class="p">(</span><span class="n">ChoiceInput</span><span class="p">):</span>
+    <span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;checkbox&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CheckboxChoiceInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">force_text</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_checked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+
+<span class="nd">@html_safe</span>
+<span class="nd">@python_2_unicode_compatible</span>
+<span class="k">class</span> <span class="nc">ChoiceFieldRenderer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An object used by RadioSelect to enable customization of radio widgets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">choice_input_class</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">outer_html</span> <span class="o">=</span> <span class="s">&#39;&lt;ul{id_attr}&gt;{content}&lt;/ul&gt;&#39;</span>
+    <span class="n">inner_html</span> <span class="o">=</span> <span class="s">&#39;&lt;li&gt;{choice_value}{sub_widgets}&lt;/li&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">choices</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>  <span class="c"># Let the IndexError propagate</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">choice</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Outputs a &lt;ul&gt; for this set of choice fields.</span>
+<span class="sd">        If an id was given to the field, it is applied to the &lt;ul&gt; (each</span>
+<span class="sd">        item in the list will get an id of `$id_$i`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">choice</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">):</span>
+            <span class="n">choice_value</span><span class="p">,</span> <span class="n">choice_label</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">choice_label</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="n">attrs_plus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+                    <span class="n">attrs_plus</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;_{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">sub_ul_renderer</span> <span class="o">=</span> <span class="n">ChoiceFieldRenderer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                      <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                                      <span class="n">attrs</span><span class="o">=</span><span class="n">attrs_plus</span><span class="p">,</span>
+                                                      <span class="n">choices</span><span class="o">=</span><span class="n">choice_label</span><span class="p">)</span>
+                <span class="n">sub_ul_renderer</span><span class="o">.</span><span class="n">choice_input_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_html</span><span class="p">,</span> <span class="n">choice_value</span><span class="o">=</span><span class="n">choice_value</span><span class="p">,</span>
+                                          <span class="n">sub_widgets</span><span class="o">=</span><span class="n">sub_ul_renderer</span><span class="o">.</span><span class="n">render</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">choice</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_html</span><span class="p">,</span>
+                                          <span class="n">choice_value</span><span class="o">=</span><span class="n">force_text</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">sub_widgets</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_html</span><span class="p">,</span>
+                           <span class="n">id_attr</span><span class="o">=</span><span class="n">format_html</span><span class="p">(</span><span class="s">&#39; id=&quot;{}&quot;&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="p">)</span> <span class="k">if</span> <span class="n">id_</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+                           <span class="n">content</span><span class="o">=</span><span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)))</span>
+
+
+<span class="k">class</span> <span class="nc">RadioFieldRenderer</span><span class="p">(</span><span class="n">ChoiceFieldRenderer</span><span class="p">):</span>
+    <span class="n">choice_input_class</span> <span class="o">=</span> <span class="n">RadioChoiceInput</span>
+
+
+<span class="k">class</span> <span class="nc">CheckboxFieldRenderer</span><span class="p">(</span><span class="n">ChoiceFieldRenderer</span><span class="p">):</span>
+    <span class="n">choice_input_class</span> <span class="o">=</span> <span class="n">CheckboxChoiceInput</span>
+
+
+<span class="k">class</span> <span class="nc">RendererMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># subclasses must define this</span>
+    <span class="n">_empty_value</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c"># Override the default renderer if we were passed one.</span>
+        <span class="n">renderer</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;renderer&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">renderer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">renderer</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RendererMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">subwidgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">widget</span>
+
+    <span class="k">def</span> <span class="nf">get_renderer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Returns an instance of the renderer.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_value</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span> <span class="n">choices</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">final_attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+        <span class="c"># Widgets using this RendererMixin are made of a collection of</span>
+        <span class="c"># subwidgets, each with their own &lt;label&gt;, and distinct ID.</span>
+        <span class="c"># The IDs are made distinct by y &quot;_X&quot; suffix, where X is the zero-based</span>
+        <span class="c"># index of the choice field. Thus, the label for the main widget should</span>
+        <span class="c"># reference the first subwidget, hence the &quot;_0&quot; suffix.</span>
+        <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+            <span class="n">id_</span> <span class="o">+=</span> <span class="s">&#39;_0&#39;</span>
+        <span class="k">return</span> <span class="n">id_</span>
+
+
+<span class="k">class</span> <span class="nc">RadioSelect</span><span class="p">(</span><span class="n">RendererMixin</span><span class="p">,</span> <span class="n">Select</span><span class="p">):</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="n">RadioFieldRenderer</span>
+    <span class="n">_empty_value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">CheckboxSelectMultiple</span><span class="p">(</span><span class="n">RendererMixin</span><span class="p">,</span> <span class="n">SelectMultiple</span><span class="p">):</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="n">CheckboxFieldRenderer</span>
+    <span class="n">_empty_value</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">MultiWidget</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A widget that is composed of multiple widgets.</span>
+
+<span class="sd">    Its render() method is different than other widgets&#39;, because it has to</span>
+<span class="sd">    figure out how to split a single value for display in multiple widgets.</span>
+<span class="sd">    The ``value`` argument can be one of two things:</span>
+
+<span class="sd">        * A list.</span>
+<span class="sd">        * A normal value (e.g., a string) that has been &quot;compressed&quot; from</span>
+<span class="sd">          a list of values.</span>
+
+<span class="sd">    In the second case -- i.e., if the value is NOT a list -- render() will</span>
+<span class="sd">    first &quot;decompress&quot; the value into a list before rendering it. It does so by</span>
+<span class="sd">    calling the decompress() method, which MultiWidget subclasses must</span>
+<span class="sd">    implement. This method takes a single &quot;compressed&quot; value and returns a</span>
+<span class="sd">    list.</span>
+
+<span class="sd">    When render() does its HTML rendering, each value in the list is rendered</span>
+<span class="sd">    with the corresponding widget -- the first value is rendered in the first</span>
+<span class="sd">    widget, the second value is rendered in the second widget, etc.</span>
+
+<span class="sd">    Subclasses may implement format_output(), which takes the list of rendered</span>
+<span class="sd">    widgets and returns a string of HTML that formats them any way you&#39;d like.</span>
+
+<span class="sd">    You&#39;ll probably want to use this class with MultiValueField.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widgets</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">widgets</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">is_hidden</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_localized</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">is_localized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_localized</span>
+        <span class="c"># value is a list of values, each corresponding to a widget</span>
+        <span class="c"># in self.widgets.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">widget_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="n">widget_value</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+                <span class="n">final_attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">final_attrs</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39;_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget_value</span><span class="p">,</span> <span class="n">final_attrs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format_output</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+        <span class="c"># See the comment for RadioSelect.id_for_label()</span>
+        <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
+            <span class="n">id_</span> <span class="o">+=</span> <span class="s">&#39;_0&#39;</span>
+        <span class="k">return</span> <span class="n">id_</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">widget</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#39;_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">format_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rendered_widgets</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a list of rendered widgets (as strings), returns a Unicode string</span>
+<span class="sd">        representing the HTML for the whole lot.</span>
+
+<span class="sd">        This hook allows you to format the HTML design of the widgets, if</span>
+<span class="sd">        needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rendered_widgets</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of decompressed values for the given compressed value.</span>
+<span class="sd">        The given value can be assumed to be valid, but not necessarily</span>
+<span class="sd">        non-empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;Subclasses must implement this method.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_media</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">&quot;Media for a multiwidget is the combination of all media of the subwidgets&quot;</span>
+        <span class="n">media</span> <span class="o">=</span> <span class="n">Media</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="n">media</span> <span class="o">=</span> <span class="n">media</span> <span class="o">+</span> <span class="n">w</span><span class="o">.</span><span class="n">media</span>
+        <span class="k">return</span> <span class="n">media</span>
+    <span class="n">media</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_media</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__deepcopy__</span><span class="p">(</span><span class="n">memo</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">needs_multipart_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">needs_multipart_form</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SplitDateTimeWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Widget that splits datetime input into two &lt;input type=&quot;text&quot;&gt; boxes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">supports_microseconds</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">date_format</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">time_format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span><span class="n">DateInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">date_format</span><span class="p">),</span>
+                   <span class="n">TimeInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">time_format</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SplitDateTimeWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">to_current_timezone</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">value</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">SplitHiddenDateTimeWidget</span><span class="p">(</span><span class="n">SplitDateTimeWidget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Widget that splits datetime input into two &lt;input type=&quot;hidden&quot;&gt; inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">date_format</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">time_format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SplitHiddenDateTimeWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">date_format</span><span class="p">,</span> <span class="n">time_format</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;hidden&#39;</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

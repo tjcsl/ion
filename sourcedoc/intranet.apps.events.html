@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.events package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
+    <link rel="next" title="intranet.apps.feedback package" href="intranet.apps.feedback.html" />
+    <link rel="prev" title="intranet.apps.error package" href="intranet.apps.error.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.apps.events package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.admin">intranet.apps.events.admin module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.forms">intranet.apps.events.forms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.models">intranet.apps.events.models module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.notifications">intranet.apps.events.notifications module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.tests">intranet.apps.events.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.urls">intranet.apps.events.urls module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.views">intranet.apps.events.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-apps-events-package">
+<h1>intranet.apps.events package<a class="headerlink" href="#intranet-apps-events-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.events.admin">
+<span id="intranet-apps-events-admin-module"></span><h2>intranet.apps.events.admin module<a class="headerlink" href="#module-intranet.apps.events.admin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.events.forms">
+<span id="intranet-apps-events-forms-module"></span><h2>intranet.apps.events.forms module<a class="headerlink" href="#module-intranet.apps.events.forms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.events.forms.EventForm">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.forms.</code><code class="descname">EventForm</code><span class="sig-paren">(</span><em>all_groups=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#EventForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.EventForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dl class="class">
+<dt id="intranet.apps.events.forms.EventForm.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#EventForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="intranet.apps.events.forms.EventForm.Meta.exclude">
+<code class="descname">exclude</code><em class="property"> = [u'created_time', u'last_modified_time', u'user', u'scheduled_activity', u'announcement', u'attending', u'links', u'approved', u'rejected', u'approved_by', u'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.forms.EventForm.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Event</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.forms.EventForm.declared_fields">
+<code class="descclassname">EventForm.</code><code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.events.forms.EventForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.events.models">
+<span id="intranet-apps-events-models-module"></span><h2>intranet.apps.events.models module<a class="headerlink" href="#module-intranet.apps.events.models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.events.models.Event">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>An event available to the TJ community.</p>
+<dl class="docutils">
+<dt>title</dt>
+<dd>The title for the event</dd>
+<dt>description</dt>
+<dd>A description about the event</dd>
+<dt>links</dt>
+<dd>Not currently used</dd>
+<dt>created_time</dt>
+<dd>Time created (automatically set)</dd>
+<dt>last_modified_time</dt>
+<dd>Time last modified (automatically set)</dd>
+<dt>time</dt>
+<dd>The date and time of the event</dd>
+<dt>location</dt>
+<dd>Where the event is located</dd>
+<dt>user</dt>
+<dd>The user who created the event.</dd>
+<dt>scheduled_activity</dt>
+<dd>An EighthScheduledActivity that should be linked with the event.</dd>
+<dt>announcement</dt>
+<dd>An Announcement that should be linked with the event.</dd>
+<dt>groups</dt>
+<dd>Groups that the event is visible to.</dd>
+<dt>attending</dt>
+<dd>A ManyToManyField of User objects that are attending the event.</dd>
+<dt>approved</dt>
+<dd>Boolean, whether the event has been approved and will be displayed.</dd>
+<dt>approved_by</dt>
+<dd>ForeignKey to User object, the user who approved the event.</dd>
+<dt>rejected</dt>
+<dd>Boolean, whether the event was rejected and shouldn&#8217;t be shown in the
+list of events that need to be approved.</dd>
+<dt>rejected_by</dt>
+<dd>ForeignKey to User object, the user who rejected the event.</dd>
+</dl>
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.events.models.Event.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Event.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.events.models.Event.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.announcement">
+<code class="descclassname">Event.</code><code class="descname">announcement</code><a class="headerlink" href="#intranet.apps.events.models.Event.announcement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.approved_by">
+<code class="descclassname">Event.</code><code class="descname">approved_by</code><a class="headerlink" href="#intranet.apps.events.models.Event.approved_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.attending">
+<code class="descclassname">Event.</code><code class="descname">attending</code><a class="headerlink" href="#intranet.apps.events.models.Event.attending" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.created_hook">
+<code class="descclassname">Event.</code><code class="descname">created_hook</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Event.created_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Event.created_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run when an event is created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_next_by_created_time">
+<code class="descclassname">Event.</code><code class="descname">get_next_by_created_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_created_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_next_by_last_modified_time">
+<code class="descclassname">Event.</code><code class="descname">get_next_by_last_modified_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_last_modified_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_next_by_time">
+<code class="descclassname">Event.</code><code class="descname">get_next_by_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_next_by_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_previous_by_created_time">
+<code class="descclassname">Event.</code><code class="descname">get_previous_by_created_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_created_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_previous_by_last_modified_time">
+<code class="descclassname">Event.</code><code class="descname">get_previous_by_last_modified_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_last_modified_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.get_previous_by_time">
+<code class="descclassname">Event.</code><code class="descname">get_previous_by_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event.get_previous_by_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.groups">
+<code class="descclassname">Event.</code><code class="descname">groups</code><a class="headerlink" href="#intranet.apps.events.models.Event.groups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.is_this_year">
+<code class="descclassname">Event.</code><code class="descname">is_this_year</code><a class="headerlink" href="#intranet.apps.events.models.Event.is_this_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the event was created after September 1st
+of this school year.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.links">
+<code class="descclassname">Event.</code><code class="descname">links</code><a class="headerlink" href="#intranet.apps.events.models.Event.links" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.objects">
+<code class="descclassname">Event.</code><code class="descname">objects</code><em class="property"> = &lt;intranet.apps.events.models.EventManager object&gt;</em><a class="headerlink" href="#intranet.apps.events.models.Event.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.rejected_by">
+<code class="descclassname">Event.</code><code class="descname">rejected_by</code><a class="headerlink" href="#intranet.apps.events.models.Event.rejected_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.scheduled_activity">
+<code class="descclassname">Event.</code><code class="descname">scheduled_activity</code><a class="headerlink" href="#intranet.apps.events.models.Event.scheduled_activity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.events.models.Event.show_fuzzy_date">
+<code class="descclassname">Event.</code><code class="descname">show_fuzzy_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Event.show_fuzzy_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Event.show_fuzzy_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the event is in the next or previous 2 weeks.
+Determines whether to display the fuzzy date.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event.user">
+<code class="descclassname">Event.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.events.models.Event.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.events.models.EventManager">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">EventManager</code><a class="reference internal" href="../_modules/intranet/apps/events/models.html#EventManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.EventManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<dl class="method">
+<dt id="intranet.apps.events.models.EventManager.visible_to_user">
+<code class="descname">visible_to_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#EventManager.visible_to_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.EventManager.visible_to_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of visible events for a given user (usually
+request.user).</p>
+<p>These visible events will be those that either have no groups
+assigned to them (and are therefore public) or those in which the
+user is a member.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.events.models.Event_attending">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">Event_attending</code><span class="sig-paren">(</span><em>id</em>, <em>event</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event_attending" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_attending.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.events.models.Event_attending.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_attending.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Event_attending.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.events.models.Event_attending.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_attending.event">
+<code class="descclassname">Event_attending.</code><code class="descname">event</code><a class="headerlink" href="#intranet.apps.events.models.Event_attending.event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_attending.objects">
+<code class="descclassname">Event_attending.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.events.models.Event_attending.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_attending.user">
+<code class="descclassname">Event_attending.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.events.models.Event_attending.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.events.models.Event_groups">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">Event_groups</code><span class="sig-paren">(</span><em>id</em>, <em>event</em>, <em>group</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_groups.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.events.models.Event_groups.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_groups.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Event_groups.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.events.models.Event_groups.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_groups.event">
+<code class="descclassname">Event_groups.</code><code class="descname">event</code><a class="headerlink" href="#intranet.apps.events.models.Event_groups.event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_groups.group">
+<code class="descclassname">Event_groups.</code><code class="descname">group</code><a class="headerlink" href="#intranet.apps.events.models.Event_groups.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_groups.objects">
+<code class="descclassname">Event_groups.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.events.models.Event_groups.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.events.models.Event_links">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">Event_links</code><span class="sig-paren">(</span><em>id</em>, <em>event</em>, <em>link</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.Event_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_links.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.events.models.Event_links.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.events.models.Event_links.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Event_links.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.events.models.Event_links.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_links.event">
+<code class="descclassname">Event_links.</code><code class="descname">event</code><a class="headerlink" href="#intranet.apps.events.models.Event_links.event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_links.link">
+<code class="descclassname">Event_links.</code><code class="descname">link</code><a class="headerlink" href="#intranet.apps.events.models.Event_links.link" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Event_links.objects">
+<code class="descclassname">Event_links.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.events.models.Event_links.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.events.models.Link">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.models.</code><code class="descname">Link</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A link about an item (Facebook event link, etc).</p>
+<dl class="exception">
+<dt id="intranet.apps.events.models.Link.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.events.models.Link.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.events.models.Link.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Link.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.events.models.Link.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Link.event_set">
+<code class="descclassname">Link.</code><code class="descname">event_set</code><a class="headerlink" href="#intranet.apps.events.models.Link.event_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.models.Link.objects">
+<code class="descclassname">Link.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.events.models.Link.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.events.notifications">
+<span id="intranet-apps-events-notifications-module"></span><h2>intranet.apps.events.notifications module<a class="headerlink" href="#module-intranet.apps.events.notifications" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.events.notifications.event_approval_request">
+<code class="descclassname">intranet.apps.events.notifications.</code><code class="descname">event_approval_request</code><span class="sig-paren">(</span><em>request</em>, <em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/notifications.html#event_approval_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.notifications.event_approval_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.events.tests">
+<span id="intranet-apps-events-tests-module"></span><h2>intranet.apps.events.tests module<a class="headerlink" href="#module-intranet.apps.events.tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.events.tests.SimpleTest">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.tests.</code><code class="descname">SimpleTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#SimpleTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.tests.SimpleTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="intranet.apps.events.tests.SimpleTest.test_basic_addition">
+<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#SimpleTest.test_basic_addition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that 1 + 1 always equals 2.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.events.urls">
+<span id="intranet-apps-events-urls-module"></span><h2>intranet.apps.events.urls module<a class="headerlink" href="#module-intranet.apps.events.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.events.views">
+<span id="intranet-apps-events-views-module"></span><h2>intranet.apps.events.views module<a class="headerlink" href="#module-intranet.apps.events.views" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.events.views.add_event_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">add_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#add_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.add_event_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add event page. Currently, there is an approval process for events.
+If a user is an events administrator, they can create events directly.
+Otherwise, their event is added in the system but must be approved.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.events.views.delete_event_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">delete_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#delete_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.delete_event_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete event page. You may only delete an event if you were the creator or you are an
+administrator. Confirmation page if not POST.</p>
+<p>id: event id</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.events.views.event_roster_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">event_roster_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#event_roster_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.event_roster_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the event roster. Users with hidden eighth period permissions will not be
+displayed. Users will be able to view all other users, along with a count of the
+number of hidden users. (Same as 8th roster page.) Admins will see a full roster
+at the bottom.</p>
+<p>id: event id</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.events.views.events_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">events_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#events_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.events_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Events homepage. Shows a list of events occurring in the next week, month, and future.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.events.views.join_event_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">join_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#join_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.join_event_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join event page. If a POST request, actually add or remove the attendance of
+the current user. Otherwise, display a page with confirmation.</p>
+<p>id: event id</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.events.views.modify_event_view">
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">modify_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#modify_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.modify_event_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify event page. You may only modify an event if you were the creator or you are an
+administrator.</p>
+<p>id: event id</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.events">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.events" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

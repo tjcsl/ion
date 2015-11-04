@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../../../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for intranet.apps.eighth.views.admin.scheduling</h1><div class="highlight"><pre>
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+import logging
+from datetime import timedelta
+from django.contrib import messages
+from django.forms.formsets import formset_factory
+from django.http import Http404
+from django.shortcuts import render, redirect
+from formtools.wizard.views import SessionWizardView
+from .....utils.serialization import safe_json
+from ....auth.decorators import eighth_admin_required
+from ...models import (
+    EighthBlock, EighthActivity, EighthScheduledActivity, EighthSponsor,
+    EighthRoom
+)
+from ...forms.admin.blocks import BlockSelectionForm
+from ...forms.admin.activities import ActivitySelectionForm
+from ...forms.admin.scheduling import ScheduledActivityForm
+from ...utils import get_start_date
+
+logger = logging.getLogger(__name__)
+
+
+@eighth_admin_required
+<div class="viewcode-block" id="schedule_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">[docs]</a>def schedule_activity_view(request):
+    ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
+
+    if request.method == &quot;POST&quot;:
+        formset = ScheduledActivityFormset(request.POST)
+
+        if formset.is_valid():
+            for form in formset:
+                block = form.cleaned_data[&quot;block&quot;]
+                activity = form.cleaned_data[&quot;activity&quot;]
+
+                # Save changes to cancelled activities and scheduled activities
+                cancelled = (EighthScheduledActivity.objects
+                                                    .filter(block=block,
+                                                            activity=activity,
+                                                            cancelled=True)
+                                                    .exists())
+
+                if form[&quot;scheduled&quot;].value() or cancelled:
+                    instance, created = (EighthScheduledActivity.objects
+                                                                .get_or_create(block=block,
+                                                                               activity=activity))
+
+                    fields = [
+                        &quot;rooms&quot;,
+                        &quot;capacity&quot;,
+                        &quot;sponsors&quot;,
+                        &quot;title&quot;,
+                        &quot;comments&quot;,
+                        &quot;admin_comments&quot;
+                    ]
+                    for field_name in fields:
+                        setattr(instance, field_name, form.cleaned_data[field_name])
+
+                    # Uncancel if this activity/block pairing was already
+                    # created and cancelled
+                    if not form[&quot;scheduled&quot;].value():
+                        instance.cancelled = True
+                    else:
+                        instance.cancelled = False
+
+                    # If an activity has already been cancelled and the
+                    # unschedule checkbox has been checked, delete the
+                    # EighthScheduledActivity instance. If there are students
+                    # in the activity then error out.
+                    if form[&quot;unschedule&quot;].value() and instance.cancelled:
+                        name = &quot;{}&quot;.format(instance)
+                        count = instance.eighthsignup_set.count()
+                        logger.debug(&quot;Unschedule {} - signups {}&quot;.format(name, count))
+                        bb_ok = True
+                        sibling = False
+                        if activity.both_blocks:
+                            sibling = instance.get_both_blocks_sibling()
+                            if sibling:
+                                if not sibling.eighthsignup_set.count() == 0:
+                                    bb_ok = False
+
+                        if count == 0 and bb_ok:
+                            instance.delete()
+                            if sibling:
+                                sibling.delete()
+                            messages.success(request, &quot;Unscheduled {}&quot;.format(name))
+
+                            continue  # don&#39;t run instance.save()
+                        elif count == 1:
+                            messages.error(request, &quot;Did not unschedule {} because there is {} student signed up.&quot;.format(name, count))
+                        else:
+                            messages.error(request, &quot;Did not unschedule {} because there are {} students signed up.&quot;.format(name, count))
+
+                    instance.save()
+                else:
+                    schact = EighthScheduledActivity.objects.filter(
+                        block=block,
+                        activity=activity
+                    )
+                    logger.debug(block)
+                    logger.debug(activity)
+                    logger.debug(schact)
+
+                    # Instead of deleting and messing up attendance,
+                    # cancel the scheduled activity if it is unscheduled.
+                    # If the scheduled activity needs to be completely deleted,
+                    # the &quot;Unschedule&quot; box can be checked after it has been cancelled.
+
+                    # If a both blocks activity, unschedule the other
+                    # scheduled activities of it on the same day.
+                    if schact and activity.both_blocks:
+                        other_act = schact[0].get_both_blocks_sibling()
+                        logger.debug(&quot;other_act: {}&quot;.format(other_act))
+                        if other_act:
+                            other_act.cancelled = True
+                            other_act.save()
+                    else:
+                        schact.update(cancelled=True)
+
+            messages.success(request, &quot;Successfully updated schedule.&quot;)
+
+            # Force reload everything from the database to reset
+            # forms that weren&#39;t saved
+            return redirect(request.get_full_path())
+        else:
+            messages.error(request, &quot;Error updating schedule.&quot;)
+
+    activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)
+    activity_id = request.GET.get(&quot;activity&quot;, None)
+    activity = None
+
+    if activity_id is not None and len(activity_id) &gt; 0:
+        try:
+            activity = EighthActivity.undeleted_objects.get(id=activity_id)
+        except (EighthActivity.DoesNotExist, ValueError):
+            pass
+
+    all_sponsors = {s[&quot;id&quot;]: s for s in EighthSponsor.objects.values()}
+    all_rooms = {r[&quot;id&quot;]: r for r in EighthRoom.objects.values()}
+
+    for sid, sponsor in all_sponsors.items():
+        if sponsor[&quot;show_full_name&quot;]:
+            all_sponsors[sid][&quot;full_name&quot;] = sponsor[&quot;last_name&quot;] + &quot;, &quot; + sponsor[&quot;first_name&quot;]
+        else:
+            all_sponsors[sid][&quot;full_name&quot;] = sponsor[&quot;last_name&quot;]
+
+    for rid, room in all_rooms.items():
+        all_rooms[rid][&quot;description&quot;] = room[&quot;name&quot;] + &quot; (&quot; + str(room[&quot;capacity&quot;]) + &quot;)&quot;
+
+    all_signups = {}
+    all_default_capacities = {}
+
+    context = {
+        &quot;activities&quot;: activities,
+        &quot;activity&quot;: activity,
+        &quot;sponsors&quot;: all_sponsors,
+        &quot;all_signups&quot;: all_signups,
+        &quot;rooms&quot;: all_rooms,
+        &quot;sponsors_json&quot;: safe_json(all_sponsors),
+        &quot;rooms_json&quot;: safe_json(all_rooms)
+    }
+
+    if activity is not None:
+        start_date = get_start_date(request)
+        end_date = start_date + timedelta(days=60)
+
+        blocks = EighthBlock.objects.filter(date__gte=start_date, date__lte=end_date)
+        initial_formset_data = []
+
+        sched_act_queryset = (EighthScheduledActivity.objects
+                                                     .filter(activity=activity)
+                                                     .select_related(&quot;block&quot;)
+                                                     .prefetch_related(&quot;rooms&quot;,
+                                                                       &quot;sponsors&quot;,
+                                                                       &quot;members&quot;))
+        all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
+
+        for block in blocks:
+            initial_form_data = {
+                &quot;block&quot;: block,
+                &quot;activity&quot;: activity
+            }
+            try:
+                sched_act = all_sched_acts[block.id]
+
+                all_signups[block.id] = sched_act.members.count()
+                all_default_capacities[block.id] = sched_act.get_true_capacity()
+                initial_form_data.update({
+                    &quot;rooms&quot;: sched_act.rooms.all(),
+                    &quot;capacity&quot;: sched_act.capacity,
+                    &quot;sponsors&quot;: sched_act.sponsors.all(),
+                    &quot;title&quot;: sched_act.title,
+                    &quot;comments&quot;: sched_act.comments,
+                    &quot;admin_comments&quot;: sched_act.admin_comments,
+                    &quot;scheduled&quot;: not sched_act.cancelled,
+                    &quot;cancelled&quot;: sched_act.cancelled
+                })
+            except KeyError:
+                all_signups[block.id] = 0
+                all_default_capacities[block.id] = activity.capacity()
+                pass
+            initial_formset_data.append(initial_form_data)
+
+        if request.method != &quot;POST&quot;:
+            # There must be an error in the form if this is reached
+            formset = ScheduledActivityFormset(initial=initial_formset_data)
+        context[&quot;formset&quot;] = formset
+        context[&quot;rows&quot;] = list(zip(blocks, formset))
+
+        context[&quot;default_rooms&quot;] = activity.rooms.all()
+        context[&quot;default_sponsors&quot;] = activity.sponsors.all()
+        context[&quot;default_capacities&quot;] = all_default_capacities
+
+    context[&quot;admin_page_title&quot;] = &quot;Schedule an Activity&quot;
+    return render(request, &quot;eighth/admin/schedule_activity.html&quot;, context)
+
+</div>
+@eighth_admin_required
+<div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a>def show_activity_schedule_view(request):
+    activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)
+    activity_id = request.GET.get(&quot;activity&quot;, None)
+    activity = None
+
+    if activity_id is not None:
+        try:
+            activity = EighthActivity.undeleted_objects.get(id=activity_id)
+        except (EighthActivity.DoesNotExist, ValueError):
+            pass
+
+    context = {
+        &quot;activities&quot;: activities,
+        &quot;activity&quot;: activity
+    }
+
+    if activity is not None:
+        start_date = get_start_date(request)
+        scheduled_activities = (activity.eighthscheduledactivity_set
+                                        .filter(block__date__gte=start_date)
+                                        .order_by(&quot;block__date&quot;,
+                                                  &quot;block__block_letter&quot;))
+        context[&quot;scheduled_activities&quot;] = scheduled_activities
+
+    context[&quot;admin_page_title&quot;] = &quot;View Activity Schedule&quot;
+    return render(request, &quot;eighth/admin/view_activity_schedule.html&quot;, context)
+
+</div>
+@eighth_admin_required
+<div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a>def distribute_students_view(request):
+    context = {}
+    return render(request, &quot;eighth/admin/distribute_students.html&quot;, context)
+
+</div>
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a>class EighthAdminTransferStudentsWizard(SessionWizardView):
+    FORMS = [
+        (&quot;block_1&quot;, BlockSelectionForm),
+        (&quot;activity_1&quot;, ActivitySelectionForm),
+        (&quot;block_2&quot;, BlockSelectionForm),
+        (&quot;activity_2&quot;, ActivitySelectionForm)
+    ]
+
+    TEMPLATES = {
+        &quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
+        &quot;activity_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
+        &quot;block_2&quot;: &quot;eighth/admin/transfer_students.html&quot;,
+        &quot;activity_2&quot;: &quot;eighth/admin/transfer_students.html&quot;
+    }
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
+</div>
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step in (&quot;block_1&quot;, &quot;block_2&quot;):
+            kwargs.update({
+                &quot;exclude_before_date&quot;: get_start_date(self.request)
+            })
+        if step == &quot;activity_1&quot;:
+            block = self.get_cleaned_data_for_step(&quot;block_1&quot;)[&quot;block&quot;]
+            kwargs.update({&quot;block&quot;: block})
+        if step == &quot;activity_2&quot;:
+            block = self.get_cleaned_data_for_step(&quot;block_2&quot;)[&quot;block&quot;]
+            kwargs.update({&quot;block&quot;: block})
+
+        labels = {
+            &quot;block_1&quot;: &quot;Select a block to move students from&quot;,
+            &quot;activity_1&quot;: &quot;Select an activity to move students from&quot;,
+            &quot;block_2&quot;: &quot;Select a block to move students to&quot;,
+            &quot;activity_2&quot;: &quot;Select an activity to move students to&quot;,
+        }
+
+        kwargs.update({&quot;label&quot;: labels[step]})
+
+        return kwargs
+</div>
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminTransferStudentsWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({&quot;admin_page_title&quot;: &quot;Transfer Students&quot;})
+        return context
+</div>
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done">[docs]</a>    def done(self, form_list, **kwargs):
+        source_block = form_list[0].cleaned_data[&quot;block&quot;]
+        source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
+        source_scheduled_activity = EighthScheduledActivity.objects.get(
+            block=source_block,
+            activity=source_activity
+        )
+
+        dest_block = form_list[2].cleaned_data[&quot;block&quot;]
+        dest_activity = form_list[3].cleaned_data[&quot;activity&quot;]
+        dest_scheduled_activity = EighthScheduledActivity.objects.get(
+            block=dest_block,
+            activity=dest_activity
+        )
+
+        req = &quot;source_act={}&amp;dest_act={}&quot;.format(source_scheduled_activity.id, dest_scheduled_activity.id)
+
+        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)
+</div></div>
+transfer_students_view = eighth_admin_required(
+    EighthAdminTransferStudentsWizard.as_view(
+        EighthAdminTransferStudentsWizard.FORMS
+    )
+)
+
+
+@eighth_admin_required
+<div class="viewcode-block" id="transfer_students_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action">[docs]</a>def transfer_students_action(request):
+    &quot;&quot;&quot; Do the actual process of transferring students.&quot;&quot;&quot;
+    if &quot;source_act&quot; in request.GET:
+        source_act = EighthScheduledActivity.objects.get(id=request.GET.get(&quot;source_act&quot;))
+    elif &quot;source_act&quot; in request.POST:
+        source_act = EighthScheduledActivity.objects.get(id=request.POST.get(&quot;source_act&quot;))
+    else:
+        raise Http404
+
+    if &quot;dest_act&quot; in request.GET:
+        dest_act = EighthScheduledActivity.objects.get(id=request.GET.get(&quot;dest_act&quot;))
+    elif &quot;dest_act&quot; in request.POST:
+        dest_act = EighthScheduledActivity.objects.get(id=request.POST.get(&quot;dest_act&quot;))
+    else:
+        raise Http404
+
+    num = source_act.members.count()
+
+    context = {
+        &quot;admin_page_title&quot;: &quot;Transfer Students&quot;,
+        &quot;source_act&quot;: source_act,
+        &quot;dest_act&quot;: dest_act,
+        &quot;num&quot;: num
+    }
+
+    if request.method == &quot;POST&quot;:
+        source_act.eighthsignup_set.update(
+            scheduled_activity=dest_act
+        )
+        messages.success(request, &quot;Successfully transfered {} students.&quot;.format(num))
+        return redirect(&quot;eighth_admin_dashboard&quot;)
+    else:
+        return render(request, &quot;eighth/admin/transfer_students.html&quot;, context)</div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

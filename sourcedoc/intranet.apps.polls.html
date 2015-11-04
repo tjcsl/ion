@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.polls package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
+    <link rel="next" title="intranet.apps.preferences package" href="intranet.apps.preferences.html" />
+    <link rel="prev" title="intranet.apps.notifications package" href="intranet.apps.notifications.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.apps.polls package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls.models">intranet.apps.polls.models module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls.tests">intranet.apps.polls.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls.urls">intranet.apps.polls.urls module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls.views">intranet.apps.polls.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-apps-polls-package">
+<h1>intranet.apps.polls package<a class="headerlink" href="#intranet-apps-polls-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.polls.models">
+<span id="intranet-apps-polls-models-module"></span><h2>intranet.apps.polls.models module<a class="headerlink" href="#module-intranet.apps.polls.models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.polls.models.Answer">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>user</em>, <em>choice</em>, <em>weight</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Answer.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Answer.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Answer.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Answer.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Answer.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer.choice">
+<code class="descclassname">Answer.</code><code class="descname">choice</code><a class="headerlink" href="#intranet.apps.polls.models.Answer.choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer.objects">
+<code class="descclassname">Answer.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Answer.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer.question">
+<code class="descclassname">Answer.</code><code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Answer.question" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer.user">
+<code class="descclassname">Answer.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.polls.models.Answer.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.polls.models.Answer_Votes">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer_Votes</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>choice</em>, <em>votes</em>, <em>is_writing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer_Votes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Answer_Votes.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Answer_Votes.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Answer_Votes.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer_Votes.choice">
+<code class="descclassname">Answer_Votes.</code><code class="descname">choice</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer_Votes.objects">
+<code class="descclassname">Answer_Votes.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer_Votes.question">
+<code class="descclassname">Answer_Votes.</code><code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.question" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Answer_Votes.users">
+<code class="descclassname">Answer_Votes.</code><code class="descname">users</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.users" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.polls.models.Choice">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Choice</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>num</em>, <em>info</em>, <em>std</em>, <em>app</em>, <em>free_resp</em>, <em>short_resp</em>, <em>std_other</em>, <em>is_writing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Choice.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Choice.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Choice.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.answer_set">
+<code class="descclassname">Choice.</code><code class="descname">answer_set</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.answer_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.answer_votes_set">
+<code class="descclassname">Choice.</code><code class="descname">answer_votes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.answer_votes_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.objects">
+<code class="descclassname">Choice.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Choice.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Choice.question">
+<code class="descclassname">Choice.</code><code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.question" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Choice.trunc_info">
+<code class="descclassname">Choice.</code><code class="descname">trunc_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Choice.trunc_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Choice.trunc_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.polls.models.Group">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Group</code><span class="sig-paren">(</span><em>id</em>, <em>poll</em>, <em>name</em>, <em>vote</em>, <em>modify</em>, <em>view</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Group.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Group.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Group.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Group.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Group.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Group.objects">
+<code class="descclassname">Group.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Group.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Group.poll">
+<code class="descclassname">Group.</code><code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Group.poll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.polls.models.Poll">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Poll</code><span class="sig-paren">(</span><em>id</em>, <em>name</em>, <em>info</em>, <em>start_time</em>, <em>end_time</em>, <em>visible</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Poll.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Poll.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Poll.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.get_next_by_end_time">
+<code class="descclassname">Poll.</code><code class="descname">get_next_by_end_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_next_by_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.get_next_by_start_time">
+<code class="descclassname">Poll.</code><code class="descname">get_next_by_start_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_next_by_start_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.get_previous_by_end_time">
+<code class="descclassname">Poll.</code><code class="descname">get_previous_by_end_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_previous_by_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.get_previous_by_start_time">
+<code class="descclassname">Poll.</code><code class="descname">get_previous_by_start_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_previous_by_start_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.group_set">
+<code class="descclassname">Poll.</code><code class="descname">group_set</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.group_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.objects">
+<code class="descclassname">Poll.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Poll.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.question_set">
+<code class="descclassname">Poll.</code><code class="descname">question_set</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.question_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.polls.models.Question">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Question</code><span class="sig-paren">(</span><em>id</em>, <em>poll</em>, <em>question</em>, <em>num</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.APP">
+<code class="descname">APP</code><em class="property"> = u'APP'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.APP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Question.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Question.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.FREE_RESP">
+<code class="descclassname">Question.</code><code class="descname">FREE_RESP</code><em class="property"> = u'FRE'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.FREE_RESP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.polls.models.Question.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Question.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Question.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.SHORT_RESP">
+<code class="descclassname">Question.</code><code class="descname">SHORT_RESP</code><em class="property"> = u'SRE'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.SHORT_RESP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.SPLIT_APP">
+<code class="descclassname">Question.</code><code class="descname">SPLIT_APP</code><em class="property"> = u'SAP'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.SPLIT_APP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.STD">
+<code class="descclassname">Question.</code><code class="descname">STD</code><em class="property"> = u'STD'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.STD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.STD_OTHER">
+<code class="descclassname">Question.</code><code class="descname">STD_OTHER</code><em class="property"> = u'STO'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.STD_OTHER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.TYPE">
+<code class="descclassname">Question.</code><code class="descname">TYPE</code><em class="property"> = ((u'STD', u'Standard'), (u'APP', u'Approval'), (u'SAP', u'Split approval'), (u'FRE', u'Free response'), (u'SRE', u'Short response'), (u'STO', u'Standard other'))</em><a class="headerlink" href="#intranet.apps.polls.models.Question.TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.answer_set">
+<code class="descclassname">Question.</code><code class="descname">answer_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.answer_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.answer_votes_set">
+<code class="descclassname">Question.</code><code class="descname">answer_votes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.answer_votes_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.choice_set">
+<code class="descclassname">Question.</code><code class="descname">choice_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.choice_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.get_type_display">
+<code class="descclassname">Question.</code><code class="descname">get_type_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Question.get_type_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.is_writing">
+<code class="descclassname">Question.</code><code class="descname">is_writing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_writing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_writing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.objects">
+<code class="descclassname">Question.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Question.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.poll">
+<code class="descclassname">Question.</code><code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Question.poll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.trunc_question">
+<code class="descclassname">Question.</code><code class="descname">trunc_question</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.trunc_question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.trunc_question" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.polls.tests">
+<span id="intranet-apps-polls-tests-module"></span><h2>intranet.apps.polls.tests module<a class="headerlink" href="#module-intranet.apps.polls.tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.polls.tests.SimpleTest">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.tests.</code><code class="descname">SimpleTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/tests.html#SimpleTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.tests.SimpleTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="intranet.apps.polls.tests.SimpleTest.test_basic_addition">
+<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/tests.html#SimpleTest.test_basic_addition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that 1 + 1 always equals 2.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.polls.urls">
+<span id="intranet-apps-polls-urls-module"></span><h2>intranet.apps.polls.urls module<a class="headerlink" href="#module-intranet.apps.polls.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.polls.views">
+<span id="intranet-apps-polls-views-module"></span><h2>intranet.apps.polls.views module<a class="headerlink" href="#module-intranet.apps.polls.views" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.polls.views.polls_view">
+<code class="descclassname">intranet.apps.polls.views.</code><code class="descname">polls_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#polls_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.polls_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.polls">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.polls" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

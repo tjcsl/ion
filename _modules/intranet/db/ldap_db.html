@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for intranet.db.ldap_db</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">ldap</span>
+<span class="kn">import</span> <span class="nn">ldap.sasl</span>
+<span class="kn">import</span> <span class="nn">ldap.filter</span>
+<span class="kn">from</span> <span class="nn">ldap.modlist</span> <span class="kn">import</span> <span class="n">modifyModlist</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
+<span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="kn">import</span> <span class="n">request_finished</span>
+<span class="kn">from</span> <span class="nn">django.core.handlers.wsgi</span> <span class="kn">import</span> <span class="n">WSGIHandler</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+<span class="kn">from</span> <span class="nn">intranet</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">_thread_locals</span> <span class="o">=</span> <span class="n">local</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="LDAPFilter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter">[docs]</a><span class="k">class</span> <span class="nc">LDAPFilter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.operator"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.operator">[docs]</a>    <span class="k">def</span> <span class="nf">operator</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">operator</span> <span class="o">+</span> <span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">c</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">))</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.and_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.and_filter">[docs]</a>    <span class="k">def</span> <span class="nf">and_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s">&quot;&amp;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.or_filter"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.or_filter">[docs]</a>    <span class="k">def</span> <span class="nf">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s">&quot;|&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.escape"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.escape">[docs]</a>    <span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.attribute_in_list"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.attribute_in_list">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_in_list</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all entries for which a</span>
+<span class="sd">        specified attribute is contained in a specified list of values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="p">(</span><span class="n">attribute</span> <span class="o">+</span> <span class="s">&quot;=&quot;</span> <span class="o">+</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LDAPFilter.all_users"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.all_users">[docs]</a>    <span class="k">def</span> <span class="nf">all_users</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all user objects in LDAP</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">user_object_classes</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">LDAP_OBJECT_CLASSES</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">attribute_in_list</span><span class="p">(</span><span class="s">&quot;objectclass&quot;</span><span class="p">,</span> <span class="n">user_object_classes</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="LDAPConnection"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection">[docs]</a><span class="k">class</span> <span class="nc">LDAPConnection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Represents an LDAP connection with wrappers for the raw ldap</span>
+<span class="sd">    queries.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        conn</span>
+<span class="sd">            The singleton LDAP connection.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">conn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lazily load and return the raw connection from threadlocals.</span>
+
+<span class="sd">        Connect to the LDAP server specified in settings and bind</span>
+<span class="sd">        using the GSSAPI protocol. The requisite KRB5CCNAME</span>
+<span class="sd">        environmental variable should have already been set by the</span>
+<span class="sd">        SetKerberosCache middleware.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s">&quot;ldap_conn&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Connecting to LDAP...&quot;</span><span class="p">)</span>
+            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">ldapobject</span><span class="o">.</span><span class="n">ReconnectLDAPObject</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LDAP_SERVER</span><span class="p">,</span> <span class="n">trace_stack_limit</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">auth_tokens</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">sasl</span><span class="o">.</span><span class="n">gssapi</span><span class="p">()</span>
+                <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">sasl_interactive_bind_s</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">auth_tokens</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Successfully connected to LDAP.&quot;</span><span class="p">)</span>
+                <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">LOCAL_ERROR</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c"># try again</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Retrying connection to LDAP after local error&quot;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">auth_tokens</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">sasl</span><span class="o">.</span><span class="n">gssapi</span><span class="p">()</span>
+                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">sasl_interactive_bind_s</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">auth_tokens</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Successfully connected to LDAP.&quot;</span><span class="p">)</span>
+                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">except</span> <span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">LOCAL_ERROR</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">INVALID_CREDENTIALS</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">simple_bind_s</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_DN</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_PASSWORD</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;SASL bind failed - using simple bind&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">INVALID_CREDENTIALS</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">simple_bind_s</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_DN</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_PASSWORD</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;SASL bind failed - using simple bind&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="c"># logger.debug(_thread_locals.ldap_conn.whoami_s())</span>
+
+        <span class="k">return</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span>
+
+<div class="viewcode-block" id="LDAPConnection.did_use_simple_bind"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.did_use_simple_bind">[docs]</a>    <span class="k">def</span> <span class="nf">did_use_simple_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether a simple bind was used, or ``False`` for an</span>
+<span class="sd">        uninitialized connection.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s">&quot;simple_bind&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="LDAPConnection.search"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search LDAP and return an :class:`LDAPResult`.</span>
+
+<span class="sd">        Search LDAP with the given dn and filter and return the given</span>
+<span class="sd">        attributes in an :class:`LDAPResult` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dn</span>
+<span class="sd">                The string representation of the distinguished name</span>
+<span class="sd">                (DN) of the entry at which to start the search.</span>
+<span class="sd">            filter</span>
+<span class="sd">                The string representation of the filter to apply to</span>
+<span class="sd">                the search.</span>
+<span class="sd">            attributes</span>
+<span class="sd">                A list of LDAP attributes (as strings) to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An :class:`LDAPResult` object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Should raise stuff but it doesn&#39;t yet</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Searching ldap - dn: {}, filter: {}, &quot;</span>
+                     <span class="s">&quot;attributes: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">))</span>
+
+        <span class="c"># Tip-toe around unicode bugs - `ldap` expects ASCII strings for</span>
+        <span class="c"># attribute names</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">search_s</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="LDAPConnection.user_attributes"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.user_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">user_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch a list of attributes of the specified user.</span>
+
+<span class="sd">        Fetch LDAP attributes of a tjhsstStudent or a tjhsstTeacher. The</span>
+<span class="sd">        :class:`LDAPResult` will contain an empty set of results if the</span>
+<span class="sd">        user does not exist.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dn</span>
+<span class="sd">                The full DN of the user</span>
+<span class="sd">            attributes</span>
+<span class="sd">                A list of the LDAP fields to fetch (strings)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :class:`LDAPResult` object (empty if no results)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Fetching attributes &#39;{}&#39; of user &quot;</span>
+                     <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">dn</span><span class="p">))</span>
+
+        <span class="nb">filter</span> <span class="o">=</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">all_users</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">NO_SUCH_OBJECT</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;No such user &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">return</span> <span class="n">LDAPResult</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="LDAPConnection.class_attributes"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.class_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">class_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch a list of attributes of the specified class.</span>
+
+<span class="sd">        Fetch LDAP attributes of a tjhsstClass. The :class:`LDAPResult`</span>
+<span class="sd">        will contain an empty set of results if the class does not</span>
+<span class="sd">        exist.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dn</span>
+<span class="sd">                The full DN of the class</span>
+<span class="sd">            attributes</span>
+<span class="sd">                A list of the LDAP fields to fetch (strings)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :class:`LDAPResult` object (empty if no results)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Fetching attributes &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="s">&quot;&#39; of class &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
+        <span class="nb">filter</span> <span class="o">=</span> <span class="s">&#39;(objectclass=tjhsstClass)&#39;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">NO_SUCH_OBJECT</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;No such class &quot;</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">return</span> <span class="n">LDAPResult</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="LDAPConnection.set_attribute"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.set_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">old_entry</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">attribute</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_attributes</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="p">[</span><span class="n">attribute</span><span class="p">])</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+
+        <span class="n">new_entry</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">attribute</span><span class="p">:</span> <span class="n">value</span>
+        <span class="p">}</span>
+
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">modifyModlist</span><span class="p">(</span><span class="n">old_entry</span><span class="p">,</span> <span class="n">new_entry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">modify_s</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="LDAPResult"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPResult">[docs]</a><span class="k">class</span> <span class="nc">LDAPResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Represents the result of an LDAP query.</span>
+
+<span class="sd">    LDAPResult stores the raw result of an LDAP query and can process</span>
+<span class="sd">    the results in various ways.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        result</span>
+<span class="sd">            The raw result of an LDAP query</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_obj</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c"># Encode results as unicode</span>
+
+<div class="viewcode-block" id="LDAPResult.decode_obj"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPResult.decode_obj">[docs]</a>    <span class="k">def</span> <span class="nf">decode_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>  <span class="c"># FIXME: Currently, python-ldap is not unicode safe, so this is the best we can do.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">decode_obj</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decode_obj</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">decode_obj</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_obj</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj</span>
+</div>
+<div class="viewcode-block" id="LDAPResult.first_result"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPResult.first_result">[docs]</a>    <span class="k">def</span> <span class="nf">first_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch the first LDAP object in the response.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+</div>
+<div class="viewcode-block" id="LDAPResult.results_array"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPResult.results_array">[docs]</a>    <span class="k">def</span> <span class="nf">results_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the full array of results.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+
+</div></div>
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">request_finished</span><span class="p">,</span>
+          <span class="n">dispatch_uid</span><span class="o">=</span><span class="s">&quot;close_ldap_connection&quot;</span><span class="p">,</span>
+          <span class="n">sender</span><span class="o">=</span><span class="n">WSGIHandler</span><span class="p">)</span>
+<div class="viewcode-block" id="close_ldap_connection"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.close_ldap_connection">[docs]</a><span class="k">def</span> <span class="nf">close_ldap_connection</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Closes the request&#39;s LDAP connection and clears up thread locals.</span>
+
+<span class="sd">    Listens for the request_finished signal from Django and upon</span>
+<span class="sd">    receipt, unbinds from the directory, terminates the current</span>
+<span class="sd">    association, and frees resources.</span>
+
+<span class="sd">    It would be nice if we could leave the connections open in a pool,</span>
+<span class="sd">    but it looks like rebinding on an open connection isn&#39;t possible</span>
+<span class="sd">    with GSSAPI binds.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s">&quot;ldap_conn&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">unbind_s</span><span class="p">()</span>
+            <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;LDAP connection closed.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s">&quot;simple_bind&quot;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

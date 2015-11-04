@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.auth package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
+    <link rel="next" title="intranet.apps.auth.management package" href="intranet.apps.auth.management.html" />
+    <link rel="prev" title="intranet.apps.api package" href="intranet.apps.api.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.apps.auth package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.apps">intranet.apps.auth.apps module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.backends">intranet.apps.auth.backends module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.decorators">intranet.apps.auth.decorators module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.forms">intranet.apps.auth.forms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.tests">intranet.apps.auth.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.urls">intranet.apps.auth.urls module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.views">intranet.apps.auth.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-apps-auth-package">
+<h1>intranet.apps.auth package<a class="headerlink" href="#intranet-apps-auth-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intranet.apps.auth.management.html">intranet.apps.auth.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.auth.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.auth.management.commands.html">intranet.apps.auth.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.auth.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.auth.management.commands.html#module-intranet.apps.auth.management.commands.grant_admin">intranet.apps.auth.management.commands.grant_admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.auth.management.commands.html#module-intranet.apps.auth.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.auth.management.html#module-intranet.apps.auth.management">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.auth.apps">
+<span id="intranet-apps-auth-apps-module"></span><h2>intranet.apps.auth.apps module<a class="headerlink" href="#module-intranet.apps.auth.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.auth.apps.AuthConfig">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.apps.</code><code class="descname">AuthConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/apps.html#AuthConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.apps.AuthConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.auth.apps.AuthConfig.label">
+<code class="descname">label</code><em class="property"> = u'intranet.apps.auth'</em><a class="headerlink" href="#intranet.apps.auth.apps.AuthConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.auth.apps.AuthConfig.name">
+<code class="descname">name</code><em class="property"> = u'intranet.apps.auth'</em><a class="headerlink" href="#intranet.apps.auth.apps.AuthConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth.backends">
+<span id="intranet-apps-auth-backends-module"></span><h2>intranet.apps.auth.backends module<a class="headerlink" href="#module-intranet.apps.auth.backends" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.backends.</code><code class="descname">KerberosAuthenticationBackend</code><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Authenticate using Kerberos. This is the default
+authentication backend.</p>
+<dl class="method">
+<dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">
+<code class="descname">authenticate</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate a username-password pair.</p>
+<p>Creates a new user if one is not already in the database.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>username</dt>
+<dd>The username of the <cite>User</cite> to authenticate.</dd>
+<dt>password</dt>
+<dd>The password of the <cite>User</cite> to authenticate.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><cite>User</cite></dd>
+</dl>
+<p>NOTE: None is returned when the user account does not exist. However,
+if the account exists but does not exist in LDAP, which is the case for
+former and future students who do not have Intranet access, a dummy user
+is returned that has the flag is_active=False. (The is_active property in
+the User class returns False when the username starts with &#8220;INVALID_USER&#8221;.)</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">
+<em class="property">static </em><code class="descname">get_kerberos_ticket</code><span class="sig-paren">(</span><em>username</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.get_kerberos_ticket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to create a Kerberos ticket for a user.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>username</dt>
+<dd>The username.</dd>
+<dt>password</dt>
+<dd>The password.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>Boolean indicating success or failure of ticket creation</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">
+<code class="descname">get_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.get_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a user, given his or her user id. Required for a
+custom authentication backend.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>user_id</dt>
+<dd>The user id of the user to fetch.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>User or None</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.backends.</code><code class="descname">MasterPasswordAuthenticationBackend</code><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Authenticate as any user against a master password whose hash is
+in secret.py. Forces a simple LDAP bind.</p>
+<dl class="method">
+<dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">
+<code class="descname">authenticate</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate a username-password pair.</p>
+<p>Creates a new user if one is not already in the database.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>username</dt>
+<dd>The username of the <cite>User</cite> to authenticate.</dd>
+<dt>password</dt>
+<dd>The master password.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><cite>User</cite></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">
+<code class="descname">get_user</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend.get_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a user, given his or her user id. Required for a
+custom authentication backend.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>user_id</dt>
+<dd>The user id of the user to fetch.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>User or None</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth.decorators">
+<span id="intranet-apps-auth-decorators-module"></span><h2>intranet.apps.auth.decorators module<a class="headerlink" href="#module-intranet.apps.auth.decorators" title="Permalink to this headline">¶</a></h2>
+<p>Decorators that restrict views to certain types of users.</p>
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.admin_required">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">admin_required</code><span class="sig-paren">(</span><em>group</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/decorators.html#admin_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.decorators.admin_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that requires the user to be in a certain admin group.
+For example, &#64;admin_required(&#8220;polls&#8221;) would check whether a user is
+in the &#8220;admin_polls&#8221; group or in the &#8220;admin_all&#8221; group.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.announcements_admin_required">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">announcements_admin_required</code><span class="sig-paren">(</span><em>view_func</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.auth.decorators.announcements_admin_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the wrapped view to announcements admins</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.attendance_taker_required">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">attendance_taker_required</code><span class="sig-paren">(</span><em>view_func</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.auth.decorators.attendance_taker_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the wrapped view to users who can take attendance</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.eighth_admin_required">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">eighth_admin_required</code><span class="sig-paren">(</span><em>view_func</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.auth.decorators.eighth_admin_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the wrapped view to eighth admins</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.decorators.events_admin_required">
+<code class="descclassname">intranet.apps.auth.decorators.</code><code class="descname">events_admin_required</code><span class="sig-paren">(</span><em>view_func</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.auth.decorators.events_admin_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the wrapped view to events admins</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth.forms">
+<span id="intranet-apps-auth-forms-module"></span><h2>intranet.apps.auth.forms module<a class="headerlink" href="#module-intranet.apps.auth.forms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.auth.forms.AuthenticateForm">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.forms.</code><code class="descname">AuthenticateForm</code><span class="sig-paren">(</span><em>request=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/forms.html#AuthenticateForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.forms.AuthenticateForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/topics/auth/default/#django.contrib.auth.forms.AuthenticationForm" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.forms.AuthenticationForm</span></code></a></p>
+<p>Implements a login form.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>username</dt>
+<dd>The username text field.</dd>
+<dt>password</dt>
+<dd>The password text field.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="intranet.apps.auth.forms.AuthenticateForm.declared_fields">
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('username', &lt;django.forms.fields.CharField object at 0x7f9425ea92d0&gt;), ('password', &lt;django.forms.fields.CharField object at 0x7f9425ea9310&gt;)])</em><a class="headerlink" href="#intranet.apps.auth.forms.AuthenticateForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.auth.forms.AuthenticateForm.is_valid">
+<code class="descname">is_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/forms.html#AuthenticateForm.is_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.forms.AuthenticateForm.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the username and password in the form</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth.tests">
+<span id="intranet-apps-auth-tests-module"></span><h2>intranet.apps.auth.tests module<a class="headerlink" href="#module-intranet.apps.auth.tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.auth.tests.SimpleTest">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.tests.</code><code class="descname">SimpleTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/tests.html#SimpleTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.tests.SimpleTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Does a simple test</p>
+<dl class="method">
+<dt id="intranet.apps.auth.tests.SimpleTest.test_basic_addition">
+<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/tests.html#SimpleTest.test_basic_addition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that 1 + 1 always equals 2.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth.urls">
+<span id="intranet-apps-auth-urls-module"></span><h2>intranet.apps.auth.urls module<a class="headerlink" href="#module-intranet.apps.auth.urls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.auth.views">
+<span id="intranet-apps-auth-views-module"></span><h2>intranet.apps.auth.views module<a class="headerlink" href="#module-intranet.apps.auth.views" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.auth.views.about_view">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">about_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#about_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.about_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show an about page with credits.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.do_logout">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">do_logout</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#do_logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.do_logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the Kerberos cache and logout.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.get_bg_pattern">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">get_bg_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#get_bg_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.get_bg_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose a background pattern image.
+One will be selected at random.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.index_view">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">index_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#index_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.index_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process and show the main login page or dashboard if logged in.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.log_auth">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">log_auth</code><span class="sig-paren">(</span><em>request</em>, <em>success</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#log_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.log_auth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.auth.views.login_view">
+<em class="property">class </em><code class="descclassname">intranet.apps.auth.views.</code><code class="descname">login_view</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#login_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.login_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/class-based-views/base/#django.views.generic.base.View" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.views.generic.base.View</span></code></a></p>
+<p>Log in and redirect a user.</p>
+<dl class="method">
+<dt id="intranet.apps.auth.views.login_view.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#login_view.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.login_view.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redirect to the login page.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.auth.views.login_view.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#login_view.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.login_view.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate and process the login POST request.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.auth.views.logout_view">
+<code class="descclassname">intranet.apps.auth.views.</code><code class="descname">logout_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/views.html#logout_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.auth.views.logout_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the Kerberos cache and logout.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.auth">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.auth" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

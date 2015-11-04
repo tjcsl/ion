@@ -1,0 +1,816 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.eighth.views.attendance &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for intranet.apps.eighth.views.attendance</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+<span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.enums</span> <span class="kn">import</span> <span class="n">TA_CENTER</span><span class="p">,</span> <span class="n">TA_RIGHT</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">letter</span>
+<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SimpleDocTemplate</span><span class="p">,</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">TableStyle</span><span class="p">,</span> <span class="n">PageBreak</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">getSampleStyleSheet</span><span class="p">,</span> <span class="n">ParagraphStyle</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">inch</span>
+<span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span><span class="p">,</span> <span class="n">attendance_taker_required</span>
+<span class="kn">from</span> <span class="nn">...users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span> <span class="nn">..forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
+<span class="kn">from</span> <span class="nn">..forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthBlock</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="should_show_activity_list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.should_show_activity_list">[docs]</a><span class="k">def</span> <span class="nf">should_show_activity_list</span><span class="p">(</span><span class="n">wizard</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&quot;default_activity&quot;</span> <span class="ow">in</span> <span class="n">wizard</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">act_id</span> <span class="o">=</span> <span class="n">wizard</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s">&quot;default_activity&quot;</span><span class="p">]</span>
+        <span class="n">default_activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">act_id</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">default_activity</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">default_activity</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">wizard</span><span class="o">.</span><span class="n">default_activity</span> <span class="o">=</span> <span class="n">default_activity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">wizard</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="n">cleaned_data</span> <span class="o">=</span> <span class="n">wizard</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s">&quot;block&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">cleaned_data</span><span class="p">:</span>
+        <span class="n">activities</span> <span class="o">=</span> <span class="n">wizard</span><span class="o">.</span><span class="n">get_form</span><span class="p">(</span><span class="s">&quot;activity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;activity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span>
+        <span class="k">if</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">wizard</span><span class="o">.</span><span class="n">default_activity</span> <span class="o">=</span> <span class="n">activities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wizard</span><span class="o">.</span><span class="n">no_activities</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+</div>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAttendanceSelectScheduledActivityWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;block&quot;</span><span class="p">:</span> <span class="s">&quot;eighth/take_attendance.html&quot;</span><span class="p">,</span>
+        <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="s">&quot;eighth/take_attendance.html&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_template_names"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span>
+</div>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s">&quot;block&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&quot;show_all_blocks&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="sd">&quot;&quot;&quot; Only show blocks after September 1st of the current school year &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
+                    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">now</span><span class="p">})</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">now</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+                <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">})</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s">&quot;activity&quot;</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s">&quot;block&quot;</span><span class="p">)[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+
+            <span class="n">block_title</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;Take Attendance&quot;</span> <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="k">else</span> <span class="s">&quot;View Roster&quot;</span><span class="p">)</span>
+
+            <span class="c"># try:</span>
+            <span class="c">#    sponsor = self.request.user.eighthsponsor</span>
+            <span class="c"># except (EighthSponsor.DoesNotExist, AttributeError):</span>
+            <span class="c">#    sponsor = None</span>
+
+            <span class="c"># if not (self.request.user.is_eighth_admin or (sponsor is None)):</span>
+            <span class="c">#    kwargs.update({&quot;sponsor&quot;: sponsor})</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;block&quot;</span><span class="p">:</span> <span class="s">&quot;Select a block&quot;</span><span class="p">,</span>
+            <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="s">&quot;Select an activity&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">block</span> <span class="k">else</span> <span class="n">block_title</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+</div>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_context_data"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAttendanceSelectScheduledActivityWizard</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Take Attendance&quot;</span><span class="p">})</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s">&quot;block&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sponsor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsponsor</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">EighthSponsor</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+                <span class="n">sponsor</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="n">sponsor</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
+                <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;sponsor_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;sponsor block: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">))</span>
+
+                <span class="n">sponsoring_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span> <span class="o">|</span>
+                                     <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">&amp;</span>
+                                      <span class="n">Q</span><span class="p">(</span><span class="n">activity__sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)))</span>
+                <span class="n">sponsored_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
+                                                               <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
+                                                               <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsoring_filter</span><span class="p">)</span>
+                                                               <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;activity__name&quot;</span><span class="p">))</span>
+
+                <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;sponsored_activities&quot;</span><span class="p">:</span> <span class="n">sponsored_activities</span><span class="p">})</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sponsored_activities</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s">&quot;block&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">block_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s">&quot;redirect_block_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_id</span>
+
+        <span class="k">return</span> <span class="n">context</span>
+</div>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.done"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;debug called in attendance&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;no_activities&quot;</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_attendance_choose_scheduled_activity&quot;</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">[</span><span class="s">&quot;Location&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&quot;?na=1&quot;</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;default_activity&quot;</span><span class="p">):</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_activity</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;activity&quot;</span><span class="p">]</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span>
+            <span class="n">activity</span><span class="o">=</span><span class="n">activity</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s">&quot;admin&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_take_attendance&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_take_attendance&quot;</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</div></div>
+<span class="n">_unsafe_choose_scheduled_activity_view</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">EighthAttendanceSelectScheduledActivityWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
+        <span class="n">EighthAttendanceSelectScheduledActivityWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">,</span>
+        <span class="n">condition_dict</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">should_show_activity_list</span><span class="p">}</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">teacher_choose_scheduled_activity_view</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">attendance_taker_required</span><span class="p">(</span><span class="n">_unsafe_choose_scheduled_activity_view</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">admin_choose_scheduled_activity_view</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">_unsafe_choose_scheduled_activity_view</span><span class="p">)</span>
+<span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.roster_view">[docs]</a><span class="k">def</span> <span class="nf">roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
+
+    <span class="n">viewable_members</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_viewable_members</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">num_hidden_members</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_hidden_members</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+    <span class="n">is_sponsor</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">viewable_members</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
+        <span class="s">&quot;viewable_members&quot;</span><span class="p">:</span> <span class="n">viewable_members</span><span class="p">,</span>
+        <span class="s">&quot;num_hidden_members&quot;</span><span class="p">:</span> <span class="n">num_hidden_members</span><span class="p">,</span>
+        <span class="s">&quot;signups&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="p">,</span>
+        <span class="s">&quot;is_sponsor&quot;</span><span class="p">:</span> <span class="n">is_sponsor</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/roster.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+</div>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="raw_roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.raw_roster_view">[docs]</a><span class="k">def</span> <span class="nf">raw_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
+
+    <span class="n">viewable_members</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_viewable_members</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">num_hidden_members</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_hidden_members</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
+        <span class="s">&quot;viewable_members&quot;</span><span class="p">:</span> <span class="n">viewable_members</span><span class="p">,</span>
+        <span class="s">&quot;num_hidden_members&quot;</span><span class="p">:</span> <span class="n">num_hidden_members</span><span class="p">,</span>
+        <span class="s">&quot;signups&quot;</span><span class="p">:</span> <span class="n">signups</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/roster-list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+</div>
+<span class="nd">@attendance_taker_required</span>
+<div class="viewcode-block" id="take_attendance_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.take_attendance_view">[docs]</a><span class="k">def</span> <span class="nf">take_attendance_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
+                                                     <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;activity&quot;</span><span class="p">,</span>
+                                                                     <span class="s">&quot;block&quot;</span><span class="p">)</span>
+                                                     <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                          <span class="n">activity__deleted</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                          <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;User has permission to edit&quot;</span><span class="p">)</span>
+        <span class="n">edit_perm</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;User does not have permission to edit&quot;</span><span class="p">)</span>
+        <span class="n">edit_perm</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">edit_perm</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You do not have permission to take attendance for this activity. You are not a sponsor.&quot;</span>
+            <span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s">&quot;admin&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_take_attendance&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_take_attendance&quot;</span>
+
+        <span class="k">if</span> <span class="s">&quot;clear_attendance_bit&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Attendance bit cleared for {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You do not have permission to take attendance for this activity. The block has not been locked yet.&quot;</span>
+            <span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Note: Taking attendance on an unlocked block.&quot;</span><span class="p">)</span>
+
+        <span class="n">present_user_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">csrf</span> <span class="o">=</span> <span class="s">&quot;csrfmiddlewaretoken&quot;</span>
+        <span class="k">if</span> <span class="n">csrf</span> <span class="ow">in</span> <span class="n">present_user_ids</span><span class="p">:</span>
+            <span class="n">present_user_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">csrf</span><span class="p">)</span>
+
+        <span class="n">absent_signups</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user__in</span><span class="o">=</span><span class="n">present_user_ids</span><span class="p">))</span>
+        <span class="n">absent_signups</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="n">present_signups</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                                       <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span>
+                                               <span class="n">user__in</span><span class="o">=</span><span class="n">present_user_ids</span><span class="p">))</span>
+        <span class="n">present_signups</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="n">passes</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                              <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span>
+                                      <span class="n">after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                      <span class="n">pass_accepted</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                              <span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+
+        <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Attendance updated.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">passes</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                              <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+                              <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span>
+                                      <span class="n">after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                      <span class="n">pass_accepted</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+
+        <span class="n">users</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthsignup__in</span><span class="o">=</span><span class="n">passes</span><span class="p">)</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">absent_user_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                                       <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+                                       <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span>
+                                               <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;user__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+
+        <span class="n">pass_users</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                                  <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+                                  <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">,</span>
+                                          <span class="n">after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                          <span class="n">pass_accepted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                  <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;user__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+            <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_first</span><span class="p">(),</span>  <span class="c"># includes nickname</span>
+                <span class="s">&quot;grade&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+                <span class="s">&quot;present&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="ow">and</span>
+                            <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">absent_user_ids</span><span class="p">)),</span>
+                <span class="s">&quot;had_pass&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">pass_users</span><span class="p">,</span>
+                <span class="s">&quot;pass_present&quot;</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="ow">and</span>
+                                 <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">pass_users</span> <span class="ow">and</span>
+                                 <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">absent_user_ids</span><span class="p">),</span>
+                <span class="s">&quot;email&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span>
+            <span class="p">})</span>
+
+        <span class="n">members</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">])</span>
+
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
+            <span class="s">&quot;passes&quot;</span><span class="p">:</span> <span class="n">passes</span><span class="p">,</span>
+            <span class="s">&quot;members&quot;</span><span class="p">:</span> <span class="n">members</span><span class="p">,</span>
+            <span class="s">&quot;p&quot;</span><span class="p">:</span> <span class="n">pass_users</span><span class="p">,</span>
+            <span class="s">&quot;no_edit_perm&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">edit_perm</span><span class="p">,</span>
+            <span class="s">&quot;show_checkboxes&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s">&quot;scheduled_activities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
+                                                                      <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                                                                      <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;scheduled_activities&quot;</span><span class="p">])</span>
+            <span class="n">context</span><span class="p">[</span><span class="s">&quot;blocks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span>
+                                 <span class="c"># .filter(date__gte=get_start_date(request))</span>
+                                            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s">&quot;eighth_admin_export_attendance_csv&quot;</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/csv&quot;</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">[</span><span class="s">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="s">attendance.csv</span><span class="se">\&quot;</span><span class="s">&quot;</span>
+
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&quot;Block&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Activity&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Name&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Student ID&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Grade&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Email&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Locked&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Rooms&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Sponsors&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Attendance Taken&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Present&quot;</span><span class="p">,</span>
+                             <span class="s">&quot;Had Pass&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="p">))</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="p">))</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">])</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">])</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;grade&quot;</span><span class="p">])</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;email&quot;</span><span class="p">])</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">)</span>
+                <span class="n">rooms</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">room</span><span class="o">.</span><span class="n">capacity</span><span class="p">)</span> <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">rooms</span><span class="p">]))</span>
+                <span class="n">sponsors</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot; ,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">sponsor</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors</span><span class="p">]))</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;present&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="k">else</span> <span class="s">&quot;N/A&quot;</span><span class="p">)</span>
+
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s">&quot;had_pass&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="k">else</span> <span class="s">&quot;N/A&quot;</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/take_attendance.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+</div>
+<span class="nd">@attendance_taker_required</span>
+<div class="viewcode-block" id="accept_pass_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.accept_pass_view">[docs]</a><span class="k">def</span> <span class="nf">accept_pass_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">signup_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signup_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
+    <span class="n">can_accept</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span>
+        <span class="p">(</span><span class="n">sponsor</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">in</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">())</span> <span class="ow">or</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_accept</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You do not have permission to take accept this pass.&quot;</span>
+        <span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s">&quot;accept&quot;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ACCEPT&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;signup.was_absent = False</span>
+<span class="sd">        signup.present = True</span>
+<span class="sd">        signup.pass_accepted = True&quot;&quot;&quot;</span>
+        <span class="n">signup</span><span class="o">.</span><span class="n">accept_pass</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="s">&quot;reject&quot;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;REJECT&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;signup.was_absent = True</span>
+<span class="sd">        signup.pass_accepted = True&quot;&quot;&quot;</span>
+        <span class="n">signup</span><span class="o">.</span><span class="n">reject_pass</span><span class="p">()</span>
+
+    <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s">&quot;admin&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+        <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_take_attendance&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_take_attendance&quot;</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span>
+                    <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+</div>
+<span class="nd">@attendance_taker_required</span>
+<div class="viewcode-block" id="accept_all_passes_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.accept_all_passes_view">[docs]</a><span class="k">def</span> <span class="nf">accept_all_passes_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+
+    <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
+    <span class="n">can_accept</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span>
+        <span class="p">(</span><span class="n">sponsor</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">in</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">())</span> <span class="ow">or</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_accept</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You do not have permission to take accept these passes.&quot;</span>
+        <span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">after_deadline</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">pass_accepted</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">was_absent</span><span class="o">=</span><span class="bp">False</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s">&quot;admin&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+        <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_take_attendance&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_take_attendance&quot;</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span>
+                    <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="generate_roster_pdf"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.generate_roster_pdf">[docs]</a><span class="k">def</span> <span class="nf">generate_roster_pdf</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">,</span> <span class="n">include_instructions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates a PDF roster for one or more</span>
+<span class="sd">    :class:`EighthScheduledActivity`\s.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">        sched_act_ids</span>
+<span class="sd">            The list of IDs of the scheduled activities to show in the PDF.</span>
+<span class="sd">        include_instructions</span>
+<span class="sd">            Whether instructions should be printed at the bottom of the</span>
+<span class="sd">            roster(s).</span>
+
+<span class="sd">    Returns a BytesIO object for the PDF.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pdf_buffer</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">h_margin</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">inch</span>
+    <span class="n">v_margin</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">inch</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">SimpleDocTemplate</span><span class="p">(</span><span class="n">pdf_buffer</span><span class="p">,</span> <span class="n">pagesize</span><span class="o">=</span><span class="n">letter</span><span class="p">,</span>
+                            <span class="n">rightMargin</span><span class="o">=</span><span class="n">h_margin</span><span class="p">,</span> <span class="n">leftMargin</span><span class="o">=</span><span class="n">h_margin</span><span class="p">,</span>
+                            <span class="n">topMargin</span><span class="o">=</span><span class="n">v_margin</span><span class="p">,</span> <span class="n">bottomMargin</span><span class="o">=</span><span class="n">v_margin</span><span class="p">)</span>
+
+    <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">styles</span> <span class="o">=</span> <span class="n">getSampleStyleSheet</span><span class="p">()</span>
+    <span class="n">styles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ParagraphStyle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Center&quot;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">TA_CENTER</span><span class="p">))</span>
+    <span class="n">styles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ParagraphStyle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;BlockLetter&quot;</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">leading</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">TA_CENTER</span><span class="p">))</span>
+    <span class="n">styles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ParagraphStyle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;BlockLetterSmall&quot;</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">leading</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">TA_CENTER</span><span class="p">))</span>
+    <span class="n">styles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ParagraphStyle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;BlockLetterSmallest&quot;</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">leading</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">TA_CENTER</span><span class="p">))</span>
+    <span class="n">styles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ParagraphStyle</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;ActivityAttribute&quot;</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">leading</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">TA_RIGHT</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">said</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">):</span>
+        <span class="n">sact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">said</span><span class="p">)</span>
+
+        <span class="n">sponsor_names</span> <span class="o">=</span> <span class="n">sact</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;first_name&quot;</span><span class="p">,</span>
+                                                             <span class="s">&quot;last_name&quot;</span><span class="p">)</span>
+        <span class="n">sponsors_str</span> <span class="o">=</span> <span class="s">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">f</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sponsor_names</span><span class="p">)</span>
+
+        <span class="n">room_names</span> <span class="o">=</span> <span class="n">sact</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">room_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rooms_str</span> <span class="o">=</span> <span class="s">&quot;Room &quot;</span> <span class="o">+</span> <span class="n">room_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rooms_str</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;Rooms: &quot;</span> <span class="o">+</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">room_names</span><span class="p">)</span>
+
+        <span class="n">block_letter</span> <span class="o">=</span> <span class="n">sact</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">block_letter_width</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">inch</span>
+            <span class="n">block_letter_width</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">inch</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">block_letter_style</span> <span class="o">=</span> <span class="s">&quot;BlockLetter&quot;</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="n">block_letter_width</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">inch</span>
+            <span class="n">block_letter_width</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="n">inch</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">block_letter_style</span> <span class="o">=</span> <span class="s">&quot;BlockLetterSmall&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">block_letter_width</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">inch</span>
+            <span class="n">block_letter_width</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">inch</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_letter</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">block_letter_style</span> <span class="o">=</span> <span class="s">&quot;BlockLetterSmallest&quot;</span>
+
+        <span class="n">header_data</span> <span class="o">=</span> <span class="p">[[</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Activity ID: {}&lt;br /&gt;Scheduled ID: {}&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sact</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sact</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Normal&quot;</span><span class="p">]),</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="s">&quot;{}&lt;br/&gt;{}&lt;br/&gt;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sponsors_str</span><span class="p">,</span>
+                                                <span class="n">rooms_str</span><span class="p">,</span>
+                                                <span class="n">sact</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%A, %B </span><span class="si">%-d</span><span class="s">, %Y&quot;</span><span class="p">)),</span>
+                      <span class="n">styles</span><span class="p">[</span><span class="s">&quot;ActivityAttribute&quot;</span><span class="p">]),</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="n">block_letter</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="n">block_letter_style</span><span class="p">])</span>
+        <span class="p">]]</span>
+        <span class="n">header_style</span> <span class="o">=</span> <span class="n">TableStyle</span><span class="p">([</span>
+            <span class="p">(</span><span class="s">&quot;VALIGN&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s">&quot;TOP&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;VALIGN&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s">&quot;MIDDLE&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;TOPPADDING&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">15</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;RIGHTPADDING&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">])</span>
+
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">header_data</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">header_style</span><span class="p">,</span> <span class="n">colWidths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">inch</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">block_letter_width</span><span class="p">]))</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Spacer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Paragraph</span><span class="p">(</span><span class="n">sact</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Title&quot;</span><span class="p">]))</span>
+
+        <span class="n">num_members</span> <span class="o">=</span> <span class="n">sact</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">num_members_label</span> <span class="o">=</span> <span class="s">&quot;{} Student{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_members</span><span class="p">,</span> <span class="s">&quot;s&quot;</span> <span class="k">if</span> <span class="n">num_members</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Paragraph</span><span class="p">(</span><span class="n">num_members_label</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Center&quot;</span><span class="p">]))</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Spacer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+        <span class="n">attendance_data</span> <span class="o">=</span> <span class="p">[[</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="s">&quot;Present&quot;</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Heading5&quot;</span><span class="p">]),</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="s">&quot;Student Name (ID)&quot;</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Heading5&quot;</span><span class="p">]),</span>
+            <span class="n">Paragraph</span><span class="p">(</span><span class="s">&quot;Grade&quot;</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Heading5&quot;</span><span class="p">])</span>
+        <span class="p">]]</span>
+
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">sact</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+                <span class="n">member</span><span class="o">.</span><span class="n">last_name</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">student_id</span> <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">student_id</span> <span class="k">else</span> <span class="s">&quot;User {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">id</span><span class="p">)),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">grade</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">grade</span> <span class="k">else</span> <span class="s">&quot;?&quot;</span>
+            <span class="p">))</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">member_id</span><span class="p">,</span> <span class="n">member_grade</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">member_name</span><span class="p">,</span> <span class="n">member_id</span><span class="p">),</span> <span class="n">member_grade</span><span class="p">]</span>
+            <span class="n">attendance_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="c"># Line commands are like this:</span>
+        <span class="c"># op, start, stop, weight, colour, cap, dashes, join, linecount, linespacing</span>
+        <span class="n">attendance_style</span> <span class="o">=</span> <span class="n">TableStyle</span><span class="p">([</span>
+            <span class="p">(</span><span class="s">&quot;LINEABOVE&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">black</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;LINEBELOW&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">attendance_data</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colors</span><span class="o">.</span><span class="n">black</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;TOPPADDING&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;BOTTOMPADDING&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&quot;BOTTOMPADDING&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">])</span>
+
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">attendance_data</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">attendance_style</span><span class="p">,</span> <span class="n">colWidths</span><span class="o">=</span><span class="p">[</span><span class="mf">1.3</span> <span class="o">*</span> <span class="n">inch</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">inch</span><span class="p">]))</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Spacer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="n">instructions</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;Underline, highlight, or circle the names and ID numbers of the students who are &lt;b&gt;no-shows&lt;/b&gt;.&lt;br/&gt;</span>
+<span class="s">        Return the &lt;b&gt;roster&lt;/b&gt; and &lt;b&gt;passes&lt;/b&gt; to Eighth Period coordinator Joan Burch&#39;s mailbox</span>
+<span class="s">        in the &lt;b&gt;main office&lt;/b&gt;.&lt;br/&gt;</span>
+<span class="s">        &lt;b&gt;Do not make any additions to the roster.&lt;/b&gt;&lt;br/&gt;</span>
+<span class="s">        Students who need changes should report to the 8th period office.&lt;br/&gt;</span>
+<span class="s">        For questions, please call extension 5046 or 5078. Thank you!&lt;br/&gt;&quot;&quot;&quot;</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Paragraph</span><span class="p">(</span><span class="n">instructions</span><span class="p">,</span> <span class="n">styles</span><span class="p">[</span><span class="s">&quot;Normal&quot;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PageBreak</span><span class="p">())</span>
+
+    <span class="n">doc</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pdf_buffer</span>
+
+</div>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="eighth_absences_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.eighth_absences_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_absences_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">user_id</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s">&quot;user&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+
+    <span class="n">absences</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
+                            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                                    <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                    <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;scheduled_activity__block&quot;</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;absences&quot;</span><span class="p">:</span> <span class="n">absences</span><span class="p">,</span>
+        <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/absences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.apps.eighth.views.admin package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet.apps.eighth.views package" href="intranet.apps.eighth.views.html" />
+    <link rel="next" title="intranet.apps.error package" href="intranet.apps.error.html" />
+    <link rel="prev" title="intranet.apps.eighth.views package" href="intranet.apps.eighth.views.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.apps.eighth.views.admin package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.activities">intranet.apps.eighth.views.admin.activities module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.attendance">intranet.apps.eighth.views.admin.attendance module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.blocks">intranet.apps.eighth.views.admin.blocks module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.general">intranet.apps.eighth.views.admin.general module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.groups">intranet.apps.eighth.views.admin.groups module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.rooms">intranet.apps.eighth.views.admin.rooms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.scheduling">intranet.apps.eighth.views.admin.scheduling module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin.sponsors">intranet.apps.eighth.views.admin.sponsors module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.admin">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-apps-eighth-views-admin-package">
+<h1>intranet.apps.eighth.views.admin package<a class="headerlink" href="#intranet-apps-eighth-views-admin-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.activities">
+<span id="intranet-apps-eighth-views-admin-activities-module"></span><h2>intranet.apps.eighth.views.admin.activities module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.activities" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.activities.add_activity_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.activities.</code><code class="descname">add_activity_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/activities.html#add_activity_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.activities.add_activity_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.activities.delete_activity_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.activities.</code><code class="descname">delete_activity_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/activities.html#delete_activity_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.activities.delete_activity_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.activities.edit_activity_id">
+<code class="descclassname">intranet.apps.eighth.views.admin.activities.</code><code class="descname">edit_activity_id</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/activities.html#edit_activity_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.activities.edit_activity_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.activities.edit_activity_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.activities.</code><code class="descname">edit_activity_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/activities.html#edit_activity_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.activities.edit_activity_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.attendance">
+<span id="intranet-apps-eighth-views-admin-attendance-module"></span><h2>intranet.apps.eighth.views.admin.attendance module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.attendance" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.activities_without_attendance_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">activities_without_attendance_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#activities_without_attendance_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.activities_without_attendance_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.after_deadline_signup_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">after_deadline_signup_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#after_deadline_signup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.after_deadline_signup_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.clear_absence_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">clear_absence_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#clear_absence_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.clear_absence_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.delinquent_students_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">delinquent_students_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#delinquent_students_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.delinquent_students_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.migrate_outstanding_passes_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">migrate_outstanding_passes_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#migrate_outstanding_passes_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.migrate_outstanding_passes_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.no_signups_roster">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">no_signups_roster</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#no_signups_roster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.no_signups_roster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.open_passes_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">open_passes_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#open_passes_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.open_passes_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.attendance.out_of_building_schedules_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.attendance.</code><code class="descname">out_of_building_schedules_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/attendance.html#out_of_building_schedules_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.attendance.out_of_building_schedules_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.blocks">
+<span id="intranet-apps-eighth-views-admin-blocks-module"></span><h2>intranet.apps.eighth.views.admin.blocks module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.blocks" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.blocks.add_block_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.blocks.</code><code class="descname">add_block_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/blocks.html#add_block_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.blocks.add_block_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.blocks.delete_block_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.blocks.</code><code class="descname">delete_block_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/blocks.html#delete_block_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.blocks.delete_block_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.blocks.edit_block_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.blocks.</code><code class="descname">edit_block_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/blocks.html#edit_block_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.blocks.edit_block_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.blocks.print_block_rosters_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.blocks.</code><code class="descname">print_block_rosters_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/blocks.html#print_block_rosters_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.blocks.print_block_rosters_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.general">
+<span id="intranet-apps-eighth-views-admin-general-module"></span><h2>intranet.apps.eighth.views.admin.general module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.general" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.general.cache_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.general.</code><code class="descname">cache_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/general.html#cache_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.general.cache_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.general.edit_start_date_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.general.</code><code class="descname">edit_start_date_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/general.html#edit_start_date_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.general.edit_start_date_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.general.eighth_admin_dashboard_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.general.</code><code class="descname">eighth_admin_dashboard_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/general.html#eighth_admin_dashboard_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.general.eighth_admin_dashboard_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.general.not_implemented_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.general.</code><code class="descname">not_implemented_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/general.html#not_implemented_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.general.not_implemented_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.groups">
+<span id="intranet-apps-eighth-views-admin-groups-module"></span><h2>intranet.apps.eighth.views.admin.groups module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.groups" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">EighthAdminDistributeGroupWizard</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">formtools.wizard.views.SessionWizardView</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.FORMS">
+<code class="descname">FORMS</code><em class="property"> = [(u'block', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;), (u'activity', &lt;class 'intranet.apps.eighth.forms.admin.activities.ScheduledActivityMultiSelectForm'&gt;)]</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.FORMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.TEMPLATES">
+<code class="descname">TEMPLATES</code><em class="property"> = {u'choose': u'eighth/admin/distribute_group.html', u'block': u'eighth/admin/distribute_group.html', u'activity': u'eighth/admin/distribute_group.html'}</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.TEMPLATES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.done">
+<code class="descname">done</code><span class="sig-paren">(</span><em>form_list</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard.done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.done" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>form</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard.get_context_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_form_kwargs">
+<code class="descname">get_form_kwargs</code><span class="sig-paren">(</span><em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard.get_form_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_form_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_template_names">
+<code class="descname">get_template_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminDistributeGroupWizard.get_template_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_template_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">EighthAdminSignUpGroupWizard</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminSignUpGroupWizard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">formtools.wizard.views.SessionWizardView</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.FORMS">
+<code class="descname">FORMS</code><em class="property"> = [(u'block', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;), (u'activity', &lt;class 'intranet.apps.eighth.forms.admin.activities.ActivitySelectionForm'&gt;)]</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.FORMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.TEMPLATES">
+<code class="descname">TEMPLATES</code><em class="property"> = {u'block': u'eighth/admin/sign_up_group.html', u'activity': u'eighth/admin/sign_up_group.html'}</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.TEMPLATES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.done">
+<code class="descname">done</code><span class="sig-paren">(</span><em>form_list</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminSignUpGroupWizard.done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.done" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>form</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminSignUpGroupWizard.get_context_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_form_kwargs">
+<code class="descname">get_form_kwargs</code><span class="sig-paren">(</span><em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminSignUpGroupWizard.get_form_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_form_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_template_names">
+<code class="descname">get_template_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#EighthAdminSignUpGroupWizard.get_template_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_template_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.add_group_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">add_group_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#add_group_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.add_group_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.add_member_to_group_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">add_member_to_group_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#add_member_to_group_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.add_member_to_group_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.delete_group_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">delete_group_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#delete_group_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.delete_group_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.download_group_csv_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">download_group_csv_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#download_group_csv_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.download_group_csv_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.edit_group_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">edit_group_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#edit_group_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.edit_group_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_action">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">eighth_admin_distribute_action</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#eighth_admin_distribute_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_group">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">eighth_admin_distribute_group</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_unsigned">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">eighth_admin_distribute_unsigned</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_unsigned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">eighth_admin_signup_group</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group_action">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">eighth_admin_signup_group_action</code><span class="sig-paren">(</span><em>request</em>, <em>group_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#eighth_admin_signup_group_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.find_users_input">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">find_users_input</code><span class="sig-paren">(</span><em>lines</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#find_users_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.find_users_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.get_file_string">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">get_file_string</code><span class="sig-paren">(</span><em>fileobj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#get_file_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.get_file_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.get_user_info">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">get_user_info</code><span class="sig-paren">(</span><em>key</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#get_user_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.get_user_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.handle_group_input">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">handle_group_input</code><span class="sig-paren">(</span><em>filetext</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#handle_group_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.handle_group_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.remove_member_from_group_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">remove_member_from_group_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#remove_member_from_group_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.remove_member_from_group_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.groups.upload_group_members_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.groups.</code><code class="descname">upload_group_members_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/groups.html#upload_group_members_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.groups.upload_group_members_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.rooms">
+<span id="intranet-apps-eighth-views-admin-rooms-module"></span><h2>intranet.apps.eighth.views.admin.rooms module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.rooms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">EighthAdminRoomUtilizationWizard</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#EighthAdminRoomUtilizationWizard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">formtools.wizard.views.SessionWizardView</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.FORMS">
+<code class="descname">FORMS</code><em class="property"> = [(u'start_block', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;), (u'end_block', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;)]</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.FORMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.TEMPLATES">
+<code class="descname">TEMPLATES</code><em class="property"> = {u'end_block': u'eighth/admin/room_utilization.html', u'start_block': u'eighth/admin/room_utilization.html'}</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.TEMPLATES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.done">
+<code class="descname">done</code><span class="sig-paren">(</span><em>form_list</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#EighthAdminRoomUtilizationWizard.done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.done" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>form</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#EighthAdminRoomUtilizationWizard.get_context_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_form_kwargs">
+<code class="descname">get_form_kwargs</code><span class="sig-paren">(</span><em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#EighthAdminRoomUtilizationWizard.get_form_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_form_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_template_names">
+<code class="descname">get_template_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#EighthAdminRoomUtilizationWizard.get_template_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_template_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.add_room_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">add_room_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#add_room_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.add_room_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.delete_room_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">delete_room_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#delete_room_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.delete_room_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.edit_room_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">edit_room_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#edit_room_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.edit_room_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.room_sanity_check_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">room_sanity_check_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#room_sanity_check_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.room_sanity_check_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.room_utilization_action">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">room_utilization_action</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#room_utilization_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.room_utilization_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">room_utilization_for_block_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/rooms.html#room_utilization_for_block_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.rooms.room_utilization_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.rooms.</code><code class="descname">room_utilization_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.views.admin.rooms.room_utilization_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.scheduling">
+<span id="intranet-apps-eighth-views-admin-scheduling-module"></span><h2>intranet.apps.eighth.views.admin.scheduling module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.scheduling" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">EighthAdminTransferStudentsWizard</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#EighthAdminTransferStudentsWizard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">formtools.wizard.views.SessionWizardView</span></code></p>
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.FORMS">
+<code class="descname">FORMS</code><em class="property"> = [(u'block_1', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;), (u'activity_1', &lt;class 'intranet.apps.eighth.forms.admin.activities.ActivitySelectionForm'&gt;), (u'block_2', &lt;class 'intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm'&gt;), (u'activity_2', &lt;class 'intranet.apps.eighth.forms.admin.activities.ActivitySelectionForm'&gt;)]</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.FORMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.TEMPLATES">
+<code class="descname">TEMPLATES</code><em class="property"> = {u'block_1': u'eighth/admin/transfer_students.html', u'activity_1': u'eighth/admin/transfer_students.html', u'activity_2': u'eighth/admin/transfer_students.html', u'block_2': u'eighth/admin/transfer_students.html'}</em><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.TEMPLATES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done">
+<code class="descname">done</code><span class="sig-paren">(</span><em>form_list</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#EighthAdminTransferStudentsWizard.done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>form</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#EighthAdminTransferStudentsWizard.get_context_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">
+<code class="descname">get_form_kwargs</code><span class="sig-paren">(</span><em>step</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#EighthAdminTransferStudentsWizard.get_form_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">
+<code class="descname">get_template_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#EighthAdminTransferStudentsWizard.get_template_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.scheduling.distribute_students_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">distribute_students_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#distribute_students_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.distribute_students_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">schedule_activity_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#schedule_activity_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">show_activity_schedule_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#show_activity_schedule_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.scheduling.transfer_students_action">
+<code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">transfer_students_action</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/scheduling.html#transfer_students_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.transfer_students_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the actual process of transferring students.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.scheduling.transfer_students_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.scheduling.</code><code class="descname">transfer_students_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.eighth.views.admin.scheduling.transfer_students_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin.sponsors">
+<span id="intranet-apps-eighth-views-admin-sponsors-module"></span><h2>intranet.apps.eighth.views.admin.sponsors module<a class="headerlink" href="#module-intranet.apps.eighth.views.admin.sponsors" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.sponsors.add_sponsor_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.sponsors.</code><code class="descname">add_sponsor_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/sponsors.html#add_sponsor_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.sponsors.add_sponsor_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.sponsors.delete_sponsor_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.sponsors.</code><code class="descname">delete_sponsor_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/sponsors.html#delete_sponsor_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.sponsors.delete_sponsor_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.sponsors.edit_sponsor_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.sponsors.</code><code class="descname">edit_sponsor_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/sponsors.html#edit_sponsor_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.sponsors.edit_sponsor_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.eighth.views.admin.sponsors.sponsor_schedule_view">
+<code class="descclassname">intranet.apps.eighth.views.admin.sponsors.</code><code class="descname">sponsor_schedule_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/views/admin/sponsors.html#sponsor_schedule_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.views.admin.sponsors.sponsor_schedule_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.eighth.views.admin">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.eighth.views.admin" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

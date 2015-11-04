@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setting up the Server &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="Setup" href="index.html" />
+    <link rel="next" title="Setting up Vagrant" href="vagrant.html" />
+    <link rel="prev" title="Setting up Your Sandbox Manually" href="sandbox.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Setup</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Setting up the Server</a><ul>
+<li><a class="reference internal" href="#portage-use-flags">Portage USE flags</a></li>
+<li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
+<li><a class="reference internal" href="#redis">Redis</a></li>
+<li><a class="reference internal" href="#python">Python</a></li>
+<li><a class="reference internal" href="#virtualenv">Virtualenv</a></li>
+<li><a class="reference internal" href="#git">Git</a></li>
+<li><a class="reference internal" href="#set-up-the-production-code-base">Set up the production code base</a></li>
+<li><a class="reference internal" href="#nginx">Nginx</a></li>
+<li><a class="reference internal" href="#supervisor">Supervisor</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="setting-up-the-server">
+<h1>Setting up the Server<a class="headerlink" href="#setting-up-the-server" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="portage-use-flags">
+<h2>Portage USE flags<a class="headerlink" href="#portage-use-flags" title="Permalink to this headline">¶</a></h2>
+<p>Add the following flags to <code class="docutils literal"><span class="pre">/etc/portage/package.use</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>net-nds/openldap kerberos sasl
+dev-python/python-ldap sasl
+dev-libs/cyrus-sasl kerberos ldap
+</pre></div>
+</div>
+</div>
+<div class="section" id="postgresql">
+<h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
+<p>First, install the PostgreSQL server.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge dev-db/postgresql-server
+</pre></div>
+</div>
+<p>The following command will print out the command you should run to configure postgres.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>grep <span class="s2">&quot;config =dev-db/postgres&quot;</span> /var/log/portage/elog/summary.log
+</pre></div>
+</div>
+<p>Run the printed command. Then start the PostgreSQL server.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/postgresql-9.2 start
+</pre></div>
+</div>
+<p>Add the Postgres service to the default runlevel.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add postgresql-9.2 default
+</pre></div>
+</div>
+<p>Become root, then run the following command to add an admin user to the postgres group. Replace &lt;admin username&gt; with the username of someone you would like to make a Postgres admin.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>usermod -aG postgres &lt;admin username&gt;
+</pre></div>
+</div>
+<p>Become the user <code class="docutils literal"><span class="pre">postgres</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>su - postgres
+</pre></div>
+</div>
+<p>Create the admin user in postgres</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>createuser -s &lt;admin username&gt;
+</pre></div>
+</div>
+<p>Exit from <code class="docutils literal"><span class="pre">su</span></code>. Repeat the last three steps (since you became root) for all the users who should have admin Postgres access. Then exit from <code class="docutils literal"><span class="pre">ksu</span></code>.</p>
+<p>Create the production Ion database.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>createdb -h localhost ion
+<span class="nv">$ </span>createdb -h localhost ion-dev
+</pre></div>
+</div>
+</div>
+<div class="section" id="redis">
+<h2>Redis<a class="headerlink" href="#redis" title="Permalink to this headline">¶</a></h2>
+<p>Install Redis.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge redis
+</pre></div>
+</div>
+<p>Start Redis.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/redis start
+</pre></div>
+</div>
+<p>Add the Redis service to the default runlevel.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add redis default
+</pre></div>
+</div>
+</div>
+<div class="section" id="python">
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>Install the <code class="docutils literal"><span class="pre">python-ldap</span></code> module, the Cyrus-SASL C library, and the Pip package manager.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge net-nds/openldap
+<span class="nv">$ </span>emerge dev-libs/cyrus-sasl
+<span class="nv">$ </span>emerge python-ldap
+<span class="nv">$ </span>emerge dev-python/pip
+</pre></div>
+</div>
+</div>
+<div class="section" id="virtualenv">
+<h2>Virtualenv<a class="headerlink" href="#virtualenv" title="Permalink to this headline">¶</a></h2>
+<p>Create a directory for virualenvs.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>mkdir /etc/local/virtualenvs
+</pre></div>
+</div>
+<p>Install virtualenv and virtualenvwrapper.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install virtualenv virtualenvwrapper
+</pre></div>
+</div>
+<p>Append the following to <code class="docutils literal"><span class="pre">/etc/bash/bashrc</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># Virtualenv/Pip config</span>
+<span class="nb">export </span><span class="nv">VIRTUALENV_DISTRIBUTE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export </span><span class="nv">PIP_VIRTUALENV_BASE</span><span class="o">=</span>/usr/local/virtualenvs
+<span class="nb">export </span><span class="nv">WORKON_HOME</span><span class="o">=</span>/usr/local/virtualenvs
+<span class="nb">export </span><span class="nv">VIRTUALENVWRAPPER_PYTHON</span><span class="o">=</span>/usr/bin/python
+<span class="nb">export </span><span class="nv">PIP_DOWNLOAD_CACHE</span><span class="o">=</span>/usr/local/virtualenvs/cache
+<span class="nb">source</span> /usr/bin/virtualenvwrapper.sh
+</pre></div>
+</div>
+<p>Reload the bashrc.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">source</span> /etc/bash/bashrc
+</pre></div>
+</div>
+<p>Make a production virtualenv.</p>
+<div class="highlight-bash"><div class="highlight"><pre>mkvirtualenv ion
+</pre></div>
+</div>
+<p>Confirm that your prompt now appears something like this:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(ion)awilliam@ion ~ $
+</pre></div>
+</div>
+</div>
+<div class="section" id="git">
+<h2>Git<a class="headerlink" href="#git" title="Permalink to this headline">¶</a></h2>
+<p>Install Git.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge dev-vcs/git
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-up-the-production-code-base">
+<h2>Set up the production code base<a class="headerlink" href="#set-up-the-production-code-base" title="Permalink to this headline">¶</a></h2>
+<p>Exit from root. Create the local shared Git repository.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> /shared/git
+</pre></div>
+</div>
+<p>Set up SSH access to Bitbucket by following <a class="reference external" href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">this tutorial</a>. Then clone the Ion Git repository and give all users in the &#8220;ion&#8221; group access.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone --bare git@bitbucket.org:tjhsstintranet/intranet3.git
+<span class="nv">$ </span><span class="nb">cd </span>intranet3.git
+<span class="nv">$ </span>git config core.sharedRepository <span class="nb">true</span>
+<span class="nv">$ </span>chgrp -R ion .
+</pre></div>
+</div>
+<p>Rename the main branch to &#8220;bitbucket&#8221; (<code class="docutils literal"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">rename</span></code> doesn&#8217;t seem to work in this situation).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git remote add bitbucket git@bitbucket.org:tjhsstintranet/intranet3.git
+<span class="nv">$ </span>git fetch bitbucket
+<span class="nv">$ </span>git remote rm origin
+</pre></div>
+</div>
+<p>Add the Git hook to automatically push changes to Bitbucket by creating a post-receive hook (<code class="docutils literal"><span class="pre">touch</span> <span class="pre">hooks/post-receive</span></code>) and appending the following to that file:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c">#!/bin/bash</span>
+
+git push --all bitbucket
+git push --tags bitbucket
+</pre></div>
+</div>
+<p>Make the post-receive hook executable.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>chmod +x hooks/post-receive
+</pre></div>
+</div>
+<p>Create a directory for the production code.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
+<span class="nv">$ </span>mkdir /usr/local/www
+<span class="nv">$ </span><span class="nb">cd</span> /usr/local/www
+</pre></div>
+</div>
+<p>Clone the shared repository.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone /shared/git/intranet3.git
+</pre></div>
+</div>
+<p>Ensure that your prompt still starts with <code class="docutils literal"><span class="pre">(ion)</span></code>. If it doesn&#8217;t, run the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>workon ion
+</pre></div>
+</div>
+<p>Install all of the dependencies.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install -r intranet3/requirements/production.txt
+</pre></div>
+</div>
+</div>
+<div class="section" id="nginx">
+<h2>Nginx<a class="headerlink" href="#nginx" title="Permalink to this headline">¶</a></h2>
+<p>Install Nginx.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge www-servers/nginx
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">/etc/nginx/nginx.conf</span></code> with the config file in the Ion git repository.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
+<span class="nv">$ </span>mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+<span class="nv">$ </span>cp /usr/local/www/intranet3/extras/nginx/nginx.conf /etc/nginx/nginx.conf
+</pre></div>
+</div>
+<p>Start Nginx.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/nginx start
+</pre></div>
+</div>
+<p>Add the Nginx service to the default runlevel.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add nginx default
+</pre></div>
+</div>
+</div>
+<div class="section" id="supervisor">
+<h2>Supervisor<a class="headerlink" href="#supervisor" title="Permalink to this headline">¶</a></h2>
+<p>Deactivate the virtualenv if your prompt still starts with (ion).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>deactivate
+</pre></div>
+</div>
+<p>Install Supervisor.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install supervisor
+</pre></div>
+</div>
+<p>Add the Supervisor config file from the Ion repository.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
+<span class="nv">$ </span>cp /usr/local/www/intranet3/extras/supervisord.conf /etc/supervisord.conf
+</pre></div>
+</div>
+<p>Add the init.d script from the Ion repository. (Based on the script from <a class="reference external" href="https://github.com/Supervisor/initscripts/blob/master/gentoo-matagus">here</a>)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cp /usr/local/www/intranet3/extras/supervisord /etc/init.d/
+<span class="nv">$ </span>chmod +x /etc/init.d/supervisord
+</pre></div>
+</div>
+<p>Start Supervisor.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/supervisord start
+</pre></div>
+</div>
+<p>Add the Supervisor service to the default runlevel.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add supervisord default
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

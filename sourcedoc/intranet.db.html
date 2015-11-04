@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.db package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet package" href="intranet.html" />
+    <link rel="next" title="intranet.middleware package" href="intranet.middleware.html" />
+    <link rel="prev" title="intranet.apps.welcome package" href="intranet.apps.welcome.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.db package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.db.ldap_db">intranet.db.ldap_db module</a></li>
+<li><a class="reference internal" href="#module-intranet.db">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-db-package">
+<h1>intranet.db package<a class="headerlink" href="#intranet-db-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.db.ldap_db">
+<span id="intranet-db-ldap-db-module"></span><h2>intranet.db.ldap_db module<a class="headerlink" href="#module-intranet.db.ldap_db" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.db.ldap_db.LDAPConnection">
+<em class="property">class </em><code class="descclassname">intranet.db.ldap_db.</code><code class="descname">LDAPConnection</code><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Represents an LDAP connection with wrappers for the raw ldap
+queries.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>conn</dt>
+<dd>The singleton LDAP connection.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPConnection.class_attributes">
+<code class="descname">class_attributes</code><span class="sig-paren">(</span><em>dn</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection.class_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.class_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a list of attributes of the specified class.</p>
+<p>Fetch LDAP attributes of a tjhsstClass. The <a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a>
+will contain an empty set of results if the class does not
+exist.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>dn</dt>
+<dd>The full DN of the class</dd>
+<dt>attributes</dt>
+<dd>A list of the LDAP fields to fetch (strings)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a> object (empty if no results)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.db.ldap_db.LDAPConnection.conn">
+<code class="descname">conn</code><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.conn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lazily load and return the raw connection from threadlocals.</p>
+<p>Connect to the LDAP server specified in settings and bind
+using the GSSAPI protocol. The requisite KRB5CCNAME
+environmental variable should have already been set by the
+SetKerberosCache middleware.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPConnection.did_use_simple_bind">
+<code class="descname">did_use_simple_bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection.did_use_simple_bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.did_use_simple_bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether a simple bind was used, or <code class="docutils literal"><span class="pre">False</span></code> for an
+uninitialized connection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPConnection.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>dn</em>, <em>filter</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search LDAP and return an <a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a>.</p>
+<p>Search LDAP with the given dn and filter and return the given
+attributes in an <a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a> object.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>dn</dt>
+<dd>The string representation of the distinguished name
+(DN) of the entry at which to start the search.</dd>
+<dt>filter</dt>
+<dd>The string representation of the filter to apply to
+the search.</dd>
+<dt>attributes</dt>
+<dd>A list of LDAP attributes (as strings) to retrieve.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>An <a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a> object.</dd>
+<dt>Raises:</dt>
+<dd>Should raise stuff but it doesn&#8217;t yet</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPConnection.set_attribute">
+<code class="descname">set_attribute</code><span class="sig-paren">(</span><em>dn</em>, <em>attribute</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection.set_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.set_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPConnection.user_attributes">
+<code class="descname">user_attributes</code><span class="sig-paren">(</span><em>dn</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPConnection.user_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPConnection.user_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a list of attributes of the specified user.</p>
+<p>Fetch LDAP attributes of a tjhsstStudent or a tjhsstTeacher. The
+<a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a> will contain an empty set of results if the
+user does not exist.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>dn</dt>
+<dd>The full DN of the user</dd>
+<dt>attributes</dt>
+<dd>A list of the LDAP fields to fetch (strings)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><a class="reference internal" href="#intranet.db.ldap_db.LDAPResult" title="intranet.db.ldap_db.LDAPResult"><code class="xref py py-class docutils literal"><span class="pre">LDAPResult</span></code></a> object (empty if no results)</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.db.ldap_db.LDAPFilter">
+<em class="property">class </em><code class="descclassname">intranet.db.ldap_db.</code><code class="descname">LDAPFilter</code><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.all_users">
+<em class="property">static </em><code class="descname">all_users</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.all_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.all_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a filter for selecting all user objects in LDAP</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.and_filter">
+<em class="property">static </em><code class="descname">and_filter</code><span class="sig-paren">(</span><em>*conditions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.and_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.and_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.attribute_in_list">
+<em class="property">static </em><code class="descname">attribute_in_list</code><span class="sig-paren">(</span><em>attribute</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.attribute_in_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.attribute_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a filter for selecting all entries for which a
+specified attribute is contained in a specified list of values.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.escape">
+<em class="property">static </em><code class="descname">escape</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.escape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.operator">
+<em class="property">static </em><code class="descname">operator</code><span class="sig-paren">(</span><em>operator</em>, <em>*conditions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.operator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.operator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="intranet.db.ldap_db.LDAPFilter.or_filter">
+<em class="property">static </em><code class="descname">or_filter</code><span class="sig-paren">(</span><em>*conditions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPFilter.or_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPFilter.or_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.db.ldap_db.LDAPResult">
+<em class="property">class </em><code class="descclassname">intranet.db.ldap_db.</code><code class="descname">LDAPResult</code><span class="sig-paren">(</span><em>result</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Represents the result of an LDAP query.</p>
+<p>LDAPResult stores the raw result of an LDAP query and can process
+the results in various ways.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>result</dt>
+<dd>The raw result of an LDAP query</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPResult.decode_obj">
+<code class="descname">decode_obj</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPResult.decode_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPResult.decode_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPResult.first_result">
+<code class="descname">first_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPResult.first_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPResult.first_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the first LDAP object in the response.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.db.ldap_db.LDAPResult.results_array">
+<code class="descname">results_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#LDAPResult.results_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.LDAPResult.results_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the full array of results.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.db.ldap_db.close_ldap_connection">
+<code class="descclassname">intranet.db.ldap_db.</code><code class="descname">close_ldap_connection</code><span class="sig-paren">(</span><em>sender</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/db/ldap_db.html#close_ldap_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.db.ldap_db.close_ldap_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the request&#8217;s LDAP connection and clears up thread locals.</p>
+<p>Listens for the request_finished signal from Django and upon
+receipt, unbinds from the directory, terminates the current
+association, and frees resources.</p>
+<p>It would be nice if we could leave the connections open in a pool,
+but it looks like rebinding on an open connection isn&#8217;t possible
+with GSSAPI binds.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.db">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.db" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>intranet.middleware package &mdash; TJ Intranet v3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'v3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="TJ Intranet v3 documentation" href="../index.html" />
+    <link rel="up" title="intranet package" href="intranet.html" />
+    <link rel="next" title="intranet.settings package" href="intranet.settings.html" />
+    <link rel="prev" title="intranet.db package" href="intranet.db.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html">Creating Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/fixtures.html#importing-iodine-fixtures">Importing Iodine fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/postinstall.html">Post-Install Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/sandbox.html">Setting up Your Sandbox Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/server.html">Setting up the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/vagrant.html">Setting up Vagrant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#technologies">Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../architecture/index.html#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">intranet</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="intranet.html">intranet package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../administration/index.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-1">Task 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-2">Task 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/index.html#task-3">Task 3</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">intranet.middleware package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.access_log">intranet.middleware.access_log module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.ajax">intranet.middleware.ajax module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.environment">intranet.middleware.environment module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.ldap_db">intranet.middleware.ldap_db module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.profiler">intranet.middleware.profiler module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.templates">intranet.middleware.templates module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.threadlocals">intranet.middleware.threadlocals module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.traceback">intranet.middleware.traceback module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.url_slashes">intranet.middleware.url_slashes module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="intranet-middleware-package">
+<h1>intranet.middleware package<a class="headerlink" href="#intranet-middleware-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-intranet.middleware.access_log">
+<span id="intranet-middleware-access-log-module"></span><h2>intranet.middleware.access_log module<a class="headerlink" href="#module-intranet.middleware.access_log" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.access_log.AccessLogMiddleWare">
+<em class="property">class </em><code class="descclassname">intranet.middleware.access_log.</code><code class="descname">AccessLogMiddleWare</code><a class="reference internal" href="../_modules/intranet/middleware/access_log.html#AccessLogMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.access_log.AccessLogMiddleWare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="intranet.middleware.access_log.AccessLogMiddleWare.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/access_log.html#AccessLogMiddleWare.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.access_log.AccessLogMiddleWare.process_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.ajax">
+<span id="intranet-middleware-ajax-module"></span><h2>intranet.middleware.ajax module<a class="headerlink" href="#module-intranet.middleware.ajax" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare">
+<em class="property">class </em><code class="descclassname">intranet.middleware.ajax.</code><code class="descname">AjaxNotAuthenticatedMiddleWare</code><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Django doesn&#8217;t handle login redirects with AJAX very nicely,
+so we have to work around the default behavior a little. If a user&#8217;s
+session has expired, but they still have a window open, they client
+may send AJAX requests to a view wrapped in &#64;login_required or
+something similar. When this happens, Django <code class="docutils literal"><span class="pre">302</span></code> redirects to
+something like <code class="docutils literal"><span class="pre">/login?next=/eighth/signup</span></code>, which will show up to
+the client as a <code class="docutils literal"><span class="pre">200</span> <span class="pre">OK</span></code> <code class="docutils literal"><span class="pre">GET</span></code> request and proceed as if
+everything worked. To avoid this, we need to detect these types of
+requests and change their status code to <code class="docutils literal"><span class="pre">401</span></code> to let the client
+know that the request actually failed.</p>
+<dl class="method">
+<dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare.process_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.environment">
+<span id="intranet-middleware-environment-module"></span><h2>intranet.middleware.environment module<a class="headerlink" href="#module-intranet.middleware.environment" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.environment.KerberosCacheMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.environment.</code><code class="descname">KerberosCacheMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Reloads the KRB5CCNAME environmental variable from the session
+for potential use in future LDAP requests.</p>
+<p>For a login request, the KRB5CCNAME environmental variable has
+already been set in the authentication backend, but for all other
+requests, it must be reset from the Kerberos cache stored in a
+user&#8217;s session. Otherwise all requests to a a particular Gunicorn
+worker would use the Kerberos cache of the user who most recently
+logged in through that worker.</p>
+<p>The environmental variable must be set by middleware so it is
+available for requests to any view and so each view does not have
+to load the environmental variable. The LDAP wrapper
+(intranet.db.ldap_db) cannot set the environmental variable because
+it does not have access to the current session (request.session).</p>
+<dl class="method">
+<dt id="intranet.middleware.environment.KerberosCacheMiddleware.process_request">
+<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propogate KRB5CCNAME session variable to the environmental
+variable</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.ldap_db">
+<span id="intranet-middleware-ldap-db-module"></span><h2>intranet.middleware.ldap_db module<a class="headerlink" href="#module-intranet.middleware.ldap_db" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.ldap_db.CheckLDAPBindMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.ldap_db.</code><code class="descname">CheckLDAPBindMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/ldap_db.html#CheckLDAPBindMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ldap_db.CheckLDAPBindMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="intranet.middleware.ldap_db.CheckLDAPBindMiddleware.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/ldap_db.html#CheckLDAPBindMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ldap_db.CheckLDAPBindMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.profiler">
+<span id="intranet-middleware-profiler-module"></span><h2>intranet.middleware.profiler module<a class="headerlink" href="#module-intranet.middleware.profiler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.profiler.ProfileMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.profiler.</code><code class="descname">ProfileMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#ProfileMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.ProfileMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Displays timing or profiling for any view.
+<a class="reference external" href="http://yoursite.com/yourview/?time">http://yoursite.com/yourview/?time</a> or <a class="reference external" href="http://yoursite.com/yourview/?prof">http://yoursite.com/yourview/?prof</a></p>
+<p>Record the time taken by Django and the project code to generate the web page and by the database to make the
+queries. Accumulate repeated web page visits and display the accumulated
+statistics in the web browser in place of the normal web page. The availability of this middleware is
+controlled by the DEBUG flas in settings.py. To time a page, add &#8216;?time&#8217; (or &#8216;&amp;time&#8217;). To clear
+out accumulated timings, add &#8216;&amp;reset&#8217;.</p>
+<p>Alternatively, profile the python function calls executed to create the web page and
+display the profiling statistics in the web browser. To profile a page,
+add &#8216;?prof&#8217; (or &#8216;&amp;prof&#8217;) to the url. By default the statistics are sorted by cumulative time. To
+specify an alternative sort, add one or more &#8216;sort&#8217; parameters, e.g.,
+&#8216;&amp;sort=time&amp;sort=calls&#8217;. By default the display is limited to the first 40 function calls. To
+specify an alternative, add a limit parameter, e.g., &#8216;&amp;limit=.50&#8217;. To write the profile data to
+a permanent file in <cite>PROFILE_LOG_BASE</cite> add &#8216;&amp;log&#8217;. To strip the directory paths from the profile
+statistics, add &#8216;&amp;strip&#8217;. (Note that the file and group summaries are also removed by &#8216;strip&#8217;.)</p>
+<dl class="method">
+<dt id="intranet.middleware.profiler.ProfileMiddleware.process_request">
+<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#ProfileMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.ProfileMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.middleware.profiler.ProfileMiddleware.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#ProfileMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.ProfileMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.middleware.profiler.ProfileMiddleware.process_view">
+<code class="descname">process_view</code><span class="sig-paren">(</span><em>request</em>, <em>callback</em>, <em>callback_args</em>, <em>callback_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#ProfileMiddleware.process_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.ProfileMiddleware.process_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.middleware.profiler.get_log_file_path">
+<code class="descclassname">intranet.middleware.profiler.</code><code class="descname">get_log_file_path</code><span class="sig-paren">(</span><em>log_file_path</em>, <em>called_time</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#get_log_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.get_log_file_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.middleware.profiler.stdev">
+<code class="descclassname">intranet.middleware.profiler.</code><code class="descname">stdev</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/profiler.html#stdev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.profiler.stdev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate mean and standard deviation of data x[]:
+mean = {sum_i x_i over n}
+std = sqrt(sum_i (x_i - mean)^2 over n-1)
+<a class="reference external" href="http://www.physics.rutgers.edu/~masud/computing/WPark_recipes_in_python.html">http://www.physics.rutgers.edu/~masud/computing/WPark_recipes_in_python.html</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.templates">
+<span id="intranet-middleware-templates-module"></span><h2>intranet.middleware.templates module<a class="headerlink" href="#module-intranet.middleware.templates" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">AdminSelectizeLoadingIndicatorMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Automatically add a loading placeholder for Selectize inputs
+in admin templates.</p>
+<p>This is probably not a good practice, but it really needs to be done
+server-side for the loading indicators to show up instantly.</p>
+<dl class="method">
+<dt id="intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.middleware.templates.StripNewlinesMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">StripNewlinesMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Strip extra newlines from rendered templates to
+enhance readability.</p>
+<dl class="method">
+<dt id="intranet.middleware.templates.StripNewlinesMiddleware.process_response">
+<code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the response and strip extra newlines from HTML.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.threadlocals">
+<span id="intranet-middleware-threadlocals-module"></span><h2>intranet.middleware.threadlocals module<a class="headerlink" href="#module-intranet.middleware.threadlocals" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.threadlocals.</code><code class="descname">ThreadLocalsMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Stores the current authorized User object in thread locals for
+access in models (and elsewhere) without passing the user around as
+an argument.</p>
+<dl class="method">
+<dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request">
+<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the request to thread locals</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.middleware.threadlocals.request">
+<code class="descclassname">intranet.middleware.threadlocals.</code><code class="descname">request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the currently authorized User object.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>User object</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.traceback">
+<span id="intranet-middleware-traceback-module"></span><h2>intranet.middleware.traceback module<a class="headerlink" href="#module-intranet.middleware.traceback" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.traceback.UserTracebackMiddleware">
+<em class="property">class </em><code class="descclassname">intranet.middleware.traceback.</code><code class="descname">UserTracebackMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/traceback.html#UserTracebackMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.traceback.UserTracebackMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Adds the currently logged-in user to the request context, so that they
+show up in error emails.</p>
+<dl class="method">
+<dt id="intranet.middleware.traceback.UserTracebackMiddleware.process_exception">
+<code class="descname">process_exception</code><span class="sig-paren">(</span><em>request</em>, <em>exception</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/traceback.html#UserTracebackMiddleware.process_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.traceback.UserTracebackMiddleware.process_exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware.url_slashes">
+<span id="intranet-middleware-url-slashes-module"></span><h2>intranet.middleware.url_slashes module<a class="headerlink" href="#module-intranet.middleware.url_slashes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.middleware.url_slashes.FixSlashes">
+<em class="property">class </em><code class="descclassname">intranet.middleware.url_slashes.</code><code class="descname">FixSlashes</code><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="intranet.middleware.url_slashes.FixSlashes.process_request">
+<code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes.process_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add or remove trailing slashes where needed.</p>
+<p>Note that there is no HTTP redirection actually happening.
+This just fixes the trailing slashes before the URLs are matched
+to any URL patterns by changing the request&#8217;s internal
+properties.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.middleware">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.middleware" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
