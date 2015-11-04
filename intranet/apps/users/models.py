@@ -1740,7 +1740,7 @@ class Grade(object):
             return "Grade {}".format(self._number)
         else:
             return self._name
-    
+
     @classmethod
     def grade_from_year(cls, graduation_year):
         today = datetime.now()

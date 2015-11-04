@@ -141,7 +141,6 @@ def cache_view(request):
     return render(request, "eighth/admin/cache.html", context)
 
 
-
 @eighth_admin_required
 def not_implemented_view(request, *args, **kwargs):
     raise NotImplementedError("This view has not been implemented yet.")

@@ -24,9 +24,9 @@ def do_ldap_query(q, admin=False):
     # If only a digit, search for student ID and user ID
     if q.isdigit():
         query = ("(&(|(tjhsstStudentId={0})"
-                     "(iodineUidNumber={0})"
-                     ")(objectClass=*))").format(q)
-        
+                 "(iodineUidNumber={0})"
+                 ")(objectClass=*))").format(q)
+
         logger.debug("Running LDAP query: {}".format(query))
 
         res = c.search(settings.USER_DN, query, [])
@@ -102,7 +102,7 @@ def do_ldap_query(q, admin=False):
                            "(nickname={0}*)"
                            ")")).format(p)
 
-                continue # skip rest of processing
+                continue  # skip rest of processing
 
             cat = cat.lower()
             val = val.lower()
@@ -126,7 +126,7 @@ def do_ldap_query(q, admin=False):
             for attr in attrs:
                 inner += "({}{}{})".format(attr, sep, val)
             inner += ")"
-        
+
         query = "(&{}(objectClass=*))".format(inner)
 
         logger.debug("Running LDAP query: {}".format(query))
@@ -149,16 +149,16 @@ def do_ldap_query(q, admin=False):
             # Search for first, last, middle, nickname uid, with implied
             # wildcard at beginning and end
             query = (("(&(|(givenName=*{0})"
-                          "(givenName={0}*)"
-                          "(sn=*{0})"
-                          "(sn={0}*)"
-                          "(iodineUid=*{0})"
-                          "(iodineUid={0}*)") +
-                         ("(mname=*{0})"
-                          "(mname={0}*)" if admin else "") +
-                         ("(nickname=*{0})"
-                          "(nickname={0}*)"
-                          ")(objectClass=*))")).format(p)
+                      "(givenName={0}*)"
+                      "(sn=*{0})"
+                      "(sn={0}*)"
+                      "(iodineUid=*{0})"
+                      "(iodineUid={0}*)") +
+                     ("(mname=*{0})"
+                      "(mname={0}*)" if admin else "") +
+                     ("(nickname=*{0})"
+                      "(nickname={0}*)"
+                      ")(objectClass=*))")).format(p)
 
             logger.debug("Running LDAP query: {}".format(query))
 
@@ -199,6 +199,7 @@ def do_activities_search(q):
             final_entires.append(e)
     return final_entires
 
+
 def do_announcements_search(q):
     filter_query = get_query(q, ["title"])
     entires = Announcement.objects.filter(filter_query).order_by("title")
@@ -208,6 +209,7 @@ def do_announcements_search(q):
             final_entires.append(e)
     return final_entires
 
+
 def do_events_search(q):
     filter_query = get_query(q, ["title"])
     entires = Event.objects.filter(filter_query).order_by("title")
@@ -216,6 +218,7 @@ def do_events_search(q):
         if e.is_this_year:
             final_entires.append(e)
     return final_entires
+
 
 @login_required
 def search_view(request):
@@ -253,9 +256,9 @@ def search_view(request):
             "query_error": query_error,
             "search_query": q,
             "search_results": users,  # User objects
-            "announcements": announcements, # Announcement objects
-            "events": events, # Event objects
-            "activities": activities # EighthActivity objects
+            "announcements": announcements,  # Announcement objects
+            "events": events,  # Event objects
+            "activities": activities  # EighthActivity objects
         }
     else:
         context = {

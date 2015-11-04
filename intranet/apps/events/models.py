@@ -141,4 +141,3 @@ class Event(models.Model):
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
         else:
             return "{} - {}".format(self.title, self.time)
-
