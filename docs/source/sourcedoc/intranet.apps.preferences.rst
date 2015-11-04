@@ -4,26 +4,10 @@ intranet.apps.preferences package
 Submodules
 ----------
 
-intranet.apps.preferences.admin module
---------------------------------------
-
-.. automodule:: intranet.apps.preferences.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.preferences.forms module
 --------------------------------------
 
 .. automodule:: intranet.apps.preferences.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet.apps.preferences.models module
----------------------------------------
-
-.. automodule:: intranet.apps.preferences.models
     :members:
     :undoc-members:
     :show-inheritance:
