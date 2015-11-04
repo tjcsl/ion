@@ -293,7 +293,6 @@ INSTALLED_APPS = (
     "intranet.apps.files",
     "intranet.middleware.environment",
     "widget_tweaks",
-    "django_extensions",
     "corsheaders",
     "cacheops"
 )
