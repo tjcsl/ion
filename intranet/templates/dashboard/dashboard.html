@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
 {% load dates %}
+{% load cacheops %}
 
 {% block title %}
     {{ block.super }} - {{ dashboard_title }}
@@ -88,25 +89,29 @@
                     <h3 style="color: orange">
                     <i class="fa fa-exclamation-circle"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting</h3>
                     <ul>
+                    {% cached_as awaiting_approval 0 dash_req_app %}
                     {% for req in awaiting_approval %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
                     {% endfor %}
+                    {% endcached_as %}
                     </ul>
                 {% endif %}
                 {% if awaiting_teacher %}
                     <h3>
                     <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending</h3>
                     <ul>
+                    {% cached_as awaiting_teacher 0 dash_req_tch %}
                     {% for req in awaiting_teacher %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, awaiting teacher approval</li>
                     {% endfor %}
+                    {% endcached_as %}
                     </ul>
                 {% endif %}
                 </div>
             {% endif %}
         {% endif %}
 
-
+        
         {% for announcement in announcements %}
             {% include "announcements/announcement.html" %}
         {% empty %}
