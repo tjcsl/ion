@@ -9,7 +9,6 @@ from django.db import models
 from django.db.models import Manager, Q
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.contrib.auth.models import Group as DjangoGroup
-from django_elasticsearch.models import EsIndexable
 from django.utils import formats
 from ..users.models import User
 from ..groups.models import Group
@@ -115,7 +114,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
                                                                 .exclude(deleted=True))
 
 
-class EighthActivity(EsIndexable, AbstractBaseEighthModel):
+class EighthActivity(AbstractBaseEighthModel):
 
     """Represents an eighth period activity.
 
@@ -171,8 +170,6 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
             A ManyToManyField of User objects who have favorited the activity.
         deleted
             Whether the activity still technically exists in the system, but was marked to be deleted.
-
-        This model is indexed by Elasticsearch.
 
     """
     objects = models.Manager()
@@ -321,9 +318,6 @@ class EighthActivity(EsIndexable, AbstractBaseEighthModel):
 
     def __unicode__(self):
         return self.name_with_flags
-
-    class Elasticsearch(EsIndexable.Elasticsearch):
-        fields = ["name", "description", "id"]
 
 
 class EighthBlockManager(models.Manager):

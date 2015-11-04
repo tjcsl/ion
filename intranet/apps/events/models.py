@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-from django_elasticsearch.models import EsIndexable
 from ..users.models import User
 from ..groups.models import Group
 from ..eighth.models import EighthScheduledActivity
@@ -38,7 +37,7 @@ class EventManager(Manager):
                                      Q(user=user)))
 
 
-class Event(EsIndexable, models.Model):
+class Event(models.Model):
     """An event available to the TJ community.
 
         title
@@ -74,8 +73,6 @@ class Event(EsIndexable, models.Model):
             list of events that need to be approved.
         rejected_by
             ForeignKey to User object, the user who rejected the event.
-
-        This model is indexed by Elasticsearch.
 
     """
     objects = EventManager()
@@ -145,5 +142,3 @@ class Event(EsIndexable, models.Model):
         else:
             return "{} - {}".format(self.title, self.time)
 
-    class Elasticsearch(EsIndexable.Elasticsearch):
-        fields = ["title", "description", "id"]

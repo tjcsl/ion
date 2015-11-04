@@ -5,7 +5,6 @@ from datetime import datetime
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-from django_elasticsearch.models import EsIndexable
 from ..groups.models import Group
 from ..users.models import User
 
@@ -65,7 +64,7 @@ class AnnouncementUserMap(models.Model):
         return "UserMap: {}".format(self.announcement.title)
 
 
-class Announcement(EsIndexable, models.Model):
+class Announcement(models.Model):
 
     """Represents an announcement.
 
@@ -83,8 +82,6 @@ class Announcement(EsIndexable, models.Model):
         user_map
             An attribute corresponding with an AnnouncementUserMap object.
             A new object is automatically created if it does not exist.
-
-        This model is indexed by Elasticsearch.
 
     """
 
@@ -133,9 +130,6 @@ class Announcement(EsIndexable, models.Model):
 
     class Meta:
         ordering = ["-pinned", "-added"]
-
-    class Elasticsearch(EsIndexable.Elasticsearch):
-        fields = ["title", "content", "pinned", "added", "id"]
 
 
 class AnnouncementRequest(models.Model):
