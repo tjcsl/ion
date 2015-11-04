@@ -249,14 +249,6 @@ LDAP_OBJECT_CLASSES = {
 
 FCPS_STUDENT_ID_LENGTH = 7
 
-# Python Elasticsearch
-# ELASTICSEARCH_INDEX = "ion"
-# ELASTICSEARCH_USER_DOC_TYPE = "user"
-
-# Django-elasticsearch
-# ELASTICSEARCH_AUTO_INDEX = True
-
-
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "USE_ABSOLUTE_URLS": True,

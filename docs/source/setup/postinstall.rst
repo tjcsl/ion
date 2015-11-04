@@ -28,15 +28,6 @@ To create and add yourself to the global administrator group, run the following 
     >>> user.save()
 
 
-Populating the Search Index
-===========================
-
-Run the following command to populate the Elasticsearch index with users.
-
-.. code-block:: bash
-
-    $ ./manage.py update_index
-
 Connecting and Disconnecting from the VM
 ========================================
 
@@ -60,4 +51,5 @@ Currently, the fixtures containing test data include Iodine data from the 2014-2
 Increasing RAM
 ==============
 
-With the default RAM size of 512MB, you may run into performance constraints. Additionally, ElasticSearch will not run with less than 1GB of RAM. It is highly recommended to bump the VM's amount of memory, through VirtualBox Manager, to at least 1.5GB.
+With the default RAM size of 1024MB, you may run into performance constraints.
+If you encounter signifigant issues, it is recommended to bump the VM's amount of memory, through VirtualBox Manager, to at least 2GB.
