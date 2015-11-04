@@ -46,8 +46,8 @@ _current_stats = None
 words_re = re.compile(r'\s+')
 group_prefix_re = [
     re.compile("^.*/django/[^/]+"),
-    re.compile("^(.*)/[^/]+$"), # extract module path
-    re.compile(".*"), # catch strange entries
+    re.compile("^(.*)/[^/]+$"),  # extract module path
+    re.compile(".*"),  # catch strange entries
 ]
 _log_file_path = None
 _prof = None
@@ -114,7 +114,7 @@ class ProfileMiddleware(object):
                 else:
                     # outer layer of onion
                     _current_stats['middleware_time'] = (time.time() -
-                            _middleware_start_time - _current_stats['total_time'])
+                                                         _middleware_start_time - _current_stats['total_time'])
                     self._display_time(request, response)
                     _middleware_start_time = None
                     _current_stats = None
@@ -141,6 +141,7 @@ class ProfileMiddleware(object):
                 self._last_uri = uri
 
     _reUri = re.compile(r'^(http.+/)[?&]time.*$')
+
     def _get_real_uri(self, request):
         uri = request.build_absolute_uri()
         m = self._reUri.match(uri)
@@ -250,7 +251,7 @@ class ProfileMiddleware(object):
 
         res = "      tottime\n"
         for item in items:
-            res += "%4.1f%% %7.3f %s\n" % ( 100 * item[0] / total if total else 0, item[0], item[1] )
+            res += "%4.1f%% %7.3f %s\n" % (100 * item[0] / total if total else 0, item[0], item[1])
 
         return res
 
@@ -269,12 +270,12 @@ class ProfileMiddleware(object):
                 ttl += time
                 file_name = fields[6].split(":")[0]
 
-                if not file_name in mystats:
+                if file_name not in mystats:
                     mystats[file_name] = 0
                 mystats[file_name] += time
 
                 group = self._get_group(file_name)
-                if not group in mygroups:
+                if group not in mygroups:
                     mygroups[group] = 0
                 mygroups[group] += time
 
@@ -312,5 +313,5 @@ def stdev(x):
     mean /= float(n)
     for a in x:
         std += (a - mean)**2
-    std = sqrt(std / float(n-1))
+    std = sqrt(std / float(n - 1))
     return std

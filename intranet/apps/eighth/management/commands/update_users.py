@@ -14,5 +14,5 @@ class Command(BaseCommand):
         ION_ID_START = 31416
         ION_ID_END = 33503
         self.stdout.write("ID range: {} - {}".format(ION_ID_START, ION_ID_END))
-        users = [User.objects.user_with_ion_id(i) for i in range(ION_ID_START, ION_ID_END+1)]
+        users = [User.objects.user_with_ion_id(i) for i in range(ION_ID_START, ION_ID_END + 1)]
         self.stdout.write("Looped through {} IDs.".format(len(users)))
