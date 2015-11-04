@@ -303,7 +303,7 @@ def stdev(x):
     """Calculate mean and standard deviation of data x[]:
         mean = {\sum_i x_i \over n}
         std = sqrt(\sum_i (x_i - mean)^2 \over n-1)
-    http://www.physics.rutgers.edu/~masud/computing/WPark_recipes_in_python.html
+        http://www.physics.rutgers.edu/~masud/computing/WPark_recipes_in_python.html
     """
     from math import sqrt
     n, mean, std = len(x), 0, 0
