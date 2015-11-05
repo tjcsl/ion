@@ -10,9 +10,8 @@ from intranet import settings
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ....users.models import User
-from ...forms.admin import (
-    activities as activity_forms, blocks as block_forms, groups as group_forms,
-    rooms as room_forms, sponsors as sponsor_forms, general as general_forms)
+from ...forms.admin import (groups as group_forms,
+                            rooms as room_forms, general as general_forms)
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor
 from ...utils import get_start_date, set_start_date
 
@@ -58,11 +57,8 @@ def eighth_admin_dashboard_view(request, **kwargs):
     }
 
     forms = {
-        # "add_activity_form": activity_forms.QuickActivityForm,
-        # "add_block_form": block_forms.QuickBlockForm,
         "add_group_form": group_forms.QuickGroupForm,
         "add_room_form": room_forms.RoomForm,
-        # "add_sponsor_form": sponsor_forms.SponsorForm
     }
 
     for form_name, form_class in forms.items():
