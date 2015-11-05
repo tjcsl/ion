@@ -689,8 +689,8 @@ def add_member_to_group_view(request, group_id):
 
     errors, results = get_search_results(query)
     logger.debug(results)
-    if results["hits"]["total"] == 1:
-        user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
+    if len(results) == 1:
+        user_id = results[0].id
         logger.debug("User id: {}".format(user_id))
         user = User.objects.user_with_ion_id(user_id)
 
@@ -698,10 +698,10 @@ def add_member_to_group_view(request, group_id):
         user.save()
         messages.success(request, "Successfully added user \"{}\" to the group.".format(user.full_name))
         return redirect(next_url + "?added=" + str(user_id))
-    elif results["hits"]["total"] == 0:
+    elif len(results) == 0:
         return redirect(next_url + "?error=n")
     else:
-        users = [r["_source"] for r in results["hits"]["hits"]]
+        users = results
         context = {
             "query": query,
             "users": users,

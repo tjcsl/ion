@@ -58,7 +58,8 @@ def do_ldap_query(q, admin=False):
             "sex": ("sex",),
             "gender": ("sex",),
             "id": ("iodineUidNumber",),
-            "username": ("iodineUid",)
+            "username": ("iodineUid",),
+            "counselor": ("counselor",)
         }
 
         inner = ""
