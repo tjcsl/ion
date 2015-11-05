@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 self.stdout.write("Activity {} doesn't exist".format(aid))
             else:
                 self.stdout.write("{}: {}".format(aid, EighthActivity.objects.get(id=aid)))
-                grp, _ = Group.objects.get_or_create(name="z-Perms: {}".format("{}".format(act)[:55]))
+                grp, _ = Group.objects.get_or_create(name="{} -- Permissions".format("{}".format(act)[:55]))
                 users = perm_map[aid]
                 for u in users:
                     u.groups.add(grp)
