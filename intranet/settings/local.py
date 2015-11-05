@@ -8,6 +8,9 @@ from .base import *
 
 logger = logging.getLogger(__name__)
 
+# Don't send emails unless we're in production.
+EMAIL_ANNOUNCEMENTS = False
+
 DEBUG = os.getenv("DEBUG", "TRUE") == "TRUE"
 
 if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
@@ -31,8 +34,10 @@ DATABASES = {
     }
 }
 
+# We don't care about session security when running a testing instance.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
+# Avoid conflict with production redis db
 CACHES["default"]["OPTIONS"]["DB"] = 2
 
 if os.getenv("DUMMY_CACHE", "NO") == "YES":

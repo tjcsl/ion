@@ -5,8 +5,8 @@ import os
 import subprocess
 from .secret import *
 
-PRODUCTION = os.getenv("PRODUCTION", "") == "TRUE"
-TRAVIS = os.getenv("TRAVIS", "") == "true"
+PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
+TRAVIS = os.getenv("TRAVIS") == "true"
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,6 +20,7 @@ EMAIL_HOST = "mail.tjhsst.edu"
 EMAIL_PORT = 25
 EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = "[Ion] "
+EMAIL_ANNOUNCEMENTS = True
 
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
@@ -147,6 +148,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.access_log.AccessLogMiddleWare",
     "corsheaders.middleware.CorsMiddleware",
     "intranet.middleware.traceback.UserTracebackMiddleware",
+    # "intranet.middleware.profiler.ProfileMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
@@ -304,9 +306,9 @@ EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-LOG_LEVEL = "DEBUG" if not PRODUCTION else "INFO"
+LOG_LEVEL = "INFO" if PRODUCTION else "DEBUG"
 _log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
-if os.getenv("LOG_LEVEL", None) in _log_levels:
+if os.getenv("LOG_LEVEL") in _log_levels:
     LOG_LEVEL = os.environ["LOG_LEVEL"]
 
 LOGGING = {
@@ -391,6 +393,7 @@ LOGGING = {
     }
 }
 
+# The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
 
 if SHOW_DEBUG_TOOLBAR:
@@ -420,16 +423,36 @@ if SHOW_DEBUG_TOOLBAR:
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
-    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:-1] + [
+    MIDDLEWARE_CLASSES.extend([
         "intranet.middleware.templates.StripNewlinesMiddleware",
-    ] + MIDDLEWARE_CLASSES[-1:] + [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
+    ])
 
     INSTALLED_APPS += (
         "debug_toolbar",
         "debug_toolbar_line_profiler",
     )
+
+    def debug_toolbar_callback(request):
+        """Show the debug toolbar to those with the Django staff permission, excluding
+           the Eighth Period office.
+        """
+        if request.is_ajax():
+            return False
+
+        if (hasattr(request, 'user') and
+                request.user.is_authenticated()):
+            return (request.user.is_staff and
+                    not request.user.id == 9999 and
+                    "debug" in request.GET)
+
+        return False
+
+    # Only show debug toolbar when requested if in production.
+    if PRODUCTION:
+        DEBUG_TOOLBAR_CONFIG.update({
+            "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
+        })
 
 
 MAINTENANCE_MODE = False
