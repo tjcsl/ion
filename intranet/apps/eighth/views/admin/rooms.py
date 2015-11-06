@@ -222,6 +222,8 @@ def room_utilization_action(request, start_id, end_id):
     else:
         rooms = all_rooms
 
+    sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
+
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
     show_opts =          ["block", "rooms", "aid", "activity", "comments", "sponsors", "signups", "capacity", "admin_comments"]
