@@ -201,7 +201,7 @@ def find_birthdays(request):
                     "grade": {
                         "name": u.grade.name
                     },
-                    "age": u.age
+                    "age": (u.age - 1)
                 } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
                 "inc": 1
             }
