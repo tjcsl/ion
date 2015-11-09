@@ -351,6 +351,8 @@ $(function() {
                             <tr>
                                 {% if show_checkboxes %}
                                     <th><input type="checkbox" />Present</th>
+                                {% elif show_icons %}
+                                    <th>Present</th>
                                 {% endif %}
                                 <th>Student</th>
                                 <th>Student ID</th>
@@ -366,6 +368,13 @@ $(function() {
                                 <tr>
                                     {% if show_checkboxes %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
+                                    {% elif show_icons %}
+                                        <td class="present-checkbox">
+                                            {% if member.present or member.pass_present %}
+                                                <i class="fa fa-check"></i>
+                                            {% else %}
+                                                <i class="fa fa-times"></i>
+                                            {% endif %}
                                     {% endif %}
                                     <td class="user-link" data-user-id="{{ member.id }}">
                                         <a href="{% url 'user_profile' member.id %}">

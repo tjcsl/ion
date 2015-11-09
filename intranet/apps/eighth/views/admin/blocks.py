@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import re
 import logging
+from cacheops import invalidate_model
 from six.moves import cPickle as pickle
 from django import http
 from django.http import HttpResponse
@@ -62,6 +63,8 @@ def add_block_view(request):
                 if l not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
+            
+            invalidate_model(EighthBlock)
 
     letters = []
     visible_blocks = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -103,6 +106,7 @@ def edit_block_view(request, block_id):
         form = BlockForm(request.POST, instance=block)
         if form.is_valid():
             form.save()
+            invalidate_model(EighthBlock)
             messages.success(request, "Successfully edited block.")
             return redirect("eighth_admin_dashboard")
         else:
@@ -128,6 +132,7 @@ def delete_block_view(request, block_id):
 
     if request.method == "POST":
         block.delete()
+        invalidate_model(EighthBlock)
         messages.success(request, "Successfully deleted block.")
         return redirect("eighth_admin_dashboard")
     else:
