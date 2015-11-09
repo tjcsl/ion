@@ -178,6 +178,45 @@ def profile_view(request, user_id=None):
 
 
 @login_required
+def profile_history_view(request, user_id=None):
+    if user_id:
+        try:
+            profile_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise http.Http404
+    else:
+        profile_user = request.user
+
+    if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
+        return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
+
+    blocks = EighthBlock.objects.get_blocks_this_year()
+    blocks = blocks.filter(locked=True)
+    blocks = blocks.order_by("date", "block_letter")
+
+    eighth_schedule = []
+
+    for block in blocks:
+        sch = {}
+        sch["block"] = block
+        try:
+            sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
+        except EighthSignup.DoesNotExist:
+            sch["signup"] = None
+        eighth_schedule.append(sch)
+
+    logger.debug(eighth_schedule)
+
+    context = {
+        "profile_user": profile_user,
+        "eighth_schedule": eighth_schedule
+    }
+
+    return render(request, "eighth/profile_history.html", context)
+
+
+
+@login_required
 def profile_signup_view(request, user_id=None, block_id=None):
     if user_id:
         try:

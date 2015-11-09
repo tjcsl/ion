@@ -321,6 +321,7 @@
             {% endfor %}
             </tr>
         </table>
+        {% if not request.user.is_eighth_admin %}<br />{% endif %}
     </form>
     </section>
 
@@ -331,38 +332,15 @@
             <ul class="days-container">
             </ul>
         </div>
-
-        <div class="middle-wrapper">
+        {% if request.user.is_eighth_admin %}
+        <div class="middle-wrapper only-unsignup">
             <div class="middle">
-                <div class="block-title">
-                    <h2>
-                        {% if active_block.locked %}
-                            <i class="fa fa-lock"></i>
-                        {% endif %}
-                        {{ active_block.date|date:"l, F j, Y" }}
-                    </h2>
-                    <h4>
-                        {% if active_block.block_letter %}
-                            {% if active_block.block_letter|contains_digit %}
-                                Block {{ active_block.block_letter }}
-                            {% else %}
-                                {{ active_block.block_letter }} Block
-                            {% endif %}
-                        {% endif %}
-                    </h4>
-                </div>
-                {% if user.is_eighth_admin %}
                 <div class="unsignup">
                     <button id="unsignup-button" data-bid="{% for b in blocks %}{{ b.id }}{% if not forloop.last %},{% endif %}{% endfor %}" data-uid="{{ user.id }}">Remove Signups for All Blocks</button>
                 </div>
-                {% endif %}
-
-                <div class="switch">
-                    <i class="fa fa-chevron-up up"></i>
-                    <i class="fa fa-chevron-down down"></i>
-                </div>
             </div>
         </div>
+        {% endif %}
 
         <div id="activity-picker" class="{% if request.user != user %}different-user{% endif %}">
             <div class="search-wrapper">
@@ -384,9 +362,9 @@
                 <div class="empty-state">
                     <center>
                         <div>
-                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" />
+                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" style="zoom: 0.5" />
                         </div>
-                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                        <h2 class="user-name" title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
                             {{ profile_user.full_name }}
                             {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
                         </h2>

@@ -26,7 +26,9 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% include "eighth/profile_header.html" %}
+    {% with show_view_history_link=1 %}
+        {% include "eighth/profile_header.html" %}
+    {% endwith %}
 
     <section class="user-info-eighth">
     <form action="{% url 'eighth_signup' %}" method="GET">
@@ -105,9 +107,7 @@
             </a>
             </td>
             <td>
-                {% for sponsor in sch.signup.scheduled_activity.get_true_sponsors %}
-                    {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
+                {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
             </td>
             <td>
                 {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
