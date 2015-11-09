@@ -54,8 +54,8 @@ class Search(generics.RetrieveAPIView):
         user_ids = []
 
         query_error, results = get_search_results(query)
-        for unserialized_user in results['hits']['hits']:
-            user_ids.append(unserialized_user['_source']['ion_id'])
+        for unserialized_user in results:
+            user_ids.append(unserialized_user.id)
 
         queryset = User.objects.filter(pk__in=user_ids)
         users = self.paginate_queryset(queryset)
