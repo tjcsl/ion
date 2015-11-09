@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from cacheops import invalidate_obj
 from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
@@ -93,6 +94,7 @@ def schedule_activity_view(request):
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
 
                     instance.save()
+                    invalidate_obj(instance)
                 else:
                     schact = EighthScheduledActivity.objects.filter(
                         block=block,

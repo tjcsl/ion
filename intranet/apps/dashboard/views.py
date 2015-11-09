@@ -37,7 +37,12 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         return None, False
 
     # Use select_related to reduce query count
-    signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related("scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity")
+    signups = (EighthSignup.objects.filter(user=user,
+                                           scheduled_activity__block__in=surrounding_blocks)
+                                    .select_related("scheduled_activity",
+                                                    "scheduled_activity__block",
+                                                    "scheduled_activity__activity")
+                                    .nocache())
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:
@@ -58,7 +63,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         if (blk_today and not current_signup):
             flags += " warning"
         if current_signup_cancelled:
-            flags += " cancelled"
+            flags += " cancelled warning"
 
         if current_signup_cancelled:
             # don't duplicate this info; already caught
