@@ -107,11 +107,12 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         sponsor = user.get_eighth_sponsor()
 
     if surrounding_blocks is None:
-        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks).nocache()
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .select_related("block")
-                                                            .filter(block__in=surrounding_blocks))
+                                                            .filter(block__in=surrounding_blocks)
+                                                            .nocache())
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
