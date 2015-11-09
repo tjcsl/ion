@@ -14,6 +14,11 @@ $(document).ready(function() {
         var icon = $(this).children(0);
         var id = announcement.attr("data-id");
 
+        if(!id) {
+            console.error("Couldn't toggle invalid announcement ID");
+            return;
+        }
+
         var hidden = announcement.hasClass("hidden");
         var action = hidden ? "show" : "hide";
         $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function(d) {

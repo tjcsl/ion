@@ -161,8 +161,12 @@ def find_birthdays(request):
                 yr += 1
                 yr_inc = 1
 
+            real_today = today
             today = datetime(yr, mon, day).date()
-            custom = True
+            if today:
+                custom = True
+            else:
+                today = real_today
         except Exception:
             pass
 
