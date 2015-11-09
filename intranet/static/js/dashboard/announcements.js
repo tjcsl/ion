@@ -38,7 +38,7 @@ $(document).ready(function() {
         }
     };
 
-    $(".announcement h3").click(function(e) {
+    $(".announcement[data-id] h3").click(function(e) {
         if(e.target != this) {
             return;
         }
@@ -46,7 +46,7 @@ $(document).ready(function() {
         announcementToggle.call(btn);
     });
 
-    $(".announcement h3 .announcement-toggle").click(function() {
+    $(".announcement[data-id] h3 .announcement-toggle").click(function() {
         announcementToggle.call($(this));
     })
 });
