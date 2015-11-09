@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.profile &mdash; TJ Intranet v3 (Build #845) documentation</title>
+    <title>intranet.apps.eighth.views.profile &mdash; TJ Intranet v3 (Build #846) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #845)',
+        VERSION:     'v3 (Build #846)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #845) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #846) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="col-md-12">
       
   <h1>Source code for intranet.apps.eighth.views.profile</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
@@ -322,6 +322,84 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You may only view your own schedule.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
+</div>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="profile_history_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.profile_history_view">[docs]</a><span class="k">def</span> <span class="nf">profile_history_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">profile_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="k">if</span> <span class="n">profile_user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You may only view your own schedule.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">locked</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">)</span>
+
+    <span class="n">eighth_schedule</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="n">sch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">sch</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sch</span><span class="p">[</span><span class="s">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">)</span>
+            <span class="n">sch</span><span class="p">[</span><span class="s">&quot;highlighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;activity&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">sch</span><span class="p">[</span><span class="s">&quot;signup&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">sch</span><span class="p">[</span><span class="s">&quot;signup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">eighth_schedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">eighth_schedule</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span>
+        <span class="s">&quot;eighth_schedule&quot;</span><span class="p">:</span> <span class="n">eighth_schedule</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/profile_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</div>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="profile_often_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.profile_often_view">[docs]</a><span class="k">def</span> <span class="nf">profile_often_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">profile_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="k">if</span> <span class="n">profile_user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;You may only view your own schedule.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_this_year</span><span class="p">()</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">locked</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">profile_user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+    <span class="n">activities</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sch</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
+        <span class="n">activities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="p">)</span>
+
+    <span class="n">oftens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">unique_activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">unique_activities</span><span class="p">:</span>
+        <span class="n">oftens</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">&quot;count&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">act</span><span class="p">),</span>
+            <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">act</span>
+        <span class="p">})</span>
+
+    <span class="n">oftens</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">oftens</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s">&quot;count&quot;</span><span class="p">]))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">oftens</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">profile_user</span><span class="p">,</span>
+        <span class="s">&quot;oftens&quot;</span><span class="p">:</span> <span class="n">oftens</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/profile_often.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </div>
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="profile_signup_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.profile_signup_view">[docs]</a><span class="k">def</span> <span class="nf">profile_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
