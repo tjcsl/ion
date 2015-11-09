@@ -201,6 +201,7 @@ def profile_history_view(request, user_id=None):
         sch["block"] = block
         try:
             sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
+            sch["highlighted"] = (int(request.GET.get("activity") or 0) == sch["signup"].scheduled_activity.activity.id)
         except EighthSignup.DoesNotExist:
             sch["signup"] = None
         eighth_schedule.append(sch)
@@ -214,7 +215,45 @@ def profile_history_view(request, user_id=None):
 
     return render(request, "eighth/profile_history.html", context)
 
+@login_required
+def profile_often_view(request, user_id=None):
+    if user_id:
+        try:
+            profile_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise http.Http404
+    else:
+        profile_user = request.user
 
+    if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
+        return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
+
+    blocks = EighthBlock.objects.get_blocks_this_year()
+    blocks = blocks.filter(locked=True)
+
+    signups = EighthSignup.objects.filter(user=profile_user, scheduled_activity__block__in=blocks)
+    activities = []
+    for sch in signups:
+        activities.append(sch.scheduled_activity.activity)
+
+    oftens = []
+    unique_activities = set(activities)
+    for act in unique_activities:
+        oftens.append({
+            "count": activities.count(act),
+            "activity": act
+        })
+
+    oftens = sorted(oftens, key=lambda x: (-1 * x["count"]))
+
+    logger.debug(oftens)
+
+    context = {
+        "profile_user": profile_user,
+        "oftens": oftens
+    }
+
+    return render(request, "eighth/profile_often.html", context)
 
 @login_required
 def profile_signup_view(request, user_id=None, block_id=None):

@@ -11,6 +11,11 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    <style type="text/css">
+    tr.highlight, tr.highlight td {
+        background-color: yellow;
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -27,7 +32,7 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% with show_eighth_profile_link=1 %}
+    {% with show_eighth_profile_link=1 show_view_often_link=1 %}
         {% include "eighth/profile_header.html" %}
     {% endwith %}
 
@@ -49,7 +54,7 @@
         </thead>
         <tbody>
         {% for sch in eighth_schedule %}
-        <tr>
+        <tr{% if sch.highlighted %} class="highlight"{% endif %}>
             <td>
                 {{ sch.block.date|date:'D, N j, Y' }}
             </td>
@@ -74,7 +79,7 @@
                         No{% if request.user.is_eighth_admin and not sch.signup.pass_accepted %}: Pass Rejected{% endif %}
                     {% else %}
                         {% if sch.signup.after_deadline and not sch.signup.pass_accepted %}
-                            &ndash;{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
+                            ...{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
                         {% else %}
                             Yes{% if request.user.is_eighth_admin and sch.signup.pass_accepted %}: Pass Accepted{% endif %}
                         {% endif %}

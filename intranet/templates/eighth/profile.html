@@ -26,7 +26,7 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% with show_view_history_link=1 %}
+    {% with show_view_history_link=1 show_view_often_link=1 %}
         {% include "eighth/profile_header.html" %}
     {% endwith %}
 
@@ -118,7 +118,7 @@
                         No{% if request.user.is_eighth_admin and not sch.signup.pass_accepted %}: Pass Rejected{% endif %}
                     {% else %}
                         {% if sch.signup.after_deadline and not sch.signup.pass_accepted %}
-                            ----{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
+                            ...{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
                         {% else %}
                             Yes{% if request.user.is_eighth_admin and sch.signup.pass_accepted %}: Pass Accepted{% endif %}
                         {% endif %}

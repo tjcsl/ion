@@ -30,6 +30,7 @@ urlpatterns = [
     url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
     url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
     url(r"^/profile/history(?:/(?P<user_id>\d+))?$", profile.profile_history_view, name="eighth_profile_history"),
+    url(r"^/profile/often(?:/(?P<user_id>\d+))?$", profile.profile_often_view, name="eighth_profile_often"),
 
     # Roster (for students/teachers)
     url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
