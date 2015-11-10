@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.api.views &mdash; TJ Intranet v3 (Build #863) documentation</title>
+    <title>intranet.apps.api.views &mdash; TJ Intranet v3 (Build #864) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #863)',
+        VERSION:     'v3 (Build #864)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #863) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #864) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,8 +148,9 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span>
+<span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span><span class="p">,</span> <span class="n">permission_classes</span>
 <span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">AllowAny</span>
 
 
 <div class="viewcode-block" id="perma_reverse"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.views.perma_reverse">[docs]</a><span class="k">def</span> <span class="nf">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -157,15 +158,23 @@
 
 </div>
 <span class="nd">@api_view</span><span class="p">((</span><span class="s">&quot;GET&quot;</span><span class="p">,))</span>
+<span class="nd">@permission_classes</span><span class="p">((</span><span class="n">AllowAny</span><span class="p">,</span> <span class="p">))</span>
 <span class="k">def</span> <span class="nf">api_root</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Welcome to the Ion API!</span>
 
 <span class="sd">    Documentation is below. &lt;pk\&gt; refers to the unique id of a certain object - this is shown as &quot;id&quot; in most lists and references.</span>
 
 <span class="sd">    The general form of the api link (with /api/ assumed to be prepended) is shown, along with an example URL.</span>
+
+<span class="sd">    All of the API methods, except for those relating to the Bell Schedule, require authentication.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">views</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Announcements&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">views</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;Schedule&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;/schedule&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;Get schedule day list&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;api_schedule_day_list&quot;</span><span class="p">)],</span>
+        <span class="s">&quot;/schedule/&lt;date&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;Get the schedule for a specific day, in YYYY-MM-DD format&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;api_schedule_day_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;date&quot;</span><span class="p">:</span> <span class="s">&quot;2016-04-04&quot;</span><span class="p">})],</span>
+    <span class="p">},</span>
+        <span class="s">&quot;Announcements&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&quot;/announcements&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;Get announcement list&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;api_announcements_list_create&quot;</span><span class="p">)],</span>
         <span class="s">&quot;/announcements/&lt;pk&gt;&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;Get announcement details&quot;</span><span class="p">,</span> <span class="n">perma_reverse</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;api_announcements_detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">1234</span><span class="p">})],</span>
     <span class="p">},</span>
