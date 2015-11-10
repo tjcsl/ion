@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 
 def perma_reverse(request, view, *args, **kwargs):
@@ -11,15 +12,23 @@ def perma_reverse(request, view, *args, **kwargs):
 
 
 @api_view(("GET",))
+@permission_classes((AllowAny, ))
 def api_root(request, format=None):
     """Welcome to the Ion API!
 
     Documentation is below. <pk\> refers to the unique id of a certain object - this is shown as "id" in most lists and references.
 
     The general form of the api link (with /api/ assumed to be prepended) is shown, along with an example URL.
+
+    All of the API methods, except for those relating to the Bell Schedule, require authentication.
     """
 
-    views = {"Announcements": {
+    views = {
+        "Schedule": {
+        "/schedule": ["Get schedule day list", perma_reverse(request, "api_schedule_day_list")],
+        "/schedule/<date>": ["Get the schedule for a specific day, in YYYY-MM-DD format", perma_reverse(request, "api_schedule_day_detail", kwargs={"date": "2016-04-04"})],
+    },
+        "Announcements": {
         "/announcements": ["Get announcement list", perma_reverse(request, "api_announcements_list_create")],
         "/announcements/<pk>": ["Get announcement details", perma_reverse(request, "api_announcements_detail", kwargs={"pk": 1234})],
     },
