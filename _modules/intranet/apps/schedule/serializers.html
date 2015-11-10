@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.serializers &mdash; TJ Intranet v3 (Build #863) documentation</title>
+    <title>intranet.apps.schedule.serializers &mdash; TJ Intranet v3 (Build #863) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -143,23 +143,56 @@
   <div class="row">
     <div class="col-md-12">
       
-  <h1>Source code for intranet.apps.announcements.serializers</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.schedule.serializers</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
-<span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
 <span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Announcement</span>
+<span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Day</span><span class="p">,</span> <span class="n">DayType</span><span class="p">,</span> <span class="n">CodeName</span><span class="p">,</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Time</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.TimeSerializer">[docs]</a><span class="k">class</span> <span class="nc">TimeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.TimeSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Time</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;hour&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;minute&quot;</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="BlockSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.BlockSerializer">[docs]</a><span class="k">class</span> <span class="nc">BlockSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">StringRelatedField</span><span class="p">()</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">StringRelatedField</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BlockSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.BlockSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Block</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;order&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;name&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;start&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;end&quot;</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="DayTypeSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayTypeSerializer">[docs]</a><span class="k">class</span> <span class="nc">DayTypeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="c">#url = serializers.HyperlinkedIdentityField(view_name=&quot;api_eighth_activity_detail&quot;)</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">BlockSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DayTypeSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayTypeSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DayType</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;special&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;blocks&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AnnouncementSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.AnnouncementSerializer">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s">&quot;api_announcements_detail&quot;</span><span class="p">)</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">groups</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="DaySerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DaySerializer">[docs]</a><span class="k">class</span> <span class="nc">DaySerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s">&quot;api_schedule_day_detail&quot;</span><span class="p">,</span> <span class="n">lookup_field</span><span class="o">=</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+    <span class="n">day_type</span> <span class="o">=</span> <span class="n">DayTypeSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AnnouncementSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.AnnouncementSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Announcement</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;author&#39;</span><span class="p">,</span> <span class="s">&#39;user&#39;</span><span class="p">,</span> <span class="s">&#39;added&#39;</span><span class="p">,</span> <span class="s">&#39;updated&#39;</span><span class="p">,</span> <span class="s">&#39;groups&#39;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="DaySerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DaySerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Day</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;date&quot;</span><span class="p">,</span>
+                  <span class="s">&quot;day_type&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
