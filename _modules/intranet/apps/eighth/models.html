@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #860) documentation</title>
+    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #862) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #860)',
+        VERSION:     'v3 (Build #862)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #860) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #862) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -1000,22 +1000,20 @@
                     <span class="n">exception</span><span class="o">.</span><span class="n">SignupForbidden</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">raise</span> <span class="n">exception</span>
 
-            <span class="c"># Check if the block has been locked</span>
-            <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
-                    <span class="n">exception</span><span class="o">.</span><span class="n">BlockLocked</span> <span class="o">=</span> <span class="bp">True</span>
-
-            <span class="c"># Check if the scheduled activity has been cancelled</span>
-            <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
-                    <span class="n">exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="bp">True</span>
-
             <span class="c"># Check if the activity has been deleted</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span>
                 <span class="n">exception</span><span class="o">.</span><span class="n">ActivityDeleted</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="c"># Check if the activity is full</span>
             <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
+                <span class="c"># Check if the block has been locked</span>
+                <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
+                    <span class="n">exception</span><span class="o">.</span><span class="n">BlockLocked</span> <span class="o">=</span> <span class="bp">True</span>
+
+                <span class="c"># Check if the scheduled activity has been cancelled</span>
+                <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
+                    <span class="n">exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="bp">True</span>
+
+                <span class="c"># Check if the activity is full</span>
                 <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">ActivityFull</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -1057,7 +1055,7 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">Restricted</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="n">success_message</span> <span class="o">=</span> <span class="s">&quot;Successfully signed up for activity. &quot;</span>
+        <span class="n">success_message</span> <span class="o">=</span> <span class="s">&quot;Successfully signed up for activity.&quot;</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        final_remove_signups = []</span>
@@ -1145,7 +1143,6 @@
                                             <span class="n">scheduled_activity</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                             <span class="n">after_deadline</span><span class="o">=</span><span class="n">after_deadline</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-
             <span class="n">existing_signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                 <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
                 <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span>
