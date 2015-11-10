@@ -39,7 +39,8 @@ def api_root(request, format=None):
     },
         "Profile": {
         "/profile": ["Get current user profile", perma_reverse(request, "api_user_myprofile_detail")],
-        "/profile/<pk>": ["Get specific user profile", perma_reverse(request, "api_user_profile_detail", kwargs={"pk": 1234})]
+        "/profile/<pk>": ["Get specific user profile", perma_reverse(request, "api_user_profile_detail", kwargs={"pk": 489})],
+        "/profile/<pk>/picture": ["Get a specific user's profile picture", perma_reverse(request, "api_user_profile_picture_default", kwargs={"pk": 489})]
     },
         "Signups": {
         "/signups/user": ["Get eighth signups for current user, or sign up a user for activity", perma_reverse(request, "api_eighth_user_signup_list_myid")],

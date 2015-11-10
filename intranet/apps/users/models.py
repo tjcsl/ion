@@ -776,6 +776,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return None
 
+    def default_photo(self):
+        """Returns the default photo (in binary) that should be used.
+
+        Returns:
+            Binary data
+
+        """ 
+        preferred = self.preferred_photo
+        if preferred is not None:
+            if preferred.endswith("Photo"):
+                preferred = preferred[:-len("Photo")]
+
+        if preferred == "AUTO":
+            if self.user_type == "tjhsstTeacher":
+                current_grade = 12
+            else:
+                current_grade = int(self.grade)
+                if current_grade > 12:
+                    current_grade = 12
+
+            for i in reversed(range(9, current_grade + 1)):
+                data = self.photo_binary(Grade.names[i - 9])
+                if data:
+                    break
+        return data
+
 
     @property
     def photo_permissions(self):

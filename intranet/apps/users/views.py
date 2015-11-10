@@ -114,17 +114,7 @@ def picture_view(request, user_id, year=None):
                     preferred = preferred[:-len("Photo")]
 
             if preferred == "AUTO":
-                if user.user_type == "tjhsstTeacher":
-                    current_grade = 12
-                else:
-                    current_grade = int(user.grade)
-                    if current_grade > 12:
-                        current_grade = 12
-
-                for i in reversed(range(9, current_grade + 1)):
-                    data = user.photo_binary(Grade.names[i - 9])
-                    if data:
-                        break
+                data = user.default_photo()
                 if data is None:
                     image_buffer = io.open(default_image_path, mode="rb")
                 else:

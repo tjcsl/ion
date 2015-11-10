@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from intranet.apps.search.views import get_search_results
-from .models import User, Class
+from .models import User, Class, Grade
 from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
 from .renderers import JPEGRenderer
 from intranet import settings
@@ -48,12 +48,13 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
         else:
             user = request.user
 
+        binary = None
         if 'photo_year' in kwargs:
             photo_year = kwargs['photo_year']
+            if photo_year in Grade.names:
+                binary = user.photo_binary(photo_year)
         else:
-            photo_year = 'default'
-
-        binary = user.photo_binary(photo_year)
+            binary = user.default_photo()
         if not binary:
             default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
             binary = io.open(default_image_path, mode="rb").read()

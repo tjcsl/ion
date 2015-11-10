@@ -55,7 +55,6 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
 
-
 class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()
     classes = SubClassSerializer(many=True)
@@ -83,10 +82,11 @@ class UserSerializer(serializers.ModelSerializer):
     webpages = serializers.ListField(
         child=serializers.CharField(max_length=300)
     )
+    picture = serializers.HyperlinkedIdentityField(view_name="api_user_profile_picture_default")
 
     class Meta:
         model = User
-        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
+        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
 
 
 class ClassSerializer(serializers.Serializer):
