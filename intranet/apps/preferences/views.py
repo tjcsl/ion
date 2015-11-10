@@ -237,7 +237,10 @@ def save_notification_options(request, user):
                                                                notification_options[field] if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
-                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                    try:
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                    except TypeError:
+                        pass
     return notification_options_form
 
 
