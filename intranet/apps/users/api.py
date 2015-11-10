@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+import io
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from intranet.apps.search.views import get_search_results
 from .models import User, Class
 from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
+from .renderers import JPEGRenderer
+from intranet import settings
 
 
 class ProfileDetail(generics.RetrieveAPIView):
@@ -25,7 +29,37 @@ class ProfileDetail(generics.RetrieveAPIView):
             user = request.user
 
         serializer = self.get_serializer(user)
-        return Response(serializer.data)
+        data = serializer.data
+        return Response(data)
+
+class ProfilePictureDetail(generics.RetrieveAPIView):
+    """API endpoint that retrieves an Ion profile picture
+
+    /api/profile/<pk>/picture: retrieve default profile picture
+    /api/profile/<pk>/picture/<photo_year>: retrieve profile picture for year <photo_year>
+    """
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JPEGRenderer,)
+
+    def retrieve(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            user = User.objects.get(pk=kwargs['pk'])
+        else:
+            user = request.user
+
+        if 'photo_year' in kwargs:
+            photo_year = kwargs['photo_year']
+        else:
+            photo_year = 'default'
+
+        binary = user.photo_binary(photo_year)
+        if not binary:
+            default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
+            binary = io.open(default_image_path, mode="rb").read()
+
+        response = Response(binary, content_type='image/jpeg')
+        return response
 
 
 class ClassDetail(generics.RetrieveAPIView):

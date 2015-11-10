@@ -6,6 +6,7 @@ import hashlib
 import logging
 import ldap
 import os
+from base64 import b64encode
 from six import text_type
 from django.db import models
 from django.conf import settings
@@ -761,6 +762,20 @@ class User(AbstractBaseUser, PermissionsMixin):
             return data
         else:
             return None
+
+    def photo_base64(self, photo_year):
+        """Returns base64 encoded binary data for a user's picture.
+
+        Returns:
+            Base64 string, or None
+
+        """
+        binary = self.photo_binary(photo_year)
+        if binary:
+            return b64encode(binary)
+
+        return None
+
 
     @property
     def photo_permissions(self):
