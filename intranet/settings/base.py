@@ -104,8 +104,8 @@ STATICFILES_FINDERS = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
 )
 
 AUTH_USER_MODEL = "users.User"
