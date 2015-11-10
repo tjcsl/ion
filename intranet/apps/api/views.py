@@ -25,7 +25,8 @@ def api_root(request, format=None):
 
     views = {
         "Schedule": {
-        "/schedule": ["Get schedule day list", perma_reverse(request, "api_schedule_day_list")],
+        "/schedule": ["Get today's schedule", perma_reverse(request, "api_schedule_day_list")],
+        "/schedule?page_size=<num>": ["Get the schedule for the next <num> days", "{}?page_size=7".format(perma_reverse(request, "api_schedule_day_list"))],
         "/schedule/<date>": ["Get the schedule for a specific day, in YYYY-MM-DD format", perma_reverse(request, "api_schedule_day_detail", kwargs={"date": "2016-04-04"})],
     },
         "Announcements": {
