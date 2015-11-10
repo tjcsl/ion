@@ -138,7 +138,7 @@ def files_type(request, fstype=None):
         messages.error(request, "Could not find host in database.")
         return redirect("files")
 
-    if not host.visible_to(request.user):
+    if not host.visible_to(request.user) and not host.available_to_all:
         messages.error(request, "You don't have permission to access this host.")
         return redirect("files")
 

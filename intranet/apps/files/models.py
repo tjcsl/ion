@@ -66,6 +66,8 @@ class Host(models.Model):
 
     groups_visible = models.ManyToManyField(DjangoGroup, blank=True)
 
+    available_to_all = models.BooleanField(default=False)
+
     def visible_to(self, user):
         if self.groups_visible.count() == 0:
             return True
