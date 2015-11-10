@@ -16,8 +16,8 @@ class TimeSerializer(serializers.ModelSerializer):
                   "minute")
 
 class BlockSerializer(serializers.ModelSerializer):
-    start = TimeSerializer(read_only=True)
-    end = TimeSerializer(read_only=True)
+    start = serializers.StringRelatedField()
+    end = serializers.StringRelatedField()
 
     class Meta:
         model = Block
