@@ -855,22 +855,20 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.SignupForbidden = True
                     raise exception
 
-            # Check if the block has been locked
-            for sched_act in all_sched_act:
-                if sched_act.block.locked:
-                    exception.BlockLocked = True
-
-            # Check if the scheduled activity has been cancelled
-            for sched_act in all_sched_act:
-                if sched_act.cancelled:
-                    exception.ScheduledActivityCancelled = True
-
             # Check if the activity has been deleted
             if self.activity.deleted:
                 exception.ActivityDeleted = True
 
-            # Check if the activity is full
             for sched_act in all_sched_act:
+                # Check if the block has been locked
+                if sched_act.block.locked:
+                    exception.BlockLocked = True
+
+                # Check if the scheduled activity has been cancelled
+                if sched_act.cancelled:
+                    exception.ScheduledActivityCancelled = True
+
+                # Check if the activity is full
                 if sched_act.is_full():
                     exception.ActivityFull = True
 
@@ -912,7 +910,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if self.activity.id not in acts:
                     exception.Restricted = True
 
-        success_message = "Successfully signed up for activity. "
+        success_message = "Successfully signed up for activity."
 
         """
         final_remove_signups = []
@@ -1000,7 +998,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                             scheduled_activity=self,
                                             after_deadline=after_deadline)
         else:
-
             existing_signups = EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__in=all_blocks
