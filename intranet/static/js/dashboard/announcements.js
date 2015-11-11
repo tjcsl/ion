@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $("div[data-placeholder]").on("keydown keypress input", function() {
-        if(this.textContent) {
+        if (this.textContent) {
             this.dataset.divPlaceholderContent = 'true';
         } else {
             delete(this.dataset.divPlaceholderContent);
@@ -14,7 +14,7 @@ $(document).ready(function() {
         var icon = $(this).children(0);
         var id = announcement.attr("data-id");
 
-        if(!id) {
+        if (!id) {
             console.error("Couldn't toggle invalid announcement ID");
             return;
         }
@@ -24,7 +24,7 @@ $(document).ready(function() {
         $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function() {
             console.info("Announcement "+id+" "+action);
         });
-        if(action === "show") {
+        if (action === "show") {
             icon.removeClass("fa-toggle-off")
                     .addClass("fa-toggle-on")
                     .attr("title", icon.attr("data-visible-title"));
@@ -44,9 +44,7 @@ $(document).ready(function() {
     };
 
     $(".announcement[data-id] h3").click(function(e) {
-        if(e.target !== this) {
-            return;
-        }
+        if(e.target !== this) {return;}
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
     });

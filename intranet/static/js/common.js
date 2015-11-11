@@ -30,17 +30,13 @@ $(function() {
     initUIElementBehavior();
 
     $(".nav a").click(function(event) {
-        if (event.metaKey) {
-            return;
-        }
+        if (event.metaKey) {return;}
         $(".nav .selected").removeClass("selected");
         $(this).parent().addClass("selected");
     });
 
     $(".header h1").click(function() {
-        if (event.metaKey) {
-            return;
-        }
+        if (event.metaKey) {return;}
         $(".nav .selected").removeClass("selected");
         $(".nav li").slice(0,1).addClass("selected");
     });
