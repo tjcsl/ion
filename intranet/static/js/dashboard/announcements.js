@@ -8,7 +8,7 @@ $(document).ready(function() {
         }
     });
 
-    announcementToggle = function() {
+    function announcementToggle() {
         var announcement = $(this).parent().parent().parent();
         var announcementContent = $(".announcement-toggle-content", announcement);
         var icon = $(this).children(0);
@@ -21,10 +21,10 @@ $(document).ready(function() {
 
         var hidden = announcement.hasClass("hidden");
         var action = hidden ? "show" : "hide";
-        $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function(d) {
+        $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function() {
             console.info("Announcement "+id+" "+action);
         });
-        if(action == "show") {
+        if(action === "show") {
             icon.removeClass("fa-toggle-off")
                     .addClass("fa-toggle-on")
                     .attr("title", icon.attr("data-visible-title"));
@@ -35,7 +35,7 @@ $(document).ready(function() {
         } else {
             icon.removeClass("fa-toggle-on")
                     .addClass("fa-toggle-off")
-                    .attr("title", icon.attr("data-hidden-title"));;
+                    .attr("title", icon.attr("data-hidden-title"));
             setTimeout(function() {
                 announcement.addClass("hidden");
             }, 450);
@@ -44,7 +44,7 @@ $(document).ready(function() {
     };
 
     $(".announcement[data-id] h3").click(function(e) {
-        if(e.target != this) {
+        if(e.target !== this) {
             return;
         }
         var btn = $(".announcement-toggle", $(this));
@@ -53,5 +53,5 @@ $(document).ready(function() {
 
     $(".announcement[data-id] h3 .announcement-toggle").click(function() {
         announcementToggle.call($(this));
-    })
+    });
 });
