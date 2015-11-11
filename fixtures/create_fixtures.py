@@ -35,7 +35,6 @@ auth_tokens = ldap.sasl.gssapi()
 l.sasl_interactive_bind_s('', auth_tokens)
 print("Successfully bound to LDAP with " + l.whoami_s())
 
-
 def user_attrs(uid, attr):
     sfilter = '(iodineUidNumber=' + str(uid) + ')'
     try:
@@ -43,7 +42,6 @@ def user_attrs(uid, attr):
         r = ri[0][1]
     except IndexError:
         return ""
-
     return r[attr][0]
 
 os.system("mkdir -p fixtures/{eighth,users,announcements}")
@@ -166,7 +164,6 @@ for row in rows:
 json.dump(eighth_objects, f_rooms)
 eighth_objects = []
 print("Rooms complete")
-
 
 # ACTIVITIES #
 cur.execute("SELECT * FROM eighth_activities;")
