@@ -15,7 +15,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 @csrf_exempt
 def android_setup_view(request):
     """Set up a GCM session.
@@ -25,7 +24,6 @@ def android_setup_view(request):
     The "android_gcm_rand" is randomly set when the Android app is detected through
     the user agent. If it has the same value, it is assumed to be correct.
     """
-
     logger.debug(request.POST)
     if request.method == "POST":
         if "user_token" in request.POST and "gcm_token" in request.POST:
@@ -47,7 +45,6 @@ def android_setup_view(request):
             return HttpResponse('{"success":"Now registered."}', content_type="text/json")
     return HttpResponse('{"error":"Invalid arguments."}', content_type="text/json")
 
-
 @login_required
 def gcm_list_view(request):
     if not request.user.has_admin_permission("notifications"):
@@ -66,12 +63,10 @@ def gcm_list_view(request):
 
     return render(request, "notifications/gcm_list.html", context)
 
-
 @login_required
 def gcm_post_view(request):
     if not request.user.has_admin_permission("notifications"):
         return redirect("index")
-
     try:
         has_tokens = (settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID)
     except AttributeError:
@@ -89,10 +84,8 @@ def gcm_post_view(request):
     }
 
     if request.method == "POST":
-
         nc_objs = []
         reg_ids = []
-
         fail_ids = []
         nc_users = request.POST.getlist("nc_users")
         logger.debug(nc_users)
@@ -146,5 +139,4 @@ def gcm_post_view(request):
             messages.success(request, "Delivered message: {} success, {} failure".format(resp["success"], resp["failure"]))
         else:
             messages.error(request, "Failed. {}".format(req.text))
-
     return render(request, "notifications/gcm_post.html", context)

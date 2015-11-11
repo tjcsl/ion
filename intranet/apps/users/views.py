@@ -17,7 +17,6 @@ from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
 logger = logging.getLogger(__name__)
 
-
 @login_required
 def profile_view(request, user_id=None):
     """Displays a view of a user's profile.
@@ -26,7 +25,6 @@ def profile_view(request, user_id=None):
         user_id
             The ID of the user whose profile is being viewed. If not
             specified, show the user's own profile.
-
     """
     if request.user.is_eighthoffice and "full" not in request.GET and user_id is not None:
         return redirect("eighth_profile", user_id=user_id)
@@ -52,14 +50,14 @@ def profile_view(request, user_id=None):
     eighth_schedule = []
     start_block = EighthBlock.objects.get_first_upcoming_block()
 
+    blocks = []
     if start_block:
         blocks = [start_block] + list(start_block.next_blocks(num_blocks - 1))
-    else:
-        blocks = []
 
     for block in blocks:
-        sch = {}
-        sch["block"] = block
+        sch = {
+            "block": block
+        }
         try:
             sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
         except EighthSignup.DoesNotExist:
@@ -74,7 +72,6 @@ def profile_view(request, user_id=None):
                                    .order_by("block__date",
                                              "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
-
     else:
         eighth_sponsor_schedule = None
 
@@ -84,7 +81,6 @@ def profile_view(request, user_id=None):
         "eighth_sponsor_schedule": eighth_sponsor_schedule
     }
     return render(request, "users/profile.html", context)
-
 
 @login_required
 def picture_view(request, user_id, year=None):
@@ -96,7 +92,6 @@ def picture_view(request, user_id, year=None):
         year
             The user's picture from this year is fetched. If not
             specified, use the preferred picture.
-
     """
     try:
         user = User.get_user(id=user_id)
@@ -149,7 +144,6 @@ def picture_view(request, user_id, year=None):
 
         return response
 
-
 @login_required
 def class_section_view(request, section_id):
     c = Class(id=section_id)
@@ -176,7 +170,6 @@ def class_section_view(request, section_id):
     }
 
     return render(request, "users/class.html", context)
-
 
 @login_required
 def class_room_view(request, room_id):
@@ -208,7 +201,6 @@ def class_room_view(request, room_id):
     }
 
     return render(request, "users/class_room.html", context)
-
 
 @login_required
 def all_classes_view(request):
