@@ -95,7 +95,7 @@ def save_personal_info(request, user):
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
                             except Exception as e:
                                 messages.error(request, "Field {}: {}".format(field, e))
                     else:
@@ -155,7 +155,7 @@ def save_preferred_pic(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return preferred_pic_form
 
 
@@ -203,7 +203,7 @@ def save_privacy_options(request, user):
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -238,7 +238,7 @@ def save_notification_options(request, user):
                     setattr(user, field, fields[field])
                     user.save()
                     try:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
                     except TypeError:
                         pass
     return notification_options_form
