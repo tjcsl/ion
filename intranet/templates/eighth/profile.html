@@ -51,7 +51,9 @@
                         </a>
                     </span>
                     <span class="button-center">
-                        <input type="submit" value="Change Selected" />
+                        {% if request.user.is_eighth_admin or request.user == profile_user %}
+                            <input type="submit" value="Change Selected" />
+                        {% endif %}
 
                         {% if custom_date_set %}
                             <a href="?" class="button">Reset Date</a>
