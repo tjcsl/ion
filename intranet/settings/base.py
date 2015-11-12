@@ -214,7 +214,7 @@ if not TRAVIS:
 
     CACHEOPS = {
         "eighth.*": {
-            "timeout": 60 * 60
+            "timeout": 1
         },
         "announcements.*": {},
         "events.*": {},
@@ -373,7 +373,7 @@ LOGGING = {
             "propagate": True,
         },
         "intranet": {
-            "handlers": ["console", "mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),,
+            "handlers": ["console", "mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),
             "level": LOG_LEVEL,
             "propagate": True,
         },
