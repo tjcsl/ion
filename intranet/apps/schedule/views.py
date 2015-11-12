@@ -85,6 +85,7 @@ def schedule_context(request=None, date=None):
         if request and request.user.is_authenticated() and request.user.is_eighth_admin:
             try:
                 schedule_tomorrow = Day.objects.select_related("day_type").get(date=date_tomorrow)
+                logger.debug("tomorrow: {}".format(schedule_tomorrow))
                 if not schedule_tomorrow.day_type:
                     schedule_tomorrow = False
             except Day.DoesNotExist:

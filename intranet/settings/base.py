@@ -360,12 +360,10 @@ LOGGING = {
             "delay": True
         },
         "error_log": {
-            "level": "DEBUG",
+            "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "logging.FileHandler",
-            "formatter": "access",
-            "filename": "/var/log/ion/app_error.log",
-            "delay": True
+            "filename": "/var/log/ion/app_error.log"
         },
     },
     "loggers": {
@@ -375,7 +373,7 @@ LOGGING = {
             "propagate": True,
         },
         "intranet": {
-            "handlers": ["console", "mail_admins"],
+            "handlers": ["console", "mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),,
             "level": LOG_LEVEL,
             "propagate": True,
         },
