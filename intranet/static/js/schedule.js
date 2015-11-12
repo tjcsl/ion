@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    function scheduleBind() {
+    scheduleBind = function() {
         $(".schedule-outer .schedule-left").click(function(event) {
             event.preventDefault();
             scheduleView(-1);
@@ -12,7 +12,7 @@ $(document).ready(function() {
         });
     };
 
-    function genOrigSearch() {        
+    genOrigSearch = function() {        
         var qs = location.search.substring(1);
         var osearch = "";
         var searchparts = qs.split("&");
@@ -28,7 +28,7 @@ $(document).ready(function() {
     window.osearch = genOrigSearch();
     console.info("osearch:", window.osearch);
 
-    function scheduleView(reldate) {
+    scheduleView = function(reldate) {
         $sch = $(".schedule");
         var endpoint = $sch.attr("data-endpoint");
         var prev = $sch.attr("data-prev-date");
@@ -52,6 +52,89 @@ $(document).ready(function() {
             scheduleBind();
         });
     };
+
+    formatDate = function(date) {
+        var parts = date.split("-");
+        return new Date(parts[0], parts[1]-1, parts[2]);
+    }
+
+    formatTime = function(time, date) {
+        var d = new Date(date);
+        var tm = time.split(":");
+        var hr = parseInt(tm[0]);
+        var mn = parseInt(tm[1]);
+        d.setHours(hr < 7 ? hr+12 : hr);
+        d.setMinutes(mn)
+        return d;
+    }
+
+
+    getPeriods = function() {
+        $sch = $(".schedule");
+        var blocks = $(".schedule-block", $sch);
+        var periods = [];
+        var curDate = formatDate($sch.attr("data-date"));
+
+        blocks.each(function() {
+            var start = $(this).attr("data-block-start");
+            var startDate = formatTime(start, curDate);
+
+            var end = $(this).attr("data-block-end");
+            var endDate = formatTime(end, curDate);
+
+            periods.push({
+                "name": $(this).attr("data-block-name"),
+                "start": {
+                    "str": start,
+                    "date": startDate
+                },
+                "end": {
+                    "str": end,
+                    "date": endDate
+                }
+            });
+        });
+
+        return periods;
+    }
+
+    withinPeriod = function(period, now) {
+        var st = period.start.date;
+        var en = period.end.date;
+        return now >= st && now < en;
+    }
+
+    betweenPeriod = function(period1, period2, now) {
+        var en = period1.end.date;
+        var st = period2.start.date;
+        return now >= en && now < st;
+    }
+
+
+    getCurrentPeriod = function(now) {
+        $sch = $(".schedule");
+        var curDate = formatDate($sch.attr("data-date"));
+        var periods = getPeriods();
+        if(!now) now = new Date();
+
+        for(var i=0; i<periods.length; i++) {
+            var period = periods[i];
+            if(withinPeriod(period, now)) {
+                return {
+                    "status": "in",
+                    "period": period
+                };
+            }
+            if(i+1 < periods.length && betweenPeriod(period, periods[i+1], now)) {
+                return {
+                    "status": "between",
+                    "prev": period,
+                    "next": periods[i+1]
+                };
+            }
+        }
+        return false;
+    }
 
     scheduleBind(); 
 });

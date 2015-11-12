@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-<div class="schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}">
+<div class="schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}" data-date="{{ sched_ctx.date_today }}">
     <a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left"><i class="fa fa-chevron-left"></i></a>
     <span class="schedule-date">{{ sched_ctx.date|date:"D, N j" }}</span>
     <a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right"><i class="fa fa-chevron-right"></i></a>
@@ -10,7 +10,7 @@
         <br>
         <table class="bellschedule-table">
         {% for block in sched_ctx.blocks %}
-            <tr>
+            <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}">
                 <th>{{ block.name|safe }}:</th>
                 <td>{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
             </tr>
