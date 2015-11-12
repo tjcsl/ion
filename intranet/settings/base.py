@@ -363,6 +363,7 @@ LOGGING = {
             "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "logging.FileHandler",
+            "delay": True,
             "filename": "/var/log/ion/app_error.log"
         },
     },
