@@ -178,7 +178,7 @@ CACHE_AGE = {
     "user_grade": 10 * months,
     "class_teacher": 6 * months,
     "class_attribute": 6 * months,
-    "ldap_permissions": int(0.5 * months),
+    "ldap_permissions": 1 * days,
     "bell_schedule": 7 * days,
     "users_list": 7 * days,
 }

@@ -1,0 +1,62 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load forms %}
+{% load math %}
+{% load strings %}
+
+{% block title %}
+    {{ block.super }} - LDAP Testing
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        $("#user_select").selectize();
+    })
+    </script>
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+    <h2>LDAP Testing</h2>
+
+    <pre>{{ results }}</pre>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <b>LDAP search:</b><br />
+        DN/uid: <input type="text" name="search_dn" value="{{ user_dn }}" /><br />
+        Query: <input type="text" name="search_q" value="" /><br />
+        <div class="search-attrs">
+            Attrs: <input type="text" name="search_attrs" value="" />
+        </div>
+        <button onclick="$('.search-attrs').after($('.search-attrs').clone())" class="small-button">Add attr</button>
+        <br />
+        <input type="submit" value="LDAP search" />
+    </form>
+    <br />
+    <br />
+    <br />
+    <form action="" method="post">
+        {% csrf_token %}
+        <b>User attributes:</b><br />
+        DN/uid: <input type="text" name="user_attribute_dn" /><br />
+        <div class="user-attrs">
+            Attrs: <input type="text" name="user_attribute_attrs" value="" />
+        </div>
+        <button onclick="$('.user-attrs').after($('.user-attrs').clone())" class="small-button">Add attr</button>
+        <br />
+        <input type="submit" value="Get User Attribute(s)" />
+    </form>
+</div>
+{% endblock %}

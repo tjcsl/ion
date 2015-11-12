@@ -342,3 +342,44 @@ def privacy_options_view(request):
         "profile_user": user
     }
     return render(request, "preferences/privacy_options.html", context)
+
+@login_required
+def ldap_test(request):
+    from intranet.db.ldap_db import LDAPConnection
+    from intranet import settings
+
+    c = LDAPConnection()
+
+    result = None
+    if request.method == "POST":
+        if "search_q" in request.POST:
+            dn = request.POST.get("search_dn")
+            if "dc=edu" not in dn:
+                dn = User.objects.get(id=dn).dn
+            q = request.POST.get("search_q")
+            attrs = request.POST.getlist("search_attrs")
+            req = c.search(dn, q, attrs)
+            results = []
+            for row in req:
+                results.append("{}".format(list(row)))
+            results = "\n".join(results)
+
+        if "user_attribute_dn" in request.POST:
+            dn = request.POST.get("user_attribute_dn")
+            if "dc=edu" not in dn:
+                dn = User.objects.get(id=dn).dn
+            attrs = request.POST.getlist("user_attribute_attrs")
+            req = c.user_attributes(dn, attrs)
+            results = []
+            for row in req:
+                results.append("{}".format(list(row)))
+
+            results = "\n".join(results)
+
+
+    context = {
+        "user_dn": settings.USER_DN,
+        "result": result   
+    }
+
+    return render(request, "preferences/ldap.html", context)
