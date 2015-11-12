@@ -26,31 +26,44 @@
         padding: 5px 10px;
     }
 
-    img.mobile {
-        zoom: 0.6;
-    }
 
     .mobile-only {
         display: none;
     }
 
-    @media (max-width: 750px) {
-        img.mobile {
-            margin-left: -250px;
-        }
+    .eighth-mobile {
+        padding: 10px;
+    }
 
-        .mobile-only img.mobile {
-            margin-left: 0;
+    @media (max-width: 930px) {
+        .desktop {
+            zoom: 0.85;
         }
     }
 
-    @media (max-width: 600px) {
-        img.desktop {
-            zoom: 0.9;
+    @media (max-width: 848px) {
+        .desktop {
+            zoom: 0.75;
         }
 
-        img.mobile {
-            zoom: 0.5;
+        .mobile {
+            zoom: 0.85;
+        }
+    }
+
+    @media (max-width: 760px) {
+        .eighth-mobile {
+            float: none;
+        }
+
+        .eighth-mobile-detail {
+            display: none;
+        }
+    }
+
+    @media (max-width: 681px) {
+        .dashboard-desktop {
+            zoom: 0.57;
         }
     }
 
@@ -59,16 +72,26 @@
             display: none;
         }
 
-        img.mobile {
-            zoom: 0.75;
-            margin-left: 0;
-        }
-
         .mobile-only {
             display: inline;
         }
 
         .desktop-only {
+            display: none;
+        }
+
+        .eighth-mobile-detail {
+            display: block;
+        }
+
+        img.mobile {
+            float: none;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .brs {
             display: none;
         }
     }
@@ -142,47 +165,74 @@
         </h2>
 
         
+        <div>
 
-        <div class="mobile-only">
-            <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo. On the Eighth Period page, click the arrow to hide or unhide the schedule.</p>
-            <img src="{% static 'img/promo/nav-mobile.png' %}" class="mobile" />
+            <img src="{% static 'img/promo/dashboard-student-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="left" style="padding: 10px" />
+            <br />
+            <div class="brs">
+                <br />
+                <br />
+                <br />
+            </div>
+            <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" align="right" style="padding: 10px" />
+            <br />
+            <div class="mobile-only">
+                <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo. On the Eighth Period page, click the arrow to hide or unhide the schedule.</p>
+            </div>
+
+            <div class="desktop-only">
+                <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
+            </div>
+        <br />
+        <div class="brs">
+            <br />
             <br />
         </div>
-
-        <div class="desktop-only">
-            <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
-            <br />
-        </div>
-
         <p>After logging in, you will reach the dashboard. This page shows, at a glance, new announcements for you and the TJ community as well as your current eighth period signups. To sign up for a block of eighth period, click the "Sign Up" button on the widget. If you have already selected an activity for this block, you may select "Change."</p>
-        <img src="{% static 'img/promo/dashboard.png' %}" alt="Dashboard page" class="desktop" />
-        <img src="{% static 'img/promo/dashboard-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" />
 
-        <br />
-        <br />
+        
+        <center>
+            <img src="{% static 'img/promo/dashboard-student.png' %}" alt="Dashboard page" class="desktop dashboard-desktop" />
+        </center>
+
+        
         <br />
 
+            <img src="{% static 'img/promo/eighth-student-list-mobile.png' %}" alt="Eighth Period signup page" class="mobile eighth-mobile" align="left" />
+        <div class="eighth-text">
+        <br />
         <p>This will take you to the Eighth Period homepage. On the top, you will see a listing showing all of the days containing a block of Eighth Period. Click on a block listed there to change the day you are viewing activities for.</p>
         <p>On the left side of the screen, you will see a listing of all the eighth period activities scheduled. To search for a specific activity, use the search box above the listing.</p>
-        <p>To view more information about an activity, click on its name. More details about it will appear on the right. Buttons will appear that will allow you to "View Roster" or "Sign Up," if you are able. Some activities are restricted to certain groups, some are cancelled, and some fill up rather quickly. If you are unable to choose an activity to sign up for, a message will appear with an explanation.</p>
-        <img src="{% static 'img/promo/eighth-signup.png' %}" alt="Eighth Period signup page" class="desktop" />
-        <img src="{% static 'img/promo/eighth-signup-list-mobile.png' %}" alt="Eighth Period signup page" class="mobile" />
-        <img src="{% static 'img/promo/eighth-signup-mobile.png' %}" alt="Eighth Period signup information" class="mobile mobile-only" />
-        
-        <br />
-        <br />
-        <br />
 
-        <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
-        <img src="{% static 'img/promo/search.png' %}" alt="Student directory searching" class="desktop" />
+        <p>To view more information about an activity, click on its name. More details about it will appear on the right. Buttons will appear that will allow you to "View Roster" or "Sign Up," if you are able. Some activities are restricted to certain groups, some are cancelled, and some fill up rather quickly. If you are unable to choose an activity to sign up for, a message will appear with an explanation.</p>
+        </div>
+        <img src="{% static 'img/promo/eighth-student-signup-mobile.png' %}" alt="Eighth Period signup information" class="mobile eighth-mobile eighth-mobile-detail" align="left" style="clear: left" />
+
+        <center>
+            <img src="{% static 'img/promo/eighth-student-list.png' %}" alt="Eighth Period signup page" class="desktop" />
+        </center>
         
-        <div class="desktop-only">
+        
+        
+        <br />
+        <div class="brs">
             <br />
             <br />
         </div>
 
-        <p>After selecting a user, you will be able to view their user page. If the user is a teacher, you will be able to see their class schedule, including which rooms they teach in during the day. If the user is a student, you will be able to view their student picture, emails, address, class schedule, and eighth period signups. However, some students restrict public access to this information, and information that has been hidden will not be visible to you. You also have the capability to restrict other students from viewing your information; visit the Preferences page to see what information others can view about you.</p>
-        <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" />
+        <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
+        <br />
+        <img src="{% static 'img/promo/search-results.png' %}" alt="Student directory searching" class="desktop" align="right" />
+        <br />
+        <div class="brs">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+        <p>After selecting a user, you will be able to view their personal information, class, and eighth period schedule, if they have decided to share this information publicly. You also have the capability to restrict other students from viewing your information; visit the Preferences page to change what others can see on your profile.</p>
+        <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" float="left" />
 
         <span id="about-intranet" name="about-intranet"></span>
         <br />

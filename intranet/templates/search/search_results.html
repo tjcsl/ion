@@ -15,6 +15,9 @@
 
 {% block main %}
 <div class="primary-content">
+{% if "tips" in request.GET or query_error or not search_query %}
+    {% include "search/tips.html" %}
+{% else %}
     <h2>Search Results</h2>
     <!--
     <form class="search" action="{% url 'search' %}" method="get" autocomplete="off">
@@ -144,65 +147,8 @@
             <b>No results.</b>
         {% endif %}
     {% endif %}
-
-
-    {% if "tips" in request.GET or query_error or not search_query %}
-        <h3>Advanced Search Tips</h3>
-
-        <p>
-            <b>Searchable Fields</b>
-            <ul>
-                <li><em>name</em></li>
-                <li><em>first</em></li>
-                <li><em>last</em></li>
-                <li><em>middle</em></li>
-                <li><em>nickname</em></li>
-                <li><em>id</em> (e.g. 31863)</li>
-                <li><em>username</em> (e.g. 2015elowman)</li>
-                <li><em>gradyear</em> (e.g. 2015)</li>
-                <li><em>grade</em> (9-12)</li>
-                <li><em>sex</em></li>
-                <li><em>phone</em></li>
-                <li><em>zip</em></li>
-                <li><em>city</em></li>
-                <li><em>address</em></li>
-                <li><em>email</em></li>
-            </ul>
-        </p>
-        <p>
-            <b>Examples</b>
-            <ul>
-                <li>
-                    To find all members of the class of 2016:
-                    <br>
-                    <em class="search-example">gradyear:2016</em>
-                </li>
-                <li>
-                    To find all females:
-                    <br>
-                    <em class="search-example">sex:female</em>
-                </li>
-                <li>
-                    To find all males in the class of 2016:
-                    <br>
-                    <em class="search-example">gradyear:2016 sex:male</em>
-                </li>
-                <li>
-                    To find senior girls with first names containing "an" followed by "a":
-                    <br>
-                    <em class="search-example">first:an*a sex:female grade:12</em>
-                </li>
-                <li>
-                    To find juniors who live in Falls Church <i>(use "*" in place of spaces)</i>:
-                    <br>
-                    <em class="search-example">city:falls*church grade:11</em>
-                </li>
-            </ul>
-        </p>
-
-    {% else %}
         <br><br>
         <a href="{% url 'search' %}?tips">Advanced Search Tips</a>
-    {% endif %}
+{% endif %}
 </div>
 {% endblock %}
