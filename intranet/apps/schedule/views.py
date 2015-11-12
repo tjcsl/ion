@@ -79,6 +79,8 @@ def schedule_context(request=None, date=None):
         delta = 3 if date.isoweekday() == FRIDAY else 1
         date_tomorrow = date_format(date + timedelta(days=delta))
 
+        date_today = date_format(date)
+
         delta = -3 if date.isoweekday() == MONDAY else -1
         date_yesterday = date_format(date + timedelta(days=delta))
 
@@ -100,6 +102,7 @@ def schedule_context(request=None, date=None):
                 "date": date,
                 "is_weekday": is_weekday(date),
                 "date_tomorrow": date_tomorrow,
+                "date_today": date_today,
                 "date_yesterday": date_yesterday,
                 "schedule_tomorrow": schedule_tomorrow
             }
