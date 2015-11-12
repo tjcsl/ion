@@ -75,6 +75,9 @@ def profile_view(request, user_id=None):
     else:
         eighth_sponsor_schedule = None
 
+    if not profile_user.can_view_eighth and not request.user == profile_user:
+        eighth_schedule = []
+
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,

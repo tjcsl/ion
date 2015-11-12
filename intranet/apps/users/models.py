@@ -926,11 +926,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return (self.permissions["self"]["showeighth"] if (
-            self.permissions and
-            "self" in self.permissions and
-            "showeighth" in self.permissions["self"]
-        ) else False)
+        return self.attribute_is_visible("showeighth")
 
     @property
     def is_eighth_admin(self):
