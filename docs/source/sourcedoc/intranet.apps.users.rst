@@ -44,6 +44,14 @@ intranet.apps.users.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.users.renderers module
+------------------------------------
+
+.. automodule:: intranet.apps.users.renderers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.users.serializers module
 --------------------------------------
 

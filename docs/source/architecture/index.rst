@@ -2,27 +2,27 @@
 Architecture
 ************
 
-Talk about architectures
+Talk about ion's architecture
 
 Technologies
 ============
-foo
+TODO
 
 Django
 ------
-foo
+TODO
 
 REST API
 --------
-foo
+TODO
 
 Redis
 -----
-foo
+TODO
 
 PostgreSQL
 ----------
-foo
+TODO
 
 
 Resources
@@ -30,16 +30,16 @@ Resources
 
 Django
 ------
-foo
+TODO
 
 REST API
 --------
-foo
+TODO
 
 Redis
 -----
-foo
+TODO
 
 PostgreSQL
 ----------
-foo
+TODO
