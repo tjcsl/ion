@@ -50,9 +50,12 @@ Using Intranet as a Developer
 
 Source Code Documentation
 -------------------------
-Demo Django docs :django:setting:`ROOT_URLCONF` setting.
+.. code-block:: rst
 
-and python docs :class:`threading.Thread`
+  Example documentation for Django settings :django:setting:`ROOT_URLCONF`
+  and python objects :class:`threading.Thread`
+
+More details can be found at `Sphinx Documentation <http://sphinx-doc.org/markup/index.html>`_
 
 Go to the :doc:`Source Code Documentation<sourcedoc/intranet>`
 

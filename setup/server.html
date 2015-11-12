@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #877) documentation</title>
+    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #880) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #877)',
+        VERSION:     'v3 (Build #880)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #877) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #880) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Setting up Vagrant" href="vagrant.html" />
     <link rel="prev" title="Setting up Your Sandbox Manually" href="sandbox.html" />
@@ -173,7 +173,7 @@ dev-libs/cyrus-sasl kerberos ldap
 <div class="section" id="postgresql">
 <h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
 <p>First, install the PostgreSQL server.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge dev-db/postgresql-server
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>emerge dev-db/postgresql
 </pre></div>
 </div>
 <p>The following command will print out the command you should run to configure postgres.</p>
@@ -181,11 +181,11 @@ dev-libs/cyrus-sasl kerberos ldap
 </pre></div>
 </div>
 <p>Run the printed command. Then start the PostgreSQL server.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/postgresql-9.2 start
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>/etc/init.d/postgresql-9.4 start
 </pre></div>
 </div>
 <p>Add the Postgres service to the default runlevel.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add postgresql-9.2 default
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>rc-update add postgresql-9.4 default
 </pre></div>
 </div>
 <p>Become root, then run the following command to add an admin user to the postgres group. Replace &lt;admin username&gt; with the username of someone you would like to make a Postgres admin.</p>
@@ -278,24 +278,23 @@ dev-libs/cyrus-sasl kerberos ldap
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> /shared/git
 </pre></div>
 </div>
-<p>Set up SSH access to Bitbucket by following <a class="reference external" href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">this tutorial</a>. Then clone the Ion Git repository and give all users in the &#8220;ion&#8221; group access.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone --bare git@bitbucket.org:tjhsstintranet/intranet3.git
-<span class="nv">$ </span><span class="nb">cd </span>intranet3.git
+<p>Set up SSH access to Github by following <a class="reference external" href="https://help.github.com/articles/generating-ssh-keys">this tutorial</a>. Then clone the Ion Git repository and give all users in the &#8220;ion&#8221; group access.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone --bare git@github.com:tjcsl/ion.git
+<span class="nv">$ </span><span class="nb">cd </span>ion.git
 <span class="nv">$ </span>git config core.sharedRepository <span class="nb">true</span>
 <span class="nv">$ </span>chgrp -R ion .
 </pre></div>
 </div>
-<p>Rename the main branch to &#8220;bitbucket&#8221; (<code class="docutils literal"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">rename</span></code> doesn&#8217;t seem to work in this situation).</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git remote add bitbucket git@bitbucket.org:tjhsstintranet/intranet3.git
-<span class="nv">$ </span>git fetch bitbucket
+<p>Rename the main branch to &#8220;upstream&#8221; (<code class="docutils literal"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">rename</span></code> doesn&#8217;t seem to work in this situation).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git remote add upstream git@github.com:tjcsl/ion.git
+<span class="nv">$ </span>git fetch upstream
 <span class="nv">$ </span>git remote rm origin
 </pre></div>
 </div>
-<p>Add the Git hook to automatically push changes to Bitbucket by creating a post-receive hook (<code class="docutils literal"><span class="pre">touch</span> <span class="pre">hooks/post-receive</span></code>) and appending the following to that file:</p>
+<p>Add the Git hook to automatically push changes to Github by creating a post-receive hook (<code class="docutils literal"><span class="pre">touch</span> <span class="pre">hooks/post-receive</span></code>) and appending the following to that file:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="c">#!/bin/bash</span>
 
-git push --all bitbucket
-git push --tags bitbucket
+git push --all --tags github
 </pre></div>
 </div>
 <p>Make the post-receive hook executable.</p>
@@ -304,12 +303,12 @@ git push --tags bitbucket
 </div>
 <p>Create a directory for the production code.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
-<span class="nv">$ </span>mkdir /usr/local/www
-<span class="nv">$ </span><span class="nb">cd</span> /usr/local/www
+<span class="nv">$ </span>mkdir /var/www
+<span class="nv">$ </span><span class="nb">cd</span> /var/www
 </pre></div>
 </div>
 <p>Clone the shared repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone /shared/git/intranet3.git
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone /shared/git/ion.git
 </pre></div>
 </div>
 <p>Ensure that your prompt still starts with <code class="docutils literal"><span class="pre">(ion)</span></code>. If it doesn&#8217;t, run the following.</p>
@@ -317,7 +316,7 @@ git push --tags bitbucket
 </pre></div>
 </div>
 <p>Install all of the dependencies.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install -r intranet3/requirements/production.txt
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install -U -r ion/requirements/production.txt
 </pre></div>
 </div>
 </div>
@@ -330,7 +329,7 @@ git push --tags bitbucket
 <p>Replace <code class="docutils literal"><span class="pre">/etc/nginx/nginx.conf</span></code> with the config file in the Ion git repository.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
 <span class="nv">$ </span>mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
-<span class="nv">$ </span>cp /usr/local/www/intranet3/extras/nginx/nginx.conf /etc/nginx/nginx.conf
+<span class="nv">$ </span>cp /var/www/ion/extras/nginx/nginx.conf /etc/nginx/nginx.conf
 </pre></div>
 </div>
 <p>Start Nginx.</p>
@@ -354,11 +353,11 @@ git push --tags bitbucket
 </div>
 <p>Add the Supervisor config file from the Ion repository.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>ksu
-<span class="nv">$ </span>cp /usr/local/www/intranet3/extras/supervisord.conf /etc/supervisord.conf
+<span class="nv">$ </span>cp /var/www/ion/extras/supervisord.conf /etc/supervisord.conf
 </pre></div>
 </div>
 <p>Add the init.d script from the Ion repository. (Based on the script from <a class="reference external" href="https://github.com/Supervisor/initscripts/blob/master/gentoo-matagus">here</a>)</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cp /usr/local/www/intranet3/extras/supervisord /etc/init.d/
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cp /var/www/ion/extras/supervisord /etc/init.d/
 <span class="nv">$ </span>chmod +x /etc/init.d/supervisord
 </pre></div>
 </div>

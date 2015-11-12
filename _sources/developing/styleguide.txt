@@ -4,6 +4,8 @@ Coding Style Guide
 
 Follow `PEP8 <http://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python).
 
+Note that the `flake8` tool can be very useful in this regard.
+
 Main points:
 
 - Indent using 4 spaces.
@@ -84,8 +86,8 @@ Bad:
     from currentapp.models import MyModel  # implicit relative import
 
 
-Reference
-=========
+References
+==========
 
 - `Google Python Style Guide <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html>`_.
 - `Google HTML/CSS Style Guide <http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml>`_.
