@@ -198,7 +198,7 @@ def save_privacy_options(request, user):
                                                                fields[field],
                                                                privacy_options[field] if field in privacy_options else None))
                     try:
-                        user.set_ldap_attribute(field, fields[field])
+                        user.set_ldap_attribute(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Field {} with value {}: {}".format(field, fields[field], e))

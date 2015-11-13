@@ -1332,7 +1332,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_ldap_attribute(self, name, value, override_set=False):
         """Set a user attribute in LDAP.
         """
-        if name not in User.ldap_user_attributes:
+        if name not in User.ldap_user_attributes and not override_set:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
         if not User.ldap_user_attributes[name]["can_set"] and not override_set:
             raise Exception("Not allowed to set User attribute '{}'".format(name))
