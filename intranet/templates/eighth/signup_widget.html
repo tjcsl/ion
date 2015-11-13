@@ -58,6 +58,11 @@
                     <a href="{% url 'eighth_signup' block.id %}" class="btn-link" title="Click to sign up.">Sign Up</a>
                 {% endif %}
             </div>
+            {% if block.current_signup_cancelled %}
+                <div class="block-info">
+                    <i class="fa fa-info-circle"></i> This activity was <b>cancelled.</b> {% if block.locked %}Visit 8th Pd. Office{% else %}Select another activity.{% endif %}
+                </div>
+            {% endif %}
             {% if block.is_today and block.signup_time %}
                 <div class="block-timeleft">
                     {% if block.signup_time_future %}
@@ -69,11 +74,6 @@
                             Signups are <b>closing</b>. Questions? Visit 8th Pd. Office
                         {% endif %}
                     {% endif %}
-                </div>
-            {% endif %}
-            {% if block.current_signup_cancelled %}
-                <div class="block-info">
-                    <i class="fa fa-info-circle"></i> This activity was <b>cancelled.</b> {% if block.locked %}Visit 8th Pd. Office{% else %}Select another activity.{% endif %}
                 </div>
             {% endif %}
         </div>

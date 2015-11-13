@@ -142,7 +142,7 @@ $(document).ready(function() {
         return false;
     }
 
-    var prevPeriod = null;
+    prevPeriod = null;
     displayPeriod = function(now) {
         $sch = $(".schedule");
         if(!now) var now = new Date();
