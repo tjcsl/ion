@@ -120,7 +120,7 @@ def schedule_activity_view(request):
                             invalidate_obj(other_act)
                     else:
                         schact.update(cancelled=True)
-                    invalidate_obj(schact)
+                    invalidate_obj(schact[0])
             messages.success(request, "Successfully updated schedule.")
 
             # Force reload everything from the database to reset
