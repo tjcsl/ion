@@ -141,12 +141,13 @@ $(document).ready(function() {
         return false;
     }
 
+    var prevPeriod = null;
     displayPeriod = function(now) {
         $sch = $(".schedule");
         if(!now) var now = new Date();
         var current = getCurrentPeriod(now);
-        console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
-
+        if(current != prevPeriod) console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
+        prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove()
 
