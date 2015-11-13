@@ -71,7 +71,7 @@ $(document).ready(function() {
 
     getPeriods = function() {
         $sch = $(".schedule");
-        var blocks = $(".schedule-block", $sch);
+        var blocks = $(".schedule-block[data-block-order]", $sch);
         var periods = [];
         var curDate = formatDate($sch.attr("data-date"));
 
@@ -91,22 +91,27 @@ $(document).ready(function() {
                 "end": {
                     "str": end,
                     "date": endDate
-                }
+                },
+                "order": $(this).attr("data-block-order")
             });
         });
 
         return periods;
     }
 
+    getPeriodElem = function(period) {
+        return $(".schedule-block[data-block-order='" + period.order + "']");
+    }
+
     withinPeriod = function(period, now) {
-        var st = period.start.date;
-        var en = period.end.date;
+        var st = period["start"].date;
+        var en = period["end"].date;
         return now >= st && now < en;
     }
 
     betweenPeriod = function(period1, period2, now) {
-        var en = period1.end.date;
-        var st = period2.start.date;
+        var en = period1["end"].date;
+        var st = period2["start"].date;
         return now >= en && now < st;
     }
 
@@ -136,5 +141,31 @@ $(document).ready(function() {
         return false;
     }
 
+    displayPeriod = function(now) {
+        $sch = $(".schedule");
+        if(!now) var now = new Date();
+        var current = getCurrentPeriod(now);
+        console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
+
+        $(".schedule-block").removeClass("current");
+        $(".schedule-block-between").remove()
+
+        if(!current) {
+            ;
+        } else if(current["status"] == "in") {
+            var p = getPeriodElem(current["period"]);
+            p.addClass("current");
+        } else if(current["status"] == "between") {
+            var prev = getPeriodElem(current["prev"]);
+            var next = getPeriodElem(current["next"]);
+            var times = current["prev"]["end"].str + " - " + current["next"]["start"].str;
+            prev.after("<tr class='schedule-block schedule-block-between current'><th>Passing:</th><td>" + times + "</td></tr>");
+        }
+    }
+
     scheduleBind(); 
+
+
+    displayPeriod();
+    setInterval(displayPeriod, 10000);
 });

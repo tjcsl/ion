@@ -14,14 +14,14 @@
             <a href="{% url 'eighth_signup' %}" class="ui-link">View more blocks</a>
         </div-->
     </div>
-    <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
+    <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}" data-date="{{ sched_ctx.date_today }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
         {% if sched_ctx.dayobj.day_type.name %}
             <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name|safe }}</h2>
         {% endif %}
         {% if sched_ctx.dayobj %}
             <table class="bellschedule-table">
             {% for block in sched_ctx.blocks %}
-                <tr>
+                <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}" data-block-order="{{ block.order }}">
                     <th class="block">{{ block.name|safe }}:</th>
                     <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
                 </tr>
