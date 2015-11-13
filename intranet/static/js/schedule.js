@@ -50,6 +50,7 @@ $(document).ready(function() {
         $.get(endpoint, {"date": date, "no_outer": true}, function(d) {
             $(".schedule-outer").html(d);
             scheduleBind();
+            setTimeout(displayPeriod, 50);
         });
     };
 
