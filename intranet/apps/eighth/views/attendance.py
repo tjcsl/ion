@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from cacheops import invalidate_obj
 from datetime import datetime
 from six import BytesIO
 import csv
@@ -265,6 +266,7 @@ def take_attendance_view(request, scheduled_activity_id):
         if "clear_attendance_bit" in request.POST:
             scheduled_activity.attendance_taken = False
             scheduled_activity.save()
+            invalidate_obj(scheduled_activity)
 
             messages.success(request, "Attendance bit cleared for {}".format(scheduled_activity))
 
@@ -301,6 +303,7 @@ def take_attendance_view(request, scheduled_activity_id):
 
         scheduled_activity.attendance_taken = True
         scheduled_activity.save()
+        invalidate_obj(scheduled_activity)
 
         messages.success(request, "Attendance updated.")
 
@@ -432,15 +435,10 @@ def accept_pass_view(request, signup_id):
     logger.debug(status)
 
     if status == "accept":
-        logger.debug("ACCEPT")
-        """signup.was_absent = False
-        signup.present = True
-        signup.pass_accepted = True"""
+        logger.debug("ACCEPT {}".format(signup_id))
         signup.accept_pass()
     elif status == "reject":
-        logger.debug("REJECT")
-        """signup.was_absent = True
-        signup.pass_accepted = True"""
+        logger.debug("REJECT {}".format(signup_id))
         signup.reject_pass()
 
     signup.save()
@@ -485,6 +483,7 @@ def accept_all_passes_view(request, scheduled_activity_id):
         pass_accepted=True,
         was_absent=False
     )
+    invalidate_obj(scheduled_activity)
 
     if "admin" in request.path:
         url_name = "eighth_admin_take_attendance"

@@ -117,9 +117,10 @@ def schedule_activity_view(request):
                         if other_act:
                             other_act.cancelled = True
                             other_act.save()
+                            invalidate_obj(other_act)
                     else:
                         schact.update(cancelled=True)
-
+                    invalidate_obj(schact)
             messages.success(request, "Successfully updated schedule.")
 
             # Force reload everything from the database to reset
@@ -357,6 +358,10 @@ def transfer_students_action(request):
         source_act.eighthsignup_set.update(
             scheduled_activity=dest_act
         )
+
+        invalidate_obj(source_act)
+        invalidate_obj(dest_act)
+        invalidate_obj(source_act)
         messages.success(request, "Successfully transfered {} students.".format(num))
         return redirect("eighth_admin_dashboard")
     else:

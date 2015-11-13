@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from cacheops import invalidate_obj
 from datetime import datetime, timedelta
 from django import http
 from django.contrib import messages
@@ -76,6 +77,8 @@ def edit_profile_view(request, user_id=None):
                 else:
                     messages.success(request, "Set field {} to {}".format(key, new_data[key]))
         user.save()
+        invalidate_obj(user)
+        user.clear_cache()
     else:
         form = ProfileEditForm(initial=defaults)
 

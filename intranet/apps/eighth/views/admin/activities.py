@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
 import logging
+from cacheops import invalidate_obj
 from django import http, forms
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -26,6 +27,7 @@ def add_activity_view(request):
             else:
                 activity = (EighthActivity.objects.create(name=form.cleaned_data["name"],
                                                           id=int(new_id)))
+            invalidate_obj(activity)
             messages.success(request, "Successfully added activity.")
             return redirect("eighth_admin_edit_activity",
                             activity_id=activity.id)
@@ -66,6 +68,7 @@ def edit_activity_view(request, activity_id):
                     activity.restricted = True
                     activity.groups_allowed.add(grp)
                     activity.save()
+                    invalidate_obj(activity)
                     messages.success(request, "{} to '{}' group".format("Created and added" if status else "Added", grp_name))
                     return redirect("eighth_admin_edit_group", grp.id)
 
@@ -88,7 +91,7 @@ def edit_activity_view(request, activity_id):
     return render(request, "eighth/admin/edit_activity.html", context)
 
 
-@eighth_admin_required
+"""@eighth_admin_required
 def edit_activity_id(request, activity_id):
     raise http.Http404
 
@@ -118,7 +121,7 @@ def edit_activity_id(request, activity_id):
         "activities": activities,
         "available_ids": EighthActivity.available_ids()
     }
-    return render(request, "eighth/admin/edit_activity_id.html", context)
+    return render(request, "eighth/admin/edit_activity_id.html", context)"""
 
 
 @eighth_admin_required
@@ -138,6 +141,7 @@ def delete_activity_view(request, activity_id=None):
         else:
             activity.deleted = True
             activity.save()
+            invalidate_obj(activity)
         messages.success(request, "Successfully deleted activity.")
         return redirect("eighth_admin_dashboard")
     else:

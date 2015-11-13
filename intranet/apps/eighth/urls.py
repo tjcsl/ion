@@ -49,7 +49,6 @@ eighth_admin_patterns = [
     # admin_activities
     url(r"^activities/add$", admin_activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"^activities/edit/(?P<activity_id>\d+)$", admin_activities.edit_activity_view, name="eighth_admin_edit_activity"),
-    url(r"^activities/id/(?P<activity_id>\d+)$", admin_activities.edit_activity_id, name="eighth_admin_edit_activity_id"),
     url(r"^activities/delete/(?P<activity_id>\d+)$", admin_activities.delete_activity_view, name="eighth_admin_delete_activity"),
 
     # Blocks

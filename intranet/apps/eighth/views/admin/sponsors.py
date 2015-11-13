@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from cacheops import invalidate_obj
 from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages

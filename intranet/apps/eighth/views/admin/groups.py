@@ -5,6 +5,7 @@ from six.moves import cPickle as pickle
 import csv
 import logging
 import re
+from cacheops import invalidate_obj
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -58,6 +59,7 @@ def edit_group_view(request, group_id):
             for u in users:
                 group.user_set.remove(u)
             group.save()
+            invalidate_obj(group)
             messages.success(request, "Successfully deleted {} members of the group.".format(num))
             return redirect("eighth_admin_edit_group", group.id)
         form = GroupForm(request.POST, instance=group)
@@ -66,6 +68,7 @@ def edit_group_view(request, group_id):
                 props = group.properties
                 props.student_visible = form.cleaned_data['student_visible']
                 props.save()
+                invalidate_obj(props)
 
             form.save()
             messages.success(request, "Successfully edited group.")
@@ -238,6 +241,7 @@ def upload_group_members_view(request, group_id):
                     user.groups.add(group)
                     user.save()
                     num_added += 1
+            invalidate_obj(group)
             messages.success(request, "{} added to group {}".format(num_added, group))
             return redirect("eighth_admin_edit_group", group.id)
         elif "import_group" in request.POST:
@@ -250,6 +254,7 @@ def upload_group_members_view(request, group_id):
                 for member in import_group.user_set.all():
                     member.groups.add(group)
                     member.save()
+                invalidate_obj(group)
                 messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
                 return redirect("eighth_admin_edit_group", group.id)
             return render(request, "eighth/admin/upload_group.html", {
@@ -673,6 +678,7 @@ def add_member_to_group_view(request, group_id):
             user.save()
             if len(user_objects) < 25:
                 next_url += "added={}&".format(user.id)
+        invalidate_obj(group)
         messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
         return redirect(next_url)
 
@@ -731,6 +737,7 @@ def remove_member_from_group_view(request, group_id, user_id):
 
     group.user_set.remove(user)
     group.save()
+    invalidate_obj(group)
     messages.success(request, "Successfully removed user \"{}\" from the group.".format(user.full_name))
 
     return redirect(next_url)
