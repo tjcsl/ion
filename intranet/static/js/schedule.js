@@ -142,13 +142,13 @@ $(document).ready(function() {
         return false;
     }
 
-    prevPeriod = null;
+    window.prevPeriod = null;
     displayPeriod = function(now) {
         $sch = $(".schedule");
         if(!now) var now = new Date();
         var current = getCurrentPeriod(now);
-        if(current != prevPeriod) console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
-        prevPeriod = current;
+        if(current != window.prevPeriod) console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
+        window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove()
 
