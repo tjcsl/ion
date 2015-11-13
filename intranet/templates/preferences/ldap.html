@@ -10,37 +10,39 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
-
-    <script type="text/javascript">
-    $(function() {
-        $("#user_select").selectize();
-    })
-    </script>
 {% endblock %}
 
 {% block main %}
 <div class="primary-content">
     <h2>LDAP Testing</h2>
 
-    <pre>{{ results }}</pre>
+    {% if results %}
+        <pre style="padding: 5px;">
+Results:
+{{ results }}</pre>
+        <br />
+    {% endif %}
 
     <form action="" method="post">
         {% csrf_token %}
         <b>LDAP search:</b><br />
-        DN/uid: <input type="text" name="search_dn" value="{{ user_dn }}" /><br />
-        Query: <input type="text" name="search_q" value="" /><br />
+        Search DN: <input type="text" name="search_dn" value="{{ search_dn }}" /><br />
+        Query: <input type="text" name="search_q" value="{{ search_q }}" /><br />
+        {% for attr in search_attrs %}
+        <div class="search-attrs">
+            Attrs: <input type="text" name="search_attrs" value="{{ attr }}" />
+        </div>
+        {% empty %}
         <div class="search-attrs">
             Attrs: <input type="text" name="search_attrs" value="" />
         </div>
-        <button onclick="$('.search-attrs').after($('.search-attrs').clone())" class="small-button">Add attr</button>
+        {% endfor %}
+        <a onclick="$('.search-attrs').eq(0).after($('.search-attrs').eq(0).clone())" class="button small-button">Add attr</a>
         <br />
         <input type="submit" value="LDAP search" />
     </form>
@@ -50,11 +52,17 @@
     <form action="" method="post">
         {% csrf_token %}
         <b>User attributes:</b><br />
-        DN/uid: <input type="text" name="user_attribute_dn" /><br />
+        DN/iodineUidNumber: <input type="text" name="user_attribute_dn" value="{{ user_attribute_dn }}" /><br />
+        {% for attr in user_attribute_attrs %}
         <div class="user-attrs">
-            Attrs: <input type="text" name="user_attribute_attrs" value="" />
+            Attrs: <input type="text" name="user_attribute_attrs" value="{{ attr }}" />
         </div>
-        <button onclick="$('.user-attrs').after($('.user-attrs').clone())" class="small-button">Add attr</button>
+        {% empty %}
+        <div class="user-attrs">
+            Attrs: <input type="text" name="user_attribute_attrs" value="dn" />
+        </div>
+        {% endfor %}
+        <a onclick="$('.user-attrs').eq(0).after($('.user-attrs').eq(0).clone())" class="button small-button">Add attr</a>
         <br />
         <input type="submit" value="Get User Attribute(s)" />
     </form>

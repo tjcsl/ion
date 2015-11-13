@@ -350,36 +350,57 @@ def ldap_test(request):
 
     c = LDAPConnection()
 
-    result = None
+    results = ""  
+
+    search_dn = request.POST.get("search_dn")
+    search_q = request.POST.get("search_q")
+    search_attrs = request.POST.getlist("search_attrs")
+
+    user_attribute_dn = request.POST.get("user_attribute_dn")
+    user_attribute_attrs = request.POST.getlist("user_attribute_attrs")
     if request.method == "POST":
         if "search_q" in request.POST:
-            dn = request.POST.get("search_dn")
-            if "dc=edu" not in dn:
-                dn = User.objects.get(id=dn).dn
-            q = request.POST.get("search_q")
-            attrs = request.POST.getlist("search_attrs")
-            req = c.search(dn, q, attrs)
-            results = []
-            for row in req:
-                results.append("{}".format(list(row)))
-            results = "\n".join(results)
+            try:
+                req = c.search(search_dn, search_q, search_attrs)
+            except Exception as e:
+                results += "EXCEPTION: {}\n".format(e)
+            else:
+                logger.debug(req)
+                if not isinstance(req, list):
+                    req = [req]
+                for row in req:
+                    results += "{}: \n".format(row[0])
+                    for perm, value in row[1].iteritems():
+                        results += "\t{}: {}\n".format(perm, value)
 
         if "user_attribute_dn" in request.POST:
-            dn = request.POST.get("user_attribute_dn")
-            if "dc=edu" not in dn:
-                dn = User.objects.get(id=dn).dn
-            attrs = request.POST.getlist("user_attribute_attrs")
-            req = c.user_attributes(dn, attrs)
-            results = []
-            for row in req:
-                results.append("{}".format(list(row)))
+            if "dc=edu" not in user_attribute_dn:
+                user_attribute_dn = User.objects.get(id=user_attribute_dn).dn
+            try:
+                req = c.user_attributes(user_attribute_dn, user_attribute_attrs)
+            except Exception as e:
+                results += "EXCEPTION: {}\n".format(e)
+            else:
+                logger.debug(req)
+                result = req.first_result()
+                logger.debug(result)
+                if isinstance(result, dict):
+                    for perm, value in result.iteritems():
+                        logger.debug("{} {}".format(perm, value))
+                        results += "{}: {}\n".format(perm, value)
+                else:
+                    results += req
 
-            results = "\n".join(results)
 
+    logger.debug(results)
 
     context = {
-        "user_dn": settings.USER_DN,
-        "result": result   
+        "search_dn": search_dn or settings.USER_DN,
+        "search_q": search_q or "",
+        "search_attrs": search_attrs or "",
+        "user_attribute_dn": user_attribute_dn,
+        "user_attribute_attrs": user_attribute_attrs or "",
+        "results": results
     }
 
     return render(request, "preferences/ldap.html", context)
