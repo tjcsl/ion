@@ -209,12 +209,13 @@ if not TRAVIS:
 
     CACHEOPS_DEFAULTS = {
         "ops": "all",
+        "cache_on_save": True,
         "timeout": 24 * 60 * 60
     }
 
     CACHEOPS = {
         "eighth.*": {
-            "timeout": 1
+            "timeout": 60*60
         },
         "announcements.*": {},
         "events.*": {},

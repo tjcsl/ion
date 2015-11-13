@@ -46,6 +46,7 @@ def schedule_activity_view(request):
                     instance, created = (EighthScheduledActivity.objects
                                                                 .get_or_create(block=block,
                                                                                activity=activity))
+                    invalidate_obj(instance)
 
                     fields = [
                         "rooms",
@@ -56,7 +57,13 @@ def schedule_activity_view(request):
                         "admin_comments"
                     ]
                     for field_name in fields:
-                        setattr(instance, field_name, form.cleaned_data[field_name])
+                        obj = form.cleaned_data[field_name]
+                        logger.debug("{} {}".format(field_name, obj))
+                        setattr(instance, field_name, obj)
+
+                        if field_name in ["rooms", "sponsors"]:
+                            for o in obj:
+                                invalidate_obj(o)
 
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
@@ -92,9 +99,8 @@ def schedule_activity_view(request):
                             messages.error(request, "Did not unschedule {} because there is {} student signed up.".format(name, count))
                         else:
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
-
                     instance.save()
-                    invalidate_obj(instance)
+                    logger.debug(instance)
                 else:
                     schact = EighthScheduledActivity.objects.filter(
                         block=block,
@@ -120,7 +126,8 @@ def schedule_activity_view(request):
                             invalidate_obj(other_act)
                     else:
                         schact.update(cancelled=True)
-                    invalidate_obj(schact[0])
+                        for s in schact:
+                            invalidate_obj(s)
             messages.success(request, "Successfully updated schedule.")
 
             # Force reload everything from the database to reset
@@ -189,6 +196,7 @@ def schedule_activity_view(request):
 
                 all_signups[block.id] = sched_act.members.count()
                 all_default_capacities[block.id] = sched_act.get_true_capacity()
+                logger.debug(sched_act)
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),
                     "capacity": sched_act.capacity,
