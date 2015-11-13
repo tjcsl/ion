@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.attendance &mdash; TJ Intranet v3 (Build #888) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &mdash; TJ Intranet v3 (Build #889) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #888)',
+        VERSION:     'v3 (Build #889)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #888) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #889) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,6 +148,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_obj</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">csv</span>
@@ -411,6 +412,7 @@
         <span class="k">if</span> <span class="s">&quot;clear_attendance_bit&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Attendance bit cleared for {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">))</span>
 
@@ -447,6 +449,7 @@
 
         <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Attendance updated.&quot;</span><span class="p">)</span>
 
@@ -578,15 +581,10 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s">&quot;accept&quot;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ACCEPT&quot;</span><span class="p">)</span>
-        <span class="sd">&quot;&quot;&quot;signup.was_absent = False</span>
-<span class="sd">        signup.present = True</span>
-<span class="sd">        signup.pass_accepted = True&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ACCEPT {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signup_id</span><span class="p">))</span>
         <span class="n">signup</span><span class="o">.</span><span class="n">accept_pass</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="s">&quot;reject&quot;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;REJECT&quot;</span><span class="p">)</span>
-        <span class="sd">&quot;&quot;&quot;signup.was_absent = True</span>
-<span class="sd">        signup.pass_accepted = True&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;REJECT {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signup_id</span><span class="p">))</span>
         <span class="n">signup</span><span class="o">.</span><span class="n">reject_pass</span><span class="p">()</span>
 
     <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -631,6 +629,7 @@
         <span class="n">pass_accepted</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">was_absent</span><span class="o">=</span><span class="bp">False</span>
     <span class="p">)</span>
+    <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s">&quot;admin&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
         <span class="n">url_name</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_take_attendance&quot;</span>

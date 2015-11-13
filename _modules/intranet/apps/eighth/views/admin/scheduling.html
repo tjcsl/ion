@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #888) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #889) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #888)',
+        VERSION:     'v3 (Build #889)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #888) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #889) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -263,9 +263,10 @@ logger = logging.getLogger(__name__)
                         if other_act:
                             other_act.cancelled = True
                             other_act.save()
+                            invalidate_obj(other_act)
                     else:
                         schact.update(cancelled=True)
-
+                    invalidate_obj(schact)
             messages.success(request, &quot;Successfully updated schedule.&quot;)
 
             # Force reload everything from the database to reset
@@ -503,6 +504,10 @@ transfer_students_view = eighth_admin_required(
         source_act.eighthsignup_set.update(
             scheduled_activity=dest_act
         )
+
+        invalidate_obj(source_act)
+        invalidate_obj(dest_act)
+        invalidate_obj(source_act)
         messages.success(request, &quot;Successfully transfered {} students.&quot;.format(num))
         return redirect(&quot;eighth_admin_dashboard&quot;)
     else:
