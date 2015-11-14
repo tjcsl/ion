@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth package &mdash; TJ Intranet v3 (Build #895) documentation</title>
+    <title>intranet.apps.eighth package &mdash; TJ Intranet v3 (Build #896) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #895)',
+        VERSION:     'v3 (Build #896)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #895) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #896) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.eighth.forms package" href="intranet.apps.eighth.forms.html" />
     <link rel="prev" title="intranet.apps.dashboard package" href="intranet.apps.dashboard.html" />
@@ -191,6 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.management.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.management.commands.html">intranet.apps.eighth.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.absence_email">intranet.apps.eighth.management.commands.absence_email module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.import_attendance">intranet.apps.eighth.management.commands.import_attendance module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.import_permissions">intranet.apps.eighth.management.commands.import_permissions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.management.commands.html#module-intranet.apps.eighth.management.commands.signup_status_email">intranet.apps.eighth.management.commands.signup_status_email module</a></li>
@@ -1021,6 +1022,8 @@ signed up for.</dd>
 <dd>Whether the student was absent.</dd>
 <dt>absence_acknowledged</dt>
 <dd>Whether the student has dismissed the absence notification.</dd>
+<dt>absence_emailed</dt>
+<dd>Whether the student has been emailed about the absence.</dd>
 </dl>
 </dd>
 </dl>
@@ -1053,7 +1056,7 @@ signed up for.</dd>
 
 <dl class="attribute">
 <dt id="intranet.apps.eighth.models.EighthSignup.objects">
-<code class="descclassname">EighthSignup.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignup.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">EighthSignup.</code><code class="descname">objects</code><em class="property"> = &lt;intranet.apps.eighth.models.EighthSignupManager object&gt;</em><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignup.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1084,6 +1087,18 @@ to do so.</p>
 <dd><p>Checked whether more than one EighthSignup exists for a User
 on a given EighthBlock.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="intranet.apps.eighth.models.EighthSignupManager">
+<em class="property">class </em><code class="descclassname">intranet.apps.eighth.models.</code><code class="descname">EighthSignupManager</code><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthSignupManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignupManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Model manager for EighthSignup.</p>
+<dl class="method">
+<dt id="intranet.apps.eighth.models.EighthSignupManager.get_absences">
+<code class="descname">get_absences</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthSignupManager.get_absences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthSignupManager.get_absences" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1154,6 +1169,11 @@ linked to the sponsor.</dd>
 <div class="section" id="module-intranet.apps.eighth.notifications">
 <span id="intranet-apps-eighth-notifications-module"></span><h2>intranet.apps.eighth.notifications module<a class="headerlink" href="#module-intranet.apps.eighth.notifications" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="intranet.apps.eighth.notifications.absence_email">
+<code class="descclassname">intranet.apps.eighth.notifications.</code><code class="descname">absence_email</code><span class="sig-paren">(</span><em>signup</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/notifications.html#absence_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.notifications.absence_email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="intranet.apps.eighth.notifications.signup_status_email">
 <code class="descclassname">intranet.apps.eighth.notifications.</code><code class="descname">signup_status_email</code><span class="sig-paren">(</span><em>user</em>, <em>next_blocks</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/notifications.html#signup_status_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.notifications.signup_status_email" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1219,7 +1239,7 @@ linked to the sponsor.</dd>
 <em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthAddSignupSerializer.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators">
-<code class="descname">validators</code><em class="property"> = [&lt;function add_signup_validator at 0x7f19ef504848&gt;]</em><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validators</code><em class="property"> = [&lt;function add_signup_validator at 0x7fde7fc56b18&gt;]</em><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

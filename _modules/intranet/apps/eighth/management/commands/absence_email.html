@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.management.commands.fix_bad_users &mdash; TJ Intranet v3 (Build #896) documentation</title>
+    <title>intranet.apps.eighth.management.commands.absence_email &mdash; TJ Intranet v3 (Build #896) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -143,34 +143,51 @@
   <div class="row">
     <div class="col-md-12">
       
-  <h1>Source code for intranet.apps.users.management.commands.fix_bad_users</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.eighth.management.commands.absence_email</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.notifications</span> <span class="kn">import</span> <span class="n">absence_email</span>
 <span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="nb">input</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.fix_bad_users.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s">&quot;Check for user objects with no DN, and delete them.&quot;</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s">&quot;Notify users who have an Eighth Period absence.&quot;</span>
 
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.fix_bad_users.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-        <span class="n">all_users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">bad_users</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">all_users</span><span class="p">:</span>
-            <span class="c"># ignore non-active (aka 99999) users in check</span>
-            <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">u</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
-                <span class="n">bad_users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--silent&#39;</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span>
+                            <span class="n">dest</span><span class="o">=</span><span class="s">&#39;silent&#39;</span><span class="p">,</span>
+                            <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s">&#39;Be silent.&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;The following {} User IDs have no corresponding DN:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_users</span><span class="p">)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">bad_users</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Delete them?&quot;</span><span class="p">)</span>
-        <span class="nb">input</span><span class="p">(</span><span class="s">&quot;Press enter to continue, Ctrl-C to cancel..&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">bad_users</span><span class="p">:</span>
-            <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&#39;--pretend&#39;</span><span class="p">,</span>
+                            <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span>
+                            <span class="n">dest</span><span class="o">=</span><span class="s">&#39;pretend&#39;</span><span class="p">,</span>
+                            <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s">&quot;Pretend, and don&#39;t actually do anything.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Done.&quot;</span><span class="p">)</span></div></div>
+        <span class="n">log</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s">&quot;silent&quot;</span><span class="p">]</span>
+
+        <span class="n">absences</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_absences</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">absence_emailed</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+
+
+        <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">absences</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signup</span><span class="p">))</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">user</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s">&quot;pretend&quot;</span><span class="p">]:</span>
+                <span class="n">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">)</span>
+                <span class="n">signup</span><span class="o">.</span><span class="n">absence_emailed</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Done.&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
