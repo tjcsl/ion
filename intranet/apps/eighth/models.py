@@ -1101,6 +1101,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
 
+class EighthSignupManager(Manager):
+    """Model manager for EighthSignup."""
+
+    def get_absences(self):
+        return (EighthSignup.objects
+                            .filter(was_absent=True,
+                                    scheduled_activity__attendance_taken=True))
+
 class EighthSignup(AbstractBaseEighthModel):
 
     """Represents a signup/membership in an eighth period activity.
@@ -1126,8 +1134,12 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the student was absent.
         absence_acknowledged
             Whether the student has dismissed the absence notification.
+        absence_emailed
+            Whether the student has been emailed about the absence.
 
     """
+    objects = EighthSignupManager()
+
     time = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(User, null=False)
@@ -1146,6 +1158,7 @@ class EighthSignup(AbstractBaseEighthModel):
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
     absence_acknowledged = models.BooleanField(default=False, blank=True)
+    absence_emailed = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
         """Checked whether more than one EighthSignup exists for a User
