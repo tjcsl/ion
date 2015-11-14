@@ -40,8 +40,8 @@ class Command(BaseCommand):
 
         log = not options["silent"]
 
-        users = User.objects.filter(receive_eighth_emails=True)
-        next_blocks = EighthBlock.objects.get_next_upcoming_blocks()
+        users = User.objects.filter(receive_eighth_emails=True).nocache()
+        next_blocks = EighthBlock.objects.get_next_upcoming_blocks().nocache()
 
         if next_blocks.count() < 1:
             if log:
@@ -64,8 +64,13 @@ class Command(BaseCommand):
                     self.stdout.write("Block {} on {} is not today ({}).".format(next_blocks[0], blk_date, today))
                 return
 
+        if log:
+            self.stdout.write("{}".format(next_blocks))
+            self.stdout.write("{}".format(options))
+            self.stdout.write("{}".format(users))
+
         for user in users:
-            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks)
+            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks).nocache()
             if user_signups.count() < next_blocks.count():
                 """User hasn't signed up for a block."""
                 if log:
