@@ -782,7 +782,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns:
             Binary data
 
-        """ 
+        """
         preferred = self.preferred_photo
         if preferred is not None:
             if preferred.endswith("Photo"):
@@ -801,7 +801,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if data:
                     break
         return data
-
 
     @property
     def photo_permissions(self):

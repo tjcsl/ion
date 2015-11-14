@@ -6,10 +6,12 @@ from icalendar import Calendar
 from six import text_type
 from six.moves.urllib import request
 
+
 def get_ical():
     resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
     ical = resp.read()
     return ical
+
 
 def parse(ical):
     cal = Calendar.from_ical(ical)

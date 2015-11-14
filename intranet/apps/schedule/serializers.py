@@ -9,11 +9,14 @@ from .models import Day, DayType, CodeName, Block, Time
 
 logger = logging.getLogger(__name__)
 
+
 class TimeSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Time
         fields = ("hour",
                   "minute")
+
 
 class BlockSerializer(serializers.ModelSerializer):
     start = serializers.StringRelatedField()
@@ -26,6 +29,7 @@ class BlockSerializer(serializers.ModelSerializer):
                   "start",
                   "end")
 
+
 class DayTypeSerializer(serializers.ModelSerializer):
     #url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
     blocks = BlockSerializer(many=True, read_only=True)
@@ -35,7 +39,6 @@ class DayTypeSerializer(serializers.ModelSerializer):
         fields = ("name",
                   "special",
                   "blocks")
-
 
 
 class DaySerializer(serializers.HyperlinkedModelSerializer):

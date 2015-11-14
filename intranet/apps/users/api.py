@@ -32,6 +32,7 @@ class ProfileDetail(generics.RetrieveAPIView):
         data = serializer.data
         return Response(data)
 
+
 class ProfilePictureDetail(generics.RetrieveAPIView):
     """API endpoint that retrieves an Ion profile picture
 

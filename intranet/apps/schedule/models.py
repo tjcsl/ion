@@ -76,13 +76,15 @@ class DayType(models.Model):
     class Meta:
         ordering = ("name",)
 
+
 class DayManager(models.Manager):
 
     def get_future_days(self):
         """Return only future Day objects."""
         today = datetime.datetime.now().date()
-        
+
         return Day.objects.filter(date__gte=today)
+
 
 class Day(models.Model):
     objects = DayManager()

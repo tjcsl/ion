@@ -55,6 +55,7 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
 
+
 class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()
     classes = SubClassSerializer(many=True)

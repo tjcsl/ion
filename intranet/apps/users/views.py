@@ -17,6 +17,7 @@ from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def profile_view(request, user_id=None):
     """Displays a view of a user's profile.
@@ -85,6 +86,7 @@ def profile_view(request, user_id=None):
     }
     return render(request, "users/profile.html", context)
 
+
 @login_required
 def picture_view(request, user_id, year=None):
     """Displays a view of a user's picture.
@@ -147,6 +149,7 @@ def picture_view(request, user_id, year=None):
 
         return response
 
+
 @login_required
 def class_section_view(request, section_id):
     c = Class(id=section_id)
@@ -173,6 +176,7 @@ def class_section_view(request, section_id):
     }
 
     return render(request, "users/class.html", context)
+
 
 @login_required
 def class_room_view(request, room_id):
@@ -204,6 +208,7 @@ def class_room_view(request, room_id):
     }
 
     return render(request, "users/class_room.html", context)
+
 
 @login_required
 def all_classes_view(request):

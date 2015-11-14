@@ -13,6 +13,7 @@ from ..eighth import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 
+
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 

@@ -343,6 +343,7 @@ def privacy_options_view(request):
     }
     return render(request, "preferences/privacy_options.html", context)
 
+
 @login_required
 def ldap_test(request):
     from intranet.db.ldap_db import LDAPConnection
@@ -350,7 +351,7 @@ def ldap_test(request):
 
     c = LDAPConnection()
 
-    results = ""  
+    results = ""
 
     search_dn = request.POST.get("search_dn")
     search_q = request.POST.get("search_q")
@@ -390,7 +391,6 @@ def ldap_test(request):
                         results += "{}: {}\n".format(perm, value)
                 else:
                     results += req
-
 
     logger.debug(results)
 

@@ -392,11 +392,11 @@ class EighthBlockManager(models.Manager):
         """ Get a list of blocks that occur this school year. """
         now = datetime.datetime.now().date()
         if now.month < 9:
-            date_start = datetime.date(now.year-1, 9, 1)
+            date_start = datetime.date(now.year - 1, 9, 1)
             date_end = datetime.date(now.year, 7, 1)
         else:
             date_start = datetime.date(now.year, 9, 1)
-            date_end = datetime.date(now.year+1, 7, 1)
+            date_end = datetime.date(now.year + 1, 7, 1)
 
         return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
 

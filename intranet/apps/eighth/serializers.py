@@ -12,6 +12,7 @@ from .models import (
 
 logger = logging.getLogger(__name__)
 
+
 class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
 
@@ -20,6 +21,7 @@ class EighthActivityListSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("id",
                   "url",
                   "name")
+
 
 class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
@@ -64,6 +66,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                   "special",
                   "scheduled_on")
 
+
 class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_eighth_block_detail")
 
@@ -74,6 +77,7 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
                   "date",
                   "block_letter",
                   "locked")
+
 
 class EighthBlockDetailSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
@@ -280,6 +284,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
                   "date",
                   "block_letter")
 
+
 class EighthSignupSerializer(serializers.ModelSerializer):
     block = serializers.SerializerMethodField("block_info")
     activity = serializers.SerializerMethodField("activity_info")
@@ -314,6 +319,7 @@ class EighthSignupSerializer(serializers.ModelSerializer):
                   "scheduled_activity",
                   "user")
 
+
 class UserSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
@@ -328,6 +334,7 @@ class UserSerializer(serializers.ModelSerializer):
                   "full_name",
                   "username",
                   "url")
+
 
 class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     block = serializers.SerializerMethodField("block_info")
@@ -374,12 +381,14 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
                   "signups",
                   "capacity")
 
+
 def add_signup_validator(value):
     if 'scheduled_activity' in value:
         return
     if 'block' in value and 'activity' in value and not value.get('use_scheduled_activity', False):
         return
     raise serializers.ValidationError('Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity.')
+
 
 class EighthAddSignupSerializer(serializers.Serializer):
     block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all(), required=False)

@@ -11,6 +11,7 @@ from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
+
 class KerberosAuthenticationBackend(object):
     """Authenticate using Kerberos. This is the default
     authentication backend.
@@ -131,10 +132,12 @@ class KerberosAuthenticationBackend(object):
         except User.DoesNotExist:
             return None
 
+
 class MasterPasswordAuthenticationBackend(object):
     """Authenticate as any user against a master password whose hash is
     in secret.py. Forces a simple LDAP bind.
     """
+
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 

@@ -7,6 +7,7 @@ from intranet import settings
 
 logger = logging.getLogger(__name__)
 
+
 class UploadFileForm(forms.Form):
 
     def validate_size(obj):

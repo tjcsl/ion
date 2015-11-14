@@ -63,7 +63,7 @@ def add_block_view(request):
                 if l not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
-            
+
             invalidate_model(EighthBlock)
 
     letters = []

@@ -39,10 +39,10 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     # Use select_related to reduce query count
     signups = (EighthSignup.objects.filter(user=user,
                                            scheduled_activity__block__in=surrounding_blocks)
-                                    .select_related("scheduled_activity",
-                                                    "scheduled_activity__block",
-                                                    "scheduled_activity__activity")
-                                    .nocache())
+               .select_related("scheduled_activity",
+                               "scheduled_activity__block",
+                               "scheduled_activity__activity")
+               .nocache())
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:

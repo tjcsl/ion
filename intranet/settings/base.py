@@ -215,7 +215,7 @@ if not TRAVIS:
 
     CACHEOPS = {
         "eighth.*": {
-            "timeout": 60*60
+            "timeout": 60 * 60
         },
         "announcements.*": {},
         "events.*": {},

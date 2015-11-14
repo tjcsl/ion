@@ -218,6 +218,7 @@ def profile_history_view(request, user_id=None):
 
     return render(request, "eighth/profile_history.html", context)
 
+
 @login_required
 def profile_often_view(request, user_id=None):
     if user_id:
@@ -257,6 +258,7 @@ def profile_often_view(request, user_id=None):
     }
 
     return render(request, "eighth/profile_often.html", context)
+
 
 @login_required
 def profile_signup_view(request, user_id=None, block_id=None):

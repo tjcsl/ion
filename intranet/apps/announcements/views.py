@@ -20,11 +20,13 @@ from .notifications import (request_announcement_email,
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def view_announcements(request):
     """ Show the dashboard with only announcements.
     """
     return dashboard_view(request, show_widgets=False)
+
 
 @login_required
 def view_announcements_archive(request):
@@ -32,6 +34,7 @@ def view_announcements_archive(request):
         showing expired posts.
     """
     return dashboard_view(request, show_widgets=False, show_expired=True)
+
 
 def announcement_posted_hook(request, obj):
     """ Runs whenever a new announcement is created, or
@@ -56,6 +59,7 @@ def announcement_posted_hook(request, obj):
     else:
         logger.debug("Announcement notify off")
 
+
 def announcement_approved_hook(request, obj, req):
     """ Runs whenever an administrator approves an
         announcement request.
@@ -64,6 +68,7 @@ def announcement_approved_hook(request, obj, req):
         req: the AnnouncementRequest object
     """
     announcement_approved_email(request, obj, req)
+
 
 @login_required
 def request_announcement_view(request):
@@ -102,6 +107,7 @@ def request_announcement_view(request):
     else:
         form = AnnouncementRequestForm()
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
+
 
 @login_required
 def approve_announcement_view(request, req_id):
@@ -150,6 +156,7 @@ def approve_announcement_view(request, req_id):
         "admin_approve": False
     }
     return render(request, "announcements/approve.html", context)
+
 
 @announcements_admin_required
 def admin_approve_announcement_view(request, req_id):
@@ -209,6 +216,7 @@ def admin_approve_announcement_view(request, req_id):
     }
     return render(request, "announcements/approve.html", context)
 
+
 @announcements_admin_required
 def add_announcement_view(request):
     """ Add an announcement
@@ -231,6 +239,7 @@ def add_announcement_view(request):
         form = AnnouncementForm()
     return render(request, "announcements/add_modify.html", {"form": form, "action": "add"})
 
+
 @login_required
 def view_announcement_view(request, id):
     """ View an announcement
@@ -240,6 +249,7 @@ def view_announcement_view(request, id):
     announcement = get_object_or_404(Announcement, id=id)
 
     return render(request, "announcements/view.html", {"announcement": announcement})
+
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
@@ -264,6 +274,7 @@ def modify_announcement_view(request, id=None):
         form = AnnouncementForm(instance=announcement)
     return render(request, "announcements/add_modify.html", {"form": form, "action": "modify", "id": id})
 
+
 @announcements_admin_required
 def delete_announcement_view(request, id):
     """ Delete an announcement
@@ -287,6 +298,7 @@ def delete_announcement_view(request, id):
         announcement = get_object_or_404(Announcement, id=id)
         return render(request, "announcements/delete.html", {"announcement": announcement})
 
+
 @login_required
 def show_announcement_view(request):
     """ Unhide an announcement that was hidden by the logged-in user.
@@ -304,6 +316,7 @@ def show_announcement_view(request):
         return http.Http404()
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
 
 @login_required
 def hide_announcement_view(request):

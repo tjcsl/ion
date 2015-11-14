@@ -35,6 +35,7 @@ auth_tokens = ldap.sasl.gssapi()
 l.sasl_interactive_bind_s('', auth_tokens)
 print("Successfully bound to LDAP with " + l.whoami_s())
 
+
 def user_attrs(uid, attr):
     sfilter = '(iodineUidNumber=' + str(uid) + ')'
     try:

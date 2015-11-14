@@ -7,7 +7,9 @@ from django.core import mail
 from django.utils import log
 from django.views.debug import ExceptionReporter
 
+
 class AdminEmailHandler(log.AdminEmailHandler):
+
     def emit(self, record):
         try:
             request = record.request
