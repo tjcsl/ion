@@ -789,7 +789,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             if preferred.endswith("Photo"):
                 preferred = preferred[:-len("Photo")]
 
-        if preferred == "AUTO":
+        if preferred == "AUTO" or preferred is None:
             if self.user_type == "tjhsstTeacher":
                 current_grade = 12
             else:
@@ -801,10 +801,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 data = self.photo_binary(Grade.names[i - 9])
                 if data:
                     return data
-        elif preferred is None:
-            return None
-        else:
-            return self.photo_binary(preferred)
+
+        return None
 
     @property
     def photo_permissions(self):
