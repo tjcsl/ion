@@ -783,6 +783,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Binary data
 
         """
+        data = None
         preferred = self.preferred_photo
         if preferred is not None:
             if preferred.endswith("Photo"):
@@ -799,8 +800,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             for i in reversed(range(9, current_grade + 1)):
                 data = self.photo_binary(Grade.names[i - 9])
                 if data:
-                    break
-        return data
+                    return data
+        elif preferred is None:
+            return None
+        else:
+            return self.photo_binary(preferred)
 
     @property
     def photo_permissions(self):
