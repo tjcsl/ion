@@ -63,6 +63,7 @@ eighth_admin_patterns = [
     url(r"^scheduling/transfer_students$", scheduling.transfer_students_view, name="eighth_admin_transfer_students"),
     url(r"^scheduling/transfer_students_action$", scheduling.transfer_students_action, name="eighth_admin_transfer_students_action"),
     url(r"^scheduling/distribute_students$", scheduling.distribute_students_view, name="eighth_admin_distribute_students"),
+    url(r"^scheduling/unsignup_students$", scheduling.unsignup_students_view, name="eighth_admin_unsignup_students"),
 
 
     # Attendance

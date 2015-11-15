@@ -335,6 +335,63 @@ transfer_students_view = eighth_admin_required(
     )
 )
 
+class EighthAdminUnsignupStudentsWizard(SessionWizardView):
+    FORMS = [
+        ("block_1", BlockSelectionForm),
+        ("activity_1", ActivitySelectionForm)
+    ]
+
+    TEMPLATES = {
+        "block_1": "eighth/admin/transfer_students.html",
+        "activity_1": "eighth/admin/transfer_students.html"
+    }
+
+    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
+
+    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step == "block_1":
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
+        if step == "activity_1":
+            block = self.get_cleaned_data_for_step("block_1")["block"]
+            kwargs.update({"block": block})
+
+        labels = {
+            "block_1": "Select a block to move students from",
+            "activity_1": "Select an activity to unsignup students from"
+        }
+
+        kwargs.update({"label": labels[step]})
+
+        return kwargs
+
+    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminUnsignupStudentsWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({"admin_page_title": "Clear Student Signups for Activity"})
+        return context
+
+    def done(self, form_list, **kwargs):
+        source_block = form_list[0].cleaned_data["block"]
+        source_activity = form_list[1].cleaned_data["activity"]
+        source_scheduled_activity = EighthScheduledActivity.objects.get(
+            block=source_block,
+            activity=source_activity
+        )
+
+        req = "source_act={}&dest_unsignup=1".format(source_scheduled_activity.id)
+
+        return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
+
+unsignup_students_view = eighth_admin_required(
+    EighthAdminUnsignupStudentsWizard.as_view(
+        EighthAdminUnsignupStudentsWizard.FORMS
+    )
+)
+
 
 @eighth_admin_required
 def transfer_students_action(request):
@@ -346,10 +403,15 @@ def transfer_students_action(request):
     else:
         raise Http404
 
+    dest_act = None
+    dest_unsignup = False
+
     if "dest_act" in request.GET:
         dest_act = EighthScheduledActivity.objects.get(id=request.GET.get("dest_act"))
     elif "dest_act" in request.POST:
         dest_act = EighthScheduledActivity.objects.get(id=request.POST.get("dest_act"))
+    elif "dest_unsignup" in request.POST or "dest_unsignup" in request.GET:
+        dest_unsignup = True
     else:
         raise Http404
 
@@ -359,18 +421,23 @@ def transfer_students_action(request):
         "admin_page_title": "Transfer Students",
         "source_act": source_act,
         "dest_act": dest_act,
+        "dest_unsignup": dest_unsignup,
         "num": num
     }
 
     if request.method == "POST":
-        source_act.eighthsignup_set.update(
-            scheduled_activity=dest_act
-        )
+        if dest_unsignup and not dest_act:
+            source_act.eighthsignup_set.all().delete()
+            invalidate_obj(source_act)
+            messages.success(request, "Successfully removed signups for {} students.".format(num))
+        else:
+            source_act.eighthsignup_set.update(
+                scheduled_activity=dest_act
+            )
 
-        invalidate_obj(source_act)
-        invalidate_obj(dest_act)
-        invalidate_obj(source_act)
-        messages.success(request, "Successfully transfered {} students.".format(num))
+            invalidate_obj(source_act)
+            invalidate_obj(dest_act)
+            messages.success(request, "Successfully transfered {} students.".format(num))
         return redirect("eighth_admin_dashboard")
     else:
         return render(request, "eighth/admin/transfer_students.html", context)
