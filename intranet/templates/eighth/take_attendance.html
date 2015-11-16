@@ -336,10 +336,10 @@ $(function() {
                             <tr>
                                 <td colspan="4">
                                     {% if not scheduled_activity.block.locked %}
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" /> (The block is locked.)
                                     {% elif scheduled_activity.block.attendance_locked %}
 
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" /> (Attendance on the block is locked.)
                                     {% else %}
                                         <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% endif %}
@@ -407,7 +407,7 @@ $(function() {
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>
                                     <br />
                                     {% if request.user.is_eighth_admin %}
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% endif %}
                                 {% elif scheduled_activity.block.attendance_locked %}
                                     <br />
@@ -415,7 +415,7 @@ $(function() {
                                     {% if request.user.is_eighth_admin %}
                                         <b>The attendance period is locked.</b>
                                         <br />
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% else %}
                                         <b>You may not take attendance for this activity - attendance is locked.</b>
                                         <br />
