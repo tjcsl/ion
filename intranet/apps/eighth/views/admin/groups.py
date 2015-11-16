@@ -5,7 +5,7 @@ from six.moves import cPickle as pickle
 import csv
 import logging
 import re
-from cacheops import invalidate_obj
+from cacheops import invalidate_obj, invalidate_model
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -53,6 +53,7 @@ def edit_group_view(request, group_id):
         raise http.Http404
 
     if request.method == "POST":
+        invalidate_model(Group)
         if "remove_all" in request.POST:
             users = group.user_set.all()
             num = users.count()
