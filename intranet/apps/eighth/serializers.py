@@ -343,6 +343,15 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     capacity = serializers.SerializerMethodField()
 
+    def __init__(self, *args, **kwargs):
+        super(EighthScheduledActivitySerializer, self).__init__(*args, **kwargs)
+        logger.debug(kwargs)
+        if "context" in kwargs and "request" in kwargs["context"]:
+            self.request = kwargs["context"]["request"]
+        else:
+            self.request = None
+
+
     def get_name(self, scheduled_activity):
         return scheduled_activity.title_with_flags
 
@@ -369,8 +378,20 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
 
     def signups_info(self, scheduled_activity):
         signups = scheduled_activity.members
+
+        if self.request:
+            signups = scheduled_activity.get_viewable_members_serializer(self.request)
+
         serializer = UserSerializer(signups, context=self.context, many=True)
-        return serializer.data
+        return {
+            "members": serializer.data,
+            "count": scheduled_activity.members.count(),
+            "viewable_count": signups.count()
+        }
+
+    def num_signups(self, scheduled_activity):
+        return scheduled_activity.members.count()
+
 
     class Meta:
         model = EighthScheduledActivity

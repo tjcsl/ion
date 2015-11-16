@@ -770,6 +770,30 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return sorted(members, key=lambda u: (u.last_name, u.first_name))
 
+    def get_viewable_members_serializer(self, request):
+        """Get a QuerySet of User objects of students in the activity.
+        Needed for the EighthScheduledActivitySerializer.
+
+        Returns: QuerySet
+        """ 
+        ids = []
+        user = request.user
+        for member in self.members.all():
+            show = False
+            if member.dn and member.can_view_eighth:
+                show = member.can_view_eighth
+
+            if user and user.is_eighth_admin:
+                show = True
+
+            if member == user:
+                show = True
+
+            if show:
+                ids.append(member.id)
+
+        return User.objects.filter(id__in=ids)
+
     def get_hidden_members(self, user=None):
         """Get the members that you do not have permission to view.
 
