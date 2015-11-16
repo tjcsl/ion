@@ -147,7 +147,7 @@ class UserManager(UserManager):
             return cached
         else:
             try:
-                users = Group.objects.get(name="Students").user_set.all()
+                users = Group.objects.get(name__startswith="All Students").user_set.all()
             except Group.DoesNotExist:
                 users = User.objects.filter(username__startswith="2")
             # Add possible exceptions handling here
