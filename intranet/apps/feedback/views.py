@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def send_feedback_email(request, data):
     data["user"] = request.user
-    email = request.user.emails[0] if len(request.user.emails) > 0 else request.user.tj_email
+    email = request.user.tj_email if request.user and request.user.tj_email else "unknown-{}@tjhsst.edu".format(request.user)
     data["email"] = email
     data["remote_ip"] = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     data["user_agent"] = request.META.get("HTTP_USER_AGENT")
