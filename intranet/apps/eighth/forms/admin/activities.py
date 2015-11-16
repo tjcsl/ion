@@ -34,13 +34,15 @@ class ActivitySelectionForm(forms.Form):
                 activity_ids = (EighthScheduledActivity.objects
                                                        .filter(block=block)
                                                        .filter(sponsoring_filter)
-                                                       .values_list("activity__id", flat=True))
+                                                       .values_list("activity__id", flat=True)
+                                                       .nocache())
             else:
                 activity_ids = (EighthScheduledActivity.objects
                                                        .exclude(activity__deleted=True)
                                                        .exclude(cancelled=True)
                                                        .filter(block=block)
-                                                       .values_list("activity__id", flat=True))
+                                                       .values_list("activity__id", flat=True)
+                                                       .nocache())
             queryset = (EighthActivity.objects.filter(id__in=activity_ids)
                                               .order_by("name"))
         else:
@@ -84,12 +86,14 @@ class ScheduledActivityMultiSelectForm(forms.Form):
                                                    .exclude(activity__deleted=True)
                                                    .exclude(cancelled=True)
                                                    .filter(block=block)
-                                                   .values_list("activity__id", flat=True))
+                                                   .values_list("activity__id", flat=True)
+                                                   .nocache())
             queryset = (EighthActivity.objects.filter(id__in=activity_ids)
                                               .order_by("name"))
         else:
             queryset = (EighthActivity.undeleted_objects.all()
-                                                        .order_by("name"))
+                                                        .order_by("name")
+                                                        .nocache())
 
         logger.debug(queryset)
         self.fields["activities"].queryset = queryset
