@@ -280,14 +280,14 @@ def room_utilization_action(request, start_id, end_id):
                 row.append(sch_act.activity.aid)
             if show["activity"]:
                 row.append(sch_act.activity)
+            if show["comments"]:
+                row.append(sch_act.comments)
             if show["sponsors"]:
                 row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
             if show["signups"]:
                 row.append(sch_act.members.count())
             if show["capacity"]:
                 row.append(sch_act.get_true_capacity())
-            if show["comments"]:
-                row.append(sch_act.comments)
             if show["admin_comments"]:
                 row.append(sch_act.admin_comments)
 
