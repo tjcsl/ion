@@ -315,7 +315,7 @@ def download_group_csv_view(request, group_id):
         raise http.Http404
 
     response = http.HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=\"{}\"".format(group.name)
+    response["Content-Disposition"] = "attachment; filename=\"{}.csv\"".format(group.name)
 
     writer = csv.writer(response)
     writer.writerow(["Last Name", "First Name", "Student ID", "Grade", "Email"])
