@@ -185,6 +185,7 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
+    q = q.replace("+", " ")
     users = do_ldap_query(q, admin)
     return False, users
 
