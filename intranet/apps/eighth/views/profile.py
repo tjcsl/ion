@@ -109,6 +109,9 @@ def get_profile_context(request, user_id=None, date=None):
             date = request.GET.get("date")
             date = datetime.strptime(date, "%Y-%m-%d")
             custom_date_set = True
+        elif "start_date" in request.session:
+            logger.debug(get_start_date(request))
+            date = get_start_date(request)
         else:
             date = datetime.now()
     except Exception:
