@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #900) documentation</title>
+    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #901) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #900)',
+        VERSION:     'v3 (Build #901)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #900) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #901) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,6 +151,7 @@
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">ldap.filter</span> <span class="kn">import</span> <span class="n">escape_filter_chars</span>
 <span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="kn">import</span> <span class="n">LDAPConnection</span>
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">Announcement</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -165,6 +166,8 @@
 <div class="viewcode-block" id="do_ldap_query"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_ldap_query">[docs]</a><span class="k">def</span> <span class="nf">do_ldap_query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
     <span class="n">result_dns</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
     <span class="c"># If only a digit, search for student ID and user ID</span>
     <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
