@@ -344,6 +344,7 @@ def take_attendance_view(request, scheduled_activity_id):
                                  user.id not in absent_user_ids),
                 "email": user.tj_email
             })
+            invalidate_obj(user)
 
         members.sort(key=lambda m: m["name"])
 
