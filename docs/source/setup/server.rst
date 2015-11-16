@@ -12,6 +12,22 @@ Add the following flags to ``/etc/portage/package.use``::
     dev-python/python-ldap sasl
     dev-libs/cyrus-sasl kerberos ldap
 
+
+------------------
+LDAP Configuration
+------------------
+
+In order to have LDAP work properly, you have to have the following schema included:
+* core
+* cosine (if you have sound support)
+* nis
+* inetorgperson
+* dyngroup
+* iodine
+If you fail to have one of these imported, slapd will segfault without any error messages.
+You then need to add a line to include intranet's slapd.acl. This also has a possibility of bringing
+about silent segfaults; it is recommended to do this one step at a time.
+
 ----------
 PostgreSQL
 ----------
@@ -226,6 +242,11 @@ Install all of the dependencies.
 .. code-block:: bash
 
     $ pip install -U -r ion/requirements/production.txt
+
+Initialize the ldap db.
+.. code-block:: bash
+
+    ldapadd -Q -c -f intranet/static/ldap/base.ldif
 
 -----
 Nginx

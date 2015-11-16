@@ -1,0 +1,167 @@
+###
+# General stuff
+###
+# admins can do anything!
+access to *
+	by group/groupOfURLs/memberURL.base="cn=admins,dc=tjhsst,dc=edu" write
+	by * break
+# Make sure authing to a password is allowed
+# Also make sure that users can change their password if it's stored in ldap
+access to attrs=userPassword
+	by anonymous auth
+	by self write
+	by * none
+
+# no one (except full admins) can adjust adminship
+access to attrs=is-admin,is-student-admin
+   by * read
+
+# teachers can read anything
+# changed teachers from read continue to read to fix teacher override not
+# working --ahamilto 2010-02-27
+# UPDATE moved to just above the deny statement at the bottom --ahamilto
+#access to *
+#   by group/groupOfURLs/memberURL.base="cn=teachers,dc=tjhsst,dc=edu" read
+#   by * break
+
+## student admins can edit their own entries
+#access to filter=(is-student-admin=TRUE)
+#	by self write
+#	by * none break
+#
+## student admins can edit their own subtrees
+##	by set="[ldap:///ou=people,dc=tjhsst,dc=edu??one?is-student-admin=TRUE]/entryDN & this/-* & user" write
+#access to dn.regex="^.*,iodineUid=([^,]+),ou=people,dc=tjhsst,dc=edu$"
+#	by set="[ldap:///ou=people,dc=tjhsst,dc=edu??sub?is-student-admin=TRUE]" write
+#	by * none break
+
+# no one can read studentids...except self
+# teachers need to be given explict read access here
+access to attrs=tjhsstStudentId
+	by self read
+	by group/groupOfURLs/memberURL.base="cn=teachers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="objectClass=tjhsstStudent"
+	by group/groupOfURLs/memberURL.base="cn=tjstarpresenters,dc=tjhsst,dc=edu" none
+	by * break
+
+# general user-readable data
+access to attrs=cn,sn,givenName,soundexFirst,soundexLast,displayName,mname,nickname,sex,title,graduationYear,tjhsstClassId,tjhsstSectionId,quarter,periodNumber,sponsorDn
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+
+###
+# User preferences and permissions
+###
+
+# Allow users to change their own prefs
+access to attrs=startpage,style,header,boxcolor,boxtitlecolor,chrome
+	by self write
+	by * read
+
+# Let users set the (inherited) permissions bits of their own pictures
+access to dn.regex="^.*,iodineUid=([^,]+),ou=people,dc=tjhsst,dc=edu$"
+		attrs=showpictureself
+	by dn.exact,expand="iodineUid=$1,ou=people,dc=tjhsst,dc=edu" write
+	by * read continue
+
+# Allow users to set their own permissions bits
+access to attrs=perm-showtelephone-self,perm-showbirthday-self,perm-showaddress-self,perm-showmap-self,perm-showpictures-self,perm-showschedule-self,perm-showlocker-self,perm-showeighth-self
+	by self write
+	by * read
+
+# ... but not the parental ones
+access to attrs=perm-showtelephone,perm-showbirthday,perm-showaddress,perm-showmap,perm-showpictures,perm-showschedule,perm-showlocker,perm-showeighth
+	by * read
+
+
+###
+# Users have access to their own restricted data
+###
+
+access to attrs=homePhone,enrolledClass,counselor,street,birthday,st,street,l,postalCode,postalAddress,c,locker
+   by self read
+   by * none break
+
+access to attrs=preferredPhoto
+   by self write
+   by * none break
+
+access to dn.regex="^.*,iodineUid=([^,]+),ou=people,dc=tjhsst,dc=edu$"
+		attrs=jpegPhoto
+	by self.level{-1} read
+	by * none break
+
+
+###
+# Restricted data
+###
+
+access to filter="(&(perm-showtelephone-self=TRUE)(perm-showtelephone=TRUE))"
+		attrs=homePhone
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="(&(perm-showschedule-self=TRUE)(perm-showschedule=TRUE))"
+		attrs=enrolledclass,counselor
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="perm-showpictures=TRUE"
+		attrs=preferredPhoto
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to dn.regex="^.*,iodineUid=([^,]+),ou=people,dc=tjhsst,dc=edu$"
+		filter="(&(perm-showpictures-self=TRUE)(perm-showpictures=TRUE))"
+		attrs=jpegPhoto
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="(&(perm-showbirthday-self=TRUE)(perm-showbirthday=TRUE))"
+		attrs=bday
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="(&(perm-showaddress-self=TRUE)(perm-showaddress=TRUE))"
+		attrs=st,street,l,postalCode,postalAddress,c
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+access to filter="(&(perm-showlocker-self=TRUE)(perm-showlocker=TRUE))"
+		attrs=locker
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+#access to filter="(|(perm-showpicture-self=FALSE)(perm-showpicture=FALSE))"
+#		attrs=preferredPhoto
+#	by self read
+#	by dn.regex="uid=[^,]+/ldap,dc=tjhsst,dc=edu" write
+#	by * none
+
+# Changeable student info
+access to attrs=mobile,aim,msn,icq,googletalk,yahoo,telephoneNumber,webpage,jabber,mail,xfire,children,skype
+	by self write
+	by group/groupOfURLs/memberURL.base="cn=iodineusers,dc=tjhsst,dc=edu" read
+	by * none
+
+# teachers can read anything
+# changed teachers from read continue to read to fix teacher override not
+# working.
+# ACL was moved down otherwise, teachers break with a * read and lose the
+# ability to set their own information
+# --ahamilto 2010-02-27
+access to *
+	by group/groupOfURLs/memberURL.base="cn=teachers,dc=tjhsst,dc=edu" read
+	by * break
+
+# Block access to sensitive info unless it was explicitly allowed above
+access to attrs=homePhone,enrolledClass,counselor,street,preferredPhoto,jpegPhoto,birthday,st,street,l,postalCode,postalAddress,c,locker
+	by * none
+
+# Catch-all clause
+access to *
+	by self write
+	by * read
