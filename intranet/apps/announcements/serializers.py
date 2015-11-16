@@ -13,4 +13,4 @@ class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Announcement
-        fields = ('url', 'id', 'title', 'content', 'author', 'user', 'added', 'updated', 'groups')
+        fields = ('url', 'id', 'title', 'content', 'author', 'user', 'added', 'updated', 'groups', 'pinned')
