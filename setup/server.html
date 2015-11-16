@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #901) documentation</title>
+    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #902) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #901)',
+        VERSION:     'v3 (Build #902)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #901) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #902) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Setting up Vagrant" href="vagrant.html" />
     <link rel="prev" title="Setting up Your Sandbox Manually" href="sandbox.html" />
@@ -116,6 +116,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Setting up the Server</a><ul>
 <li><a class="reference internal" href="#portage-use-flags">Portage USE flags</a></li>
+<li><a class="reference internal" href="#ldap-configuration">LDAP Configuration</a></li>
 <li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
 <li><a class="reference internal" href="#redis">Redis</a></li>
 <li><a class="reference internal" href="#python">Python</a></li>
@@ -169,6 +170,19 @@ dev-python/python-ldap sasl
 dev-libs/cyrus-sasl kerberos ldap
 </pre></div>
 </div>
+</div>
+<div class="section" id="ldap-configuration">
+<h2>LDAP Configuration<a class="headerlink" href="#ldap-configuration" title="Permalink to this headline">¶</a></h2>
+<p>In order to have LDAP work properly, you have to have the following schema included:
+* core
+* cosine (if you have sound support)
+* nis
+* inetorgperson
+* dyngroup
+* iodine
+If you fail to have one of these imported, slapd will segfault without any error messages.
+You then need to add a line to include intranet&#8217;s slapd.acl. This also has a possibility of bringing
+about silent segfaults; it is recommended to do this one step at a time.</p>
 </div>
 <div class="section" id="postgresql">
 <h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
@@ -320,6 +334,10 @@ git push --all --tags github
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install -U -r ion/requirements/production.txt
 </pre></div>
 </div>
+<p>Initialize the ldap db.
+.. code-block:: bash</p>
+<blockquote>
+<div>ldapadd -Q -c -f intranet/static/ldap/base.ldif</div></blockquote>
 </div>
 <div class="section" id="nginx">
 <h2>Nginx<a class="headerlink" href="#nginx" title="Permalink to this headline">¶</a></h2>
