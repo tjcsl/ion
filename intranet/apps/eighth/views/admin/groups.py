@@ -320,8 +320,9 @@ def download_group_csv_view(request, group_id):
 
     writer = csv.writer(response)
     writer.writerow(["Last Name", "First Name", "Student ID", "Grade", "Email"])
-
-    for user in group.user_set.all():
+    users = group.user_set.all()
+    users = sorted(users, key=lambda m: (m.last_name, m.first_name))
+    for user in users:
         row = []
         row.append(user.last_name)
         row.append(user.first_name)
