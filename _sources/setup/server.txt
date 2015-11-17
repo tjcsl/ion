@@ -106,6 +106,9 @@ Add the Redis service to the default runlevel.
 
     $ rc-update add redis default
 
+Note: It may be necessary to bump the amount of memory allocated to redis to handle a large number of concurrent sessions.
+Bump the maxmemory config option in redis.conf to at least 256MB.
+
 ------
 Python
 ------
