@@ -194,7 +194,7 @@ def find_birthdays(request):
                         "name": u.grade.name
                     },
                     "age": (u.age + yr_inc) if u.age is not None else -1
-                } for u in User.objects.users_with_birthday(today.month, today.day)],
+                } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
                 "inc": 0
             },
             "tomorrow": {
