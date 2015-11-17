@@ -180,6 +180,12 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         context = super(EighthAdminRoomUtilizationWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Room Utilization"})
+        this_yr = EighthBlock.objects.get_blocks_this_year()
+        context.update({
+            "first_block": this_yr.first().id,
+            "last_block": this_yr.last().id,
+            "all_rooms": EighthRoom.objects.all()
+        })
         return context
 
     def done(self, form_list, **kwargs):

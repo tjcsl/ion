@@ -105,6 +105,18 @@
             {% endif %}
             {% endcomment %}
         </form>
+        <br />
+        <hr />
+        <br />
+        <form action="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" method="get">
+            <p>Select a room:</p>
+            <select name="room" onselect="this.form.submit()" placeholder="Select a room">
+                <option value="">Select a room</option>
+            {% for room in all_rooms %}
+                <option value="{{ room.id }}">{{ room }}</option>
+            {% endfor %}
+            </select>
+        </form>
     {% else %}
     <table style="width: 100%">
     <tr>
