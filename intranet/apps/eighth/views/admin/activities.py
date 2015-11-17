@@ -79,13 +79,26 @@ def edit_activity_view(request, activity_id):
         form = ActivityForm(instance=activity)
 
     activities = EighthActivity.undeleted_objects.order_by("name")
+
+    activity_groups = []
+    for g in activity.groups_allowed.all():
+        group = {}
+        group["id"] = g.id
+        group["name"] = "{}".format(g)
+        group["members_alpha"] = sorted(g.user_set.all(), key=lambda x: (x.last_name, x.first_name))
+        group["members_alpha_count"] = len(group["members_alpha"])
+        activity_groups.append(group)
+
+    activity_members = sorted(activity.users_allowed.all(), key=lambda x: (x.last_name, x.first_name))
     context = {
         "form": form,
         "admin_page_title": "Edit Activity",
         "delete_url": reverse("eighth_admin_delete_activity",
                               args=[activity_id]),
         "activity": activity,
-        "activities": activities
+        "activity_groups": activity_groups,
+        "activities": activities,
+        "activity_members": activity_members
     }
 
     return render(request, "eighth/admin/edit_activity.html", context)

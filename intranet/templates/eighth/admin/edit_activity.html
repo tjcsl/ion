@@ -141,11 +141,11 @@
                     <li><b>All Seniors</b></li>
                 {% endif %}
 
-                {% for group in activity.groups_allowed.all %}
-                    <li><b>Group: {{ group }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
+                {% for group in activity_groups %}
+                    <li><b>Group: {{ group.name }}</b> (<a href="{% url 'eighth_admin_edit_group' group.id %}">Modify</a>)
                     <ul>
-                        {% if group.user_set.count < 50 %}
-                            {% for member in group.user_set.all %}
+                        {% if group.members_alpha_num < 50 %}
+                            {% for member in group.members_alpha %}
                                 <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
                             {% endfor %}
                         {% else %}
@@ -155,7 +155,7 @@
                     </li>
                 {% endfor %}
 
-                {% for member in activity.users_allowed.all %}
+                {% for member in activity_members %}
                     <li>{{ member.last_name }}, {{ member.first_name }} ({{ member }})</li>
                 {% endfor %}
             </ul>
