@@ -47,6 +47,8 @@ def schedule_activity_view(request):
                                                                 .get_or_create(block=block,
                                                                                activity=activity))
                     invalidate_obj(instance)
+                    invalidate_obj(block)
+                    invalidate_obj(activity)
 
                     fields = [
                         "rooms",
@@ -56,6 +58,14 @@ def schedule_activity_view(request):
                         "comments",
                         "admin_comments"
                     ]
+                    if "rooms" in form.cleaned_data:
+                        for o in form.cleaned_data["rooms"]:
+                            invalidate_obj(o)
+
+                    if "sponsors" in form.cleaned_data:
+                        for o in form.cleaned_data["sponsors"]:
+                            invalidate_obj(o)
+
                     for field_name in fields:
                         obj = form.cleaned_data[field_name]
                         logger.debug("{} {}".format(field_name, obj))
