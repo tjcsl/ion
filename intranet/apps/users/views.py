@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from six.moves import cStringIO as StringIO
+import csv
 import io
 import logging
 import os
@@ -158,9 +159,11 @@ def class_section_view(request, section_id):
     except Exception:
         raise Http404
 
+    students = sorted(c.students, key=lambda x: (x.last_name, x.first_name))
+
     attrs = {
         "name": c.name,
-        "students": sorted(c.students, key=lambda x: (x.last_name, x.first_name)),
+        "students": students,
         "teacher": c.teacher,
         "quarters": c.quarters,
         "periods": c.periods,
@@ -171,8 +174,29 @@ def class_section_view(request, section_id):
         "sections": c.sections
     }
 
+    if request.resolver_match.url_name == "class_section_csv":
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=\"class_{}.csv\"".format(section_id)
+
+        writer = csv.writer(response)
+
+        title_row = []
+        
+        writer.writerow(["Name",
+                         "Student ID",
+                         "Grade",
+                         "TJ Email"])
+
+        for s in students:
+            writer.writerow([s.last_first(),
+                             s.student_id if s.student_id else "",
+                             s.grade.number,
+                             s.tj_email if s.tj_email else ""])
+        return response
+
     context = {
-        "class": attrs
+        "class": attrs,
+        "show_emails": (request.user.is_teacher or request.user.is_eighth_admin)
     }
 
     return render(request, "users/class.html", context)
