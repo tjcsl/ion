@@ -248,7 +248,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     else:
         start_num = 0
 
-    display_num = 15
+    display_num = 10
     end_num = start_num + display_num
     more_announcements = ((announcements.count() - start_num) > display_num)
     try:
@@ -261,7 +261,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     announcements = announcements.select_related("user").prefetch_related("groups", "event")
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user)
-                                                     .values_list("id", flat=True))
+                                                     .values_list("id", flat=True)).nocache()
 
     is_student = user.is_student
     is_teacher = user.is_teacher
