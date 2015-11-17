@@ -49,7 +49,8 @@ $(document).ready(function() {
         announcementToggle.call(btn);
     });
 
-    $(".announcement[data-id] h3 .announcement-toggle").click(function() {
+    $(".announcement[data-id] h3 .announcement-toggle").click(function(e) {
+        e.preventDefault();
         announcementToggle.call($(this));
     });
 });
