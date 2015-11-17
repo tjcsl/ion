@@ -37,6 +37,7 @@ def request_announcement_email(request, form, obj):
     for teacher in teachers:
         emails.append(teacher.tj_email)
     logger.debug(emails)
+    logger.info("{}: Announcement request to {}, {}".format(request.user, teachers, emails))
     base_url = request.build_absolute_uri(reverse('index'))
     data = {
         "teachers": teachers,
@@ -45,6 +46,7 @@ def request_announcement_email(request, form, obj):
         "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
         "base_url": base_url
     }
+    logger.info("{}: Announcement request {}".format(request.user, data))
     email_send("announcements/emails/teacher_approve.txt",
                "announcements/emails/teacher_approve.html",
                data, subject, emails)
