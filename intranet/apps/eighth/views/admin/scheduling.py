@@ -42,6 +42,7 @@ def schedule_activity_view(request):
                                                             cancelled=True)
                                                     .exists())
 
+                instance = None
                 if form["scheduled"].value() or cancelled:
                     instance, created = (EighthScheduledActivity.objects
                                                                 .get_or_create(block=block,
@@ -49,7 +50,37 @@ def schedule_activity_view(request):
                     invalidate_obj(instance)
                     invalidate_obj(block)
                     invalidate_obj(activity)
+                else:
+                    schact = EighthScheduledActivity.objects.filter(
+                        block=block,
+                        activity=activity
+                    )
+                    logger.debug(block)
+                    logger.debug(activity)
+                    logger.debug(schact)
 
+                    # Instead of deleting and messing up attendance,
+                    # cancel the scheduled activity if it is unscheduled.
+                    # If the scheduled activity needs to be completely deleted,
+                    # the "Unschedule" box can be checked after it has been cancelled.
+
+                    # If a both blocks activity, unschedule the other
+                    # scheduled activities of it on the same day.
+                    if schact:
+                        if activity.both_blocks:
+                            other_act = schact[0].get_both_blocks_sibling()
+                            logger.debug("other_act: {}".format(other_act))
+                            if other_act:
+                                other_act.cancelled = True
+                                other_act.save()
+                                invalidate_obj(other_act)
+                        else:
+                            schact.update(cancelled=True)
+                            for s in schact:
+                                invalidate_obj(s)
+                        instance = schact[0]
+
+                if instance:
                     fields = [
                         "rooms",
                         "capacity",
@@ -75,6 +106,7 @@ def schedule_activity_view(request):
                             for o in obj:
                                 invalidate_obj(o)
 
+                if form["scheduled"].value() or cancelled:
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
                     if not form["scheduled"].value():
@@ -111,33 +143,7 @@ def schedule_activity_view(request):
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
                     instance.save()
                     logger.debug(instance)
-                else:
-                    schact = EighthScheduledActivity.objects.filter(
-                        block=block,
-                        activity=activity
-                    )
-                    logger.debug(block)
-                    logger.debug(activity)
-                    logger.debug(schact)
 
-                    # Instead of deleting and messing up attendance,
-                    # cancel the scheduled activity if it is unscheduled.
-                    # If the scheduled activity needs to be completely deleted,
-                    # the "Unschedule" box can be checked after it has been cancelled.
-
-                    # If a both blocks activity, unschedule the other
-                    # scheduled activities of it on the same day.
-                    if schact and activity.both_blocks:
-                        other_act = schact[0].get_both_blocks_sibling()
-                        logger.debug("other_act: {}".format(other_act))
-                        if other_act:
-                            other_act.cancelled = True
-                            other_act.save()
-                            invalidate_obj(other_act)
-                    else:
-                        schact.update(cancelled=True)
-                        for s in schact:
-                            invalidate_obj(s)
             messages.success(request, "Successfully updated schedule.")
 
             # Force reload everything from the database to reset
