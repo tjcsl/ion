@@ -37,10 +37,12 @@ def add_block_view(request):
         date = request.GET.get("date")
     if "date" in request.POST:
         date = request.POST.get("date")
+    title_suffix = ""
     if date:
         date_format = re.compile(r'([0-9]{2})\/([0-9]{2})\/([0-9]{4})')
         fmtdate = date_format.sub(r'\3-\1-\2', date)
         logger.debug(fmtdate)
+        title_suffix = " - {}".format(fmtdate)
         show_letters = True
 
         if "modify_blocks" in request.POST:
@@ -85,7 +87,7 @@ def add_block_view(request):
                 })
 
     context = {
-        "admin_page_title": "Add or Remove Blocks",
+        "admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
