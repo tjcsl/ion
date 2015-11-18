@@ -119,9 +119,9 @@ $(function() {
         margin: 8px -40px;
         text-align: center;
         left: 50%;
-        width: 120px;
+        width: 160px;
         height: 30px;
-        margin-left: -60px;
+        margin-left: -80px;
     }
 
     .schedule-month > tbody > tr > td .buttons .button {
@@ -271,11 +271,11 @@ $(function() {
             {% for day in week %}
             <td{% if forloop.counter == 6 or forloop.counter == 7 %} class="weekend"{% endif %}>
             {% if not day.empty %}
-                <b>{{ day.day }}.</b>
+                <b>{{ day.day }}</b>
                 {% if day.schedule %}
                         <em class="day">
                             <a href="{% url 'schedule_daytype' day.schedule.id %}" class="day-name {{ day.schedule.class_name }}">
-                                {{ day.schedule.name|safe }}
+                                {{ day.schedule.name|safe }}{% if day.dayobj.comment %} {{ day.dayobj.comment }}{% endif %}
                             </a>
                         </em>
                     <table class="bellschedule-table">
@@ -287,6 +287,9 @@ $(function() {
                     {% endfor %}
                     </table>
                 {% else %}
+                    <em class="day">
+                        {% if day.dayobj.comment %} {{ day.dayobj.comment }}{% endif %}
+                    </em>
                     <b>No schedule assigned.</b>
                 {% endif %}
                 <span class="buttons"{% if not day.schedule %} style="visibility: visible"{% endif %}>
@@ -300,6 +303,10 @@ $(function() {
                             <i class='edit fa fa-reply'></i>
                         </a>
                     {% endif %}
+
+                    <a href="{% url 'schedule_comment' %}?date={{ day.formatted_date }}" class="button make-comment-button" title="Add Comment on Day" data-endpoint="{% url 'schedule_comment' %}" data-date="{{ day.formatted_date }}">
+                        <i class='edit fa fa-comment'></i>
+                    </a>
 
                     <a href="{% url 'schedule_daytype' %}?assign_date={{ day.formatted_date }}" class="button" title="Custom Schedule">
                         <i class='edit fa fa-star'></i>

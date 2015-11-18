@@ -90,6 +90,7 @@ class Day(models.Model):
     objects = DayManager()
     date = models.DateField(unique=True)
     day_type = models.ForeignKey('DayType')
+    comment = models.CharField(max_length=1000, blank=True)
 
     def __unicode__(self):
         return "{}: {}".format(text_type(self.date), self.day_type)

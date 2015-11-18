@@ -65,8 +65,10 @@ def schedule_context(request=None, date=None):
     else:
         try:
             dayobj = Day.objects.select_related("day_type").get(date=date)
+            comment = dayobj.comment
         except Day.DoesNotExist:
             dayobj = None
+            comment = None
 
         if dayobj is not None:
             blocks = (dayobj.day_type
@@ -104,7 +106,8 @@ def schedule_context(request=None, date=None):
                 "date_tomorrow": date_tomorrow,
                 "date_today": date_today,
                 "date_yesterday": date_yesterday,
-                "schedule_tomorrow": schedule_tomorrow
+                "schedule_tomorrow": schedule_tomorrow,
+                "comment": comment
             }
         }
         cache.set(key, data, timeout=settings.CACHE_AGE['bell_schedule'])
@@ -287,6 +290,32 @@ def admin_add_view(request):
     }
     return render(request, "schedule/admin_add.html", context)
 
+@schedule_admin_required
+def admin_comment_view(request):
+    date = request.GET.get("date")
+    if request.method == "POST" and "comment" in request.POST:
+        delete_cache()
+        date = request.POST.get("date")
+        comment = request.POST.get("comment")
+        day, _ = Day.objects.get_or_create(date=date)
+        day.comment = comment
+        day.save()
+        return redirect("schedule_admin")
+    else:
+        try:
+            day = Day.objects.get(date=date)
+            comment = day.comment
+        except Day.DoesNotExist:
+            day = None
+            comment = None
+
+    context = {
+        "day": day,
+        "date": date,
+        "comment": comment
+    }
+
+    return render(request, "schedule/admin_comment.html", context)
 
 @schedule_admin_required
 def admin_daytype_view(request, id=None):
