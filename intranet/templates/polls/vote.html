@@ -25,8 +25,8 @@
         <h2>Vote: {{ poll }}</h2>
 
             <p>{{ poll.description }}</p>
-
-        {% if request.user in poll.get_users_voted %}
+        {% if user != request.user %}<b>{{ user }}</b><br />{% endif %}
+        {% if user in poll.get_users_voted %}
             <span class="voted-status voted">
                 <i class="fa fa-check"></i> You have voted in this poll.
             </span>
@@ -36,7 +36,7 @@
             </span>
         {% endif %}
 
-        <form action="{% url 'poll_vote' poll.id %}" method="post">
+        <form action="{% url 'poll_vote' poll.id %}{% if user != request.user %}?user={{ user.id }}{% endif %}" method="post">
             {% csrf_token %}
             <hr />
 

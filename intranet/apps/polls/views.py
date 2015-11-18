@@ -33,7 +33,10 @@ def poll_vote_view(request, poll_id):
     user = request.user
     is_polls_admin = user.has_admin_permission("polls")
     if is_polls_admin and "user" in request.GET:
-        user = User.objects.get(id=request.GET.get("user"))
+        try:
+            user = User.objects.get(id=request.GET.get("user"))
+        except User.DoesNotExist, ValueError:
+            user = request.user
 
     if request.method == "POST":
         questions = poll.question_set.all()
@@ -107,6 +110,7 @@ def poll_vote_view(request, poll_id):
     context = {
         "poll": poll,
         "can_vote": can_vote,
+        "user": user,
         "questions": questions,
         "question_types": Question.get_question_types()
     }
@@ -134,7 +138,7 @@ def poll_results_view(request, poll_id):
                 "votes": {
                     "total": {
                         "all": votes.count(),
-                        "all_percent": (votes.count() / question_votes.count()) * 100,
+                        "all_percent": int( 10000 * votes.count() / question_votes.count()) / 100,
                         "male": sum([v.user.is_male for v in votes]),
                         "female": sum([v.user.is_female for v in votes])
                     }
@@ -181,6 +185,7 @@ def poll_results_view(request, poll_id):
             "votes": {
                 "total": {
                     "all": users.count(),
+                    "all_percent": int( 10000 * users.count() / question_votes.count()) / 100,
                     "male": sum([u.is_male for u in users]),
                     "female": sum([u.is_female for u in users]),
                 }

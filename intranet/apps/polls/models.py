@@ -91,6 +91,9 @@ class Poll(models.Model):
         if not self.in_time_range():
             return False
 
+        if self.groups.count() == 0:
+            return True
+
         for g in self.groups.all():
             if g in user.groups.all():
                 return True
@@ -157,7 +160,7 @@ class Question(models.Model):
 
     def get_users_voted(self):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
-        return User.objects.filter(id__in=users)
+        return User.objects.filter(id__in=users).nocache()
 
     def __unicode__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())

@@ -58,7 +58,7 @@
     <br />
 
     <div class="bottom-row">
-        {% if request.user in poll.get_users_voted %}    
+        {% if request.user in poll.get_users_voted %}
         <span class="voted-status voted">
             <i class="fa fa-check"></i> You have voted in this poll.
         </span>
@@ -72,6 +72,12 @@
     <a href="{% url 'poll_vote' poll.id %}" class="button">
         Vote
     </a>
+
+    {% if is_polls_admin %}
+        <a href="{% url 'poll_results' poll.id %}" class="button">
+            View Results
+        </a>
+    {% endif %}
 
 
 
