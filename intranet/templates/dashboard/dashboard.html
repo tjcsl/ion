@@ -60,6 +60,11 @@
                 &nbsp;
             {% endif %}
             {% if announcements_admin %}
+                {% if "show_all" not in request.GET %}
+                    <a class="button" href="{% url 'view_announcements' %}?show_all=1">
+                        Show All
+                    </a>
+                {% endif %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
                     <i class="fa fa-plus"></i>
                     Add
