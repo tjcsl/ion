@@ -36,11 +36,19 @@ class Command(BaseCommand):
                             default=False,
                             help="Pretend, and don't actually do anything.")
 
+        parser.add_argument('--everyone',
+                            action='store_true',
+                            dest='everyone',
+                            default=False,
+                            help="Send to everyone, even those who have no eighth emails set.")
+
     def handle(self, *args, **options):
 
         log = not options["silent"]
-
-        users = User.objects.filter(receive_eighth_emails=True).nocache()
+        if options["everyone"]:
+            users = User.objects.get_students()
+        else:
+            users = User.objects.filter(receive_eighth_emails=True).nocache()
         next_blocks = EighthBlock.objects.get_next_upcoming_blocks().nocache()
 
         if next_blocks.count() < 1:
