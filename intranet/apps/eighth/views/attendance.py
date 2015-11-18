@@ -118,6 +118,10 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         context.update({"admin_page_title": "Take Attendance"})
 
         block = self.get_cleaned_data_for_step("block")
+
+
+        context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block) })
+
         if block:
             block = block["block"]
             try:

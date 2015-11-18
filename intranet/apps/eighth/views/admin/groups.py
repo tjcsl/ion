@@ -710,6 +710,7 @@ def add_member_to_group_view(request, group_id):
         return redirect(next_url + "?error=n")
     else:
         users = results
+        results = sorted(results, key=lambda x: (x.last_name, x.first_name))
         context = {
             "query": query,
             "users": users,

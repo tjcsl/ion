@@ -182,36 +182,39 @@ def find_birthdays(request):
     else:
         logger.debug("Loading and caching birthday info for {}".format(today))
         tomorrow = today + timedelta(days=1)
-
-        data = {
-            "custom": custom,
-            "today": {
-                "date": today,
-                "users": [{
-                    "id": u.id,
-                    "full_name": u.full_name,
-                    "grade": {
-                        "name": u.grade.name
-                    },
-                    "age": (u.age + yr_inc) if u.age is not None else -1
-                } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
-                "inc": 0
-            },
-            "tomorrow": {
-                "date": tomorrow,
-                "users": [{
-                    "id": u.id,
-                    "full_name": u.full_name,
-                    "grade": {
-                        "name": u.grade.name
-                    },
-                    "age": (u.age - 1)
-                } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
-                "inc": 1
+        try:
+            data = {
+                "custom": custom,
+                "today": {
+                    "date": today,
+                    "users": [{
+                        "id": u.id,
+                        "full_name": u.full_name,
+                        "grade": {
+                            "name": u.grade.name
+                        },
+                        "age": (u.age + yr_inc) if u.age is not None else -1
+                    } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
+                    "inc": 0
+                },
+                "tomorrow": {
+                    "date": tomorrow,
+                    "users": [{
+                        "id": u.id,
+                        "full_name": u.full_name,
+                        "grade": {
+                            "name": u.grade.name
+                        },
+                        "age": (u.age - 1)
+                    } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
+                    "inc": 1
+                }
             }
-        }
-        cache.set(key, data, timeout=60 * 60 * 24)
-        return data
+        except AttributeError:
+            return None
+        else:
+            cache.set(key, data, timeout=60 * 60 * 24)
+            return data
 
 
 @login_required
