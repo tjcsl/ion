@@ -251,7 +251,10 @@ class EighthActivity(AbstractBaseEighthModel):
         activities = set(user.restricted_activity_set
                              .values_list("id", flat=True))
 
-        grade = user.grade.number
+        if user and user.grade and user.grade.number:
+            grade = user.grade.number
+        else:
+            grade = None
 
         if grade == 9:
             activities |= set(EighthActivity.objects
