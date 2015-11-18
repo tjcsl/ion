@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from random import shuffle
 from django.contrib.auth.models import Group as DjangoGroup
+from django.utils.html import strip_tags
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
@@ -217,10 +218,11 @@ class Choice(models.Model):  # individual answer choices
     is_writing = models.BooleanField(default=False)  # True if question.is_writing() or if last of STD_OTHER
 
     def trunc_info(self):
-        if len(self.info) > 150:
-            return self.info[:147] + "..."
+        comp = strip_tags(self.info)
+        if len(comp) > 50:
+            return self.info[:47] + "..."
         else:
-            return self.info
+            return comp
 
     def __unicode__(self):
         # return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())
