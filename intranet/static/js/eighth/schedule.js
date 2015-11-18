@@ -147,5 +147,14 @@ $(function() {
 
         }
 
-    })
+    });
+
+    $(".selectized").each(function() {
+        var sel = $(this)[0].selectize;
+        if(sel) {
+            sel.on('item_add', function () {
+              sel.close();
+            });
+        }
+    });
 });
