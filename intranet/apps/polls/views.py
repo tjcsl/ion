@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import datetime
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -24,7 +25,7 @@ def polls_view(request):
 
     
     if not "show_all" in request.GET:
-        now = timezone.now()
+        now = datetime.datetime.now()
         polls = polls.filter(start_time__gt=now, end_time__lt=now)
 
     if not is_polls_admin:
