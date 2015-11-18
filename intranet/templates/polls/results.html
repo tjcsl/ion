@@ -1,0 +1,109 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Poll Results
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
+    <style>
+
+    .results-table, .results-table tr, .results-table tr > td, .results-table tr > th {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+
+    tr > td.choice {
+        text-align: left;
+        width: 300px;
+    }
+
+    th.choice-header {
+        vertical-align: middle;
+    }
+
+    tr.total {
+        font-weight: bold;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <a href="{% url 'polls' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Polls
+        </a>
+        <h2>Results: {{ poll }}</h2>
+        <ol class="questions">
+            {% for q in questions %}
+                <li>
+                    {{ q.question.question }}
+                    <br />
+                    <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="choice-header">Choice</th>
+                            <th colspan="3">Total Votes</th>
+                            {% for i in grades %}
+                                <th colspan="3">{{ i }}</th>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                        {% for i in "01234" %}
+                            <th>T</th>
+                            <th>M</th>
+                            <th>F</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in q.choices %}
+                        <tr {% if c.choice == "Total" %} class="total"{% endif %}>
+                            <td class="choice">
+                                {{ c.choice }}
+                            </td>
+                            {% with t=c.votes.total %}
+                                <td>{{ t.all }} ({{ t.all_percent }}%)</td>
+                                <td>{{ t.male }}</td>
+                                <td>{{ t.female }}</td>
+                            {% endwith %}
+                            {% with t=c.votes.9 %}
+                                <td>{{ t.all }}</td>
+                                <td>{{ t.male }}</td>
+                                <td>{{ t.female }}</td>
+                            {% endwith %}
+                            {% with t=c.votes.10 %}
+                                <td>{{ t.all }}</td>
+                                <td>{{ t.male }}</td>
+                                <td>{{ t.female }}</td>
+                            {% endwith %}
+                            {% with t=c.votes.11 %}
+                                <td>{{ t.all }}</td>
+                                <td>{{ t.male }}</td>
+                                <td>{{ t.female }}</td>
+                            {% endwith %}
+                            {% with t=c.votes.12 %}
+                                <td>{{ t.all }}</td>
+                                <td>{{ t.male }}</td>
+                                <td>{{ t.female }}</td>
+                            {% endwith %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+
+{% endblock %}

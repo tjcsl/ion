@@ -9,26 +9,6 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
-    <style type="text/css">
-    ol.questions {
-        list-style: initial;
-        list-style-type: decimal;
-        margin-left: 20px;
-    }
-
-    ul.answers {
-        list-style: none;
-        margin-left: -20px;
-    }
-
-    ul.answers label.clear-vote {
-        font-style: italic;
-    }
-
-    .question {
-        margin-left: 20px;
-    }
-    </style>
 {% endblock %}
 
 {% block js %}
@@ -39,13 +19,26 @@
 
 {% block main %}
     <div class="primary-content polls">
+        <a href="{% url 'polls' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Polls
+        </a>
         <h2>Vote: {{ poll }}</h2>
+
+            <p>{{ poll.description }}</p>
+
+        {% if request.user in poll.get_users_voted %}
+            <span class="voted-status voted">
+                <i class="fa fa-check"></i> You have voted in this poll.
+            </span>
+        {% else %}
+            <span class="voted-status not-voted">
+                <i class="fa fa-exclamation-triangle"></i> You have not voted in this poll.
+            </span>
+        {% endif %}
 
         <form action="{% url 'poll_vote' poll.id %}" method="post">
             {% csrf_token %}
-            <p>{{ poll.description }}</p>
             <hr />
-            <p>To vote, follow the instructions next to each question.</p>
 
             <ol class="questions">
             {% for question in questions %}
@@ -84,7 +77,11 @@
                 </li>
             {% endfor %}
             </ol>
-            <input type="submit" value="Vote!" />
+            {% if can_vote %}
+                <input type="submit" value="Vote!" />
+            {% else %}
+                You can't vote in this poll.
+            {% endif %}
         </form>
     </div>
 

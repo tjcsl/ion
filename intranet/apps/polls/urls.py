@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     url(r"^$", views.polls_view, name="polls"),
     url(r"^/vote/(?P<poll_id>\d+)$", views.poll_vote_view, name="poll_vote"),
+    url(r"^/results/(?P<poll_id>\d+)$", views.poll_results_view, name="poll_results"),
 
 
     url(r"^/add$", views.add_poll_view, name="add_poll"),

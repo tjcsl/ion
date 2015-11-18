@@ -6,6 +6,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from ..users.models import User
 from .models import Poll, Question, Answer, Choice
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,11 @@ def poll_vote_view(request, poll_id):
         poll = Poll.objects.get(id=poll_id)
     except Poll.DoesNotExist:
         raise http.Http404
+
+    user = request.user
+    is_polls_admin = user.has_admin_permission("polls")
+    if is_polls_admin and "user" in request.GET:
+        user = User.objects.get(id=request.GET.get("user"))
 
     if request.method == "POST":
         questions = poll.question_set.all()
@@ -52,8 +58,8 @@ def poll_vote_view(request, poll_id):
                 choices = question_obj.choice_set.all()
                 if question_obj.type in [Question.STD, Question.ELECTION]:
                     if choice_num and choice_num == "CLEAR":
-                        Answer.objects.filter(user=request.user, question=question_obj).delete()
-                        Answer.objects.create(user=request.user, question=question_obj, clear_vote=True)
+                        Answer.objects.filter(user=user, question=question_obj).delete()
+                        Answer.objects.create(user=user, question=question_obj, clear_vote=True)
                         messages.success(request, "Clear Vote for {}".format(question_obj))
                     else:
                         try:
@@ -63,14 +69,14 @@ def poll_vote_view(request, poll_id):
                             continue
                         else:
                             logger.debug(choice_obj)
-                            Answer.objects.filter(user=request.user, question=question_obj).delete()
-                            Answer.objects.create(user=request.user, question=question_obj, choice=choice_obj)
+                            Answer.objects.filter(user=user, question=question_obj).delete()
+                            Answer.objects.create(user=user, question=question_obj, choice=choice_obj)
                             messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
 
     questions = []
     for q in poll.question_set.all():
         try:
-            current_vote = Answer.objects.get(user=request.user, question=q)
+            current_vote = Answer.objects.get(user=user, question=q)
         except Answer.DoesNotExist:
             current_vote = None
 
@@ -97,12 +103,113 @@ def poll_vote_view(request, poll_id):
 
     logger.debug(questions)
 
+    can_vote = poll.can_vote(user)
     context = {
         "poll": poll,
+        "can_vote": can_vote,
         "questions": questions,
         "question_types": Question.get_question_types()
     }
     return render(request, "polls/vote.html", context)
+
+@login_required
+def poll_results_view(request, poll_id):
+    if not request.user.has_admin_permission("polls"):
+        return redirect("polls")
+
+    try:
+        poll = Poll.objects.get(id=poll_id)
+    except Poll.DoesNotExist:
+        raise http.Http404
+
+    questions = []
+    for q in poll.question_set.all():
+        question_votes = votes = Answer.objects.filter(question=q)
+        users = q.get_users_voted()
+        choices = []
+        for c in q.choice_set.all().order_by("num"):
+            votes = question_votes.filter(choice=c)
+            choice = {
+                "choice": c,
+                "votes": {
+                    "total": {
+                        "all": votes.count(),
+                        "all_percent": (votes.count() / question_votes.count()) * 100,
+                        "male": sum([v.user.is_male for v in votes]),
+                        "female": sum([v.user.is_female for v in votes])
+                    }
+                }
+            }
+            for yr in range(9, 13):
+                yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                yr_votes = filter(None, yr_votes)
+                choice["votes"][yr] = {
+                    "all": len(yr_votes),
+                    "male": sum([u.is_male for u in yr_votes]),
+                    "female": sum([u.is_female for u in yr_votes])
+                }
+            logger.debug(choice)
+            choices.append(choice)
+
+        """ Clear vote """
+        votes = question_votes.filter(clear_vote=True)
+        choice = {
+            "choice": "Clear vote",
+            "votes": {
+                "total": {
+                    "all": votes.count(),
+                    "all_percent": int( 10000 * votes.count() / question_votes.count()) / 100,
+                    "male": sum([v.user.is_male for v in votes]),
+                    "female": sum([v.user.is_female for v in votes])
+                }
+            }
+        }
+        for yr in range(9, 13):
+            yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+            yr_votes = filter(None, yr_votes)
+            choice["votes"][yr] = {
+                "all": len(yr_votes),
+                "male": sum([u.is_male for u in yr_votes]),
+                "female": sum([u.is_female for u in yr_votes])
+            }
+        logger.debug(choice)
+        choices.append(choice)
+
+
+        choice = {
+            "choice": "Total",
+            "votes": {
+                "total": {
+                    "all": users.count(),
+                    "male": sum([u.is_male for u in users]),
+                    "female": sum([u.is_female for u in users]),
+                }
+            }
+        }
+        for yr in range(9, 13):
+            yr_votes = [u if u.grade.number == yr else None for u in users]
+            yr_votes = filter(None, yr_votes)
+            choice["votes"][yr] = {
+                "all": len(yr_votes),
+                "male": sum([u.is_male for u in yr_votes]),
+                "female": sum([u.is_female for u in yr_votes])
+            }
+
+        choices.append(choice)
+
+
+        question = {
+            "question": q,
+            "choices": choices
+        }
+        questions.append(question)
+
+    context = {
+        "poll": poll,
+        "grades": range(9, 13),
+        "questions": questions
+    }
+    return render(request, "polls/results.html", context)
 
 @login_required
 def add_poll_view(request):

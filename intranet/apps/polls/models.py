@@ -64,9 +64,38 @@ class Poll(models.Model):
         now = timezone.now()
         return now < self.start_time
 
+    def in_time_range(self):
+        """ Is it within the poll time range? """
+        return not self.before_start_time() and self.before_end_time()
+
 
     def get_users_voted(self):
-        return []
+        users = []
+        for q in self.question_set.all():
+            if len(users) > 0:
+                users = list(set(q.get_users_voted()) | set(users))
+            else:
+                users = list(q.get_users_voted())
+        return users
+
+    def has_user_voted(self, user):
+        return (Answer.objects.filter(question__in=self.question_set.all(), user=user).count() == self.question_set.count())
+
+    def can_vote(self, user):
+        if user.has_admin_permission("polls"):
+            return True
+
+        if not self.visible:
+            return False
+
+        if not self.in_time_range():
+            return False
+
+        for g in self.groups.all():
+            if g in user.groups.all():
+                return True
+
+        return False
 
     def __unicode__(self):
         return self.title
@@ -125,6 +154,10 @@ class Question(models.Model):
             return self.question[:12] + "..?"
         else:
             return self.question
+
+    def get_users_voted(self):
+        users = Answer.objects.filter(question=self).values_list("user", flat=True)
+        return User.objects.filter(id__in=users)
 
     def __unicode__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
