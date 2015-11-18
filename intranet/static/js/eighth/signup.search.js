@@ -2,10 +2,6 @@ $(document).ready(function() {
 
     searchDebug = false;
 
-    function clearSearch() {
-        $("#activity-picker .search-wrapper input").val("").trigger("keyup");
-    };
-
     function eighthSearch(q) {
         var _st = +new Date();
 
@@ -42,7 +38,10 @@ $(document).ready(function() {
         if (searchStr.length === 0) {
             $(".sticky-header.all-header").html("All");
         } else {
-            $(".sticky-header.all-header").html("Search Results<a class='button small-button clear-button' onclick='clearSearch()'>Clear</span>");
+            $(".sticky-header.all-header").html("Search Results<a class='button small-button clear-button'>Clear</a>");
+            $(".clear-button").click(function() {
+                $("#activity-picker .search-wrapper input").val("").trigger("keyup");
+            });
         }
 
         // console.log("query:", searchStr);
