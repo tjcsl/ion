@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from intranet import settings
-from ..notifications.emails import email_send
+from ..notifications.emails import email_send, email_send_bcc
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -177,7 +177,7 @@ def announcement_posted_email(request, obj, send_all=False):
             "info_link": url,
             "base_url": base_url
         }
-        email_send("announcements/emails/announcement_posted.txt",
+        email_send_bcc("announcements/emails/announcement_posted.txt",
                    "announcements/emails/announcement_posted.html",
                    data, subject, emails)
         messages.success(request, "Sent email to {} users".format(len(users_send)))

@@ -97,6 +97,7 @@ class Announcement(models.Model):
     expiration_date = models.DateTimeField(auto_now=False, default=datetime(3000, 1, 1))
 
     notify_post = models.BooleanField(default=True)
+    notify_email_all = models.BooleanField(default=False)
 
     pinned = models.BooleanField(default=False)
 
