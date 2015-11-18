@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls package &mdash; TJ Intranet v3 (Build #922) documentation</title>
+    <title>intranet.apps.polls package &mdash; TJ Intranet v3 (Build #923) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #922)',
+        VERSION:     'v3 (Build #923)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #922) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #923) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.preferences package" href="intranet.apps.preferences.html" />
     <link rel="prev" title="intranet.apps.notifications package" href="intranet.apps.notifications.html" />
@@ -116,6 +116,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.polls package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.polls.admin">intranet.apps.polls.admin module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.polls.models">intranet.apps.polls.models module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.polls.tests">intranet.apps.polls.tests module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.polls.urls">intranet.apps.polls.urls module</a></li>
@@ -161,11 +162,14 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-intranet.apps.polls.admin">
+<span id="intranet-apps-polls-admin-module"></span><h2>intranet.apps.polls.admin module<a class="headerlink" href="#module-intranet.apps.polls.admin" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-intranet.apps.polls.models">
 <span id="intranet-apps-polls-models-module"></span><h2>intranet.apps.polls.models module<a class="headerlink" href="#module-intranet.apps.polls.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.polls.models.Answer">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>user</em>, <em>choice</em>, <em>weight</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>user</em>, <em>choice</em>, <em>clear_vote</em>, <em>weight</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Answer.DoesNotExist">
@@ -202,47 +206,72 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="intranet.apps.polls.models.Answer_Votes">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer_Votes</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>choice</em>, <em>votes</em>, <em>is_writing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer_Votes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">AnswerVotes</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>choice</em>, <em>votes</em>, <em>is_writing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#AnswerVotes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
-<dt id="intranet.apps.polls.models.Answer_Votes.DoesNotExist">
-<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="intranet.apps.polls.models.Answer_Votes.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Answer_Votes.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">AnswerVotes.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Answer_Votes.choice">
-<code class="descclassname">Answer_Votes.</code><code class="descname">choice</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.choice" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.choice">
+<code class="descclassname">AnswerVotes.</code><code class="descname">choice</code><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.choice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Answer_Votes.objects">
-<code class="descclassname">Answer_Votes.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.objects" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.objects">
+<code class="descclassname">AnswerVotes.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Answer_Votes.question">
-<code class="descclassname">Answer_Votes.</code><code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.question" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.question">
+<code class="descclassname">AnswerVotes.</code><code class="descname">question</code><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.question" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Answer_Votes.users">
-<code class="descclassname">Answer_Votes.</code><code class="descname">users</code><a class="headerlink" href="#intranet.apps.polls.models.Answer_Votes.users" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.AnswerVotes.users">
+<code class="descclassname">AnswerVotes.</code><code class="descname">users</code><a class="headerlink" href="#intranet.apps.polls.models.AnswerVotes.users" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="intranet.apps.polls.models.Choice">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Choice</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>num</em>, <em>info</em>, <em>std</em>, <em>app</em>, <em>free_resp</em>, <em>short_resp</em>, <em>std_other</em>, <em>is_writing</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Choice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Choice</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A choice for a Question.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>question</dt>
+<dd>A ForeignKey to the question this choice is for.</dd>
+<dt>num</dt>
+<dd>An integer order in which the question should appear; the primary sort.</dd>
+<dt>info</dt>
+<dd>Textual information about this answer choice.</dd>
+<dt>std</dt>
+<dd>Boolean, if the Question is Question.STD.</dd>
+<dt>app</dt>
+<dd>Boolean, if the Question is Question.APP.</dd>
+<dt>free_resp</dt>
+<dd>Textual field, if the question is Question.FREE_RESP.</dd>
+<dt>short_resp</dt>
+<dd>Textual field, if the question is Question.SHORT_RESP.</dd>
+<dt>std_other</dt>
+<dd>Textual field, if the question is Question.STD_OTHER.</dd>
+<dt>is_writing</dt>
+<dd>Boolean, if the Question is_writing().</dd>
+</dl>
+</dd>
+</dl>
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Choice.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -261,8 +290,8 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Choice.answer_votes_set">
-<code class="descclassname">Choice.</code><code class="descname">answer_votes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.answer_votes_set" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.Choice.answervotes_set">
+<code class="descclassname">Choice.</code><code class="descname">answervotes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Choice.answervotes_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -283,37 +312,30 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="intranet.apps.polls.models.Group">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Group</code><span class="sig-paren">(</span><em>id</em>, <em>poll</em>, <em>name</em>, <em>vote</em>, <em>modify</em>, <em>view</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Group" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
-<dl class="exception">
-<dt id="intranet.apps.polls.models.Group.DoesNotExist">
-<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Group.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="intranet.apps.polls.models.Group.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Group.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Group.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="intranet.apps.polls.models.Group.objects">
-<code class="descclassname">Group.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Group.objects" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="intranet.apps.polls.models.Group.poll">
-<code class="descclassname">Group.</code><code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Group.poll" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="intranet.apps.polls.models.Poll">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Poll</code><span class="sig-paren">(</span><em>id</em>, <em>name</em>, <em>info</em>, <em>start_time</em>, <em>end_time</em>, <em>visible</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Poll</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A Poll, for the TJ community.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>title</dt>
+<dd>A title for the poll, that will be displayed to identify it uniquely.</dd>
+<dt>description</dt>
+<dd>A longer description, possibly explaining how to complete the poll.</dd>
+<dt>start_time</dt>
+<dd>A time that the poll should open.</dd>
+<dt>end_time</dt>
+<dd>A time that the poll should close.</dd>
+<dt>visible</dt>
+<dd>Whether the poll is visible to the users it is for.</dd>
+<dt>groups</dt>
+<dd>The Group&#8217;s that can view&#8211;and vote in&#8211;the poll. Like Announcements,
+if there are none set, then it is public to all.</dd>
+</dl>
+</dd>
+</dl>
+<p>Access questions for the poll through poll.question_set.all()</p>
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Poll.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -325,6 +347,23 @@
 <em class="property">exception </em><code class="descclassname">Poll.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.before_end_time">
+<code class="descclassname">Poll.</code><code class="descname">before_end_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.before_end_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.before_end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Has the poll not ended yet?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.before_start_time">
+<code class="descclassname">Poll.</code><code class="descname">before_start_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.before_start_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.before_start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Has the poll not started yet?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.can_vote">
+<code class="descclassname">Poll.</code><code class="descname">can_vote</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.can_vote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.can_vote" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.polls.models.Poll.get_next_by_end_time">
@@ -346,14 +385,30 @@
 <code class="descclassname">Poll.</code><code class="descname">get_previous_by_start_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_previous_by_start_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="intranet.apps.polls.models.Poll.group_set">
-<code class="descclassname">Poll.</code><code class="descname">group_set</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.group_set" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.get_users_voted">
+<code class="descclassname">Poll.</code><code class="descname">get_users_voted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.get_users_voted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.get_users_voted" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.polls.models.Poll.groups">
+<code class="descclassname">Poll.</code><code class="descname">groups</code><a class="headerlink" href="#intranet.apps.polls.models.Poll.groups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.has_user_voted">
+<code class="descclassname">Poll.</code><code class="descname">has_user_voted</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.has_user_voted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.has_user_voted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Poll.in_time_range">
+<code class="descclassname">Poll.</code><code class="descname">in_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Poll.in_time_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Poll.in_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is it within the poll time range?</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.polls.models.Poll.objects">
-<code class="descclassname">Poll.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Poll.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Poll.</code><code class="descname">objects</code><em class="property"> = &lt;intranet.apps.polls.models.PollManager object&gt;</em><a class="headerlink" href="#intranet.apps.polls.models.Poll.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -364,9 +419,51 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="intranet.apps.polls.models.PollManager">
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">PollManager</code><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#PollManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.PollManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<dl class="method">
+<dt id="intranet.apps.polls.models.PollManager.visible_to_user">
+<code class="descname">visible_to_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#PollManager.visible_to_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.PollManager.visible_to_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of visible polls for a given user (usually
+request.user).</p>
+<p>These visible polls will be those that either have no groups
+assigned to them (and are therefore public) or those in which the
+user is a member.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="intranet.apps.polls.models.Question">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Question</code><span class="sig-paren">(</span><em>id</em>, <em>poll</em>, <em>question</em>, <em>num</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Question</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A question for a Poll.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first docutils">
+<dt>poll</dt>
+<dd>A ForeignKey to the Poll object the question is for.</dd>
+<dt>question</dt>
+<dd>A text field for entering the question, of which there are choices
+the user can make.</dd>
+<dt>num</dt>
+<dd>An integer order in which the question should appear; the primary sort.</dd>
+<dt>type</dt>
+<dd><dl class="first last docutils">
+<dt>One of:</dt>
+<dd>Question.STD: Standard
+Question.ELECTION: Election (randomized choice order)
+Question.APP: Approval
+Question.SPLIT_APP: Split approval
+Question.FREE_RESP: Free response
+Question.STD_OTHER: Standard Other field</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">Access possible choices for this question through question.choice_set.all()</p>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="intranet.apps.polls.models.Question.APP">
 <code class="descname">APP</code><em class="property"> = u'APP'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.APP" title="Permalink to this definition">¶</a></dt>
@@ -377,6 +474,11 @@
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.polls.models.Question.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.ELECTION">
+<code class="descclassname">Question.</code><code class="descname">ELECTION</code><em class="property"> = u'ELC'</em><a class="headerlink" href="#intranet.apps.polls.models.Question.ELECTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.polls.models.Question.FREE_RESP">
@@ -411,7 +513,7 @@
 
 <dl class="attribute">
 <dt id="intranet.apps.polls.models.Question.TYPE">
-<code class="descclassname">Question.</code><code class="descname">TYPE</code><em class="property"> = ((u'STD', u'Standard'), (u'APP', u'Approval'), (u'SAP', u'Split approval'), (u'FRE', u'Free response'), (u'SRE', u'Short response'), (u'STO', u'Standard other'))</em><a class="headerlink" href="#intranet.apps.polls.models.Question.TYPE" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Question.</code><code class="descname">TYPE</code><em class="property"> = ((u'STD', u'Standard'), (u'ELC', u'Election'), (u'APP', u'Approval'), (u'SAP', u'Split approval'), (u'FRE', u'Free response'), (u'SRE', u'Short response'), (u'STO', u'Standard other'))</em><a class="headerlink" href="#intranet.apps.polls.models.Question.TYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -420,8 +522,8 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="intranet.apps.polls.models.Question.answer_votes_set">
-<code class="descclassname">Question.</code><code class="descname">answer_votes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.answer_votes_set" title="Permalink to this definition">¶</a></dt>
+<dt id="intranet.apps.polls.models.Question.answervotes_set">
+<code class="descclassname">Question.</code><code class="descname">answervotes_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.answervotes_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -429,9 +531,24 @@
 <code class="descclassname">Question.</code><code class="descname">choice_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.choice_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="classmethod">
+<dt id="intranet.apps.polls.models.Question.get_question_types">
+<em class="property">classmethod </em><code class="descclassname">Question.</code><code class="descname">get_question_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.get_question_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.get_question_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.polls.models.Question.get_type_display">
 <code class="descclassname">Question.</code><code class="descname">get_type_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.polls.models.Question.get_type_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.get_users_voted">
+<code class="descclassname">Question.</code><code class="descname">get_users_voted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.get_users_voted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.get_users_voted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.is_choice">
+<code class="descclassname">Question.</code><code class="descname">is_choice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_choice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -447,6 +564,11 @@
 <dl class="attribute">
 <dt id="intranet.apps.polls.models.Question.poll">
 <code class="descclassname">Question.</code><code class="descname">poll</code><a class="headerlink" href="#intranet.apps.polls.models.Question.poll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.polls.models.Question.random_choice_set">
+<code class="descclassname">Question.</code><code class="descname">random_choice_set</code><a class="headerlink" href="#intranet.apps.polls.models.Question.random_choice_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -477,6 +599,26 @@
 </div>
 <div class="section" id="module-intranet.apps.polls.views">
 <span id="intranet-apps-polls-views-module"></span><h2>intranet.apps.polls.views module<a class="headerlink" href="#module-intranet.apps.polls.views" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="intranet.apps.polls.views.add_poll_view">
+<code class="descclassname">intranet.apps.polls.views.</code><code class="descname">add_poll_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#add_poll_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.add_poll_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.polls.views.modify_poll_view">
+<code class="descclassname">intranet.apps.polls.views.</code><code class="descname">modify_poll_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#modify_poll_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.modify_poll_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.polls.views.poll_results_view">
+<code class="descclassname">intranet.apps.polls.views.</code><code class="descname">poll_results_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#poll_results_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.poll_results_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.polls.views.poll_vote_view">
+<code class="descclassname">intranet.apps.polls.views.</code><code class="descname">poll_vote_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#poll_vote_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.poll_vote_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="intranet.apps.polls.views.polls_view">
 <code class="descclassname">intranet.apps.polls.views.</code><code class="descname">polls_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/views.html#polls_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.views.polls_view" title="Permalink to this definition">¶</a></dt>

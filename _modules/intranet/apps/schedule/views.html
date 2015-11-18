@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #922) documentation</title>
+    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #923) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #922)',
+        VERSION:     'v3 (Build #923)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #922) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #923) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -211,8 +211,10 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">dayobj</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;day_type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="n">dayobj</span><span class="o">.</span><span class="n">comment</span>
         <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="n">dayobj</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="k">if</span> <span class="n">dayobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">dayobj</span><span class="o">.</span><span class="n">day_type</span>
@@ -250,7 +252,8 @@
                 <span class="s">&quot;date_tomorrow&quot;</span><span class="p">:</span> <span class="n">date_tomorrow</span><span class="p">,</span>
                 <span class="s">&quot;date_today&quot;</span><span class="p">:</span> <span class="n">date_today</span><span class="p">,</span>
                 <span class="s">&quot;date_yesterday&quot;</span><span class="p">:</span> <span class="n">date_yesterday</span><span class="p">,</span>
-                <span class="s">&quot;schedule_tomorrow&quot;</span><span class="p">:</span> <span class="n">schedule_tomorrow</span>
+                <span class="s">&quot;schedule_tomorrow&quot;</span><span class="p">:</span> <span class="n">schedule_tomorrow</span><span class="p">,</span>
+                <span class="s">&quot;comment&quot;</span><span class="p">:</span> <span class="n">comment</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s">&#39;bell_schedule&#39;</span><span class="p">])</span>
@@ -432,7 +435,33 @@
         <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;schedule/admin_add.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</div>
+<span class="nd">@schedule_admin_required</span>
+<div class="viewcode-block" id="admin_comment_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.admin_comment_view">[docs]</a><span class="k">def</span> <span class="nf">admin_comment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span> <span class="ow">and</span> <span class="s">&quot;comment&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">delete_cache</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;comment&quot;</span><span class="p">)</span>
+        <span class="n">day</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">day</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">comment</span>
+        <span class="n">day</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;schedule_admin&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">comment</span>
+        <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="bp">None</span>
 
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;day&quot;</span><span class="p">:</span> <span class="n">day</span><span class="p">,</span>
+        <span class="s">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+        <span class="s">&quot;comment&quot;</span><span class="p">:</span> <span class="n">comment</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;schedule/admin_comment.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </div>
 <span class="nd">@schedule_admin_required</span>
 <div class="viewcode-block" id="admin_daytype_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.admin_daytype_view">[docs]</a><span class="k">def</span> <span class="nf">admin_daytype_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
