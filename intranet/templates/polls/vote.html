@@ -1,0 +1,117 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Vote
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
+    <style type="text/css">
+    ol.questions {
+        list-style: initial;
+        list-style-type: decimal;
+        margin-left: 20px;
+    }
+
+    ul.answers {
+        list-style: none;
+        margin-left: -20px;
+    }
+
+    ul.answers label.clear-vote {
+        font-style: italic;
+    }
+
+    .question {
+        margin-left: 20px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <h2>Vote: {{ poll }}</h2>
+
+        <form action="{% url 'poll_vote' poll.id %}" method="post">
+            {% csrf_token %}
+            <p>{{ poll.description }}</p>
+            <hr />
+            <p>To vote, follow the instructions next to each question.</p>
+
+            <ol class="questions">
+            {% for question in poll.question_set.all %}
+                <li>
+                {% if question.type == "STD" %}
+                    {{ question.question }}
+                    <div class="question">
+                        <ul class="answers">
+                        {% for choice in question.choice_set.all %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-{{ choice.num }}"
+                                       name="question-{{ question.num }}"
+                                       value="{{ choice.num }}" />
+
+                                <label for="question-{{ question.num }}-{{ choice.num }}">
+                                    {{ choice.info }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-clear"
+                                       name="question-{{ question.num }}"
+                                       value="CLEAR" />
+
+                                <label for="question-{{ question.num }}-clear" class="clear-vote">
+                                    Clear Vote
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                {% elif question.type == "ELC" %}
+                    {{ question.question }}
+                    <div class="question">
+                        <ul class="answers">
+                        {% for choice in question.random_choice_set %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-{{ choice.num }}"
+                                       name="question-{{ question.num }}"
+                                       value="{{ choice.num }}" />
+
+                                <label for="question-{{ question.num }}-{{ choice.num }}">
+                                    {{ choice.info }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-clear"
+                                       name="question-{{ question.num }}"
+                                       value="CLEAR" />
+
+                                <label for="question-{{ question.num }}-clear" class="clear-vote">
+                                    Clear Vote
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+                </li>
+            {% endfor %}
+            </ol>
+            <input type="submit" value="Vote!" />
+        </form>
+    </div>
+
+{% endblock %}

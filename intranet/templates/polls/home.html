@@ -1,0 +1,62 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Polls
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        $("[data-form-submit]").click(function() {
+            var name = $(this).attr("data-form-submit");
+            document.forms[name].submit();
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <h2>Polls</h2>
+        <div class="button-container">
+            {% if is_polls_admin %}
+                <a href="?show_all=1" class="button">
+                    Show All
+                </a>
+            {% endif %}
+
+            {% if is_polls_admin %}
+                <a href="{% url 'add_poll' %}" class="button">
+                    <i class="fa fa-bullhorn"></i>
+                    Add
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="polls-container">
+        {% for poll in polls %}
+            {% include "polls/poll.html" %}
+        {% empty %}
+            <div class="poll">
+                There are no polls to display at this time.
+            </div>
+        {% endfor %}
+
+        {% if start_num > 0 %}
+            <a href="?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
+        {% endif %}
+        {% if more_polls %}
+            <a href="?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
+        {% endif %}
+    </div>
+
+    </div>
+{% endblock %}

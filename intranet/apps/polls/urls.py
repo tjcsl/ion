@@ -7,7 +7,10 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.polls_view, name="polls"),
-    url(r"^add$", views.add_poll_view, name="add_poll"),
-    url(r"^modify/(?P<id>\d+)$", views.modify_poll_view, name="modify_poll"),
-    url(r"^delete/(?P<id>\d+)$", views.modify_poll_view, name="delete_poll"),
+    url(r"^/vote/(?P<poll_id>\d+)$", views.poll_vote_view, name="poll_vote"),
+
+
+    url(r"^/add$", views.add_poll_view, name="add_poll"),
+    url(r"^/modify/(?P<poll_id>\d+)$", views.modify_poll_view, name="modify_poll"),
+    url(r"^/delete/(?P<poll_id>\d+)$", views.modify_poll_view, name="delete_poll"),
 ]

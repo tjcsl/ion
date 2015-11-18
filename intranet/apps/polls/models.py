@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from random import shuffle
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+from django.utils import timezone
 from ..users.models import User
 
 
@@ -53,6 +54,20 @@ class Poll(models.Model):
     groups = models.ManyToManyField(DjangoGroup, blank=True)
     # Access questions through .question_set
 
+    def before_end_time(self):
+        """ Has the poll not ended yet? """
+        now = timezone.now()
+        return now < self.end_time
+
+    def before_start_time(self):
+        """ Has the poll not started yet? """
+        now = timezone.now()
+        return now < self.start_time
+
+
+    def get_users_voted(self):
+        return []
+
     def __unicode__(self):
         return self.title
 
@@ -70,6 +85,7 @@ class Question(models.Model):
         type
             One of:
                 Question.STD: Standard
+                Question.ELECTION: Election (randomized choice order)
                 Question.APP: Approval
                 Question.SPLIT_APP: Split approval
                 Question.FREE_RESP: Free response
@@ -81,6 +97,7 @@ class Question(models.Model):
     question = models.CharField(max_length=500)
     num = models.IntegerField()
     STD = 'STD'
+    ELECTION = 'ELC'
     APP = 'APP'
     SPLIT_APP = 'SAP'
     FREE_RESP = 'FRE'
@@ -88,6 +105,7 @@ class Question(models.Model):
     STD_OTHER = 'STO'
     TYPE = (
         (STD, 'Standard'),
+        (ELECTION, 'Election'),
         (APP, 'Approval'),
         (SPLIT_APP, 'Split approval'),
         (FREE_RESP, 'Free response'),
@@ -108,6 +126,20 @@ class Question(models.Model):
     def __unicode__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
         return "Question #{}: '{}'".format(self.num, self.trunc_question())
+
+    @classmethod
+    def get_question_types(cls):
+        return {t[0]: t[1] for t in cls.TYPE}
+
+    @property
+    def random_choice_set(self):
+        choices = list(self.choice_set.all())
+        shuffle(choices)
+        return choices
+    
+
+    class Meta:
+        ordering = ["num"]
 
 
 class Choice(models.Model):  # individual answer choices
