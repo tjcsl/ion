@@ -626,12 +626,11 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         elements.append(Table(attendance_data, style=attendance_style, colWidths=[1.3 * inch, None, 0.8 * inch]))
         elements.append(Spacer(0, 15))
-        instructions = """Underline, highlight, or circle the names and ID numbers of the students who are <b>no-shows</b>.<br/>
-        Return the <b>roster</b> and <b>passes</b> to Eighth Period coordinator Joan Burch's mailbox
-        in the <b>main office</b>.<br/>
-        <b>Do not make any additions to the roster.</b><br/>
-        Students who need changes should report to the 8th period office.<br/>
-        For questions, please call extension 5046 or 5078. Thank you!<br/>"""
+        instructions = """
+        <b>Highlight or circle</b> the names of students who are <b>absent</b>, and put an <b>"X"</b> next to those <b>present</b>.<br />
+        If a student arrives and their name is not on the roster, please send them to the <b>8th Period Office</b>.<br />
+        If a student leaves your activity early, please make a note. <b>Do not make any additions to the roster.</b><br />
+        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>. For questions, please call extension 5046 or 5078. Thank you!<br />"""
         elements.append(Paragraph(instructions, styles["Normal"]))
 
         if i != len(sched_act_ids) - 1:
