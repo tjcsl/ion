@@ -15,12 +15,17 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def polls_view(request):
-    polls = Poll.objects.visible_to_user(request.user)
+    is_polls_admin = request.user.has_admin_permission("polls")
+
+    if is_polls_admin and "show_all" in request.GET:
+        polls = Poll.objects.all()
+    else:
+        polls = Poll.objects.visible_to_user(request.user)
+
+    
     if not "show_all" in request.GET:
         now = timezone.now()
         polls = polls.filter(start_time__gt=now, end_time__lt=now)
-
-    is_polls_admin = request.user.has_admin_permission("polls")
 
     if not is_polls_admin:
         polls = polls.filter(visible=True)
