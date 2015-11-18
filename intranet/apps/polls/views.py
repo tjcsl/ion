@@ -20,10 +20,10 @@ def polls_view(request):
         now = timezone.now()
         polls = polls.filter(start_time__gt=now, end_time__lt=now)
 
+    is_polls_admin = request.user.has_admin_permission("polls")
+
     if not is_polls_admin:
         polls = polls.filter(visible=True)
-
-    is_polls_admin = request.user.has_admin_permission("polls")
 
     context = {
         "polls": polls,
