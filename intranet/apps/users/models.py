@@ -418,8 +418,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.full_name
         return display_name
 
-    property
-
+    @property
     def last_first(self):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
@@ -520,6 +519,21 @@ class User(AbstractBaseUser, PermissionsMixin):
                       timeout=settings.CACHE_AGE['ldap_permissions'])
             return grade
 
+    def _current_user_override(self):
+        """ Return whether the currently logged in user is a teacher,
+            and can view all of a student's information regardless of
+            their privacy settings.
+        """
+        try:
+            # threadlocals is a module, not an actual thread locals object
+            requesting_user = threadlocals.request().user
+            can_view_anyway = (requesting_user.is_teacher or
+                               requesting_user.is_eighthoffice)
+        except (AttributeError, KeyError):
+            can_view_anyway = False
+
+        return can_view_anyway
+
     @property
     def classes(self):
         """Returns a list of Class objects for a user ordered by
@@ -539,6 +553,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = self.attribute_is_visible("showschedule")
         else:
             visible = True
+
+        visible = self._current_user_override() or visible
 
         if cached and visible:
             logger.debug("Attribute 'classes' of user {} loaded "
@@ -635,6 +651,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         cached = cache.get(key)
         visible = self.attribute_is_visible("showaddress")
+
+        visible = self._current_user_override() or visible
 
         if cached and visible:
             logger.debug("Attribute 'address' of user {} loaded "
@@ -736,6 +754,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if self.is_http_request_sender():
+            visible = True
+        elif self._current_user_override():
             visible = True
         else:
             perms = self.photo_permissions
@@ -1314,6 +1334,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = True
         else:
             visible = self.attribute_is_visible(attr["perm"])
+
+        if name not in ["ion_id", "ion_username", "user_type"]:
+            visible = self._current_user_override() or visible
 
         if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded "

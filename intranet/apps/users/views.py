@@ -188,7 +188,7 @@ def class_section_view(request, section_id):
                          "TJ Email"])
 
         for s in students:
-            writer.writerow([s.last_first(),
+            writer.writerow([s.last_first,
                              s.student_id if s.student_id else "",
                              s.grade.number,
                              s.tj_email if s.tj_email else ""])
