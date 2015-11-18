@@ -173,7 +173,7 @@ $(function() {
                     <br />
                 {% endif %}
 
-                {% if not sponsor_block or request.user.is_eighth_admin %}  
+
                     {{ wizard.form }}
                     {% if wizard.steps.prev %}
                         <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
@@ -186,13 +186,9 @@ $(function() {
                     {% else %}
                         <!--input type="submit" value="{% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}"/-->
                     {% endif %}
-                {% else %}
-                    {% if wizard.steps.prev %}
-                        <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="button">Back</a>
-                    {% endif %}
-                    <br />
-                    <br />
-                    <p>To view rosters for another activity, search for its name in the search box, and click on "View Roster."</p>
+                {% if sponsor_block %}
+                    <br /><br />
+                    <p>You can view more information about an activity by searching for its name in the Search box.</p>
                 {% endif %}
 
 
@@ -333,7 +329,7 @@ $(function() {
 
                 <form class="attendance-form" action="" method="post">
                     {% csrf_token %}
-                    <table class="take-attendance-roster">
+                    <table class="take-attendance-roster{% if not members %} no-members{% endif %}">
                         <thead>
                             {% if request.user.is_eighth_admin %}
                             <tr>
@@ -404,7 +400,9 @@ $(function() {
                         <tfoot class="print-hide">
                             <tr>
                                 <td colspan="5">
-                                {% if not scheduled_activity.block.locked %}
+                                {% if no_edit_perm %}
+                                    <br />
+                                {% elif not scheduled_activity.block.locked %}
                                     <br />
                                     <br />
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>

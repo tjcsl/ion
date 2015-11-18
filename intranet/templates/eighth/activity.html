@@ -101,7 +101,16 @@
     </dl>
 
     <section class="user-info-eighth sponsor">
-        <h3>Scheduled on:</h3>
+        <h3>
+            Scheduled on:
+            {% if request.user.is_teacher or request.user.is_eighth_admin %}
+                {% if "show_all" in request.GET %}
+                    &nbsp; <a href="?" class="button small-button">Show Next 2 Months</a>
+                {% else %}
+                    &nbsp; <a href="?show_all=1" class="button small-button">Show All Blocks</a>
+                {% endif %}
+            {% endif %}
+        </h3>
         <table class="fancy-table">
         <thead>
         <tr>
