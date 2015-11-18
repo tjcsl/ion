@@ -139,6 +139,11 @@ def poll_results_view(request, poll_id):
     except Poll.DoesNotExist:
         raise http.Http404
 
+    def perc(num, den):
+        if den == 0:
+            return 0
+        return int( 10000 * num / den) / 100
+
     questions = []
     for q in poll.question_set.all():
         question_votes = votes = Answer.objects.filter(question=q)
@@ -151,7 +156,7 @@ def poll_results_view(request, poll_id):
                 "votes": {
                     "total": {
                         "all": votes.count(),
-                        "all_percent": int( 10000 * votes.count() / question_votes.count()) / 100,
+                        "all_percent": perc(votes.count(), question_votes.count()),
                         "male": sum([v.user.is_male for v in votes]),
                         "female": sum([v.user.is_female for v in votes])
                     }
@@ -175,7 +180,7 @@ def poll_results_view(request, poll_id):
             "votes": {
                 "total": {
                     "all": votes.count(),
-                    "all_percent": int( 10000 * votes.count() / question_votes.count()) / 100,
+                    "all_percent": perc(votes.count(), question_votes.count()),
                     "male": sum([v.user.is_male for v in votes]),
                     "female": sum([v.user.is_female for v in votes])
                 }
@@ -198,7 +203,7 @@ def poll_results_view(request, poll_id):
             "votes": {
                 "total": {
                     "all": users.count(),
-                    "all_percent": int( 10000 * users.count() / question_votes.count()) / 100,
+                    "all_percent": perc(users.count(), question_votes.count()),
                     "male": sum([u.is_male for u in users]),
                     "female": sum([u.is_female for u in users]),
                 }
