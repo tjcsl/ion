@@ -25,8 +25,8 @@ def polls_view(request):
 
     
     if not "show_all" in request.GET:
-        now = datetime.datetime.now()
-        polls = polls.filter(start_time__gt=now, end_time__lt=now)
+        now = timezone.now()
+        polls = polls.filter(start_time__lt=now, end_time__gt=now)
 
     if not is_polls_admin:
         polls = polls.filter(visible=True)
