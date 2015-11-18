@@ -154,10 +154,11 @@ class Question(models.Model):
         return (self.type in [Question.STD, Question.ELECTION])
 
     def trunc_question(self):
-        if len(self.question) > 15:
-            return self.question[:12] + "..?"
+        comp = strip_tags(self.question)
+        if len(comp) > 50:
+            return comp[:47] + "..."
         else:
-            return self.question
+            return comp
 
     def get_users_voted(self):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
@@ -220,7 +221,7 @@ class Choice(models.Model):  # individual answer choices
     def trunc_info(self):
         comp = strip_tags(self.info)
         if len(comp) > 50:
-            return self.info[:47] + "..."
+            return comp[:47] + "..."
         else:
             return comp
 
