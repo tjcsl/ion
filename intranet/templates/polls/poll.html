@@ -9,6 +9,7 @@
         {% else %}    
             {{ poll.title }}
         {% endif %}
+        {% if not poll.visible %} (HIDDEN){% endif %}
         {% if is_polls_admin %}
             <div class="poll-icon-wrapper">
                 <a href="{% url 'modify_poll' poll.id %}">

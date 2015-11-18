@@ -24,8 +24,8 @@
         </a>
         <h2>Vote: {{ poll }}</h2>
 
-            <p>{{ poll.description }}</p>
-        {% if user != request.user %}<b>{{ user }}</b><br />{% endif %}
+            <p>{{ poll.description|safe }}</p>
+        {% if user != request.user %}<b>Voting as: {{ user }}</b><br />{% endif %}
         {% if user in poll.get_users_voted %}
             <span class="voted-status voted">
                 <i class="fa fa-check"></i> You have voted in this poll.

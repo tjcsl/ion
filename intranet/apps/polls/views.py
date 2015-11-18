@@ -6,6 +6,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from ..users.models import User
 from .models import Poll, Question, Answer, Choice
 
@@ -15,6 +16,13 @@ logger = logging.getLogger(__name__)
 @login_required
 def polls_view(request):
     polls = Poll.objects.visible_to_user(request.user)
+    if not "show_all" in request.GET:
+        now = timezone.now()
+        polls = polls.filter(start_time__gt=now, end_time__lt=now)
+
+    if not is_polls_admin:
+        polls = polls.filter(visible=True)
+
     is_polls_admin = request.user.has_admin_permission("polls")
 
     context = {
