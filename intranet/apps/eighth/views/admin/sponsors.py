@@ -114,7 +114,8 @@ def sponsor_schedule_view(request, sponsor_id):
         "activities": activities,
         "activity": activity,
         "admin_page_title": "Sponsor Schedule",
-        "sponsor": sponsor
+        "sponsor": sponsor,
+        "all_sponsors": EighthSponsor.objects.all()
     }
 
     return render(request, "eighth/admin/sponsor_schedule.html", context)

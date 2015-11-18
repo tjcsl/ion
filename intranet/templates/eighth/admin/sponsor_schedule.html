@@ -7,6 +7,12 @@
     <script type="text/javascript">
         $(function() {
             Sortable.init();
+            $("#sponsor-select").on("change", function() {
+                var val = $(this).val();
+                if(val) {
+                    location.href = "/eighth/admin/sponsors/schedule/" + val;
+                }
+            })
         });
     </script>
 {% endblock %}
@@ -17,6 +23,14 @@
 {% endblock %}
 
 {% block admin_main %}
+
+
+<select id="sponsor-select" placeholder="Select or search for a sponsor">
+    <option value="">Select or search for a sponsor</option>
+    {% for sp in all_sponsors %}
+        <option value="{{ sp.id }}"{% if sp.id == sponsor.id %} selected{% endif %}>{{ sp.name }}{% if sp.user.id %} (User {{ sp.user.id }}){% else %} (No user){% endif %}</option>
+    {% endfor %}
+</select>
 
 <h4>Select an Activity:</h4>
 
