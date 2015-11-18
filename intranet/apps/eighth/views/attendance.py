@@ -247,16 +247,15 @@ def take_attendance_view(request, scheduled_activity_id):
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
-    if scheduled_activity.cancelled:
-        return render(request, "error/403.html", {
-            "reason": "{} was cancelled.".format(scheduled_activity)
-        })
-
     if request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user):
         logger.debug("User has permission to edit")
         edit_perm = True
     else:
         logger.debug("User does not have permission to edit")
+        edit_perm = False
+
+    if scheduled_activity.cancelled and not request.user.is_eighth_admin:
+        logger.debug("Non-admin user does not have permission to edit cancelled activity")
         edit_perm = False
 
     if request.method == "POST":
