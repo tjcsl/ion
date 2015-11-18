@@ -554,7 +554,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         if len(room_names) == 1:
             rooms_str = "Room " + room_names[0]
         else:
-            rooms_str = ", ".join("Rooms: " + r for r in room_names)
+            rooms_str = "Rooms: " + ", ".join(r for r in room_names)
 
         block_letter = sact.block.block_letter
 
@@ -588,7 +588,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, block_letter_width]))
         elements.append(Spacer(0, 10))
-        elements.append(Paragraph(sact.activity.name, styles["Title"]))
+        elements.append(Paragraph(sact.full_title, styles["Title"]))
 
         num_members = sact.members.count()
         num_members_label = "{} Student{}".format(num_members, "s" if num_members != 1 else "")

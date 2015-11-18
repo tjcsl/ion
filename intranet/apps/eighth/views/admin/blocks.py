@@ -163,6 +163,7 @@ def print_block_rosters_view(request, block_id):
         try:
             block = EighthBlock.objects.get(id=block_id)
             schacts = EighthScheduledActivity.objects.filter(block=block).order_by("sponsors")
+            schacts = sorted(schacts, key=lambda x: "{}".format(x.get_true_sponsors()))
         except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
             raise http.Http404
         context = {
