@@ -412,7 +412,7 @@ class EighthBlock(AbstractBaseEighthModel):
             The recommended time at which all users should sign up.
             This does *not* prevent people from signing up at this
             time, however students will see the amount of time left
-            to sign up. Defaults to 12:30.
+            to sign up. Defaults to 12:40.
         block_letter
             The block letter (e.g. A, B, A1, A2, SOL).
             Despite its name, it can now be more than just a letter.
@@ -436,7 +436,7 @@ class EighthBlock(AbstractBaseEighthModel):
     objects = EighthBlockManager()
 
     date = models.DateField(null=False)
-    signup_time = models.TimeField(default=datetime.time(12, 30))
+    signup_time = models.TimeField(default=datetime.time(12, 40))
     block_letter = models.CharField(max_length=10)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
