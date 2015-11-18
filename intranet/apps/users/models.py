@@ -696,6 +696,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     @property
+    def is_male(self):
+        return self.sex.lower()[:1] == "m" if self.sex else False
+
+    @property
+    def is_female(self):
+        return self.sex.lower()[:1] == "f" if self.sex else False
+    
+    
+
+    @property
     def age(self, date=None):
         """Returns a user's age, based on their birthday.
            Optional date argument to find their age on a given day.
@@ -1314,12 +1324,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             field_name = attr["ldap_name"]
             try:
                 results = c.user_attributes(self.dn, [field_name])
-                result = results.first_result()[field_name]
+                try:
+                    result = results.first_result()[field_name]
+                except TypeError:
+                    result = None
 
                 if attr["is_list"]:
                     value = result
-                else:
+                elif result:
                     value = result[0]
+                else:
+                    value = None
+                    should_cache = False
 
                 if should_cache:
                     cache.set(key, value,
