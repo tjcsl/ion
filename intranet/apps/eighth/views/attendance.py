@@ -238,11 +238,15 @@ def take_attendance_view(request, scheduled_activity_id):
         scheduled_activity = (EighthScheduledActivity.objects
                                                      .select_related("activity",
                                                                      "block")
-                                                     .get(cancelled=False,
-                                                          activity__deleted=False,
+                                                     .get(activity__deleted=False,
                                                           id=scheduled_activity_id))
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
+
+    if scheduled_activity.cancelled:
+        return render(request, "error/403.html", {
+            "reason": "{} was cancelled.".format(scheduled_activity)
+        })
 
     if request.user.is_eighth_admin or scheduled_activity.user_is_sponsor(request.user):
         logger.debug("User has permission to edit")
