@@ -25,7 +25,11 @@
             </span>
             {% endif %}
         </div>
-        You are in the following groups:
+        {% if request.user == user %}
+            You are in the following groups:
+        {% else %}
+            <b>{{ user }}</b> is in the following groups:
+        {% endif %}
         <ul>
             {% for group in user.groups.all %}
                 <li>
