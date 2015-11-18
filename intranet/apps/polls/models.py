@@ -115,7 +115,10 @@ class Question(models.Model):
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
 
     def is_writing(self):
-        return (self.TYPE == Question.FREE_RESP or self.TYPE == Question.SHORT_RESP)
+        return (self.type in [Question.FREE_RESP, Question.SHORT_RESP])
+
+    def is_choice(self):
+        return (self.type in [Question.STD, Question.ELECTION])
 
     def trunc_question(self):
         if len(self.question) > 15:
@@ -191,7 +194,8 @@ class Choice(models.Model):  # individual answer choices
 class Answer(models.Model):  # individual answer choices selected
     question = models.ForeignKey(Question)
     user = models.ForeignKey(User)
-    choice = models.ForeignKey(Choice)  # determine field based on question type
+    choice = models.ForeignKey(Choice, null=True)  # determine field based on question type
+    clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
 
     def __unicode__(self):

@@ -48,18 +48,19 @@
             <p>To vote, follow the instructions next to each question.</p>
 
             <ol class="questions">
-            {% for question in poll.question_set.all %}
+            {% for question in questions %}
                 <li>
-                {% if question.type == "STD" %}
                     {{ question.question }}
                     <div class="question">
+                    {% if question.is_choice %}
                         <ul class="answers">
-                        {% for choice in question.choice_set.all %}
+                        {% for choice in question.choices %}
                             <li>
                                 <input type="radio"
                                        id="question-{{ question.num }}-{{ choice.num }}"
                                        name="question-{{ question.num }}"
-                                       value="{{ choice.num }}" />
+                                       value="{{ choice.num }}"
+                                       {% if choice.id == question.current_choice.id %} checked {% endif %} />
 
                                 <label for="question-{{ question.num }}-{{ choice.num }}">
                                     {{ choice.info }}
@@ -70,7 +71,8 @@
                                 <input type="radio"
                                        id="question-{{ question.num }}-clear"
                                        name="question-{{ question.num }}"
-                                       value="CLEAR" />
+                                       value="CLEAR"
+                                       {% if question.current_vote_clear %} checked {% endif %} />
 
                                 <label for="question-{{ question.num }}-clear" class="clear-vote">
                                     Clear Vote
@@ -78,35 +80,7 @@
                             </li>
                         </ul>
                     </div>
-                {% elif question.type == "ELC" %}
-                    {{ question.question }}
-                    <div class="question">
-                        <ul class="answers">
-                        {% for choice in question.random_choice_set %}
-                            <li>
-                                <input type="radio"
-                                       id="question-{{ question.num }}-{{ choice.num }}"
-                                       name="question-{{ question.num }}"
-                                       value="{{ choice.num }}" />
-
-                                <label for="question-{{ question.num }}-{{ choice.num }}">
-                                    {{ choice.info }}
-                                </label>
-                            </li>
-                        {% endfor %}
-                            <li>
-                                <input type="radio"
-                                       id="question-{{ question.num }}-clear"
-                                       name="question-{{ question.num }}"
-                                       value="CLEAR" />
-
-                                <label for="question-{{ question.num }}-clear" class="clear-vote">
-                                    Clear Vote
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
-                {% endif %}
+                    {% endif %}
                 </li>
             {% endfor %}
             </ol>
