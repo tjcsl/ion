@@ -390,15 +390,15 @@ def ldap_test(request):
                         logger.debug("{} {}".format(perm, value))
                         results += "{}: {}\n".format(perm, value)
                 else:
-                    results += req
+                    results += "Empty result"
 
     logger.debug(results)
 
     context = {
-        "search_dn": search_dn or settings.USER_DN,
+        "search_dn": search_dn or settings.USER_DN or "",
         "search_q": search_q or "",
         "search_attrs": search_attrs or "",
-        "user_attribute_dn": user_attribute_dn,
+        "user_attribute_dn": user_attribute_dn or "",
         "user_attribute_attrs": user_attribute_attrs or "",
         "results": results
     }
