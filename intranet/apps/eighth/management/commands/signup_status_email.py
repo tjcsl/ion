@@ -84,13 +84,19 @@ class Command(BaseCommand):
                 if log:
                     self.stdout.write("User {} hasn't signed up for a block".format(user))
                 if not options["pretend"]:
-                    signup_status_email(user, next_blocks)
+                    try:
+                        signup_status_email(user, next_blocks)
+                    except Exception as e:
+                        print e
             elif user_signups.filter(scheduled_activity__cancelled=True).count() > 0:
                 """User is in a cancelled activity."""
                 if log:
                     self.stdout.write("User {} is in a cancelled activity.".format(user))
                 if not options["pretend"]:
-                    signup_status_email(user, next_blocks)
+                    try:
+                        signup_status_email(user, next_blocks)
+                    except Exception as e:
+                        print e
 
         if log:
             self.stdout.write("Done.")
