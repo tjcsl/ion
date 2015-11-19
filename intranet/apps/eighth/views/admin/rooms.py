@@ -233,8 +233,8 @@ def room_utilization_action(request, start_id, end_id):
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
-    show_opts = ["block", "rooms", "aid", "activity", "comments", "sponsors", "signups", "capacity", "admin_comments"]
-    show_opts_defaults = ["block", "rooms", "aid", "activity", "comments", "sponsors", "signups", "capacity"]
+    show_opts = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors", "admin_comments"]
+    show_opts_defaults = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors"]
     show_opts_hidden = ["admin_comments"]
     if len(show_vals) == 0:
         show = {name: True for name in show_opts_defaults}
@@ -282,6 +282,10 @@ def room_utilization_action(request, start_id, end_id):
                 row.append(sch_act.block)
             if show["rooms"]:
                 row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            if show["capacity"]:
+                row.append(sch_act.get_true_capacity())
+            if show["signups"]:
+                row.append(sch_act.members.count())
             if show["aid"]:
                 row.append(sch_act.activity.aid)
             if show["activity"]:
@@ -290,10 +294,6 @@ def room_utilization_action(request, start_id, end_id):
                 row.append(sch_act.comments)
             if show["sponsors"]:
                 row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
-            if show["signups"]:
-                row.append(sch_act.members.count())
-            if show["capacity"]:
-                row.append(sch_act.get_true_capacity())
             if show["admin_comments"]:
                 row.append(sch_act.admin_comments)
 
