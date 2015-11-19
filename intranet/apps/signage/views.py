@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from intranet import settings
 from ..users.models import User
 from ..eighth.models import EighthBlock, EighthSignup
 from ..eighth.serializers import EighthBlockDetailSerializer
@@ -17,6 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 def eighth_signage(request, block_id=None):
+    if not request.user.is_authenticated() and request.META['REMOTE_ADDR'] not in settings.INTERNAL_IPS:
+        return render(request, "error/403.html", {
+                "reason": "You are not authorized to view this page."
+            }, status=403)
+
     if block_id is None:
         next_block = EighthBlock.objects.get_first_upcoming_block()
         if next_block is not None:
