@@ -12,13 +12,15 @@
             <div class="user-title">
                 <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
                     {{ profile_user.full_name }}
-                    {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+                    {% if profile_user.nickname %} ({{ profile_user.nickname }}){% endif %}
+                    {% if profile_user.student_id %} ({{ profile_user.student_id }})
+                    {% endif %}
                 </h2>
                 <h3>
                 {% if profile_user.is_student %}
                     {% if profile_user.graduation_year %}
                         {{ profile_user.grade|capfirst }}
-                        ({{ profile_user.graduation_year }})
+                        (Grade {{ profile_user.grade.number }}: {{ profile_user.graduation_year }})
                     {% else %}
                         Student
                     {% endif %}
@@ -43,13 +45,6 @@
                     <th>Username</th>
                     <td>{{ profile_user.ion_username }}</td>
                 </tr>
-                {% if profile_user.student_id %}
-                    <tr>
-                        <th>Student ID</th>
-                        <td>{{ profile_user.student_id }}</td>
-                    </tr>
-                {% endif %}
-
                 {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
                     <tr>
                         <th>Counselor</th>

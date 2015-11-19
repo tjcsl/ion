@@ -156,16 +156,17 @@
     {% if profile_user.is_eighth_sponsor %}
         <section class="user-info-eighth sponsor">
             <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsored Activities{% endif %}</h3>
-            <table data-sortable class="fancy-table">
+            <table data-sortable class="fancy-table sponsor-table">
                 {% if eighth_sponsor_schedule %}
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th>Block</th>
                         <th>Activity</th>
                         <th>Comments</th>
                         <th>Room</th>
-                        <th>Signups</th>
                         <th>Capacity</th>
+                        <th>Signups</th>
                         {% if request.user.is_eighth_admin %}
                             <th></th>
                         {% endif %}
@@ -175,15 +176,16 @@
                 <tbody>
                     {% for scheduled_activity in eighth_sponsor_schedule %}
                         <tr>
-                            <th>{{ scheduled_activity.block.date|date:"D, M d, Y" }} ({{ scheduled_activity.block.block_letter }})</th>
+                            <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}</td>
+                            <td>{{ scheduled_activity.block.block_letter }}</td>
                             <td>{{ scheduled_activity.activity.id }}: {{ scheduled_activity.activity.name_with_flags }}</td>
                             <td>{{ scheduled_activity.comments }}</td>
                             <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
-                            <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                             <td>{{ scheduled_activity.get_true_capacity }}</td>
+                            <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                             {% if request.user.is_eighth_admin %}
                                 <td>
-                                    <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button small-button">
+                                    <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button">
                                         {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
                                     </a>
                                 </td>
