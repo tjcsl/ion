@@ -106,8 +106,13 @@ $(function() {
         {% endif %}
 
         {% if no_edit_perm %}
-            <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
-            <br />
+            {% if edit_perm_cancelled %}
+                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> This activity was cancelled, so you can only view the roster.</strong>
+                <br />
+            {% else %}
+                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
+                <br />
+            {% endif %}
         {% endif %}
 
         {% if request.GET.no_attendance %}

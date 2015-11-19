@@ -253,17 +253,25 @@ def take_attendance_view(request, scheduled_activity_id):
     else:
         logger.debug("User does not have permission to edit")
         edit_perm = False
+    
+    edit_perm_cancelled = False
 
     if scheduled_activity.cancelled and not request.user.is_eighth_admin:
         logger.debug("Non-admin user does not have permission to edit cancelled activity")
         edit_perm = False
+        edit_perm_cancelled = True
 
     if request.method == "POST":
 
         if not edit_perm:
-            return render(request, "error/403.html", {
-                "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
-            }, status=403)
+            if edit_perm_cancelled:
+                return render(request, "error/403.html", {
+                    "reason": "You do not have permission to take attendance for this activity. The activity was cancelled."
+                }, status=403)
+            else:
+                return render(request, "error/403.html", {
+                    "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
+                }, status=403)
 
         if "admin" in request.path:
             url_name = "eighth_admin_take_attendance"
@@ -370,14 +378,14 @@ def take_attendance_view(request, scheduled_activity_id):
             "members": members,
             "p": pass_users,
             "no_edit_perm": not edit_perm,
+            "edit_perm_cancelled": edit_perm_cancelled,
             "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin),
             "show_icons": (scheduled_activity.block.locked and scheduled_activity.block.attendance_locked() and not request.user.is_eighth_admin)
         }
 
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = (EighthScheduledActivity.objects
-                                                                      .filter(block__id=scheduled_activity.block.id)
-                                                                      .exclude(cancelled=True))
+                                                                      .filter(block__id=scheduled_activity.block.id))
             logger.debug(context["scheduled_activities"])
             context["blocks"] = (EighthBlock.objects
                                  # .filter(date__gte=get_start_date(request))
