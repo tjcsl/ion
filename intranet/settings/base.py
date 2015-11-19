@@ -294,6 +294,7 @@ INSTALLED_APPS = (
     "intranet.apps.preferences",
     "intranet.apps.files",
     "intranet.apps.polls",
+    "intranet.apps.signage",
     "intranet.middleware.environment",
     "widget_tweaks",
     "corsheaders",
