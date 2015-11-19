@@ -59,4 +59,20 @@ if SHOW_DEBUG_TOOLBAR:
         "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
     })
 
+class glob_list(list):
+
+    """A list of glob-style strings."""
+
+    def __contains__(self, key):
+        """Check if a string matches a glob in the list."""
+        for elt in self:
+            if fnmatch(key, elt):
+                return True
+        return False
+
+INTERNAL_IPS = glob_list([
+    "127.0.0.1",
+    "198.38.*.*"
+])
+
 # MIDDLEWARE_CLASSES += ('intranet.middleware.profiler.ProfileMiddleware',)
