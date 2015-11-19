@@ -33,19 +33,34 @@ def eighth_signage(request, block_id=None):
             if last_block is not None:
                 block_id = last_block.id
 
+    block_increment = request.GET.get("block_increment", 0)
+    try:
+        block_increment = int(block_increment)
+    except ValueError:
+        block_increment = 0
+
+    block = None
+    if block_increment > 0:
+        next_blocks = next_block.next_blocks()
+        if next_blocks.count() >= block_increment:
+            block = next_blocks[block_increment - 1]
+
+    if not block:
+        try:
+            block = (EighthBlock.objects
+                                .prefetch_related("eighthscheduledactivity_set")
+                                .get(id=block_id))
+        except EighthBlock.DoesNotExist:
+            if EighthBlock.objects.count() == 0:
+                # No blocks have been added yet
+                return render(request, "eighth/display.html", {"no_blocks": True})
+            else:
+                # The provided block_id is invalid
+                raise http.Http404
+
     user = User.objects.get(username="awilliam")
 
-    try:
-        block = (EighthBlock.objects
-                            .prefetch_related("eighthscheduledactivity_set")
-                            .get(id=block_id))
-    except EighthBlock.DoesNotExist:
-        if EighthBlock.objects.count() == 0:
-            # No blocks have been added yet
-            return render(request, "eighth/display.html", {"no_blocks": True})
-        else:
-            # The provided block_id is invalid
-            raise http.Http404
+    
 
 
     serializer_context = {
