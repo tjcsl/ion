@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from fnmatch import fnmatch
 from six.moves.urllib import parse
 from .base import *
 
