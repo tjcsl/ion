@@ -56,12 +56,15 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
 
+
 class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
+
     def get_url(self, obj, view_name, request, format):
         s = super(HyperlinkedImageField, self).get_url(obj, view_name, request, format)
         if "format=" in s:
             return "{}format=jpg".format(s.split("format=")[0])
         return s
+
 
 class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()

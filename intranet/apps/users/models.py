@@ -720,8 +720,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_female(self):
         return self.sex.lower()[:1] == "f" if self.sex else False
-    
-    
 
     @property
     def age(self, date=None):

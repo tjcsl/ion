@@ -351,6 +351,7 @@ transfer_students_view = eighth_admin_required(
     )
 )
 
+
 class EighthAdminUnsignupStudentsWizard(SessionWizardView):
     FORMS = [
         ("block_1", BlockSelectionForm),

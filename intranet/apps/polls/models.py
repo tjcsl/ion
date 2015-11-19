@@ -22,7 +22,7 @@ class PollManager(Manager):
         """
 
         return Poll.objects.filter(Q(groups__in=user.groups.all()) |
-                                           Q(groups__isnull=True))
+                                   Q(groups__isnull=True))
 
 
 class Poll(models.Model):
@@ -69,7 +69,6 @@ class Poll(models.Model):
         """ Is it within the poll time range? """
         return not self.before_start_time() and self.before_end_time()
 
-
     def get_users_voted(self):
         users = []
         for q in self.question_set.all():
@@ -103,6 +102,7 @@ class Poll(models.Model):
 
     def __unicode__(self):
         return self.title
+
 
 class Question(models.Model):
     """ A question for a Poll.
@@ -177,7 +177,6 @@ class Question(models.Model):
         choices = list(self.choice_set.all())
         shuffle(choices)
         return choices
-    
 
     class Meta:
         ordering = ["num"]
@@ -206,7 +205,6 @@ class Choice(models.Model):  # individual answer choices
         is_writing
             Boolean, if the Question is_writing().
     """
-
 
     question = models.ForeignKey(Question)
     num = models.IntegerField()

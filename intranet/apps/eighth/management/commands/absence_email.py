@@ -30,7 +30,6 @@ class Command(BaseCommand):
 
         absences = EighthSignup.objects.get_absences().filter(absence_emailed=False).nocache()
 
-
         for signup in absences:
             if log:
                 self.stdout.write("{}".format(signup))

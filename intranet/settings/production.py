@@ -60,6 +60,7 @@ if SHOW_DEBUG_TOOLBAR:
         "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
     })
 
+
 class glob_list(list):
 
     """A list of glob-style strings."""

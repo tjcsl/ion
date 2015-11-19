@@ -290,6 +290,7 @@ def admin_add_view(request):
     }
     return render(request, "schedule/admin_add.html", context)
 
+
 @schedule_admin_required
 def admin_comment_view(request):
     date = request.GET.get("date")
@@ -316,6 +317,7 @@ def admin_comment_view(request):
     }
 
     return render(request, "schedule/admin_comment.html", context)
+
 
 @schedule_admin_required
 def admin_daytype_view(request, id=None):

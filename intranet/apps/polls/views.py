@@ -23,7 +23,6 @@ def polls_view(request):
     else:
         polls = Poll.objects.visible_to_user(request.user)
 
-    
     if not "show_all" in request.GET:
         now = timezone.now()
         polls = polls.filter(start_time__lt=now, end_time__gt=now)
@@ -36,6 +35,7 @@ def polls_view(request):
         "is_polls_admin": is_polls_admin
     }
     return render(request, "polls/home.html", context)
+
 
 @login_required
 def poll_vote_view(request, poll_id):
@@ -67,7 +67,6 @@ def poll_vote_view(request, poll_id):
                     messages.error(request, "Invalid question passes with num {}".format(question_num))
                     continue
                 logger.debug(question_obj)
-
 
                 choice_num = entries[name]
                 logger.debug(choice_num)
@@ -117,7 +116,6 @@ def poll_vote_view(request, poll_id):
         }
         questions.append(question)
 
-
     logger.debug(questions)
 
     can_vote = poll.can_vote(user)
@@ -129,6 +127,7 @@ def poll_vote_view(request, poll_id):
         "question_types": Question.get_question_types()
     }
     return render(request, "polls/vote.html", context)
+
 
 @login_required
 def poll_results_view(request, poll_id):
@@ -143,7 +142,7 @@ def poll_results_view(request, poll_id):
     def perc(num, den):
         if den == 0:
             return 0
-        return int( 10000 * num / den) / 100
+        return int(10000 * num / den) / 100
 
     questions = []
     for q in poll.question_set.all():
@@ -198,7 +197,6 @@ def poll_results_view(request, poll_id):
         logger.debug(choice)
         choices.append(choice)
 
-
         choice = {
             "choice": "Total",
             "votes": {
@@ -221,7 +219,6 @@ def poll_results_view(request, poll_id):
 
         choices.append(choice)
 
-
         question = {
             "question": q,
             "choices": choices
@@ -235,9 +232,11 @@ def poll_results_view(request, poll_id):
     }
     return render(request, "polls/results.html", context)
 
+
 @login_required
 def add_poll_view(request):
     return redirect("polls")
+
 
 @login_required
 def modify_poll_view(request, poll_id):

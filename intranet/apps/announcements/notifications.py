@@ -178,8 +178,8 @@ def announcement_posted_email(request, obj, send_all=False):
             "base_url": base_url
         }
         email_send_bcc("announcements/emails/announcement_posted.txt",
-                   "announcements/emails/announcement_posted.html",
-                   data, subject, emails)
+                       "announcements/emails/announcement_posted.html",
+                       data, subject, emails)
         messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
         logger.debug("Emailing announcements disabled")

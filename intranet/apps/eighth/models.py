@@ -778,7 +778,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         Needed for the EighthScheduledActivitySerializer.
 
         Returns: QuerySet
-        """ 
+        """
         ids = []
         user = request.user
         for member in self.members.all():
@@ -1135,6 +1135,7 @@ class EighthSignupManager(Manager):
         return (EighthSignup.objects
                             .filter(was_absent=True,
                                     scheduled_activity__attendance_taken=True))
+
 
 class EighthSignup(AbstractBaseEighthModel):
 

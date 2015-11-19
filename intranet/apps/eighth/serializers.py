@@ -351,7 +351,6 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
         else:
             self.request = None
 
-
     def get_name(self, scheduled_activity):
         return scheduled_activity.title_with_flags
 
@@ -391,7 +390,6 @@ class EighthScheduledActivitySerializer(serializers.ModelSerializer):
 
     def num_signups(self, scheduled_activity):
         return scheduled_activity.members.count()
-
 
     class Meta:
         model = EighthScheduledActivity

@@ -35,6 +35,7 @@ def email_send(text_template, html_template, data, subject, emails, headers=None
 
     return msg
 
+
 def email_send_bcc(text_template, html_template, data, subject, emails, headers=None):
     """
         Send an HTML/Plaintext email with the following fields.

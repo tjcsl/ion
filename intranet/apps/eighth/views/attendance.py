@@ -119,8 +119,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         block = self.get_cleaned_data_for_step("block")
 
-
-        context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block) })
+        context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block)})
 
         if block:
             block = block["block"]
@@ -253,7 +252,7 @@ def take_attendance_view(request, scheduled_activity_id):
     else:
         logger.debug("User does not have permission to edit")
         edit_perm = False
-    
+
     edit_perm_cancelled = False
 
     if scheduled_activity.cancelled and not request.user.is_eighth_admin:

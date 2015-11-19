@@ -21,8 +21,8 @@ def eighth_signage(request, block_id=None):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {
-                "reason": "You are not authorized to view this page."
-            }, status=403)
+            "reason": "You are not authorized to view this page."
+        }, status=403)
 
     if block_id is None:
         next_block = EighthBlock.objects.get_first_upcoming_block()
@@ -59,9 +59,6 @@ def eighth_signage(request, block_id=None):
                 raise http.Http404
 
     user = User.objects.get(username="awilliam")
-
-    
-
 
     serializer_context = {
         "request": request,

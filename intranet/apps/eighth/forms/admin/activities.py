@@ -86,7 +86,7 @@ class ScheduledActivityMultiSelectForm(forms.Form):
         if block is not None:
             activity_ids = (EighthScheduledActivity.objects
                                                    .exclude(activity__deleted=True)
-                                                   #.exclude(cancelled=True)
+                            #.exclude(cancelled=True)
                                                    .filter(block=block)
                                                    .values_list("activity__id", flat=True)
                                                    .nocache())
