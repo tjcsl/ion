@@ -49,7 +49,7 @@ def poll_vote_view(request, poll_id):
     if is_polls_admin and "user" in request.GET:
         try:
             user = User.objects.get(id=request.GET.get("user"))
-        except User.DoesNotExist, ValueError:
+        except (User.DoesNotExist, ValueError):
             user = request.user
 
     if request.method == "POST":
