@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 def eighth_signage(request, block_id=None):
-    if not request.user.is_authenticated() and request.META['REMOTE_ADDR'] not in settings.INTERNAL_IPS:
+    remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
+    if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {
                 "reason": "You are not authorized to view this page."
             }, status=403)
