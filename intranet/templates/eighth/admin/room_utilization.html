@@ -84,6 +84,10 @@
     color: red;
 }
 
+.tbd-tba {
+    color: red;
+}
+
     </style>
 {% endblock %}
 
@@ -203,7 +207,13 @@
                             </td>
                         {% endif %}
                         {% if show.rooms %}
-                            <td>{{ sched_act.get_true_rooms|join:", " }}</td>
+                            <td>
+                            {% for rm in sched_act.get_true_rooms %}
+                                {% if rm.to_be_determined %}
+                                    <span class="tbd-tba">{{ rm }}</span>{% else %}
+                                    {{ rm }}{% endif %}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </td>
                         {% endif %}
                         {% if show.capacity %}
                             <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
@@ -221,7 +231,13 @@
                             <td>{{ sched_act.comments }}</td>
                         {% endif %}
                         {% if show.sponsors %}
-                            <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
+                            <td>
+                            {% for sp in sched_act.get_true_sponsors %}
+                                {% if sp.to_be_assigned %}
+                                    <span class="tbd-tba">{{ sp }}</span>{% else %}
+                                    {{ sp }}{% endif %}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </td>
                         {% endif %}
                         {% if show.admin_comments %}
                             <td>{{ sched_act.admin_comments }}</td>

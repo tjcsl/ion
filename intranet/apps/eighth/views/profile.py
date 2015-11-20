@@ -196,6 +196,9 @@ def profile_history_view(request, user_id=None):
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
+    if profile_user.is_eighth_sponsor and request.user.is_eighth_admin:
+        return redirect("eighth_admin_sponsor_schedule", profile_user.get_eighth_sponsor().id)
+
     blocks = EighthBlock.objects.get_blocks_this_year()
     blocks = blocks.filter(locked=True)
     blocks = blocks.order_by("date", "block_letter")
