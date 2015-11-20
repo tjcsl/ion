@@ -1,3 +1,21 @@
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "EmailMessage",
+  "description": "Announcement Approved: {{ announcement.title }}",
+  "potentialAction": {
+    "@type": "ViewAction",
+    "target": "{{ info_link }}",
+    "name": "View announcement"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "TJHSST",
+    "url": "https://ion.tjhsst.edu"
+  }
+}
+</script>
+
 <p>
 {% if role == "approved" %}
     The announcement that you approved,
@@ -27,6 +45,5 @@
 {% endautoescape %}
 
 <p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
-
 
 {% include "email_footer.html" %}
