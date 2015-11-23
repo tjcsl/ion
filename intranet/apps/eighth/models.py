@@ -774,10 +774,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if member.dn and member.can_view_eighth:
                 show = member.can_view_eighth
 
-            if user and user.is_eighth_admin:
+            if not show and user and user.is_eighth_admin:
                 show = True
-            if member == user:
+            if not show and user and user.is_teacher:
                 show = True
+            if not show and member == user:
+                show = True
+
             if show:
                 members.append(member)
 
