@@ -9,6 +9,7 @@ from cacheops import invalidate_obj, invalidate_model
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
@@ -54,6 +55,8 @@ def edit_group_view(request, group_id):
 
     if request.method == "POST":
         invalidate_model(Group)
+        if group.name.lower().startswith("all students"):
+            cache.delete("users:students")
         if "remove_all" in request.POST:
             users = group.user_set.all()
             num = users.count()
