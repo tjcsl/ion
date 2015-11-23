@@ -549,12 +549,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
-        if is_student:
+        if self.is_http_request_sender():
+            visible = True
+        elif self._current_user_override():
+            visible = True
+        elif is_student:
             visible = self.attribute_is_visible("showschedule")
         else:
             visible = True
-
-        visible = self._current_user_override() or visible
 
         if cached and visible:
             logger.debug("Attribute 'classes' of user {} loaded "

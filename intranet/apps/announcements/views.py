@@ -7,6 +7,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from ..auth.decorators import announcements_admin_required
 from ..groups.models import Group
 from ..dashboard.views import dashboard_view
@@ -262,6 +263,10 @@ def modify_announcement_view(request, id=None):
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
+            logger.debug(form.cleaned_data)
+            if "update_added_date" in form.cleaned_data and form.cleaned_data["update_added_date"]:
+                logger.debug("Update added date")
+                obj.added = timezone.now()
             # SAFE HTML
             obj.content = bleach.linkify(obj.content)
             obj.save()
