@@ -124,7 +124,7 @@ $(function() {
         {% endif %}
 
         {% if wizard %}
-            <form action="" method="post" name="wizard-form">
+            <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" name="wizard-form">
                 {% csrf_token %}
                 {{ wizard.management_form }}
 
@@ -446,7 +446,7 @@ $(function() {
                 {% if user.is_eighth_admin %}
                     <br />
                     <br />
-                    <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
+                    <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
                         {% csrf_token %}
                         <input type="hidden" name="clear_attendance_bit" value="true" />
                         <input type="submit" value="Clear Attendance Bit" style="font-size: 10px; padding: 3px 5px" />
