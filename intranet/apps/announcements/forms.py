@@ -25,8 +25,15 @@ class AnnouncementForm(forms.ModelForm):
             "does NOT take users' email notification preferences into account, so please use with care."
         )
 
+        self.fields["update_added_date"].help_text = (
+            "If this announcement has already been added, update the added date to now so that the "
+            "announcement is pushed to the top. If this option is not selected, the announcement will stay in "
+            "its current position."
+        )
+
     expiration_date = forms.DateTimeInput()
     notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
+    update_added_date = forms.BooleanField(required=False, label="Update Added Date")
 
     class Meta:
         model = Announcement
@@ -38,6 +45,7 @@ class AnnouncementForm(forms.ModelForm):
             "expiration_date",
             "notify_post",
             "notify_email_all",
+            "update_added_date",
             "pinned"
         ]
 
