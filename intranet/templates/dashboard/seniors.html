@@ -1,13 +1,21 @@
 <div class="widget extra-widget seniors-widget" data-graduation-date="{{ senior_graduation }}" data-graduation-year="{{ senior_graduation_year }}">
     <div class="widget-title">
         <h2>
-            Seniors: Class of {{ senior_graduation_year }}
+            {% if is_senior %}
+                Seniors: Class of {{ senior_graduation_year }}
+            {% else %}
+                {{ user.grade.name|capfirst }}s: Class of {{ user.graduation_year }}
+            {% endif %}
         </h2>
         <div class="info">
             
         </div>
     </div>
     <div class="widget-content">
+    {% if is_senior %}
         <center><span class="seniors-clock"></span></center>
+    {% else %}
+        <center>Your class will never graduate.</center>
+    {% endif %}
     </div>
 </div>

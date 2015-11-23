@@ -213,7 +213,7 @@ def find_birthdays(request):
         except AttributeError:
             return None
         else:
-            cache.set(key, data, timeout=60 * 60 * 24)
+            cache.set(key, data, timeout=60 * 60 * 6)
             return data
 
 
