@@ -1,20 +1,9 @@
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "EmailMessage",
-  "description": "Event Pending: {{ event.title }}",
-  "potentialAction": {
-    "@type": "ViewAction",
-    "target": "{{ info_link }}",
-    "name": "Approve/Reject event"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "TJHSST",
-    "url": "https://ion.tjhsst.edu"
-  }
-}
-</script>
+{% include "email_header.html" %}
+<meta itemprop="description" content="Event Pending: {{ event.title }}"/>
+<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+  <link itemprop="target" href="{{ info_link }}"/>
+  <meta itemprop="name" content="Approve/Reject event"/>
+</div>
 
 <p>The following event is in the approval queue:</p>
 <b>Title:</b> {{ event.title }}<br />

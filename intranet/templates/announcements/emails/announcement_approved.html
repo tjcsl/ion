@@ -1,20 +1,9 @@
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "EmailMessage",
-  "description": "Announcement Approved: {{ announcement.title }}",
-  "potentialAction": {
-    "@type": "ViewAction",
-    "target": "{{ info_link }}",
-    "name": "View announcement"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "TJHSST",
-    "url": "https://ion.tjhsst.edu"
-  }
-}
-</script>
+{% include "email_header.html" %}
+<meta itemprop="description" content="Announcement Approved: {{ formdata.title }}"/>
+<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+  <link itemprop="target" href="{{ info_link }}"/>
+  <meta itemprop="name" content="View announcement"/>
+</div>
 
 <p>
 {% if role == "approved" %}

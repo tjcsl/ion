@@ -1,20 +1,9 @@
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "EmailMessage",
-  "description": "{{ num_absences }} 8th Period absence{{ num_absences|pluralize }}",
-  "potentialAction": {
-    "@type": "ViewAction",
-    "target": "{{ base_url }}eighth/absences",
-    "name": "Clear absence"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "TJHSST",
-    "url": "https://ion.tjhsst.edu"
-  }
-}
-</script>
+{% include "email_header.html" %}
+<meta itemprop="description" content="{{ num_absences }} 8th Period absence{{ num_absences|pluralize }}"/>
+<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+  <link itemprop="target" href="{{ base_url }}eighth/absences"/>
+  <meta itemprop="name" content="Clear absence"/>
+</div>
 
 <p>
     You now have {{ num_absences }} Eighth Period absence{{ num_absences|pluralize }}:</p>
