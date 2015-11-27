@@ -180,7 +180,7 @@ CACHE_AGE = {
     "class_attribute": 6 * months,
     "ldap_permissions": 1 * days,
     "bell_schedule": 7 * days,
-    "users_list": 7 * days,
+    "users_list": 1 * days,
 }
 del days
 del months

@@ -12,6 +12,7 @@ django.contrib.admin.autodiscover()
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
     url(r"^robots\.txt$", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots"),
+    url(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
 
     url(r"^", include("intranet.apps.auth.urls")),

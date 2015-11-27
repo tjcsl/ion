@@ -7,6 +7,7 @@ from datetime import datetime
 from six import BytesIO
 import csv
 from django import http
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -287,7 +288,12 @@ def take_attendance_view(request, scheduled_activity_id):
 
             messages.success(request, "Attendance bit cleared for {}".format(scheduled_activity))
 
-            return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+            redirect_url = reverse(url_name, args=[scheduled_activity.id])
+
+            if "no_attendance" in request.GET:
+                redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+
+            return redirect(redirect_url)
 
         if not scheduled_activity.block.locked and not request.user.is_eighth_admin:
             return render(request, "error/403.html", {
@@ -333,7 +339,12 @@ def take_attendance_view(request, scheduled_activity_id):
 
         messages.success(request, "Attendance updated.")
 
-        return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+        redirect_url = reverse(url_name, args=[scheduled_activity.id])
+
+        if "no_attendance" in request.GET:
+            redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+
+        return redirect(redirect_url)
     else:
         passes = (EighthSignup.objects
                               .select_related("user")

@@ -17,7 +17,7 @@ $(document).ready(function() {
         var osearch = "";
         var searchparts = qs.split("&");
         for (var i in searchparts) {
-            console.debug(searchparts[i]);
+            // console.debug(searchparts[i]);
             if (searchparts[i].length > 0 && searchparts[i].substring(0, 5) !== "date=") {
                 osearch += searchparts[i] + "&";
             }
@@ -26,7 +26,7 @@ $(document).ready(function() {
     };
 
     window.osearch = genOrigSearch();
-    console.info("osearch:", window.osearch);
+    // console.info("osearch:", window.osearch);
 
     scheduleView = function(reldate) {
         $sch = $(".schedule");
@@ -147,7 +147,7 @@ $(document).ready(function() {
         $sch = $(".schedule");
         if(!now) var now = new Date();
         var current = getCurrentPeriod(now);
-        if(current != window.prevPeriod) console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
+        // if(current != window.prevPeriod) console.debug(now.getHours()+":"+now.getMinutes(), "current:", current);
         window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove()
