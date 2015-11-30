@@ -122,7 +122,7 @@ class Senior(models.Model):
         "Mechanical Engineering",
         "Mathematics & Computer Science"
     ]
-    major = models.CharField(max_length=100, choices=[(i, i) for i in MAJORS] + [('', 'Undecided')])
+    major = models.CharField(max_length=100, choices=[(i, i) for i in MAJORS] + [('', 'Undecided')], blank=True, null=True)
     college_sure = models.BooleanField(default=False)
     major_sure = models.BooleanField(default=False)
 
