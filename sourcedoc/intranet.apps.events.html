@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #992) documentation</title>
+    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #993) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #992)',
+        VERSION:     'v3 (Build #993)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #992) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #993) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.feedback package" href="intranet.apps.feedback.html" />
     <link rel="prev" title="intranet.apps.error package" href="intranet.apps.error.html" />
@@ -170,6 +170,33 @@
 <div class="section" id="module-intranet.apps.events.forms">
 <span id="intranet-apps-events-forms-module"></span><h2>intranet.apps.events.forms module<a class="headerlink" href="#module-intranet.apps.events.forms" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="intranet.apps.events.forms.AdminEventForm">
+<em class="property">class </em><code class="descclassname">intranet.apps.events.forms.</code><code class="descname">AdminEventForm</code><span class="sig-paren">(</span><em>all_groups=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#AdminEventForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
+<dl class="class">
+<dt id="intranet.apps.events.forms.AdminEventForm.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#AdminEventForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="intranet.apps.events.forms.AdminEventForm.Meta.exclude">
+<code class="descname">exclude</code><em class="property"> = [u'created_time', u'last_modified_time', u'user', u'attending', u'links', u'approved', u'rejected', u'approved_by', u'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.forms.AdminEventForm.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Event</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.events.forms.AdminEventForm.declared_fields">
+<code class="descclassname">AdminEventForm.</code><code class="descname">declared_fields</code><em class="property"> = OrderedDict()</em><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="intranet.apps.events.forms.EventForm">
 <em class="property">class </em><code class="descclassname">intranet.apps.events.forms.</code><code class="descname">EventForm</code><span class="sig-paren">(</span><em>all_groups=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#EventForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.EventForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
@@ -229,6 +256,8 @@
 <dd>Groups that the event is visible to.</dd>
 <dt>attending</dt>
 <dd>A ManyToManyField of User objects that are attending the event.</dd>
+<dt>show_attending</dt>
+<dd>Boolean, whether users can mark if they are attending or not attending.</dd>
 <dt>approved</dt>
 <dd>Boolean, whether the event has been approved and will be displayed.</dd>
 <dt>approved_by</dt>
