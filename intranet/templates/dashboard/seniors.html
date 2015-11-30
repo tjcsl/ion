@@ -4,11 +4,15 @@
             {% if is_senior %}
                 Seniors: Class of {{ senior_graduation_year }}
             {% else %}
-                {{ user.grade.name|capfirst }}s: Class of {{ user.graduation_year }}
+                {{ user.grade.name_plural|capfirst }}: Class of {{ user.graduation_year }}
             {% endif %}
         </h2>
         <div class="info">
-            
+            {% if is_senior %}
+                <a class="button small-button" href="{% url 'seniors' %}">Add/View Destinations</a>
+            {% else %}
+                <a class="button small-button" href="{% url 'seniors' %}">Senior Destinations</a>
+            {% endif %}
         </div>
     </div>
     <div class="widget-content">
