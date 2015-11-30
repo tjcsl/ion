@@ -26,6 +26,7 @@ urlpatterns = [
     url(r"^search", include("intranet.apps.search.urls")),
     url(r"^profile", include("intranet.apps.users.urls")),
     url(r"^schedule", include("intranet.apps.schedule.urls")),
+    url(r"^seniors", include("intranet.apps.seniors.urls")),
     url(r"^preferences", include("intranet.apps.preferences.urls")),
     url(r"^feedback", include("intranet.apps.feedback.urls")),
     url(r"^welcome", include("intranet.apps.welcome.urls")),

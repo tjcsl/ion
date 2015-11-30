@@ -1015,6 +1015,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "tjhsstStudent"
 
     @property
+    def is_senior(self):
+        """Checks if user is a student in Grade 12.
+
+        Returns:
+            Boolean
+
+        """
+        return (self.is_student and self.grade and self.grade.number and self.grade.number == 12)
+    
+
+    @property
     def is_eighthoffice(self):
         """Checks if user is an Eighth Period office user.
 
