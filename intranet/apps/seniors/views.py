@@ -17,9 +17,14 @@ logger = logging.getLogger(__name__)
 @login_required
 def seniors_home_view(request):
     seniors = Senior.objects.exclude(college=None, major=None)
+    try:
+        own_senior = Senior.objects.get(user=request.user)
+    except Senior.DoesNotExist:
+        own_senior = None
     context = {
         "is_senior": request.user.is_senior,
-        "seniors": seniors
+        "seniors": seniors,
+        "own_senior": own_senior
     }
     return render(request, "seniors/home.html", context)
 
@@ -39,12 +44,16 @@ def seniors_add_view(request):
         else:
             form = SeniorForm(data=request.POST)
         if form.is_valid():
-            form.user = request.user
-            form.save()
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
             messages.success(request, "Your information was {}".format("modified" if senior else "added"))
             return redirect("seniors")
     else:
-        form = SeniorForm()
+        if senior:
+            form = SeniorForm(instance=senior)
+        else:
+            form = SeniorForm()
 
     context = {
         "form": form,

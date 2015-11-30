@@ -9,8 +9,10 @@ class SeniorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SeniorForm, self).__init__(*args, **kwargs)
+        self.fields["college"].help_text = "CollegeBoard CEEB numbers are in parentheses."
+        self.fields["college"].empty_label = "Undecided"
         self.fields["college_sure"].label = "Sure?"
-        self.fields["major_sure"].help_text = "Sure?"
+        self.fields["major_sure"].label = "Sure?"
 
     class Meta:
         model = Senior

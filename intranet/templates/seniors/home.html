@@ -8,6 +8,11 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <style type="text/css">
+    td.unsure {
+        font-style: italic;
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -22,7 +27,7 @@
         <div class="button-container">
             {% if is_senior %}
                 <a href="{% url 'seniors_add' %}" class="button">
-                    Add Your Destination Info
+                    {% if own_senior %}Modify{% else %}Add{% endif %} Your Destination Info
                 </a>
             {% endif %}
         </div>
@@ -42,9 +47,11 @@
                         <td>{{ senior.user.full_name }}</td>
                         <td class="{% if not senior.college_sure %}un{% endif %}sure">
                             {{ senior.college }}
+                            {% if not senior.college_sure %} (unsure){% endif %}
                         </td>
                         <td class="{% if not senior.major_sure %}un{% endif %}sure">
                             {{ senior.major }}
+                            {% if not senior.major_sure %} (unsure){% endif %}
                         </td>
                     </tr>
                 {% empty %}
