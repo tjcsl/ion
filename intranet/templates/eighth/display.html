@@ -138,7 +138,7 @@
         })
         </script>
     {% endif %}
-    {% if use_scroll %}
+    {% if use_scroll_individual %}
         <script type="text/javascript">
         $(function() {
             $(".primary-content").addClass("scroll-display");
@@ -163,6 +163,29 @@
                 if(amo < 0) window.scrollDirection *= -1;
                 console.debug(amo, amo/26);
                 $el.animate({ scrollTop: amo }, window.scrollSpeed);
+            }
+
+            window.setInterval(displayScroll, window.scrollInterval);
+        });
+        </script>
+    {% endif %}
+    {% if use_scroll %}
+        <script type="text/javascript">
+        $(function() {
+            $(".primary-content").addClass("scroll-display");
+            $("#activity-list").before($(".middle-wrapper"));
+
+            window.scrollDirection = 1; //down
+            window.scrollInterval = 10000;
+            window.scrollSpeed = 1000;
+            displayScroll = function() {
+                var $el = $("#activity-list");
+                if(window.scrollDirection == 1) {
+                    $el.animate({ scrollTop: $el.height() }, window.scrollSpeed);
+                } else {
+                    $el.animate({ scrollTop: 0 }, window.scrollSpeed);
+                }
+                window.scrollDirection *= -1;
             }
 
             window.setInterval(displayScroll, window.scrollInterval);
