@@ -76,6 +76,7 @@ def eighth_signage(request, block_id=None):
         "no_title": ("no_title" in request.GET),
         "no_detail": not ("detail" in request.GET),
         "no_rooms": ("no_rooms" in request.GET),
+        "use_scroll": ("no_scroll" not in request.GET),
         "no_user_display": True,
         "no_fav": True
     }
