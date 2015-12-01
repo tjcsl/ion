@@ -1,3 +1,4 @@
+set -e
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
   echo "Pushing docs to Github Pages"
 

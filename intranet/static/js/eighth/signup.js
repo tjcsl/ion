@@ -8,13 +8,13 @@ $(function() {
     eighth.ActivityList = Backbone.Collection.extend({
         model: eighth.Activity,
         comparator: function(a1, a2) {
-            if (a1.attributes.special && !a2.attributes.special) return -1;
-            if (!a1.attributes.special && a2.attributes.special) return 1;
+            if (a1.attributes.special && !a2.attributes.special) {return -1;}
+            if (!a1.attributes.special && a2.attributes.special) {return 1;}
 
             var n1 = a1.attributes.name.toLowerCase(),
                 n2 = a2.attributes.name.toLowerCase();
-            if (n1 < n2) return -1;
-            if (n1 > n2) return 1;
+            if (n1 < n2) {return -1;}
+            if (n1 > n2) {return 1;}
             return 0;
         }
     });
@@ -24,7 +24,7 @@ $(function() {
     eighth.ActivityDetailView = Backbone.View.extend({
         el: $("#activity-detail"),
 
-        initialize: function(){
+        initialize: function() {
             _.bindAll(this, "render");
             this.template = _.template($("#activity-details-template").html());
         },
@@ -34,7 +34,7 @@ $(function() {
             "click a#roster-button": "rosterClickHandler"
         },
 
-        render: function(){
+        render: function() {
             var container = this.options.viewContainer,
                 renderedContent = this.template(this.model.toJSON());
             container.html(renderedContent);
@@ -42,7 +42,7 @@ $(function() {
         },
 
         signupClickHandler: function(e) {
-            var target = e.target
+            var target = e.target;
             $(target).attr("disabled", "disabled");
             var spinnerEl = document.getElementById("signup-spinner");
             var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
@@ -62,7 +62,7 @@ $(function() {
             var spinnerEl = document.getElementById("signup-spinner");
             var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
             var schact_id = this.model.attributes.scheduled_activity;
-            console.debug("Load roster for scheduled activity", schact_id)
+            console.debug("Load roster for scheduled activity", schact_id);
             var endpoint = $(target).data("endpoint");
             var container = $("#roster-section");
             $.get(endpoint + "/" + schact_id, {}, function(resp) {
@@ -74,7 +74,7 @@ $(function() {
 
     eighth.ActivityListRowView = Backbone.View.extend({
         tagName: "li",
-        attributes: function(){
+        attributes: function() {
             return {
                 "data-activity-id": this.model.id,
                 "data-scheduled-activity-id": this.model.scheduled_activity,
@@ -83,20 +83,20 @@ $(function() {
                 "data-cancelled": this.model.attributes.cancelled,
                 "data-favorited": this.model.attributes.favorited,
                 "data-sticky": this.model.attributes.sticky
-            }
+            };
         },
 
         events: {
             "click": "showDetail"
         },
 
-        initialize: function(){
+        initialize: function() {
           _.bindAll(this, "render", "showDetail");
 
           this.template = _.template($("#activity-list-row-template").html());
         },
 
-        render: function(){
+        render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
@@ -108,9 +108,7 @@ $(function() {
                 $target = $target.parents("li");
             }
 
-            if(!$target.attr("data-activity-id")) {
-                return;
-            }
+            if (!$target.attr("data-activity-id")) {return;}
 
             $target.addClass("selected");
 
@@ -131,12 +129,12 @@ $(function() {
 
             initUIElementBehavior();
 
-            if(typeof badgeClickUpdate != "undefined") {
+            if (typeof badgeClickUpdate !== "undefined") {
                 badgeClickUpdate();
             }
 
             /* remove ?activity= from URL if able */
-            if(location.search.substring(0, 10) == "?activity=" && history.pushState) {
+            if (location.search.substring(0, 10) === "?activity=" && history.pushState) {
                 history.pushState(null, null, location.href.split("?activity=")[0]);
             }
         }
@@ -165,8 +163,8 @@ $(function() {
                 }
 
                 var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
-                if(changed_activities != null) {
-                    for(var i=0; i<changed_activities.length; i++) {
+                if (changed_activities !== null) {
+                    for (var i=0; i<changed_activities.length; i++) {
                         try {
                             var evnt = changed_activities[i];
                             console.debug(evnt);
@@ -179,7 +177,7 @@ $(function() {
                                 var sa_blk = $(this).attr("title");
                                 var sa_act = $(".selected-activity", $(this)).attr("title");
                                 console.debug(sa_blk, sa_act);
-                                if(sa_blk == blk && sa_act == act) {
+                                if (sa_blk === blk && sa_act === act) {
                                     console.log("Found changed activity:", blk, act);
                                     $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                                 }
@@ -193,11 +191,10 @@ $(function() {
 
                 }
 
-
                 $(".active-block.cancelled").removeClass("cancelled");
 
-                var selectedActivity = activityModels.filter(function(a){return a.attributes.selected == true});
-                _.each(selectedActivity, function(a){
+                var selectedActivity = activityModels.filter(function(a){return a.attributes.selected === true});
+                _.each(selectedActivity, function(a) {
                     a.attributes.selected = false;
                     a.attributes.roster.count -= 1;
                 });
@@ -211,34 +208,33 @@ $(function() {
 
                 var $container = $(".primary-content.eighth-signup");
                 var next_url = $container.attr("data-next-url");
-                if(next_url) {
+                if (next_url) {
                     location.href = next_url;
                 }
-
 
             },
             error: function(xhr, status, error) {
                 var content_type = xhr.getResponseHeader("content-type");
-                if (xhr.status == 403 &&
-                    (content_type == "text/plain" ||
-                     content_type.indexOf("text/plain;") == 0 ||
-                     content_type == "text/html" ||
-                     content_type.indexOf("text/html;") == 0)) {
+                if (xhr.status === 403 &&
+                    (content_type === "text/plain" ||
+                     content_type.indexOf("text/plain;") === 0 ||
+                     content_type === "text/html" ||
+                     content_type.indexOf("text/html;") === 0)) {
 
                     $(".error-feedback").html(xhr.responseText);
                     if (isEighthAdmin) {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }
-                } else if(xhr.status == 401) {
+                } else if (xhr.status === 401) {
                     location.reload();
                 } else {
                     console.error(xhr.responseText);
-                    if (xhr.status == 401) {
-                        $(".error-feedback").html("You must log in to sign up for this activity.")
-                        window.location.replace("/login?next=" + window.location.pathname)
+                    if (xhr.status === 401) {
+                        $(".error-feedback").html("You must log in to sign up for this activity.");
+                        window.location.replace("/login?next=" + window.location.pathname);
                     } else {
-                        $(".error-feedback").html("There was an error signing you up for this activity.")
+                        $(".error-feedback").html("There was an error signing you up for this activity.");
                     }
                 }
             },
@@ -264,23 +260,23 @@ $(function() {
             }
             var renderActivitiesInContainer = function(models, $container) {
                 $container.html("");
-                _.each(models, function(model){
+                _.each(models, function(model) {
                     var activityListRowView = new eighth.ActivityListRowView({
                         model: model
                     });
-                    rowViews.push(activityListRowView)
+                    rowViews.push(activityListRowView);
 
                     $container.append(activityListRowView.render().el);
                 }, this);
             }
 
-            renderActivitiesInContainer(this.activities.models, $(".all-activities", this.el))
+            renderActivitiesInContainer(this.activities.models, $(".all-activities", this.el));
 
             var favorites = _.filter(this.activities.models, function(activity) {
                 return activity.attributes.favorited;
             });
             renderActivitiesInContainer(favorites, $(".favorite-activities", this.el));
-            if (favorites.length == 0) {
+            if (favorites.length === 0) {
                 $(".favorites-header").addClass("hidden");
             } else {
                 $(".favorites-header").removeClass("hidden");
@@ -308,7 +304,7 @@ $(function() {
                             console.error(xhr.responseText);
                             model.attributes.favorited = !model.attributes.favorited;
                             view.render();
-                            alert("There was an error favoriting this activity. Try reloading the page.")
+                            alert("There was an error favoriting this activity. Try reloading the page.");
                         }
                     });
                     event.stopPropagation();
@@ -328,8 +324,7 @@ $(function() {
     });
 
     window.activityListView = new eighth.ActivityListView();
-    activityListView.render()
-
+    activityListView.render();
 
     $("button#unsignup-button").click(function() {
         var uid = $(this).attr("data-uid");
@@ -347,7 +342,7 @@ $(function() {
                 force: force
             },
             success: function(response) {
-                if(response) {
+                if (response) {
                     alert($("<div>"+response+"</div>").text());
                 }
                 console.error(response);
@@ -355,7 +350,7 @@ $(function() {
             },
             error: function(response, error) {
                 window.r = response;
-                if(response.responseText) {
+                if (response.responseText) {
                     alert($("<div>"+response.statusText+": "+response.responseText+"</div>").text());
                 }
                 console.error(response);

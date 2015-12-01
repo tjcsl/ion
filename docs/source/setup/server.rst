@@ -12,6 +12,22 @@ Add the following flags to ``/etc/portage/package.use``::
     dev-python/python-ldap sasl
     dev-libs/cyrus-sasl kerberos ldap
 
+
+------------------
+LDAP Configuration
+------------------
+
+In order to have LDAP work properly, you have to have the following schema included:
+* core
+* cosine (if you have sound support)
+* nis
+* inetorgperson
+* dyngroup
+* iodine
+If you fail to have one of these imported, slapd will segfault without any error messages.
+You then need to add a line to include intranet's slapd.acl. This also has a possibility of bringing
+about silent segfaults; it is recommended to do this one step at a time.
+
 ----------
 PostgreSQL
 ----------
@@ -20,7 +36,7 @@ First, install the PostgreSQL server.
 
 .. code-block:: bash
 
-    $ emerge dev-db/postgresql-server
+    $ emerge dev-db/postgresql
 
 The following command will print out the command you should run to configure postgres.
 
@@ -32,14 +48,14 @@ Run the printed command. Then start the PostgreSQL server.
 
 .. code-block:: bash
 
-    $ /etc/init.d/postgresql-9.2 start
+    $ /etc/init.d/postgresql-9.4 start
 
 Add the Postgres service to the default runlevel.
 
 
 .. code-block:: bash
 
-    $ rc-update add postgresql-9.2 default
+    $ rc-update add postgresql-9.4 default
 
 Become root, then run the following command to add an admin user to the postgres group. Replace <admin username> with the username of someone you would like to make a Postgres admin.
 
@@ -90,6 +106,9 @@ Add the Redis service to the default runlevel.
 
     $ rc-update add redis default
 
+Note: It may be necessary to bump the amount of memory allocated to redis to handle a large number of concurrent sessions.
+Bump the maxmemory config option in redis.conf to at least 256MB.
+
 ------
 Python
 ------
@@ -102,6 +121,7 @@ Install the ``python-ldap`` module, the Cyrus-SASL C library, and the Pip packag
     $ emerge dev-libs/cyrus-sasl
     $ emerge python-ldap
     $ emerge dev-python/pip
+    $ emerge dev-python/fabric
 
 ----------
 Virtualenv
@@ -169,31 +189,30 @@ Exit from root. Create the local shared Git repository.
 
     $ cd /shared/git
 
-Set up SSH access to Bitbucket by following `this tutorial <https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git>`_. Then clone the Ion Git repository and give all users in the "ion" group access.
+Set up SSH access to Github by following `this tutorial <https://help.github.com/articles/generating-ssh-keys>`_. Then clone the Ion Git repository and give all users in the "ion" group access.
 
 .. code-block:: bash
 
-    $ git clone --bare git@bitbucket.org:tjhsstintranet/intranet3.git
-    $ cd intranet3.git
+    $ git clone --bare git@github.com:tjcsl/ion.git
+    $ cd ion.git
     $ git config core.sharedRepository true
     $ chgrp -R ion .
 
-Rename the main branch to "bitbucket" (``git remote rename`` doesn't seem to work in this situation).
+Rename the main branch to "upstream" (``git remote rename`` doesn't seem to work in this situation).
 
 .. code-block:: bash
 
-    $ git remote add bitbucket git@bitbucket.org:tjhsstintranet/intranet3.git
-    $ git fetch bitbucket
+    $ git remote add upstream git@github.com:tjcsl/ion.git
+    $ git fetch upstream
     $ git remote rm origin
 
-Add the Git hook to automatically push changes to Bitbucket by creating a post-receive hook (``touch hooks/post-receive``) and appending the following to that file:
+Add the Git hook to automatically push changes to Github by creating a post-receive hook (``touch hooks/post-receive``) and appending the following to that file:
 
 .. code-block:: bash
 
     #!/bin/bash
 
-    git push --all bitbucket
-    git push --tags bitbucket
+    git push --all --tags github
 
 Make the post-receive hook executable.
 
@@ -206,14 +225,14 @@ Create a directory for the production code.
 .. code-block:: bash
 
     $ ksu
-    $ mkdir /usr/local/www
-    $ cd /usr/local/www
+    $ mkdir /var/www
+    $ cd /var/www
 
 Clone the shared repository.
 
 .. code-block:: bash
 
-    $ git clone /shared/git/intranet3.git
+    $ git clone /shared/git/ion.git
 
 Ensure that your prompt still starts with ``(ion)``. If it doesn't, run the following.
 
@@ -225,7 +244,12 @@ Install all of the dependencies.
 
 .. code-block:: bash
 
-    $ pip install -r intranet3/requirements/production.txt
+    $ pip install -U -r ion/requirements/production.txt
+
+Initialize the ldap db.
+.. code-block:: bash
+
+    ldapadd -Q -c -f intranet/static/ldap/base.ldif
 
 -----
 Nginx
@@ -243,7 +267,7 @@ Replace ``/etc/nginx/nginx.conf`` with the config file in the Ion git repository
 
     $ ksu
     $ mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
-    $ cp /usr/local/www/intranet3/extras/nginx/nginx.conf /etc/nginx/nginx.conf
+    $ cp /var/www/ion/extras/nginx/nginx.conf /etc/nginx/nginx.conf
 
 Start Nginx.
 
@@ -278,13 +302,13 @@ Add the Supervisor config file from the Ion repository.
 .. code-block:: bash
 
     $ ksu
-    $ cp /usr/local/www/intranet3/extras/supervisord.conf /etc/supervisord.conf
+    $ cp /var/www/ion/extras/supervisord.conf /etc/supervisord.conf
 
 Add the init.d script from the Ion repository. (Based on the script from `here <https://github.com/Supervisor/initscripts/blob/master/gentoo-matagus>`_)
 
 .. code-block:: bash
 
-    $ cp /usr/local/www/intranet3/extras/supervisord /etc/init.d/
+    $ cp /var/www/ion/extras/supervisord /etc/init.d/
     $ chmod +x /etc/init.d/supervisord
 
 Start Supervisor.

@@ -86,7 +86,7 @@
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
                 <% } else { %>
-                    <% var pieNumber = Math.min(Math.round(roster.count / roster.capacity * 10), 10); %>
+                    <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
                 <% } %>
             </span>
@@ -139,11 +139,10 @@
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
             <span class="activity-sponsors" title="<%= sponsors_all %>">
-
-                <span class="activity-ids">
-                    <%= aid %> &mdash;
-                </span>
                 <%= sponsors_all %>
+                <span class="activity-ids">
+                    <%= aid %>
+                </span>
             </span>
 
         {% endverbatim %}
@@ -151,36 +150,44 @@
 
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
-        <h3>
-            <%= name %><% if (title) { %> - <%= title %><% } %>
+        <h3 class="activity-detail-header">
+            <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
+                <%= name %><% if (title) { %> - <%= title %><% } %>
+            </a>
         </h3>
 
         <% if (cancelled) { %>
-            <span class="badge darkred clickable" data-append-search="is:c">CANCELLED</span>
+            <span class="badge darkred clickable cancelled-badge" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
         <% } %>
 
         <% if (special) { %>
-            <span class="badge green clickable" data-append-search="is:sp">Special</span>
+            <span class="badge green clickable" data-append-search="is:sp" title="This is a special activity.">Special</span>
         <% } %>
 
         <% if (restricted_for_user) { %>
-            <span class="badge purple clickable" data-append-search="is:r">Restricted</span>
+            <span class="badge purple clickable" data-append-search="is:r" title="This student is not on the authorized list for this restricted activity.">Restricted</span>
+        <% } else if (restricted) { %>
+            <span class="badge green clickable" data-append-search="is:au" title="This student is authorized to sign up for this restricted activity.">Authorized</span>
         <% } %>
 
         <% if (sticky) { %>
-            <span class="badge orange clickable" data-append-search="is:st">Sticky</span>
+            <span class="badge orange clickable" data-append-search="is:st" title="This is a sticky activity.">Sticky</span>
         <% } %>
 
         <% if (both_blocks) { %>
-            <span class="badge blue clickable" data-append-search="is:b">Both Blocks</span>
+            <span class="badge blue clickable" data-append-search="is:b" title="This activity runs both blocks.">Both Blocks</span>
+        <% } %>
+
+        <% if (one_a_day) { %>
+            <span class="badge lightblue clickable" data-append-search="is:one" title="You may only sign up for this activity once per day.">One a Day</span>
         <% } %>
 
         <% if (administrative) { %>
-            <span class="badge clickable" data-append-search="is:a">Administrative</span>
+            <span class="badge clickable" data-append-search="is:ad" title="This activity is administrative.">Administrative</span>
         <% } %>
 
         <% if (presign) { %>
-            <span class="badge yellow clickable" data-append-search="is:p">48-hr Presign</span>
+            <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
         <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
@@ -321,6 +328,7 @@
             {% endfor %}
             </tr>
         </table>
+        {% if not request.user.is_eighth_admin %}<br />{% endif %}
     </form>
     </section>
 
@@ -331,38 +339,15 @@
             <ul class="days-container">
             </ul>
         </div>
-
-        <div class="middle-wrapper">
+        {% if request.user.is_eighth_admin %}
+        <div class="middle-wrapper only-unsignup">
             <div class="middle">
-                <div class="block-title">
-                    <h2>
-                        {% if active_block.locked %}
-                            <i class="fa fa-lock"></i>
-                        {% endif %}
-                        {{ active_block.date|date:"l, F j, Y" }}
-                    </h2>
-                    <h4>
-                        {% if active_block.block_letter %}
-                            {% if active_block.block_letter|contains_digit %}
-                                Block {{ active_block.block_letter }}
-                            {% else %}
-                                {{ active_block.block_letter }} Block
-                            {% endif %}
-                        {% endif %}
-                    </h4>
-                </div>
-                {% if user.is_eighth_admin %}
                 <div class="unsignup">
                     <button id="unsignup-button" data-bid="{% for b in blocks %}{{ b.id }}{% if not forloop.last %},{% endif %}{% endfor %}" data-uid="{{ user.id }}">Remove Signups for All Blocks</button>
                 </div>
-                {% endif %}
-
-                <div class="switch">
-                    <i class="fa fa-chevron-up up"></i>
-                    <i class="fa fa-chevron-down down"></i>
-                </div>
             </div>
         </div>
+        {% endif %}
 
         <div id="activity-picker" class="{% if request.user != user %}different-user{% endif %}">
             <div class="search-wrapper">
@@ -384,9 +369,9 @@
                 <div class="empty-state">
                     <center>
                         <div>
-                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" />
+                            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" style="zoom: 0.5" />
                         </div>
-                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                        <h2 class="user-name" title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
                             {{ profile_user.full_name }}
                             {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
                         </h2>

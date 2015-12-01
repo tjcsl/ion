@@ -33,32 +33,11 @@
         {% endwith %}
         </div>
 
-
-        <h2>Public Roster</h2>
-
-        <ul>
-            {% for p in viewable_roster %}
-                <li>
-                    <a href="{% url 'user_profile' p.id %}">
-                        {{ p.full_name }} ({{ p.grade.number }})
-                    </a>
-                </li>
-            {% empty %}
-                <li>There are no users to display.</li>
-            {% endfor %}
-        </ul>
-
-        {% if num_hidden_members > 0 %}
-            <br />
-            <p>{{ num_hidden_members }} {% if num_hidden_members == 1 %}user {% if not request.user.can_view_eighth %}(you) {% endif %}has{% else %}users {% if not request.user.can_view_eighth %}(including you) {% endif %}have{% endif %} elected to not appear on this list.</p>
-        {% endif %}
-
-        {% if is_events_admin %}
-            <br />
-            <h2>Full Roster</h2>
+        {% if event.show_attending %}
+            <h2>Public Roster</h2>
 
             <ul>
-                {% for p in full_roster %}
+                {% for p in viewable_roster %}
                     <li>
                         <a href="{% url 'user_profile' p.id %}">
                             {{ p.full_name }} ({{ p.grade.number }})
@@ -68,8 +47,28 @@
                     <li>There are no users to display.</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-        
 
+            {% if num_hidden_members > 0 %}
+                <br />
+                <p>{{ num_hidden_members }} {% if num_hidden_members == 1 %}user {% if not request.user.can_view_eighth %}(you) {% endif %}has{% else %}users {% if not request.user.can_view_eighth %}(including you) {% endif %}have{% endif %} elected to not appear on this list.</p>
+            {% endif %}
+
+            {% if is_events_admin %}
+                <br />
+                <h2>Full Roster</h2>
+
+                <ul>
+                    {% for p in full_roster %}
+                        <li>
+                            <a href="{% url 'user_profile' p.id %}">
+                                {{ p.full_name }} ({{ p.grade.number }})
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>There are no users to display.</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}

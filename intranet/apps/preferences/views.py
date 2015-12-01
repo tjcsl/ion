@@ -95,7 +95,7 @@ def save_personal_info(request, user):
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
                             except Exception as e:
                                 messages.error(request, "Field {}: {}".format(field, e))
                     else:
@@ -155,7 +155,7 @@ def save_preferred_pic(request, user):
                             messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return preferred_pic_form
 
 
@@ -198,12 +198,12 @@ def save_privacy_options(request, user):
                                                                fields[field],
                                                                privacy_options[field] if field in privacy_options else None))
                     try:
-                        user.set_ldap_attribute(field, fields[field])
+                        user.set_ldap_attribute(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -237,7 +237,10 @@ def save_notification_options(request, user):
                                                                notification_options[field] if field in notification_options else None))
                     setattr(user, field, fields[field])
                     user.save()
-                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(field[field], list) else ", ".join(fields[field])))
+                    try:
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                    except TypeError:
+                        pass
     return notification_options_form
 
 
@@ -339,3 +342,65 @@ def privacy_options_view(request):
         "profile_user": user
     }
     return render(request, "preferences/privacy_options.html", context)
+
+
+@login_required
+def ldap_test(request):
+    from intranet.db.ldap_db import LDAPConnection
+    from intranet import settings
+
+    c = LDAPConnection()
+
+    results = ""
+
+    search_dn = request.POST.get("search_dn")
+    search_q = request.POST.get("search_q")
+    search_attrs = request.POST.getlist("search_attrs")
+
+    user_attribute_dn = request.POST.get("user_attribute_dn")
+    user_attribute_attrs = request.POST.getlist("user_attribute_attrs")
+    if request.method == "POST":
+        if "search_q" in request.POST:
+            try:
+                req = c.search(search_dn, search_q, search_attrs)
+            except Exception as e:
+                results += "EXCEPTION: {}\n".format(e)
+            else:
+                logger.debug(req)
+                if not isinstance(req, list):
+                    req = [req]
+                for row in req:
+                    results += "{}: \n".format(row[0])
+                    for perm, value in row[1].iteritems():
+                        results += "\t{}: {}\n".format(perm, value)
+
+        if "user_attribute_dn" in request.POST:
+            if "dc=edu" not in user_attribute_dn:
+                user_attribute_dn = User.objects.get(id=user_attribute_dn).dn
+            try:
+                req = c.user_attributes(user_attribute_dn, user_attribute_attrs)
+            except Exception as e:
+                results += "EXCEPTION: {}\n".format(e)
+            else:
+                logger.debug(req)
+                result = req.first_result()
+                logger.debug(result)
+                if isinstance(result, dict):
+                    for perm, value in result.iteritems():
+                        logger.debug("{} {}".format(perm, value))
+                        results += "{}: {}\n".format(perm, value)
+                else:
+                    results += "Empty result"
+
+    logger.debug(results)
+
+    context = {
+        "search_dn": search_dn or settings.USER_DN or "",
+        "search_q": search_q or "",
+        "search_attrs": search_attrs or "",
+        "user_attribute_dn": user_attribute_dn or "",
+        "user_attribute_attrs": user_attribute_attrs or "",
+        "results": results
+    }
+
+    return render(request, "preferences/ldap.html", context)

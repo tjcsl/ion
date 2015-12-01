@@ -1,0 +1,57 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Seniors
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <style type="text/css">
+    #id_college, #id_major {
+        width: 500px;
+    }
+
+    form.senior-form .selectize-control {
+        display: inline;
+    }
+
+    form.senior-form .selectize-input {
+        width: 500px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+    $(function() {
+        $("#id_college, #id_major").selectize();
+    });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <h2>Add Destination Info</h2>
+
+        <div class="seniors-container">
+            <form action="" method="post" name="senior-form" class="senior-form">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" value="Update Info" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    </div>
+{% endblock %}

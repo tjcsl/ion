@@ -23,17 +23,9 @@
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/dashboard/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/dashboard/announcements.js' %}"></script>
-
-    <style type="text/css">
-        div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
-            content: attr(data-placeholder);
-            float: left;
-            margin-left: 5px;
-            color: rgb(72, 72, 72);
-        }
-    </style>
-
-
+    {% if is_senior %}
+        <script type="text/javascript" src="{% static 'js/dashboard/seniors.js' %}"></script>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
@@ -52,7 +44,7 @@
     {% include "dashboard/birthdays.html" %}
     {% include "dashboard/links.html" %}
     
-    {% if is_senior %}
+    {% if is_student %}
         {% include "dashboard/seniors.html" %}
     {% endif %}
 </div>
@@ -68,6 +60,11 @@
                 &nbsp;
             {% endif %}
             {% if announcements_admin %}
+                {% if "show_all" not in request.GET %}
+                    <a class="button" href="{% url 'view_announcements' %}?show_all=1">
+                        Show All
+                    </a>
+                {% endif %}
                 <a class="button announcement-add" href="{% url 'add_announcement' %}">
                     <i class="fa fa-plus"></i>
                     Add
@@ -89,22 +86,18 @@
                     <h3 style="color: orange">
                     <i class="fa fa-exclamation-circle"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting</h3>
                     <ul>
-                    {% cached_as awaiting_approval 0 dash_req_app %}
                     {% for req in awaiting_approval %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
                     {% endfor %}
-                    {% endcached_as %}
                     </ul>
                 {% endif %}
                 {% if awaiting_teacher %}
                     <h3>
                     <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending</h3>
                     <ul>
-                    {% cached_as awaiting_teacher 0 dash_req_tch %}
                     {% for req in awaiting_teacher %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, awaiting teacher approval</li>
                     {% endfor %}
-                    {% endcached_as %}
                     </ul>
                 {% endif %}
                 </div>

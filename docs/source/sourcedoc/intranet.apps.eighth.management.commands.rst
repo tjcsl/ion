@@ -4,6 +4,14 @@ intranet.apps.eighth.management.commands package
 Submodules
 ----------
 
+intranet.apps.eighth.management.commands.absence_email module
+-------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.absence_email
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.eighth.management.commands.import_attendance module
 -----------------------------------------------------------------
 

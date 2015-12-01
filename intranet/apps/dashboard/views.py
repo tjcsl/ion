@@ -37,7 +37,12 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         return None, False
 
     # Use select_related to reduce query count
-    signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related("scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity")
+    signups = (EighthSignup.objects.filter(user=user,
+                                           scheduled_activity__block__in=surrounding_blocks)
+               .select_related("scheduled_activity",
+                               "scheduled_activity__block",
+                               "scheduled_activity__activity")
+               .nocache())
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:
@@ -58,7 +63,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         if (blk_today and not current_signup):
             flags += " warning"
         if current_signup_cancelled:
-            flags += " cancelled"
+            flags += " cancelled warning"
 
         if current_signup_cancelled:
             # don't duplicate this info; already caught
@@ -102,11 +107,12 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         sponsor = user.get_eighth_sponsor()
 
     if surrounding_blocks is None:
-        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks).nocache()
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
                                                             .select_related("block")
-                                                            .filter(block__in=surrounding_blocks))
+                                                            .filter(block__in=surrounding_blocks)
+                                                            .nocache())
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
@@ -155,8 +161,12 @@ def find_birthdays(request):
                 yr += 1
                 yr_inc = 1
 
+            real_today = today
             today = datetime(yr, mon, day).date()
-            custom = True
+            if today:
+                custom = True
+            else:
+                today = real_today
         except Exception:
             pass
 
@@ -172,36 +182,39 @@ def find_birthdays(request):
     else:
         logger.debug("Loading and caching birthday info for {}".format(today))
         tomorrow = today + timedelta(days=1)
-
-        data = {
-            "custom": custom,
-            "today": {
-                "date": today,
-                "users": [{
-                    "id": u.id,
-                    "full_name": u.full_name,
-                    "grade": {
-                        "name": u.grade.name
-                    },
-                    "age": (u.age + yr_inc) if u.age is not None else -1
-                } for u in User.objects.users_with_birthday(today.month, today.day)],
-                "inc": 0
-            },
-            "tomorrow": {
-                "date": tomorrow,
-                "users": [{
-                    "id": u.id,
-                    "full_name": u.full_name,
-                    "grade": {
-                        "name": u.grade.name
-                    },
-                    "age": u.age
-                } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
-                "inc": 1
+        try:
+            data = {
+                "custom": custom,
+                "today": {
+                    "date": today,
+                    "users": [{
+                        "id": u.id,
+                        "full_name": u.full_name,
+                        "grade": {
+                            "name": u.grade.name
+                        },
+                        "age": (u.age + yr_inc) if u.age is not None else -1
+                    } if u else {} for u in User.objects.users_with_birthday(today.month, today.day)],
+                    "inc": 0
+                },
+                "tomorrow": {
+                    "date": tomorrow,
+                    "users": [{
+                        "id": u.id,
+                        "full_name": u.full_name,
+                        "grade": {
+                            "name": u.grade.name
+                        },
+                        "age": (u.age - 1)
+                    } for u in User.objects.users_with_birthday(tomorrow.month, tomorrow.day)],
+                    "inc": 1
+                }
             }
-        }
-        cache.set(key, data, timeout=60 * 60 * 24)
-        return data
+        except AttributeError:
+            return None
+        else:
+            cache.set(key, data, timeout=60 * 60 * 6)
+            return data
 
 
 @login_required
@@ -238,7 +251,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     else:
         start_num = 0
 
-    display_num = 15
+    display_num = 10
     end_num = start_num + display_num
     more_announcements = ((announcements.count() - start_num) > display_num)
     try:
@@ -251,11 +264,11 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     announcements = announcements.select_related("user").prefetch_related("groups", "event")
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user)
-                                                     .values_list("id", flat=True))
+                                                     .values_list("id", flat=True)).nocache()
 
     is_student = user.is_student
     is_teacher = user.is_teacher
-    is_senior = (user.grade.number == 12) if user.grade and user.grade.number else False
+    is_senior = user.is_senior
     eighth_sponsor = user.get_eighth_sponsor()
 
     if show_widgets:

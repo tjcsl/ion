@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 import logging
+from cacheops import invalidate_obj
 from datetime import datetime
 from six import BytesIO
 import csv
 from django import http
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -117,6 +119,9 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         context.update({"admin_page_title": "Take Attendance"})
 
         block = self.get_cleaned_data_for_step("block")
+
+        context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block)})
+
         if block:
             block = block["block"]
             try:
@@ -159,10 +164,13 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         block = form_list[0].cleaned_data["block"]
         logger.debug(block)
-        scheduled_activity = EighthScheduledActivity.objects.get(
-            block=block,
-            activity=activity
-        )
+        try:
+            scheduled_activity = EighthScheduledActivity.objects.get(
+                block=block,
+                activity=activity
+            )
+        except EighthScheduledActivity.DoesNotExist:
+            raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity))
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
@@ -237,8 +245,7 @@ def take_attendance_view(request, scheduled_activity_id):
         scheduled_activity = (EighthScheduledActivity.objects
                                                      .select_related("activity",
                                                                      "block")
-                                                     .get(cancelled=False,
-                                                          activity__deleted=False,
+                                                     .get(activity__deleted=False,
                                                           id=scheduled_activity_id))
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
@@ -250,12 +257,24 @@ def take_attendance_view(request, scheduled_activity_id):
         logger.debug("User does not have permission to edit")
         edit_perm = False
 
+    edit_perm_cancelled = False
+
+    if scheduled_activity.cancelled and not request.user.is_eighth_admin:
+        logger.debug("Non-admin user does not have permission to edit cancelled activity")
+        edit_perm = False
+        edit_perm_cancelled = True
+
     if request.method == "POST":
 
         if not edit_perm:
-            return render(request, "error/403.html", {
-                "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
-            }, status=403)
+            if edit_perm_cancelled:
+                return render(request, "error/403.html", {
+                    "reason": "You do not have permission to take attendance for this activity. The activity was cancelled."
+                }, status=403)
+            else:
+                return render(request, "error/403.html", {
+                    "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
+                }, status=403)
 
         if "admin" in request.path:
             url_name = "eighth_admin_take_attendance"
@@ -265,10 +284,16 @@ def take_attendance_view(request, scheduled_activity_id):
         if "clear_attendance_bit" in request.POST:
             scheduled_activity.attendance_taken = False
             scheduled_activity.save()
+            invalidate_obj(scheduled_activity)
 
             messages.success(request, "Attendance bit cleared for {}".format(scheduled_activity))
 
-            return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+            redirect_url = reverse(url_name, args=[scheduled_activity.id])
+
+            if "no_attendance" in request.GET:
+                redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+
+            return redirect(redirect_url)
 
         if not scheduled_activity.block.locked and not request.user.is_eighth_admin:
             return render(request, "error/403.html", {
@@ -285,32 +310,47 @@ def take_attendance_view(request, scheduled_activity_id):
             present_user_ids.remove(csrf)
 
         absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
-                                      .exclude(user__in=present_user_ids))
+                                      .exclude(user__in=present_user_ids)).nocache()
         absent_signups.update(was_absent=True)
+
+        for s in absent_signups:
+            invalidate_obj(s)
 
         present_signups = (EighthSignup.objects
                                        .filter(scheduled_activity=scheduled_activity,
-                                               user__in=present_user_ids))
+                                               user__in=present_user_ids)).nocache()
         present_signups.update(was_absent=False)
+
+        for s in present_signups:
+            invalidate_obj(s)
 
         passes = (EighthSignup.objects
                               .filter(scheduled_activity=scheduled_activity,
                                       after_deadline=True,
-                                      pass_accepted=False)
-                              .update(was_absent=True))
+                                      pass_accepted=False)).nocache()
+        passes.update(was_absent=True)
+
+        for s in passes:
+            invalidate_obj(s)
 
         scheduled_activity.attendance_taken = True
         scheduled_activity.save()
+        invalidate_obj(scheduled_activity)
 
         messages.success(request, "Attendance updated.")
 
-        return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+        redirect_url = reverse(url_name, args=[scheduled_activity.id])
+
+        if "no_attendance" in request.GET:
+            redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+
+        return redirect(redirect_url)
     else:
         passes = (EighthSignup.objects
                               .select_related("user")
                               .filter(scheduled_activity=scheduled_activity,
                                       after_deadline=True,
-                                      pass_accepted=False))
+                                      pass_accepted=False)).nocache()
 
         users = scheduled_activity.members.exclude(eighthsignup__in=passes)
         members = []
@@ -319,19 +359,19 @@ def take_attendance_view(request, scheduled_activity_id):
                                        .select_related("user")
                                        .filter(scheduled_activity=scheduled_activity,
                                                was_absent=True)
-                                       .values_list("user__id", flat=True))
+                                       .values_list("user__id", flat=True)).nocache()
 
         pass_users = (EighthSignup.objects
                                   .select_related("user")
                                   .filter(scheduled_activity=scheduled_activity,
                                           after_deadline=True,
                                           pass_accepted=True)
-                                  .values_list("user__id", flat=True))
+                                  .values_list("user__id", flat=True)).nocache()
 
         for user in users:
             members.append({
                 "id": user.id,
-                "name": user.last_first(),  # includes nickname
+                "name": user.last_first,  # includes nickname
                 "grade": user.grade.number if user.grade else None,
                 "present": (scheduled_activity.attendance_taken and
                             (user.id not in absent_user_ids)),
@@ -341,6 +381,7 @@ def take_attendance_view(request, scheduled_activity_id):
                                  user.id not in absent_user_ids),
                 "email": user.tj_email
             })
+            invalidate_obj(user)
 
         members.sort(key=lambda m: m["name"])
 
@@ -350,13 +391,14 @@ def take_attendance_view(request, scheduled_activity_id):
             "members": members,
             "p": pass_users,
             "no_edit_perm": not edit_perm,
-            "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin)
+            "edit_perm_cancelled": edit_perm_cancelled,
+            "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin),
+            "show_icons": (scheduled_activity.block.locked and scheduled_activity.block.attendance_locked() and not request.user.is_eighth_admin)
         }
 
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = (EighthScheduledActivity.objects
-                                                                      .filter(block__id=scheduled_activity.block.id)
-                                                                      .exclude(cancelled=True))
+                                                                      .filter(block__id=scheduled_activity.block.id))
             logger.debug(context["scheduled_activities"])
             context["blocks"] = (EighthBlock.objects
                                  # .filter(date__gte=get_start_date(request))
@@ -431,15 +473,10 @@ def accept_pass_view(request, signup_id):
     logger.debug(status)
 
     if status == "accept":
-        logger.debug("ACCEPT")
-        """signup.was_absent = False
-        signup.present = True
-        signup.pass_accepted = True"""
+        logger.debug("ACCEPT {}".format(signup_id))
         signup.accept_pass()
     elif status == "reject":
-        logger.debug("REJECT")
-        """signup.was_absent = True
-        signup.pass_accepted = True"""
+        logger.debug("REJECT {}".format(signup_id))
         signup.reject_pass()
 
     signup.save()
@@ -484,6 +521,7 @@ def accept_all_passes_view(request, scheduled_activity_id):
         pass_accepted=True,
         was_absent=False
     )
+    invalidate_obj(scheduled_activity)
 
     if "admin" in request.path:
         url_name = "eighth_admin_take_attendance"
@@ -536,7 +574,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         if len(room_names) == 1:
             rooms_str = "Room " + room_names[0]
         else:
-            rooms_str = ", ".join("Rooms: " + r for r in room_names)
+            rooms_str = "Rooms: " + ", ".join(r for r in room_names)
 
         block_letter = sact.block.block_letter
 
@@ -570,7 +608,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, block_letter_width]))
         elements.append(Spacer(0, 10))
-        elements.append(Paragraph(sact.activity.name, styles["Title"]))
+        elements.append(Paragraph(sact.full_title, styles["Title"]))
 
         num_members = sact.members.count()
         num_members_label = "{} Student{}".format(num_members, "s" if num_members != 1 else "")
@@ -608,12 +646,11 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         elements.append(Table(attendance_data, style=attendance_style, colWidths=[1.3 * inch, None, 0.8 * inch]))
         elements.append(Spacer(0, 15))
-        instructions = """Underline, highlight, or circle the names and ID numbers of the students who are <b>no-shows</b>.<br/>
-        Return the <b>roster</b> and <b>passes</b> to Eighth Period coordinator Joan Burch's mailbox
-        in the <b>main office</b>.<br/>
-        <b>Do not make any additions to the roster.</b><br/>
-        Students who need changes should report to the 8th period office.<br/>
-        For questions, please call extension 5046 or 5078. Thank you!<br/>"""
+        instructions = """
+        <b>Highlight or circle</b> the names of students who are <b>absent</b>, and put an <b>"X"</b> next to those <b>present</b>.<br />
+        If a student arrives and their name is not on the roster, please send them to the <b>8th Period Office</b>.<br />
+        If a student leaves your activity early, please make a note. <b>Do not make any additions to the roster.</b><br />
+        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>. For questions, please call extension 5046 or 5078. Thank you!<br />"""
         elements.append(Paragraph(instructions, styles["Normal"]))
 
         if i != len(sched_act_ids) - 1:

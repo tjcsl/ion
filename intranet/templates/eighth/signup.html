@@ -89,7 +89,7 @@
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
                 <% } else { %>
-                    <% var pieNumber = Math.min(Math.round(roster.count / roster.capacity * 10), 10); %>
+                    <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
                     <span class="activity-icon pie-<%= pieNumber %>"></span>
                 <% } %>
             </span>
@@ -139,11 +139,10 @@
             <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
             <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
             <span class="activity-sponsors" title="<%= sponsors_all %>">
-
-                <span class="activity-ids">
-                    <%= aid %> &mdash;
-                </span>
                 <%= sponsors_all %>
+                <span class="activity-ids">
+                    <%= aid %>
+                </span>
             </span>
 
         {% endverbatim %}
@@ -151,14 +150,14 @@
 
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
-        <h3>
+        <h3 class="activity-detail-header">
             <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
                 <%= name %><% if (title) { %> - <%= title %><% } %>
             </a>
         </h3>
 
         <% if (cancelled) { %>
-            <span class="badge darkred clickable" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
+            <span class="badge darkred clickable cancelled-badge" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
         <% } %>
 
         <% if (special) { %>
@@ -319,7 +318,7 @@
                                                     {{ b.block_letter }}
                                                 </span>
                                                 {% if b.locked %}
-                                                    <i class="fa fa-lock"></i>
+                                                    <i class="fa fa-lock" title="The block is locked."></i>
                                                 {% endif %}
                                                 <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags_no_restricted }}{% endif %}">
                                                     {% if b.current_signup_cancelled %}
@@ -352,7 +351,7 @@
                 <div class="block-title">
                     <h2>
                         {% if active_block.locked %}
-                            <i class="fa fa-lock"></i>
+                            <i class="fa fa-lock" title="The block is locked."></i>
                         {% endif %}
                         {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                     </h2>

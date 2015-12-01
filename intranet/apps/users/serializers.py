@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 from .models import User
 
 
@@ -56,6 +57,15 @@ class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
 
 
+class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
+
+    def get_url(self, obj, view_name, request, format):
+        s = super(HyperlinkedImageField, self).get_url(obj, view_name, request, format)
+        if "format=" in s:
+            return "{}format=jpg".format(s.split("format=")[0])
+        return s
+
+
 class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()
     classes = SubClassSerializer(many=True)
@@ -83,10 +93,11 @@ class UserSerializer(serializers.ModelSerializer):
     webpages = serializers.ListField(
         child=serializers.CharField(max_length=300)
     )
+    picture = HyperlinkedImageField(view_name="api_user_profile_picture_default", format="jpg")
 
     class Meta:
         model = User
-        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
+        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
 
 
 class ClassSerializer(serializers.Serializer):

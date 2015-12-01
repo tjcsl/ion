@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import csv
 import logging
+from cacheops import invalidate_obj
 from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http
@@ -179,6 +180,12 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
         context = super(EighthAdminRoomUtilizationWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Room Utilization"})
+        this_yr = EighthBlock.objects.get_blocks_this_year()
+        context.update({
+            "first_block": this_yr.first().id,
+            "last_block": this_yr.last().id,
+            "all_rooms": EighthRoom.objects.all()
+        })
         return context
 
     def done(self, form_list, **kwargs):
@@ -222,11 +229,13 @@ def room_utilization_action(request, start_id, end_id):
     else:
         rooms = all_rooms
 
+    sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
+
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
-    show_opts = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity", "comments", "admin_comments"]
-    show_opts_defaults = ["block", "rooms", "aid", "activity", "sponsors", "signups", "capacity"]
-    show_opts_hidden = ["comments", "admin_comments"]
+    show_opts = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors", "admin_comments"]
+    show_opts_defaults = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors"]
+    show_opts_hidden = ["admin_comments"]
     if len(show_vals) == 0:
         show = {name: True for name in show_opts_defaults}
         show.update({name: False for name in show_opts_hidden})
@@ -273,18 +282,18 @@ def room_utilization_action(request, start_id, end_id):
                 row.append(sch_act.block)
             if show["rooms"]:
                 row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+            if show["capacity"]:
+                row.append(sch_act.get_true_capacity())
+            if show["signups"]:
+                row.append(sch_act.members.count())
             if show["aid"]:
                 row.append(sch_act.activity.aid)
             if show["activity"]:
                 row.append(sch_act.activity)
-            if show["sponsors"]:
-                row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
-            if show["signups"]:
-                row.append(sch_act.members.count())
-            if show["capacity"]:
-                row.append(sch_act.get_true_capacity())
             if show["comments"]:
                 row.append(sch_act.comments)
+            if show["sponsors"]:
+                row.append(";".join([str(sp) for sp in sch_act.get_true_sponsors()]))
             if show["admin_comments"]:
                 row.append(sch_act.admin_comments)
 

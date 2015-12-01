@@ -16,6 +16,9 @@
         $(function() {
             var author = $("#id_author");
             author.attr("placeholder", "{{ user.full_name|escape }}");
+            {% if action == "add" %}
+                $("#id_update_added_date").parent().parent().remove()
+            {% endif %}
         });
     </script>
 {% endblock %}

@@ -61,6 +61,12 @@
         }
     {% endif %}
 
+    {% if no_fav %}
+    .activity-icon.fav {
+        display: none;
+    }
+    {% endif %}
+
     </style>
 {% endblock %}
 
@@ -130,6 +136,37 @@
         $(function() {
                 $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
         })
+        </script>
+    {% endif %}
+    {% if use_scroll %}
+        <script type="text/javascript">
+        $(function() {
+            $(".primary-content").addClass("scroll-display");
+            $("#activity-list").before($(".middle-wrapper"));
+
+            window.scrollDirection = 1; //down
+            window.scrollInterval = 2500;
+            window.scrollSpeed = 500;
+            displayScroll = function() {
+                var $el = $("#activity-list");
+                var inc = 26;
+                var top = ($el.scrollTop() + $el.innerHeight());
+                var scr = $el[0].scrollHeight;
+                if(top >= scr || (top <= 2*inc && window.scrollDirection == -1)) {
+                    window.scrollDirection *= -1;
+                }
+                var amo = $el.scrollTop() + inc*window.scrollDirection;
+                console.debug(amo);
+                if(amo % 26 != 0 && amo != 0) {
+                    amo -= (amo % 26);
+                }
+                if(amo < 0) window.scrollDirection *= -1;
+                console.debug(amo, amo/26);
+                $el.animate({ scrollTop: amo }, window.scrollSpeed);
+            }
+
+            window.setInterval(displayScroll, window.scrollInterval);
+        });
         </script>
     {% endif %}
 {% endblock %}
@@ -352,7 +389,6 @@
         {% endverbatim %}
     </script>
 
-
     <div class="primary-content eighth-signup">
 
         <div class="days-container"></div>
@@ -392,7 +428,7 @@
                                 {% if active_block.locked %}
                                     <i class="fa fa-lock"></i>
                                 {% endif %}
-                                {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                                {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user and not no_user_display %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
                             </h2>
                             <h4>
                                 {% if block_info.block_letter %}

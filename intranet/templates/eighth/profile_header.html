@@ -1,6 +1,6 @@
 <a href="{% url 'eighth_profile' profile_user.id %}">
     <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">    
-        <img src="/profile/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View pictures" width="86" height="107.5" />
+        <img src="/profile/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View Eighth Profile" width="86" height="107.5" />
     </div>
 </a>
 
@@ -12,13 +12,15 @@
             <div class="user-title">
                 <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
                     {{ profile_user.full_name }}
-                    {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+                    {% if profile_user.nickname %} ({{ profile_user.nickname }}){% endif %}
+                    {% if profile_user.student_id %} ({{ profile_user.student_id }})
+                    {% endif %}
                 </h2>
                 <h3>
                 {% if profile_user.is_student %}
                     {% if profile_user.graduation_year %}
                         {{ profile_user.grade|capfirst }}
-                        ({{ profile_user.graduation_year }})
+                        (Grade {{ profile_user.grade.number }}: {{ profile_user.graduation_year }})
                     {% else %}
                         Student
                     {% endif %}
@@ -43,13 +45,6 @@
                     <th>Username</th>
                     <td>{{ profile_user.ion_username }}</td>
                 </tr>
-                {% if profile_user.student_id %}
-                    <tr>
-                        <th>Student ID</th>
-                        <td>{{ profile_user.student_id }}</td>
-                    </tr>
-                {% endif %}
-
                 {% if profile_user.user_type == "tjhsstStudent" and profile_user.counselor %}
                     <tr>
                         <th>Counselor</th>
@@ -59,18 +54,32 @@
                 {% if request.user.is_eighth_admin %}
                     <tr class="comments">
                         <th>Comments</th>
-                        <td style="width: 400px">{{ profile_user.admin_comments|safe|linebreaksbr }}</td>
+                        <td style="width: 400px">
+                            {% if profile_user.admin_comments|length > 2 %}
+                                {{ profile_user.admin_comments|safe|linebreaksbr }}
+                            {% else %}
+                                (None)
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endif %}
 
             </table>
             {% if show_eighth_profile_link %}
-                <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
+                <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Profile</a> &nbsp;
             {% endif %}
-            <a href="/profile/{{ profile_user.id }}?full=1" class="button">View All Info</a> &nbsp;
+            <a href="/profile/{{ profile_user.id }}?full=1" class="button">
+                View All Info
+            </a> &nbsp;
+            {% if show_view_history_link %}
+                <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a> &nbsp;
+            {% endif %}
+            {% if show_view_often_link %}
+                <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Often Signups</a> &nbsp;
+            {% endif %}
             {% if request.user.is_eighth_admin %}
-                <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button">Edit Info</a> &nbsp;
-                <a href="{% url 'privacy_options' %}?user={{ profile_user.id }}" class="button">Edit Privacy</a> &nbsp;
+                <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button small-button">Edit Info</a> &nbsp;
+                <a href="{% url 'privacy_options' %}?user={{ profile_user.id }}" class="button small-button">Edit Privacy</a> &nbsp;
             {% endif %}
 
         </div>

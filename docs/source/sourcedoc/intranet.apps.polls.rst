@@ -4,6 +4,14 @@ intranet.apps.polls package
 Submodules
 ----------
 
+intranet.apps.polls.admin module
+--------------------------------
+
+.. automodule:: intranet.apps.polls.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.polls.models module
 ---------------------------------
 

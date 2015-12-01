@@ -12,6 +12,8 @@ django.contrib.admin.autodiscover()
 urlpatterns = [
     url(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
     url(r"^robots\.txt$", TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots"),
+    url(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
+    url(r"^serviceworker\.js$", TemplateView.as_view(template_name="serviceworker.js", content_type="text/javascript"), name="chrome_serviceworker"),
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
 
     url(r"^", include("intranet.apps.auth.urls")),
@@ -25,10 +27,12 @@ urlpatterns = [
     url(r"^search", include("intranet.apps.search.urls")),
     url(r"^profile", include("intranet.apps.users.urls")),
     url(r"^schedule", include("intranet.apps.schedule.urls")),
+    url(r"^seniors", include("intranet.apps.seniors.urls")),
     url(r"^preferences", include("intranet.apps.preferences.urls")),
     url(r"^feedback", include("intranet.apps.feedback.urls")),
     url(r"^welcome", include("intranet.apps.welcome.urls")),
     url(r"^notifications", include("intranet.apps.notifications.urls")),
+    url(r"^signage", include("intranet.apps.signage.urls")),
 
     url(r"^djangoadmin/", include(django.contrib.admin.site.urls)),
 ]

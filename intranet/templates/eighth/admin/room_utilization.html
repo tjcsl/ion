@@ -84,6 +84,10 @@
     color: red;
 }
 
+.tbd-tba {
+    color: red;
+}
+
     </style>
 {% endblock %}
 
@@ -104,6 +108,18 @@
                 <input type="submit" value="Show Room Utilization"/>
             {% endif %}
             {% endcomment %}
+        </form>
+        <br />
+        <hr />
+        <br />
+        <form action="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" method="get">
+            <p>Select a room:</p>
+            <select name="room" onselect="this.form.submit()" placeholder="Select a room">
+                <option value="">Select a room</option>
+            {% for room in all_rooms %}
+                <option value="{{ room.id }}">{{ room }}</option>
+            {% endfor %}
+            </select>
         </form>
     {% else %}
     <table style="width: 100%">
@@ -154,11 +170,11 @@
             {% endfor %}
                 <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %} /><br />Block</td>
                 <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %} /><br />Rooms</td>
+                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
+                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
                 <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %} /><br />AID</td>
                 <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %} /><br />Activity</td>
                 <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
-                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %} /><br />Signups</td>
-                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %} /><br />Capacity</td>
                 <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
                 <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
                 <th><input type="submit" value="Apply" id="apply-btn" /></th>
@@ -173,12 +189,12 @@
                 <tr>
                     {% if show.block %}<th style="min-width: 150px">Block</th>{% endif %}
                     {% if show.rooms %}<th data-sortable-type="numeric">Rooms</th>{% endif %}
-                    {% if show.aid %}<th>AID</th>{% endif %}
+                    {% if show.capacity %}<th style="min-width: 66px">Cap</th>{% endif %}
+                    {% if show.signups %}<th style="min-width: 68px">Sign</th>{% endif %}
+                    {% if show.aid %}<th style="min-width: 45px">AID</th>{% endif %}
                     {% if show.activity %}<th>Activity</th>{% endif %}
+                    {% if show.comments %}<th style="min-width: 92px">Comments</th>{% endif %}
                     {% if show.sponsors %}<th>Sponsors</th>{% endif %}
-                    {% if show.signups %}<th>Signups</th>{% endif %}
-                    {% if show.capacity %}<th>Capacity</th>{% endif %}
-                    {% if show.comments %}<th>Comments</th>{% endif %}
                     {% if show.admin_comments %}<th>Admin Comments</th>{% endif %}
                 </tr>
             </thead>
@@ -191,7 +207,19 @@
                             </td>
                         {% endif %}
                         {% if show.rooms %}
-                            <td>{{ sched_act.get_true_rooms|join:", " }}</td>
+                            <td>
+                            {% for rm in sched_act.get_true_rooms %}
+                                {% if rm.to_be_determined %}
+                                    <span class="tbd-tba">{{ rm }}</span>{% else %}
+                                    {{ rm }}{% endif %}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </td>
+                        {% endif %}
+                        {% if show.capacity %}
+                            <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                        {% endif %}
+                        {% if show.signups %}
+                            <td>{{ sched_act.members.count }}</td>
                         {% endif %}
                         {% if show.aid %}
                             <td>{{ sched_act.activity.aid }}</td>
@@ -199,17 +227,17 @@
                         {% if show.activity %}
                             <td>{{ sched_act.title_with_flags }}</td>
                         {% endif %}
-                        {% if show.sponsors %}
-                            <td>{{ sched_act.get_true_sponsors|join:", " }}</td>
-                        {% endif %}
-                        {% if show.signups %}
-                            <td>{{ sched_act.members.count }}</td>
-                        {% endif %}
-                        {% if show.capacity %}
-                            <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
-                        {% endif %}
                         {% if show.comments %}
                             <td>{{ sched_act.comments }}</td>
+                        {% endif %}
+                        {% if show.sponsors %}
+                            <td>
+                            {% for sp in sched_act.get_true_sponsors %}
+                                {% if sp.to_be_assigned %}
+                                    <span class="tbd-tba">{{ sp }}</span>{% else %}
+                                    {{ sp }}{% endif %}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </td>
                         {% endif %}
                         {% if show.admin_comments %}
                             <td>{{ sched_act.admin_comments }}</td>

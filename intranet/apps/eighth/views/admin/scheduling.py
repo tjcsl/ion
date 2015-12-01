@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from cacheops import invalidate_obj
 from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
@@ -41,11 +42,45 @@ def schedule_activity_view(request):
                                                             cancelled=True)
                                                     .exists())
 
+                instance = None
                 if form["scheduled"].value() or cancelled:
                     instance, created = (EighthScheduledActivity.objects
                                                                 .get_or_create(block=block,
                                                                                activity=activity))
+                    invalidate_obj(instance)
+                    invalidate_obj(block)
+                    invalidate_obj(activity)
+                else:
+                    schact = EighthScheduledActivity.objects.filter(
+                        block=block,
+                        activity=activity
+                    )
+                    logger.debug(block)
+                    logger.debug(activity)
+                    logger.debug(schact)
 
+                    # Instead of deleting and messing up attendance,
+                    # cancel the scheduled activity if it is unscheduled.
+                    # If the scheduled activity needs to be completely deleted,
+                    # the "Unschedule" box can be checked after it has been cancelled.
+
+                    # If a both blocks activity, unschedule the other
+                    # scheduled activities of it on the same day.
+                    if schact:
+                        if activity.both_blocks:
+                            other_act = schact[0].get_both_blocks_sibling()
+                            logger.debug("other_act: {}".format(other_act))
+                            if other_act:
+                                other_act.cancelled = True
+                                other_act.save()
+                                invalidate_obj(other_act)
+                        else:
+                            schact.update(cancelled=True)
+                            for s in schact:
+                                invalidate_obj(s)
+                        instance = schact[0]
+
+                if instance:
                     fields = [
                         "rooms",
                         "capacity",
@@ -54,9 +89,24 @@ def schedule_activity_view(request):
                         "comments",
                         "admin_comments"
                     ]
-                    for field_name in fields:
-                        setattr(instance, field_name, form.cleaned_data[field_name])
+                    if "rooms" in form.cleaned_data:
+                        for o in form.cleaned_data["rooms"]:
+                            invalidate_obj(o)
 
+                    if "sponsors" in form.cleaned_data:
+                        for o in form.cleaned_data["sponsors"]:
+                            invalidate_obj(o)
+
+                    for field_name in fields:
+                        obj = form.cleaned_data[field_name]
+                        logger.debug("{} {}".format(field_name, obj))
+                        setattr(instance, field_name, obj)
+
+                        if field_name in ["rooms", "sponsors"]:
+                            for o in obj:
+                                invalidate_obj(o)
+
+                if form["scheduled"].value() or cancelled:
                     # Uncancel if this activity/block pairing was already
                     # created and cancelled
                     if not form["scheduled"].value():
@@ -91,32 +141,8 @@ def schedule_activity_view(request):
                             messages.error(request, "Did not unschedule {} because there is {} student signed up.".format(name, count))
                         else:
                             messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
-
                     instance.save()
-                else:
-                    schact = EighthScheduledActivity.objects.filter(
-                        block=block,
-                        activity=activity
-                    )
-                    logger.debug(block)
-                    logger.debug(activity)
-                    logger.debug(schact)
-
-                    # Instead of deleting and messing up attendance,
-                    # cancel the scheduled activity if it is unscheduled.
-                    # If the scheduled activity needs to be completely deleted,
-                    # the "Unschedule" box can be checked after it has been cancelled.
-
-                    # If a both blocks activity, unschedule the other
-                    # scheduled activities of it on the same day.
-                    if schact and activity.both_blocks:
-                        other_act = schact[0].get_both_blocks_sibling()
-                        logger.debug("other_act: {}".format(other_act))
-                        if other_act:
-                            other_act.cancelled = True
-                            other_act.save()
-                    else:
-                        schact.update(cancelled=True)
+                    logger.debug(instance)
 
             messages.success(request, "Successfully updated schedule.")
 
@@ -163,9 +189,10 @@ def schedule_activity_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        end_date = start_date + timedelta(days=60)
+        #end_date = start_date + timedelta(days=60)
 
-        blocks = EighthBlock.objects.filter(date__gte=start_date, date__lte=end_date)
+        blocks = EighthBlock.objects.filter(date__gte=start_date)
+        #, date__lte=end_date)
         initial_formset_data = []
 
         sched_act_queryset = (EighthScheduledActivity.objects
@@ -186,6 +213,7 @@ def schedule_activity_view(request):
 
                 all_signups[block.id] = sched_act.members.count()
                 all_default_capacities[block.id] = sched_act.get_true_capacity()
+                logger.debug(sched_act)
                 initial_form_data.update({
                     "rooms": sched_act.rooms.all(),
                     "capacity": sched_act.capacity,
@@ -325,6 +353,64 @@ transfer_students_view = eighth_admin_required(
 )
 
 
+class EighthAdminUnsignupStudentsWizard(SessionWizardView):
+    FORMS = [
+        ("block_1", BlockSelectionForm),
+        ("activity_1", ActivitySelectionForm)
+    ]
+
+    TEMPLATES = {
+        "block_1": "eighth/admin/transfer_students.html",
+        "activity_1": "eighth/admin/transfer_students.html"
+    }
+
+    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
+
+    def get_form_kwargs(self, step):
+        kwargs = {}
+        if step == "block_1":
+            kwargs.update({
+                "exclude_before_date": get_start_date(self.request)
+            })
+        if step == "activity_1":
+            block = self.get_cleaned_data_for_step("block_1")["block"]
+            kwargs.update({"block": block})
+
+        labels = {
+            "block_1": "Select a block to move students from",
+            "activity_1": "Select an activity to unsignup students from"
+        }
+
+        kwargs.update({"label": labels[step]})
+
+        return kwargs
+
+    def get_context_data(self, form, **kwargs):
+        context = super(EighthAdminUnsignupStudentsWizard,
+                        self).get_context_data(form=form, **kwargs)
+        context.update({"admin_page_title": "Clear Student Signups for Activity"})
+        return context
+
+    def done(self, form_list, **kwargs):
+        source_block = form_list[0].cleaned_data["block"]
+        source_activity = form_list[1].cleaned_data["activity"]
+        source_scheduled_activity = EighthScheduledActivity.objects.get(
+            block=source_block,
+            activity=source_activity
+        )
+
+        req = "source_act={}&dest_unsignup=1".format(source_scheduled_activity.id)
+
+        return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
+
+unsignup_students_view = eighth_admin_required(
+    EighthAdminUnsignupStudentsWizard.as_view(
+        EighthAdminUnsignupStudentsWizard.FORMS
+    )
+)
+
+
 @eighth_admin_required
 def transfer_students_action(request):
     """ Do the actual process of transferring students."""
@@ -335,10 +421,15 @@ def transfer_students_action(request):
     else:
         raise Http404
 
+    dest_act = None
+    dest_unsignup = False
+
     if "dest_act" in request.GET:
         dest_act = EighthScheduledActivity.objects.get(id=request.GET.get("dest_act"))
     elif "dest_act" in request.POST:
         dest_act = EighthScheduledActivity.objects.get(id=request.POST.get("dest_act"))
+    elif "dest_unsignup" in request.POST or "dest_unsignup" in request.GET:
+        dest_unsignup = True
     else:
         raise Http404
 
@@ -348,14 +439,23 @@ def transfer_students_action(request):
         "admin_page_title": "Transfer Students",
         "source_act": source_act,
         "dest_act": dest_act,
+        "dest_unsignup": dest_unsignup,
         "num": num
     }
 
     if request.method == "POST":
-        source_act.eighthsignup_set.update(
-            scheduled_activity=dest_act
-        )
-        messages.success(request, "Successfully transfered {} students.".format(num))
+        if dest_unsignup and not dest_act:
+            source_act.eighthsignup_set.all().delete()
+            invalidate_obj(source_act)
+            messages.success(request, "Successfully removed signups for {} students.".format(num))
+        else:
+            source_act.eighthsignup_set.update(
+                scheduled_activity=dest_act
+            )
+
+            invalidate_obj(source_act)
+            invalidate_obj(dest_act)
+            messages.success(request, "Successfully transfered {} students.".format(num))
         return redirect("eighth_admin_dashboard")
     else:
         return render(request, "eighth/admin/transfer_students.html", context)

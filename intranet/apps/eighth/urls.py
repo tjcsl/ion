@@ -29,6 +29,8 @@ urlpatterns = [
     url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
     url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
     url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
+    url(r"^/profile/history(?:/(?P<user_id>\d+))?$", profile.profile_history_view, name="eighth_profile_history"),
+    url(r"^/profile/often(?:/(?P<user_id>\d+))?$", profile.profile_often_view, name="eighth_profile_often"),
 
     # Roster (for students/teachers)
     url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
@@ -47,7 +49,6 @@ eighth_admin_patterns = [
     # admin_activities
     url(r"^activities/add$", admin_activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"^activities/edit/(?P<activity_id>\d+)$", admin_activities.edit_activity_view, name="eighth_admin_edit_activity"),
-    url(r"^activities/id/(?P<activity_id>\d+)$", admin_activities.edit_activity_id, name="eighth_admin_edit_activity_id"),
     url(r"^activities/delete/(?P<activity_id>\d+)$", admin_activities.delete_activity_view, name="eighth_admin_delete_activity"),
 
     # Blocks
@@ -62,6 +63,7 @@ eighth_admin_patterns = [
     url(r"^scheduling/transfer_students$", scheduling.transfer_students_view, name="eighth_admin_transfer_students"),
     url(r"^scheduling/transfer_students_action$", scheduling.transfer_students_action, name="eighth_admin_transfer_students_action"),
     url(r"^scheduling/distribute_students$", scheduling.distribute_students_view, name="eighth_admin_distribute_students"),
+    url(r"^scheduling/unsignup_students$", scheduling.unsignup_students_view, name="eighth_admin_unsignup_students"),
 
 
     # Attendance

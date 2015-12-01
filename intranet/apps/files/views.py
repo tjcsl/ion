@@ -138,7 +138,9 @@ def files_type(request, fstype=None):
         messages.error(request, "Could not find host in database.")
         return redirect("files")
 
-    if not host.visible_to(request.user):
+    if host.available_to_all:
+        pass
+    elif not host.visible_to(request.user):
         messages.error(request, "You don't have permission to access this host.")
         return redirect("files")
 
@@ -292,8 +294,9 @@ def files_upload(request, fstype=None):
     except Host.DoesNotExist:
         messages.error(request, "Could not find host in database.")
         return redirect("files")
-
-    if not host.visible_to(request.user):
+    if host.available_to_all:
+        pass
+    elif not host.visible_to(request.user):
         messages.error(request, "You don't have permission to access this host.")
         return redirect("files")
 

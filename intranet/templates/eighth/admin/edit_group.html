@@ -71,6 +71,19 @@
     </ul>
     <br />
 {% endif %}
+{% if "remove_all" in request.GET %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <p><b>Are you sure you want to remove all of the group members?</b></p>
+        <input type="hidden" name="remove_all" value="1" />
+        <input type="submit" value="Remove All" />
+    </form>
+{% else %}
+    <a href="?remove_all=1" class="button small-button">
+    Remove All Group Members
+    </a>
+{% endif %}
+<br />
 <table data-sortable class="fancy-table">
     <thead>
         <tr>

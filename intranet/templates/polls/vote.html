@@ -1,0 +1,88 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super}} - Vote
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <a href="{% url 'polls' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Polls
+        </a>
+        <h2>Vote: {{ poll }}</h2>
+
+            <p>{{ poll.description|safe }}</p>
+        {% if user != request.user %}<b>Voting as: {{ user }}</b><br />{% endif %}
+        {% if user in poll.get_users_voted %}
+            <span class="voted-status voted">
+                <i class="fa fa-check"></i> You have voted in this poll.
+            </span>
+        {% else %}
+            <span class="voted-status not-voted">
+                <i class="fa fa-exclamation-triangle"></i> You have not voted in this poll.
+            </span>
+        {% endif %}
+
+        <form action="{% url 'poll_vote' poll.id %}{% if user != request.user %}?user={{ user.id }}{% endif %}" method="post">
+            {% csrf_token %}
+            <hr />
+
+            <ol class="questions">
+            {% for question in questions %}
+                <li>
+                    {{ question.question }}
+                    <div class="question">
+                    {% if question.is_choice %}
+                        <ul class="answers">
+                        {% for choice in question.choices %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-{{ choice.num }}"
+                                       name="question-{{ question.num }}"
+                                       value="{{ choice.num }}"
+                                       {% if choice.id == question.current_choice.id %} checked {% endif %} />
+
+                                <label for="question-{{ question.num }}-{{ choice.num }}">
+                                    {{ choice.info|safe }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                            <li>
+                                <input type="radio"
+                                       id="question-{{ question.num }}-clear"
+                                       name="question-{{ question.num }}"
+                                       value="CLEAR"
+                                       {% if question.current_vote_clear %} checked {% endif %} />
+
+                                <label for="question-{{ question.num }}-clear" class="clear-vote">
+                                    Clear Vote
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ol>
+            {% if can_vote %}
+                <input type="submit" value="Vote!" />
+            {% else %}
+                You can't vote in this poll.
+            {% endif %}
+        </form>
+    </div>
+
+{% endblock %}

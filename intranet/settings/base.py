@@ -25,9 +25,9 @@ EMAIL_ANNOUNCEMENTS = True
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 ADMINS = (
-    ("Ethan Lowman", "2015elowman+ion@tjhsst.edu"),
     ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
     ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu"),
+    ("Andrew Hamilton", "ahamilto+ion@tjhsst.edu")
 )
 
 FEEDBACK_EMAIL = "intranet+feedback@lists.tjhsst.edu"
@@ -105,8 +105,8 @@ STATICFILES_FINDERS = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
 )
 
 AUTH_USER_MODEL = "users.User"
@@ -180,9 +180,9 @@ CACHE_AGE = {
     "user_grade": 10 * months,
     "class_teacher": 6 * months,
     "class_attribute": 6 * months,
-    "ldap_permissions": int(0.5 * months),
+    "ldap_permissions": 1 * days,
     "bell_schedule": 7 * days,
-    "users_list": 7 * days,
+    "users_list": 1 * days,
 }
 del days
 del months
@@ -211,12 +211,13 @@ if not TRAVIS:
 
     CACHEOPS_DEFAULTS = {
         "ops": "all",
+        "cache_on_save": True,
         "timeout": 24 * 60 * 60
     }
 
     CACHEOPS = {
         "eighth.*": {
-            "timeout": 60 * 60
+            "timeout": 1  # 60 * 60
         },
         "announcements.*": {},
         "events.*": {},
@@ -278,6 +279,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
     "rest_framework",
     "maintenancemode",
     "intranet.apps",
@@ -293,6 +295,9 @@ INSTALLED_APPS = (
     "intranet.apps.users",
     "intranet.apps.preferences",
     "intranet.apps.files",
+    "intranet.apps.polls",
+    "intranet.apps.signage",
+    "intranet.apps.seniors",
     "intranet.middleware.environment",
     "widget_tweaks",
     "corsheaders",
@@ -331,7 +336,7 @@ LOGGING = {
         "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
+            "class": "intranet.middleware.email_handler.AdminEmailHandler",
             "include_html": True
         },
         "console": {
@@ -361,12 +366,11 @@ LOGGING = {
             "delay": True
         },
         "error_log": {
-            "level": "DEBUG",
+            "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "logging.FileHandler",
-            "formatter": "access",
-            "filename": "/var/log/ion/app_error.log",
-            "delay": True
+            "delay": True,
+            "filename": "/var/log/ion/app_error.log"
         },
     },
     "loggers": {
@@ -376,7 +380,7 @@ LOGGING = {
             "propagate": True,
         },
         "intranet": {
-            "handlers": ["console", "mail_admins"],
+            "handlers": ["console", "mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),
             "level": LOG_LEVEL,
             "propagate": True,
         },

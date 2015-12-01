@@ -65,6 +65,10 @@
                     {{ class.quarters|join:", " }}
                 {% endif %}
             </h3>
+            {% if show_emails %}
+                <br />
+                <a href="{% url 'class_section_csv' class.section_id %}" class="button">Export CSV</a>
+            {% endif %}
         </section>
 
         <section class="students-info">
@@ -74,6 +78,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Grade</th>
+                        {% if show_emails %}<th class="email-col">TJ Email</th>{% endif %}
                     </tr>
                 </thead>
                 {% for student in class.students %}
@@ -84,6 +89,7 @@
                         </a>
                     </td>
                     <td>{{ student.grade.number }}</td>
+                    {% if show_emails %}<td class="email-col">{{ student.tj_email }}</td>{% endif %}
                 </tr>
                 {% endfor %}
             </table>

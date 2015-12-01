@@ -6,6 +6,7 @@ import hashlib
 import logging
 import ldap
 import os
+from base64 import b64encode
 from six import text_type
 from django.db import models
 from django.conf import settings
@@ -146,7 +147,7 @@ class UserManager(UserManager):
             return cached
         else:
             try:
-                users = Group.objects.get(name="Students").user_set.all()
+                users = Group.objects.get(name__istartswith="All Students").user_set.all()
             except Group.DoesNotExist:
                 users = User.objects.filter(username__startswith="2")
             # Add possible exceptions handling here
@@ -417,8 +418,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.full_name
         return display_name
 
-    property
-
+    @property
     def last_first(self):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
@@ -519,6 +519,21 @@ class User(AbstractBaseUser, PermissionsMixin):
                       timeout=settings.CACHE_AGE['ldap_permissions'])
             return grade
 
+    def _current_user_override(self):
+        """ Return whether the currently logged in user is a teacher,
+            and can view all of a student's information regardless of
+            their privacy settings.
+        """
+        try:
+            # threadlocals is a module, not an actual thread locals object
+            requesting_user = threadlocals.request().user
+            can_view_anyway = (requesting_user.is_teacher or
+                               requesting_user.is_eighthoffice)
+        except (AttributeError, KeyError):
+            can_view_anyway = False
+
+        return can_view_anyway
+
     @property
     def classes(self):
         """Returns a list of Class objects for a user ordered by
@@ -534,7 +549,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         key = User.create_secure_cache_key(identifier)
 
         cached = cache.get(key)
-        if is_student:
+        if self.is_http_request_sender():
+            visible = True
+        elif self._current_user_override():
+            visible = True
+        elif is_student:
             visible = self.attribute_is_visible("showschedule")
         else:
             visible = True
@@ -635,6 +654,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
         visible = self.attribute_is_visible("showaddress")
 
+        visible = self._current_user_override() or visible
+
         if cached and visible:
             logger.debug("Attribute 'address' of user {} loaded "
                          "from cache.".format(self.id))
@@ -695,6 +716,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     @property
+    def is_male(self):
+        return self.sex.lower()[:1] == "m" if self.sex else False
+
+    @property
+    def is_female(self):
+        return self.sex.lower()[:1] == "f" if self.sex else False
+
+    @property
     def age(self, date=None):
         """Returns a user's age, based on their birthday.
            Optional date argument to find their age on a given day.
@@ -725,6 +754,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if self.is_http_request_sender():
+            visible = True
+        elif self._current_user_override():
             visible = True
         else:
             perms = self.photo_permissions
@@ -761,6 +792,47 @@ class User(AbstractBaseUser, PermissionsMixin):
             return data
         else:
             return None
+
+    def photo_base64(self, photo_year):
+        """Returns base64 encoded binary data for a user's picture.
+
+        Returns:
+            Base64 string, or None
+
+        """
+        binary = self.photo_binary(photo_year)
+        if binary:
+            return b64encode(binary)
+
+        return None
+
+    def default_photo(self):
+        """Returns the default photo (in binary) that should be used.
+
+        Returns:
+            Binary data
+
+        """
+        data = None
+        preferred = self.preferred_photo
+        if preferred is not None:
+            if preferred.endswith("Photo"):
+                preferred = preferred[:-len("Photo")]
+
+        if preferred == "AUTO" or preferred is None:
+            if self.user_type == "tjhsstTeacher":
+                current_grade = 12
+            else:
+                current_grade = int(self.grade)
+                if current_grade > 12:
+                    current_grade = 12
+
+            for i in reversed(range(9, current_grade + 1)):
+                data = self.photo_binary(Grade.names[i - 9])
+                if data:
+                    return data
+
+        return None
 
     @property
     def photo_permissions(self):
@@ -885,11 +957,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return (self.permissions["self"]["showeighth"] if (
-            self.permissions and
-            "self" in self.permissions and
-            "showeighth" in self.permissions["self"]
-        ) else False)
+        return self.attribute_is_visible("showeighth")
 
     @property
     def is_eighth_admin(self):
@@ -945,6 +1013,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         return self.user_type == "tjhsstStudent"
+
+    @property
+    def is_senior(self):
+        """Checks if user is a student in Grade 12.
+
+        Returns:
+            Boolean
+
+        """
+        return (self.is_student and self.grade and self.grade.number and self.grade.number == 12)
+    
 
     @property
     def is_eighthoffice(self):
@@ -1267,6 +1346,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             visible = self.attribute_is_visible(attr["perm"])
 
+        if name not in ["ion_id", "ion_username", "user_type"]:
+            visible = self._current_user_override() or visible
+
         if cached and visible:
             logger.debug("Attribute '{}' of user {} loaded "
                          "from cache.".format(name, self.id or self.dn))
@@ -1276,12 +1358,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             field_name = attr["ldap_name"]
             try:
                 results = c.user_attributes(self.dn, [field_name])
-                result = results.first_result()[field_name]
+                try:
+                    result = results.first_result()[field_name]
+                except TypeError:
+                    result = None
 
                 if attr["is_list"]:
                     value = result
-                else:
+                elif result:
                     value = result[0]
+                else:
+                    value = None
+                    should_cache = False
 
                 if should_cache:
                     cache.set(key, value,
@@ -1295,7 +1383,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_ldap_attribute(self, name, value, override_set=False):
         """Set a user attribute in LDAP.
         """
-        if name not in User.ldap_user_attributes:
+        if name not in User.ldap_user_attributes and not override_set:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
         if not User.ldap_user_attributes[name]["can_set"] and not override_set:
             raise Exception("Not allowed to set User attribute '{}'".format(name))
@@ -1734,6 +1822,11 @@ class Grade(object):
     def name(self):
         """Return the grade's name (e.g. senior)"""
         return self._name
+
+    @property
+    def name_plural(self):
+        """Return the grade's plural name (e.g. freshmen)"""
+        return "freshmen" if self._grade == 9 else "{}s".format(self._name)
 
     @property
     def text(self):

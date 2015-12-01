@@ -7,6 +7,12 @@
     <script type="text/javascript">
         $(function() {
             Sortable.init();
+            $("#sponsor-select").on("change", function() {
+                var val = $(this).val();
+                if(val) {
+                    location.href = "/eighth/admin/sponsors/schedule/" + val;
+                }
+            })
         });
     </script>
 {% endblock %}
@@ -17,6 +23,14 @@
 {% endblock %}
 
 {% block admin_main %}
+
+
+<select id="sponsor-select" placeholder="Select or search for a sponsor">
+    <option value="">Select or search for a sponsor</option>
+    {% for sp in all_sponsors %}
+        <option value="{{ sp.id }}"{% if sp.id == sponsor.id %} selected{% endif %}>{{ sp.name }}{% if sp.user.id %} (User {{ sp.user.id }}){% else %} (No user){% endif %}</option>
+    {% endfor %}
+</select>
 
 <h4>Select an Activity:</h4>
 
@@ -36,6 +50,7 @@ Click on column titles to sort.
     <thead>
         <tr>
             <th>Block</th>
+            <th>AID</th>
             <th>Activity</th>
             <th>Comments</th>
             <th>Room</th>
@@ -47,6 +62,7 @@ Click on column titles to sort.
         {% for scheduled_activity in scheduled_activities %}
             <tr>
                 <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                <td>{{ scheduled_activity.activity.aid }}</td>
                 <td>{{ scheduled_activity.activity.name_with_flags }}</td>
                 <td>{{ scheduled_activity.comments }}</td>
                 <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>

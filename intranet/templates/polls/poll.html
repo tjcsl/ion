@@ -1,0 +1,85 @@
+{% load dates %}
+
+<div class="poll" data-id="{{ poll.id }}">
+    <h3>
+        {% if link_to_poll %}
+            <a href="{% url 'poll' poll.id %}" class="poll-link">
+                {{ poll.title }}
+            </a>
+        {% else %}    
+            {{ poll.title }}
+        {% endif %}
+        {% if not poll.visible %} (HIDDEN){% endif %}
+        {% if is_polls_admin %}
+            <div class="poll-icon-wrapper">
+                <a href="{% url 'modify_poll' poll.id %}">
+                    <i class="poll-icon fa fa-pencil"></i>
+                </a>
+                <a href="{% url 'delete_poll' poll.id %}" class="poll-delete">
+                    <i class="poll-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="poll-metadata">
+        {% comment %}
+        by {{ poll.user.full_name|escape }} {% if poll.show_fuzzy_date %}&bull; {{ poll.time|fuzzy_date|capfirst }}{% endif %} &bull; {% endcomment %}
+        {% if poll.before_start_time %}
+            Opens {{ poll.start_time|date:"l, F j, Y"}}{% if poll.start_time|date:"P" != "midnight" %} {{ poll.start_time|date:"P" }}{% endif %} &bull;
+        {% elif poll.before_end_time %}
+            Closes {{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %} &bull;
+        {% else %}
+            Closed {{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %} &bull;
+        {% endif %}
+        for
+        {% for group in poll.groups.all %}
+            {{ group }}
+            {% if not forloop.last %},{% endif %}
+        {% empty %}
+            everyone
+        {% endfor %}
+    </div>
+
+    {% if poll.announcement and not announcement %}
+        {% with announcement=poll.announcement link_to_announcement=1 %}
+            {% include "announcements/announcement.html" %}
+        {% endwith %}
+    {% endif %}
+
+    <div class="poll-content">
+        {% if poll.description %}
+            {{ poll.description|safe }}
+        {% else %}
+            Click on the button below to vote in this poll.
+        {% endif %}
+    </div>
+
+    <br />
+    <br />
+
+    <div class="bottom-row">
+        {% if request.user in poll.get_users_voted %}
+        <span class="voted-status voted">
+            <i class="fa fa-check"></i> You have voted in this poll.
+        </span>
+        {% else %}
+        <span class="voted-status not-voted">
+            <i class="fa fa-exclamation-triangle"></i> You have not voted in this poll.
+        </span>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'poll_vote' poll.id %}" class="button">
+        Vote
+    </a>
+
+    {% if is_polls_admin %}
+        <a href="{% url 'poll_results' poll.id %}" class="button">
+            View Results
+        </a>
+    {% endif %}
+
+
+
+</div>

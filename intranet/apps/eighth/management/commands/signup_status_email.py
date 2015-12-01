@@ -36,12 +36,20 @@ class Command(BaseCommand):
                             default=False,
                             help="Pretend, and don't actually do anything.")
 
+        parser.add_argument('--everyone',
+                            action='store_true',
+                            dest='everyone',
+                            default=False,
+                            help="Send to everyone, even those who have no eighth emails set.")
+
     def handle(self, *args, **options):
 
         log = not options["silent"]
-
-        users = User.objects.filter(receive_eighth_emails=True)
-        next_blocks = EighthBlock.objects.get_next_upcoming_blocks()
+        if options["everyone"]:
+            users = User.objects.get_students()
+        else:
+            users = User.objects.filter(receive_eighth_emails=True).nocache()
+        next_blocks = EighthBlock.objects.get_next_upcoming_blocks().nocache()
 
         if next_blocks.count() < 1:
             if log:
@@ -64,20 +72,31 @@ class Command(BaseCommand):
                     self.stdout.write("Block {} on {} is not today ({}).".format(next_blocks[0], blk_date, today))
                 return
 
+        if log:
+            self.stdout.write("{}".format(next_blocks))
+            self.stdout.write("{}".format(options))
+            self.stdout.write("{}".format(users))
+
         for user in users:
-            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks)
+            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks).nocache()
             if user_signups.count() < next_blocks.count():
                 """User hasn't signed up for a block."""
                 if log:
                     self.stdout.write("User {} hasn't signed up for a block".format(user))
                 if not options["pretend"]:
-                    signup_status_email(user, next_blocks)
+                    try:
+                        signup_status_email(user, next_blocks)
+                    except Exception as e:
+                        print(e)
             elif user_signups.filter(scheduled_activity__cancelled=True).count() > 0:
                 """User is in a cancelled activity."""
                 if log:
                     self.stdout.write("User {} is in a cancelled activity.".format(user))
                 if not options["pretend"]:
-                    signup_status_email(user, next_blocks)
+                    try:
+                        signup_status_email(user, next_blocks)
+                    except Exception as e:
+                        print(e)
 
         if log:
             self.stdout.write("Done.")

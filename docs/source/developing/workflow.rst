@@ -2,5 +2,5 @@
 Workflow
 ********
 
-git remote update
-git branch dev origin/dev
+- git fetch
+- git checkout dev

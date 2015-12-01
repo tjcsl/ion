@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+import io
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from intranet.apps.search.views import get_search_results
-from .models import User, Class
+from .models import User, Class, Grade
 from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
+from .renderers import JPEGRenderer
+from intranet import settings
 
 
 class ProfileDetail(generics.RetrieveAPIView):
@@ -25,7 +29,39 @@ class ProfileDetail(generics.RetrieveAPIView):
             user = request.user
 
         serializer = self.get_serializer(user)
-        return Response(serializer.data)
+        data = serializer.data
+        return Response(data)
+
+
+class ProfilePictureDetail(generics.RetrieveAPIView):
+    """API endpoint that retrieves an Ion profile picture
+
+    /api/profile/<pk>/picture: retrieve default profile picture
+    /api/profile/<pk>/picture/<photo_year>: retrieve profile picture for year <photo_year>
+    """
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JPEGRenderer,)
+
+    def retrieve(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            user = User.objects.get(pk=kwargs['pk'])
+        else:
+            user = request.user
+
+        binary = None
+        if 'photo_year' in kwargs:
+            photo_year = kwargs['photo_year']
+            if photo_year in Grade.names:
+                binary = user.photo_binary(photo_year)
+        else:
+            binary = user.default_photo()
+        if not binary:
+            default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
+            binary = io.open(default_image_path, mode="rb").read()
+
+        response = Response(binary, content_type='image/jpeg')
+        return response
 
 
 class ClassDetail(generics.RetrieveAPIView):
@@ -52,10 +88,10 @@ class Search(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         query = kwargs['query']
         user_ids = []
-
+        query = query.replace("+", " ")
         query_error, results = get_search_results(query)
-        for unserialized_user in results['hits']['hits']:
-            user_ids.append(unserialized_user['_source']['ion_id'])
+        for unserialized_user in results:
+            user_ids.append(unserialized_user.id)
 
         queryset = User.objects.filter(pk__in=user_ids)
         users = self.paginate_queryset(queryset)

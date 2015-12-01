@@ -1,0 +1,70 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load forms %}
+{% load math %}
+{% load strings %}
+
+{% block title %}
+    {{ block.super }} - LDAP Testing
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/preferences.css' %}" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+    <h2>LDAP Testing</h2>
+
+    {% if results %}
+        <pre style="padding: 5px;">
+Results:
+{{ results }}</pre>
+        <br />
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <b>LDAP search:</b><br />
+        Search DN: <input type="text" name="search_dn" value="{{ search_dn }}" /><br />
+        Query: <input type="text" name="search_q" value="{{ search_q }}" /><br />
+        {% for attr in search_attrs %}
+        <div class="search-attrs">
+            Attrs: <input type="text" name="search_attrs" value="{{ attr }}" />
+        </div>
+        {% empty %}
+        <div class="search-attrs">
+            Attrs: <input type="text" name="search_attrs" value="" />
+        </div>
+        {% endfor %}
+        <a onclick="$('.search-attrs').eq(0).after($('.search-attrs').eq(0).clone())" class="button small-button">Add attr</a>
+        <br />
+        <input type="submit" value="LDAP search" />
+    </form>
+    <br />
+    <br />
+    <br />
+    <form action="" method="post">
+        {% csrf_token %}
+        <b>User attributes:</b><br />
+        DN/iodineUidNumber: <input type="text" name="user_attribute_dn" value="{{ user_attribute_dn }}" /><br />
+        {% for attr in user_attribute_attrs %}
+        <div class="user-attrs">
+            Attrs: <input type="text" name="user_attribute_attrs" value="{{ attr }}" />
+        </div>
+        {% empty %}
+        <div class="user-attrs">
+            Attrs: <input type="text" name="user_attribute_attrs" value="dn" />
+        </div>
+        {% endfor %}
+        <a onclick="$('.user-attrs').eq(0).after($('.user-attrs').eq(0).clone())" class="button small-button">Add attr</a>
+        <br />
+        <input type="submit" value="Get User Attribute(s)" />
+    </form>
+</div>
+{% endblock %}

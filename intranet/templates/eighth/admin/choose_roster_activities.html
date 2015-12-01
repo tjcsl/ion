@@ -37,7 +37,7 @@ $(function() {
         <table data-sortable class="fancy-table choose-activities zebra">
         <thead>
             <tr>
-                <th><input type="checkbox" class="all" checked /></th>
+                <th data-sortable="false"><input type="checkbox" class="all" checked /></th>
                 <th>Activity Name</th>
                 <!-- automatically sorted by sponsor -->
                 <th data-sorted="true" data-sorted-direction="ascending">Sponsors</th>
@@ -47,7 +47,7 @@ $(function() {
         <tbody>
         {% for schact in schacts %}
         <tr>
-            <td><input type="checkbox" name="schact_id" value="{{ schact.id }}" checked /></td>
+            <td data-sortable="false"><input type="checkbox" name="schact_id" value="{{ schact.id }}" checked /></td>
             <td>{{ schact.full_title }}</td>
             <td>{{ schact.get_true_sponsors|join:"; " }}</td>
             <td>{{ schact.get_true_rooms|join:"; " }}</td>

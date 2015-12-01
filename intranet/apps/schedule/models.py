@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 from six import text_type
 from django.db import models
 
@@ -76,9 +77,20 @@ class DayType(models.Model):
         ordering = ("name",)
 
 
+class DayManager(models.Manager):
+
+    def get_future_days(self):
+        """Return only future Day objects."""
+        today = datetime.datetime.now().date()
+
+        return Day.objects.filter(date__gte=today)
+
+
 class Day(models.Model):
+    objects = DayManager()
     date = models.DateField(unique=True)
     day_type = models.ForeignKey('DayType')
+    comment = models.CharField(max_length=1000, blank=True)
 
     def __unicode__(self):
         return "{}: {}".format(text_type(self.date), self.day_type)

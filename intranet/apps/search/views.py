@@ -5,6 +5,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from ldap.filter import escape_filter_chars
 from intranet.db.ldap_db import LDAPConnection
 from ..announcements.models import Announcement
 from ..events.models import Event
@@ -19,6 +20,8 @@ logger = logging.getLogger(__name__)
 def do_ldap_query(q, admin=False):
     c = LDAPConnection()
     result_dns = []
+
+    q = escape_filter_chars(q)
 
     # If only a digit, search for student ID and user ID
     if q.isdigit():
@@ -58,7 +61,8 @@ def do_ldap_query(q, admin=False):
             "sex": ("sex",),
             "gender": ("sex",),
             "id": ("iodineUidNumber",),
-            "username": ("iodineUid",)
+            "username": ("iodineUid",),
+            "counselor": ("counselor",)
         }
 
         inner = ""
@@ -184,6 +188,7 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
+    q = q.replace("+", " ")
     users = do_ldap_query(q, admin)
     return False, users
 

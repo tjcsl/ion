@@ -5,9 +5,11 @@ from six.moves import cPickle as pickle
 import csv
 import logging
 import re
+from cacheops import invalidate_obj, invalidate_model
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
@@ -52,12 +54,25 @@ def edit_group_view(request, group_id):
         raise http.Http404
 
     if request.method == "POST":
+        invalidate_model(Group)
+        if group.name.lower().startswith("all students"):
+            cache.delete("users:students")
+        if "remove_all" in request.POST:
+            users = group.user_set.all()
+            num = users.count()
+            for u in users:
+                group.user_set.remove(u)
+            group.save()
+            invalidate_obj(group)
+            messages.success(request, "Successfully deleted {} members of the group.".format(num))
+            return redirect("eighth_admin_edit_group", group.id)
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             if 'student_visible' in form.cleaned_data:
                 props = group.properties
                 props.student_visible = form.cleaned_data['student_visible']
                 props.save()
+                invalidate_obj(props)
 
             form.save()
             messages.success(request, "Successfully edited group.")
@@ -230,6 +245,7 @@ def upload_group_members_view(request, group_id):
                     user.groups.add(group)
                     user.save()
                     num_added += 1
+            invalidate_obj(group)
             messages.success(request, "{} added to group {}".format(num_added, group))
             return redirect("eighth_admin_edit_group", group.id)
         elif "import_group" in request.POST:
@@ -242,6 +258,7 @@ def upload_group_members_view(request, group_id):
                 for member in import_group.user_set.all():
                     member.groups.add(group)
                     member.save()
+                invalidate_obj(group)
                 messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
                 return redirect("eighth_admin_edit_group", group.id)
             return render(request, "eighth/admin/upload_group.html", {
@@ -302,12 +319,13 @@ def download_group_csv_view(request, group_id):
         raise http.Http404
 
     response = http.HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=\"{}\"".format(group.name)
+    response["Content-Disposition"] = "attachment; filename=\"{}.csv\"".format(group.name)
 
     writer = csv.writer(response)
     writer.writerow(["Last Name", "First Name", "Student ID", "Grade", "Email"])
-
-    for user in group.user_set.all():
+    users = group.user_set.all()
+    users = sorted(users, key=lambda m: (m.last_name, m.first_name))
+    for user in users:
         row = []
         row.append(user.last_name)
         row.append(user.first_name)
@@ -665,6 +683,7 @@ def add_member_to_group_view(request, group_id):
             user.save()
             if len(user_objects) < 25:
                 next_url += "added={}&".format(user.id)
+        invalidate_obj(group)
         messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
         return redirect(next_url)
 
@@ -681,8 +700,8 @@ def add_member_to_group_view(request, group_id):
 
     errors, results = get_search_results(query)
     logger.debug(results)
-    if results["hits"]["total"] == 1:
-        user_id = results["hits"]["hits"][0]["_source"]["ion_id"]
+    if len(results) == 1:
+        user_id = results[0].id
         logger.debug("User id: {}".format(user_id))
         user = User.objects.user_with_ion_id(user_id)
 
@@ -690,10 +709,11 @@ def add_member_to_group_view(request, group_id):
         user.save()
         messages.success(request, "Successfully added user \"{}\" to the group.".format(user.full_name))
         return redirect(next_url + "?added=" + str(user_id))
-    elif results["hits"]["total"] == 0:
+    elif len(results) == 0:
         return redirect(next_url + "?error=n")
     else:
-        users = [r["_source"] for r in results["hits"]["hits"]]
+        users = results
+        results = sorted(results, key=lambda x: (x.last_name, x.first_name))
         context = {
             "query": query,
             "users": users,
@@ -723,6 +743,7 @@ def remove_member_from_group_view(request, group_id, user_id):
 
     group.user_set.remove(user)
     group.save()
+    invalidate_obj(group)
     messages.success(request, "Successfully removed user \"{}\" from the group.".format(user.full_name))
 
     return redirect(next_url)

@@ -38,7 +38,8 @@ def fuzzy_date(date):
         elif minutes < 60:
             return "{} minutes ago".format(int(seconds // 60))
         elif hours < 24:
-            return "{} hours ago".format(int(diff.seconds // (60 * 60)))
+            hrs = int(diff.seconds // (60 * 60))
+            return "{} hour{} ago".format(hrs, "s" if hrs != 1 else "")
         elif diff.days == 1:
             return "yesterday"
         elif diff.days < 7:
@@ -59,7 +60,8 @@ def fuzzy_date(date):
         elif minutes < 60:
             return "in {} minutes".format(int(seconds // 60))
         elif hours < 24:
-            return "in {} hours".format(int(diff.seconds // (60 * 60)))
+            hrs = int(diff.seconds // (60 * 60))
+            return "in {} hour{}".format(hrs, "s" if hrs != 1 else "")
         elif diff.days == 1:
             return "tomorrow"
         elif diff.days < 7:

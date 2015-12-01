@@ -17,9 +17,10 @@ from django.db.models import Manager, Q
                                   code="afs",
                                   address="remote.tjhsst.edu",
                                   directory="/afs/csl/",
-                                  linux=True)
+                                  linux=True,
+                                  available_to_all=True)
 
-        afs.groups.add(Group.objects.get(name="admin_all"))
+        afs.groups_visible.add(Group.objects.get(name="admin_all"))
 
         Host.objects.create(name="Home Folder (M)",
                             code="tj03_m",
@@ -65,6 +66,8 @@ class Host(models.Model):
     linux = models.BooleanField(default=False)
 
     groups_visible = models.ManyToManyField(DjangoGroup, blank=True)
+
+    available_to_all = models.BooleanField(default=False)
 
     def visible_to(self, user):
         if self.groups_visible.count() == 0:

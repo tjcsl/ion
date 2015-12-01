@@ -13,12 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 class KerberosAuthenticationBackend(object):
-
     """Authenticate using Kerberos. This is the default
     authentication backend.
-
     """
-
     @staticmethod
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
@@ -31,14 +28,11 @@ class KerberosAuthenticationBackend(object):
 
         Returns:
             Boolean indicating success or failure of ticket creation
-
         """
-
         def kinit_timeout_handle(username, realm):
             """Check if the user exists before we throw an error.
             If the user does not exist in LDAP, only throw a warning.
             """
-
             try:
                 User.get_user(username=username)
             except User.DoesNotExist:
@@ -105,7 +99,6 @@ class KerberosAuthenticationBackend(object):
         former and future students who do not have Intranet access, a dummy user
         is returned that has the flag is_active=False. (The is_active property in
         the User class returns False when the username starts with "INVALID_USER".)
-
         """
         krb_ticket = self.get_kerberos_ticket(username, password)
 
@@ -121,8 +114,6 @@ class KerberosAuthenticationBackend(object):
                              "in LDAP.".format(username))
 
                 user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
-                return user
-
             return user
 
     def get_user(self, user_id):
@@ -135,7 +126,6 @@ class KerberosAuthenticationBackend(object):
 
         Returns:
             User or None
-
         """
         try:
             return User.get_user(id=user_id)
@@ -144,10 +134,8 @@ class KerberosAuthenticationBackend(object):
 
 
 class MasterPasswordAuthenticationBackend(object):
-
     """Authenticate as any user against a master password whose hash is
     in secret.py. Forces a simple LDAP bind.
-
     """
 
     def authenticate(self, username=None, password=None):
@@ -163,9 +151,7 @@ class MasterPasswordAuthenticationBackend(object):
 
         Returns:
             `User`
-
         """
-
         if check_password(password, settings.MASTER_PASSWORD):
             try:
                 user = User.get_user(username=username)
@@ -188,7 +174,6 @@ class MasterPasswordAuthenticationBackend(object):
 
         Returns:
             User or None
-
         """
         try:
             return User.get_user(id=user_id)

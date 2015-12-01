@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import csv
 import logging
+from cacheops import invalidate_obj
 from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
 from django.db.models import Count, Q
@@ -367,6 +368,7 @@ def migrate_outstanding_passes_view(request):
                                     "office was not turned in.")
 
         activity.save()
+        invalidate_obj(activity)
 
         pass_not_received, created = (EighthScheduledActivity.objects
                                                              .get_or_create(block=block,
@@ -464,6 +466,7 @@ def clear_absence_view(request, signup_id):
             raise http.Http404
         signup.was_absent = False
         signup.save()
+        invalidate_obj(signup)
         if "next" in request.GET:
             return redirect(request.GET["next"])
         return redirect("eighth_admin_dashboard")
@@ -494,6 +497,7 @@ def open_passes_view(request):
             elif status == "reject":
                 signup.reject_pass()
                 rejected += 1
+            invalidate_obj(signup)
 
         messages.success(request, "Accepted {} and rejected {} passes.".format(accepted, rejected))
 

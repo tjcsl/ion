@@ -101,13 +101,18 @@ $(function() {
 
 
         {% if request.GET.ns %}
-            <strong>You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
+            <strong style="color: red"><i class="fa fa-exclamation-triangle"></i>  You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
             <br />
         {% endif %}
 
         {% if no_edit_perm %}
-            <strong>You are not a sponsor for this activity, so you can only view the roster.</strong>
-            <br />
+            {% if edit_perm_cancelled %}
+                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> This activity was cancelled, so you can only view the roster.</strong>
+                <br />
+            {% else %}
+                <strong style="color: red"><i class="fa fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
+                <br />
+            {% endif %}
         {% endif %}
 
         {% if request.GET.no_attendance %}
@@ -119,11 +124,11 @@ $(function() {
         {% endif %}
 
         {% if wizard %}
-            <form action="" method="post" name="wizard-form">
+            <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" name="wizard-form">
                 {% csrf_token %}
                 {{ wizard.management_form }}
 
-                {% if "default_activity" in request.GET %}
+                {% if default_activity_not_scheduled %}
                     <b>The activity you selected was not scheduled on this block. Select a different activity.</b>
                     <br />
                 {% endif %}
@@ -173,12 +178,12 @@ $(function() {
                     <br />
                 {% endif %}
 
-                {% if not sponsor_block or request.user.is_eighth_admin %}  
+
                     {{ wizard.form }}
                     {% if wizard.steps.prev %}
                         <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
                     {% endif %}
-                    {% if wizard.steps.next %}
+                    {% if wizard.steps.next or default_activity_not_scheduled %}
                         <label>
                             <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if "show_all_blocks" in request.GET %} checked{% endif %}/> Show Past Blocks
                         </label><br />
@@ -186,10 +191,9 @@ $(function() {
                     {% else %}
                         <!--input type="submit" value="{% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}"/-->
                     {% endif %}
-                {% else %}
-                    {% if wizard.steps.prev %}
-                        <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="button">Back</a>
-                    {% endif %}
+                {% if sponsor_block %}
+                    <br /><br />
+                    <p>You can view more information about an activity by searching for its name in the Search box.</p>
                 {% endif %}
 
 
@@ -229,6 +233,10 @@ $(function() {
                         {% endwith %}
                     </tr>
                 </table>
+
+                {% if scheduled_activity.cancelled %}
+                    <span class="badge darkred cancelled-badge" title="This activity was cancelled.">CANCELLED</span><br />
+                {% endif %}
 
                 {% if scheduled_activity.attendance_taken %}
                     <div class="attendance-taken">
@@ -330,33 +338,35 @@ $(function() {
 
                 <form class="attendance-form" action="" method="post">
                     {% csrf_token %}
-                    <table class="take-attendance-roster">
+                    <table class="take-attendance-roster{% if not members %} no-members{% endif %}">
                         <thead>
                             {% if request.user.is_eighth_admin %}
                             <tr>
                                 <td colspan="4">
                                     {% if not scheduled_activity.block.locked %}
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% elif scheduled_activity.block.attendance_locked %}
 
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% else %}
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% endif %}
                                 </td>
                             </tr>
                             {% endif %}
 
                             {% if members %}
-                            <tr>
+                            <tr class="members-header">
                                 {% if show_checkboxes %}
-                                    <th><input type="checkbox" />Present</th>
+                                    <th class="cb-col"><input type="checkbox" />Present</th>
+                                {% elif show_icons %}
+                                    <th class="cb-col">Present</th>
                                 {% endif %}
-                                <th>Student</th>
-                                <th>Student ID</th>
-                                <th>Grade</th>
+                                <th class="user-col">Student</th>
+                                <th class="sid-col">Student ID</th>
+                                <th class="grade-col">Grade</th>
                                 <th class="email-col">Email</th>
-                                <th></th>
+                                <th class="extra-col"></th>
                             </tr>
                             {% endif %}
 
@@ -366,20 +376,27 @@ $(function() {
                                 <tr>
                                     {% if show_checkboxes %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
+                                    {% elif show_icons %}
+                                        <td class="present-checkbox">
+                                            {% if member.present or member.pass_present %}
+                                                <i class="fa fa-check"></i>
+                                            {% else %}
+                                                <i class="fa fa-times"></i>
+                                            {% endif %}
                                     {% endif %}
-                                    <td class="user-link" data-user-id="{{ member.id }}">
+                                    <td class="user-col user-link" data-user-id="{{ member.id }}">
                                         <a href="{% url 'user_profile' member.id %}">
                                             {{ member.name }}
                                         </a>
                                     </td>
-                                    <td>{% if member.student_id %}
+                                    <td class="sid-col">{% if member.student_id %}
                                         {{ member.student_id }}
                                     {% else %}
                                         (Ion {{ member.id }})
                                     {% endif %}</td>
                                     <td style="text-align: center">{{ member.grade }}</td>
                                     <td class="email-col">{{ member.email }}</td>
-                                    <td>{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Accepted{% endif %}){% endif %}</td>
+                                    <td class="extra-col">{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Accepted{% endif %}){% endif %}</td>
                                 </tr>
                             {% empty %}
                                 <tr>
@@ -392,15 +409,15 @@ $(function() {
                         <tfoot class="print-hide">
                             <tr>
                                 <td colspan="5">
-                                {% if not scheduled_activity.block.locked %}
+                                {% if no_edit_perm %}
+                                    <br />
+                                {% elif not scheduled_activity.block.locked %}
                                     <br />
                                     <br />
                                     <b>You may not take attendance for this activity - signups are not yet locked.</b>
                                     <br />
                                     {% if request.user.is_eighth_admin %}
-                                        <b>The attendance period is locked.</b>
-                                        <br />
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% endif %}
                                 {% elif scheduled_activity.block.attendance_locked %}
                                     <br />
@@ -408,13 +425,13 @@ $(function() {
                                     {% if request.user.is_eighth_admin %}
                                         <b>The attendance period is locked.</b>
                                         <br />
-                                        <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance Anyway" />
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                     {% else %}
                                         <b>You may not take attendance for this activity - attendance is locked.</b>
                                         <br />
                                     {% endif %}
                                 {% else %}
-                                    <input type="submit" class="save-button" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
+                                    <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance" />
                                 {% endif %}
                                 </td>
                             </tr>
@@ -424,10 +441,12 @@ $(function() {
 
                 <br />
                 <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
+                &nbsp; &nbsp;
+                <button class="print-hide" onclick="window.print()">Print</button>
                 {% if user.is_eighth_admin %}
                     <br />
                     <br />
-                    <form action="" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
+                    <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
                         {% csrf_token %}
                         <input type="hidden" name="clear_attendance_bit" value="true" />
                         <input type="submit" value="Clear Attendance Bit" style="font-size: 10px; padding: 3px 5px" />

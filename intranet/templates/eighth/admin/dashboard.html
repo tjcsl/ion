@@ -42,6 +42,7 @@
                 <!--li><a href="{% url 'eighth_admin_schedule_activity' %}"><i class="fa-li fa fa-list-alt"></i>Schedule an activity</a></li-->
                 <li><a href="{% url 'eighth_admin_view_activity_schedule' %}"><i class="fa-li fa fa-calendar"></i>View when an activity is scheduled</a></li>
                 <li><a href="{% url 'eighth_admin_transfer_students' %}"><i class="fa-li fa fa-share"></i>Transfer students from one scheduled activity to another</a></li>
+                <li><a href="{% url 'eighth_admin_unsignup_students' %}"><i class="fa-li fa fa-user-times"></i>Clear student signups for one scheduled activity</a></li>
                 <li><a href="{% url 'eighth_admin_distribute_unsigned' %}"><i class="fa-li fa fa-book"></i>Distribute students who have not signed up among activities</a></li>
             </ul>
 
@@ -178,6 +179,7 @@
                 <li><a href="{% url 'eighth_admin_add_sponsor' %}"><i class="fa-li fa fa-user-plus"></i>Add Sponsor</a></li>
             </ul>
 
+            <h3 style="margin-top:6px"></h3>
 
             <ul class="fa-ul">
                 <li><a href="{% url 'eighth_admin_cache' %}"><i class="fa-li fa fa-bomb"></i>Clear Cache</a></li>
@@ -201,7 +203,6 @@
                 <a class="dynamic-link button" data-select="block-select" data-href-pattern="{% url 'eighth_admin_edit_block' url_id_placeholder %}" class="button">Edit Block</a>
             </div>
 
-            {% cached_as blocks_next 0 dash_blocks_next %}
             {% if blocks_next %}
                 <b>{{ blocks_next_date }}:</b>
                 <ul class="fa-ul blocks-next">
@@ -224,7 +225,7 @@
                             <b>Unlocked; close time set to {{ blk.signup_time }}</b>
                         {% endif %} &mdash; 
                         <a href="{% url 'eighth_admin_no_signups_roster' blk.id %}">
-                            <b>{{ blk.num_signups }}</b>/{{ signup_users_count }} signup{{ blk.num_signups|pluralize }}
+                            <b>{{ blk.num_signups }}</b>/{{ signup_users_count }} signup{{ blk.num_signups|pluralize }}, {{ blk.num_no_signups }} not signed up
                         </a>
                     </li>
                 {% endfor %}
@@ -235,7 +236,6 @@
                     <li><a href="{% url 'eighth_admin_add_block' %}"><i class="fa-li fa fa-list-alt"></i>Add or remove blocks</a></li>
                 </ul>
             {% endif %}
-            {% endcached_as %}
 
         </td>
         

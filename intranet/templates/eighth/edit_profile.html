@@ -17,6 +17,15 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
+    <style type="text/css">
+    #cke_1_contents {
+        height: 100px !important;
+    }
+
+    .cke_focus #cke_1_contents {
+        height: 200px !important;
+    }
+    </style>
 {% endblock %}
 
 {% block main %}
@@ -27,7 +36,9 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% include "eighth/profile_header.html" %}
+    {% with show_eighth_profile_link=1 %}
+        {% include "eighth/profile_header.html" %}
+    {% endwith %}
 
     <section class="user-info-edit">
     <form action="{% url 'eighth_edit_profile' profile_user.id %}" method="POST">
@@ -37,6 +48,11 @@
             Modify User Info: {{ profile_user.full_name }} ({{ profile_user.student_id }})
         </h3>
         <table class="edit-table">
+            <tr>
+                <td colspan="2" style="width: 643px">
+                    <input type="submit" style="float: right" />
+                </td>
+            </tr>
             {% for field in form %}
             <tr>
                 <th>
@@ -47,7 +63,11 @@
                 </td>
             </tr>
             {% endfor %}
-            <tr><td><input type="submit" /></td></tr>
+            <tr>
+                <td colspan="2" style="width: 643px">
+                    <input type="submit" style="float: right" />
+                </td>
+            </tr>
         </table>
     </form>
     </section>
@@ -57,7 +77,8 @@
 <script type="text/javascript">
     // name of <textarea> is content
     CKEDITOR.replace("admin_comments", {
-        width: "300px"
+        width: "500px",
+        height: "100px"
     });
 </script>
 {% endblock %}

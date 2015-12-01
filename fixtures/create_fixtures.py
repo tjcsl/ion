@@ -43,7 +43,6 @@ def user_attrs(uid, attr):
         r = ri[0][1]
     except IndexError:
         return ""
-
     return r[attr][0]
 
 os.system("mkdir -p fixtures/{eighth,users,announcements}")
@@ -166,7 +165,6 @@ for row in rows:
 json.dump(eighth_objects, f_rooms)
 eighth_objects = []
 print("Rooms complete")
-
 
 # ACTIVITIES #
 cur.execute("SELECT * FROM eighth_activities;")

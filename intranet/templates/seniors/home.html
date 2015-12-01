@@ -1,0 +1,68 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Seniors
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    <style type="text/css">
+    td.unsure {
+        font-style: italic;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <h2>Senior Destinations</h2>
+        <div class="button-container">
+            {% if is_senior %}
+                <a href="{% url 'seniors_add' %}" class="button">
+                    {% if own_senior %}Modify{% else %}Add{% endif %} Your Destination Info
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="seniors-container">
+            <table class="seniors-table fancy-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>College</th>
+                        <th>Major</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for senior in seniors %}
+                    <tr>
+                        <td>{{ senior.user.full_name }}</td>
+                        <td class="{% if not senior.college_sure %}un{% endif %}sure">
+                            {{ senior.college }}
+                            {% if not senior.college_sure %} (unsure){% endif %}
+                        </td>
+                        <td class="{% if not senior.major_sure %}un{% endif %}sure">
+                            {{ senior.major }}
+                            {% if not senior.major_sure %} (unsure){% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No seniors have entered destination info.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+{% endblock %}

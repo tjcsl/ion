@@ -7,6 +7,7 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from ..auth.decorators import announcements_admin_required
 from ..groups.models import Group
 from ..dashboard.views import dashboard_view
@@ -37,12 +38,10 @@ def view_announcements_archive(request):
 
 
 def announcement_posted_hook(request, obj):
-    """
-        Runs whenever a new announcement is created, or
+    """ Runs whenever a new announcement is created, or
         a request is approved and posted.
 
         obj: The Announcement object
-
     """
     logger.debug("Announcement posted")
 
@@ -63,22 +62,18 @@ def announcement_posted_hook(request, obj):
 
 
 def announcement_approved_hook(request, obj, req):
-    """
-        Runs whenever an administrator approves an
+    """ Runs whenever an administrator approves an
         announcement request.
 
         obj: the Announcement object
         req: the AnnouncementRequest object
-
     """
     announcement_approved_email(request, obj, req)
 
 
 @login_required
 def request_announcement_view(request):
-    """
-        The request announcement page
-
+    """ The request announcement page
     """
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST)
@@ -117,12 +112,10 @@ def request_announcement_view(request):
 
 @login_required
 def approve_announcement_view(request, req_id):
-    """
-        The approve announcement page.
+    """ The approve announcement page.
         Teachers will be linked to this page from an email.
 
         req_id: The ID of the AnnouncementRequest
-
     """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
@@ -168,12 +161,10 @@ def approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def admin_approve_announcement_view(request, req_id):
-    """
-        The administrator approval announcement request page.
+    """ The administrator approval announcement request page.
         Admins will view this page through the UI.
 
         req_id: The ID of the AnnouncementRequest
-
     """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
@@ -209,13 +200,12 @@ def admin_approve_announcement_view(request, req_id):
                 announcement_posted_hook(request, announcement)
 
                 messages.success(request, "Successfully approved announcement request. It has been posted.")
-                return redirect("index")
             else:
                 req.rejected = True
                 req.posted_by = request.user
                 req.save()
                 messages.success(request, "You did not approve this request. It will be hidden.")
-                return redirect("index")
+            return redirect("index")
 
     form = AnnouncementRequestForm(instance=req)
     all_groups = Group.objects.all()
@@ -230,9 +220,7 @@ def admin_approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def add_announcement_view(request):
-    """
-        Add an announcement
-
+    """ Add an announcement
     """
     if request.method == "POST":
         form = AnnouncementForm(request.POST)
@@ -255,11 +243,9 @@ def add_announcement_view(request):
 
 @login_required
 def view_announcement_view(request, id):
-    """
-        View an announcement
+    """ View an announcement
 
         id: announcement id
-
     """
     announcement = get_object_or_404(Announcement, id=id)
 
@@ -268,17 +254,19 @@ def view_announcement_view(request, id):
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
-    """
-        Modify an announcement
+    """ Modify an announcement
 
         id: announcement id
-
     """
     if request.method == "POST":
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
+            logger.debug(form.cleaned_data)
+            if "update_added_date" in form.cleaned_data and form.cleaned_data["update_added_date"]:
+                logger.debug("Update added date")
+                obj.added = timezone.now()
             # SAFE HTML
             obj.content = bleach.linkify(obj.content)
             obj.save()
@@ -294,11 +282,9 @@ def modify_announcement_view(request, id=None):
 
 @announcements_admin_required
 def delete_announcement_view(request, id):
-    """
-        Delete an announcement
+    """ Delete an announcement
 
         id: announcement id
-
     """
     if request.method == "POST":
         post_id = None
@@ -320,8 +306,7 @@ def delete_announcement_view(request, id):
 
 @login_required
 def show_announcement_view(request):
-    """
-        Unhide an announcement that was hidden by the logged-in user.
+    """ Unhide an announcement that was hidden by the logged-in user.
 
         announcements_hidden in the user model is the related_name for
         "users_hidden" in the announcement model.
@@ -340,8 +325,7 @@ def show_announcement_view(request):
 
 @login_required
 def hide_announcement_view(request):
-    """
-        Hide an announcement for the logged-in user.
+    """ Hide an announcement for the logged-in user.
 
         announcements_hidden in the user model is the related_name for
         "users_hidden" in the announcement model.

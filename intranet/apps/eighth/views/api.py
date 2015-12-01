@@ -88,6 +88,9 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         else:
             force = False
 
+        if force and not request.user.is_eighth_admin:
+            return Response({"error": "You are not an administrator."}, status=status.HTTP_400_BAD_REQUEST)
+
         schactivity.add_user(user, request, force=force)
 
         return Response(EighthActivityDetailSerializer(schactivity.activity, context={"request": request}).data, status=status.HTTP_201_CREATED)

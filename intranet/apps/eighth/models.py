@@ -67,6 +67,11 @@ class EighthSponsor(AbstractBaseEighthModel):
         else:
             return self.last_name
 
+    @property
+    def to_be_assigned(self):
+        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+    
+
     def __unicode__(self):
         return self.name
 
@@ -98,9 +103,14 @@ class EighthRoom(AbstractBaseEighthModel):
                 capacity += c
         return capacity
 
+    @property
+    def to_be_determined(self):
+        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+    
+
     def __unicode__(self):
-        # return "{} ({})".format(self.name, self.capacity)
-        return "{}".format(self.name)
+        return "{} ({})".format(self.name, self.capacity)
+        # return "{}".format(self.name)
 
     class Meta:
         ordering = ("name",)
@@ -251,7 +261,10 @@ class EighthActivity(AbstractBaseEighthModel):
         activities = set(user.restricted_activity_set
                              .values_list("id", flat=True))
 
-        grade = user.grade.number
+        if user and user.grade and user.grade.number:
+            grade = user.grade.number
+        else:
+            grade = None
 
         if grade == 9:
             activities |= set(EighthActivity.objects
@@ -388,6 +401,18 @@ class EighthBlockManager(models.Manager):
 
         return block.get_surrounding_blocks()
 
+    def get_blocks_this_year(self):
+        """ Get a list of blocks that occur this school year. """
+        now = datetime.datetime.now().date()
+        if now.month < 9:
+            date_start = datetime.date(now.year - 1, 9, 1)
+            date_end = datetime.date(now.year, 7, 1)
+        else:
+            date_start = datetime.date(now.year, 9, 1)
+            date_end = datetime.date(now.year + 1, 7, 1)
+
+        return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
+
 
 class EighthBlock(AbstractBaseEighthModel):
 
@@ -400,7 +425,7 @@ class EighthBlock(AbstractBaseEighthModel):
             The recommended time at which all users should sign up.
             This does *not* prevent people from signing up at this
             time, however students will see the amount of time left
-            to sign up. Defaults to 12:30.
+            to sign up. Defaults to 12:40.
         block_letter
             The block letter (e.g. A, B, A1, A2, SOL).
             Despite its name, it can now be more than just a letter.
@@ -424,7 +449,7 @@ class EighthBlock(AbstractBaseEighthModel):
     objects = EighthBlockManager()
 
     date = models.DateField(null=False)
-    signup_time = models.TimeField(default=datetime.time(12, 30))
+    signup_time = models.TimeField(default=datetime.time(12, 40))
     block_letter = models.CharField(max_length=10)
     locked = models.BooleanField(default=False)
     activities = models.ManyToManyField(EighthActivity,
@@ -503,6 +528,11 @@ class EighthBlock(AbstractBaseEighthModel):
         """ How many people have signed up?"""
         return EighthSignup.objects.filter(scheduled_activity__block=self).count()
 
+    def num_no_signups(self):
+        """ How many people have not signed up?"""
+        signup_users_count = User.objects.get_students().count()
+        return signup_users_count - self.num_signups()
+
     def get_unsigned_students(self):
         """ Return a list of Users who haven't signed up for an activity. """
         return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
@@ -522,6 +552,18 @@ class EighthBlock(AbstractBaseEighthModel):
     def short_text(self):
         """ Display the date and block letter (mm/dd B, e.x. "9/1 B") """
         return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
+
+    @property
+    def is_this_year(self):
+        """Return whether the block occurs after September 1st
+           of this school year."""
+        now = datetime.now().date()
+        ann = self.date
+        if now.month < 9:
+            return ((ann.year == now.year and ann.month < 9) or
+                    (ann.year == now.year - 1 and ann.month >= 9))
+        else:
+            return (ann.year == now.year and ann.month >= 9)
 
     def __unicode__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
@@ -732,14 +774,42 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if member.dn and member.can_view_eighth:
                 show = member.can_view_eighth
 
-            if user and user.is_eighth_admin:
+            if not show and user and user.is_eighth_admin:
                 show = True
-            if member == user:
+            if not show and user and user.is_teacher:
                 show = True
+            if not show and member == user:
+                show = True
+
             if show:
                 members.append(member)
 
         return sorted(members, key=lambda u: (u.last_name, u.first_name))
+
+    def get_viewable_members_serializer(self, request):
+        """Get a QuerySet of User objects of students in the activity.
+        Needed for the EighthScheduledActivitySerializer.
+
+        Returns: QuerySet
+        """
+        ids = []
+        user = request.user
+        for member in self.members.all():
+            show = False
+            if member.dn and member.can_view_eighth:
+                show = member.can_view_eighth
+
+            if not show and user and user.is_eighth_admin:
+                show = True
+            if not show and user and user.is_teacher:
+                show = True
+            if not show and member == user:
+                show = True
+
+            if show:
+                ids.append(member.id)
+
+        return User.objects.filter(id__in=ids)
 
     def get_hidden_members(self, user=None):
         """Get the members that you do not have permission to view.
@@ -749,11 +819,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         hidden_members = []
         for member in self.members.all():
             show = False
-            show = member.can_view_eighth
-            if user and user.is_eighth_admin:
+            if member.dn and member.can_view_eighth:
+                show = member.can_view_eighth
+
+            if not show and user and user.is_eighth_admin:
                 show = True
-            if member == user:
+            if not show and user and user.is_teacher:
                 show = True
+            if not show and member == user:
+                show = True
+
             if not show:
                 hidden_members.append(member)
 
@@ -826,22 +901,20 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.SignupForbidden = True
                     raise exception
 
-            # Check if the block has been locked
-            for sched_act in all_sched_act:
-                if sched_act.block.locked:
-                    exception.BlockLocked = True
-
-            # Check if the scheduled activity has been cancelled
-            for sched_act in all_sched_act:
-                if sched_act.cancelled:
-                    exception.ScheduledActivityCancelled = True
-
             # Check if the activity has been deleted
             if self.activity.deleted:
                 exception.ActivityDeleted = True
 
-            # Check if the activity is full
             for sched_act in all_sched_act:
+                # Check if the block has been locked
+                if sched_act.block.locked:
+                    exception.BlockLocked = True
+
+                # Check if the scheduled activity has been cancelled
+                if sched_act.cancelled:
+                    exception.ScheduledActivityCancelled = True
+
+                # Check if the activity is full
                 if sched_act.is_full():
                     exception.ActivityFull = True
 
@@ -883,7 +956,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if self.activity.id not in acts:
                     exception.Restricted = True
 
-        success_message = "Successfully signed up for activity. "
+        success_message = "Successfully signed up for activity."
 
         """
         final_remove_signups = []
@@ -971,7 +1044,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                                             scheduled_activity=self,
                                             after_deadline=after_deadline)
         else:
-
             existing_signups = EighthSignup.objects.filter(
                 user=user,
                 scheduled_activity__block__in=all_blocks
@@ -1075,6 +1147,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
 
+class EighthSignupManager(Manager):
+    """Model manager for EighthSignup."""
+
+    def get_absences(self):
+        return (EighthSignup.objects
+                            .filter(was_absent=True,
+                                    scheduled_activity__attendance_taken=True))
+
+
 class EighthSignup(AbstractBaseEighthModel):
 
     """Represents a signup/membership in an eighth period activity.
@@ -1100,8 +1181,12 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the student was absent.
         absence_acknowledged
             Whether the student has dismissed the absence notification.
+        absence_emailed
+            Whether the student has been emailed about the absence.
 
     """
+    objects = EighthSignupManager()
+
     time = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(User, null=False)
@@ -1120,6 +1205,7 @@ class EighthSignup(AbstractBaseEighthModel):
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
     absence_acknowledged = models.BooleanField(default=False, blank=True)
+    absence_emailed = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
         """Checked whether more than one EighthSignup exists for a User

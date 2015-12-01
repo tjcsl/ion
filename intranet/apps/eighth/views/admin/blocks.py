@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import re
 import logging
+from cacheops import invalidate_model
 from six.moves import cPickle as pickle
 from django import http
 from django.http import HttpResponse
@@ -36,10 +37,12 @@ def add_block_view(request):
         date = request.GET.get("date")
     if "date" in request.POST:
         date = request.POST.get("date")
+    title_suffix = ""
     if date:
         date_format = re.compile(r'([0-9]{2})\/([0-9]{2})\/([0-9]{4})')
         fmtdate = date_format.sub(r'\3-\1-\2', date)
         logger.debug(fmtdate)
+        title_suffix = " - {}".format(fmtdate)
         show_letters = True
 
         if "modify_blocks" in request.POST:
@@ -63,6 +66,8 @@ def add_block_view(request):
                     EighthBlock.objects.get(date=fmtdate, block_letter=l).delete()
                     messages.success(request, "Successfully removed {} Block on {}".format(l, fmtdate))
 
+            invalidate_model(EighthBlock)
+
     letters = []
     visible_blocks = ["A", "B", "C", "D", "E", "F", "G", "H"]
     if show_letters:
@@ -82,7 +87,7 @@ def add_block_view(request):
                 })
 
     context = {
-        "admin_page_title": "Add or Remove Blocks",
+        "admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
@@ -103,6 +108,7 @@ def edit_block_view(request, block_id):
         form = BlockForm(request.POST, instance=block)
         if form.is_valid():
             form.save()
+            invalidate_model(EighthBlock)
             messages.success(request, "Successfully edited block.")
             return redirect("eighth_admin_dashboard")
         else:
@@ -128,6 +134,7 @@ def delete_block_view(request, block_id):
 
     if request.method == "POST":
         block.delete()
+        invalidate_model(EighthBlock)
         messages.success(request, "Successfully deleted block.")
         return redirect("eighth_admin_dashboard")
     else:
@@ -156,6 +163,7 @@ def print_block_rosters_view(request, block_id):
         try:
             block = EighthBlock.objects.get(id=block_id)
             schacts = EighthScheduledActivity.objects.filter(block=block).order_by("sponsors")
+            schacts = sorted(schacts, key=lambda x: "{}".format(x.get_true_sponsors()))
         except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
             raise http.Http404
         context = {

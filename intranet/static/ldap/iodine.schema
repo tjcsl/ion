@@ -1,0 +1,986 @@
+#
+#	TJHSST Intranet 2 LDAP Schemas
+#
+# 1.3.6.1.4.1						- iso.org.dod.internet.private.enterprise
+#				 .20601				- TJHSST
+#						 .1 			- Intranet 2 LDAP Elements
+#							.1			- Attributes
+#							  .1		- graduationYear
+#							  .2		- tjhsstStudentId
+#							  .3		- classPeriod
+#							  .4		- shortClassName
+#							  .5		- perm_showpictures
+#							  .6		- perm_showaddress
+#							  .7		- perm_showtelephone
+#				...
+#							.2			- Objectclasses
+#							  .1		- tjhsstStudent
+#							  .2		- tjhsstTeacher
+#							  .3		- tjhsstSection
+#							  .4		- tjhsstClass
+#				...
+
+
+# Define macros so wo don't have to type out a thousand OIDs
+objectIdentifier tjOID					1.3.6.1.4.1.20601
+objectIdentifier i2OID					tjOID:1
+objectIdentifier i2Attr					i2OID:1
+objectIdentifier i2OC					i2OID:2
+
+# And a few handy shortcuts for syntaxes, etc.
+objectIdentifier audioSyntax			1.3.6.1.4.1.1466.115.121.1.4
+objectIdentifier binarySyntax			1.3.6.1.4.1.1466.115.121.1.5
+objectIdentifier bitStringSyntax		1.3.6.1.4.1.1466.115.121.1.6
+objectIdentifier boolSyntax				1.3.6.1.4.1.1466.115.121.1.7
+objectIdentifier certificateSyntax		1.3.6.1.4.1.1466.115.121.1.8
+objectIdentifier certificateListSyntax	1.3.6.1.4.1.1466.115.121.1.9
+objectIdentifier certificatePairSyntax	1.3.6.1.4.1.1466.115.121.1.10
+objectIdentifier countrySyntax			1.3.6.1.4.1.1466.115.121.1.11
+objectIdentifier dnSyntax				1.3.6.1.4.1.1466.115.121.1.12
+objectIdentifier stringSyntax			1.3.6.1.4.1.1466.115.121.1.15
+objectIdentifier faxSyntax				1.3.6.1.4.1.1466.115.121.1.22
+objectIdentifier timeSyntax				1.3.6.1.4.1.1466.115.121.1.24
+objectIdentifier ia5Syntax				1.3.6.1.4.1.1466.115.121.1.26
+objectIdentifier integerSyntax			1.3.6.1.4.1.1466.115.121.1.27
+objectIdentifier jpegSyntax				1.3.6.1.4.1.1466.115.121.1.28
+objectIdentifier nameSyntax				1.3.6.1.4.1.1466.115.121.1.34
+objectIdentifier numericStringSyntax	1.3.6.1.4.1.1466.115.121.1.36
+objectIdentifier octetStringSyntax		1.3.6.1.4.1.1466.115.121.1.36
+objectIdentifier addressSyntax			1.3.6.1.4.1.1466.115.121.1.41
+objectIdentifier telephoneSyntax		1.3.6.1.4.1.1466.115.121.1.50
+
+# Define syntaxes
+
+
+
+attributetype ( i2Attr:1 
+	NAME ('graduationYear' 'gradYear' 'year')
+	DESC 'A year of graduation' 
+	EQUALITY integerMatch 
+	SYNTAX integerSyntax{4}
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:2
+	NAME ('tjhsstStudentId' 'studentId' 'fcpsStudentId')
+	DESC 'The FCPS Student ID Number'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:3
+	NAME ('classPeriod' 'period' 'tjhsstPeriod' 'periodNo' 'periodNumber')
+	DESC 'The period of a class'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:4
+	NAME ('shortClassName' 'abbrevClassName')
+	DESC 'The abbreviated name of a class'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:5
+	NAME ('perm-showpictures' 'perm-showpicture' 'showpictures' 'showpicture')
+	DESC 'Whether the pictures should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+
+attributetype ( i2Attr:6
+	NAME ('perm-showaddress' 'showaddress')
+	DESC 'Whether the address should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:7
+	NAME ('perm-showtelephone' 'showtelephone' 'showphone' 'showphonenumber')
+	DESC 'Whether the telephone number(s) should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:8
+	NAME ('block' 'blockLetter' 'eighthBlock')
+	DESC 'The block of an activity'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:9
+	NAME ('classRef' 'classDn' 'memberClass')
+	DESC 'A reference to a class by DN'
+	EQUALITY distinguishedNameMatch
+	SYNTAX dnSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:10
+	NAME ('eighthoffice-comments' 'comments')
+	DESC 'Comments the 8th-period office has about something'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:11
+	NAME ('sponsorDn' 'sponsor' 'teacher')
+	DESC 'The DN of the teacher(s) sponsoring an activity'
+	EQUALITY distinguishedNameMatch
+	SYNTAX dnSyntax
+	)
+
+attributetype ( i2Attr:12
+	NAME ('groupLeader' 'leader' 'master' 'groupAdmin' 'administrator' 'admin' 'groupAdministrator')
+	DESC 'The DN of the people in charge of a group'
+	EQUALITY distinguishedNameMatch
+	SYNTAX dnSyntax
+	)
+
+attributetype ( i2Attr:13
+	NAME ('counselor' 'couns')
+	DESC 'The iodineUid of the counselor a student is assigned to'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:14
+	NAME ('iodineUid' 'i2uid' 'lanuid' 'schooluid' 'localuid')
+	DESC 'A log-in username'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:17
+	NAME ('tjhsstSectionId' 'sectionId')
+	DESC 'The ID of a class/period pairing'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:18
+	NAME ('prerequisite' 'requiredClass' 'prerequisiteClassId' 'requiredClassId')
+	DESC 'A  required class'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:19
+	NAME ('corequisite' 'corequisiteClassId' 'corequisiteClass')
+	DESC 'A corequisite class'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:20
+	NAME ('tjhsstClassId' 'classId' 'courseId' 'tjhsstCourseId' 'associatedClassId')
+	DESC 'A string identifying a TJHSST class'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:21
+	NAME ('tjhsstActivityId' 'activityId' 'aid')
+	DESC 'A unique number identifying an activity'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:22
+	NAME ('tjhsstGroupId' 'groupId' 'gid' 'i2GroupId')
+	DESC 'A unique number identifying a group'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:23
+	NAME ('courseLength' 'length' 'quarters' 'numQuarters')
+	DESC 'How long a course is, in quarters'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax{1}
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:24
+	NAME ('eighthBlockId' 'eighthBlockNumber' 'blockNumber' 'blockId')
+	DESC 'A unique number identifying an 8th-period block'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:26
+	NAME ('enrolledStudent' 'classMember' 'enrolledStudentDn')
+	DESC 'The DN of a student enrolled in a class'
+	EQUALITY distinguishedNameMatch
+	SYNTAX dnSyntax
+	)
+
+attributetype ( i2Attr:27
+	NAME ('middlename' 'mname')
+	DESC 'A middle name'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:28
+	NAME ('groupMembership' 'group')
+	DESC 'The ID of a group the entry is a member of'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:29
+	NAME ('iodineUidNumber' 'iodineUserNumber')
+	DESC 'The numerical ID of an iodine user'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:30
+	NAME ('birthday' 'bday')
+	DESC 'The birthday of a person'
+	EQUALITY numericStringMatch
+	SUBSTR numericStringSubstringsMatch
+	SYNTAX numericStringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:31
+	NAME ('nickname' 'nick' 'nname')
+	DESC 'The nickname of a person'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE	
+	)
+
+attributetype ( i2Attr:32
+	NAME ('gender' 'sex')
+	DESC 'The gender of a person'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:33
+	NAME ('startpage' 'defaultmodule')
+	DESC 'The default Iodine module of a user'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE	
+	)
+	
+attributetype ( i2Attr:34
+	NAME ('style' 'css' 'theme')
+	DESC 'The default Iodine style of a user'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE	
+	)
+	
+	
+attributetype ( i2Attr:35
+	NAME ('header' 'headertype' 'fullheader')
+	DESC 'Whether the user prefers a full header'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE	
+	)
+	
+attributetype ( i2Attr:36
+	NAME ('chrome' 'usechrome')
+	DESC 'Whether the user prefers chrome'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE	
+	)
+
+attributetype ( i2Attr:37
+	NAME ('aim')
+	DESC 'AIM/AOL Screenname'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:38
+	NAME ('yahoo')
+	DESC 'Yahoo! ID'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+	
+attributetype ( i2Attr:39
+	NAME ('msn')
+	DESC 'MSN Username'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+	
+attributetype ( i2Attr:40
+	NAME ('jabber')
+	DESC 'Jabber Username'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+	
+attributetype ( i2Attr:41
+	NAME ('icq')
+	DESC 'ICQ Number'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+	
+attributetype ( i2Attr:42
+	NAME ('googleTalk')
+	DESC 'Google Talk'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:43
+	NAME ('webpage' 'website')
+	DESC 'The website of a user'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:44
+	NAME ('locker' 'lockerNumber')
+	DESC 'The locker number or a person'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:46
+	NAME ('perm-showbirthday' 'showbirthday' 'showbday' 'showbdate')
+	DESC 'Whether the birthday should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:47
+	NAME ('perm-showmap' 'showmap' 'showdirections')
+	DESC 'Whether a map to the house should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:48
+	NAME ('perm-showschedule' 'showschedule' 'showsched')
+	DESC 'Whether the schedule information should be visible to others'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:49
+	NAME ('soundexlast' 'lastsoundex' 'lastnamesound')
+	DESC 'The soundex of a last name'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:50
+	NAME ('soundexfirst' 'firstsoundex' 'firstnamesound')
+	DESC 'The soundex of a first name'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+
+attributetype ( i2Attr:55
+	NAME ('perm-showbirthday-self' 'showbirthday-self' 'self-showbday' 'self-showbdate' 'showbdateself' 'showbdayself')
+	DESC 'Whether the birthday should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:56
+	NAME ('perm-showmap-self' 'showmap-self' 'student-showmap' 'showmapself')
+	DESC 'Whether a map to the house should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+	
+attributetype ( i2Attr:57
+	NAME ('perm-showschedule-self' 'showschedule-self' 'student-showsched' 'showscheduleself' 'showschedself')
+	DESC 'Whether the schedule information should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:58
+	NAME ('perm-showpictures-self' 'showpictures-self' 'self-showpicture' 'showpictureself')
+	DESC 'Whether the pictures should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+
+attributetype ( i2Attr:59
+	NAME ('perm-showaddress-self' 'showaddress-self' 'showaddressself')
+	DESC 'Whether the address should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:60
+	NAME ('perm-showtelephone-self' 'showtelephone-self' 'self-showphone' 'showphonenumber-self' 'showphoneself')
+	DESC 'Whether the telephone number(s) should be visible to others (user set)'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:61
+	NAME ('xfire')
+	DESC 'XFire handle'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:63
+	NAME ('metaphonelast' 'lastmetaphone')
+	DESC 'The metaphone of a last name'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:64
+	NAME ('metaphonefirst' 'firstmetaphone')
+	DESC 'The metaphone of a first name'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:65
+	NAME ('quarterNumber' 'quarter')
+	DESC 'The quarter(s) in which a class occurs'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax{1}
+	)
+
+attributetype ( i2Attr:66
+	NAME ('preferredPhoto')
+	DESC 'The preferred photo of a user'
+	EQUALITY caseIgnoreMatch
+	SYNTAX stringSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:67
+	NAME ('mailentries' 'mailMessages')
+	DESC 'The number of entries a user wishes in their mail intrabox'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:68
+	NAME ('enrolledclass')
+	DESC 'The DN of a class a student is enrolled in'
+	EQUALITY distinguishedNameMatch
+	SYNTAX dnSyntax
+	)
+
+attributetype ( i2Attr:69
+	NAME ('perm-showeighth-self' 'showeighthself')
+	DESC 'Whether the user wants their eighth-period presence shown'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:70
+	NAME ('skype')
+	DESC 'A skype handle'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:71
+	NAME ('boxcolor')
+	DESC 'The color of Intrabox headers'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubStringsMatch
+	SYNTAX stringSyntax{6}
+	)
+
+attributetype ( i2Attr:72
+	NAME ('boxtitlecolor')
+	DESC 'The color of Intrabox header titles'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubStringsMatch
+	SYNTAX stringSyntax{6}
+	)
+
+attributetype ( i2Attr:73
+	NAME ('perm-showeighth' 'showeighth')
+	DESC 'Whether the users eighth-period presence may be shown'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:74
+	NAME ('is-admin' 'admin-all')
+	DESC 'Whether the user has full administrative access'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:75
+	NAME ('afsid')
+	DESC 'AFS ID'
+	EQUALITY integerMatch
+	SYNTAX integerSyntax
+	)
+
+attributetype ( i2Attr:76
+   NAME ('perm-showlocker' 'showlocker')
+   DESC 'Whether the users locker number may be shown'
+   EQUALITY booleanMatch
+   SYNTAX boolSyntax
+   SINGLE-VALUE
+   )
+
+attributetype ( i2Attr:77
+   NAME ('perm-showlocker-self' 'showlockerself')
+   DESC 'Whether the user wants their locker number shown'
+   EQUALITY booleanMatch
+   SYNTAX boolSyntax
+   SINGLE-VALUE
+   )
+
+attributetype ( i2Attr:78
+	NAME ('is-student-admin')
+	DESC 'Whether the user is a student (limited-privileges) admin'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:79
+	NAME ('friend')
+	DESC 'the identifier of a friend users cn'
+	EQUALITY caseExactMatch
+	SYNTAX stringSyntax
+	)
+
+attributetype ( i2Attr:80
+	NAME ('perm-showtelephone-friend' 'showtelephonefriend' 'showphonefriend' 'showphonenumberfriend')
+	DESC 'Whether the telephone number(s) should be visible to friends'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+attributetype ( i2Attr:81
+	NAME ('eighthAgreement')
+	DESC 'Whether the user has accepted the 8th period policy agreement'
+	EQUALITY booleanMatch
+	SYNTAX boolSyntax
+	SINGLE-VALUE
+	)
+
+objectclass ( i2OC:1
+	NAME 'tjhsstStudent'
+	SUP inetOrgPerson STRUCTURAL
+	MUST (
+		graduationYear $
+		iodineUid $
+		cn $
+		sn $
+		startpage $
+		iodineUidNumber $
+		style $
+		header $
+		chrome
+	)
+	MAY (
+		tjhsstStudentId $
+		perm-showpictures $
+		perm-showaddress $
+		perm-showtelephone $
+		perm-showbirthday $
+		perm-showschedule $
+		perm-showmap $
+		perm-showeighth $
+      perm-showlocker $
+		perm-showpictures-self $
+		perm-showaddress-self $
+		perm-showtelephone-self $
+		perm-showbirthday-self $
+		perm-showschedule-self $
+		perm-showmap-self $
+		perm-showeighth-self $
+      perm-showlocker-self $
+		friend $
+		perm-showtelephone-friend $
+		displayName $
+		middlename $
+		nickname $
+		boxcolor $ boxtitlecolor $
+		counselor $
+		group $
+		birthday $
+		sex $ 
+		aim $ xfire $ yahoo $ msn $ jabber $ icq $ googleTalk $ skype $
+		webpage $
+		locker $
+		soundexlast $
+		soundexfirst $
+		metaphonelast $
+		metaphonefirst $
+		comments $
+		preferredPhoto $
+		enrolledclass $
+		mailMessages $
+		gidNumber $
+		afsid $
+		homeDirectory $
+		loginShell $
+		is-student-admin $
+		is-admin $
+		eighthAgreement
+	)
+	)
+
+objectclass ( i2OC:2
+	NAME 'tjhsstTeacher'
+	SUP inetOrgPerson STRUCTURAL
+	MUST (
+		cn $
+		iodineUid $
+		header $
+		style $
+		chrome $
+		startpage $
+		iodineUidNumber $
+		sn
+	)
+	MAY (
+		employeeNumber $
+		displayName $
+		middlename $
+		group $
+		nickname $
+		birthday $
+		sex $
+		webpage $
+		header $
+		style $
+		chrome $
+		comments $
+		boxcolor $ boxtitlecolor $
+		counselor $
+		soundexlast $
+		soundexfirst $
+		metaphonelast $
+		metaphonefirst $
+		aim $ msn $ xfire $ yahoo $ googleTalk $ icq $ jabber $ xfire $ skype $
+		preferredPhoto $
+		mailMessages $
+		gidNumber $
+		afsid $
+		homeDirectory $
+		loginShell $
+		perm-showaddress-self $
+		perm-showtelephone-self $
+		perm-showbirthday-self $
+		perm-showpictures-self $
+		perm-showaddress $
+		perm-showtelephone $
+		perm-showbirthday $
+		perm-showpictures $
+		is-admin
+	)
+	)
+
+objectclass ( i2OC:3
+	NAME 'tjStarPresenter'
+	SUP inetOrgPerson STRUCTURAL
+	MUST (
+		cn $
+		iodineUid $
+		header $
+		style $
+		chrome $
+		startpage $
+		iodineUidNumber $
+		userPassword $
+		sn
+	)
+	MAY (
+		displayName $
+		middlename $
+		group $
+		nickname $
+		birthday $
+		sex $
+		webpage $
+		header $
+		style $
+		chrome $
+		comments $
+		boxcolor $ boxtitlecolor $
+		counselor $
+		soundexlast $
+		soundexfirst $
+		metaphonelast $
+		metaphonefirst $
+		aim $ msn $ xfire $ yahoo $ googleTalk $ icq $ jabber $ xfire $ skype $
+		preferredPhoto $
+		mailMessages $
+		gidNumber $
+		afsid $
+		homeDirectory $
+		loginShell $
+		perm-showaddress-self $
+		perm-showtelephone-self $
+		perm-showbirthday-self $
+		perm-showpictures-self $
+		perm-showaddress $
+		perm-showtelephone $
+		perm-showbirthday $
+		perm-showpictures $
+		is-admin
+	)
+	)
+
+objectclass ( i2OC:4
+	NAME 'tjhsstClass'
+	MUST (
+		tjhsstClassId $
+		tjhsstSectionId $
+		courselength $
+		cn $
+		sponsorDn $
+		year $
+		quarternumber $
+		classPeriod
+	)
+	MAY (
+		shortClassName $
+		description $
+		displayname $
+		enrolledStudent $
+		roomNumber
+	)
+	)
+
+objectclass ( i2OC:5
+	NAME 'tjhsstUser'
+	SUP inetOrgPerson STRUCTURAL
+	MUST (
+		cn $
+		iodineUid $
+		header $
+		style $
+		chrome $
+		startpage $
+		iodineUidNumber $
+		userPassword $
+		sn
+	)
+	MAY (
+		displayName $
+		middlename $
+		group $
+		nickname $
+		birthday $
+		sex $
+		webpage $
+		header $
+		style $
+		chrome $
+		comments $
+		boxcolor $ boxtitlecolor $
+		counselor $
+		soundexlast $
+		soundexfirst $
+		metaphonelast $
+		metaphonefirst $
+		aim $ msn $ xfire $ yahoo $ googleTalk $ icq $ jabber $ xfire $ skype $
+		preferredPhoto $
+		mailMessages $
+		gidNumber $
+		afsid $
+		homeDirectory $
+		loginShell $
+		perm-showaddress-self $
+		perm-showtelephone-self $
+		perm-showbirthday-self $
+		perm-showpictures-self $
+		perm-showaddress $
+		perm-showtelephone $
+		perm-showbirthday $
+		perm-showpictures $
+		is-admin
+	)
+	)
+
+objectclass ( i2OC:8
+	NAME 'syslabUser'
+	SUP posixAccount AUXILIARY
+	MUST (
+		cn $
+		uid $
+		uidNumber $
+		gidNumber $
+		homeDirectory $
+		loginShell
+	)
+	MAY (
+		group
+	)
+	)
+
+objectclass ( i2OC:9
+	NAME 'tjhsstRoom'
+	MUST (
+		roomNumber
+	)
+	MAY (
+		cn $
+		description $
+		displayName
+	)
+	)
+
+objectclass ( i2OC:10
+	NAME 'tjhsstYear'
+	MUST (
+		year
+	)
+	)
+
+objectclass ( i2OC:11
+	NAME 'prerequisiteGrouping'
+	)
+
+objectclass ( i2OC:12
+	NAME 'corequisiteGrouping'
+	)
+
+objectclass ( i2OC:13
+	NAME 'prerequisiteANDGrouping'
+	SUP prerequisiteGrouping STRUCTURAL
+	)
+
+objectclass ( i2OC:14
+	NAME 'prerequisiteORGrouping'
+	SUP prerequisiteGrouping STRUCTURAL
+	)
+
+objectclass ( i2OC:15
+	NAME 'corequisiteANDGrouping'
+	SUP corequisiteGrouping STRUCTURAL
+	)
+
+objectclass ( i2OC:16
+	NAME 'corequisiteORGrouping'
+	SUP corequisiteGrouping STRUCTURAL
+	)
+
+objectclass ( i2OC:17
+	NAME 'iodineAlias'
+	SUP alias STRUCTURAL
+	MAY (
+		iodineUid $
+		groupId $
+		activityId $
+		studentId $
+		sectionId $
+		classId $
+		roomNumber $
+		uid
+	)
+	)
+
+objectclass ( i2OC:18
+	NAME 'tjhsstCounselor'
+	SUP tjhsstTeacher STRUCTURAL
+	)
+
+objectclass ( i2OC:19
+	NAME 'simpleUser'
+	SUP inetOrgPerson STRUCTURAL
+	MUST (
+		iodineUid $
+		iodineUidNumber
+	)
+	MAY (
+		startpage $
+		style $
+		chrome $
+		header $
+		startpage $
+		givenName $
+		sn $
+		cn $
+      is-admin
+	)
+	)
+
+objectclass ( i2OC:20
+	NAME 'iodineGroup'
+	MUST (
+		cn
+	)
+	MAY (
+		gidNumber $
+		description $
+		uniqueMember $
+		owner
+	)
+	)
+
+objectclass ( i2OC:21
+	NAME 'iodinePhoto'
+	MUST (
+		jpegPhoto $
+		cn
+   )
+   MAY (
+		perm-showpictures $
+		perm-showpictures-self
+	)
+	)

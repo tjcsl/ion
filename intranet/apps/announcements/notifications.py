@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from intranet import settings
-from ..notifications.emails import email_send
+from ..notifications.emails import email_send, email_send_bcc
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -37,6 +37,7 @@ def request_announcement_email(request, form, obj):
     for teacher in teachers:
         emails.append(teacher.tj_email)
     logger.debug(emails)
+    logger.info("{}: Announcement request to {}, {}".format(request.user, teachers, emails))
     base_url = request.build_absolute_uri(reverse('index'))
     data = {
         "teachers": teachers,
@@ -45,6 +46,7 @@ def request_announcement_email(request, form, obj):
         "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
         "base_url": base_url
     }
+    logger.info("{}: Announcement request {}".format(request.user, data))
     email_send("announcements/emails/teacher_approve.txt",
                "announcements/emails/teacher_approve.html",
                data, subject, emails)
@@ -175,9 +177,9 @@ def announcement_posted_email(request, obj, send_all=False):
             "info_link": url,
             "base_url": base_url
         }
-        email_send("announcements/emails/announcement_posted.txt",
-                   "announcements/emails/announcement_posted.html",
-                   data, subject, emails)
+        email_send_bcc("announcements/emails/announcement_posted.txt",
+                       "announcements/emails/announcement_posted.html",
+                       data, subject, emails)
         messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
         logger.debug("Emailing announcements disabled")

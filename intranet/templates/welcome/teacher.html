@@ -108,14 +108,19 @@
         <h2>Welcome to the TJ Intranet</h2>
         <p>The TJ Intranet gives you access to eighth period attendance, announcements, directory information, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
 
-        <p>Logged in as: {{ request.user.full_name }}, Class of {{ request.user.graduation_year }}</p>
+        <p>Logged in as: {{ request.user.full_name }}</p>
         <p>Email addresses on file:</p>
         <ul>
             {% for email in request.user.emails %}
-            <li>{{ email }}</li>
+            {% if email != request.user.tj_email %}
+                <li>{{ email }}</li>
+            {% endif %}
             {% empty %}
             <li>(No custom addresses)</li>
             {% endfor %}
+            {% if request.user.emails|length == 1 and request.user.emails.0 == request.user.tj_email %}
+                <li>(No custom addresses)</li>
+            {% endif %}
         </ul>
         
         <br />
@@ -141,45 +146,15 @@
 
         <div class="mobile-only">
             <p>Good news! Intranet is now fully optimized for small screens. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
-            <img src="{% static 'img/promo/nav-mobile.png' %}" class="mobile" />
+            <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" class="mobile" />
+            <br />
+            <br />
         </div>
 
         <div class="desktop-only">
             <p>The largest change to Intranet is that it is now fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
         </div>
-
-        <div class="desktop-only">
-            <p>On the left side of the page is the navigation bar. To view old activity rosters, click on Eighth. To view events in the TJ community, click on Events.</p>
-        </div>
-
-        <p>After logging in, you can easily take attendance for the activities you are sponsoring. Click on the activity's name for the correct day to take attendance. If you are able to take attendance, the text "Take Now" will appear in green; otherwise, you can view the current roster. If the icon is orange, then there is information awaiting your attention.</p>
-        <img src="{% static 'img/promo/dashboard-teacher.png' %}" alt="Dashboard page" class="desktop" />
-        <img src="{% static 'img/promo/dashboard-teacher-mobile.png' %}" alt="Dashboard page, mobile" class="mobile" />
-
-        <br />
-        <br />
-
-        <p>After selecting an activity you are sponsoring, you will see the "Take Attendance" page. In instances where you cannot take attendance, you will be able to view the roster. Student passes from the Eighth Period Office will appear if necessary. Accepting a pass marks the student as present.</p>
-        <p>When taking attendance, select the checkbox on the left of the student's name. If you mouse over a student, a popup will appear with their picture, if it is available. You can use this functionality to visually identify students more easily.</p>
-        <p>If you have any questions on the attendance process, please ask the Eighth Period Office.</p>
-        <img src="{% static 'img/promo/eighth-attendance.png' %}" alt="Eighth Period signup page" class="desktop" />
-        <img src="{% static 'img/promo/eighth-attendance-mobile.png' %}" alt="Eighth Period signup page" class="mobile" />
-        
-        <br />
-        <br />
-        <br />
-
-        <p>To access the student/faculty directory and look up a user, enter a search query on the bar at the top of the page. This will show a list of all the users that matched your query.</p>
-        <img src="{% static 'img/promo/search.png' %}" alt="Student directory searching" class="desktop" />
-        
-        <div class="desktop-only">
-            <br />
-            <br />
-            <br />
-        </div>
-
-        <p>After selecting a user, you will be able to view their user page. <b>As a teacher, you will be able to view all of the available information about a student</b>, regardless of whether they want it publicly visible or not. Please keep this in mind.</p>
-        <img src="{% static 'img/promo/profile.png' %}" alt="Student profile" class="desktop" />
+        For detailed instructions on using the Ion teacher interface, press the <b>Help</b> button on the left-side navigation, or <a href="/static/teacher-guide.pdf">click here</a>.
 
         <br />
         <br />
