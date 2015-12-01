@@ -63,6 +63,8 @@ class Event(models.Model):
             Groups that the event is visible to.
         attending
             A ManyToManyField of User objects that are attending the event.
+        show_attending
+            Boolean, whether users can mark if they are attending or not attending.
         approved
             Boolean, whether the event has been approved and will be displayed.
         approved_by
@@ -92,6 +94,7 @@ class Event(models.Model):
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     attending = models.ManyToManyField(User, blank=True, related_name="attending")
+    show_attending = models.BooleanField(default=True)
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)

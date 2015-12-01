@@ -5,7 +5,7 @@ import logging
 import datetime
 import bleach
 from .models import Event
-from .forms import EventForm
+from .forms import EventForm, AdminEventForm
 from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -112,6 +112,8 @@ def join_event_view(request, id):
     event = get_object_or_404(Event, id=id)
 
     if request.method == "POST":
+        if not event.show_attending:
+            return redirect("events")
         if "attending" in request.POST:
             attending = request.POST.get("attending")
             attending = (attending == "true")
@@ -229,7 +231,10 @@ def modify_event_view(request, id=None):
         raise exceptions.PermissionDenied
 
     if request.method == "POST":
-        form = EventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission('groups'))
+        if is_events_admin:
+            form = AdminEventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission('groups'))
+        else:
+            form = EventForm(data=request.POST, instance=event, all_groups=request.user.has_admin_permission('groups'))
         logger.debug(form)
         if form.is_valid():
             obj = form.save()
@@ -242,7 +247,10 @@ def modify_event_view(request, id=None):
         else:
             messages.error(request, "Error adding event.")
     else:
-        form = EventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
+        if is_events_admin:
+            form = AdminEventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
+        else:
+            form = EventForm(instance=event, all_groups=request.user.has_admin_permission('groups'))
     context = {
         "form": form,
         "action": "modify",
