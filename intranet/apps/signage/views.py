@@ -65,6 +65,10 @@ def eighth_signage(request, block_id=None):
         "user": user
     }
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
+    try:
+        reload_mins = float(request.GET.get("reload_mins") or 5)
+    except Exception:
+        reload_mins = 5
 
     context = {
         "user": user,
@@ -77,6 +81,8 @@ def eighth_signage(request, block_id=None):
         "no_detail": not ("detail" in request.GET),
         "no_rooms": ("no_rooms" in request.GET),
         "use_scroll": ("no_scroll" not in request.GET),
+        "do_reload": ("no_reload" not in request.GET),
+        "reload_mins": reload_mins,
         "no_user_display": True,
         "no_fav": True
     }
