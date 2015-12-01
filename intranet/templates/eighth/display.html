@@ -138,6 +138,37 @@
         })
         </script>
     {% endif %}
+    {% if use_scroll %}
+        <script type="text/javascript">
+        $(function() {
+            $(".primary-content").addClass("scroll-display");
+            $("#activity-list").before($(".middle-wrapper"));
+
+            window.scrollDirection = 1; //down
+            window.scrollInterval = 2500;
+            window.scrollSpeed = 500;
+            displayScroll = function() {
+                var $el = $("#activity-list");
+                var inc = 26;
+                var top = ($el.scrollTop() + $el.innerHeight());
+                var scr = $el[0].scrollHeight;
+                if(top >= scr || (top <= 2*inc && window.scrollDirection == -1)) {
+                    window.scrollDirection *= -1;
+                }
+                var amo = $el.scrollTop() + inc*window.scrollDirection;
+                console.debug(amo);
+                if(amo % 26 != 0 && amo != 0) {
+                    amo -= (amo % 26);
+                }
+                if(amo < 0) window.scrollDirection *= -1;
+                console.debug(amo, amo/26);
+                $el.animate({ scrollTop: amo }, window.scrollSpeed);
+            }
+
+            window.setInterval(displayScroll, window.scrollInterval);
+        });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -357,7 +388,6 @@
         </dl>
         {% endverbatim %}
     </script>
-
 
     <div class="primary-content eighth-signup">
 

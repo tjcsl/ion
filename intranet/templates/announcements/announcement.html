@@ -34,7 +34,7 @@
     </h3>
 
     <div class="announcement-metadata">
-        by {{ announcement.get_author|escape }} &bull; {{ announcement.added|fuzzy_date|capfirst }} &bull; to
+        by {{ announcement.get_author|escape }} &bull; <span title="{{ announcement.added }}">{{ announcement.added|fuzzy_date|capfirst }}</span> &bull; to
         {% for group in announcement.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}

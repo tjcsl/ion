@@ -14,13 +14,15 @@ class College(models.Model):
     ceeb = models.IntegerField(unique=True)
 
     def __unicode__(self):
-        return "{}: {}".format(self.ceeb, self.name)
+        return "{} ({})".format(self.name, self.ceeb)
 
     class Meta:
         ordering = ["name"]
 
-class Major(models.Model):
-    MAJORS = [(i, i) for i in (
+class Senior(models.Model):
+    user = models.OneToOneField(User)
+    college = models.ForeignKey(College, blank=True, null=True)
+    MAJORS = [
         "Computer Science",
         "Engineering",
         "Education",
@@ -119,19 +121,8 @@ class Major(models.Model):
         "International Development",
         "Mechanical Engineering",
         "Mathematics & Computer Science"
-    )]
-    name = models.CharField(max_length=1000, choices=MAJORS)
-
-    def __unicode__(self):
-        return "{}".format(self.name)
-
-    class Meta:
-        ordering = ["name"]
-
-class Senior(models.Model):
-    user = models.OneToOneField(User)
-    college = models.ForeignKey(College, blank=False)
-    major = models.ForeignKey(Major, blank=False)
+    ]
+    major = models.CharField(max_length=100, choices=[(i, i) for i in MAJORS] + [('', 'Undecided')], blank=True, null=True)
     college_sure = models.BooleanField(default=False)
     major_sure = models.BooleanField(default=False)
 
