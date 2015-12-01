@@ -1826,7 +1826,7 @@ class Grade(object):
     @property
     def name_plural(self):
         """Return the grade's plural name (e.g. freshmen)"""
-        return "freshmen" if self._grade == 9 else "{}s".format(self._name)
+        return "freshmen" if (self._grade and self._grade == 9) else "{}s".format(self._name) if self._name else ""
 
     @property
     def text(self):
