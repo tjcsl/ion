@@ -68,7 +68,7 @@ class glob_list(list):
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
         for item in self:
-            if ipaddress.ip_address(key) in ipaddress.ip_network(item):
+            if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
                 return True
         return False
 
