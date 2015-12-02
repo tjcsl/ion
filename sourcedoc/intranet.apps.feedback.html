@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.feedback package &mdash; TJ Intranet v3 (Build #1021) documentation</title>
+    <title>intranet.apps.feedback package &mdash; TJ Intranet v3 (Build #1022) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1021)',
+        VERSION:     'v3 (Build #1022)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1021) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1022) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.files package" href="intranet.apps.files.html" />
     <link rel="prev" title="intranet.apps.events package" href="intranet.apps.events.html" />
@@ -117,6 +117,7 @@
 <li><a class="reference internal" href="#">intranet.apps.feedback package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.feedback.forms">intranet.apps.feedback.forms module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.feedback.models">intranet.apps.feedback.models module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.feedback.urls">intranet.apps.feedback.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.feedback.views">intranet.apps.feedback.views module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.feedback">Module contents</a></li>
@@ -169,7 +170,48 @@
 <p>A form for sending comments to the Intranet team.</p>
 <dl class="attribute">
 <dt id="intranet.apps.feedback.forms.FeedbackForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('comments', &lt;django.forms.fields.CharField object at 0x7f8ee321a110&gt;)])</em><a class="headerlink" href="#intranet.apps.feedback.forms.FeedbackForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('comments', &lt;django.forms.fields.CharField object at 0x7fc4bf0cf4d0&gt;)])</em><a class="headerlink" href="#intranet.apps.feedback.forms.FeedbackForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-intranet.apps.feedback.models">
+<span id="intranet-apps-feedback-models-module"></span><h2>intranet.apps.feedback.models module<a class="headerlink" href="#module-intranet.apps.feedback.models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="intranet.apps.feedback.models.Feedback">
+<em class="property">class </em><code class="descclassname">intranet.apps.feedback.models.</code><code class="descname">Feedback</code><span class="sig-paren">(</span><em>id</em>, <em>user</em>, <em>comments</em>, <em>date</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/feedback/models.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.feedback.models.Feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="intranet.apps.feedback.models.Feedback.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="intranet.apps.feedback.models.Feedback.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Feedback.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.feedback.models.Feedback.get_next_by_date">
+<code class="descclassname">Feedback.</code><code class="descname">get_next_by_date</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.get_next_by_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.feedback.models.Feedback.get_previous_by_date">
+<code class="descclassname">Feedback.</code><code class="descname">get_previous_by_date</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.get_previous_by_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.feedback.models.Feedback.objects">
+<code class="descclassname">Feedback.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.feedback.models.Feedback.user">
+<code class="descclassname">Feedback.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.feedback.models.Feedback.user" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

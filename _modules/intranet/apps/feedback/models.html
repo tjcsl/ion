@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.seniors.forms &mdash; TJ Intranet v3 (Build #1022) documentation</title>
+    <title>intranet.apps.feedback.models &mdash; TJ Intranet v3 (Build #1022) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -143,30 +143,14 @@
   <div class="row">
     <div class="col-md-12">
       
-  <h1>Source code for intranet.apps.seniors.forms</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
-
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Senior</span>
+  <h1>Source code for intranet.apps.feedback.models</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
 
-
-<div class="viewcode-block" id="SeniorForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorForm">[docs]</a><span class="k">class</span> <span class="nc">SeniorForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SeniorForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;college&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s">&quot;CollegeBoard CEEB numbers are in parentheses.&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;college&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">empty_label</span> <span class="o">=</span> <span class="s">&quot;Undecided&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;college_sure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Sure?&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;major_sure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Sure?&quot;</span>
-
-<div class="viewcode-block" id="SeniorForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.seniors.html#intranet.apps.seniors.forms.SeniorForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Senior</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;college&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;college_sure&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;major&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;major_sure&quot;</span><span class="p">]</span></div></div>
+<div class="viewcode-block" id="Feedback"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.models.Feedback">[docs]</a><span class="k">class</span> <span class="nc">Feedback</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">comments</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
