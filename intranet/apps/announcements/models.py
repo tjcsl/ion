@@ -126,7 +126,7 @@ class Announcement(models.Model):
             return ((ann.year == now.year and ann.month < 9) or
                     (ann.year == now.year - 1 and ann.month >= 9))
         else:
-            return (ann.year == now.year and ann.month >= 9)
+            return ann.year == now.year and ann.month >= 9
 
     class Meta:
         ordering = ["-pinned", "-added"]
