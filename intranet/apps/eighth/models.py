@@ -70,7 +70,6 @@ class EighthSponsor(AbstractBaseEighthModel):
     @property
     def to_be_assigned(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
-    
 
     def __unicode__(self):
         return self.name
@@ -106,7 +105,6 @@ class EighthRoom(AbstractBaseEighthModel):
     @property
     def to_be_determined(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
-    
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)

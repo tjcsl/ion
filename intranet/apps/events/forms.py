@@ -27,7 +27,9 @@ class EventForm(forms.ModelForm):
                    "approved_by",
                    "rejected_by"]
 
+
 class AdminEventForm(forms.ModelForm):
+
     def __init__(self, all_groups=False, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
         if not all_groups:

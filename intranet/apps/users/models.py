@@ -1023,7 +1023,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return (self.is_student and self.grade and self.grade.number and self.grade.number == 12)
-    
 
     @property
     def is_eighthoffice(self):

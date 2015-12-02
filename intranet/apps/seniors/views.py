@@ -14,6 +14,7 @@ from .forms import SeniorForm
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def seniors_home_view(request):
     seniors = Senior.objects.exclude(college=None, major=None)
@@ -27,6 +28,7 @@ def seniors_home_view(request):
         "own_senior": own_senior
     }
     return render(request, "seniors/home.html", context)
+
 
 @login_required
 def seniors_add_view(request):

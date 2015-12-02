@@ -19,6 +19,7 @@ class College(models.Model):
     class Meta:
         ordering = ["name"]
 
+
 class Senior(models.Model):
     user = models.OneToOneField(User)
     college = models.ForeignKey(College, blank=True, null=True)
