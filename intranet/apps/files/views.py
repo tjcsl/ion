@@ -12,7 +12,7 @@ from Crypto.Cipher import AES
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import StreamingHttpResponse
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
