@@ -21,7 +21,7 @@ EMAIL_PORT = 25
 EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 
-EMAIL_FROM = "ion-noreply@tjhsst.edu"
+EMAIL_FROM = "ion+noreply@tjhsst.edu"
 
 ADMINS = (
     ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
@@ -290,6 +290,7 @@ INSTALLED_APPS = (
     "intranet.apps.search",
     "intranet.apps.schedule",
     "intranet.apps.notifications",
+    "intranet.apps.feedback",
     "intranet.apps.users",
     "intranet.apps.preferences",
     "intranet.apps.files",
