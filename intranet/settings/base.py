@@ -448,23 +448,23 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_long_hash():
     cmd = "git rev-parse HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_info():
     cmd = "git show -s --format=medium HEAD"
-    lines = subprocess.check_output(cmd, shell=True).decode().splitlines()
+    lines = subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().splitlines()
     return "\n".join([lines[0][:14].capitalize(), lines[2][8:]]).replace("   ", " ")
 
 
 def _get_current_commit_date():
     cmd = "git show -s --format=%ci HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_github_url():
