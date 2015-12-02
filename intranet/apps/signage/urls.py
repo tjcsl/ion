@@ -6,5 +6,5 @@ from . import views
 
 
 urlpatterns = [
-    url(r"^eighth(?:/(?P<block_id>\d+))?$", views.eighth_signage, name="eighth_signage"),
+    url(r"^/eighth(?:/(?P<block_id>\d+))?$", views.eighth_signage, name="eighth_signage"),
 ]
