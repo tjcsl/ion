@@ -21,7 +21,7 @@ EMAIL_PORT = 25
 EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 
-EMAIL_FROM = "ion+noreply@tjhsst.edu"
+EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 ADMINS = (
     ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
