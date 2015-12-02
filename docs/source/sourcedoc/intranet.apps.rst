@@ -21,6 +21,7 @@ Subpackages
     intranet.apps.preferences
     intranet.apps.schedule
     intranet.apps.search
+    intranet.apps.seniors
     intranet.apps.signage
     intranet.apps.templatetags
     intranet.apps.users
