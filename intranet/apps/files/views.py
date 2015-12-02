@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import base64
 import logging
+import os
 import pysftp
 import tempfile
-import os
-import base64
 from os.path import normpath
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -200,6 +200,8 @@ def files_type(request, fstype=None):
         filepath = request.GET.get("file")
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
+        filebase_escaped = filebase.encode("ascii", "ignore")
+        filebase_escaped = filebase_escaped.replace(",", "")
         if can_access_path(filepath):
             try:
                 stat = sftp.stat(filepath)
@@ -211,7 +213,7 @@ def files_type(request, fstype=None):
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase))
+            tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase_escaped))
             logger.debug(tmpfile)
 
             try:
@@ -225,7 +227,7 @@ def files_type(request, fstype=None):
             chunk_size = 8192
             response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
             response['Content-Length'] = content_len
-            response["Content-Disposition"] = "attachment; filename={}".format(filebase)
+            response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
             return response
 
     fsdir = request.GET.get("dir")
