@@ -12,37 +12,37 @@ urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),
 
     # Students
-    url(r"^/signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
-    url(r"^/signup/multi$", signup.eighth_multi_signup_view, name="eighth_multi_signup"),
-    url(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
-    url(r"^/absences$", attendance.eighth_absences_view, name="eighth_absences"),
-    url(r"^/absences/(?P<user_id>\d+)$", attendance.eighth_absences_view, name="eighth_absences"),
+    url(r"^signup(?:/(?P<block_id>\d+))?$", signup.eighth_signup_view, name="eighth_signup"),
+    url(r"^signup/multi$", signup.eighth_multi_signup_view, name="eighth_multi_signup"),
+    url(r"^toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
+    url(r"^absences$", attendance.eighth_absences_view, name="eighth_absences"),
+    url(r"^absences/(?P<user_id>\d+)$", attendance.eighth_absences_view, name="eighth_absences"),
 
     # Teachers
-    url(r"^/attendance$", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),
-    url(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
-    url(r"^/attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
-    url(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
+    url(r"^attendance$", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),
+    url(r"^attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
+    url(r"^attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
+    url(r"^attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
 
 
     # Profile
-    url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
-    url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
-    url(r"^/profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
-    url(r"^/profile/history(?:/(?P<user_id>\d+))?$", profile.profile_history_view, name="eighth_profile_history"),
-    url(r"^/profile/often(?:/(?P<user_id>\d+))?$", profile.profile_often_view, name="eighth_profile_often"),
+    url(r"^profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
+    url(r"^profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
+    url(r"^profile/edit(?:/(?P<user_id>\d+))?$", profile.edit_profile_view, name="eighth_edit_profile"),
+    url(r"^profile/history(?:/(?P<user_id>\d+))?$", profile.profile_history_view, name="eighth_profile_history"),
+    url(r"^profile/often(?:/(?P<user_id>\d+))?$", profile.profile_often_view, name="eighth_profile_often"),
 
     # Roster (for students/teachers)
-    url(r"^/roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
-    url(r"^/roster/raw/(?P<scheduled_activity_id>\d+)$", attendance.raw_roster_view, name="eighth_raw_roster"),
+    url(r"^roster/(?P<scheduled_activity_id>\d+)$", attendance.roster_view, name="eighth_roster"),
+    url(r"^roster/raw/(?P<scheduled_activity_id>\d+)$", attendance.raw_roster_view, name="eighth_raw_roster"),
 
     # Activity Info (for students/teachers)
-    url(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
+    url(r"^activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
 
     # Admin
-    url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
+    url(r"^admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
 
-    url(r"^/display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
+    url(r"^display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
 ]
 
 eighth_admin_patterns = [
@@ -123,5 +123,5 @@ eighth_admin_patterns = [
 ]
 
 urlpatterns += [
-    url(r"^/admin/", include(eighth_admin_patterns)),
+    url(r"^admin/", include(eighth_admin_patterns)),
 ]
