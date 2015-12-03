@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.db import models
 
 class Sign(models.Model):
@@ -25,3 +28,6 @@ class Sign(models.Model):
     status = models.CharField(max_length=10, choices=STATUSES, default="auto")
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     url = models.CharField(max_length=2000, null=True, blank=True)
+
+    def __unicode__(self):
+        return "{} ({})".format(self.name, self.display)
