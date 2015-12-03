@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.templatetags.strings &mdash; TJ Intranet v3 (Build #1030) documentation</title>
+    <title>intranet.apps.signage.models &mdash; TJ Intranet v3 (Build #1030) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -143,25 +143,40 @@
   <div class="row">
     <div class="col-md-12">
       
-  <h1>Source code for intranet.apps.templatetags.strings</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.signage.models</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 
-<span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<div class="viewcode-block" id="Sign"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.models.Sign">[docs]</a><span class="k">class</span> <span class="nc">Sign</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    name</span>
+<span class="sd">        A friendly name for the display</span>
+<span class="sd">    display</span>
+<span class="sd">        An internal code sent from the display</span>
+<span class="sd">    status</span>
+<span class="sd">        One of auto, eighth, schedule, status, url</span>
+<span class="sd">    eighth_block_increment</span>
+<span class="sd">        The block_increment if the status is eighth</span>
+<span class="sd">    url</span>
+<span class="sd">        The url if the status is url</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">display</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">STATUSES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="s">&quot;auto&quot;</span><span class="p">,</span> <span class="s">&quot;Auto&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&quot;eighth&quot;</span><span class="p">,</span> <span class="s">&quot;Eighth Period&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&quot;schedule&quot;</span><span class="p">,</span> <span class="s">&quot;Bell Schedule&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&quot;status&quot;</span><span class="p">,</span> <span class="s">&quot;Schedule/Clock&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span> <span class="s">&quot;Custom URL&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUSES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="n">eighth_block_increment</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-
-<span class="nd">@register.filter</span>
-<div class="viewcode-block" id="contains_digit"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.strings.contains_digit">[docs]</a><span class="k">def</span> <span class="nf">contains_digit</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">)</span>
-
-</div>
-<span class="nd">@register.filter</span>
-<div class="viewcode-block" id="endswith"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.strings.endswith">[docs]</a><span class="k">def</span> <span class="nf">endswith</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

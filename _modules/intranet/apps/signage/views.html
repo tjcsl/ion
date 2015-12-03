@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.signage.views &mdash; TJ Intranet v3 (Build #1029) documentation</title>
+    <title>intranet.apps.signage.views &mdash; TJ Intranet v3 (Build #1030) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1029)',
+        VERSION:     'v3 (Build #1030)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1029) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1030) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -155,19 +155,71 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">intranet</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Sign</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">..eighth.serializers</span> <span class="kn">import</span> <span class="n">EighthBlockDetailSerializer</span>
+<span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="kn">import</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">...utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<div class="viewcode-block" id="check_show_eighth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.check_show_eighth">[docs]</a><span class="k">def</span> <span class="nf">check_show_eighth</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
+    <span class="n">next_block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">next_block</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">next_block</span><span class="o">.</span><span class="n">date</span> <span class="o">!=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="mi">12</span> <span class="o">&lt;</span> <span class="n">now</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.signage_display">[docs]</a><span class="k">def</span> <span class="nf">signage_display</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">display_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">display_id</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;/signage/eighth?id={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">display_id</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">display_id</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;/signage/eighth?id={}&amp;block_increment=1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">display_id</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;/signage/eighth?id={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">display_id</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="n">display_id</span><span class="p">)</span>
+        <span class="n">sign_status</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">status</span>
+    <span class="k">except</span> <span class="n">Sign</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">sign_status</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+
+    <span class="n">suffix</span> <span class="o">=</span> <span class="s">&quot;id={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">display_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s">&quot;mac&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">suffix</span> <span class="o">+=</span> <span class="s">&quot;&amp;mac={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s">&quot;mac&quot;</span><span class="p">])</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s">&quot;eighth&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;eighth?block_increment={}&amp;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="o">.</span><span class="n">eighth_block_increment</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s">&quot;schedule&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;schedule?&quot;</span>
+    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s">&quot;status&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;status?&quot;</span>
+    <span class="k">elif</span> <span class="n">sign_status</span> <span class="o">!=</span> <span class="s">&quot;url&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">check_show_eighth</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">display_id</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">):</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;eighth?&quot;</span>
+            <span class="k">elif</span> <span class="n">display_id</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">):</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;eighth?block_increment=1&amp;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;eighth?&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;status?&quot;</span>
+
+    <span class="k">if</span> <span class="n">sign_status</span> <span class="o">==</span> <span class="s">&quot;url&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">url</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;/signage/{}{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="schedule_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.schedule_signage">[docs]</a><span class="k">def</span> <span class="nf">schedule_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;schedule/embed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="status_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.status_signage">[docs]</a><span class="k">def</span> <span class="nf">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s">&quot;signage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;signage/status.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="eighth_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.eighth_signage">[docs]</a><span class="k">def</span> <span class="nf">eighth_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">remote_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s">&quot;HTTP_X_FORWARDED_FOR&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&quot;HTTP_X_FORWARDED_FOR&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
