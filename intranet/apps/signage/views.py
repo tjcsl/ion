@@ -12,16 +12,48 @@ from intranet import settings
 from ..users.models import User
 from ..eighth.models import EighthBlock, EighthSignup
 from ..eighth.serializers import EighthBlockDetailSerializer
+from ..schedule.views import schedule_context
 from ...utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
+def check_show_eighth(now):
+    next_block = EighthBlock.objects.get_first_upcoming_block()
+    if next_block:
+        if next_block.date != now.date():
+            return False
+
+    return (12 < now.time().hour < 16)
+
+
 def signage_display(request, display_id):
-    if display_id.endswith("a"):
-        return redirect("/signage/eighth?id={}".format(display_id))
-    if display_id.endswith("b"):
-        return redirect("/signage/eighth?id={}&block_increment=1".format(display_id))
-    return redirect("/signage/eighth?id={}".format(display_id))
+    now = datetime.datetime.now()
+    suffix = "id={}".format(display_id)
+    if "mac" in request.GET:
+        suffix += "&mac={}".format(request.GET["mac"])
+
+    if check_show_eighth(now):
+        if display_id.endswith("a"):
+            url = "eighth?"
+        elif display_id.endswith("b"):
+            url = "eighth?block_increment=1&"
+        else:
+            url = "eighth?"
+    else:
+        url = "status?"
+
+    return redirect("/signage/{}{}".format(url, suffix))
+
+
+def schedule_signage(request):
+    context = schedule_context(request)
+    context["signage"] = True
+    return render(request, "schedule/embed.html", context)
+
+def status_signage(request):
+    context = schedule_context(request)
+    context["signage"] = True
+    return render(request, "signage/status.html", context)
 
 def eighth_signage(request, block_id=None):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))

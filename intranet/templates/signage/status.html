@@ -24,12 +24,20 @@
 
     body {
         background: transparent;
-    }
-    {% if signage %}
-    body {
         zoom: 3;
+        overflow: hidden;
     }
-    {% endif %}
+
+    .tjlogo {
+        width: 50%;
+        margin-top: 20px;
+    }
+
+    .time {
+        font-size: 30px;
+        margin: 10px 0;
+        color: black;
+    }
     </style>
 
 
@@ -38,12 +46,30 @@
     <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        setInterval(function() {
+            var now = new Date();
+            var hr = now.getHours();
+            if(hr == 0) hr = 12;
+            if(hr > 12) hr -= 12;
+            var min = now.getMinutes();
+            if(min < 10) min = "0"+min;
+            $(".time").html(hr + ":" + min);
+        }, 1000);
+
+        setTimeout(function() { location=location; }, 60 * 60 * 1000)
+    })
+    </script>
 </head>
 
 <body>
 
     <div class="center-wrapper">
         <div class="center">
+            <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+            <div class="time">&nbsp;</div>
             <div class="schedule-outer">
                 {% include "schedule/view.html" %}
             </div>
