@@ -16,6 +16,12 @@ from ...utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
+def signage_display(request, display_id):
+    if display_id.endswith("a"):
+        return redirect("/signage/eighth?id={}".format(display_id))
+    if display_id.endswith("b"):
+        return redirect("/signage/eighth?id={}&block_increment=1".format(display_id))
+    return redirect("/signage/eighth?id={}".format(display_id))
 
 def eighth_signage(request, block_id=None):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
