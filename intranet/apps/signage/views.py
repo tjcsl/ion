@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from intranet import settings
+from .models import Sign
 from ..users.models import User
 from ..eighth.models import EighthBlock, EighthSignup
 from ..eighth.serializers import EighthBlockDetailSerializer
@@ -27,22 +28,41 @@ def check_show_eighth(now):
 
 
 def signage_display(request, display_id):
-    now = datetime.datetime.now()
+    try:
+        sign = Sign.objects.get(display=display_id)
+        sign_status = sign.status
+    except Sign.DoesNotExist:
+        sign = None
+        sign_status = "auto"
+
     suffix = "id={}".format(display_id)
     if "mac" in request.GET:
         suffix += "&mac={}".format(request.GET["mac"])
 
-    if check_show_eighth(now):
-        if display_id.endswith("a"):
-            url = "eighth?"
-        elif display_id.endswith("b"):
-            url = "eighth?block_increment=1&"
-        else:
-            url = "eighth?"
-    else:
+    now = datetime.datetime.now()
+    if sign_status == "eighth":
+        url = "eighth?block_increment={}&".format(sign.eighth_block_increment or 0)
+    elif sign_status == "schedule":
+        url = "schedule?"
+    elif sign_status == "status":
         url = "status?"
+    elif sign_status != "url":
+        if check_show_eighth(now):
+            if display_id.endswith("a"):
+                url = "eighth?"
+            elif display_id.endswith("b"):
+                url = "eighth?block_increment=1&"
+            else:
+                url = "eighth?"
+        else:
+            url = "status?"
 
-    return redirect("/signage/{}{}".format(url, suffix))
+    if sign_status == "url":
+        url = sign.url
+    else:
+        url = "/signage/{}{}".format(url, suffix)
+
+    return redirect(url)
 
 
 def schedule_signage(request):
