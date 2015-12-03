@@ -20,8 +20,8 @@ class AuthenticateForm(AuthenticationForm):
             The password text field.
 
     """
-    username = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder": "Username"}), error_messages={"required": "Invalid username", "inactive": "Access disallowed."})
-    password = forms.CharField(required=True, widget=forms.widgets.PasswordInput(attrs={"placeholder": "Password"}), error_messages={"required": "Invalid password", "inactive": "Access disallowed."})
+    username = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder": "Username", "aria-label": "Enter your Username"}), error_messages={"required": "Invalid username", "inactive": "Access disallowed."})
+    password = forms.CharField(required=True, widget=forms.widgets.PasswordInput(attrs={"placeholder": "Password", "aria-label": "Enter your Password"}), error_messages={"required": "Invalid password", "inactive": "Access disallowed."})
 
     def is_valid(self):
         """Validates the username and password in the form"""
