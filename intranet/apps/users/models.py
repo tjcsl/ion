@@ -1465,6 +1465,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
+    def absence_info(self):
+        """Return information about the user's absences.
+        """
+        from ..eighth.models import EighthSignup
+
+        return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
+
     def __unicode__(self):
         return self.username or self.ion_username or self.id
 

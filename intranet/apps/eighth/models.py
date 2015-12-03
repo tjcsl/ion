@@ -515,6 +515,14 @@ class EighthBlock(AbstractBaseEighthModel):
         now = datetime.datetime.now()
         return (now.date() > self.date)
 
+    def in_clear_absence_period(self):
+        """Is the current date in the block's clear absence period?
+           (Should info on clearing the absence show?)
+        """
+        now = datetime.datetime.now()
+        two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
+        return (now.date() <= two_weeks)
+
     def attendance_locked(self):
         """Is it past 10PM on the day of the block?"""
         now = datetime.datetime.now()
@@ -1267,6 +1275,10 @@ class EighthSignup(AbstractBaseEighthModel):
         self.was_absent = True
         self.pass_accepted = True
         self.save()
+
+    def in_clear_absence_period(self):
+        """Is the block for this signup in the clear absence period?"""
+        return self.scheduled_activity.block.in_clear_absence_period()
 
     def __unicode__(self):
         return "{}: {}".format(self.user,
