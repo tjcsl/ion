@@ -48,7 +48,9 @@ def signage_display(request, display_id):
         url = "status?"
     elif sign_status != "url":
         if check_show_eighth(now):
-            if display_id.endswith("a"):
+            if sign and sign.eighth_block_increment:
+                url = "eighth?block_increment={}&".format(sign.eighth_block_increment)
+            elif display_id.endswith("a"):
                 url = "eighth?"
             elif display_id.endswith("b"):
                 url = "eighth?block_increment=1&"
