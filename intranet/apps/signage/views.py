@@ -88,6 +88,7 @@ def eighth_signage(request, block_id=None):
         "no_rooms": ("no_rooms" in request.GET),
         "use_scroll": ("no_scroll" not in request.GET),
         "do_reload": ("no_reload" not in request.GET),
+        "preload_background": True,
         "reload_mins": reload_mins,
         "no_user_display": True,
         "no_fav": True

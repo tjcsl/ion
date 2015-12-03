@@ -199,9 +199,21 @@
         }, {{ reload_mins }} * 60 * 1000)
         </script>
     {% endif %}
+    {% if preload_background %}
+        <script type="text/javascript">
+        $(window).load(function() {
+            $(".loading").hide();
+        });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
+    {% if preload_background %}
+    <div class="loading" style="z-index:99998;position:absolute;top:0;left:0;width:100%;height:100%;background:white">
+        <img src="{% static 'img/tjlogo-words.png' %}" style="z-index:99999;position:absolute;top:50%;left:50%;margin: -256px" />
+    </div>
+    {% endif %}
     <script type="text/template" id="activity-list-row-template">
         {% verbatim %}
             <span class="activity-icons">
