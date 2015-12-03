@@ -592,7 +592,8 @@ class EighthScheduledActivityManager(Manager):
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
                                              .exclude(cancelled=True)
-                                             .filter(sponsoring_filter))
+                                             .filter(sponsoring_filter)
+                                             .distinct())
         return sched_acts
 
 
