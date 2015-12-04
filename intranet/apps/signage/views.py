@@ -41,28 +41,22 @@ def signage_display(request, display_id):
 
     now = datetime.datetime.now()
     if sign_status == "eighth":
-        url = "eighth?block_increment={}&".format(sign.eighth_block_increment or 0)
+        return eighth_signage(request, None, sign.block_increment)
     elif sign_status == "schedule":
-        url = "schedule?"
+        return schedule_signage(request)
     elif sign_status == "status":
-        url = "status?"
-    elif sign_status != "url":
+        return status_signage(request)
+    elif sign_status == "url" or "url" in request.GET:
+        return iframe_signage(request, request.GET.get('url') or sign.url)
+    else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
-                url = "eighth?block_increment={}&".format(sign.eighth_block_increment)
-            elif display_id.endswith("a"):
-                url = "eighth?"
-            elif display_id.endswith("b"):
-                url = "eighth?block_increment=1&"
+                iframe = "eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
-                url = "eighth?"
+                iframe = "eighth"
+            return iframe_signage(request, iframe)
         else:
-            url = "status?"
-
-    if sign_status == "url":
-        url = sign.url
-    else:
-        url = "/signage/{}{}".format(url, suffix)
+            return status_signage(request)
 
     return redirect(url)
 
@@ -77,7 +71,13 @@ def status_signage(request):
     context["signage"] = True
     return render(request, "signage/status.html", context)
 
-def eighth_signage(request, block_id=None):
+def iframe_signage(request, url):
+    context = schedule_context(request)
+    context["signage"] = True
+    context["url"] = url
+    return render(request, "signage/iframe.html", context)
+
+def eighth_signage(request, block_id=None, block_increment=0):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
         return render(request, "error/403.html", {
@@ -93,7 +93,9 @@ def eighth_signage(request, block_id=None):
             if last_block is not None:
                 block_id = last_block.id
 
-    block_increment = request.GET.get("block_increment", 0)
+    if "block_increment" in request.GET:
+        block_increment = request.GET.get("block_increment", 0)
+
     try:
         block_increment = int(block_increment)
     except ValueError:
