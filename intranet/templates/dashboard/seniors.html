@@ -8,18 +8,18 @@
             {% endif %}
         </h2>
         <div class="info">
-            {% if is_senior %}
-                <a class="button small-button" href="{% url 'seniors' %}">Add/View Destinations</a>
-            {% else %}
-                <a class="button small-button" href="{% url 'seniors' %}">Senior Destinations</a>
-            {% endif %}
+            <a class="button small-button" href="{% url 'seniors' %}">Senior Destinations</a>
         </div>
     </div>
     <div class="widget-content">
     {% if is_senior %}
         <center><span class="seniors-clock"></span></center>
-    {% else %}
-        <center>Your class will never graduate.</center>
     {% endif %}
+    <center>
+        {{ num_senior_destinations }}{% if num_senior_destinations == 1 %} senior has{% else %} seniors have{% endif %} submitted destinations.
+        {% if is_senior %}
+            <a href="{% url 'seniors_add' %}">Add</a>
+        {% endif %}
+    </center>
     </div>
 </div>
