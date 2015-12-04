@@ -41,7 +41,12 @@ def signage_display(request, display_id):
 
     now = datetime.datetime.now()
     if sign_status == "eighth":
-        return eighth_signage(request, None, sign.block_increment)
+        #return eighth_signage(request, None, sign.block_increment)
+        if sign and sign.eighth_block_increment:
+            iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
+        else:
+            iframe = "/signage/eighth"
+        return iframe_signage(request, iframe)
     elif sign_status == "schedule":
         return schedule_signage(request)
     elif sign_status == "status":
@@ -51,9 +56,9 @@ def signage_display(request, display_id):
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
-                iframe = "eighth?block_increment={}&".format(sign.eighth_block_increment)
+                iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
-                iframe = "eighth"
+                iframe = "/signage/eighth"
             return iframe_signage(request, iframe)
         else:
             return status_signage(request)
