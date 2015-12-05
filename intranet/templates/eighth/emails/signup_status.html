@@ -1,9 +1,8 @@
+{% include "email_header.html" %}
+
 <p>
-    {% if blocks|length > 1 %}
-        These are your current signup selections
-    {% else %}
-        This is your current signup selection
-    {% endif %} for Eighth Period on {{ block_date }}:</p>
+    {{ blocks|length|pluralize:"This is,These are" }} your current signup selection{{ blocks|length|pluralize }} for Eighth Period on {{ block_date }}:
+</p>
 
 
 {% for blk in blocks %}

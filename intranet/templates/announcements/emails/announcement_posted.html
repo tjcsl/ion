@@ -1,3 +1,10 @@
+{% include "email_header.html" %}
+<meta itemprop="description" content="Announcement: {{ announcement.title }}"/>
+<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+  <link itemprop="target" href="{{ info_link }}"/>
+  <meta itemprop="name" content="View announcement"/>
+</div>
+
 <p>
 {% if announcement.author %}
     {{ announcement.author }}
@@ -13,6 +20,5 @@
 {% endautoescape %}
 
 <p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
-
 
 {% include "email_footer.html" %}

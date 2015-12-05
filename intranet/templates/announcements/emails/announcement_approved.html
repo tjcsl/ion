@@ -1,3 +1,10 @@
+{% include "email_header.html" %}
+<meta itemprop="description" content="Announcement Approved: {{ formdata.title }}"/>
+<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+  <link itemprop="target" href="{{ info_link }}"/>
+  <meta itemprop="name" content="View announcement"/>
+</div>
+
 <p>
 {% if role == "approved" %}
     The announcement that you approved,
@@ -27,6 +34,5 @@
 {% endautoescape %}
 
 <p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
-
 
 {% include "email_footer.html" %}
