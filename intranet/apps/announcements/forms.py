@@ -15,6 +15,10 @@ class AnnouncementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AnnouncementForm, self).__init__(*args, **kwargs)
+        self.fields["expiration_date"].help_text = (
+            "By default, announcements expire after two weeks. To change this, click in the box above."
+        )
+
         self.fields["notify_post"].help_text = (
             "If this box is checked, students who have signed up for notifications "
             "will receive an email. If the announcement is public, a link will be posted on Twitter."

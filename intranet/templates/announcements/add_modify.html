@@ -15,12 +15,35 @@
     <script type="text/javascript">
         $(function() {
             var author = $("#id_author");
+            var exp = $("#id_expiration_date");
+            dateFormat = function(date) {
+                zero = function(v) { return v<10 ? "0"+v : v; }
+                return (date.getFullYear() + "-" +
+                        zero(date.getMonth()+1) + "-" +
+                        zero(date.getDate()) + " 23:59:59");
+            }
+            dateReset = function() {
+                var date = new Date();
+                date.setDate(date.getDate() + 14);
+                exp.val(dateFormat(date));
+            }
+            date3000 = function() {
+                var date = new Date("3000-01-01 00:00:00");
+                exp.val(dateFormat(date));
+            }
             {% if action == "add" %}
                 $("#id_update_added_date").parent().parent().remove()
+                
                 author.attr("placeholder", "{{ user.full_name|escape }}");
+                dateReset()
+                
             {% elif announcement %}
                 author.attr("placeholder", "{{ announcement.user.full_name|escape }}");
             {% endif %}
+            $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
+                                               "<a onclick='dateReset()' class='button small-button'>Reset to Default</a>" +
+                                               "<a onclick='date3000()' class='button small-button'>Don't Expire</a>" +
+                                               "</span>");
         });
     </script>
 {% endblock %}
