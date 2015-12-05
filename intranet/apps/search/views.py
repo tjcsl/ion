@@ -27,7 +27,7 @@ def do_ldap_query(q, admin=False):
     if q.isdigit():
         query = ("(&(|(tjhsstStudentId={0})"
                  "(iodineUidNumber={0})"
-                 ")(objectClass=*))").format(q)
+                 ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
 
         logger.debug("Running LDAP query: {}".format(query))
 
@@ -62,7 +62,8 @@ def do_ldap_query(q, admin=False):
             "gender": ("sex",),
             "id": ("iodineUidNumber",),
             "username": ("iodineUid",),
-            "counselor": ("counselor",)
+            "counselor": ("counselor",),
+            "type": ("objectClass",)
         }
 
         inner = ""
@@ -113,6 +114,19 @@ def do_ldap_query(q, admin=False):
             # fix grade, because LDAP only stores graduation year
             if cat == "grade" and val.isdigit():
                 val = "{}".format(Grade.year_from_grade(int(val)))
+            elif cat == "grade" and val == "staff":
+                cat = "type"
+                val = "teacher"
+            elif cat == "grade" and val == "student":
+                cat = "type"
+                val = "student"
+
+            if cat == "type" and val == "teacher":
+                val = "tjhsstTeacher"
+            elif cat == "type" and val == "student":
+                val = "tjhsstStudent"
+
+
 
             # replace sex:male with sex:m and sex:female with sex:f
             if cat == "sex" or cat == "gender":
@@ -130,7 +144,7 @@ def do_ldap_query(q, admin=False):
                 inner += "({}{}{})".format(attr, sep, val)
             inner += ")"
 
-        query = "(&{}(objectClass=*))".format(inner)
+        query = "(&{}(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))".format(inner)
 
         logger.debug("Running LDAP query: {}".format(query))
 
@@ -161,7 +175,7 @@ def do_ldap_query(q, admin=False):
                       "(mname={0}*)" if admin else "") +
                      ("(nickname=*{0})"
                       "(nickname={0}*)"
-                      ")(objectClass=*))")).format(p)
+                      ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
 
             logger.debug("Running LDAP query: {}".format(query))
 

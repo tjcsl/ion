@@ -277,12 +277,17 @@ class User(AbstractBaseUser, PermissionsMixin):
                 try:
                     user = User.objects.get(id=user.id)
                 except User.DoesNotExist:
-                    user.username = user.ion_username
+                    if user.ion_username and user.ion_id:
+                        user.username = user.ion_username
 
-                    user.set_unusable_password()
-                    user.last_login = datetime(9999, 1, 1)
+                        user.set_unusable_password()
+                        user.last_login = datetime(9999, 1, 1)
 
-                    user.save()
+                        user.save()
+                    else:
+                        raise User.DoesNotExist(
+                            "`User` with DN '{}' does not have a username.".format(dn)
+                        )
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
                 raise User.DoesNotExist(
                     "`User` with DN '{}' does not exist.".format(dn)
