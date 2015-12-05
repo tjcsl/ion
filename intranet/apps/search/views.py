@@ -22,9 +22,12 @@ def do_ldap_query(q, admin=False):
     result_dns = []
 
     q = escape_filter_chars(q)
+    # Allow wildcards
+    q = q.replace(escape_filter_chars('*'), '*')
 
     # If only a digit, search for student ID and user ID
     if q.isdigit():
+        logger.debug("Digit search: {}".format(q))
         query = ("(&(|(tjhsstStudentId={0})"
                  "(iodineUidNumber={0})"
                  ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
@@ -36,6 +39,7 @@ def do_ldap_query(q, admin=False):
             dn = row[0]
             result_dns.append(dn)
     elif ":" in q:
+        logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
         map_attrs = {
             "firstname": ("givenname", "nickname",),
@@ -83,6 +87,7 @@ def do_ldap_query(q, admin=False):
                 cat, val = p.split(">")
                 sep = ">="
             else:
+                logger.debug("Advanced fallback: {}".format(p))
                 # Fall back on regular searching (there's no key)
 
                 # Wildcards are already implied at the start and end
@@ -91,22 +96,42 @@ def do_ldap_query(q, admin=False):
                 if p.startswith("*"):
                     p = p[1:]
 
+                exact = False
+                if p.startswith('"') and p.endswith('"'):
+                    exact = True
+                    p = p[1:-1]
+
                 if len(p) == 0:
                     continue
 
-                inner += (("(|(givenName=*{0})"
-                           "(givenName={0}*)"
-                           "(sn=*{0})"
-                           "(sn={0}*)"
-                           "(iodineUid=*{0})"
-                           "(iodineUid={0}*)") +
-                          ("(mname=*{0})"
-                           "(mname={0}*)" if admin else "") +
-                          ("(nickname=*{0})"
-                           "(nickname={0}*)"
+                if exact:
+                    # No implied wildcard
+                    inner += (("(|(givenName={0})"
+                           "(sn={0})"
+                           "(iodineUid={0})") +
+                          ("(mname={0})" if admin else "") +
+                          ("(nickname={0})"
                            ")")).format(p)
+                else:
+                    # Search firstname, lastname, uid, nickname (+ middlename if admin) with
+                    # implied wildcard at beginning and end of the search string
+                    inner += (("(|(givenName=*{0})"
+                               "(givenName={0}*)"
+                               "(sn=*{0})"
+                               "(sn={0}*)"
+                               "(iodineUid=*{0})"
+                               "(iodineUid={0}*)") +
+                              ("(mname=*{0})"
+                               "(mname={0}*)" if admin else "") +
+                              ("(nickname=*{0})"
+                               "(nickname={0}*)"
+                               ")")).format(p)
 
                 continue  # skip rest of processing
+            logger.debug("Advanced exact: {}".format(p))
+            if val.startswith('"') and val.endswith('"'):
+                # Already exact
+                val = val[1:-1]
 
             cat = cat.lower()
             val = val.lower()
@@ -125,7 +150,6 @@ def do_ldap_query(q, admin=False):
                 val = "tjhsstTeacher"
             elif cat == "type" and val == "student":
                 val = "tjhsstStudent"
-
 
 
             # replace sex:male with sex:m and sex:female with sex:f
@@ -154,28 +178,46 @@ def do_ldap_query(q, admin=False):
             result_dns.append(dn)
 
     else:
+        logger.debug("Simple search")
+        # Non-advanced search; no ":"
         parts = q.split(" ")
         # split on each word
         i = 0
         for p in parts:
-            if p.endswith("*"):
-                p = p[:-1]
-            if p.startswith("*"):
-                p = p[1:]
+            exact = False
+            logger.debug(p)
+            if p.startswith('"') and p.endswith('"'):
+                exact = True
+                p = p[1:-1]
 
-            # Search for first, last, middle, nickname uid, with implied
-            # wildcard at beginning and end
-            query = (("(&(|(givenName=*{0})"
-                      "(givenName={0}*)"
-                      "(sn=*{0})"
-                      "(sn={0}*)"
-                      "(iodineUid=*{0})"
-                      "(iodineUid={0}*)") +
-                     ("(mname=*{0})"
-                      "(mname={0}*)" if admin else "") +
-                     ("(nickname=*{0})"
-                      "(nickname={0}*)"
+            if exact:
+                logger.debug("Simple exact: {}".format(p))
+                # No implied wildcard
+                query = (("(&(|(givenName={0})"
+                      "(sn={0})"
+                      "(iodineUid={0})") +
+                     ("(mname={0})" if admin else "") +
+                     ("(nickname={0})"
                       ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
+            else:
+                logger.debug("Simple wildcard: {}".format(p))
+                if p.endswith("*"):
+                    p = p[:-1]
+                if p.startswith("*"):
+                    p = p[1:]
+                # Search for first, last, middle, nickname uid, with implied
+                # wildcard at beginning and end
+                query = (("(&(|(givenName=*{0})"
+                          "(givenName={0}*)"
+                          "(sn=*{0})"
+                          "(sn={0}*)"
+                          "(iodineUid=*{0})"
+                          "(iodineUid={0}*)") +
+                         ("(mname=*{0})"
+                          "(mname={0}*)" if admin else "") +
+                         ("(nickname=*{0})"
+                          "(nickname={0}*)"
+                          ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
 
             logger.debug("Running LDAP query: {}".format(query))
 
@@ -203,7 +245,12 @@ def do_ldap_query(q, admin=False):
 
 def get_search_results(q, admin=False):
     q = q.replace("+", " ")
-    users = do_ldap_query(q, admin)
+    users = []
+
+    queries = q.split(" OR ")
+    for qu in queries:
+        users += do_ldap_query(qu, admin)
+    
     return False, users
 
 
