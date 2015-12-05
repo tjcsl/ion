@@ -46,18 +46,15 @@
                 </div>
             </div>
             <a href="{% if request.user.is_eighthoffice %}/eighth/admin{% else %}/{% endif %}" class="intranet-title">
-                <div class="logo">
-                </div>
-                <h1>
-                    Intranet
-                </h1>
+                <div class="logo"></div>
+                <h1>Intranet</h1>
             </a>
 
             <form class="search" action="/search" method="get" autocomplete="off">
-                    <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" />
-                    <button type="submit" class="search-button">
-                       <i class="fa fa-search"></i>
-                    </button>
+                <input type="search" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" />
+                <button type="submit" class="search-button" aria-label="Search">
+                    <i class="fa fa-search"></i>
+                </button>
             </form>
         </div>
 
@@ -88,14 +85,14 @@
                 <div class="dropdown-item-wrapper">
                     <i class="fa fa-user"></i><span class="user-name">{{ request.user.first_name }}</span><i class="fa fa-caret-down"></i>
                 </div>
-                    <ul class="dropdown-menu">
-                        <div class="arrow"></div>
-                        <li><a href="{% url 'user_profile'%}"><i class="fa fa-user"></i> My Profile</a></li>
-                        <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> Preferences</a></li>
-                        <li><a href="{% url 'about' %}"><i class="fa fa-info-circle"></i> About/Credits</a></li>
-                        <li><a href="{% url 'send_feedback' %}" style="color: green"><i class="fa fa-smile-o"></i> Send Feedback</a>
-                        <li><a href="{% url 'logout'%}"><i class="fa fa-power-off"></i> Logout</a></li>
-                    </ul>
+                <ul class="dropdown-menu">
+                    <div class="arrow"></div>
+                    <li><a href="{% url 'user_profile'%}"><i class="fa fa-user"></i> My Profile</a></li>
+                    <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> Preferences</a></li>
+                    <li><a href="{% url 'about' %}"><i class="fa fa-info-circle"></i> About/Credits</a></li>
+                    <li><a href="{% url 'send_feedback' %}" style="color:green"><i class="fa fa-smile-o"></i> Send Feedback</a></li>
+                    <li><a href="{% url 'logout'%}"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
             </li>
         </ul>
     </div>
