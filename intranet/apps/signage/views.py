@@ -27,13 +27,16 @@ def check_show_eighth(now):
     return (12 < now.time().hour < 16)
 
 
-def signage_display(request, display_id):
+def signage_display(request, display_id=None):
     try:
         sign = Sign.objects.get(display=display_id)
         sign_status = sign.status
     except Sign.DoesNotExist:
         sign = None
         sign_status = "auto"
+
+    if "status" in request.GET:
+        sign_status = request.GET.get("status")
 
     suffix = "id={}".format(display_id)
     if "mac" in request.GET:
@@ -43,22 +46,22 @@ def signage_display(request, display_id):
     if sign_status == "eighth":
         #return eighth_signage(request, None, sign.block_increment)
         if sign and sign.eighth_block_increment:
-            iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
+            iframe = "/signage/eighth?no_reload&block_increment={}&".format(sign.eighth_block_increment)
         else:
-            iframe = "/signage/eighth"
+            iframe = "/signage/eighth?no_reload&"
         return iframe_signage(request, iframe)
     elif sign_status == "schedule":
         return schedule_signage(request)
     elif sign_status == "status":
         return status_signage(request)
     elif sign_status == "url" or "url" in request.GET:
-        return iframe_signage(request, request.GET.get('url') or sign.url)
+        return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
                 iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
-                iframe = "/signage/eighth"
+                iframe = "/signage/eighth?no_reload&"
             return iframe_signage(request, iframe)
         else:
             return status_signage(request)
@@ -69,6 +72,7 @@ def signage_display(request, display_id):
 def schedule_signage(request):
     context = schedule_context(request)
     context["signage"] = True
+    context["hide_arrows"] = True
     return render(request, "schedule/embed.html", context)
 
 def status_signage(request):

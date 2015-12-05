@@ -1,9 +1,9 @@
 {% load staticfiles %}
 
 <div class="schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}" data-date="{{ sched_ctx.date_today }}">
-    <a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left" title="Previous Day"><i class="fa fa-chevron-left"></i></a>
+    {% if not hide_arrows %}<a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left" title="Previous Day"><i class="fa fa-chevron-left"></i></a>{% endif %}
     <span class="schedule-date">{{ sched_ctx.date|date:"D, N j" }}</span>
-    <a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right" title="Next Day"><i class="fa fa-chevron-right"></i></a>
+    {% if not hide_arrows %}<a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right" title="Next Day"><i class="fa fa-chevron-right"></i></a>{% endif %}
     <br>
     {% if sched_ctx.dayobj %}
         <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name|safe }}{% if sched_ctx.comment %} {{ sched_ctx.comment }}{% endif %}</h2>

@@ -59,7 +59,7 @@
             $(".time").html(hr + ":" + min);
         }, 1000);
 
-        setTimeout(function() { location=location; }, 60 * 60 * 1000)
+        setTimeout(function() { location=location; }, 20 * 60 * 1000)
     })
     </script>
 </head>
@@ -71,7 +71,9 @@
             <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
             <div class="time">&nbsp;</div>
             <div class="schedule-outer">
+            {% with hide_arrows=1 %}
                 {% include "schedule/view.html" %}
+            {% endwith %}
             </div>
         </div>
     </div>
