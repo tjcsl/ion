@@ -1,9 +1,6 @@
-{% include "email_header.html" %}
-<meta itemprop="description" content="Announcement Approved: {{ formdata.title }}"/>
-<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
-  <link itemprop="target" href="{{ info_link }}"/>
-  <meta itemprop="name" content="Approve/Reject post"/>
-</div>
+{% with description="Approve announcement",target=info_link,name="Approve/Reject announcement" %}
+    {% include "email_metadata.html" %}
+{% endif %}
 
 <p>The following news post was approved by a sponsor and is in the approval queue:</p>
 <b>Title:</b> {{ formdata.title }}<br />

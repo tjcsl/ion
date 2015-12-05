@@ -1,9 +1,6 @@
-{% include "email_header.html" %}
-<meta itemprop="description" content="Event Pending: {{ event.title }}"/>
-<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
-  <link itemprop="target" href="{{ info_link }}"/>
-  <meta itemprop="name" content="Approve/Reject event"/>
-</div>
+{% with description="Approve event",target=info_link,name="Approve/Reject event" %}
+    {% include "email_metadata.html" %}
+{% endif %}
 
 <p>The following event is in the approval queue:</p>
 <b>Title:</b> {{ event.title }}<br />

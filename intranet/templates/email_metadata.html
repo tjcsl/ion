@@ -1,0 +1,17 @@
+<div itemscope itemtype="http://schema.org/EmailMessage">
+    {% if description %}
+        <meta itemprop="description" content="{{ description }}" />
+    {% endif %}
+    {% if target and name %}
+    <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+        <link itemprop="target" href="{{ target }}" />
+        <meta itemprop="name" content="{{ name }}" />
+    </div>
+    {% endif %}
+    {% if base_url %}
+    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content="TJ Intranet" />
+        <link itemprop="url" href="{{ base_url }}" />
+    </div>
+    {% endif %}
+</div>

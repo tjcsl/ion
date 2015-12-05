@@ -56,7 +56,8 @@ def signup_status_email(user, next_blocks):
         "date_str": date_str,
         "block_signup_time": block_signup_time,
         "base_url": base_url,
-        "issues": issues
+        "issues": issues,
+        "info_link": base_url + "eighth/signup"
     }
 
     email_send("eighth/emails/signup_status.txt",
@@ -83,7 +84,8 @@ def absence_email(signup):
         "user": user,
         "signup": signup,
         "num_absences": num_absences,
-        "base_url": base_url
+        "base_url": base_url,
+        "info_link": base_url + "eighth/absences"
     }
 
     email_send("eighth/emails/absence.txt",

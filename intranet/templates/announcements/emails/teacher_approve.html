@@ -1,9 +1,6 @@
-{% include "email_header.html" %}
-<meta itemprop="description" content="Announcement Requested: {{ formdata.title }}"/>
-<div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
-  <link itemprop="target" href="{{ info_link }}"/>
-  <meta itemprop="name" content="Approve/Reject post"/>
-</div>
+{% with description="Announcement needs approval",target=info_link,name="Approve/Reject announcement" %}
+    {% include "email_metadata.html" %}
+{% endif %}
 
 <p>{{ user.full_name }} ({{ user }}) submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are:</p>
 <b>Title:</b> {{ formdata.title }}<br />
