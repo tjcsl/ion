@@ -277,7 +277,14 @@ def modify_announcement_view(request, id=None):
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, "announcements/add_modify.html", {"form": form, "action": "modify", "id": id})
+
+    context = {
+        "form": form,
+        "action": "modify", 
+        "id": id,
+        "announcement": announcement
+    }
+    return render(request, "announcements/add_modify.html", context)
 
 
 @announcements_admin_required
