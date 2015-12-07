@@ -64,19 +64,17 @@
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
 
+    <script type="text/javascript">
     {% if request.GET.activity %}
-        <script type="text/javascript">
         $(function() {
                 $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
         })
-        </script>
     {% elif active_block_current_signup %}
-        <script type="text/javascript">
         $(function() {
                 $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
         })
-        </script>
     {% endif %}
+    </script>
 {% endblock %}
 
 {% block main %}
