@@ -132,7 +132,6 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE_CLASSES = [
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -147,6 +146,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.access_log.AccessLogMiddleWare",
     "corsheaders.middleware.CorsMiddleware",
     "intranet.middleware.traceback.UserTracebackMiddleware",
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
