@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.query &mdash; TJ Intranet v3 (Build #1054) documentation</title>
+    <title>django.db.models.query &mdash; TJ Intranet v3 (Build #1055) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1054)',
+        VERSION:     'v3 (Build #1055)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1054) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1055) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for django.db.models.query</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -1083,10 +1083,10 @@
                                              <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">base_queryset_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;_base_queryset_class&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">klass</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">klass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
-            <span class="n">base_queryset_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;_base_queryset_class&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="n">base_queryset_class</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">base_queryset_class</span><span class="p">)):</span>
             <span class="n">class_bases</span> <span class="o">=</span> <span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">base_queryset_class</span><span class="p">)</span>
             <span class="n">class_dict</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s">&#39;_base_queryset_class&#39;</span><span class="p">:</span> <span class="n">base_queryset_class</span><span class="p">,</span>
@@ -1777,10 +1777,24 @@
         <span class="n">rel_attr_val</span> <span class="o">=</span> <span class="n">rel_obj_attr</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">)</span>
         <span class="n">rel_obj_cache</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rel_attr_val</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rel_obj</span><span class="p">)</span>
 
+    <span class="n">to_attr</span><span class="p">,</span> <span class="n">as_attr</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">get_current_to_attr</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="c"># Make sure `to_attr` does not conflict with a field.</span>
+    <span class="k">if</span> <span class="n">as_attr</span> <span class="ow">and</span> <span class="n">instances</span><span class="p">:</span>
+        <span class="c"># We assume that objects retrieved are homogeneous (which is the premise</span>
+        <span class="c"># of prefetch_related), so what applies to first object applies to all.</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">to_attr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FieldDoesNotExist</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;to_attr={} conflicts with a field on the {} model.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">to_attr</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+
     <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
         <span class="n">instance_attr_val</span> <span class="o">=</span> <span class="n">instance_attr</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">rel_obj_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance_attr_val</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="n">to_attr</span><span class="p">,</span> <span class="n">as_attr</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">get_current_to_attr</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">single</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">vals</span> <span class="k">else</span> <span class="bp">None</span>
             <span class="n">to_attr</span> <span class="o">=</span> <span class="n">to_attr</span> <span class="k">if</span> <span class="n">as_attr</span> <span class="k">else</span> <span class="n">cache_name</span>
