@@ -5,3 +5,6 @@ class Feedback(models.Model):
     user = models.ForeignKey(User)
     comments = models.CharField(max_length=50000)
     date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-date"]
