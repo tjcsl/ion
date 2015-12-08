@@ -69,6 +69,19 @@ def get_bg_pattern():
 
     return static(file_path + random.choice(files))
 
+def get_login_theme():
+    """
+    Load a custom login theme (e.x. snow)
+    """
+    today = datetime.now().date()
+    if today.month == 12 or today.month == 1:
+        # Snow
+        return {
+            "js": "themes/snow/snow.js",
+            "css": "themes/snow/snow.css"
+        }
+    return {}
+
 
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
@@ -82,7 +95,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             "auth_form": auth_form,
             "request": request,
             "git_info": settings.GIT,
-            "bg_pattern": get_bg_pattern()
+            "bg_pattern": get_bg_pattern(),
+            "theme": get_login_theme()
         }
         schedule = schedule_context(request)
         data.update(schedule)
