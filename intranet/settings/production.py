@@ -61,18 +61,18 @@ if SHOW_DEBUG_TOOLBAR:
     })
 
 
-class glob_list(list):
+class ip_list(list):
 
-    """A list of glob-style strings."""
+    """A list of IP address strings."""
 
     def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
+        """Check if a string matches an IP range in the list."""
         for item in self:
             if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
                 return True
         return False
 
-INTERNAL_IPS = glob_list([
+INTERNAL_IPS = ip_list([
     "127.0.0.0/8",
     "198.38.16.0/20",
     "2001:468:cc0::/48"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from fnmatch import fnmatch
+import ipaddress
 import logging
 from .base import *
 
@@ -48,23 +48,22 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
     for key in CACHE_AGE:
         CACHE_AGE[key] = 60
 
+class ip_list(list):
 
-class glob_list(list):
-
-    """A list of glob-style strings."""
+    """A list of IP address strings."""
 
     def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-        for elt in self:
-            if fnmatch(key, elt):
+        """Check if a string matches an IP range in the list."""
+        for item in self:
+            if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
                 return True
         return False
 
-INTERNAL_IPS = glob_list([
-    "127.0.0.1",
-    "192.*.*.*",
-    "10.*.*.*",
-    "198.38.*.*"
+INTERNAL_IPS = ip_list([
+    "127.0.0.0/8",
+    "192.168.0.0/16",
+    "198.38.16.0/20",
+    "2001:468:cc0::/48"
 ])
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
