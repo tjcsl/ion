@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.utils.functional &mdash; TJ Intranet v3 (Build #1056) documentation</title>
+    <title>django.utils.functional &mdash; TJ Intranet v3 (Build #1057) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1056)',
+        VERSION:     'v3 (Build #1057)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1056) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1057) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="col-md-12">
       
   <h1>Source code for django.utils.functional</h1><div class="highlight"><pre>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -152,6 +152,7 @@
 
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">django.utils.deprecation</span> <span class="kn">import</span> <span class="n">RemovedInDjango19Warning</span>
+<span class="kn">from</span> <span class="nn">django.utils.six.moves</span> <span class="kn">import</span> <span class="n">copyreg</span>
 
 
 <span class="c"># You can&#39;t trivially replace this with `functools.partial` because this binds</span>
@@ -413,30 +414,32 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;subclasses of LazyObject must provide a _setup() method&#39;</span><span class="p">)</span>
 
     <span class="c"># Because we have messed with __class__ below, we confuse pickle as to what</span>
-    <span class="c"># class we are pickling. We&#39;re going to have to initialize the wrapped</span>
-    <span class="c"># object to successfully pickle it, so we might as well just pickle the</span>
-    <span class="c"># wrapped object since they&#39;re supposed to act the same way.</span>
-    <span class="c">#</span>
-    <span class="c"># Unfortunately, if we try to simply act like the wrapped object, the ruse</span>
-    <span class="c"># will break down when pickle gets our id(). Thus we end up with pickle</span>
-    <span class="c"># thinking, in effect, that we are a distinct object from the wrapped</span>
-    <span class="c"># object, but with the same __dict__. This can cause problems (see #25389).</span>
-    <span class="c">#</span>
-    <span class="c"># So instead, we define our own __reduce__ method and custom unpickler. We</span>
-    <span class="c"># pickle the wrapped object as the unpickler&#39;s argument, so that pickle</span>
-    <span class="c"># will pickle it normally, and then the unpickler simply returns its</span>
-    <span class="c"># argument.</span>
-    <span class="k">def</span> <span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c"># class we are pickling. It also appears to stop __reduce__ from being</span>
+    <span class="c"># called. So, we define __getstate__ in a way that cooperates with the way</span>
+    <span class="c"># that pickle interprets this class.  This fails when the wrapped class is</span>
+    <span class="c"># a builtin, but it is better than nothing.</span>
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">unpickle_lazyobject</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span><span class="o">.</span><span class="n">__dict__</span>
 
-    <span class="c"># We have to explicitly override __getstate__ so that older versions of</span>
-    <span class="c"># pickle don&#39;t try to pickle the __dict__ (which in the case of a</span>
-    <span class="c"># SimpleLazyObject may contain a lambda). The value will end up being</span>
-    <span class="c"># ignored by our __reduce__ and custom unpickler.</span>
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{}</span>
+    <span class="c"># Python 3.3 will call __reduce__ when pickling; this method is needed</span>
+    <span class="c"># to serialize and deserialize correctly.</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__newobj__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">proto</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c"># On Py3, since the default protocol is 3, pickle uses the</span>
+            <span class="c"># ``__newobj__`` method (&amp; more efficient opcodes) for writing.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__newobj__</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># On Py2, the default protocol is 0 (for back-compat) &amp; the above</span>
+            <span class="c"># code fails miserably (see regression test). Instead, we return</span>
+            <span class="c"># exactly what&#39;s returned if there&#39;s no ``__reduce__`` method at</span>
+            <span class="c"># all.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">copyreg</span><span class="o">.</span><span class="n">_reconstructor</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">:</span>
@@ -473,15 +476,6 @@
 
     <span class="n">__len__</span> <span class="o">=</span> <span class="n">new_method_proxy</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
     <span class="n">__contains__</span> <span class="o">=</span> <span class="n">new_method_proxy</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">contains</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">unpickle_lazyobject</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Used to unpickle lazy objects. Just return its argument, which will be the</span>
-<span class="sd">    wrapped object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">wrapped</span>
-<span class="n">unpickle_lazyobject</span><span class="o">.</span><span class="n">__safe_for_unpickling__</span> <span class="o">=</span> <span class="bp">True</span>
 
 
 <span class="c"># Workaround for http://bugs.python.org/issue12370</span>
