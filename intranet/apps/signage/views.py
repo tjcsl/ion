@@ -18,6 +18,7 @@ from ...utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
+
 def check_show_eighth(now):
     next_block = EighthBlock.objects.get_first_upcoming_block()
     if next_block:
@@ -44,7 +45,7 @@ def signage_display(request, display_id=None):
 
     now = datetime.datetime.now()
     if sign_status == "eighth":
-        #return eighth_signage(request, None, sign.block_increment)
+        # return eighth_signage(request, None, sign.block_increment)
         if sign and sign.eighth_block_increment:
             iframe = "/signage/eighth?no_reload&block_increment={}&".format(sign.eighth_block_increment)
         else:
@@ -75,16 +76,19 @@ def schedule_signage(request):
     context["hide_arrows"] = True
     return render(request, "schedule/embed.html", context)
 
+
 def status_signage(request):
     context = schedule_context(request)
     context["signage"] = True
     return render(request, "signage/status.html", context)
+
 
 def iframe_signage(request, url):
     context = schedule_context(request)
     context["signage"] = True
     context["url"] = url
     return render(request, "signage/iframe.html", context)
+
 
 def eighth_signage(request, block_id=None, block_increment=0):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))

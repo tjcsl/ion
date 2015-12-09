@@ -280,7 +280,7 @@ def modify_announcement_view(request, id=None):
 
     context = {
         "form": form,
-        "action": "modify", 
+        "action": "modify",
         "id": id,
         "announcement": announcement
     }

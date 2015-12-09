@@ -31,7 +31,6 @@ def absence_count(request):
 
             if show_notif:
                 request.session['eighth_absence_notif_seen'] = True
-            
 
         return {
             "eighth_absence_count": num_absences,

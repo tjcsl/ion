@@ -69,6 +69,7 @@ def get_bg_pattern():
 
     return static(file_path + random.choice(files))
 
+
 def get_login_theme():
     """
     Load a custom login theme (e.x. snow)

@@ -107,11 +107,11 @@ def do_ldap_query(q, admin=False):
                 if exact:
                     # No implied wildcard
                     inner += (("(|(givenName={0})"
-                           "(sn={0})"
-                           "(iodineUid={0})") +
-                          ("(mname={0})" if admin else "") +
-                          ("(nickname={0})"
-                           ")")).format(p)
+                               "(sn={0})"
+                               "(iodineUid={0})") +
+                              ("(mname={0})" if admin else "") +
+                              ("(nickname={0})"
+                               ")")).format(p)
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
                     # implied wildcard at beginning and end of the search string
@@ -150,7 +150,6 @@ def do_ldap_query(q, admin=False):
                 val = "tjhsstTeacher"
             elif cat == "type" and val == "student":
                 val = "tjhsstStudent"
-
 
             # replace sex:male with sex:m and sex:female with sex:f
             if cat == "sex" or cat == "gender":
@@ -194,11 +193,11 @@ def do_ldap_query(q, admin=False):
                 logger.debug("Simple exact: {}".format(p))
                 # No implied wildcard
                 query = (("(&(|(givenName={0})"
-                      "(sn={0})"
-                      "(iodineUid={0})") +
-                     ("(mname={0})" if admin else "") +
-                     ("(nickname={0})"
-                      ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
+                          "(sn={0})"
+                          "(iodineUid={0})") +
+                         ("(mname={0})" if admin else "") +
+                         ("(nickname={0})"
+                          ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))")).format(p)
             else:
                 logger.debug("Simple wildcard: {}".format(p))
                 if p.endswith("*"):
@@ -250,7 +249,7 @@ def get_search_results(q, admin=False):
     queries = q.split(" OR ")
     for qu in queries:
         users += do_ldap_query(qu, admin)
-    
+
     return False, users
 
 
