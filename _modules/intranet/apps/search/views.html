@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1061) documentation</title>
+    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1062) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1061)',
+        VERSION:     'v3 (Build #1062)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1061) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1062) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -253,11 +253,11 @@
                 <span class="k">if</span> <span class="n">exact</span><span class="p">:</span>
                     <span class="c"># No implied wildcard</span>
                     <span class="n">inner</span> <span class="o">+=</span> <span class="p">((</span><span class="s">&quot;(|(givenName={0})&quot;</span>
-                           <span class="s">&quot;(sn={0})&quot;</span>
-                           <span class="s">&quot;(iodineUid={0})&quot;</span><span class="p">)</span> <span class="o">+</span>
-                          <span class="p">(</span><span class="s">&quot;(mname={0})&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-                          <span class="p">(</span><span class="s">&quot;(nickname={0})&quot;</span>
-                           <span class="s">&quot;)&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                               <span class="s">&quot;(sn={0})&quot;</span>
+                               <span class="s">&quot;(iodineUid={0})&quot;</span><span class="p">)</span> <span class="o">+</span>
+                              <span class="p">(</span><span class="s">&quot;(mname={0})&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+                              <span class="p">(</span><span class="s">&quot;(nickname={0})&quot;</span>
+                               <span class="s">&quot;)&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c"># Search firstname, lastname, uid, nickname (+ middlename if admin) with</span>
                     <span class="c"># implied wildcard at beginning and end of the search string</span>
@@ -296,7 +296,6 @@
                 <span class="n">val</span> <span class="o">=</span> <span class="s">&quot;tjhsstTeacher&quot;</span>
             <span class="k">elif</span> <span class="n">cat</span> <span class="o">==</span> <span class="s">&quot;type&quot;</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">==</span> <span class="s">&quot;student&quot;</span><span class="p">:</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="s">&quot;tjhsstStudent&quot;</span>
-
 
             <span class="c"># replace sex:male with sex:m and sex:female with sex:f</span>
             <span class="k">if</span> <span class="n">cat</span> <span class="o">==</span> <span class="s">&quot;sex&quot;</span> <span class="ow">or</span> <span class="n">cat</span> <span class="o">==</span> <span class="s">&quot;gender&quot;</span><span class="p">:</span>
@@ -340,11 +339,11 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Simple exact: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
                 <span class="c"># No implied wildcard</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;(&amp;(|(givenName={0})&quot;</span>
-                      <span class="s">&quot;(sn={0})&quot;</span>
-                      <span class="s">&quot;(iodineUid={0})&quot;</span><span class="p">)</span> <span class="o">+</span>
-                     <span class="p">(</span><span class="s">&quot;(mname={0})&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-                     <span class="p">(</span><span class="s">&quot;(nickname={0})&quot;</span>
-                      <span class="s">&quot;)(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                          <span class="s">&quot;(sn={0})&quot;</span>
+                          <span class="s">&quot;(iodineUid={0})&quot;</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="p">(</span><span class="s">&quot;(mname={0})&quot;</span> <span class="k">if</span> <span class="n">admin</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="p">(</span><span class="s">&quot;(nickname={0})&quot;</span>
+                          <span class="s">&quot;)(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Simple wildcard: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">):</span>
@@ -396,7 +395,7 @@
     <span class="n">queries</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; OR &quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">qu</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
         <span class="n">users</span> <span class="o">+=</span> <span class="n">do_ldap_query</span><span class="p">(</span><span class="n">qu</span><span class="p">,</span> <span class="n">admin</span><span class="p">)</span>
-    
+
     <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">users</span>
 
 </div>
