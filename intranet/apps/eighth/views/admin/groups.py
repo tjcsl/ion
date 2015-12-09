@@ -119,7 +119,7 @@ def edit_group_view(request, group_id):
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
-        filetext += chunk
+        filetext += unicode(chunk, "ISO-8859-1")
     return filetext
 
 
