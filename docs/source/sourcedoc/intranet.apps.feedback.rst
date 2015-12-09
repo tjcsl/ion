@@ -12,6 +12,14 @@ intranet.apps.feedback.forms module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.feedback.models module
+------------------------------------
+
+.. automodule:: intranet.apps.feedback.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.feedback.urls module
 ----------------------------------
 
