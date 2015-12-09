@@ -24,7 +24,7 @@ def check_show_eighth(now):
         if next_block.date != now.date():
             return False
 
-    return (12 < now.time().hour < 16)
+    return (8 < now.time().hour < 16)
 
 
 def signage_display(request, display_id=None):
