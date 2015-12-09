@@ -2,19 +2,17 @@
     {% include "email_metadata.html" %}
 {% endwith %}
 
-<p>
+{% autoescape off %}
+{{ announcement.content }}
+{% endautoescape %}
+
+<p>Posted by
 {% if announcement.author %}
     {{ announcement.author }}
 {% else %}
     {{ announcement.user.full_name }}
-{% endif %} posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
+{% endif %} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}
 </p>
-
-<h2>{{ announcement.title }}</h2>
-
-{% autoescape off %}
-{{ announcement.content|truncatewords_html:30 }}
-{% endautoescape %}
 
 <p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
 

@@ -69,13 +69,13 @@ class AnnouncementRequestForm(forms.ModelForm):
         self.fields["author"].help_text = (
             "If you want this post to have a custom author entry, such as "
             "\"Basket Weaving Club\" or \"TJ Faculty,\" enter that name here. "
-            "Otherwise, your name will appear in this field automatically.")
+            "Otherwise, your name will appear in this field automatically."
+        )
         self.fields["content"].help_text = (
             "The contents of the news post which will appear on Intranet."
         )
         self.fields["expiration_date"].help_text = (
-            "An expiration date for when this post should expire (be not visible). "
-            "To never expire, keep the default value of January 1st, 3000."
+            "By default, announcements expire after two weeks. To change this, click in the box above."
         )
         self.fields["notes"].help_text = (
             "Any information about this announcement you wish to share with the Intranet "
