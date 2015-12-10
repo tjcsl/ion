@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from fnmatch import fnmatch
+import ipaddress
 from six.moves.urllib import parse
 from .base import *
 
@@ -67,14 +67,15 @@ class glob_list(list):
 
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
-        for elt in self:
-            if fnmatch(key, elt):
+        for item in self:
+            if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
                 return True
         return False
 
 INTERNAL_IPS = glob_list([
-    "127.0.0.1",
-    "198.38.*.*"
+    "127.0.0.0/8",
+    "198.38.16.0/20",
+    "2001:468:cc0::/48"
 ])
 
 # MIDDLEWARE_CLASSES += ('intranet.middleware.profiler.ProfileMiddleware',)

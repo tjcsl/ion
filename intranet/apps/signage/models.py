@@ -1,3 +1,34 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.db import models
 
-# Create your models here.
+
+class Sign(models.Model):
+    """
+    name
+        A friendly name for the display
+    display
+        An internal code sent from the display
+    status
+        One of auto, eighth, schedule, status, url
+    eighth_block_increment
+        The block_increment if the status is eighth
+    url
+        The url if the status is url
+    """
+    name = models.CharField(max_length=1000)
+    display = models.CharField(max_length=100, unique=True)
+    STATUSES = (
+        ("auto", "Auto"),
+        ("eighth", "Eighth Period"),
+        ("schedule", "Bell Schedule"),
+        ("status", "Schedule/Clock"),
+        ("url", "Custom URL")
+    )
+    status = models.CharField(max_length=10, choices=STATUSES, default="auto")
+    eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
+    url = models.CharField(max_length=2000, null=True, blank=True)
+
+    def __unicode__(self):
+        return "{} ({})".format(self.name, self.display)

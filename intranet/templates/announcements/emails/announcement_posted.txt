@@ -1,10 +1,8 @@
-{% if announcement.author %}{{ announcement.author }}{% else %}{{ announcement.user.full_name }}{% endif %} posted a new announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
-
-{{ announcement.title }}
-
 {% autoescape off %}
-{{ announcement.content|truncatewords_html:30 }}
+{{ announcement.content }}
 {% endautoescape %}
+
+Posted by {% if announcement.author %}{{ announcement.author }}{% else %}{{ announcement.user.full_name }}{% endif %} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}
 
 View this announcement on Intranet: {{ info_link }}
 

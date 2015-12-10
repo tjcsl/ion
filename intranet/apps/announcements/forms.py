@@ -15,6 +15,10 @@ class AnnouncementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AnnouncementForm, self).__init__(*args, **kwargs)
+        self.fields["expiration_date"].help_text = (
+            "By default, announcements expire after two weeks. To change this, click in the box above."
+        )
+
         self.fields["notify_post"].help_text = (
             "If this box is checked, students who have signed up for notifications "
             "will receive an email. If the announcement is public, a link will be posted on Twitter."
@@ -65,13 +69,13 @@ class AnnouncementRequestForm(forms.ModelForm):
         self.fields["author"].help_text = (
             "If you want this post to have a custom author entry, such as "
             "\"Basket Weaving Club\" or \"TJ Faculty,\" enter that name here. "
-            "Otherwise, your name will appear in this field automatically.")
+            "Otherwise, your name will appear in this field automatically."
+        )
         self.fields["content"].help_text = (
             "The contents of the news post which will appear on Intranet."
         )
         self.fields["expiration_date"].help_text = (
-            "An expiration date for when this post should expire (be not visible). "
-            "To never expire, keep the default value of January 1st, 3000."
+            "By default, announcements expire after two weeks. To change this, click in the box above."
         )
         self.fields["notes"].help_text = (
             "Any information about this announcement you wish to share with the Intranet "

@@ -312,6 +312,6 @@ def stdev(x):
         mean += a
     mean /= float(n)
     for a in x:
-        std += (a - mean)**2
+        std += (a - mean) ** 2
     std = sqrt(std / float(n - 1))
     return std

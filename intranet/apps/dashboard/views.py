@@ -11,6 +11,7 @@ from intranet import settings
 from ..users.models import User
 from ..schedule.views import schedule_context
 from ..announcements.models import Announcement, AnnouncementRequest
+from ..seniors.models import Senior
 from ..eighth.models import (
     EighthBlock, EighthSignup, EighthScheduledActivity
 )
@@ -279,6 +280,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     else:
         dashboard_title = dashboard_header = "Announcements"
 
+    num_senior_destinations = Senior.objects.filled().count()
+
     context = {
         "announcements": announcements,
         "announcements_admin": announcements_admin,
@@ -294,7 +297,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "dashboard_header": dashboard_header,
         "is_student": is_student,
         "is_teacher": is_teacher,
-        "is_senior": is_senior
+        "is_senior": is_senior,
+        "num_senior_destinations": num_senior_destinations
     }
 
     if show_widgets:

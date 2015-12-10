@@ -5,6 +5,7 @@ from django import forms
 from .models import Senior
 from ..users.models import User
 
+
 class SeniorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):

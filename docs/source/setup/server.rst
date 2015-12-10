@@ -108,6 +108,7 @@ Add the Redis service to the default runlevel.
 
 Note: It may be necessary to bump the amount of memory allocated to redis to handle a large number of concurrent sessions.
 Bump the maxmemory config option in redis.conf to at least 256MB.
+Warning: If sessions are constantly being logged-out, this could be a symptom of an insufficently large redis cache.
 
 ------
 Python

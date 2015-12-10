@@ -29,7 +29,7 @@ ADMINS = (
     ("Andrew Hamilton", "ahamilto+ion@tjhsst.edu")
 )
 
-FEEDBACK_EMAIL = "intranet+feedback@lists.tjhsst.edu"
+FEEDBACK_EMAIL = "intranet@lists.tjhsst.edu"
 APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
@@ -132,7 +132,6 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE_CLASSES = [
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
     "intranet.middleware.url_slashes.FixSlashes",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -147,6 +146,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.access_log.AccessLogMiddleWare",
     "corsheaders.middleware.CorsMiddleware",
     "intranet.middleware.traceback.UserTracebackMiddleware",
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
@@ -290,6 +290,7 @@ INSTALLED_APPS = (
     "intranet.apps.search",
     "intranet.apps.schedule",
     "intranet.apps.notifications",
+    "intranet.apps.feedback",
     "intranet.apps.users",
     "intranet.apps.preferences",
     "intranet.apps.files",
@@ -448,23 +449,23 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_long_hash():
     cmd = "git rev-parse HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_info():
     cmd = "git show -s --format=medium HEAD"
-    lines = subprocess.check_output(cmd, shell=True).decode().splitlines()
+    lines = subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().splitlines()
     return "\n".join([lines[0][:14].capitalize(), lines[2][8:]]).replace("   ", " ")
 
 
 def _get_current_commit_date():
     cmd = "git show -s --format=%ci HEAD"
-    return subprocess.check_output(cmd, shell=True).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
 
 
 def _get_current_commit_github_url():
@@ -482,3 +483,4 @@ GIT = {
 SENIOR_GRADUATION = "June 18 2016 19:00:00"
 SENIOR_GRADUATION_YEAR = 2016
 ATTENDANCE_LOCK_HOUR = 20  # 10PM
+CLEAR_ABSENCE_DAYS = 14  # Two weeks

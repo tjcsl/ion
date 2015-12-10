@@ -8,6 +8,7 @@ from django.shortcuts import render
 from intranet import settings
 from ..notifications.emails import email_send
 from .forms import FeedbackForm
+from .models import Feedback
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,9 @@ def send_feedback_view(request):
         if form.is_valid():
             logger.debug("Valid form")
             data = form.cleaned_data
+            logger.info("Feedback")
+            logger.info(data)
+            Feedback.objects.create(user=request.user, comments=data["comments"])
             send_feedback_email(request, data)
             messages.success(request, "Your feedback was sent. Thanks!")
     form = FeedbackForm()

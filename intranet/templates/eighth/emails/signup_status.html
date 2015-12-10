@@ -1,9 +1,11 @@
+<html><body>
+{% with description="You need to update your Eighth Period signup selections." target=info_link name="View status" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
 <p>
-    {% if blocks|length > 1 %}
-        These are your current signup selections
-    {% else %}
-        This is your current signup selection
-    {% endif %} for Eighth Period on {{ block_date }}:</p>
+    {{ blocks|length|pluralize:"This is,These are" }} your current signup selection{{ blocks|length|pluralize }} for Eighth Period on {{ block_date }}:
+</p>
 
 
 {% for blk in blocks %}
@@ -49,3 +51,4 @@
 </p>
 
 {% include "email_footer.html" %}
+</body></html>
