@@ -35,7 +35,7 @@ var numsnowletters=3;
 //Fonts possible for flakes
 var snowtype=new Array("Arial Black","Arial Narrow","Times","Comic Sans MS");
 //Character to be used for flakes
-if(!ie && !android){ // IE doesnt' like it for some reason, and android doesn't either.
+if(!ie){ // IE doesnt' like it for some reason
 	var snowletter=new Array("❄","❅","❆");
 }else{
 	var snowletter="*";
