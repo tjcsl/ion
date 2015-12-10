@@ -213,7 +213,7 @@ def files_type(request, fstype=None):
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            tmpfile = tempfile.TemporaryFile(prefix="ion_{}_{}".format(request.user.username, filebase_escaped))
+            tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped))
             logger.debug(tmpfile)
 
             try:

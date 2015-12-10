@@ -1,0 +1,50 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Print
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/print.css' %}" />
+    <style type="text/css">
+    .primary-content .selectize-control {
+        height: 42px;
+    }
+
+    .primary-content tr th,
+    .primary-content tr td {
+        padding: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+    $(function() {
+        $("#id_printer").selectize();
+    });
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Printing</h2>
+        <table>
+        {{ form.as_table }}
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Print" />
+            </td>
+        </tr>
+        </table>
+    </form>
+
+    </div>
+{% endblock %}

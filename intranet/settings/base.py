@@ -294,6 +294,7 @@ INSTALLED_APPS = (
     "intranet.apps.users",
     "intranet.apps.preferences",
     "intranet.apps.files",
+    "intranet.apps.printing",
     "intranet.apps.polls",
     "intranet.apps.signage",
     "intranet.apps.seniors",
