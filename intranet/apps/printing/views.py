@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import magic
 import os
 import subprocess
 import tempfile
@@ -39,6 +40,39 @@ def get_file_string(fileobj):
         filetext += unicode(chunk, "ISO-8859-1")
     return filetext
 
+def convert_soffice(tmpfile_name):
+    proc = subprocess.Popen(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stdout=subprocess.PIPE)
+    (output, err) = proc.communicate()
+    if err:
+        return False
+
+    if " -> " in output and " using " in output:
+        fileout = output.split(" -> ")[1]
+        fileout = fileout.split(" using ")[0]
+        return fileout
+
+    return False
+
+def convert_file(tmpfile_name):
+    mime = magic.Magic(mime=True)
+    detected = mime.from_file(tmpfile_name)
+    NO_CONVERSION = [
+        "application/pdf",
+        "application/postscript"
+    ]
+    SOFFICE_CONVERT = [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/msword"
+    ]
+    if detected in NO_CONVERSION:
+        return tmpfile_name
+
+    # .docx
+    if detected in SOFFICE_CONVERT:
+        return convert_soffice(tmpfile_name)
+
+    return Exception("Not sure how to handle a file of type {}".format(detected))
+
 def print_job(obj):
     logger.debug(obj)
 
@@ -62,6 +96,12 @@ def print_job(obj):
             dest.write(chunk)
 
     logger.debug(tmpfile_name)
+
+    tmpfile_name = convert_file(tmpfile_name)
+    logger.debug(tmpfile_name)
+    
+    if not tmpfile_name:
+        return Exception("Could not convert file.")
 
     proc = subprocess.Popen(["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)], stdout=subprocess.PIPE)
     (output, err) = proc.communicate()
