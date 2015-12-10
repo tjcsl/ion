@@ -84,6 +84,17 @@ Create the production Ion database.
     $ createdb -h localhost ion
     $ createdb -h localhost ion-dev
 
+
+---
+Libreoffice
+---
+
+Install Libreoffice to support printing doc/docx files.
+
+.. code-block:: bash
+
+    $ emerge app-office/libreoffice
+
 -----
 Redis
 -----
