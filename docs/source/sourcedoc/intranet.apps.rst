@@ -19,6 +19,7 @@ Subpackages
     intranet.apps.notifications
     intranet.apps.polls
     intranet.apps.preferences
+    intranet.apps.printing
     intranet.apps.schedule
     intranet.apps.search
     intranet.apps.seniors
