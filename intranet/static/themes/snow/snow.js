@@ -28,6 +28,12 @@ if(mobile) {
 	var snowmax = 100;
 }
 
+if(!window.requestAnimationFrame) {
+	window.requestAnimationFrame = function(f) {
+		return f();
+	}
+}
+
 //Colors possible for flakes
 var snowcolor=new Array("#aaaacc","#ddddFF","#ccccDD");
 // Number of snowflake characters in following array
@@ -359,11 +365,14 @@ function initsnow() {
 		container.appendChild(snowflakes[i]);
 	}
 	if(pile) {
-		setTimeout("movesnow_pile()",30);
+		window.requestAnimationFrame(movesnow_pile)
+		//setTimeout("movesnow_pile()",30);
 	} else if (fastpile) {
-		setTimeout("movesnow_fastpile()",30);
+		window.requestAnimationFrame(movesnow_fastpile);
+		//setTimeout("movesnow_fastpile()",30);
 	} else {
-		setTimeout("movesnow_nopile()",30);
+		window.requestAnimationFrame(movesnow_nopile);
+		//setTimeout("movesnow_nopile()",30);
 	}
 	
 }
@@ -405,7 +414,10 @@ function movesnow_pile() {
 			}
 		}
 	}
-	setTimeout("movesnow_pile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_pile);
+	}, 1000/30);
+	//setTimeout("movesnow_pile()",60);
 }
 function movesnow_nopile() {
 	if (santaexists) {
@@ -425,7 +437,10 @@ function movesnow_nopile() {
 		snowflakes[i].style.top = snowy[i]+"px";
 		snowflakes[i].style.left = (snowflakes[i].x+10*Math.sin(snowy[i]/9))+"px";
 	}
-	setTimeout("movesnow_nopile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_nopile);
+	}, 1000/30);
+	//setTimeout("movesnow_nopile()",60);
 }
 var i=0;
 function movesnow_fastpile() {
@@ -448,7 +463,10 @@ function movesnow_fastpile() {
 		snowflakes[i].style.top = snowy[i]+"px";
 		snowflakes[i].style.left = (snowflakes[i].x+10*Math.sin(snowy[i]/9))+"px";
 	}
-	setTimeout("movesnow_fastpile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_fastpile);
+	}, 1000/30);
+	//setTimeout("movesnow_fastpile()",60);
 }
 var count=0;
 function iterfastpile() {
