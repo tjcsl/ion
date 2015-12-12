@@ -249,7 +249,7 @@ function initsnow() {
 	set_urlvars();
 	container=document.createElement("div");
     container.id="snowcontainer";
-	container.style.position="absolute";
+	container.style.position="fixed";
 	container.style.top="0px";
 	container.style.left="0px";
 	container.style.width="100%";
