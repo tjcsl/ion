@@ -21,13 +21,9 @@ var fastbrowser = false;
 if(!ie) fastbrowser = true;
 //Config
 //Number of flakes
-if(mobile) {
-	var snowmax=20;
-} else if (fastbrowser) {
-	var snowmax=60;
-} else {
-	var snowmax=50;
-}
+
+var snowmax = 100;
+
 //Colors possible for flakes
 var snowcolor=new Array("#aaaacc","#ddddFF","#ccccDD");
 // Number of snowflake characters in following array
@@ -254,6 +250,7 @@ function initsnow() {
 	container.style.left="0px";
 	container.style.width="100%";
 	container.style.height="100%";
+	container.style.marginTop = "-20px";
 	container.style.overflow="hidden";
 	container.style.zIndex="-1";
 	document.body.appendChild(container);
