@@ -22,7 +22,11 @@ if(!ie) fastbrowser = true;
 //Config
 //Number of flakes
 
-var snowmax = 100;
+if(mobile) {
+	var snowmax = 15;
+} else {
+	var snowmax = 100;
+}
 
 //Colors possible for flakes
 var snowcolor=new Array("#aaaacc","#ddddFF","#ccccDD");
