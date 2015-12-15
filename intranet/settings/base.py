@@ -37,6 +37,8 @@ FILE_UPLOAD_HANDLERS = [
     "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
 
+PRINTING_PAGES_LIMIT = 15
+
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
 FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 

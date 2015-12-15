@@ -20,7 +20,6 @@ def get_printers():
     proc = subprocess.Popen(["lpstat", "-a"], stdout=subprocess.PIPE)
     (output, err) = proc.communicate()
     lines = output.split("\n")
-    logger.debug(lines)
     names = []
     for l in lines:
         if "requests since" in l:
@@ -53,12 +52,41 @@ def convert_soffice(tmpfile_name):
 
     return False
 
+def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
+    new_name = "{}.pdf".format(tmpfile_name)
+    proc = subprocess.Popen([cmdname, tmpfile_name, new_name], stdout=subprocess.PIPE)
+    (output, err) = proc.communicate()
+    if err:
+        return False
+
+    if os.path.isfile(new_name):
+        return new_name
+
+    return False
+
+def get_numpages(tmpfile_name):
+    proc = subprocess.Popen(["pdfinfo", tmpfile_name], stdout=subprocess.PIPE)
+    (output, err) = proc.communicate()
+    if err:
+        return False
+
+    lines = output.split("\n")
+    num_pages = -1
+    for l in lines:
+        if l.startswith("Pages:"):
+            try:
+                num_pages = l.split("Pages:")[1].strip()
+                num_pages = int(num_pages)
+            except Exception:
+                num_pages = -1
+
+    return num_pages
+
 def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
     NO_CONVERSION = [
-        "application/pdf",
-        "application/postscript"
+        "application/pdf"
     ]
     SOFFICE_CONVERT = [
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -71,9 +99,12 @@ def convert_file(tmpfile_name):
     if detected in SOFFICE_CONVERT:
         return convert_soffice(tmpfile_name)
 
+    if detected == "application/postscript":
+        return convert_pdf(tmpfile_name, "pdf2ps")
+
     return Exception("Not sure how to handle a file of type {}".format(detected))
 
-def print_job(obj):
+def print_job(obj, do_print=True):
     logger.debug(obj)
 
     printer = obj.printer
@@ -103,8 +134,18 @@ def print_job(obj):
     if not tmpfile_name:
         return Exception("Could not convert file.")
 
-    proc = subprocess.Popen(["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)], stdout=subprocess.PIPE)
-    (output, err) = proc.communicate()
+
+    num_pages = get_numpages(tmpfile_name)
+    obj.num_pages = num_pages
+    obj.save()
+    if num_pages > settings.PRINTING_PAGES_LIMIT:
+        return Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT))
+
+    obj.printed = True
+    obj.save()
+    if do_print:
+        proc = subprocess.Popen(["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)], stdout=subprocess.PIPE)
+        (output, err) = proc.communicate()
 
 @login_required
 def print_view(request):
