@@ -243,10 +243,15 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
-    q = q.replace("+", " ")
-    users = []
+    try:
+        q = q.replace("+", " ")
+        q = q.encode("utf8")
+        users = []
 
-    queries = q.split(" OR ")
+        queries = q.split(" OR ")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return True, []
+
     for qu in queries:
         users += do_ldap_query(qu, admin)
 
