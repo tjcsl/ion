@@ -126,11 +126,6 @@ class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
 
     Attributes:
-        aid
-            The AID (activity ID), not the same as the activity's ID necessarily. By default,
-            it is the same as the assigned ID. However, it can be changed to any alphanumeric
-            string that is between 1-10 characters. Don't set to the internal ID of another
-            activity, or to the AID of another activity.
         name
             The name of the activity, max length 100 characters.
         description
@@ -182,7 +177,6 @@ class EighthActivity(AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    """aid = models.CharField(max_length=10, blank=True) # Should be unique"""
     name = models.CharField(max_length=100)  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
