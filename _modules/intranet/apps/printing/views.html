@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.printing.views &mdash; TJ Intranet v3 (Build #1085) documentation</title>
+    <title>intranet.apps.printing.views &mdash; TJ Intranet v3 (Build #1086) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1085)',
+        VERSION:     'v3 (Build #1086)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1085) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1086) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -166,7 +166,6 @@
     <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&quot;lpstat&quot;</span><span class="p">,</span> <span class="s">&quot;-a&quot;</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
     <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="k">if</span> <span class="s">&quot;requests since&quot;</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
@@ -199,12 +198,41 @@
 
     <span class="k">return</span> <span class="bp">False</span>
 </div>
+<div class="viewcode-block" id="convert_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf">[docs]</a><span class="k">def</span> <span class="nf">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">cmdname</span><span class="o">=</span><span class="s">&quot;ps2pdf&quot;</span><span class="p">):</span>
+    <span class="n">new_name</span> <span class="o">=</span> <span class="s">&quot;{}.pdf&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">new_name</span>
+
+    <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="get_numpages"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_numpages">[docs]</a><span class="k">def</span> <span class="nf">get_numpages</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&quot;pdfinfo&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">num_pages</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;Pages:&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">num_pages</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;Pages:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">num_pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_pages</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">num_pages</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">num_pages</span>
+</div>
 <div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">):</span>
     <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
     <span class="n">NO_CONVERSION</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s">&quot;application/pdf&quot;</span><span class="p">,</span>
-        <span class="s">&quot;application/postscript&quot;</span>
+        <span class="s">&quot;application/pdf&quot;</span>
     <span class="p">]</span>
     <span class="n">SOFFICE_CONVERT</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s">&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;</span><span class="p">,</span>
@@ -217,9 +245,12 @@
     <span class="k">if</span> <span class="n">detected</span> <span class="ow">in</span> <span class="n">SOFFICE_CONVERT</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">convert_soffice</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">detected</span> <span class="o">==</span> <span class="s">&quot;application/postscript&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">,</span> <span class="s">&quot;pdf2ps&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Not sure how to handle a file of type {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detected</span><span class="p">))</span>
 </div>
-<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">do_print</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
     <span class="n">printer</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">printer</span>
@@ -249,8 +280,18 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">tmpfile_name</span><span class="p">:</span>
         <span class="k">return</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Could not convert file.&quot;</span><span class="p">)</span>
 
-    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&quot;lpr&quot;</span><span class="p">,</span> <span class="s">&quot;-P&quot;</span><span class="p">,</span> <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printer</span><span class="p">),</span> <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="n">num_pages</span> <span class="o">=</span> <span class="n">get_numpages</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">num_pages</span> <span class="o">=</span> <span class="n">num_pages</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">num_pages</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;This file contains {} pages. You may only print up to {} pages using this tool.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_pages</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT</span><span class="p">))</span>
+
+    <span class="n">obj</span><span class="o">.</span><span class="n">printed</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">do_print</span><span class="p">:</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s">&quot;lpr&quot;</span><span class="p">,</span> <span class="s">&quot;-P&quot;</span><span class="p">,</span> <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printer</span><span class="p">),</span> <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
 </div>
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="print_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_view">[docs]</a><span class="k">def</span> <span class="nf">print_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
