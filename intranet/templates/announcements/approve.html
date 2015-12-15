@@ -16,7 +16,7 @@
         $(function() {
             var author = $("#id_author");
             {% if admin_approve %}
-                author.attr("placeholder", "{{ req.author }}")
+                author.attr("placeholder", "{% if req.author %}{{ req.author|escape }}{% else %}{{ req.user.full_name|escape }}{% endif %}")
             {% endif %}
             author.attr("placeholder", "{{ user.full_name|escape }}");
         });

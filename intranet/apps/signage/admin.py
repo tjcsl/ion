@@ -5,4 +5,6 @@ from django.contrib import admin
 from .models import Sign
 
 
-admin.site.register(Sign)
+class SignAdmin(admin.ModelAdmin):
+    list_display = ('name', 'display', 'status')
+admin.site.register(Sign, SignAdmin)
