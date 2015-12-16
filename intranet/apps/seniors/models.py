@@ -136,3 +136,6 @@ class Senior(models.Model):
 
     def __unicode__(self):
         return "{}".format(self.user)
+
+    class Meta:
+        ordering = ["user"]
