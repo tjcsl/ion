@@ -100,6 +100,10 @@ class KerberosAuthenticationBackend(object):
         is returned that has the flag is_active=False. (The is_active property in
         the User class returns False when the username starts with "INVALID_USER".)
         """
+
+        # remove all non-alphanumerics
+        username = re.sub('\W', '', username)
+
         krb_ticket = self.get_kerberos_ticket(username, password)
 
         if not krb_ticket:
