@@ -65,7 +65,7 @@ class glob_list(list):
         for item in self:
             try:
                 if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
-                    logger.info("Internal IP: {}".format(item))
+                    logger.info("Internal IP: {}".format(key))
                     return True
             except ValueError:
                 pass
