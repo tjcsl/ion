@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import pexpect
 import uuid
 import os
+import re
 import logging
 from django.contrib.auth.hashers import check_password
 from intranet import settings
