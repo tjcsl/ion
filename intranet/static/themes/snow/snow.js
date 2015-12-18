@@ -22,7 +22,9 @@ if(!ie) fastbrowser = true;
 //Config
 //Number of flakes
 
-if(mobile) {
+if(typeof snowmax != 'undefined') {
+
+} else if(mobile) {
 	var snowmax = 15;
 } else {
 	var snowmax = 100;
@@ -41,18 +43,24 @@ var numsnowletters=3;
 //Fonts possible for flakes
 var snowtype=new Array("Arial Black","Arial Narrow","Times","Comic Sans MS");
 //Character to be used for flakes
-if(!ie){ // IE doesnt' like it for some reason
+if(typeof snowletter != 'undefined') {
+
+} else if(!ie){ // IE doesnt' like it for some reason
 	var snowletter=new Array("❄","❅","❆");
 }else{
 	var snowletter="*";
 }
 //Speed multiplier for the snow falling
-if(fastbrowser) { // They have more elements and do piling. This increases the amount of time it takes for significant slowdown.
+if(typeof sinkspeed != 'undefined') {
+
+} else if(fastbrowser) { // They have more elements and do piling. This increases the amount of time it takes for significant slowdown.
 	var sinkspeed=0.5;
 } else {
-	var sinkspeed=1
+	var sinkspeed=1;
 }
-if(mobile) {
+if(typeof snowmaxsize != 'undefined' && typeof snowminsize != 'undefined') {
+
+} else if(mobile) {
 	//Maximum size of snowflakes
 	var snowmaxsize=44;
 	//Miniumum size of snowflakes
@@ -63,6 +71,9 @@ if(mobile) {
 	//Miniumum size of snowflakes
 	var snowminsize=8;
 }
+
+if(typeof snowfps == 'undefined')
+	snowfps = 30;
 
 //Should the snow pile up?
 var pile=false;
@@ -416,7 +427,7 @@ function movesnow_pile() {
 	}
 	setTimeout(function() {
 		window.requestAnimationFrame(movesnow_pile);
-	}, 1000/30);
+	}, 1000/snowfps);
 	//setTimeout("movesnow_pile()",60);
 }
 function movesnow_nopile() {
@@ -439,7 +450,7 @@ function movesnow_nopile() {
 	}
 	setTimeout(function() {
 		window.requestAnimationFrame(movesnow_nopile);
-	}, 1000/30);
+	}, 1000/snowfps);
 	//setTimeout("movesnow_nopile()",60);
 }
 var i=0;
@@ -465,7 +476,7 @@ function movesnow_fastpile() {
 	}
 	setTimeout(function() {
 		window.requestAnimationFrame(movesnow_fastpile);
-	}, 1000/30);
+	}, 1000/snowfps);
 	//setTimeout("movesnow_fastpile()",60);
 }
 var count=0;
