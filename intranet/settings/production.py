@@ -74,8 +74,12 @@ class glob_list(list):
             key = key.split(",")[0]
 
         for item in self:
-            if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
-                return True
+            try:
+                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
+                    logger.info("Internal IP: {}".format(item))
+                    return True
+            except ValueError:
+                pass
         return False
 
 INTERNAL_IPS = glob_list([
