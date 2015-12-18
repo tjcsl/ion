@@ -144,7 +144,6 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "maintenancemode.middleware.MaintenanceModeMiddleware",
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -154,6 +153,7 @@ MIDDLEWARE_CLASSES = [
     "corsheaders.middleware.CorsMiddleware",
     "intranet.middleware.traceback.UserTracebackMiddleware",
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
+    "maintenancemode.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
