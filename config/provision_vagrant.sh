@@ -92,6 +92,7 @@ sudo -i -u vagrant bash -c "
 "
 source .virtualenvs/ion/bin/activate
 cd intranet
+mkdir -p uploads
 ./manage.py migrate --noinput
 cd ..
 chown -R vagrant: /home/vagrant
