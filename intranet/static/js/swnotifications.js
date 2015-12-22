@@ -16,11 +16,8 @@ function subscribe() {
             .catch(function(e) {
                 if (Notification.permission === 'denied') {
                     console.warn('Permission for Notification is denied');
-                    pushButton.disabled = true;
                 } else {
                     console.error('Unable to subscribe to push', e);
-                    pushButton.disabled = true;
-                    pushButton.textContent = 'Enable Push Messages';
                 }
             }
         );

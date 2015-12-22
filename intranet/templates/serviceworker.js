@@ -13,8 +13,10 @@ self.addEventListener('push', function(event) {
         console.debug("Fetching data text...")
         fetch("/notifications/chrome/getdata", { credentials: 'include' }).then(function(r) {
             console.debug(r);
-            var j = r.json();
+            return r.json();
+        }).then(function(j) {
             console.debug(j);
+            if(j == null) return;
             showNotif(evt, j);
         });
     }
@@ -22,10 +24,10 @@ self.addEventListener('push', function(event) {
     
     showNotif = function(event, data) {
         //replace with message data fetched from Ion API/DB based on logged in user's UID
-        var title = data.title || "[Unable to fetch title]";
-        var body = data.text || "Click here for more information."
-        var icon = '/static/img/logos/touch/touch-icon128.png';
-        var tag = data.tag || 'ion-notification';
+        var title = data.title || "Intranet Notification";
+        var body = data.text || "Click here to view."
+        var icon = '/static/img/logos/touch/touch-icon192.png';
+        var tag = data.url ? "url="+data.url : (data.tag || 'ion-notification');
 
         self.registration.showNotification(title, {
             body: body,
@@ -42,11 +44,21 @@ self.addEventListener('notificationclick', function (event) {
 
     event.notification.close();
 
-    var tagUrl = '/';
+    tagUrl = '/?src=sw';
     var tags = tag.split("=");
     if(tags[0] == "url") {
         tagUrl = "/"+tags[1];
+        if(tagUrl.indexOf("?") == -1) {
+            tagUrl += "?src=sw";
+        } else {
+            tagUrl += "&src=sw";
+        }
+        if(tagUrl.substring(0,2) == "//") {
+            tagUrl = "/" + tagUrl.substring(2);
+        }
     }
+
+    console.log("tagUrl: ", tagUrl);
 
     event.waitUntil(
         clients.matchAll({

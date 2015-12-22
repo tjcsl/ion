@@ -63,17 +63,15 @@ def chrome_getdata_view(request):
             ndata = notif.data
             data = {
                 "title": ndata['title'],
-                "text": ndata['text']
+                "text": ndata['text'],
+                "url": ndata['url']
             }
         else:
-            data = {
-                "title": "[Unknown title]",
-                "text": "[Unknown text]"
-            }
+            return HttpResponse("null", content_type="text/json")
     else:
         data = {
             "title": "Check Intranet",
-            "text": "You have a notification waiting that couldn't be loaded right now."
+            "text": "You have a new notification that couldn't be loaded right now."
         }
     j = json.dumps(data)
     return HttpResponse(j, content_type="text/json")
