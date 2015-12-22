@@ -27,8 +27,17 @@ def check_show_eighth(now):
 
     return (8 < now.time().hour < 16)
 
+def check_internal_ip(request):
+    remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
+    if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
+        return render(request, "error/403.html", {
+            "reason": "You are not authorized to view this page."
+        }, status=403)
 
 def signage_display(request, display_id=None):
+    internal_ip = check_internal_ip(request)
+    if internal_ip: return internal_ip
+
     try:
         sign = Sign.objects.get(display=display_id)
         sign_status = sign.status
@@ -69,33 +78,35 @@ def signage_display(request, display_id=None):
 
     return redirect(url)
 
-
 def schedule_signage(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip: return internal_ip
+
     context = schedule_context(request)
     context["signage"] = True
     context["hide_arrows"] = True
     return render(request, "schedule/embed.html", context)
 
-
 def status_signage(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip: return internal_ip
+
     context = schedule_context(request)
     context["signage"] = True
     return render(request, "signage/status.html", context)
 
-
 def iframe_signage(request, url):
+    internal_ip = check_internal_ip(request)
+    if internal_ip: return internal_ip
+
     context = schedule_context(request)
     context["signage"] = True
     context["url"] = url
     return render(request, "signage/iframe.html", context)
 
-
 def eighth_signage(request, block_id=None, block_increment=0):
-    remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
-    if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
-        return render(request, "error/403.html", {
-            "reason": "You are not authorized to view this page."
-        }, status=403)
+    internal_ip = check_internal_ip(request)
+    if internal_ip: return internal_ip
 
     if block_id is None:
         next_block = EighthBlock.objects.get_first_upcoming_block()

@@ -7,7 +7,7 @@ from six.moves.urllib import parse
 from .base import *
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("intranet_access")
 
 """In production, add a file called secret.py to the settings package that
 defines SECRET_KEY and DATABASE_URL.
@@ -24,8 +24,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
-
-USE_X_FORWARDED_HOST = True
 
 CACHES['default']['OPTIONS']['DB'] = 1
 
@@ -81,7 +79,7 @@ class glob_list(list):
 
         for item in self:
             try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
+                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)) and key != "127.0.0.1":
                     logger.info("Internal IP: {}".format(key))
                     return True
             except ValueError:
