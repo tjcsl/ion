@@ -2,8 +2,12 @@
 from __future__ import unicode_literals
 
 import ipaddress
+import logging
 from six.moves.urllib import parse
 from .base import *
+
+
+logger = logging.getLogger(__name__)
 
 """In production, add a file called secret.py to the settings package that
 defines SECRET_KEY and DATABASE_URL.
