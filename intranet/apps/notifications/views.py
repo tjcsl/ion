@@ -48,6 +48,26 @@ def android_setup_view(request):
 
 
 @login_required
+def chrome_setup_view(request):
+    """Set up a browser-side GCM session.
+    This *requires* a valid login session. A "token" POST parameter is saved under the "chrome_gcm_token"
+    parameter in the logged in user's NotificationConfig.
+
+    """
+    logger.debug(request.POST)
+    if request.method == "POST":
+        if "token" in request.POST:
+            token = request.POST.get("token")
+        else:
+            return HttpResponse('{"error":"Invalid data."}', content_type="text/json")
+    ncfg, _ = NotificationConfig.objects.get_or_create(user=request.user)
+    ncfg.chrome_gcm_token = token
+    ncfg.save()
+    return HttpResponse('{"success":"Now registered."}', content_type="text/json")
+        
+
+
+@login_required
 def gcm_list_view(request):
     if not request.user.has_admin_permission("notifications"):
         return redirect("index")

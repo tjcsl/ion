@@ -9,7 +9,6 @@ self.addEventListener('push', function(event) {
     var icon = '';//url to icon
     var tag = 'simple-push-demo-notification-tag';
 
-
     
     event.waitUntil(
         self.registration.showNotification(title, {

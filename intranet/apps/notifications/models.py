@@ -12,6 +12,9 @@ class NotificationConfig(models.Model):
     android_gcm_time = models.DateTimeField(blank=True, null=True)
     android_gcm_optout = models.BooleanField(default=False)
 
+    chrome_gcm_token = models.CharField(max_length=250, blank=True, null=True)
+    chrome_gcm_time = models.DateTimeField(blank=True, null=True)
+
     def __unicode__(self):
         return "{}".format(self.user)
 
