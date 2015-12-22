@@ -25,6 +25,8 @@ CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
 
+USE_X_FORWARDED_HOST = True
+
 CACHES['default']['OPTIONS']['DB'] = 1
 
 parse.uses_netloc.append("postgres")
