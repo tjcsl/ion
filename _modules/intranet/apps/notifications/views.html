@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.notifications.views &mdash; TJ Intranet v3 (Build #1106) documentation</title>
+    <title>intranet.apps.notifications.views &mdash; TJ Intranet v3 (Build #1107) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1106)',
+        VERSION:     'v3 (Build #1107)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1106) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1107) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -185,12 +185,62 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;No pair&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
 
-            <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_token</span> <span class="o">=</span> <span class="n">gcm_token</span>
+            <span class="n">ncfg</span><span class="o">.</span><span class="n">gcm_token</span> <span class="o">=</span> <span class="n">gcm_token</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_rand</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_date</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid arguments.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+
+</div>
+<span class="nd">@csrf_exempt</span>
+<div class="viewcode-block" id="chrome_getdata_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.chrome_getdata_view">[docs]</a><span class="k">def</span> <span class="nf">chrome_getdata_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the data of the last notification sent to the current user.</span>
+<span class="sd">    This is needed because Chrome, as of version 44, doesn&#39;t support sending a data</span>
+<span class="sd">    payload to a notification. Thus, information on what the notification is actually for</span>
+<span class="sd">    must be manually fetched.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
+        <span class="c"># authenticated session</span>
+        <span class="n">notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sent_to__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-time&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">notifs</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">notif</span> <span class="o">=</span> <span class="n">notifs</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">ndata</span> <span class="o">=</span> <span class="n">notif</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span>
+                <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">],</span>
+                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;url&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;null&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;Check Intranet&quot;</span><span class="p">,</span>
+            <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="s">&quot;You have a new notification that couldn&#39;t be loaded right now.&quot;</span>
+        <span class="p">}</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+
+</div>
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="chrome_setup_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.chrome_setup_view">[docs]</a><span class="k">def</span> <span class="nf">chrome_setup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set up a browser-side GCM session.</span>
+<span class="sd">    This *requires* a valid login session. A &quot;token&quot; POST parameter is saved under the &quot;gcm_token&quot;</span>
+<span class="sd">    parameter in the logged in user&#39;s NotificationConfig.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s">&quot;token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;token&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+    <span class="n">ncfg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">ncfg</span><span class="o">.</span><span class="n">gcm_token</span> <span class="o">=</span> <span class="n">token</span>
+    <span class="n">ncfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+        
 
 </div>
 <span class="nd">@login_required</span>
@@ -210,7 +260,6 @@
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;notifications/gcm_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-
 </div>
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="gcm_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_post_view">[docs]</a><span class="k">def</span> <span class="nf">gcm_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -225,8 +274,8 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;GCM tokens not installed.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
 
-    <span class="c"># exclude those with no GCM token and those who have opted out</span>
-    <span class="n">nc_all</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">android_gcm_token</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">android_gcm_optout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c"># exclude those with no GCM token</span>
+    <span class="n">nc_all</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">gcm_token</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s">&quot;nc_all&quot;</span><span class="p">:</span> <span class="n">nc_all</span><span class="p">,</span>
         <span class="s">&quot;has_tokens&quot;</span><span class="p">:</span> <span class="n">has_tokens</span>
@@ -244,8 +293,8 @@
             <span class="k">except</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="n">nc</span><span class="o">.</span><span class="n">android_gcm_token</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">nc</span><span class="o">.</span><span class="n">android_gcm_optout</span><span class="p">:</span>
-                <span class="n">reg_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nc</span><span class="o">.</span><span class="n">android_gcm_token</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nc</span><span class="o">.</span><span class="n">gcm_token</span><span class="p">:</span>
+                <span class="n">reg_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nc</span><span class="o">.</span><span class="n">gcm_token</span><span class="p">)</span>
                 <span class="n">nc_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fail_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ncid</span><span class="p">)</span>
@@ -271,7 +320,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;https://android.googleapis.com/gcm/send&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="c"># example output:</span>
         <span class="c"># {&quot;multicast_id&quot;:123456,&quot;success&quot;:1,&quot;failure&quot;:0,&quot;canonical_ids&quot;:0,&quot;results&quot;:[{&quot;message_id&quot;:&quot;0:142%771acd&quot;}]}</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>

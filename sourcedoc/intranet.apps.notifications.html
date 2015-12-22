@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.notifications package &mdash; TJ Intranet v3 (Build #1106) documentation</title>
+    <title>intranet.apps.notifications package &mdash; TJ Intranet v3 (Build #1107) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1106)',
+        VERSION:     'v3 (Build #1107)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1106) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1107) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.polls package" href="intranet.apps.polls.html" />
     <link rel="prev" title="intranet.apps.groups package" href="intranet.apps.groups.html" />
@@ -207,6 +207,11 @@ headers: A dict of additional headers to send to the message</p>
 <dd><p>Bases: <a class="reference external" href="http://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.10)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="intranet.apps.notifications.models.GCMNotification.data">
+<code class="descclassname">GCMNotification.</code><code class="descname">data</code><a class="headerlink" href="#intranet.apps.notifications.models.GCMNotification.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="intranet.apps.notifications.models.GCMNotification.get_next_by_time">
 <code class="descclassname">GCMNotification.</code><code class="descname">get_next_by_time</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.notifications.models.GCMNotification.get_next_by_time" title="Permalink to this definition">¶</a></dt>
@@ -236,7 +241,7 @@ headers: A dict of additional headers to send to the message</p>
 
 <dl class="class">
 <dt id="intranet.apps.notifications.models.NotificationConfig">
-<em class="property">class </em><code class="descclassname">intranet.apps.notifications.models.</code><code class="descname">NotificationConfig</code><span class="sig-paren">(</span><em>id</em>, <em>user</em>, <em>android_gcm_token</em>, <em>android_gcm_rand</em>, <em>android_gcm_time</em>, <em>android_gcm_optout</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/models.html#NotificationConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.models.NotificationConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.notifications.models.</code><code class="descname">NotificationConfig</code><span class="sig-paren">(</span><em>id</em>, <em>user</em>, <em>gcm_token</em>, <em>gcm_time</em>, <em>android_gcm_rand</em>, <em>android_gcm_optout</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/models.html#NotificationConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.models.NotificationConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.notifications.models.NotificationConfig.DoesNotExist">
@@ -296,6 +301,23 @@ This does <em>not</em> require a valid login session. Instead, a token from the 
 session is sent to the Android backend, which queries a POST request to this view.</p>
 <p>The &#8220;android_gcm_rand&#8221; is randomly set when the Android app is detected through
 the user agent. If it has the same value, it is assumed to be correct.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.notifications.views.chrome_getdata_view">
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_getdata_view</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_getdata_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_getdata_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data of the last notification sent to the current user.
+This is needed because Chrome, as of version 44, doesn&#8217;t support sending a data
+payload to a notification. Thus, information on what the notification is actually for
+must be manually fetched.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.notifications.views.chrome_setup_view">
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_setup_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_setup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_setup_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a browser-side GCM session.
+This <em>requires</em> a valid login session. A &#8220;token&#8221; POST parameter is saved under the &#8220;gcm_token&#8221;
+parameter in the logged in user&#8217;s NotificationConfig.</p>
 </dd></dl>
 
 <dl class="function">
