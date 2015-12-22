@@ -128,8 +128,8 @@ def gcm_post_view(request):
         messages.error(request, "GCM tokens not installed.")
         return redirect("index")
 
-    # exclude those with no GCM token
-    nc_all = NotificationConfig.objects.exclude(gcm_token=None)
+    # exclude those with no GCM token, or opted out
+    nc_all = NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True)
     context = {
         "nc_all": nc_all,
         "has_tokens": has_tokens

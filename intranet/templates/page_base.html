@@ -31,7 +31,8 @@
             base_url: "{{ ion_base_url }}",
             authenticated: {% if request.user.is_authenticated %}true{% else %}false{% endif %},
             username: {% if request.user.is_authenticated %}"{{ request.user.username|escape }}"{% else %}null{% endif %},
-            gcm_token: {% if request.user.is_authenticated and request.user.notificationconfig.gcm_token %}"{{ request.user.notificationconfig.gcm_token|escape }}"{% else %}null{% endif %}
+            gcm_token: {% if request.user.is_authenticated and request.user.notificationconfig.gcm_token %}"{{ request.user.notificationconfig.gcm_token|escape }}"{% else %}null{% endif %},
+            gcm_optout: {% if request.user.is_authenticated and request.user.notificationconfig %}{% if request.user.notificationconfig.gcm_optout %}true{% else %}false{% endif %}{% else %}null{% endif %}
         };
         </script>
         <script type="text/javascript" src="{% static 'js/swnotifications.js' %}"></script>

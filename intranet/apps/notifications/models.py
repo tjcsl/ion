@@ -9,10 +9,10 @@ class NotificationConfig(models.Model):
     user = models.OneToOneField(User)
     gcm_token = models.CharField(max_length=250, blank=True, null=True)
     gcm_time = models.DateTimeField(blank=True, null=True)
+    gcm_optout = models.BooleanField(default=False)
 
     android_gcm_rand = models.CharField(max_length=100, blank=True, null=True)
-    android_gcm_optout = models.BooleanField(default=False)
-
+    
     def __unicode__(self):
         return "{}".format(self.user)
 

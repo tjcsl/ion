@@ -1,4 +1,4 @@
-if(window.ion.authenticated) {
+if(window.ion.authenticated && !window.ion.gcm_optout) {
     window.addEventListener('load', function() {
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/serviceworker.js', { scope: './' }).then(subscribe);
@@ -34,7 +34,7 @@ function sendSubscriptionToServer(subscription) {
     var token = res[res.length-1]
     console.log(token);
     if(window.ion && window.ion.authenticated) {
-        if(!window.ion.gcm_token || window.ion.gcm_token != token) {
+        if((!window.ion.gcm_token || window.ion.gcm_token != token) && !window.ion.gcm_optout) {
             console.info("Updating GCM token...");
             $.post("/notifications/chrome/setup", {
                 "token": token

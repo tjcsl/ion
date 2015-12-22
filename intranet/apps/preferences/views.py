@@ -245,20 +245,20 @@ def save_notification_options(request, user):
 
 
 def save_gcm_options(request, user):
-    if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token:
+    if request.user.notificationconfig and request.user.notificationconfig.gcm_token:
         receive = ("receive_push_notifications" in request.POST)
         if receive:
             nc = user.notificationconfig
-            if nc.android_gcm_optout is True:
-                nc.android_gcm_optout = False
+            if nc.gcm_optout is True:
+                nc.gcm_optout = False
                 nc.save()
-                messages.success(request, "Enabled Android push notifications")
+                messages.success(request, "Enabled push notifications")
         else:
             nc = user.notificationconfig
-            if nc.android_gcm_optout is False:
-                nc.android_gcm_optout = True
+            if nc.gcm_optout is False:
+                nc.gcm_optout = True
                 nc.save()
-                messages.success(request, "Disabled Android push notifications")
+                messages.success(request, "Disabled push notifications")
 
 
 @login_required
