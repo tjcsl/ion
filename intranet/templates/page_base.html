@@ -26,6 +26,15 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
 
     {% block js %}
+        <script type="text/javascript">
+        window.ion = {
+            base_url: "{{ ion_base_url }}",
+            authenticated: {% if request.user.is_authenticated %}true{% else %}false{% endif %},
+            username: {% if request.user.is_authenticated %}"{{ request.user.username|escape }}"{% else %}null{% endif %},
+            gcm_token: {% if request.user.is_authenticated and request.user.notificationconfig.gcm_token %}"{{ request.user.notificationconfig.gcm_token|escape }}"{% else %}null{% endif %}
+        };
+        </script>
+        <script type="text/javascript" src="{% static 'js/swnotifications.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/vendor/modernizr.js' %}"></script>

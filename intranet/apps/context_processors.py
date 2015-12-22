@@ -6,6 +6,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def ion_base_url(request):
+    """Return the base URL through request.build_absolute_uri for the index page."""
+    return {"ion_base_url": request.build_absolute_uri('/')}
 
 def nav_categorizer(request):
     """Determine which top-level nav category (left nav) a request
