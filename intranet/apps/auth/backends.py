@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import pexpect
 import uuid
 import os
+import re
 import logging
 from django.contrib.auth.hashers import check_password
 from intranet import settings
@@ -100,6 +101,10 @@ class KerberosAuthenticationBackend(object):
         is returned that has the flag is_active=False. (The is_active property in
         the User class returns False when the username starts with "INVALID_USER".)
         """
+
+        # remove all non-alphanumerics
+        username = re.sub('\W', '', username)
+
         krb_ticket = self.get_kerberos_ticket(username, password)
 
         if not krb_ticket:

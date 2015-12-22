@@ -91,5 +91,13 @@ class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     """
 
+    def __init__(self, *args, **kwargs):
+        self.show_username = False
+        if "show_username" in kwargs:
+            self.show_username = kwargs["show_username"]
+            del kwargs["show_username"]
+        super(SortedTeacherMultipleChoiceField, self).__init__(*args, **kwargs)
+
     def label_from_instance(self, obj):
-        return obj.last_first_initial
+        name = obj.last_first_initial
+        return "{} ({})".format(name, obj.username) if self.show_username else name

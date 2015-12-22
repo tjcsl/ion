@@ -82,7 +82,7 @@ class AnnouncementRequestForm(forms.ModelForm):
             "administrators and teachers selected above. If you want to restrict this posting "
             "to a specific group of students, such as the Class of 2016, enter that request here."
         )
-        self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(queryset=User.objects.get_teachers_sorted())
+        self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(queryset=User.objects.get_teachers_sorted(), show_username=True)
         self.fields["teachers_requested"].label = "Sponsor"
         self.fields["teachers_requested"].help_text = (
             "The teacher(s) who will approve your announcement. They will be sent an email "

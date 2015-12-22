@@ -21,13 +21,21 @@ var fastbrowser = false;
 if(!ie) fastbrowser = true;
 //Config
 //Number of flakes
-if(mobile) {
-	var snowmax=20;
-} else if (fastbrowser) {
-	var snowmax=60;
+
+if(typeof snowmax != 'undefined') {
+
+} else if(mobile) {
+	var snowmax = 15;
 } else {
-	var snowmax=50;
+	var snowmax = 100;
 }
+
+if(!window.requestAnimationFrame) {
+	window.requestAnimationFrame = function(f) {
+		return f();
+	}
+}
+
 //Colors possible for flakes
 var snowcolor=new Array("#aaaacc","#ddddFF","#ccccDD");
 // Number of snowflake characters in following array
@@ -35,18 +43,24 @@ var numsnowletters=3;
 //Fonts possible for flakes
 var snowtype=new Array("Arial Black","Arial Narrow","Times","Comic Sans MS");
 //Character to be used for flakes
-if(!ie){ // IE doesnt' like it for some reason
+if(typeof snowletter != 'undefined') {
+
+} else if(!ie){ // IE doesnt' like it for some reason
 	var snowletter=new Array("❄","❅","❆");
 }else{
 	var snowletter="*";
 }
 //Speed multiplier for the snow falling
-if(fastbrowser) { // They have more elements and do piling. This increases the amount of time it takes for significant slowdown.
+if(typeof sinkspeed != 'undefined') {
+
+} else if(fastbrowser) { // They have more elements and do piling. This increases the amount of time it takes for significant slowdown.
 	var sinkspeed=0.5;
 } else {
-	var sinkspeed=1
+	var sinkspeed=1;
 }
-if(mobile) {
+if(typeof snowmaxsize != 'undefined' && typeof snowminsize != 'undefined') {
+
+} else if(mobile) {
 	//Maximum size of snowflakes
 	var snowmaxsize=44;
 	//Miniumum size of snowflakes
@@ -57,6 +71,9 @@ if(mobile) {
 	//Miniumum size of snowflakes
 	var snowminsize=8;
 }
+
+if(typeof snowfps == 'undefined')
+	snowfps = 30;
 
 //Should the snow pile up?
 var pile=false;
@@ -118,17 +135,6 @@ var santaspeed=5;
 var santax=-santawidth;
 var santa;
 
-// Tron Menorah
-var chanukahDay = -1; // which day of Chanukah?
-var menorah, candles, candleParticle;
-if (today.getMonth() == 11 && today.getDate() >= 20 && today.getDate() <= 28) {
-	chanukahDay = (today.getDate() - 20); // Chanukah starts on the evening of the 20th
-	                                      // chanukahDay = 0 until 18:00 when the code below will increment it
-	if (today.getHours() >= 18) { // because each "day" starts at sunset
-		chanukahDay++;
-	}
-	candles = new Array(chanukahDay);
-}
 
 
 function set_urlvars() {
@@ -224,36 +230,18 @@ function resize() {
 	if(fastpile) {
 		fastfillheight=150;
 	}
-	if (menorah) {
-		var loginTable = document.getElementsByTagName("table")[0];
-		menorah.style.left = (loginTable.offsetLeft + 37) + "px";
-		menorah.style.top = (loginTable.offsetTop - 253) + "px";
-		for (var i = 0; i < candles.length; i++) {
-			candles[i].style.top = (menorah.offsetTop + 15) + "px";
-			if (i < 4) {
-				candles[i].style.left = ((menorah.offsetLeft + 283) - (26 * (i))) + "px";
-			} else {
-				candles[i].style.left = ((menorah.offsetLeft + 104) - (25 * (i - 4))) + "px";
-			}
-		}
-		candleParticle.style.top = (menorah.offsetTop + 15) + "px"; // set the top so it lines up with the holders
-		if (chanukahDay - 1 < 4) {
-			candleParticle.style.left = ((menorah.offsetLeft + 283) - (26 * (chanukahDay - 1))) + "px";
-		} else {
-			candleParticle.style.left = ((menorah.offsetLeft + 104) - (25 * (chanukahDay - 5))) + "px";
-		}
-	}
 }
 
 function initsnow() {
 	set_urlvars();
 	container=document.createElement("div");
     container.id="snowcontainer";
-	container.style.position="absolute";
+	container.style.position="fixed";
 	container.style.top="0px";
 	container.style.left="0px";
 	container.style.width="100%";
 	container.style.height="100%";
+	container.style.marginTop = "-20px";
 	container.style.overflow="hidden";
 	container.style.zIndex="-1";
 	document.body.appendChild(container);
@@ -264,51 +252,6 @@ function initsnow() {
 		santa.style.top=Math.floor(Math.random()*screenheight-santaheight)+"px";
 		santa.style.zIndex="-1";
 		container.appendChild(santa);
-	}
-	if (chanukahDay >= 0 && chanukahDay <= 8) { // no Chanukah = no candles
-		menorah = document.createElement("img");
-		menorah.src = snowroot+"menorah.png";
-		menorah.title = "Happy Chanukah!"
-		menorah.style.position = "absolute";
-		var loginTable = document.getElementsByTagName("table")[0]; // get the login box
-		loginTable.style.position = "relative"; // ------------------- and shift
-		loginTable.style.top = "100px"; // --------------------------- it down
-		
-		menorah.style.left = (loginTable.offsetLeft + 37) + "px"; // position the menorah
-		menorah.style.top = (loginTable.offsetTop - 253) + "px"; //  on top of the login box
-		menorah.style.zIndex = "99"; // --------------------------- and make sure it is on top
-
-		container.appendChild(menorah); // then add it to the container
-
-		for (var i = 0; i < candles.length; i++) { // -------- for each candle
-			candles[i] = document.createElement("img"); // create an <img>
-			candles[i].src = snowroot+"flame.gif"; // ---- get the candle animation
-//			candles[i].style.width = "14px";
-//			candles[i].style.height = "16px";
-			candles[i].style.position = "absolute";
-			candles[i].style.top = (menorah.offsetTop + 15) + "px"; // set the top so it lines up with the holders
-			if (i < 4) {
-				candles[i].style.left = ((menorah.offsetLeft + 283) - (26 * (i))) + "px";
-			} else {
-				candles[i].style.left = ((menorah.offsetLeft + 104) - (25 * (i - 4))) + "px";
-			}
-//			candles[i].style.backgroundColor = "cyan";
-			candles[i].style.zIndex = "100"; // make sure it is on top of most stuff
-
-			container.appendChild(candles[i]); // add it to the container too
-		}
-		candleParticle = document.createElement("img"); // create an <img>
-		candleParticle.src = snowroot+"flame_particles.gif"; // ---- get the particle animation
-		candleParticle.style.position = "absolute";
-		candleParticle.style.top = (menorah.offsetTop + 15) + "px"; // set the top so it lines up with the holders
-		if (chanukahDay - 1 < 4) {
-			candleParticle.style.left = ((menorah.offsetLeft + 283) - (26 * (chanukahDay - 1))) + "px";
-		} else {
-			candleParticle.style.left = ((menorah.offsetLeft + 104) - (25 * (chanukahDay - 5))) + "px";
-		}
-		candleParticle.style.zIndex = "101"; // make sure it is on top of most stuff
-
-		container.appendChild(candleParticle); // add it to the container too
 	}
 	if(pile) {
 		for (var i=0; i<heightbuckets; i++) {
@@ -358,11 +301,14 @@ function initsnow() {
 		container.appendChild(snowflakes[i]);
 	}
 	if(pile) {
-		setTimeout("movesnow_pile()",30);
+		window.requestAnimationFrame(movesnow_pile)
+		//setTimeout("movesnow_pile()",30);
 	} else if (fastpile) {
-		setTimeout("movesnow_fastpile()",30);
+		window.requestAnimationFrame(movesnow_fastpile);
+		//setTimeout("movesnow_fastpile()",30);
 	} else {
-		setTimeout("movesnow_nopile()",30);
+		window.requestAnimationFrame(movesnow_nopile);
+		//setTimeout("movesnow_nopile()",30);
 	}
 	
 }
@@ -404,7 +350,10 @@ function movesnow_pile() {
 			}
 		}
 	}
-	setTimeout("movesnow_pile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_pile);
+	}, 1000/snowfps);
+	//setTimeout("movesnow_pile()",60);
 }
 function movesnow_nopile() {
 	if (santaexists) {
@@ -424,7 +373,10 @@ function movesnow_nopile() {
 		snowflakes[i].style.top = snowy[i]+"px";
 		snowflakes[i].style.left = (snowflakes[i].x+10*Math.sin(snowy[i]/9))+"px";
 	}
-	setTimeout("movesnow_nopile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_nopile);
+	}, 1000/snowfps);
+	//setTimeout("movesnow_nopile()",60);
 }
 var i=0;
 function movesnow_fastpile() {
@@ -447,7 +399,10 @@ function movesnow_fastpile() {
 		snowflakes[i].style.top = snowy[i]+"px";
 		snowflakes[i].style.left = (snowflakes[i].x+10*Math.sin(snowy[i]/9))+"px";
 	}
-	setTimeout("movesnow_fastpile()",60);
+	setTimeout(function() {
+		window.requestAnimationFrame(movesnow_fastpile);
+	}, 1000/snowfps);
+	//setTimeout("movesnow_fastpile()",60);
 }
 var count=0;
 function iterfastpile() {

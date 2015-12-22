@@ -3,7 +3,7 @@
 {% load dates %}
 
 {% block title %}
-    {{ block.super}} - {{ action|title }} Announcement
+    {{ block.super }} - {{ action|title }} Announcement
 {% endblock %}
 
 {% block js %}
@@ -40,6 +40,9 @@
                                                "<a onclick='dateReset()' class='button small-button'>Reset to Default</a>" +
                                                "<a onclick='date3000()' class='button small-button'>Don't Expire</a>" +
                                                "</span>");
+            {% if request.user.is_teacher %}
+                $("#id_teachers_requested")[0].selectize.setValue({{ request.user.id }});
+            {% endif %}
         });
     </script>
 {% endblock %}

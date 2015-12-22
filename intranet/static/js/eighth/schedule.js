@@ -18,6 +18,7 @@ $(function() {
             i++;
         });
     }
+
     $(".schedule-activity-grid tbody tr.form-row").each(function() {
         var cb = $("input[type=checkbox]", this);
         var checked = cb.prop("checked");
@@ -51,6 +52,7 @@ $(function() {
 
     window.propagate_direction = "both";
     window.propagate_method = "only_new";
+
     window.updatePropagateDirection = function(opt) {
         window.propagate_direction = opt;
         console.info("New propagate direction:", opt)
@@ -132,7 +134,6 @@ $(function() {
                 var o_items = nsel.items;
                 nsel.setValue(mod_items);
                 console.debug("items: ", o_items, "=>", nsel.items);
-
             });
         } else {
             mod_val = el.val();
@@ -141,18 +142,15 @@ $(function() {
             rows.each(function() {
                 var ntd = $("td[data-field='" + field + "']", $(this));
                 var ninp = $("input, select, textarea", ntd);
-
                 ninp.val(mod_val);
             });
-
         }
-
     });
 
     $(".selectized").each(function() {
         var sel = $(this)[0].selectize;
         if(sel) {
-            sel.on('item_add', function () {
+            sel.on('item_add', function() {
               sel.close();
             });
         }

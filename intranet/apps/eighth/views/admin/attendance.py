@@ -52,14 +52,14 @@ def delinquent_students_view(request):
         upper_absence_limit_filter = upper_absence_limit
 
     try:
-        start_date = datetime.strptime(start_date, "%m/%d/%Y")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
         start_date_filter = start_date
     except ValueError:
         start_date = ""
         start_date_filter = date(MINYEAR, 1, 1)
 
     try:
-        end_date = datetime.strptime(end_date, "%m/%d/%Y")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
         end_date_filter = end_date
     except ValueError:
         end_date = ""

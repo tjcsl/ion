@@ -57,18 +57,24 @@ $(function() {
 
         rosterClickHandler: function(e) {
             e.preventDefault();
-            console.log(e.target);
             var target = e.target;
-            var spinnerEl = document.getElementById("signup-spinner");
-            var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
-            var schact_id = this.model.attributes.scheduled_activity;
-            console.debug("Load roster for scheduled activity", schact_id);
-            var endpoint = $(target).data("endpoint");
+            console.log(target);
             var container = $("#roster-section");
-            $.get(endpoint + "/" + schact_id, {}, function(resp) {
-                container.html(resp);
-                spinner.spin(false);
-            });
+            if ($.trim(container.html())=='') {
+                var spinnerEl = document.getElementById("signup-spinner");
+                var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
+                var schact_id = this.model.attributes.scheduled_activity;
+                console.debug("Load roster for scheduled activity", schact_id);
+                var endpoint = $(target).data("endpoint");
+                $.get(endpoint + "/" + schact_id, {}, function(resp) {
+                    container.html(resp);
+                    spinner.spin(false);
+                    $(target).text("Close Roster");
+                });
+            } else {
+                container.empty();
+                $(target).text("View Roster");
+            }
         }
     });
 

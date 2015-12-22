@@ -32,6 +32,13 @@ ADMINS = (
 FEEDBACK_EMAIL = "intranet@lists.tjhsst.edu"
 APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+]
+
+PRINTING_PAGES_LIMIT = 15
+
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
 FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
@@ -137,7 +144,6 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "maintenancemode.middleware.MaintenanceModeMiddleware",
     "intranet.middleware.environment.KerberosCacheMiddleware",
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -147,6 +153,7 @@ MIDDLEWARE_CLASSES = [
     "corsheaders.middleware.CorsMiddleware",
     "intranet.middleware.traceback.UserTracebackMiddleware",
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",
+    "maintenancemode.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "intranet.urls"
@@ -294,6 +301,7 @@ INSTALLED_APPS = (
     "intranet.apps.users",
     "intranet.apps.preferences",
     "intranet.apps.files",
+    "intranet.apps.printing",
     "intranet.apps.polls",
     "intranet.apps.signage",
     "intranet.apps.seniors",
