@@ -1,10 +1,12 @@
-window.addEventListener('load', function() {
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/serviceworker.js', { scope: './' }).then(subscribe);
-    } else {
-        console.warn('Service workers aren\'t supported in this browser.');
-    }       
-});
+if(window.ion.authenticated) {
+    window.addEventListener('load', function() {
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/serviceworker.js', { scope: './' }).then(subscribe);
+        } else {
+            console.warn('Service workers aren\'t supported in this browser.');
+        }       
+    });
+}
 
 function subscribe() {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
