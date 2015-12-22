@@ -35,7 +35,7 @@ function sendSubscriptionToServer(subscription) {
     var token = res[res.length-1]
     console.log(token);
     if(window.ion && window.ion.authenticated) {
-        if(!window.ion.chrome_gcm_token || window.ion.chrome_gcm_token != token) {
+        if(!window.ion.gcm_token || window.ion.gcm_token != token) {
             console.info("Updating GCM token...");
             $.post("/notifications/chrome/setup", {
                 "token": token

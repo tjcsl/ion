@@ -128,6 +128,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
+                "intranet.apps.context_processors.ion_base_url",
                 "intranet.apps.context_processors.nav_categorizer",
                 "intranet.apps.eighth.context_processors.start_date",
                 "intranet.apps.eighth.context_processors.absence_count",
