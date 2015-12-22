@@ -39,6 +39,12 @@ apt-get -y install git
 sudo -i -u vagrant git config --global user.name "$(devconfig name)"
 sudo -i -u vagrant git config --global user.email "$(devconfig email)"
 
+# CUPS Printing
+apt-get -y install cups
+apt-get -y install cups-bsd
+apt-get -y install cups-client
+echo "ServerName cups2.csl.tjhsst.edu" > /etc/cups/client.conf
+
 # Shell
 cp intranet/config/bash_completion.d/fab /etc/bash_completion.d/fab
 if ! grep "ion_env_setup.sh" /etc/bash.bashrc > /dev/null; then
@@ -86,6 +92,7 @@ sudo -i -u vagrant bash -c "
 "
 source .virtualenvs/ion/bin/activate
 cd intranet
+mkdir -p uploads
 ./manage.py migrate --noinput
 cd ..
 chown -R vagrant: /home/vagrant

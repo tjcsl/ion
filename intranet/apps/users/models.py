@@ -277,12 +277,17 @@ class User(AbstractBaseUser, PermissionsMixin):
                 try:
                     user = User.objects.get(id=user.id)
                 except User.DoesNotExist:
-                    user.username = user.ion_username
+                    if user.ion_username and user.ion_id:
+                        user.username = user.ion_username
 
-                    user.set_unusable_password()
-                    user.last_login = datetime(9999, 1, 1)
+                        user.set_unusable_password()
+                        user.last_login = datetime(9999, 1, 1)
 
-                    user.save()
+                        user.save()
+                    else:
+                        raise User.DoesNotExist(
+                            "`User` with DN '{}' does not have a username.".format(dn)
+                        )
             except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
                 raise User.DoesNotExist(
                     "`User` with DN '{}' does not exist.".format(dn)
@@ -1023,7 +1028,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return (self.is_student and self.grade and self.grade.number and self.grade.number == 12)
-    
 
     @property
     def is_eighthoffice(self):
@@ -1383,9 +1387,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_ldap_attribute(self, name, value, override_set=False):
         """Set a user attribute in LDAP.
         """
-        if name not in User.ldap_user_attributes and not override_set:
+
+        if name in User.ldap_user_attributes:
+            pass
+        elif override_set:
+            pass
+        else:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
-        if not User.ldap_user_attributes[name]["can_set"] and not override_set:
+
+        if User.ldap_user_attributes[name]["can_set"]:
+            pass
+        elif override_set:
+            pass
+        else:
             raise Exception("Not allowed to set User attribute '{}'".format(name))
 
         if self.dn is None:
@@ -1465,6 +1479,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
+
+    def absence_info(self):
+        """Return information about the user's absences.
+        """
+        from ..eighth.models import EighthSignup
+
+        return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
     def __unicode__(self):
         return self.username or self.ion_username or self.id
@@ -1826,7 +1847,7 @@ class Grade(object):
     @property
     def name_plural(self):
         """Return the grade's plural name (e.g. freshmen)"""
-        return "freshmen" if self._grade == 9 else "{}s".format(self._name)
+        return "freshmen" if (self._number and self._number == 9) else "{}s".format(self._name) if self._name else ""
 
     @property
     def text(self):

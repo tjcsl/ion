@@ -79,6 +79,7 @@ def request_announcement_view(request):
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
         logger.debug(form.data)
+
         if form.is_valid():
             teacher_objs = form.cleaned_data["teachers_requested"]
             logger.debug("teacher objs:")
@@ -96,12 +97,25 @@ def request_announcement_view(request):
 
                 ann = AnnouncementRequest.objects.get(id=obj.id)
                 logger.debug(teacher_objs)
+                approve_self = False
                 for teacher in teacher_objs:
                     ann.teachers_requested.add(teacher)
+                    if teacher == request.user:
+                        approve_self = True
                 ann.save()
 
-                request_announcement_email(request, form, obj)
-                messages.success(request, "Successfully added announcement request.")
+                if approve_self:
+                    ann.teachers_approved.add(teacher)
+                    ann.save()
+                    admin_request_announcement_email(request, form, ann)
+                    ann.admin_email_sent = True
+                    ann.save()
+
+                    messages.success(request, "Successfully added approved announcement request. An Intranet administrator "
+                                              "will review and post the announcement shortly. (Notification sent.)")
+                else:
+                    request_announcement_email(request, form, obj)
+                    messages.success(request, "Successfully added announcement request.")
                 return redirect("index")
         else:
             messages.error(request, "Error adding announcement request")
@@ -277,7 +291,14 @@ def modify_announcement_view(request, id=None):
     else:
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
-    return render(request, "announcements/add_modify.html", {"form": form, "action": "modify", "id": id})
+
+    context = {
+        "form": form,
+        "action": "modify",
+        "id": id,
+        "announcement": announcement
+    }
+    return render(request, "announcements/add_modify.html", context)
 
 
 @announcements_admin_required

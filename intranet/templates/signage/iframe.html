@@ -1,0 +1,127 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang='en'>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+
+    <style type="text/css">
+    .center-wrapper {
+        min-height: auto;
+    }
+    
+    .center-wrapper .center {
+        margin: 0;
+        top: 0;
+    }
+
+    .center, .center-wrapper {
+        height: 32px;
+    }
+
+    .center {
+        margin-left: 0;
+    }
+
+    body {
+        background: transparent;
+        zoom: 3;
+        overflow: hidden;
+        background-color: rgb(242, 242, 244);
+    }
+
+    @media (max-width: 600px) {
+        body {
+            zoom: 2;
+        }
+    }
+
+    .tjlogo {
+        height: 32px;
+        position: absolute;
+        left: 50%;
+        margin-left: -16px;
+        top: 0;
+    }
+
+    .time {
+        font-size: 24px;
+        color: black;
+        width: calc(50% - 16px);
+    }
+
+    .schedule-outer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 32px;
+        width: calc(50% - 16px);
+        overflow: hidden;
+    }
+
+    .schedule {
+        margin: 0px -13px;
+        zoom: 0.7;
+    }
+
+    @media (max-width: 790px) {
+        .schedule {
+            margin: 12px -13px;
+            zoom: 0.5;
+        }
+    }
+
+    .iframe {
+        position: absolute;
+        top: 32px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 40px);
+    }
+    </style>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        setInterval(function() {
+            var now = new Date();
+            var hr = now.getHours();
+            if(hr == 0) hr = 12;
+            if(hr > 12) hr -= 12;
+            var min = now.getMinutes();
+            if(min < 10) min = "0"+min;
+            $(".time").html(hr + ":" + min);
+        }, 1000);
+
+        setTimeout(function() { location=location; }, 20 * 60 * 1000)
+    })
+    </script>
+</head>
+
+<body>
+
+    <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+    <div class="time">&nbsp;</div>
+    <div class="schedule-outer">
+        {% include "schedule/view.html" %}
+    </div>
+    <div class="center-wrapper">
+        <div class="center">
+        </div>
+    </div>
+    <iframe class="iframe" src="{{ url }}"></iframe>
+</body>
+</html>

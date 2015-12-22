@@ -19,7 +19,15 @@ class College(models.Model):
     class Meta:
         ordering = ["name"]
 
+
+class SeniorManager(models.Manager):
+
+    def filled(self):
+        return Senior.objects.exclude(college=None, major=None)
+
+
 class Senior(models.Model):
+    objects = SeniorManager()
     user = models.OneToOneField(User)
     college = models.ForeignKey(College, blank=True, null=True)
     MAJORS = [
@@ -128,3 +136,6 @@ class Senior(models.Model):
 
     def __unicode__(self):
         return "{}".format(self.user)
+
+    class Meta:
+        ordering = ["user"]

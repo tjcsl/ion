@@ -3,7 +3,7 @@
 {% load dates %}
 
 {% block title %}
-    {{ block.super}} - {{ action|title }} Announcement
+    {{ block.super }} - {{ action|title }} Announcement
 {% endblock %}
 
 {% block js %}
@@ -15,6 +15,9 @@
     <script type="text/javascript">
         $(function() {
             var author = $("#id_author");
+            {% if admin_approve %}
+                author.attr("placeholder", "{% if req.author %}{{ req.author|escape }}{% else %}{{ req.user.full_name|escape }}{% endif %}")
+            {% endif %}
             author.attr("placeholder", "{{ user.full_name|escape }}");
         });
     </script>

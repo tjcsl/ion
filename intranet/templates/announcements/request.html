@@ -3,7 +3,7 @@
 {% load dates %}
 
 {% block title %}
-    {{ block.super}} - {{ action|title }} Announcement
+    {{ block.super }} - {{ action|title }} Announcement
 {% endblock %}
 
 {% block js %}
@@ -15,7 +15,34 @@
     <script type="text/javascript">
         $(function() {
             var author = $("#id_author");
+            var exp = $("#id_expiration_date");
+            dateFormat = function(date) {
+                zero = function(v) { return v<10 ? "0"+v : v; }
+                return (date.getFullYear() + "-" +
+                        zero(date.getMonth()+1) + "-" +
+                        zero(date.getDate()) + " 23:59:59");
+            }
+            dateReset = function() {
+                var date = new Date();
+                date.setDate(date.getDate() + 14);
+                exp.val(dateFormat(date));
+            }
+            date3000 = function() {
+                var date = new Date("3000-01-01 00:00:00");
+                exp.val(dateFormat(date));
+            }
+            
+                
             author.attr("placeholder", "{{ user.full_name|escape }}");
+            dateReset();
+
+            $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
+                                               "<a onclick='dateReset()' class='button small-button'>Reset to Default</a>" +
+                                               "<a onclick='date3000()' class='button small-button'>Don't Expire</a>" +
+                                               "</span>");
+            {% if request.user.is_teacher %}
+                $("#id_teachers_requested")[0].selectize.setValue({{ request.user.id }});
+            {% endif %}
         });
     </script>
 {% endblock %}
@@ -24,6 +51,7 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.3/jquery.datetimepicker.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.0/dist/css/selectize.default.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
     <style type="text/css">
 
         div.cke_chrome {
@@ -69,6 +97,10 @@
             margin-bottom: -15px;
         }
 
+        .announcements .selectize-control {
+            display: inline-block;
+        }
+
 
     </style>
 {% endblock %}
@@ -97,15 +129,7 @@
     <form action="" method="post">
         <table>
             {% csrf_token %}
-            {% for field in form %}
-                <tr>
-                    <th>{{ field.label_tag }}</th>
-                    <td>
-                        {{ field.help_text }}<br />
-                        {{ field }}
-                    </td>
-                </tr>
-            {% endfor %}
+            {{ form.as_table }}
             <tr><td><input type="submit" /></td></tr>
         </table>
     </form>

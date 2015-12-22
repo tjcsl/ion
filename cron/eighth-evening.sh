@@ -1,2 +1,5 @@
 #!/bin/bash
-/usr/local/virtualenvs/ion/bin/python /usr/local/www/intranet3/manage.py signup_status_email --only-tomorrow --silent
+timestamp=$(date +"%Y-%m-%d-%H%M")
+cd /usr/local/www/intranet3
+./cron/env.sh ./manage.py signup_status_email --only-tomorrow --silent
+echo "Evening signup email sent at $timestamp." >> /var/log/ion/email.log

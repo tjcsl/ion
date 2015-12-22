@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from ...models import College
 import csv
 
+
 class Command(BaseCommand):
     help = "Import colleges from ceeb.csv file"
 

@@ -1,0 +1,86 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang='en'>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+
+    <style type="text/css">
+    .center-wrapper {
+        min-height: auto;
+    }
+    
+    .center-wrapper .center {
+        margin: 0;
+        top: 0;
+    }
+
+    body {
+        background: transparent;
+        zoom: 3;
+        overflow: hidden;
+    }
+
+    .tjlogo {
+        width: 50%;
+        margin-top: 20px;
+    }
+
+    .time {
+        font-size: 30px;
+        margin: 10px 0;
+        color: black;
+    }
+    </style>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'themes/snow/snow.css' %}" />
+    <style>.center-wrapper .center { margin-left: -20px; }</style>
+    <script>snowmax = 35; sinkspeed = 3; snowmaxsize = 128; snowminsize = 32;</script>
+    <script type="text/javascript" src="{% static 'themes/snow/snow.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        setInterval(function() {
+            var now = new Date();
+            var hr = now.getHours();
+            if(hr == 0) hr = 12;
+            if(hr > 12) hr -= 12;
+            var min = now.getMinutes();
+            if(min < 10) min = "0"+min;
+            $(".time").html(hr + ":" + min);
+        }, 1000);
+
+        setTimeout(function() { location=location; }, 20 * 60 * 1000)
+    })
+    </script>
+</head>
+
+<body>
+
+    <div class="center-wrapper">
+        <div class="center">
+            <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+            <div class="time">&nbsp;</div>
+            <div class="schedule-outer">
+            {% with hide_arrows=1 %}
+                {% include "schedule/view.html" %}
+            {% endwith %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -14,9 +14,11 @@ from .forms import SeniorForm
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def seniors_home_view(request):
     seniors = Senior.objects.exclude(college=None, major=None)
+    seniors = sorted(seniors, key=lambda x: x.user.last_first)
     try:
         own_senior = Senior.objects.get(user=request.user)
     except Senior.DoesNotExist:
@@ -27,6 +29,7 @@ def seniors_home_view(request):
         "own_senior": own_senior
     }
     return render(request, "seniors/home.html", context)
+
 
 @login_required
 def seniors_add_view(request):

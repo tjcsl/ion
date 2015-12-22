@@ -4,7 +4,7 @@
 {% load users %}
 
 {% block title %}
-    {{ block.super}} - Search{% if search_query %} - {{ search_query }}{% endif %}
+    {{ block.super }} - Search{% if search_query %} - {{ search_query }}{% endif %}
 {% endblock %}
 
 {% block css %}
@@ -15,6 +15,14 @@
 
 {% block main %}
 <div class="primary-content">
+
+{% if query_error %}
+    <span style="color: red; font-size: 14px">
+        <b>There was an error performing this query.</b>
+    </span> Ensure that the search string does not contain invalid characters.
+    <br /><br />
+{% endif %}
+
 {% if "tips" in request.GET or query_error or not search_query %}
     {% include "search/tips.html" %}
 {% else %}

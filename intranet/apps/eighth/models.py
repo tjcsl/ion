@@ -70,7 +70,6 @@ class EighthSponsor(AbstractBaseEighthModel):
     @property
     def to_be_assigned(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
-    
 
     def __unicode__(self):
         return self.name
@@ -106,7 +105,6 @@ class EighthRoom(AbstractBaseEighthModel):
     @property
     def to_be_determined(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
-    
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.capacity)
@@ -128,11 +126,6 @@ class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
 
     Attributes:
-        aid
-            The AID (activity ID), not the same as the activity's ID necessarily. By default,
-            it is the same as the assigned ID. However, it can be changed to any alphanumeric
-            string that is between 1-10 characters. Don't set to the internal ID of another
-            activity, or to the AID of another activity.
         name
             The name of the activity, max length 100 characters.
         description
@@ -184,7 +177,6 @@ class EighthActivity(AbstractBaseEighthModel):
     objects = models.Manager()
     undeleted_objects = EighthActivityExcludeDeletedManager()
 
-    """aid = models.CharField(max_length=10, blank=True) # Should be unique"""
     name = models.CharField(max_length=100)  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
@@ -517,6 +509,14 @@ class EighthBlock(AbstractBaseEighthModel):
         now = datetime.datetime.now()
         return (now.date() > self.date)
 
+    def in_clear_absence_period(self):
+        """Is the current date in the block's clear absence period?
+           (Should info on clearing the absence show?)
+        """
+        now = datetime.datetime.now()
+        two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
+        return (now.date() <= two_weeks)
+
     def attendance_locked(self):
         """Is it past 10PM on the day of the block?"""
         now = datetime.datetime.now()
@@ -594,7 +594,8 @@ class EighthScheduledActivityManager(Manager):
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
                                              .exclude(cancelled=True)
-                                             .filter(sponsoring_filter))
+                                             .filter(sponsoring_filter)
+                                             .distinct())
         return sched_acts
 
 
@@ -1268,6 +1269,10 @@ class EighthSignup(AbstractBaseEighthModel):
         self.was_absent = True
         self.pass_accepted = True
         self.save()
+
+    def in_clear_absence_period(self):
+        """Is the block for this signup in the clear absence period?"""
+        return self.scheduled_activity.block.in_clear_absence_period()
 
     def __unicode__(self):
         return "{}: {}".format(self.user,

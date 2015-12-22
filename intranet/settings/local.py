@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from fnmatch import fnmatch
+import ipaddress
+from six.moves.urllib import parse
 import logging
 from .base import *
 
@@ -60,16 +61,26 @@ class glob_list(list):
 
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
-        for elt in self:
-            if fnmatch(key, elt):
-                return True
+        
+        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
+        # list of IP addresses, if the user is using a proxy
+        if "," in key:
+            key = key.split(",")[0]
+
+        for item in self:
+            try:
+                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
+                    logger.info("Internal IP: {}".format(key))
+                    return True
+            except ValueError:
+                pass
         return False
 
 INTERNAL_IPS = glob_list([
-    "127.0.0.1",
-    "192.*.*.*",
-    "10.*.*.*",
-    "198.38.*.*"
+    "127.0.0.0/8",
+    "10.0.0.0/8",
+    "198.38.16.0/20",
+    "2001:468:cc0::/48"
 ])
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')

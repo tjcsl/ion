@@ -25,6 +25,10 @@ import sphinx_bootstrap_theme
 
 # -- General configuration ------------------------------------------------
 
+# Fix for documenting models.FileField
+from django.db.models.fields.files import FileDescriptor
+FileDescriptor.__get__ = lambda self, *args, **kwargs: self
+
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.0'
 

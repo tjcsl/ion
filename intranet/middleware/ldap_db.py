@@ -22,7 +22,8 @@ class CheckLDAPBindMiddleware:
             # if request.user.is_eighth_admin:
             #    logger.info("Simple bind being used: staying logged in because eighth admin.")
             #    return response
-            messages.error(request, "LDAP Error: only obtained a simple bind. This may affect access of directory information.")
+            logger.info("LDAP simple bind being used for {}".format(request.user if request.user else None))
+            messages.error(request, "Access to directory information may be limited: LDAP issue. Try logging out and back in.")
             """
             logger.info("Simple bind being used: Destroying kerberos cache and logging out")
 
