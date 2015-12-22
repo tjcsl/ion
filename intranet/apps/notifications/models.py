@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import hashlib
 import json
 from ..users.models import User
 from django.db import models
@@ -13,6 +14,10 @@ class NotificationConfig(models.Model):
 
     android_gcm_rand = models.CharField(max_length=100, blank=True, null=True)
     
+    @property
+    def gcm_token_sha256(self):
+        return hashlib.sha256(self.gcm_token).hexdigest()
+
     def __unicode__(self):
         return "{}".format(self.user)
 
