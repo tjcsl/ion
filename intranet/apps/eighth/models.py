@@ -138,6 +138,9 @@ class EighthActivity(AbstractBaseEighthModel):
         rooms
             The default activity-level rooms for the activity. On an EighthScheduledActivity basis,
             you should NOT query this field. Use scheduled_activity.get_true_rooms()
+        default_capacity
+            The default capacity, which overrides the sum of the default rooms when scheduling the
+            activity. By default, this has a null value and is ignored.
         presign
             If True, the activity can only be signed up for within 48 hours of the day that the activity
             is scheduled.
@@ -181,6 +184,7 @@ class EighthActivity(AbstractBaseEighthModel):
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
+    default_capacity = models.SmallIntegerField(null=True, blank=True)
 
     presign = models.BooleanField(default=False)
     one_a_day = models.BooleanField(default=False)
@@ -212,9 +216,11 @@ class EighthActivity(AbstractBaseEighthModel):
     def capacity(self):
         # Note that this is the default capacity if the
         # rooms/capacity are not overridden for a particular block.
-
-        rooms = self.rooms.all()
-        return EighthRoom.total_capacity_of_rooms(rooms)
+        if self.default_capacity:
+            return self.default_capacity
+        else:
+            rooms = self.rooms.all()
+            return EighthRoom.total_capacity_of_rooms(rooms)
 
     @property
     def aid(self):
@@ -719,6 +725,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if c is not None:
             return c
         else:
+            if self.rooms.count() == 0 and self.activity.default_capacity:
+                # use activity-level override
+                return self.activity.default_capacity
+
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
 

@@ -71,6 +71,10 @@
             <div class="schedule-activity-buttons">
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
                 <input type="submit" value="Save" />
+
+                {% if activity.default_capacity %}
+                    &nbsp; Activity default capacity: {{ activity.default_capacity }}
+                {% endif %}
             </div>
 
 
@@ -159,7 +163,7 @@
                                     </select>
                                 {% elif field.name == "capacity" %}
                                     {% with bid=form.block.value %}
-                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
+                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid data-activity-default-capacity=activity.default_capacity %}
                                     {% endwith %}
                                 {% elif field.name == "unschedule" %}
                                     {% if form.cancelled.value %}

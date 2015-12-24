@@ -121,6 +121,7 @@ class ActivityForm(forms.ModelForm):
         self.fields["users_allowed"].queryset = User.objects.get_students()
 
         self.fields["presign"].label = "48 Hour"
+        self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
     class Meta:
         model = EighthActivity
@@ -129,6 +130,7 @@ class ActivityForm(forms.ModelForm):
             "description",
             "sponsors",
             "rooms",
+            "default_capacity",
             "id",
             "presign",
             "one_a_day",

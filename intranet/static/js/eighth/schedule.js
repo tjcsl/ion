@@ -46,6 +46,7 @@ $(function() {
 
         if (capacitySum == Infinity) capacitySum = -1;
         var $capacityInput = $("input.capacity", $select.parent().parent());
+        var defaultActivityCapacity = $capacityInput.data("activity-default-capacity");
         var defaultCapacity = $capacityInput.data("default-capacity");
         $capacityInput.attr("placeholder", capacitySum == 0 ? defaultCapacity : capacitySum);
     });
