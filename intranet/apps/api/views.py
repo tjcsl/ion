@@ -36,7 +36,7 @@ def api_root(request, format=None):
         "Blocks": {
             "/blocks": ["Get block list", perma_reverse(request, "api_eighth_block_list")],
             "/blocks?start_date=<start_date>": ["Get a block list starting on the specified date (in YYYY-MM-DD format).", "{}?start_date=2015-11-18".format(perma_reverse(request, "api_eighth_block_list"))],
-            "/blocks?date=<start_date>": ["Get a list of blocks only on the specified date (in YYYY-MM-DD format).", "{}?date=2015-11-18".format(perma_reverse(request, "api_eighth_block_list"))],
+            "/blocks?date=<date>": ["Get a list of blocks only on the specified date (in YYYY-MM-DD format).", "{}?date=2015-11-18".format(perma_reverse(request, "api_eighth_block_list"))],
             "/blocks/<pk>": ["Get a list of activities on a block", perma_reverse(request, "api_eighth_block_detail", kwargs={"pk": 3030})],
         },
         "Classes": {
