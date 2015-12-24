@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1115) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1116) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1115)',
+        VERSION:     'v3 (Build #1116)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1115) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1116) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -157,7 +157,8 @@
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="n">QuickActivityForm</span><span class="p">,</span> <span class="n">ActivityForm</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthRoom</span>
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -201,6 +202,101 @@
         <span class="n">form</span> <span class="o">=</span> <span class="n">ActivityForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
+
+                <span class="c"># Check if sponsor change</span>
+                <span class="n">old_sponsors</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="n">old_sponsor_ids</span> <span class="o">=</span> <span class="n">old_sponsors</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">new_sponsor_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;sponsors&quot;</span><span class="p">]]</span>
+
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_sponsor_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_sponsor_ids</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_sponsor_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                    <span class="n">sched_acts_default</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">sponsors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block__date__lt</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="c"># This will change scheduled activities that used overrides in the past.</span>
+                        <span class="c"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
+                        <span class="c"># custom sponsors specified, we *could* prevent anything from visibly</span>
+                        <span class="c"># changing by making an override with the value of the previous default.</span>
+
+                        <span class="c"># Yes: Save History =&gt; Override old values</span>
+                        <span class="c"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
+
+                        <span class="k">if</span> <span class="s">&quot;change_sponsor_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;change_sponsor_history&quot;</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;yes&quot;</span><span class="p">:</span>
+                                <span class="c"># Override old entries</span>
+                                <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_acts_default</span><span class="p">:</span>
+                                    <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">old_sponsors</span><span class="p">:</span>
+                                        <span class="n">sa</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span>
+                                    <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Overrode {} scheduled activities to old sponsor default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;no&quot;</span><span class="p">:</span>
+                                <span class="c"># Don&#39;t override</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Changing default sponsors globally&quot;</span><span class="p">)</span>
+                                <span class="c"># Continues to form.save()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c"># show message, asking whether to change history</span>
+                            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Keep Sponsor History?&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+                                <span class="s">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                                <span class="s">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
+                                <span class="s">&quot;old_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_sponsor_ids</span><span class="p">),</span>
+                                <span class="s">&quot;new_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_sponsor_ids</span><span class="p">),</span>
+                                <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                            <span class="p">}</span>
+                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/keep_sponsor_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You modified the default sponsors, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
+
+                <span class="c"># Check if room change</span>
+                <span class="n">old_rooms</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="n">old_room_ids</span> <span class="o">=</span> <span class="n">old_rooms</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">new_room_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;rooms&quot;</span><span class="p">]]</span>
+
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_room_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_room_ids</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_room_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+                    <span class="n">sched_acts_default</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">rooms</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block__date__lt</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="c"># This will change scheduled activities that used overrides in the past.</span>
+                        <span class="c"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
+                        <span class="c"># custom rooms specified, we *could* prevent anything from visibly</span>
+                        <span class="c"># changing by making an override with the value of the previous default.</span>
+
+                        <span class="c"># Yes: Save History =&gt; Override old values</span>
+                        <span class="c"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
+
+                        <span class="k">if</span> <span class="s">&quot;change_room_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;change_room_history&quot;</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;yes&quot;</span><span class="p">:</span>
+                                <span class="c"># Override old entries</span>
+                                <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_acts_default</span><span class="p">:</span>
+                                    <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">old_rooms</span><span class="p">:</span>
+                                        <span class="n">sa</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+                                    <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Overrode {} scheduled activities to old room default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;no&quot;</span><span class="p">:</span>
+                                <span class="c"># Don&#39;t override</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Changing default rooms globally&quot;</span><span class="p">)</span>
+                                <span class="c"># Continues to form.save()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c"># show message, asking whether to change history</span>
+                            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Keep Room History?&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+                                <span class="s">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                                <span class="s">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
+                                <span class="s">&quot;old_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_room_ids</span><span class="p">),</span>
+                                <span class="s">&quot;new_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_room_ids</span><span class="p">),</span>
+                                <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                            <span class="p">}</span>
+                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/keep_room_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You modified the default rooms, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
+
                 <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
                 <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
