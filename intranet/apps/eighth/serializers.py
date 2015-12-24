@@ -107,7 +107,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activity_info = {
             "id": activity.id,
             "aid": activity.aid,
-            "scheduled_activity": scheduled_activity.id,
+            "scheduled_activity": {
+                "id": scheduled_activity.id,
+                "url": reverse("api_eighth_scheduled_activity_signup_list",
+                               args=[scheduled_activity.id],
+                               request=request)
+            },
             "url": reverse("api_eighth_activity_detail",
                            args=[activity.id],
                            request=request),
