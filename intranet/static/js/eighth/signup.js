@@ -63,7 +63,7 @@ $(function() {
             if ($.trim(container.html())=='') {
                 var spinnerEl = document.getElementById("signup-spinner");
                 var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
-                var schact_id = this.model.attributes.scheduled_activity;
+                var schact_id = this.model.attributes.scheduled_activity.id;
                 console.debug("Load roster for scheduled activity", schact_id);
                 var endpoint = $(target).data("endpoint");
                 $.get(endpoint + "/" + schact_id, {}, function(resp) {

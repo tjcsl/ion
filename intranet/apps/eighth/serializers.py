@@ -258,9 +258,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
+            activity_cap = rooming.eighthactivity.default_capacity
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
-            activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
+            if activity_cap:
+                # use activity default capacity instead of sum of activity rooms
+                activity_list[activity_id]["roster"]["capacity"] = activity_cap
+            else:
+                activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
@@ -274,6 +279,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
             activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
+
 
         for scheduled_activity in scheduled_activities:
             if scheduled_activity.capacity is not None:
