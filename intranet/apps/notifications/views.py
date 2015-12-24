@@ -85,11 +85,13 @@ def chrome_setup_view(request):
 
     """
     logger.debug(request.POST)
+    token = None
     if request.method == "POST":
         if "token" in request.POST:
             token = request.POST.get("token")
-        else:
-            return HttpResponse('{"error":"Invalid data."}', content_type="text/json")
+
+    if not token:
+        return HttpResponse('{"error":"Invalid data."}', content_type="text/json")
     ncfg, _ = NotificationConfig.objects.get_or_create(user=request.user)
     ncfg.gcm_token = token
     ncfg.save()
