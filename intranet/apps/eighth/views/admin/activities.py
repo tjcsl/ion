@@ -11,7 +11,7 @@ from django.shortcuts import redirect, render
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ...forms.admin.activities import QuickActivityForm, ActivityForm
-from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
+from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor, EighthRoom
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -56,13 +56,13 @@ def edit_activity_view(request, activity_id):
         form = ActivityForm(request.POST, instance=activity)
         if form.is_valid():
             try:
-                # Persist history
-                # Check if default sponsor change
+
+                # Check if sponsor change
                 old_sponsors = activity.sponsors.all()
                 old_sponsor_ids = old_sponsors.values_list("id",flat=True)
                 new_sponsor_ids = [s.id for s in form.cleaned_data["sponsors"]]
 
-                if set(old_sponsor_ids) != set(new_sponsor_ids):
+                if set(old_sponsor_ids) != set(new_sponsor_ids) and len(old_sponsor_ids) > 0:
                     start_date = get_start_date(request)
                     sched_acts_default = EighthScheduledActivity.objects.filter(activity=activity, sponsors=None, block__date__lt=start_date)
 
@@ -75,8 +75,8 @@ def edit_activity_view(request, activity_id):
                         # Yes: Save History => Override old values
                         # No: Change Globally => Don't override old values, they will change to new default
 
-                        if "change_history" in request.POST:
-                            change = request.POST.get("change_history")
+                        if "change_sponsor_history" in request.POST:
+                            change = request.POST.get("change_sponsor_history")
 
                             if change == "yes":
                                 # Override old entries
@@ -84,7 +84,7 @@ def edit_activity_view(request, activity_id):
                                     for sponsor in old_sponsors:
                                         sa.sponsors.add(sponsor)
                                     sa.save()
-                                messages.success(request, "Overrode {} scheduled activities to old default".format(sched_acts_default.count()))
+                                messages.success(request, "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count()))
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default sponsors globally")
@@ -92,7 +92,7 @@ def edit_activity_view(request, activity_id):
                         else:
                             # show message, asking whether to change history
                             context = {
-                                "admin_page_title": "Keep History?",
+                                "admin_page_title": "Keep Sponsor History?",
                                 "activity": activity,
                                 "sched_acts_count": sched_acts_default.count(),
                                 "start_date": start_date,
@@ -100,11 +100,56 @@ def edit_activity_view(request, activity_id):
                                 "new_sponsors": EighthSponsor.objects.filter(id__in=new_sponsor_ids),
                                 "form": form
                             }
-                            return render(request, "eighth/admin/edit_activity_history.html", context)
+                            return render(request, "eighth/admin/keep_sponsor_history.html", context)
                     else:
                         messages.success(request, "You modified the default sponsors, but those changes will not affect any scheduled activities.")
 
+                # Check if room change
+                old_rooms = activity.rooms.all()
+                old_room_ids = old_rooms.values_list("id",flat=True)
+                new_room_ids = [r.id for r in form.cleaned_data["rooms"]]
 
+                if set(old_room_ids) != set(new_room_ids) and len(old_room_ids) > 0:
+                    start_date = get_start_date(request)
+                    sched_acts_default = EighthScheduledActivity.objects.filter(activity=activity, rooms=None, block__date__lt=start_date)
+
+                    if sched_acts_default.count() > 0:
+                        # This will change scheduled activities that used overrides in the past.
+                        # Thus, by looping through the scheduled activities that didn't have any
+                        # custom rooms specified, we *could* prevent anything from visibly
+                        # changing by making an override with the value of the previous default.
+
+                        # Yes: Save History => Override old values
+                        # No: Change Globally => Don't override old values, they will change to new default
+
+                        if "change_room_history" in request.POST:
+                            change = request.POST.get("change_room_history")
+
+                            if change == "yes":
+                                # Override old entries
+                                for sa in sched_acts_default:
+                                    for room in old_rooms:
+                                        sa.rooms.add(room)
+                                    sa.save()
+                                messages.success(request, "Overrode {} scheduled activities to old room default".format(sched_acts_default.count()))
+                            elif change == "no":
+                                # Don't override
+                                messages.success(request, "Changing default rooms globally")
+                                # Continues to form.save()
+                        else:
+                            # show message, asking whether to change history
+                            context = {
+                                "admin_page_title": "Keep Room History?",
+                                "activity": activity,
+                                "sched_acts_count": sched_acts_default.count(),
+                                "start_date": start_date,
+                                "old_rooms": EighthRoom.objects.filter(id__in=old_room_ids),
+                                "new_rooms": EighthRoom.objects.filter(id__in=new_room_ids),
+                                "form": form
+                            }
+                            return render(request, "eighth/admin/keep_room_history.html", context)
+                    else:
+                        messages.success(request, "You modified the default rooms, but those changes will not affect any scheduled activities.")
 
                 form.save()
             except forms.ValidationError as error:
