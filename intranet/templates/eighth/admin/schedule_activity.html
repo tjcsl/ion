@@ -120,6 +120,13 @@
                     <th>Sign/Cap</th><th></th>
                     <th>Sponsors</th><th></th>
                     <th>Title suffix</th><th></th>
+                    <th class="special">
+                        <span style="position:relative">
+                            Special
+                        </span>
+                    </th>
+                    <th>
+                    </th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
                 </tr>
@@ -171,12 +178,18 @@
                                             {{ field }} Unschedule
                                         </span>
                                     {% endif %}
+                                {% elif field.name == "special" %}
+                                    <center>
+                                        {% render_field field class='special' %}
+                                    </center>
+                                {% elif field.name == "scheduled" %}
+                                    {% render_field field class='scheduled' %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title comments admin_comments" %}
+                                {% if field.name in "rooms capacity sponsors title special comments admin_comments" %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fa fa-arrows-v"></i>

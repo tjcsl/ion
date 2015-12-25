@@ -39,6 +39,7 @@ class ScheduledActivityForm(forms.ModelForm):
             "capacity",
             "sponsors",
             "title",
+            "special",
             "comments",
             "admin_comments"
         ]

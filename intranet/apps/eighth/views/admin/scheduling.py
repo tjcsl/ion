@@ -86,6 +86,7 @@ def schedule_activity_view(request):
                         "capacity",
                         "sponsors",
                         "title",
+                        "special",
                         "comments",
                         "admin_comments"
                     ]
@@ -219,6 +220,7 @@ def schedule_activity_view(request):
                     "capacity": sched_act.capacity,
                     "sponsors": sched_act.sponsors.all(),
                     "title": sched_act.title,
+                    "special": sched_act.special,
                     "comments": sched_act.comments,
                     "admin_comments": sched_act.admin_comments,
                     "scheduled": not sched_act.cancelled,

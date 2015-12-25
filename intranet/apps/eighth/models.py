@@ -630,8 +630,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             :class:`EighthRoom`\s that will override the
             :class:`EighthActivity`'s default rooms
         attendance_taken
-            whether the :class:`EighthSponsor` for the scheduled
+            Whether the :class:`EighthSponsor` for the scheduled
             :class:`EighthActivity` has taken attendance yet
+        special
+            Whether this scheduled instance of the activity is special. If
+            not set, falls back on the EighthActivity's special setting.
         cancelled
             whether the :class:`EighthScheduledActivity` has been cancelled
 
@@ -656,6 +659,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     capacity = models.SmallIntegerField(null=True, blank=True)
+    special = models.BooleanField(default=False)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
@@ -667,6 +671,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         act_name = self.activity.name + cancelled_str
+        if self.special and not self.activity.special:
+            act_name = "Special: " + act_name
         return act_name if not self.title else "{} - {}".format(act_name, self.title)
 
     @property
@@ -676,6 +682,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str
+        if self.special and not self.activity.special:
+            name_with_flags = "Special: " + name_with_flags
         return name_with_flags
 
     def get_true_sponsors(self):
@@ -731,6 +739,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
+
+    def get_special(self):
+        """Get whether this scheduled activity is special, checking the
+           activity-level special settings.
+
+        """
+        if self.special:
+            return self.special
+        else:
+            return self.activity.special
 
     def is_full(self):
         """Return whether the activity is full.

@@ -135,7 +135,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "restricted_for_user": restricted_for_user,
             "both_blocks": activity.both_blocks,
             "one_a_day": activity.one_a_day,
-            "special": activity.special,
+            "special": scheduled_activity.get_special(),
             "administrative": activity.administrative,
             "presign": activity.presign,
             "sticky": activity.sticky,
