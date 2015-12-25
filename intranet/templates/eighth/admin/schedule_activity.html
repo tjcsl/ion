@@ -28,6 +28,27 @@
                 location.href = '/eighth/admin/activities/edit/' + v;
             }
         });
+
+        $(".unschedule-link").click(function() {
+            var cbox = $('span.unschedule', $(this).parent().parent());
+            cbox.toggle();
+            $(this).hide();
+        });
+
+        $("td[data-field='unschedule'] input").on("change", function() {
+            var chk = $(this).prop("checked");
+            var already_cancelled = ($(this).parent().attr("data-cancelled") == "true");
+            console.debug(already_cancelled);
+            if(!already_cancelled) {
+                var sch = $("td[data-field='scheduled'] input", $(this).parent().parent().parent());
+                if(chk) {
+                    sch.prop("checked", false);
+                } else {
+                    sch.prop("checked", true);
+                }
+
+            }
+        })
     });
     </script>
 
@@ -169,11 +190,9 @@
                                         {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid data-activity-default-capacity=activity.default_capacity %}
                                     {% endwith %}
                                 {% elif field.name == "unschedule" %}
-                                    {% if form.cancelled.value %}
-                                        <span style="white-space: nowrap">
-                                            {{ field }} Unschedule
-                                        </span>
-                                    {% endif %}
+                                    <span class='unschedule' style="{% if not form.cancelled.value %}display:none{% endif %};white-space: nowrap" data-cancelled="{% if form.cancelled.value %}true{% else %}false{% endif %}">
+                                        {{ field }} Unschedule
+                                    </span>
                                 {% elif field.name == "special" %}
                                     <center>
                                         {% render_field field class='special' %}
@@ -202,6 +221,8 @@
                                     {% if form.cancelled.value %}
                                         <br>
                                         <b class="cancelled">Cancelled</b>
+                                    {% elif form.scheduled.value %}
+                                        <br /><a href="javascript:;" class="unschedule-link">Unschedule</a>
                                     {% endif %}
                                 </td>
                             {% endif %}

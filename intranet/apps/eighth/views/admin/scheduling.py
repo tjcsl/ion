@@ -80,6 +80,8 @@ def schedule_activity_view(request):
                                 invalidate_obj(s)
                         instance = schact[0]
 
+                        cancelled = True
+
                 if instance:
                     fields = [
                         "rooms",
