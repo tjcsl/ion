@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth package &mdash; TJ Intranet v3 (Build #1116) documentation</title>
+    <title>intranet.apps.eighth package &mdash; TJ Intranet v3 (Build #1117) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1116)',
+        VERSION:     'v3 (Build #1117)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1116) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1117) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.eighth.forms package" href="intranet.apps.eighth.forms.html" />
     <link rel="prev" title="intranet.apps.dashboard package" href="intranet.apps.dashboard.html" />
@@ -933,8 +933,11 @@ signed up for an <a class="reference internal" href="#intranet.apps.eighth.model
 <dd><a class="reference internal" href="#intranet.apps.eighth.models.EighthRoom" title="intranet.apps.eighth.models.EighthRoom"><code class="xref py py-class docutils literal"><span class="pre">EighthRoom</span></code></a>s that will override the
 <a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity" title="intranet.apps.eighth.models.EighthActivity"><code class="xref py py-class docutils literal"><span class="pre">EighthActivity</span></code></a>&#8216;s default rooms</dd>
 <dt>attendance_taken</dt>
-<dd>whether the <a class="reference internal" href="#intranet.apps.eighth.models.EighthSponsor" title="intranet.apps.eighth.models.EighthSponsor"><code class="xref py py-class docutils literal"><span class="pre">EighthSponsor</span></code></a> for the scheduled
+<dd>Whether the <a class="reference internal" href="#intranet.apps.eighth.models.EighthSponsor" title="intranet.apps.eighth.models.EighthSponsor"><code class="xref py py-class docutils literal"><span class="pre">EighthSponsor</span></code></a> for the scheduled
 <a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity" title="intranet.apps.eighth.models.EighthActivity"><code class="xref py py-class docutils literal"><span class="pre">EighthActivity</span></code></a> has taken attendance yet</dd>
+<dt>special</dt>
+<dd>Whether this scheduled instance of the activity is special. If
+not set, falls back on the EighthActivity&#8217;s special setting.</dd>
 <dt>cancelled</dt>
 <dd>whether the <a class="reference internal" href="#intranet.apps.eighth.models.EighthScheduledActivity" title="intranet.apps.eighth.models.EighthScheduledActivity"><code class="xref py py-class docutils literal"><span class="pre">EighthScheduledActivity</span></code></a> has been cancelled</dd>
 </dl>
@@ -1014,6 +1017,13 @@ False if not found</dd>
 <code class="descclassname">EighthScheduledActivity.</code><code class="descname">get_hidden_members</code><span class="sig-paren">(</span><em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthScheduledActivity.get_hidden_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.get_hidden_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the members that you do not have permission to view.</p>
 <p>Returns: List of members hidden based on their permission preferences</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.eighth.models.EighthScheduledActivity.get_special">
+<code class="descclassname">EighthScheduledActivity.</code><code class="descname">get_special</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthScheduledActivity.get_special"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthScheduledActivity.get_special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether this scheduled activity is special, checking the
+activity-level special settings.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1403,7 +1413,7 @@ linked to the sponsor.</dd>
 <em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/eighth/serializers.html#EighthAddSignupSerializer.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators">
-<code class="descname">validators</code><em class="property"> = [&lt;function add_signup_validator at 0x7f1d5f7575f0&gt;]</em><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validators</code><em class="property"> = [&lt;function add_signup_validator at 0x7fd7d5913668&gt;]</em><a class="headerlink" href="#intranet.apps.eighth.serializers.EighthAddSignupSerializer.Meta.validators" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
