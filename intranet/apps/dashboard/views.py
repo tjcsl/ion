@@ -122,6 +122,8 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         else:
             sponsoring_block_map[bid] = [sa]
 
+    num_acts = 0
+
     for b in surrounding_blocks:
         num_added = 0
         sponsored_for_block = sponsoring_block_map.get(b.id, [])
@@ -141,9 +143,11 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
                 "id": None,
                 "fake": True
             })
+        else:
+            num_acts += 1
 
     logger.debug(acts)
-    return acts, no_attendance_today
+    return acts, no_attendance_today, num_acts
 
 
 def find_birthdays(request):
@@ -316,10 +320,11 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             })
 
         if eighth_sponsor:
-            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
+            sponsor_schedule, no_attendance_today, num_acts = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
             context.update({
                 "sponsor_schedule": sponsor_schedule,
-                "no_attendance_today": no_attendance_today
+                "no_attendance_today": no_attendance_today,
+                "num_attendance_acts": num_acts
             })
 
         context.update({
