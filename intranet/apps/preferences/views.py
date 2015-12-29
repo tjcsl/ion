@@ -91,13 +91,13 @@ def save_personal_info(request, user):
                         try:
                             user.set_ldap_attribute(field, "{}".format(fields[field]))
                         except Exception as e:
-                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
                                 messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
                             except Exception as e:
-                                messages.error(request, "Field {}: {}".format(field, e))
+                                messages.error(request, "Unable to set field {}: {}".format(field, e))
                     else:
                         logger.debug("Need to update {} because {} changed".format(full_field_name, field))
                         multi_fields_to_update.append(full_field_name)
@@ -113,8 +113,8 @@ def save_personal_info(request, user):
                 try:
                     user.set_ldap_attribute(ldap_full_field, field_vals)
                 except Exception as e:
-                    messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                    logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                    messages.error(request, "Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                    logger.debug("Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                 else:
                     messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
     return personal_info_form
@@ -152,8 +152,8 @@ def save_preferred_pic(request, user):
                         try:
                             user.set_ldap_attribute(field, fields[field])
                         except Exception as e:
-                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                            logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return preferred_pic_form
@@ -201,8 +201,8 @@ def save_privacy_options(request, user):
                     try:
                         user.set_ldap_preference(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
-                        messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                        logger.debug("Error: {} with value {}: {}".format(field, fields[field], e))
+                        messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                        logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                     else:
                         messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form

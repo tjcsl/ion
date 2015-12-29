@@ -1442,15 +1442,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         if value is False:
             value = "FALSE"
 
+        cache_item = None
+
         if item_name.startswith("photoperm-"):
             grade = field_name.split("photoperm-")[1]
             self.set_raw_ldap_photoperm(field_type, grade, value)
-            cache.delete(":".join([self.dn, "photo_permissions"]))
+            cache_item = ":".join([self.dn, "photo_permissions"])
         else:
             self.set_raw_ldap_attribute(ldap_name, value)
 
+
         if field_name == "showpictures":
-            cache.delete(":".join([self.dn, "photo_permissions"]))
+            cache_item = ":".join([self.dn, "photo_permissions"])
+        elif field_name in ["showschedule", "showaddress", "showphone", "showbirthday"]:
+            cache_item = ":".join([self.dn, "user_info_permissions"])
+
+        if cache_item:
+            cache.delete(cache_item)
+
 
     def set_raw_ldap_photoperm(self, field_type, grade, value):
         if self.dn is None:
