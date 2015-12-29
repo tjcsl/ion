@@ -174,6 +174,34 @@ class LDAPConnection(object):
             raise
         return LDAPResult(r)
 
+    def photo_attributes(self, dn, attributes):
+        """Fetch a list of attributes of the specified photo for a user.
+
+        Fetch LDAP attributes of an iodinePhoto. The :class:`LDAPResult` will
+        contain an empty set of results if the photo does not exist.
+
+        Args:
+            dn
+                The full DN of the photo
+            attributes
+                A list of the LDAP fields to fetch (strings)
+
+        Returns:
+            :class:`LDAPResult` object (empty if no results)
+
+        """
+        logger.debug("Fetching attributes '{}' of photo "
+                     "{}".format(str(attributes), dn))
+
+        filter = "(objectClass=iodinePhoto)"
+
+        try:
+            r = self.search(dn, filter, attributes)
+        except ldap.NO_SUCH_OBJECT:
+            logger.warning("No such photo " + dn)
+            raise
+        return LDAPResult(r)
+
     def class_attributes(self, dn, attributes):
         """Fetch a list of attributes of the specified class.
 
@@ -205,6 +233,21 @@ class LDAPConnection(object):
     def set_attribute(self, dn, attribute, value):
         old_entry = {
             attribute: self.user_attributes(dn, [attribute]).first_result()
+        }
+
+        if isinstance(value, (list, tuple)):
+            value = [str(v) for v in value]
+
+        new_entry = {
+            attribute: value
+        }
+
+        mod = modifyModlist(old_entry, new_entry)
+        self.conn.modify_s(dn, mod)
+
+    def set_photo_attribute(self, dn, attribute, value):
+        old_entry = {
+            attribute: self.photo_attributes(dn, [attribute]).first_result()
         }
 
         if isinstance(value, (list, tuple)):

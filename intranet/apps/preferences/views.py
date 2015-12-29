@@ -189,6 +189,7 @@ def save_privacy_options(request, user):
         logger.debug("Privacy options form: valid")
         if privacy_options_form.has_changed():
             fields = privacy_options_form.cleaned_data
+            logger.debug("Privacy form fields:")
             logger.debug(fields)
             for field in fields:
                 if field in privacy_options and privacy_options[field] == fields[field]:
@@ -198,10 +199,10 @@ def save_privacy_options(request, user):
                                                                fields[field],
                                                                privacy_options[field] if field in privacy_options else None))
                     try:
-                        user.set_ldap_attribute(field, fields[field], request.user.is_eighth_admin)
+                        user.set_ldap_preference(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
                         messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                        logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                        logger.debug("Error: {} with value {}: {}".format(field, fields[field], e))
                     else:
                         messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form

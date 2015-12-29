@@ -1388,11 +1388,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Set a user attribute in LDAP.
         """
 
-        if name in User.ldap_user_attributes:
-            pass
-        elif override_set:
-            pass
-        else:
+        if name not in User.ldap_user_attributes:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
 
         if User.ldap_user_attributes[name]["can_set"]:
@@ -1416,14 +1412,65 @@ class User(AbstractBaseUser, PermissionsMixin):
         if isinstance(value, text_type):
             value = str(value)
 
-        c = LDAPConnection()
         field_name = attr["ldap_name"]
-        c.set_attribute(self.dn, field_name, value)
+        self.set_raw_ldap_attribute(field_name, value)
 
         if should_cache:
             identifier = ":".join((self.dn, name))
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
+
+    def set_ldap_preference(self, item_name, value, is_admin):
+        logger.debug("Pref: {} {}".format(item_name, value))
+
+        if item_name.endswith("-self"):
+            field_name = item_name.split("-self")[0]
+            field_type = "self"
+            ldap_name = field_name + "-self"
+        else:
+            field_name = item_name
+            field_type = "parent"
+            ldap_name = field_name
+
+
+        if field_type == "parent" and not is_admin:
+            raise Exception("You do not have permission to change this parent field.")
+
+        if value is True:
+            value = "TRUE"
+
+        if value is False:
+            value = "FALSE"
+
+        if item_name.startswith("photoperm-"):
+            grade = field_name.split("photoperm-")[1]
+            self.set_raw_ldap_photoperm(field_type, grade, value)
+            cache.delete(":".join([self.dn, "photo_permissions"]))
+        else:
+            self.set_raw_ldap_attribute(ldap_name, value)
+
+        if field_name == "showpictures":
+            cache.delete(":".join([self.dn, "photo_permissions"]))
+
+    def set_raw_ldap_photoperm(self, field_type, grade, value):
+        if self.dn is None:
+            raise Exception("Could not determine DN of User")
+
+        if field_type not in ["parent", "self"]:
+            raise Exception("Invalid photo field type")
+
+        # Possible issue with python-ldap with unicode values
+        # FIXME: move to ldap3
+        if isinstance(value, text_type):
+            value = str(value)
+
+        photo_dn = "cn={}Photo,{}".format(grade, self.dn)
+        photo_field = "perm-showpictures" + ("-self" if field_type == "self" else "")
+
+        c = LDAPConnection()
+        logger.info("SET {}: {} = {}".format(photo_dn, photo_field, value))
+        c.set_photo_attribute(photo_dn, photo_field, value)
+
 
     def set_raw_ldap_attribute(self, field_name, value):
         """Set a raw user attribute in LDAP.
@@ -1437,6 +1484,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             value = str(value)
 
         c = LDAPConnection()
+        logger.info("SET {}: {} = {}".format(self.dn, field_name, value))
         c.set_attribute(self.dn, field_name, value)
 
     def clear_cache(self):
