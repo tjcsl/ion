@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.preferences.views &mdash; TJ Intranet v3 (Build #1119) documentation</title>
+    <title>intranet.apps.preferences.views &mdash; TJ Intranet v3 (Build #1121) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1119)',
+        VERSION:     'v3 (Build #1121)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1119) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1121) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -335,6 +335,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Privacy options form: valid&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">privacy_options_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="n">privacy_options_form</span><span class="o">.</span><span class="n">cleaned_data</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Privacy form fields:&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">privacy_options</span> <span class="ow">and</span> <span class="n">privacy_options</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">==</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
@@ -344,10 +345,10 @@
                                                                <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span>
                                                                <span class="n">privacy_options</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">privacy_options</span> <span class="k">else</span> <span class="bp">None</span><span class="p">))</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">user</span><span class="o">.</span><span class="n">set_ldap_attribute</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
+                        <span class="n">user</span><span class="o">.</span><span class="n">set_ldap_preference</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Field {} with value {}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Field {} with value {}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Error: {} with value {}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Set field {} to {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])))</span>
     <span class="k">return</span> <span class="n">privacy_options_form</span>
