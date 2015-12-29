@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1121) documentation</title>
+    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1122) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1121)',
+        VERSION:     'v3 (Build #1122)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1121) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1122) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -1588,15 +1588,24 @@
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="s">&quot;FALSE&quot;</span>
 
+        <span class="n">cache_item</span> <span class="o">=</span> <span class="bp">None</span>
+
         <span class="k">if</span> <span class="n">item_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;photoperm-&quot;</span><span class="p">):</span>
             <span class="n">grade</span> <span class="o">=</span> <span class="n">field_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;photoperm-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_raw_ldap_photoperm</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s">&quot;photo_permissions&quot;</span><span class="p">]))</span>
+            <span class="n">cache_item</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s">&quot;photo_permissions&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_raw_ldap_attribute</span><span class="p">(</span><span class="n">ldap_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
+
         <span class="k">if</span> <span class="n">field_name</span> <span class="o">==</span> <span class="s">&quot;showpictures&quot;</span><span class="p">:</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s">&quot;photo_permissions&quot;</span><span class="p">]))</span>
+            <span class="n">cache_item</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s">&quot;photo_permissions&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;showschedule&quot;</span><span class="p">,</span> <span class="s">&quot;showaddress&quot;</span><span class="p">,</span> <span class="s">&quot;showphone&quot;</span><span class="p">,</span> <span class="s">&quot;showbirthday&quot;</span><span class="p">]:</span>
+            <span class="n">cache_item</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s">&quot;user_info_permissions&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">cache_item</span><span class="p">:</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">cache_item</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="User.set_raw_ldap_photoperm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_raw_ldap_photoperm">[docs]</a>    <span class="k">def</span> <span class="nf">set_raw_ldap_photoperm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
