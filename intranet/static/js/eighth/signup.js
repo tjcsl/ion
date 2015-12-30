@@ -8,8 +8,9 @@ $(function() {
     eighth.ActivityList = Backbone.Collection.extend({
         model: eighth.Activity,
         comparator: function(a1, a2) {
-            if (a1.attributes.special && !a2.attributes.special) {return -1;}
-            if (!a1.attributes.special && a2.attributes.special) {return 1;}
+            // float special activities to top
+            // if (a1.attributes.special && !a2.attributes.special) {return -1;}
+            // if (!a1.attributes.special && a2.attributes.special) {return 1;}
 
             var n1 = a1.attributes.name.toLowerCase(),
                 n2 = a2.attributes.name.toLowerCase();
@@ -286,6 +287,16 @@ $(function() {
                 $(".favorites-header").addClass("hidden");
             } else {
                 $(".favorites-header").removeClass("hidden");
+            }
+
+            var specials = _.filter(this.activities.models, function(activity) {
+                return activity.attributes.special;
+            });
+            renderActivitiesInContainer(specials, $(".special-activities", this.el));
+            if (specials.length === 0) {
+                $(".special-header").addClass("hidden");
+            } else {
+                $(".special-header").removeClass("hidden");
             }
 
             if (!$("#activity-picker").hasClass("different-user")) {

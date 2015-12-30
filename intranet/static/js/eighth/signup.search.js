@@ -36,12 +36,9 @@ $(document).ready(function() {
         }
 
         if (searchStr.length === 0) {
-            $(".sticky-header.favorites-header, .stuck.favorites-header, .favorite-activities").removeClass("search-hide");
-            $(".sticky-header.all-header, .stuck.all-header").html("All");
+            $("#activity-picker").removeClass("has-search-header");
         } else {
-            $(".sticky-header.favorites-header, .stuck.favorites-header, .favorite-activities").addClass("search-hide");
-            $(".sticky-header.all-header").html("Search Results<a class='button small-button clear-button'>Clear</a>");
-            $(".stuck.all-header").html("Search Results<a class='button small-button clear-button'>Clear</a>");
+            $("#activity-picker").addClass("has-search-header");
             $(".clear-button").click(function() {
                 $("#activity-picker .search-wrapper input").val("").trigger("keyup");
             });
@@ -235,6 +232,21 @@ $(document).ready(function() {
                 $(this).addClass("search-hide").removeClass("search-show");
             }
 
+        });
+
+        /* hide headers with no activities */
+        $("#activity-list > ul[data-header]").each(function() {
+            var vis = $("li:not(.search-hide)[data-activity-id]", $(this));
+            var cat = $(this).attr("data-header");
+
+            console.log(vis.size(), cat);
+            if(vis.size() == 0) {
+                if(cat != "all-header") $(this).hide();
+                $(".sticky-header." + cat).hide();
+            } else {
+                if(cat != "all-header") $(this).show();
+                $(".sticky-header." + cat).show();
+            }
         });
 
         if (results.length === 0) {

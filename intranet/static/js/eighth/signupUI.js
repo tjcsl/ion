@@ -140,12 +140,16 @@ function stickyHeaders(headers) {
     this.scroll = function() {
         headers.each(function(i) {
             var thisHeader = $(this),
-                prevHeader = headers.eq(i - 1);
+                prevHeader = headers.eq(i - 1),
+                thrdHeader = headers.eq(i - 2);
             var top = thisHeader.position().top;
 
             if (top <= 0) {
                 $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
-                $("#" + prevHeader.attr("id") + "-stuck").addClass("hidden");
+                headers.each(function(j) {
+                    var loopHeader = $(this);
+                    if(j != i) $("#" + loopHeader.attr("id") + "-stuck").addClass("hidden");
+                });
             } else if (top < 31) {
                 $("#" + prevHeader.attr("id") + "-stuck").css("top", top);
             } else {
