@@ -32,10 +32,13 @@
     {% endif %}
 {% endblock %}
 
-{% block bodyclass %} login-page{% endblock %}
+{% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
+        {% if login_warning %}
+            <div class="login-warning">{{ login_warning }}</div>
+        {% endif %}
         <div class="center">
             <div class="login">
                     <div class="title">

@@ -508,9 +508,10 @@ if SHOW_DEBUG_TOOLBAR:
             "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
         })
 
-
+# Maintenance mode
 MAINTENANCE_MODE = False
 
+# Allow *.tjhsst.edu sites to access the API
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?(\w+\.)?tjhsst\.edu$'
@@ -543,7 +544,7 @@ def _get_current_commit_date():
 def _get_current_commit_github_url():
     return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash())
 
-
+# Add git information for the login page
 GIT = {
     "commit_short_hash": _get_current_commit_short_hash(),
     "commit_long_hash": _get_current_commit_long_hash(),
@@ -552,8 +553,14 @@ GIT = {
     "commit_github_url": _get_current_commit_github_url()
 }
 
+# Senior graduation date in Javascript-readable format
 SENIOR_GRADUATION = "June 18 2016 19:00:00"
+# Senior graduation year
 SENIOR_GRADUATION_YEAR = 2016
-ATTENDANCE_LOCK_HOUR = 20  # 10PM
-CLEAR_ABSENCE_DAYS = 14  # Two weeks
+# The hour on an eighth period day to lock teachers from
+# taking attendance (10PM)
+ATTENDANCE_LOCK_HOUR = 20
+# The number of days to show an absence message (2 weeks)
+CLEAR_ABSENCE_DAYS = 14
+# Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
