@@ -238,14 +238,16 @@ $(document).ready(function() {
         $("#activity-list > ul[data-header]").each(function() {
             var vis = $("li:not(.search-hide)[data-activity-id]", $(this));
             var cat = $(this).attr("data-header");
-
+            var hideUl = (cat != "all-header");
+            var sticky = $(".sticky-header." + cat);
+            var hideHeader = !sticky.hasClass("no-activities");
             console.log(vis.size(), cat);
             if(vis.size() == 0) {
-                if(cat != "all-header") $(this).hide();
-                $(".sticky-header." + cat).hide();
+                if(hideUl) $(this).hide();
+                if(hideHeader) sticky.hide();
             } else {
-                if(cat != "all-header") $(this).show();
-                $(".sticky-header." + cat).show();
+                if(hideUl) $(this).show();
+                if(hideHeader) sticky.show();
             }
         });
 

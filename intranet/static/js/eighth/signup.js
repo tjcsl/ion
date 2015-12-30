@@ -294,9 +294,9 @@ $(function() {
             });
             renderActivitiesInContainer(specials, $(".special-activities", this.el));
             if (specials.length === 0) {
-                $(".special-header").addClass("hidden");
+                $(".special-header").addClass("no-activities");
             } else {
-                $(".special-header").removeClass("hidden");
+                $(".special-header").removeClass("no-activities");
             }
 
             if (!$("#activity-picker").hasClass("different-user")) {
