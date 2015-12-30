@@ -96,7 +96,6 @@ def chrome_setup_view(request):
     ncfg.gcm_token = token
     ncfg.save()
     return HttpResponse('{"success":"Now registered."}', content_type="text/json")
-        
 
 
 @login_required
@@ -116,6 +115,7 @@ def gcm_list_view(request):
     }
 
     return render(request, "notifications/gcm_list.html", context)
+
 
 @login_required
 def gcm_post_view(request):

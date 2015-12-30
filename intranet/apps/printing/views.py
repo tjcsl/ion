@@ -33,11 +33,13 @@ def get_printers():
 
     return names
 
+
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
         filetext += unicode(chunk, "ISO-8859-1")
     return filetext
+
 
 def convert_soffice(tmpfile_name):
     proc = subprocess.Popen(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stdout=subprocess.PIPE)
@@ -52,6 +54,7 @@ def convert_soffice(tmpfile_name):
 
     return False
 
+
 def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     new_name = "{}.pdf".format(tmpfile_name)
     proc = subprocess.Popen([cmdname, tmpfile_name, new_name], stdout=subprocess.PIPE)
@@ -63,6 +66,7 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
         return new_name
 
     return False
+
 
 def get_numpages(tmpfile_name):
     proc = subprocess.Popen(["pdfinfo", tmpfile_name], stdout=subprocess.PIPE)
@@ -81,6 +85,7 @@ def get_numpages(tmpfile_name):
                 num_pages = -1
 
     return num_pages
+
 
 def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
@@ -104,6 +109,7 @@ def convert_file(tmpfile_name):
 
     return Exception("Not sure how to handle a file of type {}".format(detected))
 
+
 def print_job(obj, do_print=True):
     logger.debug(obj)
 
@@ -113,7 +119,6 @@ def print_job(obj, do_print=True):
 
     if not obj.file:
         return Exception("No file.")
-
 
     fileobj = obj.file
 
@@ -130,10 +135,9 @@ def print_job(obj, do_print=True):
 
     tmpfile_name = convert_file(tmpfile_name)
     logger.debug(tmpfile_name)
-    
+
     if not tmpfile_name:
         return Exception("Could not convert file.")
-
 
     num_pages = get_numpages(tmpfile_name)
     obj.num_pages = num_pages
@@ -146,6 +150,7 @@ def print_job(obj, do_print=True):
     if do_print:
         proc = subprocess.Popen(["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)], stdout=subprocess.PIPE)
         (output, err) = proc.communicate()
+
 
 @login_required
 def print_view(request):

@@ -13,7 +13,7 @@ class NotificationConfig(models.Model):
     gcm_optout = models.BooleanField(default=False)
 
     android_gcm_rand = models.CharField(max_length=100, blank=True, null=True)
-    
+
     @property
     def gcm_token_sha256(self):
         return hashlib.sha256(self.gcm_token).hexdigest()

@@ -280,7 +280,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             activity_list[activity_id]["rooms"].append(room_name)
             activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
-
         for scheduled_activity in scheduled_activities:
             if scheduled_activity.capacity is not None:
                 capacity = scheduled_activity.capacity

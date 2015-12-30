@@ -151,7 +151,7 @@ TEMPLATES = [
                 "intranet.apps.context_processors.ion_base_url",        # For determining the base url
                 "intranet.apps.context_processors.nav_categorizer",     # For determining the category in the navbar
                 "intranet.apps.eighth.context_processors.start_date",   # For determining the eighth pd start date
-                "intranet.apps.eighth.context_processors.absence_count",# For showing the absence count in the navbar
+                "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
                 "intranet.apps.context_processors.mobile_app"           # For the custom android app functionality (tbd?)
             ),
             "debug": True  # Only enabled if DEBUG is true as well
@@ -169,7 +169,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "django.contrib.messages.middleware.MessageMiddleware",     # Messages
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
-    "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware", # Selectize fixes 
+    "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",       # Access log
     "corsheaders.middleware.CorsMiddleware",                    # CORS headers, for ext. API use
     "intranet.middleware.traceback.UserTracebackMiddleware",    # Include user in traceback
@@ -286,7 +286,7 @@ FCPS_STUDENT_ID_LENGTH = 7
 
 # Django REST framework configuration
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",), # require authentication
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),  # require authentication
     "USE_ABSOLUTE_URLS": True,
 
     # Return native `Date` and `Time` objects in `serializer.data`
@@ -478,7 +478,7 @@ if SHOW_DEBUG_TOOLBAR:
 
     # Add middleware
     MIDDLEWARE_CLASSES.extend([
-        "intranet.middleware.templates.StripNewlinesMiddleware",# Strip newlines
+        "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
         "debug_toolbar.middleware.DebugToolbarMiddleware",      # Debug toolbar
     ])
 

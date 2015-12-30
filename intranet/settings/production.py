@@ -71,7 +71,7 @@ class glob_list(list):
 
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
-        
+
         # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
         # list of IP addresses, if the user is using a proxy
         if "," in key:

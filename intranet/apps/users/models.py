@@ -1432,7 +1432,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             field_type = "parent"
             ldap_name = field_name
 
-
         if field_type == "parent" and not is_admin:
             raise Exception("You do not have permission to change this parent field.")
 
@@ -1451,7 +1450,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             self.set_raw_ldap_attribute(ldap_name, value)
 
-
         if field_name == "showpictures":
             cache_item = ":".join([self.dn, "photo_permissions"])
         elif field_name in ["showschedule", "showaddress", "showphone", "showbirthday"]:
@@ -1459,7 +1457,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if cache_item:
             cache.delete(cache_item)
-
 
     def set_raw_ldap_photoperm(self, field_type, grade, value):
         if self.dn is None:
@@ -1479,7 +1476,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         c = LDAPConnection()
         logger.info("SET {}: {} = {}".format(photo_dn, photo_field, value))
         c.set_photo_attribute(photo_dn, photo_field, value)
-
 
     def set_raw_ldap_attribute(self, field_name, value):
         """Set a raw user attribute in LDAP.
