@@ -182,11 +182,25 @@
             displayScroll = function() {
                 var $el = $("#activity-list");
                 if(window.scrollDirection == 1) {
-                    $el.animate({ scrollTop: $el.height() }, window.scrollSpeed);
-                } else {
-                    $el.animate({ scrollTop: 0 }, window.scrollSpeed);
+                    var top = $el.scrollTop() + $el.height();
+                    var max = $el[0].scrollHeight;
+                    var scrmax = max - $el.height();
+                    if(top > scrmax) top = scrmax;
+                    $el.animate({ scrollTop: top }, window.scrollSpeed);
+
+                    var pos = ($el.scrollTop() + $el.innerHeight());
+                    if((pos >= max)) window.scrollDirection *= -1;
                 }
-                window.scrollDirection *= -1;
+
+                if(window.scrollDirection == -1) {
+                    var sec = $el.scrollTop() - $el.height();
+                    if(sec <= 0) {
+                        $el.animate({ scrollTop: 0 }, window.scrollSpeed);
+                        window.scrollDirection *= -1;
+                    } else {
+                        $el.animate({ scrollTop: sec }, window.scrollSpeed);
+                    }
+                }
             }
 
             window.setInterval(displayScroll, window.scrollInterval);
