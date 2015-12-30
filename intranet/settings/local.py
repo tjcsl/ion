@@ -76,6 +76,7 @@ class glob_list(list):
                 pass
         return False
 
+# Internal IP ranges for debugging
 INTERNAL_IPS = glob_list([
     "127.0.0.0/8",
     "10.0.0.0/8",
@@ -83,4 +84,5 @@ INTERNAL_IPS = glob_list([
     "2001:468:cc0::/48"
 ])
 
+# Trust X-Forwarded-For
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')

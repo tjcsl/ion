@@ -9,8 +9,8 @@ from .base import *
 
 logger = logging.getLogger("intranet_access")
 
-"""In production, add a file called secret.py to the settings package that
-defines SECRET_KEY and DATABASE_URL.
+""" !! In production, add a file called secret.py to the settings package that
+defines SECRET_KEY and DATABASE_URL. !!
 
 DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
@@ -86,6 +86,7 @@ class glob_list(list):
                 pass
         return False
 
+# Internal IP ranges in production
 INTERNAL_IPS = glob_list([
     "127.0.0.0/8",
     "198.38.16.0/20",
