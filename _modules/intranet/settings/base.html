@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1124) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1125) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1124)',
+        VERSION:     'v3 (Build #1125)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1124) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1125) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -170,13 +170,19 @@
 
 <span class="n">EMAIL_FROM</span> <span class="o">=</span> <span class="s">&quot;ion-noreply@tjhsst.edu&quot;</span>
 
+<span class="c"># Addresses to send production error messages</span>
 <span class="n">ADMINS</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">(</span><span class="s">&quot;James Woglom&quot;</span><span class="p">,</span> <span class="s">&quot;2016jwoglom+ion@tjhsst.edu&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s">&quot;Samuel Damashek&quot;</span><span class="p">,</span> <span class="s">&quot;2017sdamashe+ion@tjhsst.edu&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s">&quot;Andrew Hamilton&quot;</span><span class="p">,</span> <span class="s">&quot;ahamilto+ion@tjhsst.edu&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
+<span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
+
+<span class="c"># Address to send feedback messages to</span>
 <span class="n">FEEDBACK_EMAIL</span> <span class="o">=</span> <span class="s">&quot;intranet@lists.tjhsst.edu&quot;</span>
+
+<span class="c"># Address to send approval messages to</span>
 <span class="n">APPROVAL_EMAIL</span> <span class="o">=</span> <span class="s">&quot;intranet-approval@lists.tjhsst.edu&quot;</span>
 
 <span class="n">FILE_UPLOAD_HANDLERS</span> <span class="o">=</span> <span class="p">[</span>
@@ -184,18 +190,24 @@
     <span class="s">&quot;django.core.files.uploadhandler.TemporaryFileUploadHandler&quot;</span>
 <span class="p">]</span>
 
+<span class="c"># The maximum number of pages in one document that can be</span>
+<span class="c"># printed through the printing functionality (through pdfinfo)</span>
 <span class="n">PRINTING_PAGES_LIMIT</span> <span class="o">=</span> <span class="mi">15</span>
 
+<span class="c"># The maximum file upload and download size for files</span>
 <span class="n">FILES_MAX_UPLOAD_SIZE</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
 <span class="n">FILES_MAX_DOWNLOAD_SIZE</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
 
 <span class="n">CSRF_FAILURE_VIEW</span> <span class="o">=</span> <span class="s">&quot;intranet.apps.error.views.handle_csrf_view&quot;</span>
 
-<span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
 <span class="c"># Hosts/domain names that are valid for this site; required if DEBUG is False</span>
 <span class="c"># See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts</span>
-<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s">&quot;198.38.18.250&quot;</span><span class="p">]</span>
+<span class="c">#</span>
+<span class="c"># In production, Nginx filters requests that are not in this list. If this is</span>
+<span class="c"># not done, an email failure notification gets sent whenever someone messes with</span>
+<span class="c"># the HTTP Host header.</span>
+<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">]</span>
 
 <span class="c"># Local time zone for this installation. Choices can be found here:</span>
 <span class="c"># http://en.wikipedia.org/wiki/List_of_tz_zones_by_name</span>
@@ -222,11 +234,15 @@
 
 <span class="c"># Absolute filesystem path to the directory that will hold user-uploaded files.</span>
 <span class="c"># Example: &quot;/home/media/media.lawrence.com/media/&quot;</span>
+<span class="c">#</span>
+<span class="c"># Not used.</span>
 <span class="n">MEDIA_ROOT</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 
 <span class="c"># URL that handles the media served from MEDIA_ROOT. Make sure to use a</span>
 <span class="c"># trailing slash.</span>
 <span class="c"># Examples: &quot;http://media.lawrence.com/media/&quot;, &quot;http://example.com/media/&quot;</span>
+<span class="c">#</span>
+<span class="c"># Not used.</span>
 <span class="n">MEDIA_URL</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 
 <span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s">&quot;django.test.runner.DiscoverRunner&quot;</span>
@@ -235,6 +251,8 @@
 <span class="c"># Don&quot;t put anything in this directory yourself; store your static files</span>
 <span class="c"># in apps&quot; &quot;static/&quot; subdirectories and in STATICFILES_DIRS.</span>
 <span class="c"># Example: &quot;/home/media/media.lawrence.com/static/&quot;</span>
+<span class="c">#</span>
+<span class="c"># This is the folder that Nginx serves as /static in production</span>
 <span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s">&quot;collected_static&quot;</span><span class="p">)</span>
 
 <span class="c"># URL prefix for static files.</span>
@@ -262,6 +280,7 @@
     <span class="s">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="c"># Use the custom User model defined in apps/users/models.py</span>
 <span class="n">AUTH_USER_MODEL</span> <span class="o">=</span> <span class="s">&quot;users.User&quot;</span>
 
 <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">[</span>
@@ -271,15 +290,15 @@
         <span class="s">&quot;DIRS&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s">&quot;templates&quot;</span><span class="p">),),</span>
         <span class="s">&quot;OPTIONS&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;context_processors&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>
-                <span class="s">&quot;django.template.context_processors.debug&quot;</span><span class="p">,</span>
-                <span class="s">&quot;django.template.context_processors.request&quot;</span><span class="p">,</span>
-                <span class="s">&quot;django.contrib.messages.context_processors.messages&quot;</span><span class="p">,</span>
-                <span class="s">&quot;intranet.apps.context_processors.ion_base_url&quot;</span><span class="p">,</span>
-                <span class="s">&quot;intranet.apps.context_processors.nav_categorizer&quot;</span><span class="p">,</span>
-                <span class="s">&quot;intranet.apps.eighth.context_processors.start_date&quot;</span><span class="p">,</span>
-                <span class="s">&quot;intranet.apps.eighth.context_processors.absence_count&quot;</span><span class="p">,</span>
-                <span class="s">&quot;intranet.apps.context_processors.mobile_app&quot;</span>
+                <span class="s">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>          <span class="c"># Authentication; must be defined first</span>
+                <span class="s">&quot;django.template.context_processors.debug&quot;</span><span class="p">,</span>             <span class="c"># Django default</span>
+                <span class="s">&quot;django.template.context_processors.request&quot;</span><span class="p">,</span>           <span class="c"># Django default</span>
+                <span class="s">&quot;django.contrib.messages.context_processors.messages&quot;</span><span class="p">,</span>  <span class="c"># For page messages</span>
+                <span class="s">&quot;intranet.apps.context_processors.ion_base_url&quot;</span><span class="p">,</span>        <span class="c"># For determining the base url</span>
+                <span class="s">&quot;intranet.apps.context_processors.nav_categorizer&quot;</span><span class="p">,</span>     <span class="c"># For determining the category in the navbar</span>
+                <span class="s">&quot;intranet.apps.eighth.context_processors.start_date&quot;</span><span class="p">,</span>   <span class="c"># For determining the eighth pd start date</span>
+                <span class="s">&quot;intranet.apps.eighth.context_processors.absence_count&quot;</span><span class="p">,</span><span class="c"># For showing the absence count in the navbar</span>
+                <span class="s">&quot;intranet.apps.context_processors.mobile_app&quot;</span>           <span class="c"># For the custom android app functionality (tbd?)</span>
             <span class="p">),</span>
             <span class="s">&quot;debug&quot;</span><span class="p">:</span> <span class="bp">True</span>  <span class="c"># Only enabled if DEBUG is true as well</span>
         <span class="p">}</span>
@@ -287,24 +306,25 @@
 <span class="p">]</span>
 
 <span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>
-    <span class="s">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.environment.KerberosCacheMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>
-    <span class="s">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>
-    <span class="c"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,</span>
-    <span class="s">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>
-    <span class="s">&quot;maintenancemode.middleware.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>
+    <span class="s">&quot;intranet.middleware.url_slashes.FixSlashes&quot;</span><span class="p">,</span>               <span class="c"># Remove slashes in URLs</span>
+    <span class="s">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>                <span class="c"># Django default</span>
+    <span class="s">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>     <span class="c"># Django sessions</span>
+    <span class="s">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>                <span class="c"># Django CSRF</span>
+    <span class="s">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>  <span class="c"># Django auth</span>
+    <span class="s">&quot;intranet.middleware.environment.KerberosCacheMiddleware&quot;</span><span class="p">,</span>  <span class="c"># Kerberos</span>
+    <span class="s">&quot;intranet.middleware.threadlocals.ThreadLocalsMiddleware&quot;</span><span class="p">,</span>  <span class="c"># Thread locals</span>
+    <span class="s">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>     <span class="c"># Messages</span>
+    <span class="s">&quot;intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare&quot;</span><span class="p">,</span>  <span class="c"># See note in ajax.py</span>
+    <span class="s">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span> <span class="c"># Selectize fixes </span>
+    <span class="s">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>       <span class="c"># Access log</span>
+    <span class="s">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>                    <span class="c"># CORS headers, for ext. API use</span>
+    <span class="s">&quot;intranet.middleware.traceback.UserTracebackMiddleware&quot;</span><span class="p">,</span>    <span class="c"># Include user in traceback</span>
+    <span class="c"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
+    <span class="s">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>      <span class="c"># Show ldap simple bind message</span>
+    <span class="s">&quot;maintenancemode.middleware.MaintenanceModeMiddleware&quot;</span><span class="p">,</span>     <span class="c"># Maintenance mode</span>
 <span class="p">]</span>
 
+<span class="c"># URLconf at urls.py</span>
 <span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s">&quot;intranet.urls&quot;</span>
 
 <span class="c"># Python dotted path to the WSGI application used by Django&#39;s runserver.</span>
@@ -326,6 +346,7 @@
 
 <span class="n">days</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span>
 <span class="n">months</span> <span class="o">=</span> <span class="n">days</span> <span class="o">*</span> <span class="mi">30</span>
+<span class="c"># Age of cache information</span>
 <span class="n">CACHE_AGE</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&quot;dn_id_mapping&quot;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
     <span class="s">&quot;user_attribute&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
@@ -354,6 +375,8 @@
 <span class="p">}</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">:</span>
+    <span class="c"># Cacheops configuration</span>
+    <span class="c"># may be removed in the future</span>
     <span class="n">CACHEOPS_REDIS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span>
         <span class="s">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span>
@@ -382,15 +405,16 @@
 
 
 <span class="c"># LDAP configuration</span>
-<span class="n">AD_REALM</span> <span class="o">=</span> <span class="s">&quot;LOCAL.TJHSST.EDU&quot;</span>  <span class="c"># Active Directory Realm</span>
+<span class="n">AD_REALM</span> <span class="o">=</span> <span class="s">&quot;LOCAL.TJHSST.EDU&quot;</span>  <span class="c"># Active Directory (LOCAL) Realm</span>
 <span class="n">CSL_REALM</span> <span class="o">=</span> <span class="s">&quot;CSL.TJHSST.EDU&quot;</span>  <span class="c"># CSL Realm</span>
 <span class="n">HOST</span> <span class="o">=</span> <span class="s">&quot;ion.tjhsst.edu&quot;</span>
 <span class="n">LDAP_REALM</span> <span class="o">=</span> <span class="s">&quot;CSL.TJHSST.EDU&quot;</span>
 <span class="n">LDAP_SERVER</span> <span class="o">=</span> <span class="s">&quot;ldap://iodine-ldap.tjhsst.edu&quot;</span>
-<span class="n">KINIT_TIMEOUT</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c"># seconds for pexpect</span>
+<span class="n">KINIT_TIMEOUT</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c"># seconds before pexpect timeouts</span>
 
 <span class="n">AUTHUSER_DN</span> <span class="o">=</span> <span class="s">&quot;cn=authuser,dc=tjhsst,dc=edu&quot;</span>
-<span class="c"># AUTHUSER_PASSWORD</span>
+
+<span class="c"># !! define AUTHUSER_PASSWORD in secret.py !!</span>
 
 <span class="c"># LDAP schema config</span>
 <span class="n">BASE_DN</span> <span class="o">=</span> <span class="s">&quot;dc=tjhsst,dc=edu&quot;</span>
@@ -406,8 +430,9 @@
 
 <span class="n">FCPS_STUDENT_ID_LENGTH</span> <span class="o">=</span> <span class="mi">7</span>
 
+<span class="c"># Django REST framework configuration</span>
 <span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,),</span>
+    <span class="s">&quot;DEFAULT_PERMISSION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;rest_framework.permissions.IsAuthenticated&quot;</span><span class="p">,),</span> <span class="c"># require authentication</span>
     <span class="s">&quot;USE_ABSOLUTE_URLS&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
 
     <span class="c"># Return native `Date` and `Time` objects in `serializer.data`</span>
@@ -426,6 +451,7 @@
 <span class="p">}</span>
 
 <span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c"># internal Django</span>
     <span class="s">&quot;django.contrib.auth&quot;</span><span class="p">,</span>
     <span class="s">&quot;django.contrib.admin&quot;</span><span class="p">,</span>
     <span class="s">&quot;django.contrib.contenttypes&quot;</span><span class="p">,</span>
@@ -433,9 +459,11 @@
     <span class="s">&quot;django.contrib.sites&quot;</span><span class="p">,</span>
     <span class="s">&quot;django.contrib.messages&quot;</span><span class="p">,</span>
     <span class="s">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
+    <span class="c"># Django plugins</span>
     <span class="s">&quot;django_extensions&quot;</span><span class="p">,</span>
     <span class="s">&quot;rest_framework&quot;</span><span class="p">,</span>
     <span class="s">&quot;maintenancemode&quot;</span><span class="p">,</span>
+    <span class="c"># Intranet apps</span>
     <span class="s">&quot;intranet.apps&quot;</span><span class="p">,</span>
     <span class="s">&quot;intranet.apps.announcements&quot;</span><span class="p">,</span>
     <span class="s">&quot;intranet.apps.api&quot;</span><span class="p">,</span>
@@ -454,17 +482,17 @@
     <span class="s">&quot;intranet.apps.polls&quot;</span><span class="p">,</span>
     <span class="s">&quot;intranet.apps.signage&quot;</span><span class="p">,</span>
     <span class="s">&quot;intranet.apps.seniors&quot;</span><span class="p">,</span>
+    <span class="c"># Intranet middleware</span>
     <span class="s">&quot;intranet.middleware.environment&quot;</span><span class="p">,</span>
+    <span class="c"># Django plugins</span>
     <span class="s">&quot;widget_tweaks&quot;</span><span class="p">,</span>
     <span class="s">&quot;corsheaders&quot;</span><span class="p">,</span>
     <span class="s">&quot;cacheops&quot;</span>
 <span class="p">)</span>
 
+<span class="c"># Eighth period default block date format</span>
 <span class="n">EIGHTH_BLOCK_DATE_FORMAT</span> <span class="o">=</span> <span class="s">&quot;D, N j, Y&quot;</span>
 
-<span class="c"># A sample logging configuration. The only tangible logging</span>
-<span class="c"># performed by this configuration is to send an email to</span>
-<span class="c"># the site admins on every HTTP 500 error when DEBUG=False.</span>
 <span class="c"># See http://docs.djangoproject.com/en/dev/topics/logging for</span>
 <span class="c"># more details on how to customize your logging configuration.</span>
 <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="s">&quot;INFO&quot;</span> <span class="k">if</span> <span class="n">PRODUCTION</span> <span class="k">else</span> <span class="s">&quot;DEBUG&quot;</span>
@@ -489,22 +517,26 @@
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="s">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c"># Email ADMINS</span>
         <span class="s">&quot;mail_admins&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;ERROR&quot;</span><span class="p">,</span>
             <span class="s">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;require_debug_false&quot;</span><span class="p">],</span>
             <span class="s">&quot;class&quot;</span><span class="p">:</span> <span class="s">&quot;intranet.middleware.email_handler.AdminEmailHandler&quot;</span><span class="p">,</span>
             <span class="s">&quot;include_html&quot;</span><span class="p">:</span> <span class="bp">True</span>
         <span class="p">},</span>
+        <span class="c"># Log in console</span>
         <span class="s">&quot;console&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s">&quot;class&quot;</span><span class="p">:</span> <span class="s">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
             <span class="s">&quot;formatter&quot;</span><span class="p">:</span> <span class="s">&quot;simple&quot;</span>
         <span class="p">},</span>
+        <span class="c"># Log access in console</span>
         <span class="s">&quot;console_access&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s">&quot;class&quot;</span><span class="p">:</span> <span class="s">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
             <span class="s">&quot;formatter&quot;</span><span class="p">:</span> <span class="s">&quot;access&quot;</span>
         <span class="p">},</span>
+        <span class="c"># Log access to file (DEBUG=FALSE)</span>
         <span class="s">&quot;access_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;require_debug_false&quot;</span><span class="p">],</span>
@@ -513,6 +545,7 @@
             <span class="s">&quot;filename&quot;</span><span class="p">:</span> <span class="s">&quot;/var/log/ion/app_access.log&quot;</span><span class="p">,</span>
             <span class="s">&quot;delay&quot;</span><span class="p">:</span> <span class="bp">True</span>
         <span class="p">},</span>
+        <span class="c"># Log auth to file (DEBUG=FALSE)</span>
         <span class="s">&quot;auth_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;require_debug_false&quot;</span><span class="p">],</span>
@@ -521,6 +554,7 @@
             <span class="s">&quot;filename&quot;</span><span class="p">:</span> <span class="s">&quot;/var/log/ion/app_auth.log&quot;</span><span class="p">,</span>
             <span class="s">&quot;delay&quot;</span><span class="p">:</span> <span class="bp">True</span>
         <span class="p">},</span>
+        <span class="c"># Log error to file (DEBUG=FALSE)</span>
         <span class="s">&quot;error_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;ERROR&quot;</span><span class="p">,</span>
             <span class="s">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;require_debug_false&quot;</span><span class="p">],</span>
@@ -530,21 +564,25 @@
         <span class="p">},</span>
     <span class="p">},</span>
     <span class="s">&quot;loggers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c"># Django request errors email admins and errorlog</span>
         <span class="s">&quot;django.request&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s">&quot;error_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;ERROR&quot;</span><span class="p">,</span>
             <span class="s">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="c"># Intranet errors email admins and errorlog</span>
         <span class="s">&quot;intranet&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;console&quot;</span><span class="p">,</span> <span class="s">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s">&quot;error_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="n">LOG_LEVEL</span><span class="p">,</span>
             <span class="s">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="c"># Intranet access logs to accesslog</span>
         <span class="s">&quot;intranet_access&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s">&quot;access_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">False</span>
         <span class="p">},</span>
+        <span class="c"># Intranet auth logs to authlog</span>
         <span class="s">&quot;intranet_auth&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s">&quot;auth_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="s">&quot;level&quot;</span><span class="p">:</span> <span class="s">&quot;DEBUG&quot;</span><span class="p">,</span>
@@ -554,6 +592,7 @@
 <span class="p">}</span>
 
 <span class="c"># The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR</span>
+<span class="c"># This is overridden in production.py and local.py</span>
 <span class="n">SHOW_DEBUG_TOOLBAR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;SHOW_DEBUG_TOOLBAR&quot;</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;YES&quot;</span>
 
 <span class="k">if</span> <span class="n">SHOW_DEBUG_TOOLBAR</span><span class="p">:</span>
@@ -583,9 +622,10 @@
 
     <span class="n">DEBUG_TOOLBAR_PANELS</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_panels</span><span class="p">]</span>
 
+    <span class="c"># Add middleware</span>
     <span class="n">MIDDLEWARE_CLASSES</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-        <span class="s">&quot;intranet.middleware.templates.StripNewlinesMiddleware&quot;</span><span class="p">,</span>
-        <span class="s">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">,</span>
+        <span class="s">&quot;intranet.middleware.templates.StripNewlinesMiddleware&quot;</span><span class="p">,</span><span class="c"># Strip newlines</span>
+        <span class="s">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">,</span>      <span class="c"># Debug toolbar</span>
     <span class="p">])</span>
 
     <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span>
@@ -614,9 +654,10 @@
             <span class="s">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">:</span> <span class="s">&quot;intranet.settings.debug_toolbar_callback&quot;</span>
         <span class="p">})</span>
 
-
+<span class="c"># Maintenance mode</span>
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="bp">False</span>
 
+<span class="c"># Allow *.tjhsst.edu sites to access the API</span>
 <span class="n">CORS_ORIGIN_ALLOW_ALL</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="n">CORS_ORIGIN_REGEX_WHITELIST</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s">&#39;^(https?://)?(\w+\.)?tjhsst\.edu$&#39;</span>
@@ -649,7 +690,7 @@
 <span class="k">def</span> <span class="nf">_get_current_commit_github_url</span><span class="p">():</span>
     <span class="k">return</span> <span class="s">&quot;https://github.com/tjcsl/ion/commit/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_get_current_commit_long_hash</span><span class="p">())</span>
 
-
+<span class="c"># Add git information for the login page</span>
 <span class="n">GIT</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&quot;commit_short_hash&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_short_hash</span><span class="p">(),</span>
     <span class="s">&quot;commit_long_hash&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_long_hash</span><span class="p">(),</span>
@@ -658,10 +699,17 @@
     <span class="s">&quot;commit_github_url&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_github_url</span><span class="p">()</span>
 <span class="p">}</span>
 
+<span class="c"># Senior graduation date in Javascript-readable format</span>
 <span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="s">&quot;June 18 2016 19:00:00&quot;</span>
+<span class="c"># Senior graduation year</span>
 <span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2016</span>
-<span class="n">ATTENDANCE_LOCK_HOUR</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c"># 10PM</span>
-<span class="n">CLEAR_ABSENCE_DAYS</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c"># Two weeks</span>
+<span class="c"># The hour on an eighth period day to lock teachers from</span>
+<span class="c"># taking attendance (10PM)</span>
+<span class="n">ATTENDANCE_LOCK_HOUR</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c"># The number of days to show an absence message (2 weeks)</span>
+<span class="n">CLEAR_ABSENCE_DAYS</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="c"># Shows a warning message with yellow background on the login page</span>
+<span class="c"># LOGIN_WARNING = &quot;This is a message to display on the login page.&quot;</span>
 </pre></div>
 
     </div>
