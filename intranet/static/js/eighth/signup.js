@@ -311,6 +311,8 @@ $(function() {
                     model.attributes.favorited = !model.attributes.favorited;
                     view.render();
 
+                    $("#activity-picker .search-wrapper input").val("").trigger("keyup");
+
                     $.ajax({
                         url: $("#activity-list").data("toggle-favorite-endpoint"),
                         type: "POST",
