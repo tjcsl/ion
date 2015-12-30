@@ -36,9 +36,12 @@ $(document).ready(function() {
         }
 
         if (searchStr.length === 0) {
-            $(".sticky-header.all-header").html("All");
+            $(".sticky-header.favorites-header, .stuck.favorites-header, .favorite-activities").removeClass("search-hide");
+            $(".sticky-header.all-header, .stuck.all-header").html("All");
         } else {
+            $(".sticky-header.favorites-header, .stuck.favorites-header, .favorite-activities").addClass("search-hide");
             $(".sticky-header.all-header").html("Search Results<a class='button small-button clear-button'>Clear</a>");
+            $(".stuck.all-header").html("Search Results<a class='button small-button clear-button'>Clear</a>");
             $(".clear-button").click(function() {
                 $("#activity-picker .search-wrapper input").val("").trigger("keyup");
             });
