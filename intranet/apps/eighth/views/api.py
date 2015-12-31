@@ -8,7 +8,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from intranet.apps.users.models import User
 from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer, EighthScheduledActivitySerializer
+from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, \
+    EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer, EighthScheduledActivitySerializer
 
 logger = logging.getLogger(__name__)
 
