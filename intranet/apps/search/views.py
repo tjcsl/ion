@@ -220,11 +220,11 @@ def do_ldap_query(q, admin=False):
 
             logger.debug("Running LDAP query: {}".format(query))
 
-            res = c.search(settings.USER_DN, query, [])
+            res = c.search(settings.USER_DN, query, ["dn"])
             new_dns = []
             # if multiple words, delete those that weren't in previous searches
             for row in res:
-                dn = row[0]
+                dn = row["dn"]
                 if i == 0:
                     new_dns.append(dn)
                 elif dn in result_dns:
@@ -245,7 +245,9 @@ def do_ldap_query(q, admin=False):
 def get_search_results(q, admin=False):
     try:
         q = q.replace("+", " ")
-        q = q.encode("utf8")
+        if str == bytes:
+            # python 2 only
+            q = q.encode("utf-8")
         users = []
 
         queries = q.split(" OR ")
