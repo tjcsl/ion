@@ -16,7 +16,7 @@ class NotificationConfig(models.Model):
 
     @property
     def gcm_token_sha256(self):
-        return hashlib.sha256(self.gcm_token).hexdigest()
+        return hashlib.sha256(self.gcm_token.encode()).hexdigest()
 
     def __str__(self):
         return "{}".format(self.user)
