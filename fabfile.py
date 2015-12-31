@@ -48,16 +48,15 @@ def runserver(port=8080,
         abort("You must specify a port.")
 
     # clean_pyc()
-
     yes_or_no = ("debug_toolbar",
                  "werkzeug",
                  "dummy_cache",
                  "short_cache",
                  "template_warnings",
                  "insecure")
-    for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
-        if arg not in ("yes", "no"):
-            abort("Specify 'yes' or 'no' for '" + name + "' option.")
+    for s in yes_or_no:
+        if locals()[s].lower() not in ("yes", "no"):
+            abort("Specify 'yes' or 'no' for {} option.".format(s))
 
     _log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
     if log_level not in _log_levels:

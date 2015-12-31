@@ -90,7 +90,7 @@ grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"
 
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
-    mkvirtualenv ion && workon ion &&
+    mkvirtualenv --python=python3.4 ion && workon ion &&
     pip install -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate
