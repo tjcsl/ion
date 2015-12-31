@@ -74,7 +74,7 @@ class Host(models.Model):
             return True
         return (self in Host.objects.visible_to_user(user))
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.code)
 
     class Meta:

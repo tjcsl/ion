@@ -59,7 +59,7 @@ class AnnouncementUserMap(models.Model):
     users_hidden = models.ManyToManyField(User, blank=True, related_name="announcements_hidden")
     users_seen = models.ManyToManyField(User, blank=True, related_name="announcements_seen")
 
-    def __unicode__(self):
+    def __str__(self):
         return "UserMap: {}".format(self.announcement.title)
 
 
@@ -104,7 +104,7 @@ class Announcement(models.Model):
     def get_author(self):
         return self.author if self.author else self.user.full_name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @property
@@ -189,7 +189,7 @@ class AnnouncementRequest(models.Model):
 
     admin_email_sent = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:

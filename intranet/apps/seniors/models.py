@@ -13,7 +13,7 @@ class College(models.Model):
     name = models.CharField(max_length=1000)
     ceeb = models.IntegerField(unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.ceeb)
 
     class Meta:
@@ -134,7 +134,7 @@ class Senior(models.Model):
     college_sure = models.BooleanField(default=False)
     major_sure = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.user)
 
     class Meta:

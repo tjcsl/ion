@@ -1527,7 +1527,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username or self.ion_username or self.id
 
     def __int__(self):
@@ -1762,7 +1762,7 @@ class Class(object):
                           timeout=settings.CACHE_AGE['class_attribute'])
                 return value
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
 
 
@@ -1834,7 +1834,7 @@ class Address(object):
         self.state = state
         self.postal_code = postal_code
 
-    def __unicode__(self):
+    def __str__(self):
         """Returns full address string."""
         return "{}\n{}, {} {}".format(self.street, self.city,
                                       self.state, self.postal_code)
@@ -1921,9 +1921,6 @@ class Grade(object):
         """Return the grade as a number (9-12)."""
         return self._number
 
-    def __unicode__(self):
+    def __str__(self):
         """Return name of the grade."""
         return self._name
-
-    def __str__(self):
-        return self.__unicode__()

@@ -100,7 +100,7 @@ class Poll(models.Model):
 
         return False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -164,7 +164,7 @@ class Question(models.Model):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
         return User.objects.filter(id__in=users).nocache()
 
-    def __unicode__(self):
+    def __str__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
         return "Question #{}: '{}'".format(self.num, self.trunc_question())
 
@@ -223,7 +223,7 @@ class Choice(models.Model):  # individual answer choices
         else:
             return comp
 
-    def __unicode__(self):
+    def __str__(self):
         # return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())
         return "Option #{}: '{}'".format(self.num, self.trunc_info())
 
@@ -235,7 +235,7 @@ class Answer(models.Model):  # individual answer choices selected
     clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} {}".format(self.user, self.choice)
 
 
@@ -246,5 +246,5 @@ class AnswerVotes(models.Model):  # record of total selection of a given answer 
     votes = models.DecimalField(max_digits=4, decimal_places=3, default=0)  # sum of answer weights
     is_writing = models.BooleanField(default=False)  # enables distinction between writing/std answers
 
-    def __unicode__(self):
+    def __str__(self):
         return self.choice

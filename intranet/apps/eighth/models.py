@@ -71,7 +71,7 @@ class EighthSponsor(AbstractBaseEighthModel):
     def to_be_assigned(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -106,7 +106,7 @@ class EighthRoom(AbstractBaseEighthModel):
     def to_be_determined(self):
         return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.capacity)
         # return "{}".format(self.name)
 
@@ -326,7 +326,7 @@ class EighthActivity(AbstractBaseEighthModel):
     class Meta:
         verbose_name_plural = "eighth activities"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_with_flags
 
 
@@ -571,7 +571,7 @@ class EighthBlock(AbstractBaseEighthModel):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
-    def __unicode__(self):
+    def __str__(self):
         formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
         return "{} ({})".format(formatted_date, self.block_letter)
 
@@ -1171,7 +1171,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         unique_together = (("block", "activity"),)
         verbose_name_plural = "eighth scheduled activities"
 
-    def __unicode__(self):
+    def __str__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
@@ -1302,7 +1302,7 @@ class EighthSignup(AbstractBaseEighthModel):
         """Is the block for this signup in the clear absence period?"""
         return self.scheduled_activity.block.in_clear_absence_period()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity)
 

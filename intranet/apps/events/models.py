@@ -138,7 +138,7 @@ class Event(models.Model):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.approved:
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
         else:
