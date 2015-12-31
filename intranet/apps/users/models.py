@@ -609,10 +609,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 # (pickling a Class class loads all properties
                 # recursively and quickly reaches the maximum
                 # recursion depth)
-                dn_list = list(zip(*ordered_schedule)[2])
+                dn_list = list(zip(*ordered_schedule))[2]
                 cache.set(key, dn_list,
                           timeout=settings.CACHE_AGE['user_classes'])
-                return list(zip(*ordered_schedule)[1])  # Unpacked class list
+                return list(zip(*ordered_schedule))[1]  # Unpacked class list
         else:
             return None
 
@@ -1759,7 +1759,9 @@ class Class(object):
                 return value
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
+        if self.name and self.teacher.last_name:
+            return "{} ({})".format(self.name, self.teacher.last_name)
+        return "{}".format(self.dn)
 
 
 class ClassSections(object):
@@ -1805,6 +1807,9 @@ class ClassSections(object):
             classes.append(c)
 
         return classes
+
+    def __str__(self):
+        return self.id
 
 
 class Address(object):
