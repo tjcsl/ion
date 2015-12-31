@@ -12,10 +12,8 @@ $(document).ready(function() {
         location.href = (window.osearch ? "/?"+window.osearch.substring(0, window.osearch.length-1) : "/");
     });
 
-    $("#revision").click(function(e) {
-        if (e.altKey) {
-            location.href = $(this).attr("data-github-url");
-        }
+    $(".git-version").click(function(e) {
+        location.href = $(this).attr("data-github-url");
     });
 
     $("input[type=submit]").click(function(e) {

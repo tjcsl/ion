@@ -551,7 +551,7 @@ def _get_current_commit_date():
 
 
 def _get_current_commit_github_url():
-    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash())
+    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash().decode("utf-8"))
 
 # Add git information for the login page
 GIT = {
