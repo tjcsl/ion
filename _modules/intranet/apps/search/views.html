@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1137) documentation</title>
+    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1138) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1137)',
+        VERSION:     'v3 (Build #1138)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1137) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1138) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -366,11 +366,11 @@
 
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Running LDAP query: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
 
-            <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;dn&quot;</span><span class="p">])</span>
             <span class="n">new_dns</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="c"># if multiple words, delete those that weren&#39;t in previous searches</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-                <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">dn</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;dn&quot;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">new_dns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">result_dns</span><span class="p">:</span>
@@ -391,7 +391,9 @@
 <div class="viewcode-block" id="get_search_results"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.get_search_results">[docs]</a><span class="k">def</span> <span class="nf">get_search_results</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;+&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">)</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf8&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">str</span> <span class="o">==</span> <span class="nb">bytes</span><span class="p">:</span>
+            <span class="c"># python 2 only</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">queries</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot; OR &quot;</span><span class="p">)</span>
