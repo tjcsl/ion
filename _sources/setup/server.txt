@@ -172,7 +172,7 @@ Make a production virtualenv.
 
 .. code-block:: bash
 
-    mkvirtualenv ion
+    mkvirtualenv --python=$(which python3.4) ion
 
 Confirm that your prompt now appears something like this:
 
