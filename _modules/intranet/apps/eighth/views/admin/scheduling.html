@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.admin.scheduling</h1><div class="highlight"><pre>
 # -*- coding: utf-8 -*-
@@ -391,9 +391,9 @@ logger = logging.getLogger(__name__)
         context[&quot;default_capacities&quot;] = all_default_capacities
 
     context[&quot;admin_page_title&quot;] = &quot;Schedule an Activity&quot;
-    return render(request, &quot;eighth/admin/schedule_activity.html&quot;, context)
+    return render(request, &quot;eighth/admin/schedule_activity.html&quot;, context)</div>
 
-</div>
+
 @eighth_admin_required
 <div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a>def show_activity_schedule_view(request):
     activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)
@@ -420,15 +420,15 @@ logger = logging.getLogger(__name__)
         context[&quot;scheduled_activities&quot;] = scheduled_activities
 
     context[&quot;admin_page_title&quot;] = &quot;View Activity Schedule&quot;
-    return render(request, &quot;eighth/admin/view_activity_schedule.html&quot;, context)
+    return render(request, &quot;eighth/admin/view_activity_schedule.html&quot;, context)</div>
 
-</div>
+
 @eighth_admin_required
 <div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a>def distribute_students_view(request):
     context = {}
-    return render(request, &quot;eighth/admin/distribute_students.html&quot;, context)
+    return render(request, &quot;eighth/admin/distribute_students.html&quot;, context)</div>
 
-</div>
+
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a>class EighthAdminTransferStudentsWizard(SessionWizardView):
     FORMS = [
         (&quot;block_1&quot;, BlockSelectionForm),
@@ -445,8 +445,8 @@ logger = logging.getLogger(__name__)
     }
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
-        return [self.TEMPLATES[self.steps.current]]
-</div>
+        return [self.TEMPLATES[self.steps.current]]</div>
+
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
         kwargs = {}
         if step in (&quot;block_1&quot;, &quot;block_2&quot;):
@@ -469,14 +469,14 @@ logger = logging.getLogger(__name__)
 
         kwargs.update({&quot;label&quot;: labels[step]})
 
-        return kwargs
-</div>
+        return kwargs</div>
+
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
         context = super(EighthAdminTransferStudentsWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({&quot;admin_page_title&quot;: &quot;Transfer Students&quot;})
-        return context
-</div>
+        return context</div>
+
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done">[docs]</a>    def done(self, form_list, **kwargs):
         source_block = form_list[0].cleaned_data[&quot;block&quot;]
         source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
@@ -494,8 +494,8 @@ logger = logging.getLogger(__name__)
 
         req = &quot;source_act={}&amp;dest_act={}&quot;.format(source_scheduled_activity.id, dest_scheduled_activity.id)
 
-        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)
-</div></div>
+        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
+
 transfer_students_view = eighth_admin_required(
     EighthAdminTransferStudentsWizard.as_view(
         EighthAdminTransferStudentsWizard.FORMS
@@ -515,8 +515,8 @@ transfer_students_view = eighth_admin_required(
     }
 
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
-        return [self.TEMPLATES[self.steps.current]]
-</div>
+        return [self.TEMPLATES[self.steps.current]]</div>
+
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
         kwargs = {}
         if step == &quot;block_1&quot;:
@@ -534,14 +534,14 @@ transfer_students_view = eighth_admin_required(
 
         kwargs.update({&quot;label&quot;: labels[step]})
 
-        return kwargs
-</div>
+        return kwargs</div>
+
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
         context = super(EighthAdminUnsignupStudentsWizard,
                         self).get_context_data(form=form, **kwargs)
         context.update({&quot;admin_page_title&quot;: &quot;Clear Student Signups for Activity&quot;})
-        return context
-</div>
+        return context</div>
+
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.done">[docs]</a>    def done(self, form_list, **kwargs):
         source_block = form_list[0].cleaned_data[&quot;block&quot;]
         source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
@@ -552,8 +552,8 @@ transfer_students_view = eighth_admin_required(
 
         req = &quot;source_act={}&amp;dest_unsignup=1&quot;.format(source_scheduled_activity.id)
 
-        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)
-</div></div>
+        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
+
 unsignup_students_view = eighth_admin_required(
     EighthAdminUnsignupStudentsWizard.as_view(
         EighthAdminUnsignupStudentsWizard.FORMS

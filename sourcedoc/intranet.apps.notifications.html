@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.notifications package &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.notifications package &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.polls package" href="intranet.apps.polls.html" />
     <link rel="prev" title="intranet.apps.groups package" href="intranet.apps.groups.html" />
@@ -155,7 +155,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <div class="section" id="intranet-apps-notifications-package">
 <h1>intranet.apps.notifications package<a class="headerlink" href="#intranet-apps-notifications-package" title="Permalink to this headline">¶</a></h1>
@@ -230,12 +230,31 @@ headers: A dict of additional headers to send to the message</p>
 <dl class="attribute">
 <dt id="intranet.apps.notifications.models.GCMNotification.sent_to">
 <code class="descclassname">GCMNotification.</code><code class="descname">sent_to</code><a class="headerlink" href="#intranet.apps.notifications.models.GCMNotification.sent_to" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.notifications.models.GCMNotification.user">
 <code class="descclassname">GCMNotification.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.notifications.models.GCMNotification.user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -263,7 +282,18 @@ headers: A dict of additional headers to send to the message</p>
 <dl class="attribute">
 <dt id="intranet.apps.notifications.models.NotificationConfig.gcmnotification_set">
 <code class="descclassname">NotificationConfig.</code><code class="descname">gcmnotification_set</code><a class="headerlink" href="#intranet.apps.notifications.models.NotificationConfig.gcmnotification_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.notifications.models.NotificationConfig.objects">
@@ -273,7 +303,15 @@ headers: A dict of additional headers to send to the message</p>
 <dl class="attribute">
 <dt id="intranet.apps.notifications.models.NotificationConfig.user">
 <code class="descclassname">NotificationConfig.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.notifications.models.NotificationConfig.user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -286,7 +324,7 @@ headers: A dict of additional headers to send to the message</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="intranet.apps.notifications.tests.SimpleTest.test_basic_addition">
-<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/tests.html#SimpleTest.test_basic_addition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.notifications.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that 1 + 1 always equals 2.</p>
 </dd></dl>
 
@@ -300,7 +338,7 @@ headers: A dict of additional headers to send to the message</p>
 <span id="intranet-apps-notifications-views-module"></span><h2>intranet.apps.notifications.views module<a class="headerlink" href="#module-intranet.apps.notifications.views" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="intranet.apps.notifications.views.android_setup_view">
-<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">android_setup_view</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#android_setup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.android_setup_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">android_setup_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#android_setup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.android_setup_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a GCM session.
 This does <em>not</em> require a valid login session. Instead, a token from the client
 session is sent to the Android backend, which queries a POST request to this view.</p>
@@ -310,7 +348,7 @@ the user agent. If it has the same value, it is assumed to be correct.</p>
 
 <dl class="function">
 <dt id="intranet.apps.notifications.views.chrome_getdata_view">
-<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_getdata_view</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_getdata_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_getdata_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_getdata_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_getdata_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_getdata_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the data of the last notification sent to the current user.
 This is needed because Chrome, as of version 44, doesn&#8217;t support sending a data
 payload to a notification. Thus, information on what the notification is actually for
@@ -319,7 +357,7 @@ must be manually fetched.</p>
 
 <dl class="function">
 <dt id="intranet.apps.notifications.views.chrome_setup_view">
-<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_setup_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_setup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_setup_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">chrome_setup_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#chrome_setup_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.chrome_setup_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a browser-side GCM session.
 This <em>requires</em> a valid login session. A &#8220;token&#8221; POST parameter is saved under the &#8220;gcm_token&#8221;
 parameter in the logged in user&#8217;s NotificationConfig.</p>
@@ -327,12 +365,12 @@ parameter in the logged in user&#8217;s NotificationConfig.</p>
 
 <dl class="function">
 <dt id="intranet.apps.notifications.views.gcm_list_view">
-<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">gcm_list_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#gcm_list_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.gcm_list_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">gcm_list_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#gcm_list_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.gcm_list_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.notifications.views.gcm_post_view">
-<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">gcm_post_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#gcm_post_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.gcm_post_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.notifications.views.</code><code class="descname">gcm_post_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/notifications/views.html#gcm_post_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.notifications.views.gcm_post_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

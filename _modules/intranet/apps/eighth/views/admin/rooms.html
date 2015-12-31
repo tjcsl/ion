@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.rooms &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.eighth.views.admin.rooms &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.admin.rooms</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
@@ -179,9 +179,9 @@
             <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s">&quot;add_room_form&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
 
-</div>
+
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="edit_room_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.edit_room_view">[docs]</a><span class="k">def</span> <span class="nf">edit_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -206,9 +206,9 @@
                               <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">room_id</span><span class="p">]),</span>
         <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Edit Room&quot;</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/edit_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/edit_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
-</div>
+
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="delete_room_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.delete_room_view">[docs]</a><span class="k">def</span> <span class="nf">delete_room_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -228,9 +228,9 @@
                          <span class="s">&quot;of it related to eighth period.&quot;</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
-</div>
+
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="room_sanity_check_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_sanity_check_view">[docs]</a><span class="k">def</span> <span class="nf">room_sanity_check_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
@@ -270,9 +270,9 @@
         <span class="n">context</span><span class="p">[</span><span class="s">&quot;room_conflicts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">room_conflicts</span>
 
     <span class="n">context</span><span class="p">[</span><span class="s">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Room Assignment Sanity Check&quot;</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_sanity_check.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_sanity_check.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
-</div>
+
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="room_utilization_for_block_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view">[docs]</a><span class="k">def</span> <span class="nf">room_utilization_for_block_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
@@ -286,9 +286,9 @@
             <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Room Utilization&quot;</span><span class="p">,</span>
             <span class="s">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">blocks</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_utilization_for_block.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_utilization_for_block.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminRoomUtilizationWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
     <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&quot;start_block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
@@ -301,8 +301,8 @@
     <span class="p">}</span>
 
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span>
-</div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
+
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s">&quot;start_block&quot;</span><span class="p">:</span>
@@ -320,8 +320,8 @@
 
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
 
-        <span class="k">return</span> <span class="n">kwargs</span>
-</div>
+        <span class="k">return</span> <span class="n">kwargs</span></div>
+
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminRoomUtilizationWizard</span><span class="p">,</span>
                         <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -332,14 +332,14 @@
             <span class="s">&quot;last_block&quot;</span><span class="p">:</span> <span class="n">this_yr</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="s">&quot;all_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">context</span>
-</div>
+        <span class="k">return</span> <span class="n">context</span></div>
+
 <div class="viewcode-block" id="EighthAdminRoomUtilizationWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">start_block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
         <span class="n">end_block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_room_utilization&quot;</span><span class="p">,</span> <span class="n">start_block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">end_block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_room_utilization&quot;</span><span class="p">,</span> <span class="n">start_block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">end_block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
 
-</div></div>
+
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="room_utilization_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_utilization_action">[docs]</a><span class="k">def</span> <span class="nf">room_utilization_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">start_id</span><span class="p">,</span> <span class="n">end_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -447,8 +447,8 @@
 
         <span class="k">return</span> <span class="n">response</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_utilization.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-</div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/room_utilization.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
 <span class="n">room_utilization_view</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span>
     <span class="n">EighthAdminRoomUtilizationWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
         <span class="n">EighthAdminRoomUtilizationWizard</span><span class="o">.</span><span class="n">FORMS</span>

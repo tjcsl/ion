@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.forms.widgets &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>django.forms.widgets &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for django.forms.widgets</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -151,26 +151,33 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.forms.utils</span> <span class="kn">import</span> <span class="n">flatatt</span><span class="p">,</span> <span class="n">to_current_timezone</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">formats</span><span class="p">,</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">django.utils.datastructures</span> <span class="kn">import</span> <span class="n">MergeDict</span><span class="p">,</span> <span class="n">MultiValueDict</span>
-<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">force_text</span><span class="p">,</span> <span class="n">python_2_unicode_compatible</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">datetime_safe</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">django.utils.datastructures</span> <span class="kn">import</span> <span class="n">MultiValueDict</span>
+<span class="kn">from</span> <span class="nn">django.utils.dates</span> <span class="kn">import</span> <span class="n">MONTHS</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">force_str</span><span class="p">,</span> <span class="n">force_text</span><span class="p">,</span> <span class="n">python_2_unicode_compatible</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">django.utils.formats</span> <span class="kn">import</span> <span class="n">get_format</span>
 <span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">conditional_escape</span><span class="p">,</span> <span class="n">format_html</span><span class="p">,</span> <span class="n">html_safe</span>
 <span class="kn">from</span> <span class="nn">django.utils.safestring</span> <span class="kn">import</span> <span class="n">mark_safe</span>
+<span class="kn">from</span> <span class="nn">django.utils.six.moves</span> <span class="kn">import</span> <span class="nb">range</span>
 <span class="kn">from</span> <span class="nn">django.utils.six.moves.urllib.parse</span> <span class="kn">import</span> <span class="n">urljoin</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;Media&#39;</span><span class="p">,</span> <span class="s">&#39;MediaDefiningClass&#39;</span><span class="p">,</span> <span class="s">&#39;Widget&#39;</span><span class="p">,</span> <span class="s">&#39;TextInput&#39;</span><span class="p">,</span>
-    <span class="s">&#39;EmailInput&#39;</span><span class="p">,</span> <span class="s">&#39;URLInput&#39;</span><span class="p">,</span> <span class="s">&#39;NumberInput&#39;</span><span class="p">,</span> <span class="s">&#39;PasswordInput&#39;</span><span class="p">,</span>
-    <span class="s">&#39;HiddenInput&#39;</span><span class="p">,</span> <span class="s">&#39;MultipleHiddenInput&#39;</span><span class="p">,</span> <span class="s">&#39;ClearableFileInput&#39;</span><span class="p">,</span>
-    <span class="s">&#39;FileInput&#39;</span><span class="p">,</span> <span class="s">&#39;DateInput&#39;</span><span class="p">,</span> <span class="s">&#39;DateTimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;TimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;Textarea&#39;</span><span class="p">,</span> <span class="s">&#39;CheckboxInput&#39;</span><span class="p">,</span>
-    <span class="s">&#39;Select&#39;</span><span class="p">,</span> <span class="s">&#39;NullBooleanSelect&#39;</span><span class="p">,</span> <span class="s">&#39;SelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;RadioSelect&#39;</span><span class="p">,</span>
-    <span class="s">&#39;CheckboxSelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;MultiWidget&#39;</span><span class="p">,</span>
-    <span class="s">&#39;SplitDateTimeWidget&#39;</span><span class="p">,</span> <span class="s">&#39;SplitHiddenDateTimeWidget&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Media&#39;</span><span class="p">,</span> <span class="s">&#39;MediaDefiningClass&#39;</span><span class="p">,</span> <span class="s">&#39;Widget&#39;</span><span class="p">,</span> <span class="s">&#39;TextInput&#39;</span><span class="p">,</span> <span class="s">&#39;NumberInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;EmailInput&#39;</span><span class="p">,</span> <span class="s">&#39;URLInput&#39;</span><span class="p">,</span> <span class="s">&#39;PasswordInput&#39;</span><span class="p">,</span> <span class="s">&#39;HiddenInput&#39;</span><span class="p">,</span>
+    <span class="s">&#39;MultipleHiddenInput&#39;</span><span class="p">,</span> <span class="s">&#39;FileInput&#39;</span><span class="p">,</span> <span class="s">&#39;ClearableFileInput&#39;</span><span class="p">,</span> <span class="s">&#39;Textarea&#39;</span><span class="p">,</span>
+    <span class="s">&#39;DateInput&#39;</span><span class="p">,</span> <span class="s">&#39;DateTimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;TimeInput&#39;</span><span class="p">,</span> <span class="s">&#39;CheckboxInput&#39;</span><span class="p">,</span> <span class="s">&#39;Select&#39;</span><span class="p">,</span>
+    <span class="s">&#39;NullBooleanSelect&#39;</span><span class="p">,</span> <span class="s">&#39;SelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;RadioSelect&#39;</span><span class="p">,</span>
+    <span class="s">&#39;CheckboxSelectMultiple&#39;</span><span class="p">,</span> <span class="s">&#39;MultiWidget&#39;</span><span class="p">,</span> <span class="s">&#39;SplitDateTimeWidget&#39;</span><span class="p">,</span>
+    <span class="s">&#39;SplitHiddenDateTimeWidget&#39;</span><span class="p">,</span> <span class="s">&#39;SelectDateWidget&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">MEDIA_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;css&#39;</span><span class="p">,</span> <span class="s">&#39;js&#39;</span><span class="p">)</span>
@@ -189,7 +196,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_js</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">MEDIA_TYPES</span><span class="p">:</span>
-            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;add_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="n">media_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;add_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)(</span><span class="n">media_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
@@ -319,6 +326,7 @@
     <span class="n">needs_multipart_form</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># Determines does this widget need multipart form</span>
     <span class="n">is_localized</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">is_required</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">supports_microseconds</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -366,7 +374,7 @@
 <span class="sd">        Given a dictionary of data and this widget&#39;s name, returns the value</span>
 <span class="sd">        of this widget. Returns None if it&#39;s not provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -455,7 +463,7 @@
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="n">input_attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">force_text</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="o">**</span><span class="n">final_attrs</span><span class="p">)</span>
@@ -467,9 +475,9 @@
         <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">MultiValueDict</span><span class="p">,</span> <span class="n">MergeDict</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">MultiValueDict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">FileInput</span><span class="p">(</span><span class="n">Input</span><span class="p">):</span>
@@ -481,7 +489,7 @@
 
     <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="s">&quot;File widgets take data from FILES, not POST&quot;</span>
-        <span class="k">return</span> <span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 
 <span class="n">FILE_INPUT_CONTRADICTION</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
@@ -651,6 +659,13 @@
         <span class="c"># more than once.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
+        <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">()):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
@@ -711,13 +726,13 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">NullBooleanSelect</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="bp">True</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s">&#39;True&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
                 <span class="s">&#39;False&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                <span class="bp">False</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+                <span class="bp">False</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">SelectMultiple</span><span class="p">(</span><span class="n">Select</span><span class="p">):</span>
@@ -735,9 +750,9 @@
         <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">MultiValueDict</span><span class="p">,</span> <span class="n">MergeDict</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">MultiValueDict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 
 <span class="nd">@html_safe</span>
@@ -836,7 +851,7 @@
 <span class="sd">        If an id was given to the field, it is applied to the &lt;ul&gt; (each</span>
 <span class="sd">        item in the list will get an id of `$id_$i`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">choice</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">):</span>
             <span class="n">choice_value</span><span class="p">,</span> <span class="n">choice_label</span> <span class="o">=</span> <span class="n">choice</span>
@@ -844,10 +859,12 @@
                 <span class="n">attrs_plus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">id_</span><span class="p">:</span>
                     <span class="n">attrs_plus</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;_{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-                <span class="n">sub_ul_renderer</span> <span class="o">=</span> <span class="n">ChoiceFieldRenderer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                      <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                                                      <span class="n">attrs</span><span class="o">=</span><span class="n">attrs_plus</span><span class="p">,</span>
-                                                      <span class="n">choices</span><span class="o">=</span><span class="n">choice_label</span><span class="p">)</span>
+                <span class="n">sub_ul_renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">attrs</span><span class="o">=</span><span class="n">attrs_plus</span><span class="p">,</span>
+                    <span class="n">choices</span><span class="o">=</span><span class="n">choice_label</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="n">sub_ul_renderer</span><span class="o">.</span><span class="n">choice_input_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice_input_class</span>
                 <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">format_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_html</span><span class="p">,</span> <span class="n">choice_value</span><span class="o">=</span><span class="n">choice_value</span><span class="p">,</span>
                                           <span class="n">sub_widgets</span><span class="o">=</span><span class="n">sub_ul_renderer</span><span class="o">.</span><span class="n">render</span><span class="p">()))</span>
@@ -961,7 +978,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">final_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
-        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">id_</span> <span class="o">=</span> <span class="n">final_attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">widget_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -1043,6 +1060,138 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">SplitHiddenDateTimeWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">date_format</span><span class="p">,</span> <span class="n">time_format</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
             <span class="n">widget</span><span class="o">.</span><span class="n">input_type</span> <span class="o">=</span> <span class="s">&#39;hidden&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">SelectDateWidget</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Widget that splits date input into three &lt;select&gt; boxes.</span>
+
+<span class="sd">    This also serves as an example of a Widget that has more than one HTML</span>
+<span class="sd">    element and hence implements value_from_datadict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">none_value</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&#39;---&#39;</span><span class="p">)</span>
+    <span class="n">month_field</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_month&#39;</span>
+    <span class="n">day_field</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_day&#39;</span>
+    <span class="n">year_field</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_year&#39;</span>
+    <span class="n">select_widget</span> <span class="o">=</span> <span class="n">Select</span>
+
+    <span class="n">date_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;(\d{4})-(\d\d?)-(\d\d?)$&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">months</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">empty_label</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c"># Optional list or tuple of years to use in the &quot;year&quot; select box.</span>
+        <span class="k">if</span> <span class="n">years</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">years</span> <span class="o">=</span> <span class="n">years</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">years</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">this_year</span><span class="p">,</span> <span class="n">this_year</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c"># Optional dict of months to use in the &quot;month&quot; select box.</span>
+        <span class="k">if</span> <span class="n">months</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">months</span> <span class="o">=</span> <span class="n">months</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">months</span> <span class="o">=</span> <span class="n">MONTHS</span>
+
+        <span class="c"># Optional string, list, or tuple to use as empty_label.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">empty_label</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">empty_label</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;empty_label list/tuple must have 3 elements.&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">year_none_value</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">empty_label</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">month_none_value</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">empty_label</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">day_none_value</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">empty_label</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">empty_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">none_value</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">empty_label</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">year_none_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">none_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">month_none_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">none_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">day_none_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">none_value</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_date_fmt</span><span class="p">():</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_format</span><span class="p">(</span><span class="s">&#39;DATE_FORMAT&#39;</span><span class="p">)</span>
+        <span class="n">escaped</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">fmt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">escaped</span><span class="p">:</span>
+                <span class="n">escaped</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">elif</span> <span class="n">char</span> <span class="o">==</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span><span class="p">:</span>
+                <span class="n">escaped</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">char</span> <span class="ow">in</span> <span class="s">&#39;Yy&#39;</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="s">&#39;year&#39;</span>
+            <span class="k">elif</span> <span class="n">char</span> <span class="ow">in</span> <span class="s">&#39;bEFMmNn&#39;</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="s">&#39;month&#39;</span>
+            <span class="k">elif</span> <span class="n">char</span> <span class="ow">in</span> <span class="s">&#39;dj&#39;</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="s">&#39;day&#39;</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">year_val</span><span class="p">,</span> <span class="n">month_val</span><span class="p">,</span> <span class="n">day_val</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">day</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">year_val</span> <span class="o">=</span> <span class="n">month_val</span> <span class="o">=</span> <span class="n">day_val</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_L10N</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">input_format</span> <span class="o">=</span> <span class="n">get_format</span><span class="p">(</span><span class="s">&#39;DATE_INPUT_FORMATS&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">v</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">force_str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">input_format</span><span class="p">)</span>
+                        <span class="n">year_val</span><span class="p">,</span> <span class="n">month_val</span><span class="p">,</span> <span class="n">day_val</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">day</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="k">if</span> <span class="n">year_val</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="n">year_val</span><span class="p">,</span> <span class="n">month_val</span><span class="p">,</span> <span class="n">day_val</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">years</span><span class="p">]</span>
+        <span class="n">html</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_select</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">year_field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">year_val</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">year_none_value</span><span class="p">)</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">months</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">html</span><span class="p">[</span><span class="s">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_select</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month_field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">month_val</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month_none_value</span><span class="p">)</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)]</span>
+        <span class="n">html</span><span class="p">[</span><span class="s">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_select</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">day_val</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_none_value</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_date_fmt</span><span class="p">():</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">html</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">id_for_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">first_select</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_date_fmt</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">first_select</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_month&#39;</span> <span class="o">%</span> <span class="n">id_</span>
+
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year_field</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">month_field</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">day_field</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">m</span> <span class="o">==</span> <span class="n">d</span> <span class="o">==</span> <span class="s">&quot;0&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">and</span> <span class="n">m</span> <span class="ow">and</span> <span class="n">d</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">USE_L10N</span><span class="p">:</span>
+                <span class="n">input_format</span> <span class="o">=</span> <span class="n">get_format</span><span class="p">(</span><span class="s">&#39;DATE_INPUT_FORMATS&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">date_value</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">date_value</span> <span class="o">=</span> <span class="n">datetime_safe</span><span class="o">.</span><span class="n">new_date</span><span class="p">(</span><span class="n">date_value</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">date_value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">input_format</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">-</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="n">none_value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
+            <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">id_</span> <span class="o">=</span> <span class="s">&#39;id_</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_required</span><span class="p">:</span>
+            <span class="n">choices</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">none_value</span><span class="p">)</span>
+        <span class="n">local_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_attrs</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">field</span> <span class="o">%</span> <span class="n">id_</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_widget</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">)</span>
+        <span class="n">select_html</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">field</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">local_attrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">select_html</span>
 </pre></div>
 
     </div>

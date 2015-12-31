@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.seniors package &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.seniors package &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.seniors.management package" href="intranet.apps.seniors.management.html" />
     <link rel="prev" title="intranet.apps.search package" href="intranet.apps.search.html" />
@@ -157,7 +157,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <div class="section" id="intranet-apps-seniors-package">
 <h1>intranet.apps.seniors package<a class="headerlink" href="#intranet-apps-seniors-package" title="Permalink to this headline">¶</a></h1>
@@ -195,10 +195,11 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.seniors.forms.SeniorForm.Meta">
-<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/seniors/forms.html#SeniorForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.forms.SeniorForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#intranet.apps.seniors.forms.SeniorForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
 <dt id="intranet.apps.seniors.forms.SeniorForm.Meta.fields">
-<code class="descname">fields</code><em class="property"> = [u'college', u'college_sure', u'major', u'major_sure']</em><a class="headerlink" href="#intranet.apps.seniors.forms.SeniorForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ['college', 'college_sure', 'major', 'major_sure']</em><a class="headerlink" href="#intranet.apps.seniors.forms.SeniorForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -243,7 +244,17 @@
 <dl class="attribute">
 <dt id="intranet.apps.seniors.models.College.senior_set">
 <code class="descclassname">College.</code><code class="descname">senior_set</code><a class="headerlink" href="#intranet.apps.seniors.models.College.senior_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -259,7 +270,7 @@
 
 <dl class="attribute">
 <dt id="intranet.apps.seniors.models.Senior.MAJORS">
-<code class="descclassname">Senior.</code><code class="descname">MAJORS</code><em class="property"> = [u'Computer Science', u'Engineering', u'Education', u'Mathematics', u'Physics', u'Biology', u'Chemistry', u'Geology', u'History', u'Literature', u'English', u'Other', u'Language', u'Drama/Theater', u'Undecided', u'Music', u'Political Science', u'Neuroscience', u'Business', u'Economics', u'Communications', u'World Studies', u'Art/Art History', u'Biochemistry', u'Computer Engineering', u'Anthropology', u'Film', u'Atmospheric Science', u'Astronomy', u'Psychology', u'Genetics', u'Social Work', u'Architecture', u'Public Policy', u'Classics', u'Marine Biology', u'Dance', u'Philosophy', u'Emergency Health Services', u'Animal Science', u'Computer and Video Imaging', u'Geography', u'International Relations', u'Foreign Service', u'Broadcast Journalism', u'Semitic Studies', u'Microbiology', u'Finance', u'Journalism', u'Aeronautics/Astronautics', u'Pre-med', u'Pre-law', u'Automotive Technician', u'Computer Game Design', u'Petroleum Engineering', u'American Studies', u'African-American Studies', u'Linguistics', u'Sociology', u'International Finance', u'Public Policy in Science and Technology', u'Information Technology', u'Network Engineering', u'Environmental Science', u'Evolutionary Biology', u'Advertising', u'Apparel Design', u'East Asian Studies', u'Biomedical Engineering', u'Policy Analysis and Management', u'Videogame Design and Development', u'Electrical Engineering', u'Information Systems', u'Theatre', u'Theatre/Directing', u'Leadership', u'Design', u'Environmental Thought and Practice', u'Athletic Training', u'Physical Therapy', u'Chemical Engineering', u'Athletic Training &amp; Physical Therapy', u'Civil Engineering', u'Industrial and Labor Relations', u'Bowling Management', u'Pre-Dental', u'Aerospace Engineering', u'French', u'German', u'Spanish', u'Italian', u'Chinese', u'Operations Research', u'Game Design and Development', u'Software Engineering', u'International Development', u'Mechanical Engineering', u'Mathematics &amp; Computer Science']</em><a class="headerlink" href="#intranet.apps.seniors.models.Senior.MAJORS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Senior.</code><code class="descname">MAJORS</code><em class="property"> = ['Computer Science', 'Engineering', 'Education', 'Mathematics', 'Physics', 'Biology', 'Chemistry', 'Geology', 'History', 'Literature', 'English', 'Other', 'Language', 'Drama/Theater', 'Undecided', 'Music', 'Political Science', 'Neuroscience', 'Business', 'Economics', 'Communications', 'World Studies', 'Art/Art History', 'Biochemistry', 'Computer Engineering', 'Anthropology', 'Film', 'Atmospheric Science', 'Astronomy', 'Psychology', 'Genetics', 'Social Work', 'Architecture', 'Public Policy', 'Classics', 'Marine Biology', 'Dance', 'Philosophy', 'Emergency Health Services', 'Animal Science', 'Computer and Video Imaging', 'Geography', 'International Relations', 'Foreign Service', 'Broadcast Journalism', 'Semitic Studies', 'Microbiology', 'Finance', 'Journalism', 'Aeronautics/Astronautics', 'Pre-med', 'Pre-law', 'Automotive Technician', 'Computer Game Design', 'Petroleum Engineering', 'American Studies', 'African-American Studies', 'Linguistics', 'Sociology', 'International Finance', 'Public Policy in Science and Technology', 'Information Technology', 'Network Engineering', 'Environmental Science', 'Evolutionary Biology', 'Advertising', 'Apparel Design', 'East Asian Studies', 'Biomedical Engineering', 'Policy Analysis and Management', 'Videogame Design and Development', 'Electrical Engineering', 'Information Systems', 'Theatre', 'Theatre/Directing', 'Leadership', 'Design', 'Environmental Thought and Practice', 'Athletic Training', 'Physical Therapy', 'Chemical Engineering', 'Athletic Training &amp; Physical Therapy', 'Civil Engineering', 'Industrial and Labor Relations', 'Bowling Management', 'Pre-Dental', 'Aerospace Engineering', 'French', 'German', 'Spanish', 'Italian', 'Chinese', 'Operations Research', 'Game Design and Development', 'Software Engineering', 'International Development', 'Mechanical Engineering', 'Mathematics &amp; Computer Science']</em><a class="headerlink" href="#intranet.apps.seniors.models.Senior.MAJORS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -271,16 +282,19 @@
 <dl class="attribute">
 <dt id="intranet.apps.seniors.models.Senior.college">
 <code class="descclassname">Senior.</code><code class="descname">college</code><a class="headerlink" href="#intranet.apps.seniors.models.Senior.college" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.seniors.models.Senior.get_major_display">
 <code class="descclassname">Senior.</code><code class="descname">get_major_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.seniors.models.Senior.get_major_display" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="intranet.apps.seniors.models.Senior.i">
-<code class="descclassname">Senior.</code><code class="descname">i</code><em class="property"> = u'Mathematics &amp; Computer Science'</em><a class="headerlink" href="#intranet.apps.seniors.models.Senior.i" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -291,7 +305,15 @@
 <dl class="attribute">
 <dt id="intranet.apps.seniors.models.Senior.user">
 <code class="descclassname">Senior.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.seniors.models.Senior.user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -301,7 +323,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <dl class="method">
 <dt id="intranet.apps.seniors.models.SeniorManager.filled">
-<code class="descname">filled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/seniors/models.html#SeniorManager.filled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.models.SeniorManager.filled" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.seniors.models.SeniorManager.filled" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -317,12 +339,12 @@
 <span id="intranet-apps-seniors-views-module"></span><h2>intranet.apps.seniors.views module<a class="headerlink" href="#module-intranet.apps.seniors.views" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="intranet.apps.seniors.views.seniors_add_view">
-<code class="descclassname">intranet.apps.seniors.views.</code><code class="descname">seniors_add_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/seniors/views.html#seniors_add_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.views.seniors_add_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.seniors.views.</code><code class="descname">seniors_add_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/seniors/views.html#seniors_add_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.views.seniors_add_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.seniors.views.seniors_home_view">
-<code class="descclassname">intranet.apps.seniors.views.</code><code class="descname">seniors_home_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/seniors/views.html#seniors_home_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.views.seniors_home_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.seniors.views.</code><code class="descname">seniors_home_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/seniors/views.html#seniors_home_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.seniors.views.seniors_home_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

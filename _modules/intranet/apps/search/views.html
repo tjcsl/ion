@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.search.views &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -141,7 +141,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.search.views</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
@@ -151,7 +151,7 @@
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
-<span class="kn">from</span> <span class="nn">ldap.filter</span> <span class="kn">import</span> <span class="n">escape_filter_chars</span>
+<span class="kn">from</span> <span class="nn">ldap3.utils.conv</span> <span class="kn">import</span> <span class="n">escape_filter_chars</span>
 <span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="kn">import</span> <span class="n">LDAPConnection</span>
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">Announcement</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -385,9 +385,9 @@
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span>
         <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">users</span>
+    <span class="k">return</span> <span class="n">users</span></div>
 
-</div>
+
 <div class="viewcode-block" id="get_search_results"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.get_search_results">[docs]</a><span class="k">def</span> <span class="nf">get_search_results</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;+&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">)</span>
@@ -401,9 +401,9 @@
     <span class="k">for</span> <span class="n">qu</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
         <span class="n">users</span> <span class="o">+=</span> <span class="n">do_ldap_query</span><span class="p">(</span><span class="n">qu</span><span class="p">,</span> <span class="n">admin</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">users</span>
+    <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">users</span></div>
 
-</div>
+
 <div class="viewcode-block" id="do_activities_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_activities_search">[docs]</a><span class="k">def</span> <span class="nf">do_activities_search</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
     <span class="n">filter_query</span> <span class="o">=</span> <span class="n">get_query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;description&quot;</span><span class="p">])</span>
     <span class="n">entires</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filter_query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
@@ -411,9 +411,9 @@
     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entires</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
             <span class="n">final_entires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">final_entires</span>
+    <span class="k">return</span> <span class="n">final_entires</span></div>
 
-</div>
+
 <div class="viewcode-block" id="do_announcements_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_announcements_search">[docs]</a><span class="k">def</span> <span class="nf">do_announcements_search</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
     <span class="n">filter_query</span> <span class="o">=</span> <span class="n">get_query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;title&quot;</span><span class="p">])</span>
     <span class="n">entires</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filter_query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">)</span>
@@ -421,9 +421,9 @@
     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entires</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">is_this_year</span><span class="p">:</span>
             <span class="n">final_entires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">final_entires</span>
+    <span class="k">return</span> <span class="n">final_entires</span></div>
 
-</div>
+
 <div class="viewcode-block" id="do_events_search"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.do_events_search">[docs]</a><span class="k">def</span> <span class="nf">do_events_search</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
     <span class="n">filter_query</span> <span class="o">=</span> <span class="n">get_query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;title&quot;</span><span class="p">])</span>
     <span class="n">entires</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filter_query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">)</span>
@@ -431,9 +431,9 @@
     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entires</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">is_this_year</span><span class="p">:</span>
             <span class="n">final_entires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">final_entires</span>
+    <span class="k">return</span> <span class="n">final_entires</span></div>
 
-</div>
+
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="search_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.search.html#intranet.apps.search.views.search_view">[docs]</a><span class="k">def</span> <span class="nf">search_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;q&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>

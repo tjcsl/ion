@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #1128) documentation</title>
+    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #1131) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1128)',
+        VERSION:     'v3 (Build #1131)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1128) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1131) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.feedback package" href="intranet.apps.feedback.html" />
     <link rel="prev" title="intranet.apps.error package" href="intranet.apps.error.html" />
@@ -157,7 +157,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 content">
       
   <div class="section" id="intranet-apps-events-package">
 <h1>intranet.apps.events package<a class="headerlink" href="#intranet-apps-events-package" title="Permalink to this headline">¶</a></h1>
@@ -175,10 +175,11 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.events.forms.AdminEventForm.Meta">
-<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#AdminEventForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
 <dt id="intranet.apps.events.forms.AdminEventForm.Meta.exclude">
-<code class="descname">exclude</code><em class="property"> = [u'created_time', u'last_modified_time', u'user', u'attending', u'links', u'approved', u'rejected', u'approved_by', u'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
+<code class="descname">exclude</code><em class="property"> = ['created_time', 'last_modified_time', 'user', 'attending', 'links', 'approved', 'rejected', 'approved_by', 'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.AdminEventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -202,10 +203,11 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.forms.models.ModelForm</span></code></p>
 <dl class="class">
 <dt id="intranet.apps.events.forms.EventForm.Meta">
-<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="../_modules/intranet/apps/events/forms.html#EventForm.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
 <dt id="intranet.apps.events.forms.EventForm.Meta.exclude">
-<code class="descname">exclude</code><em class="property"> = [u'created_time', u'last_modified_time', u'user', u'scheduled_activity', u'announcement', u'attending', u'links', u'approved', u'rejected', u'approved_by', u'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
+<code class="descname">exclude</code><em class="property"> = ['created_time', 'last_modified_time', 'user', 'scheduled_activity', 'announcement', 'attending', 'links', 'approved', 'rejected', 'approved_by', 'rejected_by']</em><a class="headerlink" href="#intranet.apps.events.forms.EventForm.Meta.exclude" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -283,17 +285,44 @@ list of events that need to be approved.</dd>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.announcement">
 <code class="descclassname">Event.</code><code class="descname">announcement</code><a class="headerlink" href="#intranet.apps.events.models.Event.announcement" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.approved_by">
 <code class="descclassname">Event.</code><code class="descname">approved_by</code><a class="headerlink" href="#intranet.apps.events.models.Event.approved_by" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.attending">
 <code class="descclassname">Event.</code><code class="descname">attending</code><a class="headerlink" href="#intranet.apps.events.models.Event.attending" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.created_hook">
@@ -334,7 +363,18 @@ list of events that need to be approved.</dd>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.groups">
 <code class="descclassname">Event.</code><code class="descname">groups</code><a class="headerlink" href="#intranet.apps.events.models.Event.groups" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.is_this_year">
@@ -346,7 +386,18 @@ of this school year.</p>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.links">
 <code class="descclassname">Event.</code><code class="descname">links</code><a class="headerlink" href="#intranet.apps.events.models.Event.links" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.objects">
@@ -356,12 +407,28 @@ of this school year.</p>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.rejected_by">
 <code class="descclassname">Event.</code><code class="descname">rejected_by</code><a class="headerlink" href="#intranet.apps.events.models.Event.rejected_by" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.scheduled_activity">
 <code class="descclassname">Event.</code><code class="descname">scheduled_activity</code><a class="headerlink" href="#intranet.apps.events.models.Event.scheduled_activity" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.show_fuzzy_date">
@@ -373,7 +440,15 @@ Determines whether to display the fuzzy date.</p>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.user">
 <code class="descclassname">Event.</code><code class="descname">user</code><a class="headerlink" href="#intranet.apps.events.models.Event.user" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -383,7 +458,7 @@ Determines whether to display the fuzzy date.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <dl class="method">
 <dt id="intranet.apps.events.models.EventManager.visible_to_user">
-<code class="descname">visible_to_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#EventManager.visible_to_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.EventManager.visible_to_user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visible_to_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.models.EventManager.visible_to_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of visible events for a given user (usually
 request.user).</p>
 <p>These visible events will be those that either have no groups
@@ -413,7 +488,18 @@ user is a member.</p>
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Link.event_set">
 <code class="descclassname">Link.</code><code class="descname">event_set</code><a class="headerlink" href="#intranet.apps.events.models.Link.event_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Link.objects">
@@ -439,7 +525,7 @@ user is a member.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="intranet.apps.events.tests.SimpleTest.test_basic_addition">
-<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#SimpleTest.test_basic_addition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_basic_addition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.events.tests.SimpleTest.test_basic_addition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that 1 + 1 always equals 2.</p>
 </dd></dl>
 
@@ -453,7 +539,7 @@ user is a member.</p>
 <span id="intranet-apps-events-views-module"></span><h2>intranet.apps.events.views module<a class="headerlink" href="#module-intranet.apps.events.views" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="intranet.apps.events.views.add_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">add_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#add_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.add_event_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">add_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#add_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.add_event_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add event page. Currently, there is an approval process for events.
 If a user is an events administrator, they can create events directly.
 Otherwise, their event is added in the system but must be approved.</p>
@@ -461,7 +547,7 @@ Otherwise, their event is added in the system but must be approved.</p>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.delete_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">delete_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#delete_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.delete_event_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">delete_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#delete_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.delete_event_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete event page. You may only delete an event if you were the creator or you are an
 administrator. Confirmation page if not POST.</p>
 <p>id: event id</p>
@@ -469,7 +555,7 @@ administrator. Confirmation page if not POST.</p>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.event_roster_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">event_roster_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#event_roster_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.event_roster_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">event_roster_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#event_roster_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.event_roster_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the event roster. Users with hidden eighth period permissions will not be
 displayed. Users will be able to view all other users, along with a count of the
 number of hidden users. (Same as 8th roster page.) Admins will see a full roster
@@ -479,13 +565,13 @@ at the bottom.</p>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.events_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">events_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#events_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.events_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">events_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#events_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.events_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Events homepage. Shows a list of events occurring in the next week, month, and future.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.join_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">join_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#join_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.join_event_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">join_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#join_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.join_event_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Join event page. If a POST request, actually add or remove the attendance of
 the current user. Otherwise, display a page with confirmation.</p>
 <p>id: event id</p>
@@ -493,7 +579,7 @@ the current user. Otherwise, display a page with confirmation.</p>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.modify_event_view">
-<code class="descclassname">intranet.apps.events.views.</code><code class="descname">modify_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#modify_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.modify_event_view" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">intranet.apps.events.views.</code><code class="descname">modify_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#modify_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.modify_event_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify event page. You may only modify an event if you were the creator or you are an
 administrator.</p>
 <p>id: event id</p>
