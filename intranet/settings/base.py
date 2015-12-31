@@ -177,12 +177,12 @@ MIDDLEWARE_CLASSES = [
     "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
+    "intranet.middleware.traceback.UserTracebackMiddleware",    # Include user in traceback
     "django.contrib.messages.middleware.MessageMiddleware",     # Messages
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",       # Access log
     "corsheaders.middleware.CorsMiddleware",                    # CORS headers, for ext. API use
-    "intranet.middleware.traceback.UserTracebackMiddleware",    # Include user in traceback
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",      # Show ldap simple bind message
 ]
