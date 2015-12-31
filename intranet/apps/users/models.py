@@ -1672,7 +1672,7 @@ class Class(object):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        return list(zip(*ordered_schedule)[1])  # The class objects
+        return list(zip(*ordered_schedule))[1]  # The class objects
 
     def __getattr__(self, name):
         """Return simple attributes of Class
@@ -1798,11 +1798,11 @@ class ClassSections(object):
 
         """
         c = LDAPConnection()
-        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId"])
+        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId", "dn"])
 
         classes = []
         for row in query:
-            dn = row[0]
+            dn = row["dn"]
             c = Class(dn=dn)
             classes.append(c)
 
