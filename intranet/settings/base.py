@@ -531,12 +531,12 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
 
 
 def _get_current_commit_long_hash():
     cmd = "git rev-parse HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
 
 
 def _get_current_commit_info():
@@ -547,11 +547,11 @@ def _get_current_commit_info():
 
 def _get_current_commit_date():
     cmd = "git show -s --format=%ci HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).rstrip()
+    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
 
 
 def _get_current_commit_github_url():
-    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash().decode("utf-8"))
+    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash())
 
 # Add git information for the login page
 GIT = {

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import six
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -245,8 +246,8 @@ def do_ldap_query(q, admin=False):
 def get_search_results(q, admin=False):
     try:
         q = q.replace("+", " ")
-        if str == bytes:
-            # python 2 only
+        # python 2 only
+        if six.PY2:
             q = q.encode("utf-8")
         users = []
 

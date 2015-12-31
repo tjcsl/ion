@@ -62,9 +62,9 @@ def files_auth(request):
         obj = AES.new(key, AES.MODE_CFB, iv)
         message = request.POST.get("password")
         ciphertext = obj.encrypt(message)
-        request.session["files_iv"] = base64.b64encode(iv).decode("utf-8")
-        request.session["files_text"] = base64.b64encode(ciphertext).decode("utf-8")
-        cookie_key = base64.b64encode(key).decode("utf-8")
+        request.session["files_iv"] = base64.b64encode(iv).decode()
+        request.session["files_text"] = base64.b64encode(ciphertext).decode()
+        cookie_key = base64.b64encode(key).decode()
 
         nexturl = request.GET.get("next", None)
         if nexturl and nexturl.startswith("/files"):
@@ -201,7 +201,7 @@ def files_type(request, fstype=None):
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
         filebase_escaped = filebase.replace(",", "")
-        filebase_escaped = filebase_escaped.encode("ascii", "ignore").decode("utf-8")
+        filebase_escaped = filebase_escaped.encode("ascii", "ignore").decode()
         if can_access_path(filepath):
             try:
                 stat = sftp.stat(filepath)

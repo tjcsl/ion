@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
+import six
 import csv
 import logging
 import re
@@ -119,7 +120,7 @@ def edit_group_view(request, group_id):
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
-        filetext += unicode(chunk, "ISO-8859-1")
+        filetext += six.text_type(chunk, "ISO-8859-1")
     return filetext
 
 

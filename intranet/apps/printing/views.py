@@ -34,13 +34,6 @@ def get_printers():
     return names
 
 
-def get_file_string(fileobj):
-    filetext = ""
-    for chunk in fileobj.chunks():
-        filetext += unicode(chunk, "ISO-8859-1")
-    return filetext
-
-
 def convert_soffice(tmpfile_name):
     proc = subprocess.Popen(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stdout=subprocess.PIPE)
     (output, err) = proc.communicate()
