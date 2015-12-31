@@ -571,9 +571,13 @@ class EighthBlock(AbstractBaseEighthModel):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
+    @property
+    def formatted_date(self):
+        return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
+    
+
     def __str__(self):
-        formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
-        return "{} ({})".format(formatted_date, self.block_letter)
+        return "{} ({})".format(self.formatted_date, self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)

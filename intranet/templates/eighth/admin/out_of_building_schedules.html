@@ -23,12 +23,12 @@
 <select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
     <option value="">Select or search for a block</option>
     {% for block in blocks %}
-        <option value="{{ block.id }}"{% if block == chosen_block %} selected{% endif %}>{{ block.id }}: {{ block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ block.block_letter }})</option>
+        <option value="{{ block.id }}"{% if block == chosen_block %} selected{% endif %}>{{ block.id }}: {{ block.formatted_date }} ({{ block.block_letter }})</option>
     {% endfor %}
 </select>
 
 {% if chosen_block %}
-    <strong>Out of building schedule for block {{ chosen_block.id }}: {{ chosen_block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }} ({{ chosen_block.block_letter }}):</strong>
+    <strong>Out of building schedule for block {{ chosen_block.id }}: {{ chosen_block.formatted_date }} ({{ chosen_block.block_letter }}):</strong>
     <br>
     <a class="button" href="{% url 'eighth_admin_export_out_of_building_schedules_csv' chosen_block.id %}">Export CSV</a>
     <br>
