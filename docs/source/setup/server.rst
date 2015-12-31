@@ -133,7 +133,6 @@ Install the ``python-ldap`` module, the Cyrus-SASL C library, and the Pip packag
     $ emerge dev-libs/cyrus-sasl
     $ emerge python-ldap
     $ emerge dev-python/pip
-    $ emerge dev-python/fabric
 
 ----------
 Virtualenv
