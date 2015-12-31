@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='question',
             name='type',
-            field=models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('ELC', 'Election'), ('APP', 'Approval'), ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),
+            field=models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('ELC', 'Election'), ('APP', 'Approval'),
+                                                                         ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),
         ),
     ]

@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sign',
             name='status',
-            field=models.CharField(choices=[('auto', 'Auto'), ('eighth', 'Eighth Period'), ('schedule', 'Bell Schedule'), ('status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),
+            field=models.CharField(choices=[('auto', 'Auto'), ('eighth', 'Eighth Period'), ('schedule', 'Bell Schedule'),
+                                            ('status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),
         ),
     ]

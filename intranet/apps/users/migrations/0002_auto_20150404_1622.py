@@ -21,7 +21,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='groups',
-            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups', related_query_name='user', to='auth.Group', related_name='user_set'),
+            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+                                         verbose_name='groups', related_query_name='user', to='auth.Group', related_name='user_set'),
         ),
         migrations.AlterField(
             model_name='user',
