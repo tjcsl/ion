@@ -1572,11 +1572,11 @@ class Class(object):
 
         """
         c = LDAPConnection()
-        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), [])
+        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), ["dn"])
 
         users = []
         for row in students:
-            dn = row[0]
+            dn = row["dn"]
             try:
                 user = User.get_user(dn=dn)
             except User.DoesNotExist:
