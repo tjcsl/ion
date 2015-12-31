@@ -129,7 +129,7 @@ class UserManager(UserManager):
 
         users = []
         for res in results:
-            u = User.get_user(dn=res[0])
+            u = User.get_user(dn=res["dn"])
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
 
