@@ -88,7 +88,6 @@ class glob_list(list):
 
 # Internal IP ranges in production
 INTERNAL_IPS = glob_list([
-    "127.0.0.0/8",
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])
