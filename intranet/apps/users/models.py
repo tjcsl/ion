@@ -1447,7 +1447,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if field_name == "showpictures":
             cache.delete(":".join([self.dn, "photo_permissions"]))
-        
+
         if field_name in ["showschedule", "showaddress", "showphone", "showbirthday", "showpictures"]:
             cache.delete(":".join([self.dn, "user_info_permissions"]))
 

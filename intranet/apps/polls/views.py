@@ -23,7 +23,7 @@ def polls_view(request):
     else:
         polls = Poll.objects.visible_to_user(request.user)
 
-    if not "show_all" in request.GET:
+    if "show_all" not in request.GET:
         now = timezone.now()
         polls = polls.filter(start_time__lt=now, end_time__gt=now)
 

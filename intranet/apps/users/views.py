@@ -180,8 +180,6 @@ def class_section_view(request, section_id):
 
         writer = csv.writer(response)
 
-        title_row = []
-
         writer.writerow(["Name",
                          "Student ID",
                          "Grade",

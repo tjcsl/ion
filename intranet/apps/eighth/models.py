@@ -574,7 +574,6 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def formatted_date(self):
         return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
-    
 
     def __str__(self):
         return "{} ({})".format(self.formatted_date, self.block_letter)

@@ -31,7 +31,7 @@ class BlockSerializer(serializers.ModelSerializer):
 
 
 class DayTypeSerializer(serializers.ModelSerializer):
-    #url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
+    # url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
     blocks = BlockSerializer(many=True, read_only=True)
 
     class Meta:

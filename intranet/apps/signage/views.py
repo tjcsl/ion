@@ -79,8 +79,6 @@ def signage_display(request, display_id=None):
         else:
             return status_signage(request)
 
-    return redirect(url)
-
 
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
