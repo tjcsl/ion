@@ -174,6 +174,7 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.sessions.middleware.SessionMiddleware",     # Django sessions
     "django.middleware.csrf.CsrfViewMiddleware",                # Django CSRF
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
+    "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
     "django.contrib.messages.middleware.MessageMiddleware",     # Messages
@@ -184,7 +185,6 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.traceback.UserTracebackMiddleware",    # Include user in traceback
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",      # Show ldap simple bind message
-    "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
 ]
 
 # URLconf at urls.py
