@@ -585,7 +585,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         "sponsorDn=" + self.dn
                     )
                     results = c.search(settings.CLASS_DN, query, ["dn"])
-                    classes = [r[0] for r in results]
+                    classes = [r["dn"] for r in results]
 
                 logger.debug("Classes: {}".format(classes))
             except KeyError:
