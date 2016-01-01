@@ -173,6 +173,7 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.common.CommonMiddleware",                # Django default
     "django.contrib.sessions.middleware.SessionMiddleware",     # Django sessions
     "django.middleware.csrf.CsrfViewMiddleware",                # Django CSRF
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",   # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
