@@ -35,9 +35,9 @@ def do_ldap_query(q, admin=False):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, [])
+        res = c.search(settings.USER_DN, query, ["dn"])
         for row in res:
-            dn = row[0]
+            dn = row["dn"]
             result_dns.append(dn)
     elif ":" in q:
         logger.debug("Advanced search")
@@ -172,9 +172,9 @@ def do_ldap_query(q, admin=False):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, [])
+        res = c.search(settings.USER_DN, query, ["dn"])
         for row in res:
-            dn = row[0]
+            dn = row["dn"]
             result_dns.append(dn)
 
     else:
