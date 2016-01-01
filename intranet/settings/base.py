@@ -528,6 +528,9 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 
 CORS_URLS_REGEX = r'^/api/.*$'
 
+# Same origin frame options
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 
 def _get_current_commit_short_hash():
     cmd = "git rev-parse --short HEAD"
