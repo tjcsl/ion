@@ -59,9 +59,29 @@ def save_personal_info(request, user):
     logger.debug(personal_info_form)
     if personal_info_form.is_valid():
         logger.debug("Personal info: valid")
-        if personal_info_form.has_changed():
+        
+        # form.has_changed() will not report a change if a field is missing
+        num_fields_changed = False
+        for f in num_fields:
+            if num_fields[f] != _num_fields[f]:
+                num_fields_changed = True
+
+        if personal_info_form.has_changed() or num_fields_changed:
+            logger.debug("Personal info: changed")
             fields = personal_info_form.cleaned_data
             logger.debug(fields)
+
+            # add None value for fields missing
+            for f in _num_fields:
+                # remove "s" from end of field name
+                fld = f[:-1]
+                fld_num_max = _num_fields[f]
+                for fld_num in range(0, fld_num_max):
+                    fld_name = "{}_{}".format(fld, fld_num)
+                    if fld_name not in fields:
+                        logger.debug("Field {} removed, setting as None".format(fld_name))
+                        fields[fld_name] = None
+
             single_fields = ["mobile_phone", "home_phone"]
             multi_fields = {}
             multi_fields_to_update = []
@@ -102,7 +122,7 @@ def save_personal_info(request, user):
                         logger.debug("Need to update {} because {} changed".format(full_field_name, field))
                         multi_fields_to_update.append(full_field_name)
 
-            logger.debug(multi_fields_to_update)
+            logger.debug("multi_fields_to_update: {}".format(multi_fields_to_update))
             for full_field in multi_fields_to_update:
                 ldap_full_field = "{}s".format(full_field)
                 field_vals = list(multi_fields[full_field].values())
