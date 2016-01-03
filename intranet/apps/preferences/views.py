@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from ...db.ldap_db import LDAPConnection
 from ..users.models import User
 from .forms import (
     PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm, NotificationOptionsForm
@@ -298,6 +299,8 @@ def preferences_view(request):
     # Clear cache on every pageload
     user.clear_cache()
 
+    ldap_error = None
+
     if request.method == "POST":
 
         personal_info_form = save_personal_info(request, user)
@@ -312,6 +315,10 @@ def preferences_view(request):
             save_gcm_options(request, user)
         except AttributeError:
             pass
+
+
+        if LDAPConnection().did_use_simple_bind():
+            ldap_error = True
 
     else:
         personal_info, num_fields = get_personal_info(user)
@@ -339,7 +346,8 @@ def preferences_view(request):
         "personal_info_form": personal_info_form,
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
-        "notification_options_form": notification_options_form
+        "notification_options_form": notification_options_form,
+        "ldap_error": ldap_error
     }
     return render(request, "preferences/preferences.html", context)
 
