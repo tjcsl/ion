@@ -105,11 +105,12 @@ def save_personal_info(request, user):
             logger.debug(multi_fields_to_update)
             for full_field in multi_fields_to_update:
                 ldap_full_field = "{}s".format(full_field)
-                field_vals = multi_fields[full_field].values()
+                field_vals = list(multi_fields[full_field].values())
+                logger.debug(field_vals)
                 for v in field_vals:
+                    logger.debug("field vals: {} {}".format(v, field_vals))
                     if not v:
                         field_vals.remove(v)
-
                 try:
                     user.set_ldap_attribute(ldap_full_field, field_vals)
                 except Exception as e:
