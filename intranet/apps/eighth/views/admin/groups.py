@@ -385,6 +385,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
         scheduled_activity = EighthScheduledActivity.objects.get(
@@ -537,6 +538,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activities = form_list[1].cleaned_data["activities"]
 

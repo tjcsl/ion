@@ -332,6 +332,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -397,6 +398,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(

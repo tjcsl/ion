@@ -150,6 +150,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         logger.debug("debug called in attendance")
 
         if hasattr(self, "no_activities"):
