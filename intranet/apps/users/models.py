@@ -42,7 +42,7 @@ class UserManager(UserManager):
                            ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
         return None
 
     def user_with_ion_id(self, student_id):
@@ -54,7 +54,7 @@ class UserManager(UserManager):
                            ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
         return None
 
     def users_in_year(self, year):
@@ -67,7 +67,7 @@ class UserManager(UserManager):
 
         users = []
         for user in results:
-            users.append(User.get_user(dn=user[0]))
+            users.append(User.get_user(dn=user["dn"]))
 
         return users
 
@@ -106,7 +106,7 @@ class UserManager(UserManager):
                                    ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
 
         return None
 
