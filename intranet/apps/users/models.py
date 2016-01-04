@@ -175,6 +175,9 @@ class UserManager(UserManager):
         """Get teachers sorted by last name. This is used for the announcement request page."""
         teachers = self.get_teachers()
         teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
+        for t in teachers:
+            if t is None or t[0] is None or t[1] is None or t[2] is None:
+                teachers.remove(t)
         teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
             if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011]:
