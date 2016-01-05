@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 def get_printers():
     proc = subprocess.Popen(["lpstat", "-a"], stdout=subprocess.PIPE)
     (output, err) = proc.communicate()
+    output = output.decode()
     lines = output.split("\n")
     names = []
     for l in lines:
@@ -40,6 +41,8 @@ def convert_soffice(tmpfile_name):
     if err:
         return False
 
+    output = output.decode()
+
     if " -> " in output and " using " in output:
         fileout = output.split(" -> ")[1]
         fileout = fileout.split(" using ")[0]
@@ -52,6 +55,8 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     new_name = "{}.pdf".format(tmpfile_name)
     proc = subprocess.Popen([cmdname, tmpfile_name, new_name], stdout=subprocess.PIPE)
     (output, err) = proc.communicate()
+    output = output.decode()
+
     if err:
         return False
 
@@ -67,6 +72,7 @@ def get_numpages(tmpfile_name):
     if err:
         return False
 
+    output = output.decode()
     lines = output.split("\n")
     num_pages = -1
     for l in lines:
@@ -83,6 +89,7 @@ def get_numpages(tmpfile_name):
 def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
+    detected = detected.decode()
     NO_CONVERSION = [
         "application/pdf"
     ]
@@ -100,7 +107,7 @@ def convert_file(tmpfile_name):
     if detected == "application/postscript":
         return convert_pdf(tmpfile_name, "pdf2ps")
 
-    return Exception("Not sure how to handle a file of type {}".format(detected))
+    raise Exception("Not sure how to handle a file of type {}".format(detected))
 
 
 def print_job(obj, do_print=True):
@@ -116,8 +123,9 @@ def print_job(obj, do_print=True):
     fileobj = obj.file
 
     filebase = os.path.basename(fileobj.name)
-    filebase_escaped = filebase.encode("ascii", "ignore")
-    filebase_escaped = filebase_escaped.replace(",", "")
+    filebase_escaped = filebase.replace(",", "")
+    filebase_escaped = filebase_escaped.encode("ascii", "ignore")
+    filebase_escaped = filebase_escaped.decode()
     tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
 
     with open(tmpfile_name, 'wb+') as dest:
