@@ -58,8 +58,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'TJ Intranet'
-copyright = u'{}, TJ Intranet Development Team'.format(datetime.now().year)
+project = 'TJ Intranet'
+copyright = '{}, TJ Intranet Development Team'.format(datetime.now().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -255,8 +255,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'TJIntranet.tex', u'TJ Intranet Documentation',
-     u'TJ Intranet Development Team', 'manual'),
+    ('index', 'TJIntranet.tex', 'TJ Intranet Documentation',
+     'TJ Intranet Development Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -285,8 +285,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'tjintranet', u'TJ Intranet Documentation',
-     [u'TJ Intranet Development Team'], 1)
+    ('index', 'tjintranet', 'TJ Intranet Documentation',
+     ['TJ Intranet Development Team'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -299,8 +299,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'TJIntranet', u'TJ Intranet Documentation',
-     u'TJ Intranet Development Team', 'TJIntranet', 'One line description of project.',
+    ('index', 'TJIntranet', 'TJ Intranet Documentation',
+     'TJ Intranet Development Team', 'TJIntranet', 'One line description of project.',
      'Miscellaneous'),
 ]
 

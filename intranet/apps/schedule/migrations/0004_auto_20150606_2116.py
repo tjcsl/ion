@@ -22,6 +22,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='time',
-            unique_together=set([('hour', 'minute')]),
+            unique_together={('hour', 'minute')},
         ),
     ]

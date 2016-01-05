@@ -407,7 +407,7 @@ def ldap_test(request):
                     req = [req]
                 for row in req:
                     results += "{}: \n".format(row[0])
-                    for perm, value in row[1].iteritems():
+                    for perm, value in row[1].items():
                         results += "\t{}: {}\n".format(perm, value)
 
         if "user_attribute_dn" in request.POST:
@@ -422,7 +422,7 @@ def ldap_test(request):
                 result = req.first_result()
                 logger.debug(result)
                 if isinstance(result, dict):
-                    for perm, value in result.iteritems():
+                    for perm, value in result.items():
                         logger.debug("{} {}".format(perm, value))
                         results += "{}: {}\n".format(perm, value)
                 else:

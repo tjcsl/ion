@@ -109,11 +109,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='eighthsponsor',
-            unique_together=set([('first_name', 'last_name', 'user', 'online_attendance')]),
+            unique_together={('first_name', 'last_name', 'user', 'online_attendance')},
         ),
         migrations.AlterUniqueTogether(
             name='eighthsignup',
-            unique_together=set([('user', 'scheduled_activity')]),
+            unique_together={('user', 'scheduled_activity')},
         ),
         migrations.AddField(
             model_name='eighthscheduledactivity',
@@ -135,7 +135,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='eighthscheduledactivity',
-            unique_together=set([('block', 'activity')]),
+            unique_together={('block', 'activity')},
         ),
         migrations.AddField(
             model_name='eighthblock',
@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='eighthblock',
-            unique_together=set([('date', 'block_letter')]),
+            unique_together={('date', 'block_letter')},
         ),
         migrations.AddField(
             model_name='eighthactivity',
