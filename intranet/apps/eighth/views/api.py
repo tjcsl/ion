@@ -73,6 +73,7 @@ class EighthBlockDetail(views.APIView):
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
+    queryset = EighthSignup.objects.all()
 
     def list(self, request, user_id=None):
         if not user_id:

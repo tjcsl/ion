@@ -53,10 +53,15 @@ def announcement_posted_hook(request, obj):
         except AttributeError:
             notify_all = False
 
-        if notify_all:
-            announcement_posted_email(request, obj, True)
-        else:
-            announcement_posted_email(request, obj)
+        try:
+            if notify_all:
+                announcement_posted_email(request, obj, True)
+            else:
+                announcement_posted_email(request, obj)
+        except Exception as e:
+            logger.error("Exception when emailing announcement: {}".format(e))
+            messages.error("Exception when emailing announcement: {}".format(e))
+            raise e
     else:
         logger.debug("Announcement notify off")
 
