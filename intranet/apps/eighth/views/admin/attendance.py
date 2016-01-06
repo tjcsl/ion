@@ -208,7 +208,7 @@ def no_signups_roster(request, block_id):
     unsigned = block.get_unsigned_students()
     unsigned = sorted(unsigned, key=lambda u: (u.last_name, u.first_name))
 
-    user_signups_hidden = EighthSignup.objects.filter(scheduled_activity__block=block).exclude(user__in=User.objects.get_students())
+    user_signups_hidden = block.get_hidden_signups()
 
     if request.resolver_match.url_name == "eighth_admin_no_signups_roster":
         context = {

@@ -532,16 +532,21 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def num_signups(self):
         """ How many people have signed up?"""
-        return EighthSignup.objects.filter(scheduled_activity__block=self).count()
+        return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=User.objects.get_students()).count()
 
     def num_no_signups(self):
         """ How many people have not signed up?"""
         signup_users_count = User.objects.get_students().count()
-        return signup_users_count - self.num_signups()
+        return signup_users_count - self.num_signups() - self.get_hidden_signups().count()
 
     def get_unsigned_students(self):
         """ Return a list of Users who haven't signed up for an activity. """
         return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
+
+    def get_hidden_signups(self):
+        """ Return a list of Users who are *not* in the All Students list but have signed up for an activity.
+            This is usually a list of signups for z-Withdrawn from TJ """
+        return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=User.objects.get_students())
 
     @property
     def letter_width(self):
