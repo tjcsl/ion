@@ -499,7 +499,10 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 "exclude_before_date": get_start_date(self.request)
             })
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
+            logger.debug("cleaned block: {}".format(self.get_cleaned_data_for_step("block")["block"]))
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
             kwargs.update({"block": block})
 
         labels = {
