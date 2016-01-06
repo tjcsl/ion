@@ -91,10 +91,12 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         block = None
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
-            kwargs.update({"block": block})
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
+                kwargs.update({"block": block})
 
-            block_title = ("Take Attendance" if block.locked else "View Roster")
+                block_title = ("Take Attendance" if block.locked else "View Roster")
 
             # try:
             #    sponsor = self.request.user.eighthsponsor
