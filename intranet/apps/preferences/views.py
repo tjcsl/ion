@@ -141,7 +141,7 @@ def save_personal_info(request, user):
                     messages.error(request, "Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                     logger.debug("Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                 else:
-                    if len(field_vals) == 0 or (len(field_vals) == 1 and len(field_vals[0]) < 1):
+                    if field_vals is None or len(field_vals) == 0 or (len(field_vals) == 1 and len(field_vals[0]) < 1):
                         pass
                     else:
                         messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
