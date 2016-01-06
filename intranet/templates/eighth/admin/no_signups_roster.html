@@ -81,5 +81,29 @@
         </tbody>
     </table>
 
+    {% if user_signups_hidden %}
+    The following {{ user_signups_hidden.count }} users are not in the All Students group, but have signed up for these activities:
+    <br />
+    <table class="fancy-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Activity</th>
+            </tr>
+        </thead>
+        {% for signup in user_signups_hidden %}
+            <tr class="item-row">
+                <td>
+                <a href="{% url 'user_profile' signup.user.id %}">
+                    {{ signup.user.last_name }}, {{ signup.user.first_name }}
+                </a>
+                </td>
+                <td>{{ signup.user.grade.number }}</td>
+                <td>{{ signup.scheduled_activity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
 </div>
 {% endblock %}
