@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import bleach
+import datetime
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -319,8 +320,14 @@ def delete_announcement_view(request, id):
         except AttributeError:
             post_id = None
         try:
-            Announcement.objects.get(id=post_id).delete()
-            messages.success(request, "Successfully deleted announcement.")
+            a = Announcement.objects.get(id=post_id)
+            if request.POST.get("full_delete", False):
+                a.delete()
+                messages.success(request, "Successfully deleted announcement.")
+            else:
+                a.expiration_date = datetime.datetime.now()
+                a.save()
+                messages.success(request, "Successfully expired announcement.")
         except Announcement.DoesNotExist:
             pass
 
