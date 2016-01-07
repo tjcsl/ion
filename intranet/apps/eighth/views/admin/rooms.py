@@ -196,7 +196,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
 
 
 @eighth_admin_required
-def room_utilization_action(request, start_id, end_id):
+def room_utilization_action(request, start_id, end_id): 
     try:
         start_block = EighthBlock.objects.get(id=start_id)
         end_block = EighthBlock.objects.get(id=end_id)
@@ -205,32 +205,11 @@ def room_utilization_action(request, start_id, end_id):
     except EighthBlock.DoesNotExist:
         raise http.Http404
 
-    sched_acts = (EighthScheduledActivity.objects
-                                         .exclude(activity__deleted=True))
-    # .exclude(cancelled=True) # include cancelled activities
-    if not one_block:
-        sched_acts = (sched_acts.filter(block__date__gte=start_block.date,
-                                        block__date__lte=end_block.date))
-    else:
-        sched_acts = sched_acts.filter(block=start_block)
 
-    sched_acts = (sched_acts.order_by("block__date",
-                                      "block__block_letter"))
+    show_all_rooms = ("show_all" in request.GET)
+    show_listing = show_all_rooms or ("room" in request.GET)
 
     all_rooms = EighthRoom.objects.all().order_by("name")
-
-    room_ids = request.GET.getlist("room")
-    if "room" in request.GET:
-        rooms = EighthRoom.objects.filter(id__in=room_ids)
-        all_sched_acts = sched_acts
-        sched_acts = []
-        for sched_act in all_sched_acts:
-            if len(set(rooms).intersection(set(sched_act.get_true_rooms()))) > 0:
-                sched_acts.append(sched_act)
-    else:
-        rooms = all_rooms
-
-    sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
 
     # If a "show" GET parameter is defined, only show the values that are given.
     show_vals = request.GET.getlist("show")
@@ -247,17 +226,48 @@ def room_utilization_action(request, start_id, end_id):
     only_show_overbooked = "only_show_overbooked" in request.GET and request.GET.get("only_show_overbooked") != "0"
 
     context = {
-        "scheduled_activities": sched_acts,
         "admin_page_title": "Room Utilization",
         "start_block": start_block,
         "end_block": end_block,
-        "show": show,
-        "rooms": rooms,
         "all_rooms": all_rooms,
-        "room_ids": [int(i) for i in room_ids],
+        "show": show,
         "hide_administrative": hide_administrative,
-        "only_show_overbooked": only_show_overbooked
+        "only_show_overbooked": only_show_overbooked,
+        "show_listing": show_listing,
+        "show_all_rooms": show_all_rooms
     }
+
+    if show_listing:
+        sched_acts = (EighthScheduledActivity.objects
+                                             .exclude(activity__deleted=True))
+        # .exclude(cancelled=True) # include cancelled activities
+        if not one_block:
+            sched_acts = (sched_acts.filter(block__date__gte=start_block.date,
+                                            block__date__lte=end_block.date))
+        else:
+            sched_acts = sched_acts.filter(block=start_block)
+
+        sched_acts = (sched_acts.order_by("block__date",
+                                          "block__block_letter"))
+
+        room_ids = request.GET.getlist("room")
+        if "room" in request.GET:
+            rooms = EighthRoom.objects.filter(id__in=room_ids)
+            all_sched_acts = sched_acts
+            sched_acts = []
+            for sched_act in all_sched_acts:
+                if len(set(rooms).intersection(set(sched_act.get_true_rooms()))) > 0:
+                    sched_acts.append(sched_act)
+        else:
+            rooms = all_rooms
+
+        sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
+
+        context.update({
+            "scheduled_activities": sched_acts,
+            "rooms": rooms,
+            "room_ids": [int(i) for i in room_ids]
+        })
 
     if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
         response = http.HttpResponse(content_type="text/csv")
