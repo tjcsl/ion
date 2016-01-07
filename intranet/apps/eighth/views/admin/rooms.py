@@ -9,6 +9,7 @@ from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 from ....auth.decorators import eighth_admin_required
@@ -247,12 +248,18 @@ def room_utilization_action(request, start_id, end_id):
         else:
             sched_acts = sched_acts.filter(block=start_block)
 
-        sched_acts = (sched_acts.order_by("block__date",
-                                          "block__block_letter"))
-
+        logger.debug("sched_acts before: {}".format(sched_acts.count()))
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
             rooms = EighthRoom.objects.filter(id__in=room_ids)
+            sched_acts = sched_acts.filter(Q(rooms__in=rooms)|Q(activity__rooms__in=rooms))
+
+        logger.debug("sched_acts: {}".format(sched_acts.count()))
+
+        sched_acts = (sched_acts.order_by("block__date",
+                                          "block__block_letter"))
+
+        if "room" in request.GET:
             all_sched_acts = sched_acts
             sched_acts = []
             for sched_act in all_sched_acts:
@@ -260,6 +267,8 @@ def room_utilization_action(request, start_id, end_id):
                     sched_acts.append(sched_act)
         else:
             rooms = all_rooms
+
+        logger.debug("sched_acts end: {}".format(len(sched_acts)))
 
         sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
 
