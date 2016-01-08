@@ -591,7 +591,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity"""
 
-    def for_sponsor(cls, sponsor):
+    def for_sponsor(cls, sponsor, include_cancelled=False):
         """Return a QueryList of EighthScheduledActivities where the given
         EighthSponsor is sponsoring.
 
@@ -607,9 +607,11 @@ class EighthScheduledActivityManager(Manager):
                              (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
                                              .filter(sponsoring_filter)
                                              .distinct())
+        if not include_cancelled:
+            sched_acts = sched_acts.exclude(cancelled=True)
+
         return sched_acts
 
 

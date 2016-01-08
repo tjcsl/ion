@@ -92,7 +92,8 @@ def sponsor_schedule_view(request, sponsor_id):
 
     start_date = get_start_date(request)
 
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+    # for_sponsor() excludes cancelled activities
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, include_cancelled=True)
                                          .filter(block__date__gte=start_date)
                                          .order_by("block__date",
                                                    "block__block_letter"))
