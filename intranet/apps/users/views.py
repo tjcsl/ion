@@ -77,12 +77,19 @@ def profile_view(request, user_id=None):
     else:
         eighth_sponsor_schedule = None
 
-    if not profile_user.can_view_eighth and not request.user == profile_user:
+    admin_or_teacher = (request.user.is_eighth_admin or request.user.is_teacher)
+    can_view_eighth = (profile_user.can_view_eighth or request.user == profile_user)
+    eighth_restricted_msg = (not can_view_eighth and admin_or_teacher)
+
+    if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
+
 
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
+        "can_view_eighth": can_view_eighth,
+        "eighth_restricted_msg": eighth_restricted_msg,
         "eighth_sponsor_schedule": eighth_sponsor_schedule
     }
     return render(request, "users/profile.html", context)
