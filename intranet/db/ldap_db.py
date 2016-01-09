@@ -47,7 +47,7 @@ class LDAPFilter(object):
         """Returns a filter for selecting all user objects in LDAP
         """
 
-        user_object_classes = list(settings.LDAP_OBJECT_CLASSES.values())
+        user_object_classes = sorted(list(settings.LDAP_OBJECT_CLASSES.values()))
         return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
 
 

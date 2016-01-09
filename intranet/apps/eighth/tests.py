@@ -2,19 +2,32 @@
 from __future__ import unicode_literals
 
 """
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
+Tests for the eighth module.
 """
 
+from unittest import mock
 from django.test import TestCase
+from django.core.urlresolvers import reverse
+from ..users.models import User
+from ...db.ldap_db import LDAPConnection
+from ...test.fake_ldap import MockLDAPConnection
 
 
-class SimpleTest(TestCase):
+class EighthTest(TestCase):
+    def setUp(self):
+        mock.patch.object(LDAPConnection, 'conn', new=MockLDAPConnection()).start()
 
-    def test_basic_addition(self):
+    def tearDown(self):
+        mock.patch.stopall()
+
+    def test_add_user(self):
         """
-        Tests that 1 + 1 always equals 2.
+        Tests adding a user to a EighthScheduledActivity.
         """
-        self.assertEqual(1 + 1, 2)
+        user = User.get_user(username='awilliam')
+        self.client.force_login(user)
+        response = self.client.get(reverse('eighth_signup'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('eighth_signup'))
+        # FIXME: make signup succeed
+        self.assertEqual(response.status_code, 400)
