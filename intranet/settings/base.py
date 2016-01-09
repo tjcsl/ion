@@ -2,11 +2,17 @@
 from __future__ import unicode_literals
 
 import os
+import sys
 import subprocess
 from .secret import *
 
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"
+# FIXME: figure out a less-hacky way to do this.
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+# Always force testing mode if we're running on travis.
+if TRAVIS:
+    TESTING = True
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -197,17 +203,6 @@ WSGI_APPLICATION = "intranet.wsgi.application"
 # Name of current virtualenv
 VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"])
 
-# Settings for django-redis-sessions
-SESSION_ENGINE = "redis_sessions.session"
-
-SESSION_REDIS_HOST = "127.0.0.1"
-SESSION_REDIS_PORT = 6379
-SESSION_REDIS_DB = 0
-SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
-
-SESSION_COOKIE_AGE = 60 * 60 * 2
-SESSION_SAVE_EVERY_REQUEST = True
-
 days = 60 * 60 * 24
 months = days * 30
 # Age of cache information
@@ -226,19 +221,29 @@ CACHE_AGE = {
 del days
 del months
 
+if not TESTING:
+    # Settings for django-redis-sessions
+    SESSION_ENGINE = "redis_sessions.session"
 
-CACHES = {
-    "default": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {
-            "PARSER_CLASS": "redis.connection.HiredisParser"
+    SESSION_REDIS_HOST = "127.0.0.1"
+    SESSION_REDIS_PORT = 6379
+    SESSION_REDIS_DB = 0
+    SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
+
+    SESSION_COOKIE_AGE = 60 * 60 * 2
+    SESSION_SAVE_EVERY_REQUEST = True
+
+    CACHES = {
+        "default": {
+            "BACKEND": "redis_cache.RedisCache",
+            "LOCATION": "127.0.0.1:6379",
+            "OPTIONS": {
+                "PARSER_CLASS": "redis.connection.HiredisParser"
+            },
+            "KEY_PREFIX": VIRTUAL_ENV
         },
-        "KEY_PREFIX": VIRTUAL_ENV
-    },
-}
+    }
 
-if not TRAVIS:
     # Cacheops configuration
     # may be removed in the future
     CACHEOPS_REDIS = {

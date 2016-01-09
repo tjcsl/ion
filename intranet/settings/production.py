@@ -25,7 +25,8 @@ CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
 
-CACHES['default']['OPTIONS']['DB'] = 1
+if not TESTING:
+    CACHES['default']['OPTIONS']['DB'] = 1
 
 parse.uses_netloc.append("postgres")
 url = parse.urlparse(DATABASE_URL)

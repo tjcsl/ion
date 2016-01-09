@@ -39,7 +39,8 @@ DATABASES = {
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 # Avoid conflict with production redis db
-CACHES["default"]["OPTIONS"]["DB"] = 2
+if not TESTING:
+    CACHES["default"]["OPTIONS"]["DB"] = 2
 
 if os.getenv("DUMMY_CACHE", "NO") == "YES":
     CACHES = {
