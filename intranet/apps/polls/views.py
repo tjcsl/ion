@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import datetime
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required

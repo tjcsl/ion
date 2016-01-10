@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 import ipaddress
-from six.moves.urllib import parse
 import logging
-from .base import *
+from .base import *  # noqa
 
 
 logger = logging.getLogger(__name__)

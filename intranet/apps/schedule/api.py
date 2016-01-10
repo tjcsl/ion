@@ -2,14 +2,11 @@
 from __future__ import unicode_literals
 import logging
 
-from django.http import Http404
-from rest_framework import generics, views, status
+from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from intranet.apps.users.models import User
-from .models import Day, DayType, CodeName, Block, Time
-from .serializers import DaySerializer, DayTypeSerializer
+from .models import Day
+from .serializers import DaySerializer
 
 logger = logging.getLogger(__name__)
 

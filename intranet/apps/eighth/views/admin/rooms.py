@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import csv
 import logging
-from cacheops import invalidate_obj
 from collections import defaultdict
 from six.moves import cPickle as pickle
 from django import http

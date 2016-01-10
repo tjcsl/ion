@@ -8,7 +8,7 @@ import ldap3
 import ldap3.utils.dn
 import os
 from base64 import b64encode
-from six import text_type, iteritems
+from six import iteritems
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache

@@ -8,9 +8,8 @@ import subprocess
 import tempfile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from intranet import settings
-from .models import PrintJob
 from .forms import PrintJobForm
 
 logger = logging.getLogger(__name__)

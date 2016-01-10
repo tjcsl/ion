@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from rest_framework import renderers
-from .models import User, Class
 
 
 class JPEGRenderer(renderers.BaseRenderer):

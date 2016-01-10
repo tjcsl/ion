@@ -4,14 +4,11 @@ from __future__ import unicode_literals
 import logging
 import datetime
 from django import http
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.utils import timezone
+from django.shortcuts import render
 from intranet import settings
 from .models import Sign
 from ..users.models import User
-from ..eighth.models import EighthBlock, EighthSignup
+from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
 from ...utils.serialization import safe_json

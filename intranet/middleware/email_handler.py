@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
 from copy import copy
-from django.core import mail
 from django.utils import log
 from django.views.debug import ExceptionReporter
 from intranet import settings

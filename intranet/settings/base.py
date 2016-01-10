@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import os
 import sys
 import subprocess
-from .secret import *
+from .secret import *  # noqa
 
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"

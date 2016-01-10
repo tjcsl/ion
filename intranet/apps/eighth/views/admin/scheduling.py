@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import logging
 from cacheops import invalidate_obj
-from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
