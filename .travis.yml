@@ -29,7 +29,7 @@ before_script:
   - psql -c 'create database ion;' -U postgres
 
 script:
-  - flake8 .
+  - flake8 --max-line-length 200 .
   - coverage run ./manage.py test
   - ./travis/build_docs.sh
 
