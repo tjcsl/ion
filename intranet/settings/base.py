@@ -221,6 +221,34 @@ CACHE_AGE = {
 del days
 del months
 
+# Cacheops configuration
+# may be removed in the future
+CACHEOPS_REDIS = {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "db": 1,
+    "socket_timeout": 1
+}
+
+CACHEOPS_DEGRADE_ON_FAILURE = True
+
+CACHEOPS_DEFAULTS = {
+    "ops": "all",
+    "cache_on_save": True,
+    "timeout": 24 * 60 * 60
+}
+
+CACHEOPS = {
+    "eighth.*": {
+        "timeout": 1  # 60 * 60
+    },
+    "announcements.*": {},
+    "events.*": {},
+    "groups.*": {},
+    "users.*": {},
+    "auth.*": {}
+}
+
 if not TESTING:
     # Settings for django-redis-sessions
     SESSION_ENGINE = "redis_sessions.session"
@@ -243,35 +271,6 @@ if not TESTING:
             "KEY_PREFIX": VIRTUAL_ENV
         },
     }
-
-    # Cacheops configuration
-    # may be removed in the future
-    CACHEOPS_REDIS = {
-        "host": "127.0.0.1",
-        "port": 6379,
-        "db": 1,
-        "socket_timeout": 1
-    }
-
-    CACHEOPS_DEGRADE_ON_FAILURE = True
-
-    CACHEOPS_DEFAULTS = {
-        "ops": "all",
-        "cache_on_save": True,
-        "timeout": 24 * 60 * 60
-    }
-
-    CACHEOPS = {
-        "eighth.*": {
-            "timeout": 1  # 60 * 60
-        },
-        "announcements.*": {},
-        "events.*": {},
-        "groups.*": {},
-        "users.*": {},
-        "auth.*": {}
-    }
-
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm

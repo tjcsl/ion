@@ -7,7 +7,7 @@ import os
 import re
 import logging
 from django.contrib.auth.hashers import check_password
-from intranet import settings
+from django.conf import settings
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
