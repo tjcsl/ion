@@ -8,7 +8,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; th
   git clone --depth=50 --branch=gh-pages https://${GH_TOKEN}@github.com/tjcsl/ion.git gh-pages
   rm -rf gh-pages/*
   cd gh-pages
-  cp -R ../docs/build/* .
+  cp -R ../build/sphinx/html/* .
   git add -A .
   latest=$(git log -1 --pretty=%s|sed "s/Travis build \([0-9]\+\)/\1/")
   git commit -m "Travis build $TRAVIS_BUILD_NUMBER"
