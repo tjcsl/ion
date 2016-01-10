@@ -124,6 +124,7 @@ def schedule_view(request):
 
 # does NOT require login
 
+
 @xframe_options_exempt
 def schedule_embed(request):
     data = schedule_context(request)

@@ -60,7 +60,7 @@ def save_personal_info(request, user):
     logger.debug(personal_info_form)
     if personal_info_form.is_valid():
         logger.debug("Personal info: valid")
-        
+
         # form.has_changed() will not report a change if a field is missing
         num_fields_changed = False
         for f in num_fields:
@@ -116,7 +116,7 @@ def save_personal_info(request, user):
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                if fields[field] == None or len(fields[field]) < 1:
+                                if fields[field] is None or len(fields[field]) < 1:
                                     pass
                                 else:
                                     messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
@@ -315,7 +315,6 @@ def preferences_view(request):
             save_gcm_options(request, user)
         except AttributeError:
             pass
-
 
         if LDAPConnection().did_use_simple_bind():
             ldap_error = True

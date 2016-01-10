@@ -197,7 +197,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
 
 
 @eighth_admin_required
-def room_utilization_action(request, start_id, end_id): 
+def room_utilization_action(request, start_id, end_id):
     try:
         start_block = EighthBlock.objects.get(id=start_id)
         end_block = EighthBlock.objects.get(id=end_id)
@@ -205,7 +205,6 @@ def room_utilization_action(request, start_id, end_id):
         one_block = (start_id == end_id)
     except EighthBlock.DoesNotExist:
         raise http.Http404
-
 
     show_all_rooms = ("show_all" in request.GET)
     show_listing = show_all_rooms or ("room" in request.GET)
@@ -252,7 +251,7 @@ def room_utilization_action(request, start_id, end_id):
         room_ids = request.GET.getlist("room")
         if "room" in request.GET:
             rooms = EighthRoom.objects.filter(id__in=room_ids)
-            sched_acts = sched_acts.filter(Q(rooms__in=rooms)|Q(activity__rooms__in=rooms))
+            sched_acts = sched_acts.filter(Q(rooms__in=rooms) | Q(activity__rooms__in=rooms))
 
         logger.debug("sched_acts: {}".format(sched_acts.count()))
 

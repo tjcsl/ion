@@ -84,7 +84,6 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
-
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
