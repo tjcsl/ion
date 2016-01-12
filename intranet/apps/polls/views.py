@@ -124,7 +124,7 @@ def poll_vote_view(request, poll_id):
 
                 elif question_obj.is_writing():
                     Answer.objects.filter(user=user, question=question_obj).delete()
-                    answer_obj = Answer.objects.create(user=user, question=question_obj, answer=choice_num)
+                    Answer.objects.create(user=user, question=question_obj, answer=choice_num)
                     messages.success(request, "Answer saved for {}".format(question_obj))
 
     questions = []
@@ -186,7 +186,7 @@ def poll_results_view(request, poll_id):
 
     questions = []
     for q in poll.question_set.all():
-        if q.type == "SAP": # Split-approval; each person splits their one vote
+        if q.type == "SAP":  # Split-approval; each person splits their one vote
             question_votes = votes = Answer.objects.filter(question=q)
             users = q.get_users_voted()
             num_users_votes = {u.id: votes.filter(user=u).count() for u in users}
