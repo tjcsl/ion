@@ -77,6 +77,9 @@
                         <tr {% if c.choice == "Total" %} class="total"{% endif %}>
                             <td class="choice">
                                 {{ c.choice }}
+                                {% if c.choice == "Total" %}
+                                    Users: {{ c.votes.total.users_all }}
+                                {% endif %}
                                 <ul class="user-selections">
                                 {% for u in c.users %}
                                     <li><a href="{% url 'user_profile' u.id %}">{{ u }}</a></li>

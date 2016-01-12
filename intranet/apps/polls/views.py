@@ -241,8 +241,9 @@ def poll_results_view(request, poll_id):
                 "choice": "Total",
                 "votes": {
                     "total": {
-                        "all": users.count(),
-                        "all_percent": perc(users.count(), question_votes.count()),
+                        "all": question_votes.count(),
+                        "users_all": users.count(),
+                        "all_percent": perc(question_votes.count(), users.count()),
                         "male": sum([u.is_male for u in users]),
                         "female": sum([u.is_female for u in users]),
                     }
