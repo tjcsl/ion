@@ -46,10 +46,9 @@
         <h2>Results: {{ poll }}</h2>
         <ol class="questions">
             {% for q in questions %}
-                <li>
-                    {{ q.question.question }}
-                    <br />
-                    <table class="results-table">
+                <li><b>{{ q.question.question }}</b>
+                {% if q.question.is_choice %}(Choice)<br />
+                    <table class="results-table choice-table fancy-table">
                     <thead>
                         <tr>
                             <th rowspan="2" class="choice-header">Choice</th>
@@ -101,6 +100,25 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                {% elif q.question.is_writing %}(Writing)<br />
+                    <table class="results-table writing-table fancy-table">
+                    <thead>
+                        <tr>
+                            <th>Choice</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in q.answers %}
+                            <tr>
+                                <td>{{ a.answer }}</td>
+                                <td>{{ a.user }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                {% endif %}
+                <br />
                 </li>
             {% endfor %}
         </ol>

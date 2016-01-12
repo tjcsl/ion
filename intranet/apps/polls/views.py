@@ -70,23 +70,28 @@ def poll_vote_view(request, poll_id):
                 choice_num = entries[name]
                 logger.debug(choice_num)
 
-                choices = question_obj.choice_set.all()
-                if question_obj.type in [Question.STD, Question.ELECTION]:
-                    if choice_num and choice_num == "CLEAR":
-                        Answer.objects.filter(user=user, question=question_obj).delete()
-                        Answer.objects.create(user=user, question=question_obj, clear_vote=True)
-                        messages.success(request, "Clear Vote for {}".format(question_obj))
-                    else:
-                        try:
-                            choice_obj = choices.get(num=choice_num)
-                        except Choice.DoesNotExist:
-                            messages.error(request, "Invalid answer choice with num {}".format(choice_num))
-                            continue
-                        else:
-                            logger.debug(choice_obj)
+                if question_obj.is_choice():
+                    choices = question_obj.choice_set.all()
+                    if question_obj.type in [Question.STD, Question.ELECTION]:
+                        if choice_num and choice_num == "CLEAR":
                             Answer.objects.filter(user=user, question=question_obj).delete()
-                            Answer.objects.create(user=user, question=question_obj, choice=choice_obj)
-                            messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
+                            Answer.objects.create(user=user, question=question_obj, clear_vote=True)
+                            messages.success(request, "Clear Vote for {}".format(question_obj))
+                        else:
+                            try:
+                                choice_obj = choices.get(num=choice_num)
+                            except Choice.DoesNotExist:
+                                messages.error(request, "Invalid answer choice with num {}".format(choice_num))
+                                continue
+                            else:
+                                logger.debug(choice_obj)
+                                Answer.objects.filter(user=user, question=question_obj).delete()
+                                Answer.objects.create(user=user, question=question_obj, choice=choice_obj)
+                                messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
+                elif question_obj.is_writing():
+                    Answer.objects.filter(user=user, question=question_obj).delete()
+                    answer_obj = Answer.objects.create(user=user, question=question_obj, answer=choice_num)
+                    messages.success(request, "Answer saved for {}".format(question_obj))
 
     questions = []
     for q in poll.question_set.all():
@@ -108,6 +113,7 @@ def poll_vote_view(request, poll_id):
             "question": q.question,
             "choices": choices,
             "is_choice": q.is_choice(),
+            "is_writing": q.is_writing(),
             "current_vote": current_vote,
             "current_choice": (current_vote.choice if current_vote else None),
             "current_vote_none": (current_vote is None),
@@ -145,13 +151,38 @@ def poll_results_view(request, poll_id):
 
     questions = []
     for q in poll.question_set.all():
-        question_votes = votes = Answer.objects.filter(question=q)
-        users = q.get_users_voted()
-        choices = []
-        for c in q.choice_set.all().order_by("num"):
-            votes = question_votes.filter(choice=c)
+        if q.is_choice():
+            question_votes = votes = Answer.objects.filter(question=q)
+            users = q.get_users_voted()
+            choices = []
+            for c in q.choice_set.all().order_by("num"):
+                votes = question_votes.filter(choice=c)
+                choice = {
+                    "choice": c,
+                    "votes": {
+                        "total": {
+                            "all": votes.count(),
+                            "all_percent": perc(votes.count(), question_votes.count()),
+                            "male": sum([v.user.is_male for v in votes]),
+                            "female": sum([v.user.is_female for v in votes])
+                        }
+                    }
+                }
+                for yr in range(9, 13):
+                    yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                    yr_votes = list(filter(None, yr_votes))
+                    choice["votes"][yr] = {
+                        "all": len(yr_votes),
+                        "male": sum([u.is_male for u in yr_votes]),
+                        "female": sum([u.is_female for u in yr_votes])
+                    }
+                logger.debug(choice)
+                choices.append(choice)
+
+            """ Clear vote """
+            votes = question_votes.filter(clear_vote=True)
             choice = {
-                "choice": c,
+                "choice": "Clear vote",
                 "votes": {
                     "total": {
                         "all": votes.count(),
@@ -163,7 +194,7 @@ def poll_results_view(request, poll_id):
             }
             for yr in range(9, 13):
                 yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
-                yr_votes = filter(None, yr_votes)
+                yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(yr_votes),
                     "male": sum([u.is_male for u in yr_votes]),
@@ -172,57 +203,40 @@ def poll_results_view(request, poll_id):
             logger.debug(choice)
             choices.append(choice)
 
-        """ Clear vote """
-        votes = question_votes.filter(clear_vote=True)
-        choice = {
-            "choice": "Clear vote",
-            "votes": {
-                "total": {
-                    "all": votes.count(),
-                    "all_percent": perc(votes.count(), question_votes.count()),
-                    "male": sum([v.user.is_male for v in votes]),
-                    "female": sum([v.user.is_female for v in votes])
+            choice = {
+                "choice": "Total",
+                "votes": {
+                    "total": {
+                        "all": users.count(),
+                        "all_percent": perc(users.count(), question_votes.count()),
+                        "male": sum([u.is_male for u in users]),
+                        "female": sum([u.is_female for u in users]),
+                    }
                 }
             }
-        }
-        for yr in range(9, 13):
-            yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
-            yr_votes = filter(None, yr_votes)
-            choice["votes"][yr] = {
-                "all": len(yr_votes),
-                "male": sum([u.is_male for u in yr_votes]),
-                "female": sum([u.is_female for u in yr_votes])
-            }
-        logger.debug(choice)
-        choices.append(choice)
-
-        choice = {
-            "choice": "Total",
-            "votes": {
-                "total": {
-                    "all": users.count(),
-                    "all_percent": perc(users.count(), question_votes.count()),
-                    "male": sum([u.is_male for u in users]),
-                    "female": sum([u.is_female for u in users]),
+            for yr in range(9, 13):
+                yr_votes = [u if u.grade.number == yr else None for u in users]
+                yr_votes = list(filter(None, yr_votes))
+                choice["votes"][yr] = {
+                    "all": len(yr_votes),
+                    "male": sum([u.is_male for u in yr_votes]),
+                    "female": sum([u.is_female for u in yr_votes])
                 }
-            }
-        }
-        for yr in range(9, 13):
-            yr_votes = [u if u.grade.number == yr else None for u in users]
-            yr_votes = filter(None, yr_votes)
-            choice["votes"][yr] = {
-                "all": len(yr_votes),
-                "male": sum([u.is_male for u in yr_votes]),
-                "female": sum([u.is_female for u in yr_votes])
-            }
 
-        choices.append(choice)
+            choices.append(choice)
 
-        question = {
-            "question": q,
-            "choices": choices
-        }
-        questions.append(question)
+            question = {
+                "question": q,
+                "choices": choices
+            }
+            questions.append(question)
+        elif q.is_writing():
+            answers = Answer.objects.filter(question=q)
+            question = {
+                "question": q,
+                "answers": answers
+            }
+            questions.append(question)
 
     context = {
         "poll": poll,

@@ -231,12 +231,21 @@ class Choice(models.Model):  # individual answer choices
 class Answer(models.Model):  # individual answer choices selected
     question = models.ForeignKey(Question)
     user = models.ForeignKey(User)
-    choice = models.ForeignKey(Choice, null=True)  # determine field based on question type
+    choice = models.ForeignKey(Choice, null=True)  # for multiple choice questions
+    answer = models.CharField(max_length=10000, null=True) # for free response
     clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
 
     def __str__(self):
-        return "{} {}".format(self.user, self.choice)
+        if self.choice:
+            return "{} {}".format(self.user, self.choice)
+        elif self.answer:
+            return "{} {}".format(self.user, self.answer[:25])
+        elif self.clear_vote:
+            return "{} Clear".format(self.user)
+        else:
+            return "{} None".format(self.user)
+
 
 
 class AnswerVotes(models.Model):  # record of total selection of a given answer choice

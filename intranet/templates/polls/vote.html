@@ -72,8 +72,24 @@
                                 </label>
                             </li>
                         </ul>
-                    </div>
+                    {% elif question.is_writing %}
+                        {% if question.type == "FRE" %}
+                            <textarea id="question-{{ question.num }}-writing"
+                                      name="question-{{ question.num }}"
+                                      class="question-writing"
+                                      placeholder="Answer here..."
+                            >{% if question.current_vote %}{{ question.current_vote.answer|escape }}{% endif %}</textarea>
+                        {% elif question.type == "SRE" %}
+                            <input id="question-{{ question.num }}-writing"
+                                      name="question-{{ question.num }}"
+                                      class="question-writing short"
+                                      placeholder="Answer here..."
+                                      value="{% if question.current_vote %}{{ question.current_vote.answer|escape }}{% endif %}" />
+                        {% endif %}
+                    {% else %}
+                        Question type {{ question.type }} unsupported.
                     {% endif %}
+                    </div>
                 </li>
             {% endfor %}
             </ol>
