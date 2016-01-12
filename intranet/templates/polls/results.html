@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load dictionaries %}
 
 {% block title %}
     {{ block.super }} - Poll Results
@@ -82,7 +83,10 @@
                                 {% endif %}
                                 <ul class="user-selections">
                                 {% for u in c.users %}
-                                    <li><a href="{% url 'user_profile' u.id %}">{{ u }}</a></li>
+                                    <li>
+                                        <a href="{% url 'user_profile' u.id %}">{{ u }}</a>
+                                        {% if q.user_scale %} - Scale: {{ q.user_scale|lookup:u.id|truncatechars:7 }}{% endif %}
+                                    </li>
                                 {% endfor %}
                                 </ul>
                             </td>
