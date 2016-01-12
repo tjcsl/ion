@@ -94,12 +94,27 @@
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
     <style type="text/css">
+#room-util-table tr.restricted {
+    color: #ff6600;
+}
+
+#room-util-table tr.almost-full {
+    color: #00878d;
+    font-weight: bold;
+}
+
+#room-util-table tr.full {
+    color: #0000ff;
+    font-weight: bold;
+}
+
 #room-util-table tr.cancelled {
-    color: red;
+    border: 3px solid red;
 }
 
 .tbd-tba {
     color: red;
+    text-decoration: underline;
 }
 
 i.i {
@@ -218,7 +233,12 @@ i.i {
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %} {% if sched_act.activity.restricted %}restricted{% endif %}">
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} 
+                               {% if not sched_act.is_overbooked %}underbooked{% endif %} 
+                               {% if sched_act.cancelled %}cancelled{% endif %} 
+                               {% if sched_act.activity.restricted %}restricted{% endif %} 
+                               {% if sched_act.is_full %}full{% endif %}
+                               {% if sched_act.is_almost_full %}almost-full{% endif %}">
                         {% if show.block %}
                             <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
                                 {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})

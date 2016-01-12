@@ -770,6 +770,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return num_signed_up >= capacity
         return False
 
+    def is_almost_full(self):
+        """Return whether the activity is almost full (>90%).
+
+        """
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up >= (0.9 * capacity)
+        return False
+
     def is_overbooked(self):
         """Return whether the activity is overbooked.
 
