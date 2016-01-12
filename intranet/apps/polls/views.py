@@ -166,7 +166,8 @@ def poll_results_view(request, poll_id):
                             "male": sum([v.user.is_male for v in votes]),
                             "female": sum([v.user.is_female for v in votes])
                         }
-                    }
+                    },
+                    "users": [v.user for v in votes]
                 }
                 for yr in range(9, 13):
                     yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
@@ -190,7 +191,8 @@ def poll_results_view(request, poll_id):
                         "male": sum([v.user.is_male for v in votes]),
                         "female": sum([v.user.is_female for v in votes])
                     }
-                }
+                },
+                "users": [v.user for v in votes]
             }
             for yr in range(9, 13):
                 yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]

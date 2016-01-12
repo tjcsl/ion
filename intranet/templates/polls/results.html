@@ -35,6 +35,11 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
+    $(function() {
+        $("#user-sels").click(function() {
+            $(".user-selections").toggle();
+        });
+    })
     </script>
 {% endblock %}
 
@@ -42,11 +47,12 @@
     <div class="primary-content polls">
         <a href="{% url 'polls' %}" class="button">
             <i class="fa fa-arrow-left"></i> Polls
-        </a>
+        </a> &nbsp; <a href="#" class="button small-button" id="user-sels">Show User Selections</a><br />
         <h2>Results: {{ poll }}</h2>
+        
         <ol class="questions">
             {% for q in questions %}
-                <li><b>{{ q.question.question }}</b>
+                <li id="question-{{ q.question.num }}"><b>{{ q.question.question }}</b>
                 {% if q.question.is_choice %}(Choice)<br />
                     <table class="results-table choice-table fancy-table">
                     <thead>
@@ -70,6 +76,11 @@
                         <tr {% if c.choice == "Total" %} class="total"{% endif %}>
                             <td class="choice">
                                 {{ c.choice }}
+                                <ul class="user-selections">
+                                {% for u in c.users %}
+                                    <li><a href="{% url 'user_profile' u.id %}">{{ u }}</a></li>
+                                {% endfor %}
+                                </ul>
                             </td>
                             {% with t=c.votes.total %}
                                 <td>{{ t.all }} ({{ t.all_percent }}%)</td>
@@ -112,7 +123,9 @@
                         {% for a in q.answers %}
                             <tr>
                                 <td>{{ a.answer }}</td>
-                                <td>{{ a.user }}</td>
+                                <td>
+                                    <a href="{% url 'user_profile' a.user.id %}">{{ a.user }}</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
