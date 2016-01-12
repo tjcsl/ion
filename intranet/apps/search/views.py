@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 import six
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from ldap3.utils.conv import escape_filter_chars
