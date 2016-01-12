@@ -55,7 +55,12 @@
             {% for q in questions %}
                 <li id="question-{{ q.question.num }}"><b>{{ q.question.question }}</b>
                 {% if q.question.is_choice %}(Choice)<br />
-                {% if q.question.type == "APP" %}<b>Note: Because this is an approval question, values will not sum to 100%.</b><br />{% endif %}
+                {% if q.question.type == "SAP" %}
+                    <b>Note: Because this is a split approval question, each user has one vote to split for up to {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br />
+                {% endif %}
+                {% if q.question.type == "APP" %}
+                    <b>Note: Because this is an approval question, values will not sum to 100%. Each user can vote for {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br />
+                {% endif %}
                     <table class="results-table choice-table fancy-table">
                     <thead>
                         <tr>
@@ -79,7 +84,11 @@
                             <td class="choice">
                                 {{ c.choice }}
                                 {% if c.choice == "Total" %}
-                                    Users: {{ c.votes.total.users_all }}
+                                    {% if q.question.type == "SAP" %}
+                                        Votes: {{ c.votes.total.votes_all }}
+                                    {% else %}
+                                        Users: {{ c.votes.total.users_all }}
+                                    {% endif %}
                                 {% endif %}
                                 <ul class="user-selections">
                                 {% for u in c.users %}

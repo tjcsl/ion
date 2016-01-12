@@ -87,7 +87,12 @@
                             </li>
                         </ul>
                     {% elif q.is_many_choice %}
-                        You may select up to {{ q.max_choices }} choices:<br />
+                        {% if q.type == "SAP" %}
+                            You have 1 vote, that will be split for up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
+                        {% else %}
+                            You may select up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
+                        {% endif %}
+                        <br />
                         <ul class="answers">
                         {% for choice in q.choices %}
                             <li>
