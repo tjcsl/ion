@@ -54,6 +54,7 @@
             {% for q in questions %}
                 <li id="question-{{ q.question.num }}"><b>{{ q.question.question }}</b>
                 {% if q.question.is_choice %}(Choice)<br />
+                {% if q.question.type == "APP" %}<b>Note: Because this is an approval question, values will not sum to 100%.</b><br />{% endif %}
                     <table class="results-table choice-table fancy-table">
                     <thead>
                         <tr>

@@ -14,6 +14,20 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
+    $(function() {
+        $(".question-clear-action").change(function() {
+            var chk = $(this).prop("checked");
+            var ul = $(this).parent().parent();
+
+            ul.children().each(function() {
+                var li = $("input", $(this));
+                if(!li.hasClass('question-clear-action')) {
+                    li.prop("checked", false);
+                    li.attr("disabled", chk);
+                }
+            });
+        })
+    })
     </script>
 {% endblock %}
 
@@ -41,55 +55,86 @@
             <hr />
 
             <ol class="questions">
-            {% for question in questions %}
+            {% for q in questions %}
                 <li>
-                    {{ question.question }}
+                    {{ q.question }}
                     <div class="question">
-                    {% if question.is_choice %}
+                    {% if q.is_single_choice %}
                         <ul class="answers">
-                        {% for choice in question.choices %}
+                        {% for choice in q.choices %}
                             <li>
                                 <input type="radio"
-                                       id="question-{{ question.num }}-{{ choice.num }}"
-                                       name="question-{{ question.num }}"
+                                       id="question-{{ q.num }}-{{ choice.num }}"
+                                       name="question-{{ q.num }}"
                                        value="{{ choice.num }}"
-                                       {% if choice.id == question.current_choice.id %} checked {% endif %} />
+                                       {% if choice in q.current_choices %} checked {% endif %} />
 
-                                <label for="question-{{ question.num }}-{{ choice.num }}">
+                                <label for="question-{{ q.num }}-{{ choice.num }}">
                                     {{ choice.info|safe }}
                                 </label>
                             </li>
                         {% endfor %}
                             <li>
                                 <input type="radio"
-                                       id="question-{{ question.num }}-clear"
-                                       name="question-{{ question.num }}"
+                                       id="question-{{ q.num }}-clear"
+                                       name="question-{{ q.num }}"
                                        value="CLEAR"
-                                       {% if question.current_vote_clear %} checked {% endif %} />
+                                       {% if q.current_vote_clear %} checked {% endif %} />
 
-                                <label for="question-{{ question.num }}-clear" class="clear-vote">
+                                <label for="question-{{ q.num }}-clear" class="clear-vote">
                                     Clear Vote
                                 </label>
                             </li>
                         </ul>
-                    {% elif question.is_writing %}
-                        {% if question.type == "FRE" %}
-                            <textarea id="question-{{ question.num }}-writing"
-                                      name="question-{{ question.num }}"
+                    {% elif q.is_many_choice %}
+                        You may select up to {{ q.max_choices }} choices:<br />
+                        <ul class="answers">
+                        {% for choice in q.choices %}
+                            <li>
+                                <input type="checkbox"
+                                       id="question-{{ q.num }}-{{ choice.num }}"
+                                       name="question-{{ q.num }}"
+                                       value="{{ choice.num }}"
+                                       {% if choice in q.current_choices %} checked {% endif %}
+                                       {% if q.current_vote_clear %} disabled {% endif %} />
+
+                                <label for="question-{{ q.num }}-{{ choice.num }}">
+                                    {{ choice.info|safe }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                            <li>
+                                <input type="checkbox"
+                                       id="question-{{ q.num }}-clear"
+                                       class="question-clear-action"
+                                       name="question-{{ q.num }}"
+                                       value="CLEAR"
+                                       {% if q.current_vote_clear %} checked {% endif %} />
+
+                                <label for="question-{{ q.num }}-clear" class="clear-vote clear-vote">
+                                    Clear Vote
+                                </label>
+                            </li>
+                        </ul>
+                    {% elif q.is_writing %}
+                        {% if q.type == "FRE" %}
+                            <textarea id="question-{{ q.num }}-writing"
+                                      name="question-{{ q.num }}"
                                       class="question-writing"
                                       placeholder="Answer here..."
-                            >{% if question.current_vote %}{{ question.current_vote.answer|escape }}{% endif %}</textarea>
-                        {% elif question.type == "SRE" %}
-                            <input id="question-{{ question.num }}-writing"
-                                      name="question-{{ question.num }}"
+                            >{% if q.current_vote %}{{ q.current_vote.answer|escape }}{% endif %}</textarea>
+                        {% elif q.type == "SRE" %}
+                            <input id="question-{{ q.num }}-writing"
+                                      name="question-{{ q.num }}"
                                       class="question-writing short"
                                       placeholder="Answer here..."
-                                      value="{% if question.current_vote %}{{ question.current_vote.answer|escape }}{% endif %}" />
+                                      value="{% if q.current_vote %}{{ q.current_vote.answer|escape }}{% endif %}" />
                         {% endif %}
                     {% else %}
-                        Question type {{ question.type }} unsupported.
+                        Question type {{ q.type }} unsupported.
                     {% endif %}
                     </div>
+                    <br />
                 </li>
             {% endfor %}
             </ol>

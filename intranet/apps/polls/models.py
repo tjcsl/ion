@@ -119,10 +119,12 @@ class Question(models.Model):
             One of:
                 Question.STD: Standard
                 Question.ELECTION: Election (randomized choice order)
-                Question.APP: Approval
+                Question.APP: Approval (can select up to max_choices entries)
                 Question.SPLIT_APP: Split approval
                 Question.FREE_RESP: Free response
                 Question.STD_OTHER: Standard Other field
+        max_choices
+            The maximum number of choices that can be selected. Only applies for approval questions.
 
         Access possible choices for this question through question.choice_set.all()
     """
@@ -146,12 +148,19 @@ class Question(models.Model):
         (STD_OTHER, 'Standard other'),
     )
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
+    max_choices = models.IntegerField(default=1)
 
     def is_writing(self):
         return (self.type in [Question.FREE_RESP, Question.SHORT_RESP])
 
-    def is_choice(self):
+    def is_single_choice(self):
         return (self.type in [Question.STD, Question.ELECTION])
+
+    def is_many_choice(self):
+        return (self.type in [Question.APP, Question.SPLIT_APP])
+
+    def is_choice(self):
+        return (self.type in [Question.STD, Question.ELECTION, Question.APP, Question.SPLIT_APP])
 
     def trunc_question(self):
         comp = strip_tags(self.question)
@@ -226,6 +235,9 @@ class Choice(models.Model):  # individual answer choices
     def __str__(self):
         # return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())
         return "Option #{}: '{}'".format(self.num, self.trunc_info())
+
+    class Meta:
+        ordering = ["num"]
 
 
 class Answer(models.Model):  # individual answer choices selected

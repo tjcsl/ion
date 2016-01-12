@@ -72,7 +72,7 @@ def poll_vote_view(request, poll_id):
 
                 if question_obj.is_choice():
                     choices = question_obj.choice_set.all()
-                    if question_obj.type in [Question.STD, Question.ELECTION]:
+                    if question_obj.is_single_choice():
                         if choice_num and choice_num == "CLEAR":
                             Answer.objects.filter(user=user, question=question_obj).delete()
                             Answer.objects.create(user=user, question=question_obj, clear_vote=True)
@@ -88,6 +88,40 @@ def poll_vote_view(request, poll_id):
                                 Answer.objects.filter(user=user, question=question_obj).delete()
                                 Answer.objects.create(user=user, question=question_obj, choice=choice_obj)
                                 messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
+                    elif question_obj.is_many_choice():
+                        total_choices = request.POST.getlist(name)
+                        logger.debug("total choices: {}".format(total_choices))
+                        if len(total_choices) == 1 and total_choices[0] == "CLEAR":
+                            Answer.objects.filter(user=user, question=question_obj).delete()
+                            Answer.objects.create(user=user, question=question_obj, clear_vote=True)
+                            messages.success(request, "Clear Vote for {}".format(question_obj))
+                        else:
+                            current_choices = Answer.objects.filter(user=user, question=question_obj)
+                            logger.debug("current choices: {}".format(current_choices))
+                            current_choices_nums = [c.choice.num if c.choice else None for c in current_choices]
+                            # delete entries that weren't checked but in db
+                            for c in current_choices_nums:
+                                if c and c not in total_choices:
+                                    ch = choices.get(num=c)
+                                    logger.info("Deleting choice for {}".format(ch))
+                                    Answer.objects.filter(user=user, question=question_obj, choice=ch).delete()
+                            for c in total_choices:
+                                # gets re-checked on each loop
+                                current_choices = Answer.objects.filter(user=user, question=question_obj)
+                                try:
+                                    choice_obj = choices.get(num=c)
+                                except Choice.DoesNotExist:
+                                    messages.error(request, "Invalid answer choice with num {}".format(choice_num))
+                                    continue
+                                else:
+                                    if (current_choices.count() + 1) <= question_obj.max_choices:
+                                        Answer.objects.filter(user=user, question=question_obj, clear_vote=True).delete()
+                                        Answer.objects.get_or_create(user=user, question=question_obj, choice=choice_obj)
+                                        messages.success(request, "Voted for {} on {}".format(choice_obj, question_obj))
+                                    else:
+                                        messages.error(request, "You have voted on too many options for {}".format(question_obj))
+                                        current_choices.delete()
+
                 elif question_obj.is_writing():
                     Answer.objects.filter(user=user, question=question_obj).delete()
                     answer_obj = Answer.objects.create(user=user, question=question_obj, answer=choice_num)
@@ -95,14 +129,9 @@ def poll_vote_view(request, poll_id):
 
     questions = []
     for q in poll.question_set.all():
-        try:
-            current_vote = Answer.objects.get(user=user, question=q)
-        except Answer.DoesNotExist:
-            current_vote = None
+        current_votes = Answer.objects.filter(user=user, question=q)
 
-        if q.type == "STD":
-            choices = q.choice_set.all()
-        elif q.type == "ELC":
+        if q.type == Question.ELECTION:
             choices = q.random_choice_set
         else:
             choices = q.choice_set.all()
@@ -112,12 +141,15 @@ def poll_vote_view(request, poll_id):
             "type": q.type,
             "question": q.question,
             "choices": choices,
-            "is_choice": q.is_choice(),
+            "is_single_choice": q.is_single_choice(),
+            "is_many_choice": q.is_many_choice(),
             "is_writing": q.is_writing(),
-            "current_vote": current_vote,
-            "current_choice": (current_vote.choice if current_vote else None),
-            "current_vote_none": (current_vote is None),
-            "current_vote_clear": (current_vote.clear_vote if current_vote else False)
+            "max_choices": q.max_choices,
+            "current_votes": current_votes,
+            "current_vote": current_votes[0] if len(current_votes) > 0 else None,
+            "current_choices": [v.choice for v in current_votes],
+            "current_vote_none": (len(current_votes) < 1),
+            "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote)
         }
         questions.append(question)
 
