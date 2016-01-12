@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls.models &mdash; TJ Intranet v3 (Build #1197) documentation</title>
+    <title>intranet.apps.polls.models &mdash; TJ Intranet v3 (Build #1199) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1197)',
+        VERSION:     'v3 (Build #1199)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1197) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1199) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -265,10 +265,12 @@
 <span class="sd">            One of:</span>
 <span class="sd">                Question.STD: Standard</span>
 <span class="sd">                Question.ELECTION: Election (randomized choice order)</span>
-<span class="sd">                Question.APP: Approval</span>
+<span class="sd">                Question.APP: Approval (can select up to max_choices entries)</span>
 <span class="sd">                Question.SPLIT_APP: Split approval</span>
 <span class="sd">                Question.FREE_RESP: Free response</span>
 <span class="sd">                Question.STD_OTHER: Standard Other field</span>
+<span class="sd">        max_choices</span>
+<span class="sd">            The maximum number of choices that can be selected. Only applies for approval questions.</span>
 
 <span class="sd">        Access possible choices for this question through question.choice_set.all()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -292,12 +294,19 @@
         <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s">&#39;Standard other&#39;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STD</span><span class="p">)</span>
+    <span class="n">max_choices</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Question.is_writing"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.is_writing">[docs]</a>    <span class="k">def</span> <span class="nf">is_writing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SHORT_RESP</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Question.is_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.is_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Question.is_single_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.is_single_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_single_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Question.is_many_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.is_many_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_many_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Question.is_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.is_choice">[docs]</a>    <span class="k">def</span> <span class="nf">is_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Question</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">ELECTION</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">APP</span><span class="p">,</span> <span class="n">Question</span><span class="o">.</span><span class="n">SPLIT_APP</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Question.trunc_question"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Question.trunc_question">[docs]</a>    <span class="k">def</span> <span class="nf">trunc_question</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">comp</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="p">)</span>
@@ -371,18 +380,29 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c"># return &quot;{} + O#{}(&#39;{}&#39;)&quot;.format(self.question, self.num, self.trunc_info())</span>
-        <span class="k">return</span> <span class="s">&quot;Option #{}: &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="s">&quot;Option #{}: &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">())</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;num&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Answer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.Answer">[docs]</a><span class="k">class</span> <span class="nc">Answer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>  <span class="c"># individual answer choices selected</span>
     <span class="n">question</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Question</span><span class="p">)</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
-    <span class="n">choice</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Choice</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c"># determine field based on question type</span>
+    <span class="n">choice</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Choice</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c"># for multiple choice questions</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <span class="c"># for free response</span>
     <span class="n">clear_vote</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># for split approval</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">answer</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">answer</span><span class="p">[:</span><span class="mi">25</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_vote</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;{} Clear&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;{} None&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AnswerVotes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.models.AnswerVotes">[docs]</a><span class="k">class</span> <span class="nc">AnswerVotes</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>  <span class="c"># record of total selection of a given answer choice</span>

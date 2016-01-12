@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.polls package &mdash; TJ Intranet v3 (Build #1197) documentation</title>
+    <title>intranet.apps.polls package &mdash; TJ Intranet v3 (Build #1199) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1197)',
+        VERSION:     'v3 (Build #1199)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1197) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1199) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.preferences package" href="intranet.apps.preferences.html" />
     <link rel="prev" title="intranet.apps.notifications package" href="intranet.apps.notifications.html" />
@@ -299,7 +299,7 @@
 <span id="intranet-apps-polls-models-module"></span><h2>intranet.apps.polls.models module<a class="headerlink" href="#module-intranet.apps.polls.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.polls.models.Answer">
-<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>user</em>, <em>choice</em>, <em>clear_vote</em>, <em>weight</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.polls.models.</code><code class="descname">Answer</code><span class="sig-paren">(</span><em>id</em>, <em>question</em>, <em>user</em>, <em>choice</em>, <em>answer</em>, <em>clear_vote</em>, <em>weight</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Answer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.polls.models.Answer.DoesNotExist">
@@ -684,12 +684,14 @@ the user can make.</dd>
 <dt>One of:</dt>
 <dd>Question.STD: Standard
 Question.ELECTION: Election (randomized choice order)
-Question.APP: Approval
+Question.APP: Approval (can select up to max_choices entries)
 Question.SPLIT_APP: Split approval
 Question.FREE_RESP: Free response
 Question.STD_OTHER: Standard Other field</dd>
 </dl>
 </dd>
+<dt>max_choices</dt>
+<dd>The maximum number of choices that can be selected. Only applies for approval questions.</dd>
 </dl>
 <p class="last">Access possible choices for this question through question.choice_set.all()</p>
 </dd>
@@ -809,6 +811,16 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="method">
 <dt id="intranet.apps.polls.models.Question.is_choice">
 <code class="descclassname">Question.</code><code class="descname">is_choice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.is_many_choice">
+<code class="descclassname">Question.</code><code class="descname">is_many_choice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_many_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_many_choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.polls.models.Question.is_single_choice">
+<code class="descclassname">Question.</code><code class="descname">is_single_choice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/polls/models.html#Question.is_single_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.polls.models.Question.is_single_choice" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
