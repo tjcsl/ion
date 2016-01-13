@@ -190,7 +190,7 @@ def poll_results_view(request, poll_id):
             question_votes = votes = Answer.objects.filter(question=q)
             users = q.get_users_voted()
             num_users_votes = {u.id: votes.filter(user=u).count() for u in users}
-            user_scale = {u.id: (1/num_users_votes[u.id]) for u in users}
+            user_scale = {u.id: (1 / num_users_votes[u.id]) for u in users}
             choices = []
             for c in q.choice_set.all().order_by("num"):
                 votes = question_votes.filter(choice=c)
@@ -201,8 +201,8 @@ def poll_results_view(request, poll_id):
                         "total": {
                             "all": len(vote_users),
                             "all_percent": perc(len(vote_users), users.count()),
-                            "male": fmt(sum([v.user.is_male*user_scale[v.user.id] for v in votes])),
-                            "female": fmt(sum([v.user.is_female*user_scale[v.user.id] for v in votes]))
+                            "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
+                            "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
                         }
                     },
                     "users": [v.user for v in votes]
@@ -212,8 +212,8 @@ def poll_results_view(request, poll_id):
                     yr_votes = list(filter(None, yr_votes))
                     choice["votes"][yr] = {
                         "all": len(set(yr_votes)),
-                        "male": fmt(sum([u.is_male*user_scale[u.id] for u in yr_votes])),
-                        "female": fmt(sum([u.is_female*user_scale[u.id] for u in yr_votes])),
+                        "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
+                        "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
                     }
                 logger.debug(choice)
                 choices.append(choice)
@@ -227,8 +227,8 @@ def poll_results_view(request, poll_id):
                     "total": {
                         "all": len(clr_users),
                         "all_percent": perc(len(clr_users), users.count()),
-                        "male": fmt(sum([v.user.is_male*user_scale[v.user.id] for v in votes])),
-                        "female": fmt(sum([v.user.is_female*user_scale[v.user.id] for v in votes]))
+                        "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
+                        "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
                     }
                 },
                 "users": clr_users
@@ -238,8 +238,8 @@ def poll_results_view(request, poll_id):
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(yr_votes),
-                    "male": fmt(sum([u.is_male*user_scale[u.id] for u in yr_votes])),
-                    "female": fmt(sum([u.is_female*user_scale[u.id] for u in yr_votes]))
+                    "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
+                    "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
                 }
             logger.debug(choice)
             choices.append(choice)
@@ -261,8 +261,8 @@ def poll_results_view(request, poll_id):
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(set(yr_votes)),
-                    "male": fmt(sum([u.is_male*user_scale[u.id] for u in yr_votes])),
-                    "female": fmt(sum([u.is_female*user_scale[u.id] for u in yr_votes]))
+                    "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
+                    "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
                 }
 
             choices.append(choice)

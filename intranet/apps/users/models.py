@@ -14,7 +14,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core import exceptions
 from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, UserManager)
+    AbstractBaseUser, PermissionsMixin, UserManager as DjangoUserManager)
 from django.core.signing import Signer
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
@@ -23,7 +23,7 @@ from ..groups.models import Group
 logger = logging.getLogger(__name__)
 
 
-class UserManager(UserManager):
+class UserManager(DjangoUserManager):
 
     """User model Manager for table-level User queries.
 
