@@ -9,13 +9,13 @@ Coverage information is auto-generated at `Coveralls <https://coveralls.io/githu
 This is useful for finding files with insufficient coverage, so you can focus your test writing more accurately.
 
 Location
---------
+========
 
 You will want to write your tests for each module in ``intranet/apps/<module>/tests.py``
 Testing functionality that is useful for multiple tests can be found in ``intranet/test``
 
 Writing Tests
--------------
+=============
 
 Looking at pre-existing tests can give you a good idea how to structure your tests.
 The ``IonTestCase`` class is a wrapper around the standard Django test class.
@@ -33,7 +33,7 @@ Here is an bare-bones example of the basic layout for a test:
 
 
 Running Tests
--------------
+=============
 
 To actually execute tests, run ``./manage.py test``
 Note that this deletes and re-creates the db from scratch each time,
