@@ -23,6 +23,7 @@ It handles some ion-specific logic, such as mocking out ldap queries.
 Here is an bare-bones example of the basic layout for a test:
 
 .. code-block:: python
+
   from ...test.ion_test import IonTestCase
 
   class ModuleTest(IonTestCase):
@@ -44,3 +45,5 @@ References
 
 - `Django Testing Guide <https://docs.djangoproject.com/en/1.9/topics/testing>`_.
 - `Python unittest documentation <https://docs.python.org/3/library/unittest.html>`_.
+- `Code Coverage <https://coveralls.io/github/tjcsl/ion>`_.
+- `Travis Continous Integration <https://travis-ci.org/tjcsl/ion>`_.
