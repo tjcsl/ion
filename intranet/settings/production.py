@@ -38,8 +38,10 @@ def parse_db_url():
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2'
-        }.update(parse_db_url())
+        }
 }
+
+DATABASES['default'].update(parse_db_url())
 
 
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
