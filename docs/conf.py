@@ -25,10 +25,6 @@ import sphinx_bootstrap_theme
 
 # -- General configuration ------------------------------------------------
 
-# Fix for documenting models.FileField
-from django.db.models.fields.files import FileDescriptor
-FileDescriptor.__get__ = lambda self, *args, **kwargs: self
-
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.0'
 
@@ -326,7 +322,7 @@ intersphinx_mapping = {
 # -- Django Setup -------------------------------------------------------------
 
 # add project root
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 
@@ -344,4 +340,9 @@ def skip(app, what, name, obj, skip, options):
 
 def setup(app):
     """Setup autodoc."""
+    # Fix for documenting models.FileField
+    from django.db.models.fields.files import FileDescriptor
+    FileDescriptor.__get__ = lambda self, *args, **kwargs: self
+    import django
+    django.setup()
     app.connect('autodoc-skip-member', skip)

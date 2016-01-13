@@ -28,17 +28,17 @@ SHOW_DEBUG_TOOLBAR = False
 if not TESTING:
     CACHES['default']['OPTIONS']['DB'] = 1
 
-parse.uses_netloc.append("postgres")
-url = parse.urlparse(DATABASE_URL)
+
+def parse_db_url():
+    parse.uses_netloc.append("postgres")
+    url = parse.urlparse(DATABASE_URL)
+    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
+
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': url.path[1:],
-        'USER': url.username,
-        'PASSWORD': url.password,
-        'HOST': url.hostname
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2'
+        } + parse_db_url()
 }
 
 
