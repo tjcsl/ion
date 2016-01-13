@@ -14,3 +14,4 @@ class Command(BaseCommand):
         username, admin_group = args
         g = Group.objects.get_or_create(name="admin_" + admin_group)[0]
         User.get_user(username=username).groups.add(g)
+        self.stdout.write('Added %s to %s' % (username, admin_group))

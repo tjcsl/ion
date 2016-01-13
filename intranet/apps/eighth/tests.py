@@ -5,23 +5,14 @@ from __future__ import unicode_literals
 Tests for the eighth module.
 """
 
-from unittest import mock
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity
 from ..groups.models import Group
 from ..users.models import User
-from ...db.ldap_db import LDAPConnection
-from ...test.fake_ldap import MockLDAPConnection
+from ...test.ion_test import IonTestCase
 
 
-class EighthTest(TestCase):
-
-    def setUp(self):
-        mock.patch.object(LDAPConnection, 'conn', new=MockLDAPConnection()).start()
-
-    def tearDown(self):
-        mock.patch.stopall()
+class EighthTest(IonTestCase):
 
     def test_add_user(self):
         """
