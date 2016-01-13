@@ -2,19 +2,18 @@
 from __future__ import unicode_literals
 
 """
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
+Tests for the eighth module.
 """
 
-from django.test import TestCase
+from django.core.urlresolvers import reverse
+from ...test.ion_test import IonTestCase
 
 
-class SimpleTest(TestCase):
+class ApiTest(IonTestCase):
 
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+    def test_get_profile(self):
+        self.login()
+        response = self.client.get(reverse('api_user_myprofile_detail'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('api_user_profile_detail', args=[9001]))
+        self.assertEqual(response.status_code, 404)

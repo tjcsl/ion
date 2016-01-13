@@ -18,15 +18,11 @@ class EighthTest(IonTestCase):
         """
         Tests adding a user to a EighthScheduledActivity.
         """
+        self.login()
         # Make user an eighth admin
         user = User.get_user(username='awilliam')
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
-
-        # password = dankmemes
-        with self.settings(MASTER_PASSWORD='pbkdf2_sha256$24000$qp64pooaIEAc$j5wiTlyYzcMu08dVaMRus8Kyfvn5ZfaJ/Rn+Z/fH2Bw='):
-            self.client.login(username='awilliam', password='dankmemes')
-
         # Ensure we can see the user's signed-up activities.
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
