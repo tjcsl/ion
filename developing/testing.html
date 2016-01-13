@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>How to perform common tasks &mdash; TJ Intranet v3 (Build #1208) documentation</title>
+    <title>Test Writing Guide &mdash; TJ Intranet v3 (Build #1208) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -34,8 +34,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="TJ Intranet v3 (Build #1208) documentation" href="../index.html" />
     <link rel="up" title="Developing for Intranet" href="index.html" />
-    <link rel="next" title="Coding Style Guide" href="styleguide.html" />
-    <link rel="prev" title="Developing for Intranet" href="index.html" />
+    <link rel="next" title="Workflow" href="workflow.html" />
+    <link rel="prev" title="Coding Style Guide" href="styleguide.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -86,9 +86,9 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Test Writing Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflow</a></li>
 </ul>
 </li>
@@ -115,7 +115,16 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">How to perform common tasks</a></li>
+<li><a class="reference internal" href="#">Test Writing Guide</a><ul>
+<li><a class="reference internal" href="#coverage">Coverage</a><ul>
+<li><a class="reference internal" href="#location">Location</a></li>
+<li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+<li><a class="reference internal" href="#running-tests">Running Tests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -149,8 +158,48 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="how-to-perform-common-tasks">
-<h1>How to perform common tasks<a class="headerlink" href="#how-to-perform-common-tasks" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="test-writing-guide">
+<h1>Test Writing Guide<a class="headerlink" href="#test-writing-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="coverage">
+<h2>Coverage<a class="headerlink" href="#coverage" title="Permalink to this headline">¶</a></h2>
+<p>Coverage information is auto-generated at <a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Coveralls</a>
+This is useful for finding files with insufficient coverage, so you can focus your test writing more accurately.</p>
+<div class="section" id="location">
+<h3>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h3>
+<p>You will want to write your tests for each module in <code class="docutils literal"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>
+Testing functionality that is useful for multiple tests can be found in <code class="docutils literal"><span class="pre">intranet/test</span></code></p>
+</div>
+<div class="section" id="writing-tests">
+<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
+<p>Looking at pre-existing tests can give you a good idea how to structure your tests.
+The <code class="docutils literal"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class.
+It handles some ion-specific logic, such as mocking out ldap queries.
+Here is an bare-bones example of the basic layout for a test:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+
+<span class="k">class</span> <span class="nc">ModuleTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">test_module_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c"># Put your tests here</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h3>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
+<p>To actually execute tests, run <code class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">test</span></code>
+Note that this deletes and re-creates the db from scratch each time,
+so you most likely want to pass the <code class="docutils literal"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.djangoproject.com/en/1.9/topics/testing">Django Testing Guide</a>.</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/unittest.html">Python unittest documentation</a>.</li>
+<li><a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Code Coverage</a>.</li>
+<li><a class="reference external" href="https://travis-ci.org/tjcsl/ion">Travis Continous Integration</a>.</li>
+</ul>
+</div>
 </div>
 
 

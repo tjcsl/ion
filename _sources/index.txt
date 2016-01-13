@@ -42,6 +42,7 @@ Developing for Intranet
 -----------------------
 - :doc:`Workflow<developing/workflow>`
 - :doc:`Coding Style Guide<developing/styleguide>`
+- :doc:`Test Writing Guide<developing/testing>`
 
 Using Intranet as a Developer
 -----------------------------
