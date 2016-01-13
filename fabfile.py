@@ -239,4 +239,4 @@ def inspect_decorators():
 
 def generate_docs():
     """Build Sphinx documentation."""
-    local("sphinx-build -W -b html docs/source docs/build")
+    local("sphinx-build -W -b html docs -d build/sphinx/doctrees build/sphinx/html")
