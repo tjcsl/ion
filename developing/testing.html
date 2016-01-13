@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Test Writing Guide &mdash; TJ Intranet v3 (Build #1208) documentation</title>
+    <title>Test Writing Guide &mdash; TJ Intranet v3 (Build #1209) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1208)',
+        VERSION:     'v3 (Build #1209)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1208) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1209) documentation" href="../index.html" />
     <link rel="up" title="Developing for Intranet" href="index.html" />
     <link rel="next" title="Workflow" href="workflow.html" />
     <link rel="prev" title="Coding Style Guide" href="styleguide.html" />
@@ -116,12 +116,10 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Test Writing Guide</a><ul>
-<li><a class="reference internal" href="#coverage">Coverage</a><ul>
+<li><a class="reference internal" href="#coverage">Coverage</a></li>
 <li><a class="reference internal" href="#location">Location</a></li>
 <li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
 <li><a class="reference internal" href="#running-tests">Running Tests</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -164,13 +162,14 @@
 <h2>Coverage<a class="headerlink" href="#coverage" title="Permalink to this headline">¶</a></h2>
 <p>Coverage information is auto-generated at <a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Coveralls</a>
 This is useful for finding files with insufficient coverage, so you can focus your test writing more accurately.</p>
+</div>
 <div class="section" id="location">
-<h3>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h3>
+<h2>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h2>
 <p>You will want to write your tests for each module in <code class="docutils literal"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>
 Testing functionality that is useful for multiple tests can be found in <code class="docutils literal"><span class="pre">intranet/test</span></code></p>
 </div>
 <div class="section" id="writing-tests">
-<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
+<h2>Writing Tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
 <p>Looking at pre-existing tests can give you a good idea how to structure your tests.
 The <code class="docutils literal"><span class="pre">IonTestCase</span></code> class is a wrapper around the standard Django test class.
 It handles some ion-specific logic, such as mocking out ldap queries.
@@ -185,11 +184,10 @@ Here is an bare-bones example of the basic layout for a test:</p>
 </div>
 </div>
 <div class="section" id="running-tests">
-<h3>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
 <p>To actually execute tests, run <code class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">test</span></code>
 Note that this deletes and re-creates the db from scratch each time,
 so you most likely want to pass the <code class="docutils literal"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
-</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
