@@ -4,14 +4,11 @@ from __future__ import unicode_literals
 import logging
 import datetime
 from django import http
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.utils import timezone
+from django.shortcuts import render
 from intranet import settings
 from .models import Sign
 from ..users.models import User
-from ..eighth.models import EighthBlock, EighthSignup
+from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
 from ...utils.serialization import safe_json
@@ -27,6 +24,7 @@ def check_show_eighth(now):
 
     return (8 < now.time().hour < 16)
 
+
 def check_internal_ip(request):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
@@ -34,9 +32,11 @@ def check_internal_ip(request):
             "reason": "You are not authorized to view this page."
         }, status=403)
 
+
 def signage_display(request, display_id=None):
     internal_ip = check_internal_ip(request)
-    if internal_ip: return internal_ip
+    if internal_ip:
+        return internal_ip
 
     try:
         sign = Sign.objects.get(display=display_id)
@@ -76,37 +76,43 @@ def signage_display(request, display_id=None):
         else:
             return status_signage(request)
 
-    return redirect(url)
 
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
-    if internal_ip: return internal_ip
+    if internal_ip:
+        return internal_ip
 
     context = schedule_context(request)
     context["signage"] = True
     context["hide_arrows"] = True
     return render(request, "schedule/embed.html", context)
 
+
 def status_signage(request):
     internal_ip = check_internal_ip(request)
-    if internal_ip: return internal_ip
+    if internal_ip:
+        return internal_ip
 
     context = schedule_context(request)
     context["signage"] = True
     return render(request, "signage/status.html", context)
 
+
 def iframe_signage(request, url):
     internal_ip = check_internal_ip(request)
-    if internal_ip: return internal_ip
+    if internal_ip:
+        return internal_ip
 
     context = schedule_context(request)
     context["signage"] = True
     context["url"] = url
     return render(request, "signage/iframe.html", context)
 
+
 def eighth_signage(request, block_id=None, block_increment=0):
     internal_ip = check_internal_ip(request)
-    if internal_ip: return internal_ip
+    if internal_ip:
+        return internal_ip
 
     if block_id is None:
         next_block = EighthBlock.objects.get_first_upcoming_block()

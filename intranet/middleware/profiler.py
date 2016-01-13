@@ -234,7 +234,10 @@ class ProfileMiddleware(object):
         stats_str = out.getvalue()
 
         if response and response.content and stats_str:
-            response.content = "<pre>%s\n\noptions: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n         &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>" % (request.build_absolute_uri(), stats_str)
+            response.content = """<pre>%s\n\n
+            options: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n
+            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (
+                request.build_absolute_uri(), stats_str)
             if 'strip' not in request.GET:
                 response.content += self._summary_for_files(stats_str)
 

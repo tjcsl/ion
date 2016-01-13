@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 import ipaddress
-from six.moves.urllib import parse
 import logging
-from .base import *
+from .base import *  # noqa
 
 
 logger = logging.getLogger(__name__)
@@ -39,7 +38,8 @@ DATABASES = {
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
 # Avoid conflict with production redis db
-CACHES["default"]["OPTIONS"]["DB"] = 2
+if not TESTING:
+    CACHES["default"]["OPTIONS"]["DB"] = 2
 
 if os.getenv("DUMMY_CACHE", "NO") == "YES":
     CACHES = {
@@ -61,7 +61,7 @@ class glob_list(list):
 
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
-        
+
         # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
         # list of IP addresses, if the user is using a proxy
         if "," in key:
@@ -76,6 +76,7 @@ class glob_list(list):
                 pass
         return False
 
+# Internal IP ranges for debugging
 INTERNAL_IPS = glob_list([
     "127.0.0.0/8",
     "10.0.0.0/8",
@@ -83,4 +84,5 @@ INTERNAL_IPS = glob_list([
     "2001:468:cc0::/48"
 ])
 
+# Trust X-Forwarded-For
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')

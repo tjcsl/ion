@@ -72,5 +72,5 @@ class GroupProperties(models.Model):
     group = models.OneToOneField(Group)
     student_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.group)

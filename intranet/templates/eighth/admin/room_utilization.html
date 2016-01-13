@@ -22,9 +22,23 @@
                 }
             }
 
+            showAllRooms = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_all' value=1 />");
+                $(form).append(el);
+            }
+
             $("#rooms-submit").click(function(event) {
                 event.preventDefault();
                 updateRoomChoices();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#show-all-rooms").click(function(event) {
+                event.preventDefault();
+                showAllRooms();
                 document.forms["choose-fields"].submit();
             });
 
@@ -64,14 +78,14 @@
                 $("tr.underbooked").toggle();
             {% endif %}
 
-            {% if not scheduled_activities and wizard %}
+        {% if not scheduled_activities and wizard %}
             $("form > select").on("change", function() {
                 var val = $(this).val();
                 if(val) {
                     this.form.submit();
                 }
             });
-            {% endif %}
+        {% endif %}
         });
     </script>
 {% endblock %}
@@ -80,26 +94,47 @@
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
     <style type="text/css">
+#room-util-table tr.restricted {
+    color: #ff6600;
+}
+
+#room-util-table tr.almost-full {
+    color: #00878d;
+    font-weight: bold;
+}
+
+#room-util-table tr.full {
+    color: #0000ff;
+    font-weight: bold;
+}
+
 #room-util-table tr.cancelled {
-    color: red;
+    color: #ff0000;
+    font-weight: bold;
 }
 
 .tbd-tba {
     color: red;
+    text-decoration: underline;
 }
 
+i.i {
+    font-style: italic;
+}
     </style>
 {% endblock %}
 
 {% block admin_main %}
-    {% if not scheduled_activities and wizard %}
+{% if not scheduled_activities and wizard %}
         <form action="" method="post">{% csrf_token %}
             {{ wizard.management_form }}
-            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-            <br>
+            {% comment %}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p><br>
+            {% endcomment %}
             {{ wizard.form }}
             {% if wizard.steps.prev %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+                {% comment %}<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>{% endcomment %}
+                <a href="{% url 'eighth_admin_room_utilization' %}" class="button">Previous Step</a>
             {% endif %}
             {% comment %}
             {% if wizard.steps.next %}
@@ -109,19 +144,12 @@
             {% endif %}
             {% endcomment %}
         </form>
-        <br />
-        <hr />
-        <br />
-        <form action="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" method="get">
-            <p>Select a room:</p>
-            <select name="room" onselect="this.form.submit()" placeholder="Select a room">
-                <option value="">Select a room</option>
-            {% for room in all_rooms %}
-                <option value="{{ room.id }}">{{ room }}</option>
-            {% endfor %}
-            </select>
-        </form>
-    {% else %}
+        {% if wizard.steps.step1 == 1 %}
+            <br />
+            <br />
+            <a href="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" class="button">Select All Blocks</a>
+        {% endif %}
+{% else %}
     <table style="width: 100%">
     <tr>
         <td>
@@ -144,7 +172,10 @@
                         <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
                     {% endfor %}
                 </select>
-                <input type="submit" value="Filter" id="rooms-submit" />
+                <input type="submit" value="Filter Rooms" id="rooms-submit" />
+                {% if not show_all_rooms %}
+                    &nbsp; &nbsp; <a href="#" id="show-all-rooms" class="button">Show All Rooms</a>
+                {% endif %}
             </form>
         </td>
         <td>
@@ -158,9 +189,9 @@
     </tr>
     </table>
 
-        <br />
-        Choose the fields that you wish to display:
-        <form action="" method="get" name="choose-fields">
+    <br />
+    Choose the fields that you wish to display:
+    <form action="" method="get" name="choose-fields">
         <table class="choose-fields fancy-table">
             <tr>
                 <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}" />
@@ -177,11 +208,14 @@
                 <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %} /><br />Sponsors</td>
                 <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %} /><br />Comments</td>
                 <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %} /><br />Admin Comments</td>
-                <th><input type="submit" value="Apply" id="apply-btn" /></th>
-                <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
+                {% if show_listing %}
+                    <th><input type="submit" value="Apply" id="apply-btn" /></th>
+                    <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
+                {% endif %}
             </tr>
         </table>
         
+    {% if show_listing %}
         <br />
         Click on column titles to sort.
         <table id="room-util-table" data-sortable class="fancy-table">
@@ -200,7 +234,12 @@
             </thead>
             <tbody>
                 {% for sched_act in scheduled_activities %}
-                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} {% if not sched_act.is_overbooked %}underbooked{% endif %} {% if sched_act.cancelled %}cancelled{% endif %} {% if sched_act.activity.restricted %}restricted{% endif %}">
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %} 
+                               {% if not sched_act.is_overbooked %}underbooked{% endif %} 
+                               {% if sched_act.cancelled %}cancelled{% endif %} 
+                               {% if sched_act.activity.restricted %}restricted{% endif %} 
+                               {% if sched_act.is_full %}full{% endif %}
+                               {% if sched_act.is_almost_full %}almost-full{% endif %}">
                         {% if show.block %}
                             <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
                                 {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
@@ -248,7 +287,11 @@
                 {% endfor %}
             </tbody>
         </table>
-        </form>
+    {% else %}
+        <br />
+        <p>Adjust the search criteria above and press <b>Filter Rooms</b>, or press <b>Show All Rooms</b> to show all results.</p>
     {% endif %}
+    </form>
+{% endif %}
 
 {% endblock %}

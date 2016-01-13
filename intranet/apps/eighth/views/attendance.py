@@ -91,10 +91,12 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         block = None
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
-            kwargs.update({"block": block})
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
+                kwargs.update({"block": block})
 
-            block_title = ("Take Attendance" if block.locked else "View Roster")
+                block_title = ("Take Attendance" if block.locked else "View Roster")
 
             # try:
             #    sponsor = self.request.user.eighthsponsor
@@ -150,6 +152,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         logger.debug("debug called in attendance")
 
         if hasattr(self, "no_activities"):
@@ -650,7 +653,8 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         <b>Highlight or circle</b> the names of students who are <b>absent</b>, and put an <b>"X"</b> next to those <b>present</b>.<br />
         If a student arrives and their name is not on the roster, please send them to the <b>8th Period Office</b>.<br />
         If a student leaves your activity early, please make a note. <b>Do not make any additions to the roster.</b><br />
-        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>. For questions, please call extension 5046 or 5078. Thank you!<br />"""
+        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>.
+        For questions, please call extension 5046 or 5078. Thank you!<br />"""
         elements.append(Paragraph(instructions, styles["Normal"]))
 
         if i != len(sched_act_ids) - 1:

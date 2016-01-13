@@ -77,12 +77,18 @@ def profile_view(request, user_id=None):
     else:
         eighth_sponsor_schedule = None
 
-    if not profile_user.can_view_eighth and not request.user == profile_user:
+    admin_or_teacher = (request.user.is_eighth_admin or request.user.is_teacher)
+    can_view_eighth = (profile_user.can_view_eighth or request.user == profile_user)
+    eighth_restricted_msg = (not can_view_eighth and admin_or_teacher)
+
+    if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
+        "can_view_eighth": can_view_eighth,
+        "eighth_restricted_msg": eighth_restricted_msg,
         "eighth_sponsor_schedule": eighth_sponsor_schedule
     }
     return render(request, "users/profile.html", context)
@@ -180,8 +186,6 @@ def class_section_view(request, section_id):
 
         writer = csv.writer(response)
 
-        title_row = []
-
         writer.writerow(["Name",
                          "Student ID",
                          "Grade",
@@ -209,19 +213,19 @@ def class_room_view(request, room_id):
 
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id),
-                       ["tjhsstSectionId"]
+                       ["tjhsstSectionId", "dn"]
                        )
 
     if len(classes) > 0:
         schedule = []
         for row in classes:
-            class_dn = row[0]
+            class_dn = row["dn"]
             class_object = Class(dn=class_dn)
             sortvalue = class_object.sortvalue
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
+        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
     else:
         classes_objs = []
         raise Http404
@@ -240,7 +244,7 @@ def all_classes_view(request):
 
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "objectClass=tjhsstClass",
-                       ["tjhsstSectionId"]
+                       ["tjhsstSectionId", "dn"]
                        )
 
     logger.debug("{} classes found.".format(len(classes)))
@@ -248,13 +252,13 @@ def all_classes_view(request):
     if len(classes) > 0:
         schedule = []
         for row in classes:
-            class_dn = row[0]
+            class_dn = row["dn"]
             class_object = Class(dn=class_dn)
             sortvalue = class_object.sortvalue
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
+        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
     else:
         classes_objs = []
         raise Http404

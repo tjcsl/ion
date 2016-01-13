@@ -10,6 +10,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.clickjacking import xframe_options_exempt
 from intranet import settings
 from .models import Block, DayType, Day, Time
 from .forms import DayTypeForm, DayForm
@@ -124,6 +125,7 @@ def schedule_view(request):
 # does NOT require login
 
 
+@xframe_options_exempt
 def schedule_embed(request):
     data = schedule_context(request)
     return render(request, "schedule/embed.html", data)

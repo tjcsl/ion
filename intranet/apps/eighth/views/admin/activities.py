@@ -59,7 +59,7 @@ def edit_activity_view(request, activity_id):
 
                 # Check if sponsor change
                 old_sponsors = activity.sponsors.all()
-                old_sponsor_ids = old_sponsors.values_list("id",flat=True)
+                old_sponsor_ids = old_sponsors.values_list("id", flat=True)
                 new_sponsor_ids = [s.id for s in form.cleaned_data["sponsors"]]
 
                 if set(old_sponsor_ids) != set(new_sponsor_ids) and len(old_sponsor_ids) > 0:
@@ -106,7 +106,7 @@ def edit_activity_view(request, activity_id):
 
                 # Check if room change
                 old_rooms = activity.rooms.all()
-                old_room_ids = old_rooms.values_list("id",flat=True)
+                old_room_ids = old_rooms.values_list("id", flat=True)
                 new_room_ids = [r.id for r in form.cleaned_data["rooms"]]
 
                 if set(old_room_ids) != set(new_room_ids) and len(old_room_ids) > 0:

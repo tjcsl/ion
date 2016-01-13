@@ -323,6 +323,10 @@
             {% if profile_user.is_student and eighth_schedule %}
             <section class="user-info-eighth signups">
                 <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Signups{% endif %}</h3>
+                {% if eighth_restricted_msg %}
+                    <b>This info is restricted to {% if request.user.is_student %} other{% endif %} students.</b> {% if request.user.is_teacher %}Please keep this in mind.{% endif %}
+                    <br /><br />
+                {% endif %}
                 <table class="fancy-table">
                 <thead>
                 <tr>

@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 
 import logging
-from django.db.models import Count
 from rest_framework import serializers
-from rest_framework.reverse import reverse
-from .models import Day, DayType, CodeName, Block, Time
+from .models import Day, DayType, Block, Time
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +29,7 @@ class BlockSerializer(serializers.ModelSerializer):
 
 
 class DayTypeSerializer(serializers.ModelSerializer):
-    #url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
+    # url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")
     blocks = BlockSerializer(many=True, read_only=True)
 
     class Meta:

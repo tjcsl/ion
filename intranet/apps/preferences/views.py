@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from ...db.ldap_db import LDAPConnection
 from ..users.models import User
 from .forms import (
     PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm, NotificationOptionsForm
@@ -59,9 +60,29 @@ def save_personal_info(request, user):
     logger.debug(personal_info_form)
     if personal_info_form.is_valid():
         logger.debug("Personal info: valid")
-        if personal_info_form.has_changed():
+
+        # form.has_changed() will not report a change if a field is missing
+        num_fields_changed = False
+        for f in num_fields:
+            if num_fields[f] != _num_fields[f]:
+                num_fields_changed = True
+
+        if personal_info_form.has_changed() or num_fields_changed:
+            logger.debug("Personal info: changed")
             fields = personal_info_form.cleaned_data
             logger.debug(fields)
+
+            # add None value for fields missing
+            for f in _num_fields:
+                # remove "s" from end of field name
+                fld = f[:-1]
+                fld_num_max = _num_fields[f]
+                for fld_num in range(0, fld_num_max):
+                    fld_name = "{}_{}".format(fld, fld_num)
+                    if fld_name not in fields:
+                        logger.debug("Field {} removed, setting as None".format(fld_name))
+                        fields[fld_name] = None
+
             single_fields = ["mobile_phone", "home_phone"]
             multi_fields = {}
             multi_fields_to_update = []
@@ -91,32 +112,39 @@ def save_personal_info(request, user):
                         try:
                             user.set_ldap_attribute(field, "{}".format(fields[field]))
                         except Exception as e:
-                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
+                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                                if fields[field] is None or len(fields[field]) < 1:
+                                    pass
+                                else:
+                                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
                             except Exception as e:
-                                messages.error(request, "Field {}: {}".format(field, e))
+                                messages.error(request, "Unable to set field {}: {}".format(field, e))
                     else:
                         logger.debug("Need to update {} because {} changed".format(full_field_name, field))
                         multi_fields_to_update.append(full_field_name)
 
-            logger.debug(multi_fields_to_update)
+            logger.debug("multi_fields_to_update: {}".format(multi_fields_to_update))
             for full_field in multi_fields_to_update:
                 ldap_full_field = "{}s".format(full_field)
-                field_vals = multi_fields[full_field].values()
+                field_vals = list(multi_fields[full_field].values())
+                logger.debug(field_vals)
                 for v in field_vals:
+                    logger.debug("field vals: {} {}".format(v, field_vals))
                     if not v:
                         field_vals.remove(v)
-
                 try:
                     user.set_ldap_attribute(ldap_full_field, field_vals)
                 except Exception as e:
-                    messages.error(request, "Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
-                    logger.debug("Field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                    messages.error(request, "Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
+                    logger.debug("Unable to set field {} with value {}: {}".format(ldap_full_field, field_vals, e))
                 else:
-                    messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
+                    if field_vals is None or len(field_vals) == 0 or (len(field_vals) == 1 and len(field_vals[0]) < 1):
+                        pass
+                    else:
+                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
     return personal_info_form
 
 
@@ -152,8 +180,8 @@ def save_preferred_pic(request, user):
                         try:
                             user.set_ldap_attribute(field, fields[field])
                         except Exception as e:
-                            messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                            logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                            messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                            logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return preferred_pic_form
@@ -189,6 +217,7 @@ def save_privacy_options(request, user):
         logger.debug("Privacy options form: valid")
         if privacy_options_form.has_changed():
             fields = privacy_options_form.cleaned_data
+            logger.debug("Privacy form fields:")
             logger.debug(fields)
             for field in fields:
                 if field in privacy_options and privacy_options[field] == fields[field]:
@@ -198,10 +227,10 @@ def save_privacy_options(request, user):
                                                                fields[field],
                                                                privacy_options[field] if field in privacy_options else None))
                     try:
-                        user.set_ldap_attribute(field, fields[field], request.user.is_eighth_admin)
+                        user.set_ldap_preference(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
-                        messages.error(request, "Field {} with value {}: {}".format(field, fields[field], e))
-                        logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
+                        messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                        logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                     else:
                         messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
     return privacy_options_form
@@ -270,6 +299,8 @@ def preferences_view(request):
     # Clear cache on every pageload
     user.clear_cache()
 
+    ldap_error = None
+
     if request.method == "POST":
 
         personal_info_form = save_personal_info(request, user)
@@ -284,6 +315,9 @@ def preferences_view(request):
             save_gcm_options(request, user)
         except AttributeError:
             pass
+
+        if LDAPConnection().did_use_simple_bind():
+            ldap_error = True
 
     else:
         personal_info, num_fields = get_personal_info(user)
@@ -311,7 +345,8 @@ def preferences_view(request):
         "personal_info_form": personal_info_form,
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
-        "notification_options_form": notification_options_form
+        "notification_options_form": notification_options_form,
+        "ldap_error": ldap_error
     }
     return render(request, "preferences/preferences.html", context)
 
@@ -371,7 +406,7 @@ def ldap_test(request):
                     req = [req]
                 for row in req:
                     results += "{}: \n".format(row[0])
-                    for perm, value in row[1].iteritems():
+                    for perm, value in row[1].items():
                         results += "\t{}: {}\n".format(perm, value)
 
         if "user_attribute_dn" in request.POST:
@@ -386,7 +421,7 @@ def ldap_test(request):
                 result = req.first_result()
                 logger.debug(result)
                 if isinstance(result, dict):
-                    for perm, value in result.iteritems():
+                    for perm, value in result.items():
                         logger.debug("{} {}".format(perm, value))
                         results += "{}: {}\n".format(perm, value)
                 else:

@@ -13,12 +13,12 @@ class NotificationConfig(models.Model):
     gcm_optout = models.BooleanField(default=False)
 
     android_gcm_rand = models.CharField(max_length=100, blank=True, null=True)
-    
+
     @property
     def gcm_token_sha256(self):
-        return hashlib.sha256(self.gcm_token).hexdigest()
+        return hashlib.sha256(self.gcm_token.encode()).hexdigest()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.user)
 
 
@@ -31,7 +31,7 @@ class GCMNotification(models.Model):
     time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} at {}".format(self.multicast_id, self.time)
 
     @property

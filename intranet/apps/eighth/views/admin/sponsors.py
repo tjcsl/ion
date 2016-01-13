@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from cacheops import invalidate_obj
 from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
@@ -92,7 +91,8 @@ def sponsor_schedule_view(request, sponsor_id):
 
     start_date = get_start_date(request)
 
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+    # for_sponsor() excludes cancelled activities
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True)
                                          .filter(block__date__gte=start_date)
                                          .order_by("block__date",
                                                    "block__block_letter"))

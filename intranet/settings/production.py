@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 import ipaddress
 import logging
 from six.moves.urllib import parse
-from .base import *
+from .base import *  # noqa
 
 
 logger = logging.getLogger("intranet_access")
 
-"""In production, add a file called secret.py to the settings package that
-defines SECRET_KEY and DATABASE_URL.
+""" !! In production, add a file called secret.py to the settings package that
+defines SECRET_KEY and DATABASE_URL. !!
 
 DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
@@ -25,20 +25,23 @@ CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
 
-CACHES['default']['OPTIONS']['DB'] = 1
+if not TESTING:
+    CACHES['default']['OPTIONS']['DB'] = 1
 
-parse.uses_netloc.append("postgres")
-url = parse.urlparse(DATABASE_URL)
+
+def parse_db_url():
+    parse.uses_netloc.append("postgres")
+    url = parse.urlparse(DATABASE_URL)
+    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
+
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': url.path[1:],
-        'USER': url.username,
-        'PASSWORD': url.password,
-        'HOST': url.hostname
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2'
+        }
 }
+
+DATABASES['default'].update(parse_db_url())
 
 
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
@@ -71,7 +74,7 @@ class glob_list(list):
 
     def __contains__(self, key):
         """Check if a string matches a glob in the list."""
-        
+
         # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
         # list of IP addresses, if the user is using a proxy
         if "," in key:
@@ -86,8 +89,8 @@ class glob_list(list):
                 pass
         return False
 
+# Internal IP ranges in production
 INTERNAL_IPS = glob_list([
-    "127.0.0.0/8",
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])

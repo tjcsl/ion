@@ -123,11 +123,16 @@ $(function() {
 // Sticky headers for activity picker
 function stickyHeaders(headers) {
     this.load = function() {
+        var firstEmpty = false;
         headers.each(function(i) {
             var id = Math.floor((i + 1) * Math.random() * 99999);
             var stuckCopy = $(this).clone().prependTo($("#activity-picker"));
-            if (i == 0) {
-                stuckCopy.addClass("stuck");
+            var empty = $(this).hasClass("empty");
+            if(i == 0 && empty) {
+                firstEmpty = true;
+            }
+            if ((i == 0 && !empty) || (i == 1 && firstEmpty)) {
+                 stuckCopy.addClass("stuck");
             } else {
                 stuckCopy.addClass("hidden stuck");
             }
@@ -140,12 +145,22 @@ function stickyHeaders(headers) {
     this.scroll = function() {
         headers.each(function(i) {
             var thisHeader = $(this),
-                prevHeader = headers.eq(i - 1);
+                prevHeader = headers.eq(i - 1),
+                thrdHeader = headers.eq(i - 2);
             var top = thisHeader.position().top;
 
+            if(prevHeader.hasClass("empty")) {
+                prevHeader = thrdHeader;
+            }
+
             if (top <= 0) {
-                $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
-                $("#" + prevHeader.attr("id") + "-stuck").addClass("hidden");
+                if(!thisHeader.hasClass("empty")) {
+                    $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
+                }
+                headers.each(function(j) {
+                    var loopHeader = $(this);
+                    if(j != i) $("#" + loopHeader.attr("id") + "-stuck").addClass("hidden");
+                });
             } else if (top < 31) {
                 $("#" + prevHeader.attr("id") + "-stuck").css("top", top);
             } else {
@@ -158,10 +173,10 @@ function stickyHeaders(headers) {
 }
 
 $(function() {
-    // var sh = new stickyHeaders($(".sticky-header"));
-    // sh.load();
+    var sh = new stickyHeaders($(".sticky-header"));
+    sh.load();
 
-    // $("#activity-list").on("scroll", function() {
-    //     sh.scroll();
-    // });
+    $("#activity-list").on("scroll", function() {
+        sh.scroll();
+    });
 });

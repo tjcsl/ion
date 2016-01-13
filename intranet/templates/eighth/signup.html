@@ -3,6 +3,14 @@
 {% load math %}
 {% load strings %}
 
+{% comment %}
+    NOTE: Specific UI and template changes made in this file will most likely
+          also need to be changed in:
+              multi_signup.html
+              profile_signup.html
+              display.html
+{% endcomment %}
+
 {% block title %}
     {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
 {% endblock %}
@@ -97,6 +105,9 @@
                 <% if (title) { %>
                     - <%= title %>
                 <% } %>
+            </span>
+
+            <span class="activity-flags">
 
                 <% if (special) { %>
                     <span class="badge green" title="This is a special activity.">Special</span>
@@ -395,15 +406,26 @@
                 <span>
                     <input type="search" placeholder="Search names, sponsors, rooms..." disabled>
                 </span>
+                <h5 class="search-header">
+                    Search Results<a class="button small-button clear-button">Clear</a>
+                </h5>
             </div>
             <div class="backbtn">
                 <i class="fa fa-chevron-left"></i>
             </div>
             <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
-                <h5 class="sticky-header favorites-header">Favorites</h5>
-                <ul class="favorite-activities"></ul>
-                <h5 class="sticky-header all-header">All</h5>
-                <ul class="all-activities"></ul>
+                <h5 class="sticky-header favorites-header" data-header="favorites-header">
+                    Favorites
+                </h5>
+                <ul class="favorite-activities" data-header="favorites-header"></ul>
+                <h5 class="sticky-header special-header" data-header="special-header">
+                    Special
+                </h5>
+                <ul class="special-activities" data-header="special-header"></ul>
+                <h5 class="sticky-header all-header" data-header="all-header">
+                    All
+                </h5>
+                <ul class="all-activities" data-header="all-header"></ul>
                 <ul class="search-noresults">
                     <li>
                         <span class="activity-name">

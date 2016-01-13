@@ -32,10 +32,13 @@
     {% endif %}
 {% endblock %}
 
-{% block bodyclass %} login-page{% endblock %}
+{% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
+        {% if login_warning %}
+            <div class="login-warning">{{ login_warning }}</div>
+        {% endif %}
         <div class="center">
             <div class="login">
                     <div class="title">
@@ -84,9 +87,7 @@
         </a>
     </div>
     {% endcomment %}
-    <a href="{{ git_info.commit_github_url }}">
-    <div class="git-version" title="{{ git_info.commit_info|escape }}">
-        <span id="revision" data-github-url="{{ git_info.commit_github_url }}">Revision {{ git_info.commit_short_hash }}</span> <i class="fa fa-flask"></i>
+    <div class="git-version" title="{{ git_info.commit_info|escape }}" data-github-url="{{ git_info.commit_github_url }}">
+        <span id="revision">Revision {{ git_info.commit_short_hash }}</span> <i class="fa fa-flask"></i>
     </div>
-    </a>
 {% endblock %}

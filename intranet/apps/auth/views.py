@@ -92,12 +92,18 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
     else:
         auth_form = auth_form or AuthenticateForm()
         request.session.set_test_cookie()
+        try:
+            login_warning = settings.LOGIN_WARNING
+        except AttributeError:
+            login_warning = None
+
         data = {
             "auth_form": auth_form,
             "request": request,
             "git_info": settings.GIT,
             "bg_pattern": get_bg_pattern(),
-            "theme": get_login_theme()
+            "theme": get_login_theme(),
+            "login_warning": login_warning
         }
         schedule = schedule_context(request)
         data.update(schedule)

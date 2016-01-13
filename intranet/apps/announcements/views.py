@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import bleach
+import datetime
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -53,10 +54,15 @@ def announcement_posted_hook(request, obj):
         except AttributeError:
             notify_all = False
 
-        if notify_all:
-            announcement_posted_email(request, obj, True)
-        else:
-            announcement_posted_email(request, obj)
+        try:
+            if notify_all:
+                announcement_posted_email(request, obj, True)
+            else:
+                announcement_posted_email(request, obj)
+        except Exception as e:
+            logger.error("Exception when emailing announcement: {}".format(e))
+            messages.error("Exception when emailing announcement: {}".format(e))
+            raise e
     else:
         logger.debug("Announcement notify off")
 
@@ -314,8 +320,14 @@ def delete_announcement_view(request, id):
         except AttributeError:
             post_id = None
         try:
-            Announcement.objects.get(id=post_id).delete()
-            messages.success(request, "Successfully deleted announcement.")
+            a = Announcement.objects.get(id=post_id)
+            if request.POST.get("full_delete", False):
+                a.delete()
+                messages.success(request, "Successfully deleted announcement.")
+            else:
+                a.expiration_date = datetime.datetime.now()
+                a.save()
+                messages.success(request, "Successfully expired announcement.")
         except Announcement.DoesNotExist:
             pass
 

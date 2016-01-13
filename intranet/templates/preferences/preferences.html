@@ -65,6 +65,12 @@
     <div class="primary-content">
         <h2>Preferences</h2>
         <br>
+        {% if ldap_error %}
+            <span style="color: red">
+                <b>Your changes did <u>NOT</u> apply due to a directory error. To change your Preferences, email intranet@tjhsst.edu or ask the Eighth Period Office.</b>
+            </span>
+            <br /><br />
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
 
@@ -176,11 +182,6 @@
                     <th></th>
                 </thead>
                 {% for field in privacy_options_form %}
-                    <!--tr>
-                        <td><input type="checkbox" disabled="disabled" checked="checked"></td>
-                        <td><input type="checkbox"></td>
-                        <td>Show ---</td>
-                    </tr-->
                     {% if not field.name|endswith:"-self" %}
                         <tr>
                             <td>

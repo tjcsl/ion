@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import logging
 from cacheops import invalidate_obj
-from datetime import timedelta
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
@@ -192,10 +191,10 @@ def schedule_activity_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        #end_date = start_date + timedelta(days=60)
+        # end_date = start_date + timedelta(days=60)
 
         blocks = EighthBlock.objects.filter(date__gte=start_date)
-        #, date__lte=end_date)
+        # , date__lte=end_date)
         initial_formset_data = []
 
         sched_act_queryset = (EighthScheduledActivity.objects
@@ -332,6 +331,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -397,6 +397,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(

@@ -84,6 +84,7 @@ class Search(generics.RetrieveAPIView):
     """
 
     permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         query = kwargs['query']

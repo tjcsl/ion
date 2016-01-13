@@ -69,9 +69,9 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def to_be_assigned(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -104,9 +104,9 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @property
     def to_be_determined(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.capacity)
         # return "{}".format(self.name)
 
@@ -326,7 +326,7 @@ class EighthActivity(AbstractBaseEighthModel):
     class Meta:
         verbose_name_plural = "eighth activities"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_with_flags
 
 
@@ -532,7 +532,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def num_signups(self):
         """ How many people have signed up?"""
-        return EighthSignup.objects.filter(scheduled_activity__block=self).count()
+        return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=User.objects.get_students()).count()
 
     def num_no_signups(self):
         """ How many people have not signed up?"""
@@ -542,6 +542,11 @@ class EighthBlock(AbstractBaseEighthModel):
     def get_unsigned_students(self):
         """ Return a list of Users who haven't signed up for an activity. """
         return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
+
+    def get_hidden_signups(self):
+        """ Return a list of Users who are *not* in the All Students list but have signed up for an activity.
+            This is usually a list of signups for z-Withdrawn from TJ """
+        return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=User.objects.get_students())
 
     @property
     def letter_width(self):
@@ -571,9 +576,12 @@ class EighthBlock(AbstractBaseEighthModel):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
-    def __unicode__(self):
-        formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
-        return "{} ({})".format(formatted_date, self.block_letter)
+    @property
+    def formatted_date(self):
+        return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
+
+    def __str__(self):
+        return "{} ({})".format(self.formatted_date, self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)
@@ -583,7 +591,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity"""
 
-    def for_sponsor(cls, sponsor):
+    def for_sponsor(cls, sponsor, include_cancelled=False):
         """Return a QueryList of EighthScheduledActivities where the given
         EighthSponsor is sponsoring.
 
@@ -599,9 +607,11 @@ class EighthScheduledActivityManager(Manager):
                              (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
                                              .filter(sponsoring_filter)
                                              .distinct())
+        if not include_cancelled:
+            sched_acts = sched_acts.exclude(cancelled=True)
+
         return sched_acts
 
 
@@ -758,6 +768,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
             return num_signed_up >= capacity
+        return False
+
+    def is_almost_full(self):
+        """Return whether the activity is almost full (>90%).
+
+        """
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up >= (0.9 * capacity)
         return False
 
     def is_overbooked(self):
@@ -1171,7 +1191,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         unique_together = (("block", "activity"),)
         verbose_name_plural = "eighth scheduled activities"
 
-    def __unicode__(self):
+    def __str__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
@@ -1302,7 +1322,7 @@ class EighthSignup(AbstractBaseEighthModel):
         """Is the block for this signup in the clear absence period?"""
         return self.scheduled_activity.block.in_clear_absence_period()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity)
 

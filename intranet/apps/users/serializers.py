@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from rest_framework import serializers
-from rest_framework.reverse import reverse
 from .models import User
 
 
@@ -97,7 +96,37 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name', 'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone', 'other_phones', 'webpages', 'counselor', 'address', 'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher', 'is_student', 'classes')
+        fields = (
+            'id',
+            'ion_username',
+            'sex',
+            'title',
+            'display_name',
+            'full_name',
+            'short_name',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'common_name',
+            'nickname',
+            'tj_email',
+            'emails',
+            'grade',
+            'graduation_year',
+            'birthday',
+            'user_type',
+            'home_phone',
+            'mobile_phone',
+            'other_phones',
+            'webpages',
+            'counselor',
+            'address',
+            'picture',
+            'is_eighth_admin',
+            'is_announcements_admin',
+            'is_teacher',
+            'is_student',
+            'classes')
 
 
 class ClassSerializer(serializers.Serializer):

@@ -17,16 +17,32 @@ Add the following flags to ``/etc/portage/package.use``::
 LDAP Configuration
 ------------------
 
-In order to have LDAP work properly, you have to have the following schema included:
-* core
-* cosine (if you have sound support)
-* nis
-* inetorgperson
-* dyngroup
-* iodine
-If you fail to have one of these imported, slapd will segfault without any error messages.
-You then need to add a line to include intranet's slapd.acl. This also has a possibility of bringing
-about silent segfaults; it is recommended to do this one step at a time.
+In /etc/slapd.conf on the ldap server, change the `suffix` config option to `dc=tjhsst,dc=edu`
+
+Copy the iodine ldap schema to /etc.
+
+.. code-block:: bash
+
+  $ cp intranet/static/ldap/iodine.schema /etc/openldap/schema/
+  $ cp intranet/static/ldap/slapd.acl /etc/openldap/
+
+
+In order to have LDAP work properly, you have to include the following schemas in ``/etc/slapd.conf``::
+
+    include         /etc/openldap/schema/cosine.schema
+    include         /etc/openldap/schema/nis.schema
+    include         /etc/openldap/schema/inetorgperson.schema
+    include         /etc/openldap/schema/dyngroup.schema
+    include         /etc/openldap/schema/iodine.schema
+    include         /etc/openldap/slapd.acl
+
+
+You then need to import the base ldif.
+
+.. code-block:: bash
+
+  $ ./config/setup_ldap.sh
+
 
 ----------
 PostgreSQL
@@ -133,7 +149,6 @@ Install the ``python-ldap`` module, the Cyrus-SASL C library, and the Pip packag
     $ emerge dev-libs/cyrus-sasl
     $ emerge python-ldap
     $ emerge dev-python/pip
-    $ emerge dev-python/fabric
 
 ----------
 Virtualenv
@@ -173,7 +188,7 @@ Make a production virtualenv.
 
 .. code-block:: bash
 
-    mkvirtualenv ion
+    mkvirtualenv --python=$(which python3.4) ion
 
 Confirm that your prompt now appears something like this:
 

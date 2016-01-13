@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from six.moves import cPickle as pickle
+import six
 import csv
 import logging
 import re
@@ -119,7 +120,7 @@ def edit_group_view(request, group_id):
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
-        filetext += unicode(chunk, "ISO-8859-1")
+        filetext += six.text_type(chunk, "ISO-8859-1")
     return filetext
 
 
@@ -384,6 +385,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
         scheduled_activity = EighthScheduledActivity.objects.get(
@@ -497,7 +499,10 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 "exclude_before_date": get_start_date(self.request)
             })
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
+            logger.debug("cleaned block: {}".format(self.get_cleaned_data_for_step("block")["block"]))
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
             kwargs.update({"block": block})
 
         labels = {
@@ -536,6 +541,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activities = form_list[1].cleaned_data["activities"]
 

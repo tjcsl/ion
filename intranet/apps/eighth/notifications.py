@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def signup_status_email(user, next_blocks):
-    em = user.tj_email if user.tj_email else user.emails[0] if emails and len(user.emails) >= 1 else None
+    em = user.tj_email if user.tj_email else user.emails[0] if user.emails and len(user.emails) >= 1 else None
     if em:
         emails = [em]
     else:
@@ -67,7 +67,7 @@ def signup_status_email(user, next_blocks):
 
 def absence_email(signup):
     user = signup.user
-    em = user.tj_email if user.tj_email else user.emails[0] if emails and len(user.emails) >= 1 else None
+    em = user.tj_email if user.tj_email else user.emails[0] if user.emails and len(user.emails) >= 1 else None
     if em:
         emails = [em]
     else:

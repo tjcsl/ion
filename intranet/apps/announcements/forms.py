@@ -24,10 +24,10 @@ class AnnouncementForm(forms.ModelForm):
             "will receive an email. If the announcement is public, a link will be posted on Twitter."
         )
 
-        self.fields["notify_email_all"].help_text = (
-            "This will send an email notification to all of the users who can see this post. This option "
-            "does NOT take users' email notification preferences into account, so please use with care."
-        )
+        # self.fields["notify_email_all"].help_text = (
+        #    "This will send an email notification to all of the users who can see this post. This option "
+        #    "does NOT take users' email notification preferences into account, so please use with care."
+        # )
 
         self.fields["update_added_date"].help_text = (
             "If this announcement has already been added, update the added date to now so that the "
@@ -36,7 +36,7 @@ class AnnouncementForm(forms.ModelForm):
         )
 
     expiration_date = forms.DateTimeInput()
-    notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
+    # notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
     update_added_date = forms.BooleanField(required=False, label="Update Added Date")
 
     class Meta:
@@ -48,7 +48,7 @@ class AnnouncementForm(forms.ModelForm):
             "groups",
             "expiration_date",
             "notify_post",
-            "notify_email_all",
+            # "notify_email_all",
             "update_added_date",
             "pinned"
         ]

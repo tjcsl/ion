@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from collections import OrderedDict
 from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
@@ -27,8 +28,8 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
 
     def fetch_scheduled_on(self, act):
-        scheduled_on = {}
-        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block")
+        scheduled_on = OrderedDict({})
+        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block").order_by("block__date")
 
         # user = self.context.get("user", self.context["request"].user)
         # favorited_activities = set(user.favorited_activity_set
@@ -50,6 +51,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                                    request=self.context["request"]),
                 }
             }
+        logger.debug(scheduled_on)
         return scheduled_on
 
     class Meta:
@@ -279,7 +281,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
             activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
-
 
         for scheduled_activity in scheduled_activities:
             if scheduled_activity.capacity is not None:
