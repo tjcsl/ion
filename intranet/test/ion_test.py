@@ -2,7 +2,7 @@ from unittest import mock
 
 from django.test import TestCase
 
-from ..user.models import User
+from ..users.models import User
 from ..db.ldap_db import LDAPConnection
 from .fake_ldap import MockLDAPConnection
 
