@@ -15,7 +15,6 @@ Tests for the eighth module.
 """
 
 
-
 class EighthTest(IonTestCase):
 
     def test_add_user(self):

@@ -39,7 +39,7 @@ def parse_db_url():
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2'
-        }
+    }
 }
 
 DATABASES['default'].update(parse_db_url())

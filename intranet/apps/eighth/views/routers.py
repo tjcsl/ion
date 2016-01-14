@@ -11,7 +11,6 @@ requests them.
 """
 
 
-
 @login_required
 def eighth_redirect_view(request):
     if request.user.is_student:

@@ -11,7 +11,6 @@ Tests for the eighth module.
 """
 
 
-
 class ApiTest(IonTestCase):
 
     def test_get_profile(self):
