@@ -97,8 +97,10 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     given user is sponsoring.
 
     Returns:
-        sponsor_schedule
-        no_attendance_today
+        Dictionary with:
+            activities
+            no_attendance_today
+            num_acts
     """
 
     no_attendance_today = None
@@ -147,7 +149,14 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
             num_acts += 1
 
     logger.debug(acts)
-    return acts, no_attendance_today, num_acts
+
+    cur_date = acts[0]["block"].date if acts else datetime.now().date()
+    return {
+        "activities": acts, 
+        "no_attendance_today": no_attendance_today,
+        "num_acts": num_acts,
+        "cur_date": cur_date
+    }
 
 
 def find_birthdays(request):
@@ -320,11 +329,12 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             })
 
         if eighth_sponsor:
-            sponsor_schedule, no_attendance_today, num_acts = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
+            sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
             context.update({
-                "sponsor_schedule": sponsor_schedule,
-                "no_attendance_today": no_attendance_today,
-                "num_attendance_acts": num_acts
+                "sponsor_schedule": sponsor_sch["activities"],
+                "no_attendance_today": sponsor_sch["no_attendance_today"],
+                "num_attendance_acts": sponsor_sch["num_acts"],
+                "sponsor_schedule_cur_date": sponsor_sch["cur_date"]
             })
 
         context.update({
