@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 import logging
+
 from rest_framework import serializers
-from .models import Day, DayType, Block, Time
+
+from .models import Block, Day, DayType, Time
 
 logger = logging.getLogger(__name__)
 

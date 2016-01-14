@@ -2,14 +2,15 @@
 from __future__ import unicode_literals
 
 import logging
-from ldap3 import LDAPNoSuchObjectResult
-from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
-from rest_framework import status
-from rest_framework.views import exception_handler
-from rest_framework.response import Response
-from ..eighth import exceptions as eighth_exceptions
 
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from ldap3 import LDAPNoSuchObjectResult
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import exception_handler
+
+from ..eighth import exceptions as eighth_exceptions
 
 logger = logging.getLogger(__name__)
 

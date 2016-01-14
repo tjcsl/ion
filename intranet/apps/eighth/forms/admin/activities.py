@@ -2,10 +2,13 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django import forms
 from django.db.models import Q
+
 from ....users.models import User
 from ...models import EighthActivity, EighthScheduledActivity
+
 logger = logging.getLogger(__name__)
 
 

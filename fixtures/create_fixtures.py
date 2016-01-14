@@ -1,15 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import MySQLdb as mdb
+import datetime
 import json
-import re
-import pexpect
-import ldap3
-import sys
 import os
 import os.path
-import datetime
+import re
+import sys
+
+import ldap3
+import pexpect
+
+import MySQLdb as mdb
 from six.moves import input
 
 # Run this on iodine.tjhsst.edu

@@ -4,17 +4,18 @@
 # Modified by: Shwagroo Team
 # Modified further by Doug Stryke
 
-from collections import defaultdict
-
+import cProfile
+import os
 import pstats
 import re
-import os
-import cProfile
+import resource
 import tempfile
 import time
-import resource
+from collections import defaultdict
+
 from django.conf import settings
 from django.db import connections
+
 from six.moves import cStringIO as StringIO
 
 # FIXME change log base to something appropriate for the particular installation

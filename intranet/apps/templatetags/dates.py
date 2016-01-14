@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import logging
-from datetime import datetime
 from datetime import date as datetime_date
+from datetime import datetime
+
 from django import template
 
 register = template.Library()

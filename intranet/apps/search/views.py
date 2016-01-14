@@ -2,17 +2,20 @@
 from __future__ import unicode_literals
 
 import logging
+
 import six
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from ldap3.utils.conv import escape_filter_chars
+
 from intranet.db.ldap_db import LDAPConnection
+
 from ..announcements.models import Announcement
-from ..events.models import Event
 from ..eighth.models import EighthActivity
+from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import User, Grade
+from ..users.models import Grade, User
 from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)

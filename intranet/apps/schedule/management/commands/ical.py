@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.core.management.base import BaseCommand
-from intranet.apps.schedule.models import CodeName, Day, DayType
-from icalendar import Calendar
 from datetime import datetime
-from six import text_type, iteritems
+
+from django.core.management.base import BaseCommand
+from icalendar import Calendar
+from six import iteritems, text_type
+
+from intranet.apps.schedule.models import CodeName, Day, DayType
 from six.moves.urllib import request
 
 

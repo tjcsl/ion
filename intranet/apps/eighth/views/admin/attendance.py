@@ -3,19 +3,19 @@ from __future__ import unicode_literals
 
 import csv
 import logging
+from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
+
 from cacheops import invalidate_obj
-from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
 from django import http
-from django.db.models import Count, Q
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.db.models import Q, Count
+from django.shortcuts import redirect, render
+
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
-from ...models import (
-    EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity,
-    EighthRoom)
+from ...models import (EighthActivity, EighthBlock, EighthRoom,
+                       EighthScheduledActivity, EighthSignup)
 from ...utils import get_start_date
-
 
 logger = logging.getLogger(__name__)
 

@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from .models import Senior
+
 from .forms import SeniorForm
+from .models import Senior
 
 logger = logging.getLogger(__name__)
 

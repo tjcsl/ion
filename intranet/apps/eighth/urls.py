@@ -2,11 +2,11 @@
 from __future__ import unicode_literals
 
 from django.conf.urls import include, url
-from .views import routers, signup, attendance, activities, profile
-from .views.admin import (
-    general, blocks, groups, rooms, sponsors, scheduling)
-from .views.admin import attendance as admin_attendance
+
+from .views import activities, attendance, profile, routers, signup
 from .views.admin import activities as admin_activities
+from .views.admin import attendance as admin_attendance
+from .views.admin import blocks, general, groups, rooms, scheduling, sponsors
 
 urlpatterns = [
     url(r"^$", routers.eighth_redirect_view, name="eighth_redirect"),

@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
-
 DATE_FORMAT = "%m-%d-%Y"
 
 

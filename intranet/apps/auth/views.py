@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 import os
 import random
-import logging
 from datetime import date, datetime
+
+from django.contrib.auth import login, logout
+from django.shortcuts import redirect, render
+from django.templatetags.static import static
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic.base import View
+
 from intranet import settings
+
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
 from .forms import AuthenticateForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
-from django.templatetags.static import static
-from django.views.generic.base import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.debug import sensitive_post_parameters
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")

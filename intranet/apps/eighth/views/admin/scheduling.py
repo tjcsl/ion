@@ -2,21 +2,21 @@
 from __future__ import unicode_literals
 
 import logging
+
 from cacheops import invalidate_obj
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
+
 from .....utils.serialization import safe_json
 from ....auth.decorators import eighth_admin_required
-from ...models import (
-    EighthBlock, EighthActivity, EighthScheduledActivity, EighthSponsor,
-    EighthRoom
-)
-from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.activities import ActivitySelectionForm
+from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
+from ...models import (EighthActivity, EighthBlock, EighthRoom,
+                       EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)

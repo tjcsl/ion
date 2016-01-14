@@ -4,21 +4,25 @@ from __future__ import unicode_literals
 import base64
 import logging
 import os
-import pysftp
 import tempfile
 from os.path import normpath
+from wsgiref.util import FileWrapper
+
+import pysftp
 from Crypto import Random
 from Crypto.Cipher import AES
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect
-from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
-from .models import Host
-from .forms import UploadFileForm
+from django.http import StreamingHttpResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.debug import (sensitive_post_parameters,
+                                           sensitive_variables)
+
 from intranet import settings
+
+from .forms import UploadFileForm
+from .models import Host
 
 logger = logging.getLogger(__name__)
 

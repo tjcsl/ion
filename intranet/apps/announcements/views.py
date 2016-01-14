@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
-import bleach
 import datetime
+import logging
+
+import bleach
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
 from ..auth.decorators import announcements_admin_required
-from ..groups.models import Group
 from ..dashboard.views import dashboard_view
-from .models import Announcement, AnnouncementRequest
+from ..groups.models import Group
 from .forms import AnnouncementForm, AnnouncementRequestForm
-from .notifications import (request_announcement_email,
-                            admin_request_announcement_email,
-                            announcement_posted_twitter,
+from .models import Announcement, AnnouncementRequest
+from .notifications import (admin_request_announcement_email,
+                            announcement_approved_email,
                             announcement_posted_email,
-                            announcement_approved_email)
+                            announcement_posted_twitter,
+                            request_announcement_email)
 
 logger = logging.getLogger(__name__)
 

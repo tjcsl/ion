@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import pexpect
-import uuid
+import logging
 import os
 import re
-import logging
-from django.contrib.auth.hashers import check_password
+import uuid
+
+import pexpect
 from django.conf import settings
+from django.contrib.auth.hashers import check_password
+
 from ..users.models import User
 
 logger = logging.getLogger(__name__)

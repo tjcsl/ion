@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django import forms
 import logging
+
+from django import forms
+
 from intranet import settings
+
 from .models import PrintJob
 
 logger = logging.getLogger(__name__)

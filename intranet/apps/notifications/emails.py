@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+
 from intranet import settings
 
 logger = logging.getLogger(__name__)

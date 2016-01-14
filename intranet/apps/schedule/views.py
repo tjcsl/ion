@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import calendar
 import logging
 from datetime import datetime, timedelta
-import calendar
+
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.clickjacking import xframe_options_exempt
+
 from intranet import settings
-from .models import Block, DayType, Day, Time
-from .forms import DayTypeForm, DayForm
+
+from .forms import DayForm, DayTypeForm
+from .models import Block, Day, DayType, Time
 
 logger = logging.getLogger(__name__)
 schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous() and u.has_admin_permission("schedule"))

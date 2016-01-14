@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 from copy import copy
+
 from django.utils import log
 from django.views.debug import ExceptionReporter
+
 from intranet import settings
 
 

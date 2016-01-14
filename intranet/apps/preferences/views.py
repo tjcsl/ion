@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from ...db.ldap_db import LDAPConnection
 from ..users.models import User
-from .forms import (
-    PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm, NotificationOptionsForm
-)
-
-import logging
+from .forms import (NotificationOptionsForm, PersonalInformationForm,
+                    PreferredPictureForm, PrivacyOptionsForm)
 
 logger = logging.getLogger(__name__)
 

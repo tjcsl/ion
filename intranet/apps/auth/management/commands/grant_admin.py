@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from ....groups.models import Group
+
 from ....eighth.models import User
+from ....groups.models import Group
 
 
 class Command(BaseCommand):

@@ -1,26 +1,31 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import cPickle as pickle
-import six
 import csv
 import logging
 import re
-from cacheops import invalidate_obj, invalidate_model
+
+import six
+from cacheops import invalidate_model, invalidate_obj
 from django import http
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
+
+from six.moves import cPickle as pickle
+
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
-from ....users.models import User
 from ....search.views import get_search_results
-from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
+from ....users.models import User
+from ...forms.admin.activities import (ActivitySelectionForm,
+                                       ScheduledActivityMultiSelectForm)
 from ...forms.admin.blocks import BlockSelectionForm
-from ...forms.admin.groups import QuickGroupForm, GroupForm, UploadGroupForm
-from ...models import EighthScheduledActivity, EighthSignup, EighthBlock, EighthActivity
+from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
+from ...models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                       EighthSignup)
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)

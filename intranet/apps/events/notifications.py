@@ -2,8 +2,10 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
-from ..notifications.emails import email_send
+
 from intranet import settings
+
+from ..notifications.emails import email_send
 
 
 def event_approval_request(request, event):

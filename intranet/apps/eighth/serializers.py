@@ -3,13 +3,14 @@ from __future__ import unicode_literals
 
 import logging
 from collections import OrderedDict
+
 from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+
 from ..users.models import User
-from .models import (
-    EighthBlock, EighthActivity, EighthSignup,
-    EighthSponsor, EighthScheduledActivity)
+from .models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                     EighthSignup, EighthSponsor)
 
 logger = logging.getLogger(__name__)
 

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django import template
 
 register = template.Library()

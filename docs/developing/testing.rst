@@ -35,6 +35,8 @@ Here is an bare-bones example of the basic layout for a test:
 Running Tests
 =============
 
+If this is your first time running tests, you need to give the ion user permission to create the test db.
+Run ``sudo -u postgres psql -c 'alter role ion createdb'`` to grant the necessary perms.
 To actually execute tests, run ``./manage.py test``
 Note that this deletes and re-creates the db from scratch each time,
 so you most likely want to pass the ``-k`` option when developing tests as it significantly reduces run-time.

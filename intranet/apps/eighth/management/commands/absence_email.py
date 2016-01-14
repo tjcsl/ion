@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.core.management.base import BaseCommand
+
 from intranet.apps.eighth.models import EighthSignup
 from intranet.apps.eighth.notifications import absence_email
 

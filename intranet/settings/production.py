@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 
 import ipaddress
 import logging
-from six.moves.urllib import parse
-from .base import *  # noqa
 
+from six.moves.urllib import parse
+
+from .base import *  # noqa
 
 logger = logging.getLogger("intranet_access")
 
@@ -38,7 +39,7 @@ def parse_db_url():
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2'
-        }
+    }
 }
 
 DATABASES['default'].update(parse_db_url())

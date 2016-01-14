@@ -2,10 +2,12 @@
 from __future__ import unicode_literals
 
 import csv
+
 from django.core.management.base import BaseCommand
+
+from intranet.apps.eighth.models import EighthActivity
 from intranet.apps.groups.models import Group
 from intranet.apps.users.models import User
-from intranet.apps.eighth.models import EighthActivity
 
 
 class Command(BaseCommand):

@@ -2,17 +2,17 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django import http
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+
 from ....utils.serialization import safe_json
 from ...users.models import User
 from ..exceptions import SignupException
-from ..models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
-)
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                      EighthSignup)
 from ..serializers import EighthBlockDetailSerializer
-
 
 logger = logging.getLogger(__name__)
 

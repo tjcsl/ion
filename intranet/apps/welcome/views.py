@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
 logger = logging.getLogger(__name__)
 

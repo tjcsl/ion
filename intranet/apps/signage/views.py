@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
 import datetime
+import logging
+
 from django import http
 from django.shortcuts import render
+
 from intranet import settings
-from .models import Sign
-from ..users.models import User
+
+from ...utils.serialization import safe_json
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
-from ...utils.serialization import safe_json
+from ..users.models import User
+from .models import Sign
 
 logger = logging.getLogger(__name__)
 

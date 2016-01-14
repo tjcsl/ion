@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
+
+from ...test.ion_test import IonTestCase
+
+
 """
 Tests for the eighth module.
 """
-
-from django.core.urlresolvers import reverse
-from ...test.ion_test import IonTestCase
 
 
 class ApiTest(IonTestCase):

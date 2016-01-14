@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from datetime import datetime
 import hashlib
 import logging
-import ldap3
-import ldap3.utils.dn
 import os
 from base64 import b64encode
-from six import iteritems
-from django.db import models
+from datetime import datetime
+
+import ldap3
+import ldap3.utils.dn
 from django.conf import settings
-from django.core.cache import cache
+from django.contrib.auth.models import UserManager as DjangoUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core import exceptions
-from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, UserManager as DjangoUserManager)
+from django.core.cache import cache
 from django.core.signing import Signer
+from django.db import models
+from six import iteritems
+
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
+
 from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
