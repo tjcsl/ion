@@ -6,7 +6,7 @@ Tests for the eighth module.
 """
 
 from django.core.urlresolvers import reverse
-from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity
+from ..eighth.models import EighthBlock, EighthActivity, EighthScheduledActivity, EighthRoom
 from ..groups.models import Group
 from ..users.models import User
 from ...test.ion_test import IonTestCase
@@ -48,3 +48,32 @@ class EighthTest(IonTestCase):
         response = self.client.post(reverse('eighth_signup'), {'uid': 1337, 'bid': block.id, 'aid': activity.id})
         self.assertEqual(response.status_code, 200)
         self.assertIn(user, EighthScheduledActivity.objects.all()[0].members.all())
+
+    def test_signups(self):
+        """Do some sample signups.
+        """
+
+        user1 = User.objects.create(username="user1")
+        block1 = EighthBlock.objects.create(date='2015-01-01',
+                                            block_letter="A"
+                                            )
+        room1 = EighthRoom.objects.create(name="room1")
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1.rooms.add(room1)
+        schact1 = EighthScheduledActivity.objects.create(
+            activity=act1,
+            block=block1
+        )
+
+        def verifySignup(user, schact):
+            old_count = (schact.eighthsignup_set
+                               .count())
+            schact.add_user(user)
+            self.assertEqual((schact.eighthsignup_set
+                                    .count()), old_count + 1)
+            self.assertEqual((user.eighthsignup_set
+                                  .filter(scheduled_activity__block=schact.block)
+                                  .count()), 1)
+
+        verifySignup(user1, schact1)
