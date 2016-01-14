@@ -12,4 +12,12 @@ $(document).ready(function() {
             location.href = link.attr("href");
         }
     });
+
+    $(".sponsor-widget #eighth-sponsor-left").click(function() {
+        console.log("sponsor left");
+    });
+
+    $(".sponsor-widget #eighth-sponsor-right").click(function() {
+        console.log("sponsor right");
+    });
 });
