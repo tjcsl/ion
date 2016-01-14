@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.utils import timezone
 import logging
 from datetime import datetime, timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import render
+from django.utils import timezone
+
 from intranet import settings
-from ..users.models import User
-from ..schedule.views import schedule_context
+
 from ..announcements.models import Announcement, AnnouncementRequest
+from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
+from ..schedule.views import schedule_context
 from ..seniors.models import Senior
-from ..eighth.models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity
-)
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 

@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import cPickle as pickle
 import logging
+
 from cacheops import invalidate_obj
-from django import http, forms
+from django import forms, http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
+
+from six.moves import cPickle as pickle
+
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
-from ...forms.admin.activities import QuickActivityForm, ActivityForm
-from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor, EighthRoom
+from ...forms.admin.activities import ActivityForm, QuickActivityForm
+from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity,
+                       EighthSponsor)
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)

@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import os
-import sys
 import subprocess
+import sys
+
 from .secret import *  # noqa
 
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"

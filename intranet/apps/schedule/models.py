@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import datetime
-from six import text_type
+
 from django.db import models
+from six import text_type
 
 
 class Time(models.Model):

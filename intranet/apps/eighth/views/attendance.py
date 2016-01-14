@@ -1,32 +1,34 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
-from cacheops import invalidate_obj
-from datetime import datetime
-from six import BytesIO
 import csv
+import logging
+from datetime import datetime
+
+from cacheops import invalidate_obj
 from django import http
-from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from formtools.wizard.views import SessionWizardView
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-)
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from ...auth.decorators import eighth_admin_required, attendance_taker_required
+from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer, Table, TableStyle)
+from six import BytesIO
+
+from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...users.models import User
-from ..utils import get_start_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import EighthScheduledActivity, EighthActivity, EighthSponsor, EighthSignup, EighthBlock
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                      EighthSignup, EighthSponsor)
+from ..utils import get_start_date
 
 logger = logging.getLogger(__name__)
 

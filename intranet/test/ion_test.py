@@ -1,7 +1,8 @@
 from unittest import mock
-from django.test import TestCase
-from ..db.ldap_db import LDAPConnection
 
+from django.test import TestCase
+
+from ..db.ldap_db import LDAPConnection
 from .fake_ldap import MockLDAPConnection
 
 

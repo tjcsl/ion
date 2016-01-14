@@ -2,19 +2,23 @@
 from __future__ import unicode_literals
 
 import logging
-from cacheops import invalidate_obj
 from datetime import datetime, timedelta
+
+from cacheops import invalidate_obj
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+
 from ....utils.serialization import safe_json
 from ...auth.decorators import eighth_admin_required
-from ...users.models import User
 from ...users.forms import ProfileEditForm
-from ..models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
+from ...users.models import User
+from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup,
+                      EighthSponsor)
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
+
 logger = logging.getLogger(__name__)
 
 

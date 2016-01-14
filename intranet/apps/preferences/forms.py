@@ -1,7 +1,8 @@
 import logging
-from django import forms
-from ..users.models import Grade
 
+from django import forms
+
+from ..users.models import Grade
 
 logger = logging.getLogger(__name__)
 

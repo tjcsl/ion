@@ -2,14 +2,17 @@
 from __future__ import unicode_literals
 
 import logging
-import magic
 import os
 import subprocess
 import tempfile
+
+import magic
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from intranet import settings
+
 from .forms import PrintJobForm
 
 logger = logging.getLogger(__name__)

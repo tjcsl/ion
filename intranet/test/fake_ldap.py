@@ -1,6 +1,5 @@
 from unittest import mock
 
-
 # FIXME: make more general, load from fixtures
 all_users = '(|(objectclass=simpleUser)(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher)(objectclass=tjhsstUser))'
 uid_dn = 'iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu'

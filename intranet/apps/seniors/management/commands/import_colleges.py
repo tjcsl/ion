@@ -1,6 +1,8 @@
-from django.core.management.base import BaseCommand
-from ...models import College
 import csv
+
+from django.core.management.base import BaseCommand
+
+from ...models import College
 
 
 class Command(BaseCommand):

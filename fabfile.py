@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, with_statement
 
-from fabric.api import abort, env, hide, lcd, local, prefix, prompt, puts, shell_env
-from fabric.contrib.console import confirm
 import os
-import pkg_resources
 
+import pkg_resources
+from fabric.api import (abort, env, hide, lcd, local, prefix, prompt, puts,
+                        shell_env)
+from fabric.contrib.console import confirm
 
 PRODUCTION_DOCUMENT_ROOT = "/usr/local/www/intranet3"
 REDIS_SESSION_DB = 0

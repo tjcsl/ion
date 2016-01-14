@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import re
 import logging
+import re
+
 from cacheops import invalidate_model
-from six.moves import cPickle as pickle
 from django import http
-from django.http import HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
+from six.moves import cPickle as pickle
+
 from ....auth.decorators import eighth_admin_required
-from ...forms.admin.blocks import QuickBlockForm, BlockForm
+from ...forms.admin.blocks import BlockForm, QuickBlockForm
 from ...models import EighthBlock, EighthScheduledActivity
 from ..attendance import generate_roster_pdf
 

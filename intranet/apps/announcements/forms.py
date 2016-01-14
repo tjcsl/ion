@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 from django import forms
-from .models import Announcement, AnnouncementRequest
-from ..users.models import User
+
 from ..users.forms import SortedTeacherMultipleChoiceField
+from ..users.models import User
+from .models import Announcement, AnnouncementRequest
 
 
 class AnnouncementForm(forms.ModelForm):

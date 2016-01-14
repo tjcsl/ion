@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from threading import local
 import logging
-
+from threading import local
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()

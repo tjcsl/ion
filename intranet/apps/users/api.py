@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import os
 import io
+import os
+
 from rest_framework import generics
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from intranet.apps.search.views import get_search_results
-from .models import User, Class, Grade
-from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
-from .renderers import JPEGRenderer
+from rest_framework.response import Response
+
 from intranet import settings
+from intranet.apps.search.views import get_search_results
+
+from .models import Class, Grade, User
+from .renderers import JPEGRenderer
+from .serializers import (ClassSerializer, CounselorTeacherSerializer,
+                          StudentSerializer, UserSerializer)
 
 
 class ProfileDetail(generics.RetrieveAPIView):

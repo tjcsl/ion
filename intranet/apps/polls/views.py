@@ -2,13 +2,15 @@
 from __future__ import unicode_literals
 
 import logging
+
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
+
 from ..users.models import User
-from .models import Poll, Question, Answer, Choice
+from .models import Answer, Choice, Poll, Question
 
 logger = logging.getLogger(__name__)
 

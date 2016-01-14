@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import cPickle as pickle
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
+
+from six.moves import cPickle as pickle
+
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthSponsor, EighthScheduledActivity, EighthActivity
+from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
 from ...utils import get_start_date
 
 

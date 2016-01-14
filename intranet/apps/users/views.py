@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from six.moves import cStringIO as StringIO
 import csv
 import io
 import logging
 import os
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import render, redirect
-from .models import User, Grade, Class
-from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
-from ..eighth.utils import get_start_date
+from django.shortcuts import redirect, render
+
 from intranet import settings
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
+from six.moves import cStringIO as StringIO
+
+from ..eighth.models import (EighthBlock, EighthScheduledActivity,
+                             EighthSignup, EighthSponsor)
+from ..eighth.utils import get_start_date
+from .models import Class, Grade, User
 
 logger = logging.getLogger(__name__)
 

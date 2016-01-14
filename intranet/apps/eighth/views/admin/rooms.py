@@ -4,17 +4,20 @@ from __future__ import unicode_literals
 import csv
 import logging
 from collections import defaultdict
-from six.moves import cPickle as pickle
+
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
+
+from six.moves import cPickle as pickle
+
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.rooms import RoomForm
-from ...models import EighthRoom, EighthBlock, EighthScheduledActivity
+from ...models import EighthBlock, EighthRoom, EighthScheduledActivity
 from ...utils import get_start_date
 
 logger = logging.getLogger(__name__)

@@ -1,17 +1,20 @@
 
 from __future__ import unicode_literals
 
-from itertools import chain
-import logging
 import datetime
-from intranet import settings
-from django.db import models
-from django.db.models import Manager, Q
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+import logging
+from itertools import chain
+
 from django.contrib.auth.models import Group as DjangoGroup
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.db import models
+from django.db.models import Q, Manager
 from django.utils import formats
-from ..users.models import User
+
+from intranet import settings
+
 from . import exceptions as eighth_exceptions
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 

@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import ipaddress
 import logging
-from .base import *  # noqa
 
+from .base import *  # noqa
 
 logger = logging.getLogger(__name__)
 

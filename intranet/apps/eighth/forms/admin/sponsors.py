@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from django.core.exceptions import ValidationError
+
 from ....users.models import User
 from ...models import EighthSponsor
 

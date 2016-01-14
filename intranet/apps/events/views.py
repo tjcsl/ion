@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
 import datetime
+import logging
+
 import bleach
-from .models import Event
-from .forms import EventForm, AdminEventForm
-from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.core import exceptions
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms import AdminEventForm, EventForm
+from .models import Event
 
 logger = logging.getLogger(__name__)
 

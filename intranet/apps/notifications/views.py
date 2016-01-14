@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import requests
 import json
+import logging
+
+import requests
 from django.contrib import messages
-from .models import NotificationConfig, GCMNotification
-from ... import settings
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
 
-import logging
+from ... import settings
+from .models import GCMNotification, NotificationConfig
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Poll, Question, Choice, Answer, AnswerVotes
+
+from .models import Answer, AnswerVotes, Choice, Poll, Question
 
 
 class PollAdmin(admin.ModelAdmin):

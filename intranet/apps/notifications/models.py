@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import hashlib
 import json
-from ..users.models import User
+
 from django.db import models
+
+from ..users.models import User
 
 
 class NotificationConfig(models.Model):

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
-from django.db.models import Manager, Q
-from ..users.models import User
-from ..eighth.models import EighthScheduledActivity
+from django.db.models import Q, Manager
+
 from ..announcements.models import Announcement
+from ..eighth.models import EighthScheduledActivity
+from ..users.models import User
 from .notifications import event_approval_request
-from datetime import datetime
 
 
 class Link(models.Model):

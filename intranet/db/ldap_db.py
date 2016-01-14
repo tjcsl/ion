@@ -2,14 +2,16 @@
 from __future__ import unicode_literals
 
 import logging
+from threading import local
+
 import gssapi
 import ldap3
 import ldap3.protocol.sasl
 import ldap3.utils.conv
-from threading import local
-from django.core.signals import request_finished
 from django.core.handlers.wsgi import WSGIHandler
+from django.core.signals import request_finished
 from django.dispatch import receiver
+
 from intranet import settings
 
 logger = logging.getLogger(__name__)
