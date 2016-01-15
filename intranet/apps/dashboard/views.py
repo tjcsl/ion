@@ -153,7 +153,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
     cur_date = surrounding_blocks[0].date if acts else given_date if given_date else datetime.now().date()
 
-    last_block = surrounding_blocks[len(surrounding_blocks)-1] if surrounding_blocks else None
+    last_block = surrounding_blocks[len(surrounding_blocks) - 1] if surrounding_blocks else None
     last_block_date = last_block.date + timedelta(days=1) if last_block else cur_date
     next_blocks = list(last_block.next_blocks(1)) if last_block else None
     next_date = next_blocks[0].date if next_blocks else last_block_date
@@ -162,10 +162,10 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     if cur_date and not first_block:
         first_block = EighthBlock.objects.filter(date__lte=cur_date).last()
     first_block_date = first_block.date + timedelta(days=-7) if first_block else cur_date
-    prev_blocks = list(first_block.previous_blocks(num_blocks-1)) if first_block else None
+    prev_blocks = list(first_block.previous_blocks(num_blocks - 1)) if first_block else None
     prev_date = prev_blocks[0].date if prev_blocks else first_block_date
     return {
-        "sponsor_schedule": acts, 
+        "sponsor_schedule": acts,
         "no_attendance_today": no_attendance_today,
         "num_attendance_acts": num_acts,
         "sponsor_schedule_cur_date": cur_date,

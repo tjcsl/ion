@@ -695,7 +695,6 @@ def eighth_absences_view(request, user_id=None):
     return render(request, "eighth/absences.html", context)
 
 
-
 @login_required
 def sponsor_schedule_widget_view(request):
     user = request.user
@@ -723,7 +722,6 @@ def sponsor_schedule_widget_view(request):
         context.update(sponsor_sch)
         # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
         # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
-    
 
     context.update({
         "eighth_sponsor": eighth_sponsor
