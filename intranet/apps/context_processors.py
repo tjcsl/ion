@@ -15,10 +15,7 @@ def ion_base_url(request):
 def global_warning(request):
     """Display a global warning on all pages throughout the application.
     """
-    try:
-        global_warning = settings.GLOBAL_WARNING
-    except Exception:
-        global_warning = None
+    global_warning = settings.GLOBAL_WARNING if hasattr(settings, 'GLOBAL_WARNING') else None
 
     return {"global_warning": global_warning}
 
