@@ -14,7 +14,7 @@
         </div>-->
     </div>
     <div class="widget-content sponsor-widget-content">
-{% if num_attendance_acts == 0 and not request.user.is_teacher and 0 %}
+{% if num_attendance_acts == 0 and not request.user.is_teacher %}
     <div class="eighth-block">
         <div class="block-header no-activity-selected">
             You are not sponsoring any activities.
@@ -82,15 +82,11 @@
 
                     </a>
                 {% else %}
-                    {% if schact.block.locked %}
-                        <span class="block-sponsorship no-activity-selected" title="You are not sponsoring an activity.">
-                        Not sponsoring an activity
-                        </span>
-                    {% else %}
-                        <span class="block-sponsorship no-activity-selected unlocked" title="You are not sponsoring an activity.">
+                    <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}?block={{ schact.block.id }}" class="ui-link">
+                        <span class="block-sponsorship no-activity-selected{% if not schact.block.locked %} unlocked{% endif %}" title="You are not sponsoring an activity. Click to view other rosters.">
                             Not sponsoring an activity
                         </span>
-                    {% endif %}
+                    </a>
                 {% endif %}
             </div>
         </div>
