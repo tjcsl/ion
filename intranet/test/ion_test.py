@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from unittest import mock
 
 from django.test import TestCase

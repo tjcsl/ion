@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from unittest import mock
 
 # FIXME: make more general, load from fixtures

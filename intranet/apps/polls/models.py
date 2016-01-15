@@ -5,7 +5,7 @@ from random import shuffle
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
-from django.db.models import Q, Manager
+from django.db.models import Manager, Q
 from django.utils import timezone
 from django.utils.html import strip_tags
 

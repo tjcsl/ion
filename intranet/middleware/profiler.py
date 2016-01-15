@@ -1,17 +1,20 @@
+# -*- coding: utf-8 -*-
 # Original version taken from http://www.djangosnippets.org/snippets/186/
 # Original author: udfalkso
 # Modified version taken from http://djangosnippets.org/snippets/605/
 # Modified by: Shwagroo Team
 # Modified further by Doug Stryke
 
-import cProfile
-import os
-import pstats
 import re
+import os
 import resource
 import tempfile
 import time
 from collections import defaultdict
+
+import pstats
+import cProfile
+
 
 from django.conf import settings
 from django.db import connections

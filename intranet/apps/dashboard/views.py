@@ -13,7 +13,7 @@ from intranet import settings
 
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
-from ..schedule.views import schedule_context, decode_date
+from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 from ..users.models import User
 

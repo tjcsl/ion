@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
-from django.db.models import Q, Manager
+from django.db.models import Manager, Q
 
 from ..users.models import User
 

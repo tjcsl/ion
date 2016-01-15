@@ -16,16 +16,16 @@ from formtools.wizard.views import SessionWizardView
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
                                 Spacer, Table, TableStyle)
 from six import BytesIO
 
 from ...auth.decorators import attendance_taker_required, eighth_admin_required
-from ...users.models import User
 from ...dashboard.views import gen_sponsor_schedule
 from ...schedule.views import decode_date
+from ...users.models import User
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,

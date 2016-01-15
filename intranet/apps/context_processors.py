@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import re
+
 from intranet import settings
 
 logger = logging.getLogger(__name__)

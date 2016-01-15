@@ -204,7 +204,8 @@ def edit_activity_view(request, activity_id):
     return render(request, "eighth/admin/edit_activity.html", context)
 
 
-"""@eighth_admin_required
+"""
+@eighth_admin_required
 def edit_activity_id(request, activity_id):
     raise http.Http404
 
@@ -222,19 +223,20 @@ def edit_activity_id(request, activity_id):
             try:
                 activity.change_id_to(new_id)
             except Exception as e:
-                messages.error(request, "Error changing ID: {}".format(e))
+                messages.error(request, "Error changing ID: {0}".format(e))
             else:
-                messages.success(request, "Changed ID from {} to {}".format(old_id, new_id))
+                messages.success(request, "Changed ID from {0} to {1}".format(old_id, new_id))
                 return redirect("eighth_admin_edit_activity", new_id)
 
     activities = EighthActivity.undeleted_objects.order_by("name")
     context = {
-        "admin_page_title": "Edit Activity ID: {}".format(activity),
+        "admin_page_title": "Edit Activity ID: {0}".format(activity),
         "activity": activity,
         "activities": activities,
         "available_ids": EighthActivity.available_ids()
     }
-    return render(request, "eighth/admin/edit_activity_id.html", context)"""
+    return render(request, "eighth/admin/edit_activity_id.html", context)
+"""
 
 
 @eighth_admin_required

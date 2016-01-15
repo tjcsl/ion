@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.utils.html import escapejs
 from rest_framework.renderers import JSONRenderer
 

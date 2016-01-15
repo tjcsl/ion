@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import datetime
@@ -8,7 +8,7 @@ from itertools import chain
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models
-from django.db.models import Q, Manager
+from django.db.models import Manager, Q
 from django.utils import formats
 
 from intranet import settings
@@ -594,7 +594,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity"""
 
-    def for_sponsor(cls, sponsor, include_cancelled=False):
+    def for_sponsor(self, sponsor, include_cancelled=False):
         """Return a QueryList of EighthScheduledActivities where the given
         EighthSponsor is sponsoring.
 
@@ -1040,7 +1040,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 for block in override_blocks:
                     ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
                     for signup in ovr_signups:
-                        logger.debug("Need to remove signup for {}".format(signup))
+                        logger.debug("Need to remove signup for {0}".format(signup))
                         final_remove_signups.append(signup)
         """
 
@@ -1132,7 +1132,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
         for signup in final_remove_signups:
-            success_message += "\nYour signup for {} on {} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
+            success_message += "\nYour signup for {0} on {1} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
             signup.delete()
         """
 
