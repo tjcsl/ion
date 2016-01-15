@@ -20,18 +20,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
     {% if not real_user.is_eighth_admin %}
-    <style type="text/css">
-    #activity-list:not(.show-administrative) li[data-administrative=true] {
-        display: none;
-    }
-    dl.scheduledid {
-        display: none;
-    }
+        <style type="text/css">
+        #activity-list:not(.show-administrative) li[data-administrative=true] {
+            display: none;
+        }
 
-    #activity-list li .activity-ids {
-        display: none;
-    }
-    </style>
+        dl.scheduledid {
+            display: none;
+        }
+
+        #activity-list li .activity-ids {
+            display: none;
+        }
+        </style>
     {% endif %}
 {% endblock %}
 
@@ -80,6 +81,11 @@
     {% elif active_block_current_signup %}
         $(function() {
                 $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
+        })
+    {% endif %}
+    {% if not real_user.is_eighth_admin %}
+        $(function() {
+            $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
         })
     {% endif %}
     </script>

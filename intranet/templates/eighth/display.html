@@ -130,7 +130,13 @@
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
-
+    {% if not request.user.is_eighth_admin %}
+    <script type="text/javascript">
+        $(function() {
+            $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
+        });
+    </script>
+    {% endif %}
     {% if request.GET.activity %}
         <script type="text/javascript">
         $(function() {
