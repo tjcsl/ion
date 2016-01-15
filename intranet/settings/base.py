@@ -38,6 +38,18 @@ ADMINS = (
     ("Andrew Hamilton", "ahamilto+ion@tjhsst.edu")
 )
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'CONN_MAX_AGE': 30
+    }
+}
+
+# In-memory sqlite3 databases signifigantly speed up the tests.
+if TESTING:
+    DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+
+
 MANAGERS = ADMINS
 
 # Address to send feedback messages to

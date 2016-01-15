@@ -36,13 +36,6 @@ def parse_db_url():
     return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'CONN_MAX_AGE': 30
-    }
-}
-
 DATABASES['default'].update(parse_db_url())
 
 
