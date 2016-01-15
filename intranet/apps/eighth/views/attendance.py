@@ -72,11 +72,25 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         "activity": "eighth/take_attendance.html",
     }
 
+    def get(self, request, *args, **kwargs):
+        self.storage.current_step = self.steps.first
+        if "block" in self.request.GET:
+            self.storage.current_step = self.steps.all[1]
+            logger.debug(self.request.session)
+            self.request.session[self.storage.prefix]["block"] = self.request.GET.get("block")
+
+        if "block-block" in request.POST:
+            self.request.session[self.storage.prefix]["block"] = self.request.POST.get("block-block")
+
+        return self.render(self.get_form())
+
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
     def get_form_kwargs(self, step):
         kwargs = {}
+        block = None
+
         if step == "block":
             if "show_all_blocks" in self.request.GET:
                 now = datetime.now().date()
@@ -93,7 +107,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 start_date = get_start_date(self.request)
                 kwargs.update({"exclude_before_date": start_date})
 
-        block = None
+
+        
         if step == "activity":
             block = self.get_cleaned_data_for_step("block")
             if block:
@@ -124,7 +139,11 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                         self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
 
-        block = self.get_cleaned_data_for_step("block")
+        block = None
+        if "block" in self.request.GET:
+            block = {"block": EighthBlock.objects.get(id=self.request.GET.get("block"))}
+        
+        block = block or self.get_cleaned_data_for_step("block")
 
         context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block)})
 
@@ -149,9 +168,9 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
                 context.update({"sponsored_activities": sponsored_activities})
                 logger.debug(sponsored_activities)
-        elif "block" in self.request.GET:
-            block_id = self.request.GET["block"]
-            context["redirect_block_id"] = block_id
+        #elif "block" in self.request.GET:
+        #    block_id = self.request.GET["block"]
+        #    context["redirect_block_id"] = block_id
 
         return context
 

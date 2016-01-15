@@ -197,12 +197,8 @@ $(function() {
                 {% endif %}
 
 
-                {% if redirect_block_id %}
-                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
-                    <script>
-                        document.forms["wizard-form"].action = '/eighth/admin/attendance';
-                        document.forms["wizard-form"].submit()
-                    </script>
+                {% if request.GET.block %}
+                    <input type="hidden" name="block-block" value="{{ request.GET.block|escape }}" />
                 {% endif %}
             </form>
         {% else %}
