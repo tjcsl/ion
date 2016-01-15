@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.exceptions &mdash; TJ Intranet v3 (Build #1227) documentation</title>
+    <title>intranet.apps.eighth.exceptions &mdash; TJ Intranet v3 (Build #1236) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1227)',
+        VERSION:     'v3 (Build #1236)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1227) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1236) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,6 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.exceptions</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
@@ -175,10 +176,10 @@
                      <span class="s">&quot;This is a one-a-day activity.&quot;</span><span class="p">),</span>
         <span class="s">&quot;Restricted&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="s">&quot;You may not sign up for this restricted activity. You are not on the authorized list.&quot;</span><span class="p">,</span>
                         <span class="s">&quot;This activity is restricted for this student.&quot;</span><span class="p">),</span>
-        <span class="s">&quot;OverrideBlockLocked&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="s">&quot;An override block ({}) has been locked. Signup is not allowed at this time.&quot;</span><span class="p">,</span>
-                                 <span class="s">&quot;An override block ({}) has been locked.&quot;</span><span class="p">),</span>
-        <span class="s">&quot;OverrideBlockPermissions&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="s">&quot;Your signup ({}) on an override block ({}) cannot be changed out of. You will be unable to sign up for any activities on this block.&quot;</span><span class="p">,</span>
-                                      <span class="s">&quot;Your signup ({}) on an override block ({}) cannot be changed out of.&quot;</span><span class="p">)</span>
+        <span class="s">&quot;OverrideBlockLocked&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="s">&quot;An override block ({0}) has been locked. Signup is not allowed at this time.&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;An override block ({1}) has been locked.&quot;</span><span class="p">),</span>
+        <span class="s">&quot;OverrideBlockPermissions&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="s">&quot;Your signup ({0}) on an override block ({1}) cannot be changed out of. You will be unable to sign up for any activities on this block.&quot;</span><span class="p">,</span>
+                                      <span class="s">&quot;Your signup ({0}) on an override block ({1}) cannot be changed out of.&quot;</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -186,7 +187,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">desc_errors</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;SignupException(&quot;</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;SignupException(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span>

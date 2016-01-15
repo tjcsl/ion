@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1227) documentation</title>
+    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1236) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1227)',
+        VERSION:     'v3 (Build #1236)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1227) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1236) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.models</h1><div class="highlight"><pre>
-
+<span class="c"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -155,7 +155,7 @@
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">DjangoGroup</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">NON_FIELD_ERRORS</span><span class="p">,</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Manager</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">Q</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">formats</span>
 
 <span class="kn">from</span> <span class="nn">intranet</span> <span class="kn">import</span> <span class="n">settings</span>
@@ -625,7 +625,7 @@
                                      <span class="p">))</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">blocks</span>
-        <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">previous_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the previous blocks in order.&quot;&quot;&quot;</span>
@@ -637,7 +637,7 @@
                                      <span class="p">))</span>
         <span class="k">if</span> <span class="n">quantity</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">blocks</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">blocks</span><span class="p">[:</span><span class="n">quantity</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">get_surrounding_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the blocks around the one given.</span>
@@ -741,7 +741,7 @@
 <div class="viewcode-block" id="EighthScheduledActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Model Manager for EighthScheduledActivity&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="EighthScheduledActivityManager.for_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager.for_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">for_sponsor</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthScheduledActivityManager.for_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager.for_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">for_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sponsor</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a QueryList of EighthScheduledActivities where the given</span>
 <span class="sd">        EighthSponsor is sponsoring.</span>
 
@@ -1187,7 +1187,7 @@
 <span class="sd">                for block in override_blocks:</span>
 <span class="sd">                    ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)</span>
 <span class="sd">                    for signup in ovr_signups:</span>
-<span class="sd">                        logger.debug(&quot;Need to remove signup for {}&quot;.format(signup))</span>
+<span class="sd">                        logger.debug(&quot;Need to remove signup for {0}&quot;.format(signup))</span>
 <span class="sd">                        final_remove_signups.append(signup)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1279,7 +1279,7 @@
 <span class="sd">        # See &quot;If block overrides signup on other blocks&quot; check</span>
 <span class="sd">        # If there are EighthSignups that need to be removed, do them at the end</span>
 <span class="sd">        for signup in final_remove_signups:</span>
-<span class="sd">            success_message += &quot;\nYour signup for {} on {} was removed. &quot;.format(signup.scheduled_activity.activity, signup.scheduled_activity.block)</span>
+<span class="sd">            success_message += &quot;\nYour signup for {0} on {1} was removed. &quot;.format(signup.scheduled_activity.activity, signup.scheduled_activity.block)</span>
 <span class="sd">            signup.delete()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

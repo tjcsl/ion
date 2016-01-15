@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1227) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1236) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1227)',
+        VERSION:     'v3 (Build #1236)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1227) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1236) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -351,7 +351,8 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/edit_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<span class="sd">&quot;&quot;&quot;@eighth_admin_required</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@eighth_admin_required</span>
 <span class="sd">def edit_activity_id(request, activity_id):</span>
 <span class="sd">    raise http.Http404</span>
 
@@ -369,19 +370,20 @@
 <span class="sd">            try:</span>
 <span class="sd">                activity.change_id_to(new_id)</span>
 <span class="sd">            except Exception as e:</span>
-<span class="sd">                messages.error(request, &quot;Error changing ID: {}&quot;.format(e))</span>
+<span class="sd">                messages.error(request, &quot;Error changing ID: {0}&quot;.format(e))</span>
 <span class="sd">            else:</span>
-<span class="sd">                messages.success(request, &quot;Changed ID from {} to {}&quot;.format(old_id, new_id))</span>
+<span class="sd">                messages.success(request, &quot;Changed ID from {0} to {1}&quot;.format(old_id, new_id))</span>
 <span class="sd">                return redirect(&quot;eighth_admin_edit_activity&quot;, new_id)</span>
 
 <span class="sd">    activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)</span>
 <span class="sd">    context = {</span>
-<span class="sd">        &quot;admin_page_title&quot;: &quot;Edit Activity ID: {}&quot;.format(activity),</span>
+<span class="sd">        &quot;admin_page_title&quot;: &quot;Edit Activity ID: {0}&quot;.format(activity),</span>
 <span class="sd">        &quot;activity&quot;: activity,</span>
 <span class="sd">        &quot;activities&quot;: activities,</span>
 <span class="sd">        &quot;available_ids&quot;: EighthActivity.available_ids()</span>
 <span class="sd">    }</span>
-<span class="sd">    return render(request, &quot;eighth/admin/edit_activity_id.html&quot;, context)&quot;&quot;&quot;</span>
+<span class="sd">    return render(request, &quot;eighth/admin/edit_activity_id.html&quot;, context)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 
 <span class="nd">@eighth_admin_required</span>
