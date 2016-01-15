@@ -310,7 +310,13 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     num_senior_destinations = Senior.objects.filled().count()
 
+    try:
+        dash_warning = settings.DASH_WARNING
+    except Exception:
+        dash_warning = None
+
     context = {
+        "dash_warning": dash_warning,
         "announcements": announcements,
         "announcements_admin": announcements_admin,
         "start_num": start_num,

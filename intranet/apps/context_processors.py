@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import re
+from intranet import settings
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +12,15 @@ def ion_base_url(request):
     """Return the base URL through request.build_absolute_uri for the index page."""
     return {"ion_base_url": request.build_absolute_uri('/')}
 
+def global_warning(request):
+    """Display a global warning on all pages throughout the application.
+    """
+    try:
+        global_warning = settings.GLOBAL_WARNING
+    except Exception:
+        global_warning = None
+
+    return {"global_warning": global_warning}
 
 def nav_categorizer(request):
     """Determine which top-level nav category (left nav) a request

@@ -166,6 +166,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",  # For page messages
                 "intranet.apps.context_processors.ion_base_url",        # For determining the base url
                 "intranet.apps.context_processors.nav_categorizer",     # For determining the category in the navbar
+                "intranet.apps.context_processors.global_warning",      # For showing a global warning throughout the application (in page_base.html)
                 "intranet.apps.eighth.context_processors.start_date",   # For determining the eighth pd start date
                 "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
                 "intranet.apps.context_processors.mobile_app"           # For the custom android app functionality (tbd?)
