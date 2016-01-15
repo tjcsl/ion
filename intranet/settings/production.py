@@ -38,7 +38,8 @@ def parse_db_url():
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'CONN_MAX_AGE': 30
     }
 }
 
