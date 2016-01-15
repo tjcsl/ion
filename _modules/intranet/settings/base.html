@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1237) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1238) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1237)',
+        VERSION:     'v3 (Build #1238)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1237) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -184,6 +184,18 @@
     <span class="p">(</span><span class="s">&quot;Samuel Damashek&quot;</span><span class="p">,</span> <span class="s">&quot;2017sdamashe+ion@tjhsst.edu&quot;</span><span class="p">),</span>
     <span class="p">(</span><span class="s">&quot;Andrew Hamilton&quot;</span><span class="p">,</span> <span class="s">&quot;ahamilto+ion@tjhsst.edu&quot;</span><span class="p">)</span>
 <span class="p">)</span>
+
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span>
+        <span class="s">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c"># In-memory sqlite3 databases signifigantly speed up the tests.</span>
+<span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s">&quot;default&quot;</span><span class="p">][</span><span class="s">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;django.db.backends.sqlite3&quot;</span>
+
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
 
