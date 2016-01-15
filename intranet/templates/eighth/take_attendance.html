@@ -185,7 +185,7 @@ $(function() {
                     {% endif %}
                     {% if wizard.steps.next or default_activity_not_scheduled %}
                         <label>
-                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if "show_all_blocks" in request.GET %} checked{% endif %}/> Show Past Blocks
+                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if show_all_blocks %} checked{% endif %}/> Show Past Blocks
                         </label><br />
                         <!--input type="submit" value="Next" /-->
                     {% else %}
@@ -197,8 +197,13 @@ $(function() {
                 {% endif %}
 
 
-                {% if request.GET.block %}
-                    <input type="hidden" name="block-block" value="{{ request.GET.block|escape }}" />
+                {% if redirect_block_id %}
+                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
+                    <script>
+                        document.getElementById("id_block-block").remove();
+                        document.forms["wizard-form"].action = '/eighth/{% if request.user.is_eighth_admin %}admin/{% endif %}attendance?show_all_blocks=1';
+                        document.forms["wizard-form"].submit()
+                    </script>
                 {% endif %}
             </form>
         {% else %}
