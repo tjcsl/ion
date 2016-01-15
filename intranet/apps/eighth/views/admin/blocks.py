@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
@@ -31,7 +31,7 @@ def add_block_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")
-            request.session["add_block_form"] = pickle.dumps(form)
+            request.session["add_block_form"] = cPickle.dumps(form)
 
     date = None
     show_letters = None

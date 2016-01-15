@@ -56,25 +56,25 @@ def edit_profile_view(request, user_id=None):
                 new_data[field] = new
         logger.debug(new_data)
 
-        RAW_LDAP_ATTRIBUTES = ["birthday", "street", "city", "state", "postal_code", "counselor"]
-        RAW_LDAP_OVERRIDE = {
+        raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
+        raw_ldap_override = {
             "city": "l",
             "state": "st",
             "postal_code": "postalCode",
             "counselor_id": "counselor"
         }
-        OVERRIDE_SET = ["graduation_year"]
+        override_set = ["graduation_year"]
 
         for key in new_data:
-            if key in RAW_LDAP_ATTRIBUTES:
-                if key in RAW_LDAP_OVERRIDE:
-                    key = RAW_LDAP_OVERRIDE[key]
+            if key in raw_ldap_attributes:
+                if key in raw_ldap_override:
+                    key = raw_ldap_override[key]
                 logger.debug("Setting raw {}={}".format(key, new_data[key]))
                 user.set_raw_ldap_attribute(key, new_data[key])
             else:
                 logger.debug("Setting regular {}={}".format(key, new_data[key]))
                 try:
-                    user.set_ldap_attribute(key, new_data[key], key in OVERRIDE_SET)
+                    user.set_ldap_attribute(key, new_data[key], key in override_set)
                 except Exception as e:
                     messages.error(request, "Field {} with value {}: {}".format(key, new_data[key], e))
                     logger.debug("Field {} with value {}: {}".format(key, new_data[key], e))

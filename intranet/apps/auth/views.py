@@ -115,7 +115,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         return render(request, "auth/login.html", data)
 
 
-class login_view(View):
+class LoginView(View):
 
     """Log in and redirect a user."""
 

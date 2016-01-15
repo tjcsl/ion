@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from intranet import settings
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 from six.moves.urllib.parse import unquote
 
 from ....auth.decorators import eighth_admin_required
@@ -72,7 +72,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
             context["scroll_to_id"] = form_css_id
         elif form_name in request.session:
             pickled_form = request.session.pop(form_name)
-            context[form_name] = pickle.loads(str(pickled_form))
+            context[form_name] = cPickle.loads(str(pickled_form))
             context["scroll_to_id"] = form_css_id
         else:
             context[form_name] = form_class()

@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -38,7 +38,7 @@ def add_activity_view(request):
                             activity_id=activity.id)
         else:
             messages.error(request, "Error adding activity.")
-            request.session["add_activity_form"] = pickle.dumps(form)
+            request.session["add_activity_form"] = cPickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         context = {

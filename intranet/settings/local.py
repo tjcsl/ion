@@ -55,7 +55,7 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
         CACHE_AGE[key] = 60
 
 
-class glob_list(list):
+class GlobList(list):
 
     """A list of glob-style strings."""
 
@@ -77,7 +77,7 @@ class glob_list(list):
         return False
 
 # Internal IP ranges for debugging
-INTERNAL_IPS = glob_list([
+INTERNAL_IPS = GlobList([
     "127.0.0.0/8",
     "10.0.0.0/8",
     "198.38.16.0/20",

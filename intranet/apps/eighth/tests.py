@@ -52,6 +52,16 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(user, EighthScheduledActivity.objects.all()[0].members.all())
 
+    def verify_signup(self, user, schact):
+        old_count = (schact.eighthsignup_set
+                           .count())
+        schact.add_user(user)
+        self.assertEqual((schact.eighthsignup_set
+                                .count()), old_count + 1)
+        self.assertEqual((user.eighthsignup_set
+                              .filter(scheduled_activity__block=schact.block)
+                              .count()), 1)
+
     def test_signups(self):
         """Do some sample signups.
         """
@@ -69,14 +79,4 @@ class EighthTest(IonTestCase):
             block=block1
         )
 
-        def verifySignup(user, schact):
-            old_count = (schact.eighthsignup_set
-                               .count())
-            schact.add_user(user)
-            self.assertEqual((schact.eighthsignup_set
-                                    .count()), old_count + 1)
-            self.assertEqual((user.eighthsignup_set
-                                  .filter(scheduled_activity__block=schact.block)
-                                  .count()), 1)
-
-        verifySignup(user1, schact1)
+        self.verify_signup(user1, schact1)

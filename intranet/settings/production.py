@@ -69,7 +69,7 @@ if SHOW_DEBUG_TOOLBAR:
     })
 
 
-class glob_list(list):
+class GlobList(list):
 
     """A list of glob-style strings."""
 
@@ -91,7 +91,7 @@ class glob_list(list):
         return False
 
 # Internal IP ranges in production
-INTERNAL_IPS = glob_list([
+INTERNAL_IPS = GlobList([
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])

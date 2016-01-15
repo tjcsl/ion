@@ -292,9 +292,9 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def available_ids(cls):
-        ID_MIN = 1
-        ID_MAX = 3200
-        nums = [i for i in range(ID_MIN, ID_MAX)]
+        id_min = 1
+        id_max = 3200
+        nums = [i for i in range(id_min, id_max)]
         used = [row[0] for row in EighthActivity.objects.values_list("id")]
         avail = set(nums) - set(used)
         return list(avail)

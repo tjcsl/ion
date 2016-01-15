@@ -92,18 +92,18 @@ def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
     detected = detected.decode()
-    NO_CONVERSION = [
+    no_conversion = [
         "application/pdf"
     ]
-    SOFFICE_CONVERT = [
+    soffice_convert = [
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "application/msword"
     ]
-    if detected in NO_CONVERSION:
+    if detected in no_conversion:
         return tmpfile_name
 
     # .docx
-    if detected in SOFFICE_CONVERT:
+    if detected in soffice_convert:
         return convert_soffice(tmpfile_name)
 
     if detected == "application/postscript":

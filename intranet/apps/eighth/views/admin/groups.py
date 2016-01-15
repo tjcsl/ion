@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -43,7 +43,7 @@ def add_group_view(request):
         else:
             messages.error(request, "Error adding group.")
             try:
-                request.session["add_group_form"] = pickle.dumps(form)
+                request.session["add_group_form"] = cPickle.dumps(form)
             except TypeError:
                 """ Prevent pickle errors """
                 pass

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
@@ -24,7 +24,7 @@ def add_sponsor_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding sponsor.")
-            request.session["add_sponsor_form"] = pickle.dumps(form)
+            request.session["add_sponsor_form"] = cPickle.dumps(form)
 
     context = {
         "admin_page_title": "Add Sponsor",

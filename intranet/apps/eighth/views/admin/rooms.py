@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 from formtools.wizard.views import SessionWizardView
 
-from six.moves import cPickle as pickle
+from six.moves import cPickle
 
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm
@@ -33,7 +33,7 @@ def add_room_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding room.")
-            request.session["add_room_form"] = pickle.dumps(form)
+            request.session["add_room_form"] = cPickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
