@@ -478,7 +478,7 @@ class EighthBlock(AbstractBaseEighthModel):
                                      ))
         if quantity == -1:
             return blocks
-        return blocks[:quantity + 1]
+        return blocks[:quantity]
 
     def previous_blocks(self, quantity=-1):
         """Get the previous blocks in order."""
@@ -490,7 +490,7 @@ class EighthBlock(AbstractBaseEighthModel):
                                      ))
         if quantity == -1:
             return reversed(blocks)
-        return reversed(blocks[:quantity + 1])
+        return reversed(blocks[:quantity])
 
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.

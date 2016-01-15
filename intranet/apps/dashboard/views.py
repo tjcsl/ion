@@ -93,7 +93,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     return schedule, no_signup_today
 
 
-def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None):
+def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None, given_date=None):
     """Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
@@ -151,12 +151,26 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
     logger.debug(acts)
 
-    cur_date = acts[0]["block"].date if acts else datetime.now().date()
+    cur_date = surrounding_blocks[0].date if acts else given_date if given_date else datetime.now().date()
+
+    last_block = surrounding_blocks[len(surrounding_blocks)-1] if surrounding_blocks else None
+    last_block_date = last_block.date + timedelta(days=1) if last_block else cur_date
+    next_blocks = list(last_block.next_blocks(1)) if last_block else None
+    next_date = next_blocks[0].date if next_blocks else last_block_date
+
+    first_block = surrounding_blocks[0] if surrounding_blocks else None
+    if cur_date and not first_block:
+        first_block = EighthBlock.objects.filter(date__lte=cur_date).last()
+    first_block_date = first_block.date + timedelta(days=-7) if first_block else cur_date
+    prev_blocks = list(first_block.previous_blocks(num_blocks-1)) if first_block else None
+    prev_date = prev_blocks[0].date if prev_blocks else first_block_date
     return {
-        "activities": acts, 
+        "sponsor_schedule": acts, 
         "no_attendance_today": no_attendance_today,
-        "num_acts": num_acts,
-        "cur_date": cur_date
+        "num_attendance_acts": num_acts,
+        "sponsor_schedule_cur_date": cur_date,
+        "sponsor_schedule_next_date": next_date,
+        "sponsor_schedule_prev_date": prev_date
     }
 
 
@@ -331,12 +345,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
         if eighth_sponsor:
             sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
-            context.update({
-                "sponsor_schedule": sponsor_sch["activities"],
-                "no_attendance_today": sponsor_sch["no_attendance_today"],
-                "num_attendance_acts": sponsor_sch["num_acts"],
-                "sponsor_schedule_cur_date": sponsor_sch["cur_date"]
-            })
+            context.update(sponsor_sch)
+            # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
+            # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
         context.update({
             "eighth_sponsor": eighth_sponsor,

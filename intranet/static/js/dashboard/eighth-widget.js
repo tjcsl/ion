@@ -13,11 +13,24 @@ $(document).ready(function() {
         }
     });
 
-    $(".sponsor-widget #eighth-sponsor-left").click(function() {
-        console.log("sponsor left");
-    });
+    sponsor_schedule_jump = function(date) {
+        var endpoint = $(".sponsor-widget").attr("data-endpoint");
+        console.info("Sponsor schedule jump to "+date);
+        $.get(endpoint, {"date": date}, function(d) {
+            $(".sponsor-widget-outer").html(d);
+            sponsor_schedule_bind();
+        });
+    }
 
-    $(".sponsor-widget #eighth-sponsor-right").click(function() {
-        console.log("sponsor right");
-    });
+    sponsor_schedule_bind = function() {
+        $(".sponsor-widget #eighth-sponsor-left").click(function() {
+            sponsor_schedule_jump($(".sponsor-widget").attr("data-prev-date"));
+        });
+
+        $(".sponsor-widget #eighth-sponsor-right").click(function() {
+            sponsor_schedule_jump($(".sponsor-widget").attr("data-next-date"));
+        });
+    }
+
+    sponsor_schedule_bind();
 });

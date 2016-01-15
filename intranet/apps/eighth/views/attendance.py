@@ -24,6 +24,8 @@ from six import BytesIO
 
 from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...users.models import User
+from ...dashboard.views import gen_sponsor_schedule
+from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
@@ -689,3 +691,39 @@ def eighth_absences_view(request, user_id=None):
         "user": user
     }
     return render(request, "eighth/absences.html", context)
+
+
+
+@login_required
+def sponsor_schedule_widget_view(request):
+    user = request.user
+    eighth_sponsor = user.get_eighth_sponsor()
+    num_blocks = 6
+    surrounding_blocks = None
+    if "date" in request.GET:
+        date = decode_date(request.GET.get("date"))
+        if date:
+            block = EighthBlock.objects.filter(date__gte=date).first()
+            if block:
+                surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
+            else:
+                surrounding_blocks = []
+
+    if surrounding_blocks is None:
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
+
+    logger.debug(surrounding_blocks)
+    context = {}
+
+    if eighth_sponsor:
+        sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks, date)
+        context.update(sponsor_sch)
+        # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
+        # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
+    
+
+    context.update({
+        "eighth_sponsor": eighth_sponsor
+    })
+
+    return render(request, "eighth/sponsor_widget.html", context)

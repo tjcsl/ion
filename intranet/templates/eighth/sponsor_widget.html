@@ -1,4 +1,5 @@
-<div class="widget sponsor-widget">
+<div class="sponsor-widget-outer">
+<div class="widget sponsor-widget" data-endpoint="{% url 'eighth_sponsor_schedule_widget' %}" data-date="{{ sponsor_schedule_cur_date|date:'Y-m-d' }}" data-prev-date="{{ sponsor_schedule_prev_date|date:'Y-m-d' }}" data-next-date="{{ sponsor_schedule_next_date|date:'Y-m-d' }}">
     <div class="widget-title">
         <h2>
             Activity Schedule
@@ -12,8 +13,8 @@
             <a href="{% url 'eighth_attendance_choose_scheduled_activity' %}" class="btn-link">View more blocks</a>
         </div>-->
     </div>
-    <div class="widget-content">
-{% if num_attendance_acts == 0 and not request.user.is_teacher %}
+    <div class="widget-content sponsor-widget-content">
+{% if num_attendance_acts == 0 and not request.user.is_teacher and 0 %}
     <div class="eighth-block">
         <div class="block-header no-activity-selected">
             You are not sponsoring any activities.
@@ -106,4 +107,5 @@
     {% endfor %}
 {% endif %}
     </div>
+</div>
 </div>

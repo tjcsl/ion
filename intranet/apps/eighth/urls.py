@@ -23,6 +23,7 @@ urlpatterns = [
     url(r"^/attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_take_attendance"),
     url(r"^/attendance/accept_pass/(?P<signup_id>\d+)$", attendance.accept_pass_view, name="eighth_accept_pass"),
     url(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
+    url(r"^/attendance/widget$", attendance.sponsor_schedule_widget_view, name="eighth_sponsor_schedule_widget"),
 
 
     # Profile
