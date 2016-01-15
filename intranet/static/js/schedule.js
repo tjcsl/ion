@@ -12,20 +12,20 @@ $(document).ready(function() {
         });
     };
 
-    genOrigSearch = function() {        
+    genOrigSearch = function(part_exclude) {
         var qs = location.search.substring(1);
         var osearch = "";
         var searchparts = qs.split("&");
         for (var i in searchparts) {
             // console.debug(searchparts[i]);
-            if (searchparts[i].length > 0 && searchparts[i].substring(0, 5) !== "date=") {
+            if (searchparts[i].length > 0 && searchparts[i].substring(0, part_exclude.length+1) !== (part_exclude + "=")) {
                 osearch += searchparts[i] + "&";
             }
         }
         return osearch;
     };
 
-    window.osearch = genOrigSearch();
+    window.osearch = genOrigSearch("date");
     // console.info("osearch:", window.osearch);
 
     scheduleView = function(reldate) {
@@ -42,6 +42,10 @@ $(document).ready(function() {
         }
 
         if (history.pushState) {
+            var nosearch = genOrigSearch("date");
+            if(nosearch != window.osearch) {
+                window.osearch = nosearch;
+            }
             var url = "?"+window.osearch+"date="+date;
             console.debug(url);
             history.pushState(null, null, url);

@@ -700,6 +700,7 @@ def sponsor_schedule_widget_view(request):
     eighth_sponsor = user.get_eighth_sponsor()
     num_blocks = 6
     surrounding_blocks = None
+    date = None
     if "date" in request.GET:
         date = decode_date(request.GET.get("date"))
         if date:

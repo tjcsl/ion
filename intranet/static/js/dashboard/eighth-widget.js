@@ -22,13 +22,26 @@ $(document).ready(function() {
         });
     }
 
+    sponsor_schedule_pushstate = function(date) {
+        if(typeof window.osearch != 'undefined' && history.pushState) {
+            var nosearch = genOrigSearch("sponsor_date");
+            var url = "?"+nosearch+"sponsor_date="+date;
+            console.debug(url);
+            history.pushState(null, null, url);
+        }
+    }
+
     sponsor_schedule_bind = function() {
         $(".sponsor-widget #eighth-sponsor-left").click(function() {
-            sponsor_schedule_jump($(".sponsor-widget").attr("data-prev-date"));
+            var date = $(".sponsor-widget").attr("data-prev-date");
+            sponsor_schedule_jump(date);
+            sponsor_schedule_pushstate(date);
         });
 
         $(".sponsor-widget #eighth-sponsor-right").click(function() {
-            sponsor_schedule_jump($(".sponsor-widget").attr("data-next-date"));
+            var date = $(".sponsor-widget").attr("data-next-date");
+            sponsor_schedule_jump(date);
+            sponsor_schedule_pushstate(date);
         });
     }
 

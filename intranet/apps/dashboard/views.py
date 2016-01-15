@@ -13,7 +13,7 @@ from intranet import settings
 
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
-from ..schedule.views import schedule_context
+from ..schedule.views import schedule_context, decode_date
 from ..seniors.models import Senior
 from ..users.models import User
 
@@ -344,7 +344,17 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             })
 
         if eighth_sponsor:
-            sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
+            sponsor_date = request.GET.get("sponsor_date", None)
+            if sponsor_date:
+                sponsor_date = decode_date(sponsor_date)
+                if sponsor_date:
+                    block = EighthBlock.objects.filter(date__gte=sponsor_date).first()
+                    if block:
+                        surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
+                    else:
+                        surrounding_blocks = []
+
+            sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks, sponsor_date)
             context.update(sponsor_sch)
             # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
             # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
