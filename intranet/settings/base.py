@@ -217,7 +217,9 @@ WSGI_APPLICATION = "intranet.wsgi.application"
 # Name of current virtualenv
 VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"])
 
-days = 60 * 60 * 24
+minutes = 60
+hours = minutes * 60
+days = hours * 24
 months = days * 30
 # Age of cache information
 CACHE_AGE = {
@@ -231,7 +233,10 @@ CACHE_AGE = {
     "ldap_permissions": 1 * days,
     "bell_schedule": 7 * days,
     "users_list": 1 * days,
+    "emerg": 5 * minutes
 }
+del minutes
+del hours
 del days
 del months
 
@@ -364,6 +369,7 @@ INSTALLED_APPS = (
     "intranet.apps.polls",
     "intranet.apps.signage",
     "intranet.apps.seniors",
+    "intranet.apps.emerg",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
@@ -593,5 +599,7 @@ SENIOR_GRADUATION_YEAR = 2016
 ATTENDANCE_LOCK_HOUR = 20
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
+# The address for FCPS' Emergency Announcement page
+FCPS_EMERGENCY_PAGE = "http://www.fcps.edu/content/emergencyContent.html"
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
