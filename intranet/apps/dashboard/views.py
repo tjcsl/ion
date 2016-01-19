@@ -16,9 +16,25 @@ from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 from ..users.models import User
+from ..emerg.views import get_emerg
 
 logger = logging.getLogger(__name__)
 
+def get_fcps_emerg(request):
+    """
+    Return FCPS emergency information
+    """
+    try:
+        emerg = get_emerg()
+    except Exception:
+        logger.info("Unable to fetch FCPS emergency info")
+        emerg = {"status": False}
+
+    if emerg["status"] or ("show_emerg" in request.GET):
+        msg = emerg["message"]
+        return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
+
+    return False
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     """Generate a list of information about a block and a student's
@@ -314,6 +330,10 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         dash_warning = settings.DASH_WARNING
     except Exception:
         dash_warning = None
+
+    fcps_emerg = get_fcps_emerg(request)
+    if fcps_emerg:
+        dash_warning = fcps_emerg
 
     context = {
         "dash_warning": dash_warning,
