@@ -17,6 +17,7 @@ from intranet import settings
 
 from ..dashboard.views import dashboard_view
 from ..schedule.views import schedule_context
+from ..emerg.views import get_emerg
 from .forms import AuthenticateForm
 
 logger = logging.getLogger(__name__)
@@ -86,6 +87,22 @@ def get_login_theme():
         }
     return {}
 
+def get_fcps_emerg():
+    """
+    Return FCPS emergency information
+    """
+    try:
+        emerg = get_emerg()
+    except Exception:
+        logger.info("Unable to fetch FCPS emergency info")
+        emerg = {"status": False}
+
+    if emerg["status"]:
+        msg = emerg["message"]
+        return "{} <span style='float: right'>&mdash; FCPS</span>".format(msg)
+
+    return False
+
 
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
@@ -99,6 +116,10 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
             login_warning = settings.LOGIN_WARNING
         except AttributeError:
             login_warning = None
+
+        fcps_emerg = get_fcps_emerg()
+        if fcps_emerg:
+            login_warning = fcps_emerg
 
         data = {
             "auth_form": auth_form,

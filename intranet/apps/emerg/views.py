@@ -31,6 +31,8 @@ def check_emerg():
     emerg_split = '<p><a href="https://youtu.be/jo_8QFIEf64'
     message = res.split(emerg_split)[0]
 
+    message = message.strip()
+
     return status, message
 
 def get_emerg_result():
