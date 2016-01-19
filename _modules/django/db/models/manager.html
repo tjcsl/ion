@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django.db.models.manager &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>django.db.models.manager &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -163,48 +163,48 @@
 <span class="sd">    _default_manager if it&#39;s not a subclass of Manager).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">swapped</span><span class="p">:</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;objects&#39;</span><span class="p">,</span> <span class="n">SwappedManagerDescriptor</span><span class="p">(</span><span class="n">cls</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">&#39;objects&#39;</span><span class="p">,</span> <span class="n">SwappedManagerDescriptor</span><span class="p">(</span><span class="n">cls</span><span class="p">))</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_default_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;objects&#39;</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">&#39;_default_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;objects&#39;</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s">&quot;Model </span><span class="si">%s</span><span class="s"> must specify a custom Manager, because it has a &quot;</span>
-                <span class="s">&quot;field named &#39;objects&#39;&quot;</span> <span class="o">%</span> <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span>
+                <span class="s2">&quot;Model </span><span class="si">%s</span><span class="s2"> must specify a custom Manager, because it has a &quot;</span>
+                <span class="s2">&quot;field named &#39;objects&#39;&quot;</span> <span class="o">%</span> <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
-        <span class="c"># Create the default manager, if needed.</span>
-        <span class="n">cls</span><span class="o">.</span><span class="n">add_to_class</span><span class="p">(</span><span class="s">&#39;objects&#39;</span><span class="p">,</span> <span class="n">Manager</span><span class="p">())</span>
+        <span class="c1"># Create the default manager, if needed.</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">add_to_class</span><span class="p">(</span><span class="s1">&#39;objects&#39;</span><span class="p">,</span> <span class="n">Manager</span><span class="p">())</span>
         <span class="n">cls</span><span class="o">.</span><span class="n">_base_manager</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">objects</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_base_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">&#39;_base_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">):</span>
         <span class="n">default_mgr</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">__class__</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">default_mgr</span> <span class="ow">is</span> <span class="n">Manager</span> <span class="ow">or</span>
-                <span class="nb">getattr</span><span class="p">(</span><span class="n">default_mgr</span><span class="p">,</span> <span class="s">&quot;use_for_related_fields&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)):</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">default_mgr</span><span class="p">,</span> <span class="s2">&quot;use_for_related_fields&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)):</span>
             <span class="n">cls</span><span class="o">.</span><span class="n">_base_manager</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_default_manager</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c"># Default manager isn&#39;t a plain Manager class, or a suitable</span>
-            <span class="c"># replacement, so we walk up the base class hierarchy until we hit</span>
-            <span class="c"># something appropriate.</span>
+            <span class="c1"># Default manager isn&#39;t a plain Manager class, or a suitable</span>
+            <span class="c1"># replacement, so we walk up the base class hierarchy until we hit</span>
+            <span class="c1"># something appropriate.</span>
             <span class="k">for</span> <span class="n">base_class</span> <span class="ow">in</span> <span class="n">default_mgr</span><span class="o">.</span><span class="n">mro</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">base_class</span> <span class="ow">is</span> <span class="n">Manager</span> <span class="ow">or</span>
-                        <span class="nb">getattr</span><span class="p">(</span><span class="n">base_class</span><span class="p">,</span> <span class="s">&quot;use_for_related_fields&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)):</span>
-                    <span class="n">cls</span><span class="o">.</span><span class="n">add_to_class</span><span class="p">(</span><span class="s">&#39;_base_manager&#39;</span><span class="p">,</span> <span class="n">base_class</span><span class="p">())</span>
+                        <span class="nb">getattr</span><span class="p">(</span><span class="n">base_class</span><span class="p">,</span> <span class="s2">&quot;use_for_related_fields&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)):</span>
+                    <span class="n">cls</span><span class="o">.</span><span class="n">add_to_class</span><span class="p">(</span><span class="s1">&#39;_base_manager&#39;</span><span class="p">,</span> <span class="n">base_class</span><span class="p">())</span>
                     <span class="k">return</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-                <span class="s">&quot;Should never get here. Please report a bug, including your &quot;</span>
-                <span class="s">&quot;model and model manager setup.&quot;</span>
+                <span class="s2">&quot;Should never get here. Please report a bug, including your &quot;</span>
+                <span class="s2">&quot;model and model manager setup.&quot;</span>
             <span class="p">)</span>
 
 
 <span class="nd">@python_2_unicode_compatible</span>
 <span class="k">class</span> <span class="nc">BaseManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="c"># Tracks each time a Manager instance is created. Used to retain order.</span>
+    <span class="c1"># Tracks each time a Manager instance is created. Used to retain order.</span>
     <span class="n">creation_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="c">#: If set to True the manager will be serialized into migrations and will</span>
-    <span class="c">#: thus be available in e.g. RunPython operations</span>
+    <span class="c1">#: If set to True the manager will be serialized into migrations and will</span>
+    <span class="c1">#: thus be available in e.g. RunPython operations</span>
     <span class="n">use_in_migrations</span> <span class="o">=</span> <span class="bp">False</span>
 
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c"># We capture the arguments to make returning them trivial</span>
+        <span class="c1"># We capture the arguments to make returning them trivial</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_constructor_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
@@ -220,7 +220,7 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return &quot;app_label.model_label.manager_name&quot;. &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">deconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -230,33 +230,33 @@
 <span class="sd">        Raises a ValueError if the manager is dynamically generated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">qs_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queryset_class</span>
-        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;_built_with_as_manager&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-            <span class="c"># using MyQuerySet.as_manager()</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_built_with_as_manager&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+            <span class="c1"># using MyQuerySet.as_manager()</span>
             <span class="k">return</span> <span class="p">(</span>
-                <span class="bp">True</span><span class="p">,</span>  <span class="c"># as_manager</span>
-                <span class="bp">None</span><span class="p">,</span>  <span class="c"># manager_class</span>
-                <span class="s">&#39;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">qs_class</span><span class="o">.</span><span class="n">__module__</span><span class="p">,</span> <span class="n">qs_class</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span>  <span class="c"># qs_class</span>
-                <span class="bp">None</span><span class="p">,</span>  <span class="c"># args</span>
-                <span class="bp">None</span><span class="p">,</span>  <span class="c"># kwargs</span>
+                <span class="bp">True</span><span class="p">,</span>  <span class="c1"># as_manager</span>
+                <span class="bp">None</span><span class="p">,</span>  <span class="c1"># manager_class</span>
+                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">qs_class</span><span class="o">.</span><span class="n">__module__</span><span class="p">,</span> <span class="n">qs_class</span><span class="o">.</span><span class="n">__name__</span><span class="p">),</span>  <span class="c1"># qs_class</span>
+                <span class="bp">None</span><span class="p">,</span>  <span class="c1"># args</span>
+                <span class="bp">None</span><span class="p">,</span>  <span class="c1"># kwargs</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__module__</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
-            <span class="c"># Make sure it&#39;s actually there and not an inner class</span>
+            <span class="c1"># Make sure it&#39;s actually there and not an inner class</span>
             <span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s">&quot;Could not find manager </span><span class="si">%s</span><span class="s"> in </span><span class="si">%s</span><span class="s">.</span><span class="se">\n</span><span class="s">&quot;</span>
-                    <span class="s">&quot;Please note that you need to inherit from managers you &quot;</span>
-                    <span class="s">&quot;dynamically generated with &#39;from_queryset()&#39;.&quot;</span>
+                    <span class="s2">&quot;Could not find manager </span><span class="si">%s</span><span class="s2"> in </span><span class="si">%s</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Please note that you need to inherit from managers you &quot;</span>
+                    <span class="s2">&quot;dynamically generated with &#39;from_queryset()&#39;.&quot;</span>
                     <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="k">return</span> <span class="p">(</span>
-                <span class="bp">False</span><span class="p">,</span>  <span class="c"># as_manager</span>
-                <span class="s">&#39;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>  <span class="c"># manager_class</span>
-                <span class="bp">None</span><span class="p">,</span>  <span class="c"># qs_class</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_constructor_args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c"># args</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_constructor_args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c"># kwargs</span>
+                <span class="bp">False</span><span class="p">,</span>  <span class="c1"># as_manager</span>
+                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>  <span class="c1"># manager_class</span>
+                <span class="bp">None</span><span class="p">,</span>  <span class="c1"># qs_class</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_constructor_args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># args</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_constructor_args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># kwargs</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -272,44 +272,44 @@
             <span class="k">return</span> <span class="n">manager_method</span>
 
         <span class="n">new_methods</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c"># Refs http://bugs.python.org/issue1785.</span>
+        <span class="c1"># Refs http://bugs.python.org/issue1785.</span>
         <span class="n">predicate</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span> <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span> <span class="k">else</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">predicate</span><span class="p">):</span>
-            <span class="c"># Only copy missing methods.</span>
+            <span class="c1"># Only copy missing methods.</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                 <span class="k">continue</span>
-            <span class="c"># Only copy public methods or methods with the attribute `queryset_only=False`.</span>
-            <span class="n">queryset_only</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s">&#39;queryset_only&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">queryset_only</span> <span class="ow">or</span> <span class="p">(</span><span class="n">queryset_only</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)):</span>
+            <span class="c1"># Only copy public methods or methods with the attribute `queryset_only=False`.</span>
+            <span class="n">queryset_only</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;queryset_only&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">queryset_only</span> <span class="ow">or</span> <span class="p">(</span><span class="n">queryset_only</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)):</span>
                 <span class="k">continue</span>
-            <span class="c"># Copy the method onto the manager.</span>
+            <span class="c1"># Copy the method onto the manager.</span>
             <span class="n">new_methods</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">create_method</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_methods</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_queryset</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">queryset_class</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">class_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">class_name</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">From</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">queryset_class</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="n">class_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">From</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">queryset_class</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
         <span class="n">class_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;_queryset_class&#39;</span><span class="p">:</span> <span class="n">queryset_class</span><span class="p">,</span>
+            <span class="s1">&#39;_queryset_class&#39;</span><span class="p">:</span> <span class="n">queryset_class</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">class_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_get_queryset_methods</span><span class="p">(</span><span class="n">queryset_class</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">(</span><span class="n">cls</span><span class="p">,),</span> <span class="n">class_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">contribute_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="c"># TODO: Use weakref because of possible memory leak / circular reference.</span>
+        <span class="c1"># TODO: Use weakref because of possible memory leak / circular reference.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="c"># Only contribute the manager if the model is concrete</span>
+        <span class="c1"># Only contribute the manager if the model is concrete</span>
         <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">abstract</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">AbstractManagerDescriptor</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">swapped</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">SwappedManagerDescriptor</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c"># if not model._meta.abstract and not model._meta.swapped:</span>
+            <span class="c1"># if not model._meta.abstract and not model._meta.swapped:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ManagerDescriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s">&#39;_default_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;_default_manager&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">creation_counter</span> <span class="o">&lt;</span> <span class="n">model</span><span class="o">.</span><span class="n">_default_manager</span><span class="o">.</span><span class="n">creation_counter</span><span class="p">):</span>
             <span class="n">model</span><span class="o">.</span><span class="n">_default_manager</span> <span class="o">=</span> <span class="bp">self</span>
 
@@ -349,9 +349,9 @@
     <span class="k">def</span> <span class="nf">db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="ow">or</span> <span class="n">router</span><span class="o">.</span><span class="n">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
 
-    <span class="c">#######################</span>
-    <span class="c"># PROXIES TO QUERYSET #</span>
-    <span class="c">#######################</span>
+    <span class="c1">#######################</span>
+    <span class="c1"># PROXIES TO QUERYSET #</span>
+    <span class="c1">#######################</span>
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -361,12 +361,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queryset_class</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">,</span> <span class="n">hints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hints</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># We can&#39;t proxy this method through the `QuerySet` like we do for the</span>
-        <span class="c"># rest of the `QuerySet` methods. This is because `QuerySet.all()`</span>
-        <span class="c"># works by creating a &quot;copy&quot; of the current queryset and in making said</span>
-        <span class="c"># copy, all the cached `prefetch_related` lookups are lost. See the</span>
-        <span class="c"># implementation of `RelatedManager.get_queryset()` for a better</span>
-        <span class="c"># understanding of how this comes into play.</span>
+        <span class="c1"># We can&#39;t proxy this method through the `QuerySet` like we do for the</span>
+        <span class="c1"># rest of the `QuerySet` methods. This is because `QuerySet.all()`</span>
+        <span class="c1"># works by creating a &quot;copy&quot; of the current queryset and in making said</span>
+        <span class="c1"># copy, all the cached `prefetch_related` lookups are lost. See the</span>
+        <span class="c1"># implementation of `RelatedManager.get_queryset()` for a better</span>
+        <span class="c1"># understanding of how this comes into play.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -387,38 +387,38 @@
 
 
 <span class="k">class</span> <span class="nc">ManagerDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="c"># This class ensures managers aren&#39;t accessible via model instances.</span>
-    <span class="c"># For example, Poll.objects works, but poll_obj.objects raises AttributeError.</span>
+    <span class="c1"># This class ensures managers aren&#39;t accessible via model instances.</span>
+    <span class="c1"># For example, Poll.objects works, but poll_obj.objects raises AttributeError.</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
 
     <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Manager isn&#39;t accessible via </span><span class="si">%s</span><span class="s"> instances&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Manager isn&#39;t accessible via </span><span class="si">%s</span><span class="s2"> instances&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager</span>
 
 
 <span class="k">class</span> <span class="nc">AbstractManagerDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="c"># This class provides a better error message when you try to access a</span>
-    <span class="c"># manager on an abstract model.</span>
+    <span class="c1"># This class provides a better error message when you try to access a</span>
+    <span class="c1"># manager on an abstract model.</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Manager isn&#39;t available; </span><span class="si">%s</span><span class="s"> is abstract&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Manager isn&#39;t available; </span><span class="si">%s</span><span class="s2"> is abstract&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
         <span class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">SwappedManagerDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="c"># This class provides a better error message when you try to access a</span>
-    <span class="c"># manager on a swapped model.</span>
+    <span class="c1"># This class provides a better error message when you try to access a</span>
+    <span class="c1"># manager on a swapped model.</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-            <span class="s">&quot;Manager isn&#39;t available; &#39;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&#39; has been swapped for &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="s2">&quot;Manager isn&#39;t available; &#39;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&#39; has been swapped for &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">swapped</span><span class="p">,</span>

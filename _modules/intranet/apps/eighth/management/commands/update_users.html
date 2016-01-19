@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.management.commands.update_users &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.management.commands.update_users &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.management.commands.update_users</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
@@ -154,15 +154,15 @@
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.update_users.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s">&quot;Input users into the database who have not logged in already&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Input users into the database who have not logged in already&quot;</span>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.update_users.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span></div>
-        <span class="c"># The range for Ion user IDs; adjust as needed</span>
+        <span class="c1"># The range for Ion user IDs; adjust as needed</span>
         <span class="n">ion_id_start</span> <span class="o">=</span> <span class="mi">31416</span>
         <span class="n">ion_id_end</span> <span class="o">=</span> <span class="mi">33503</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ID range: {} - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ion_id_start</span><span class="p">,</span> <span class="n">ion_id_end</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ID range: {} - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ion_id_start</span><span class="p">,</span> <span class="n">ion_id_end</span><span class="p">))</span>
         <span class="n">users</span> <span class="o">=</span> <span class="p">[</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ion_id_start</span><span class="p">,</span> <span class="n">ion_id_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Looped through {} IDs.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Looped through {} IDs.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)))</span></div>
 </pre></div>
 
     </div>

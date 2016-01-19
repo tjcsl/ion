@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.feedback.views &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.feedback.views &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.feedback.views</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -164,34 +164,34 @@
 
 
 <div class="viewcode-block" id="send_feedback_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.views.send_feedback_email">[docs]</a><span class="k">def</span> <span class="nf">send_feedback_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="n">data</span><span class="p">[</span><span class="s">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="s">&quot;unknown-{}@tjhsst.edu&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="s">&quot;email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">email</span>
-    <span class="n">data</span><span class="p">[</span><span class="s">&quot;remote_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s">&quot;HTTP_X_FORWARDED_FOR&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&quot;HTTP_X_FORWARDED_FOR&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
-    <span class="n">data</span><span class="p">[</span><span class="s">&quot;user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;HTTP_USER_AGENT&quot;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span> <span class="k">else</span> <span class="s2">&quot;unknown-{}@tjhsst.edu&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">email</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;remote_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s2">&quot;HTTP_X_FORWARDED_FOR&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;HTTP_X_FORWARDED_FOR&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_USER_AGENT&quot;</span><span class="p">)</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;Reply-To&quot;</span><span class="p">:</span> <span class="s">&quot;{}; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">)</span>
+        <span class="s2">&quot;Reply-To&quot;</span><span class="p">:</span> <span class="s2">&quot;{}; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="n">email_send</span><span class="p">(</span><span class="s">&quot;feedback/email.txt&quot;</span><span class="p">,</span> <span class="s">&quot;feedback/email.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s">&quot;Feedback from {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">],</span> <span class="n">headers</span><span class="p">)</span></div>
+    <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;feedback/email.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;feedback/email.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Feedback from {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">],</span> <span class="n">headers</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="send_feedback_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.feedback.html#intranet.apps.feedback.views.send_feedback_view">[docs]</a><span class="k">def</span> <span class="nf">send_feedback_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">FeedbackForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Valid form&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Valid form&quot;</span><span class="p">)</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Feedback&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Feedback&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">Feedback</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;comments&quot;</span><span class="p">])</span>
+            <span class="n">Feedback</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;comments&quot;</span><span class="p">])</span>
             <span class="n">send_feedback_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Your feedback was sent. Thanks!&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Your feedback was sent. Thanks!&quot;</span><span class="p">)</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FeedbackForm</span><span class="p">()</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;feedback/form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;feedback/form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

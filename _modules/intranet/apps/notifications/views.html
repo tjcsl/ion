@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.notifications.views &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.notifications.views &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.notifications.views</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
@@ -174,25 +174,25 @@
 <span class="sd">    the user agent. If it has the same value, it is assumed to be correct.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s">&quot;user_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="s">&quot;gcm_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-            <span class="n">user_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;user_token&quot;</span><span class="p">)</span>
-            <span class="n">gcm_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;gcm_token&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;user_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">and</span> <span class="s2">&quot;gcm_token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">user_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_token&quot;</span><span class="p">)</span>
+            <span class="n">gcm_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gcm_token&quot;</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">gcm_token</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">ncfg</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">android_gcm_rand</span><span class="o">=</span><span class="n">user_token</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;No pair&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No pair&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span>
 
             <span class="n">ncfg</span><span class="o">.</span><span class="n">gcm_token</span> <span class="o">=</span> <span class="n">gcm_token</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_rand</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">android_gcm_date</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="n">ncfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid arguments.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;error&quot;:&quot;Invalid arguments.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span></div>
 
 
 <span class="nd">@csrf_exempt</span>
@@ -204,25 +204,25 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
-        <span class="c"># authenticated session</span>
-        <span class="n">notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sent_to__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-time&quot;</span><span class="p">)</span>
+        <span class="c1"># authenticated session</span>
+        <span class="n">notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sent_to__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-time&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">notifs</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">notif</span> <span class="o">=</span> <span class="n">notifs</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
             <span class="n">ndata</span> <span class="o">=</span> <span class="n">notif</span><span class="o">.</span><span class="n">data</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span>
-                <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">],</span>
-                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s">&#39;url&#39;</span><span class="p">]</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;null&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;null&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;Check Intranet&quot;</span><span class="p">,</span>
-            <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="s">&quot;You have a new notification that couldn&#39;t be loaded right now.&quot;</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Check Intranet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;You have a new notification that couldn&#39;t be loaded right now.&quot;</span>
         <span class="p">}</span>
     <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -234,62 +234,62 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
     <span class="n">token</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s">&quot;token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;token&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;token&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;error&quot;:&quot;Invalid data.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span>
     <span class="n">ncfg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="n">ncfg</span><span class="o">.</span><span class="n">gcm_token</span> <span class="o">=</span> <span class="n">token</span>
     <span class="n">ncfg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;text/json&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;{&quot;success&quot;:&quot;Now registered.&quot;}&#39;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/json&quot;</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="gcm_list_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_list_view">[docs]</a><span class="k">def</span> <span class="nf">gcm_list_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s">&quot;notifications&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
-    <span class="n">gcm_notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-time&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;notifications&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+    <span class="n">gcm_notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-time&quot;</span><span class="p">)</span>
     <span class="n">posts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">gcm_notifs</span><span class="p">:</span>
         <span class="n">posts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s">&quot;gcm&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-            <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">sent_data</span><span class="p">)[</span><span class="s">&quot;data&quot;</span><span class="p">]</span>
+            <span class="s2">&quot;gcm&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">sent_data</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
         <span class="p">})</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span>
+        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;notifications/gcm_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;notifications/gcm_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="gcm_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_post_view">[docs]</a><span class="k">def</span> <span class="nf">gcm_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s">&quot;notifications&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;notifications&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">has_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">GCM_AUTH_KEY</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">GCM_PROJECT_ID</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="n">has_tokens</span> <span class="o">=</span> <span class="bp">False</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_tokens</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;GCM tokens not installed.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;GCM tokens not installed.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
-    <span class="c"># exclude those with no GCM token, or opted out</span>
+    <span class="c1"># exclude those with no GCM token, or opted out</span>
     <span class="n">nc_all</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">gcm_token</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">gcm_optout</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;nc_all&quot;</span><span class="p">:</span> <span class="n">nc_all</span><span class="p">,</span>
-        <span class="s">&quot;has_tokens&quot;</span><span class="p">:</span> <span class="n">has_tokens</span>
+        <span class="s2">&quot;nc_all&quot;</span><span class="p">:</span> <span class="n">nc_all</span><span class="p">,</span>
+        <span class="s2">&quot;has_tokens&quot;</span><span class="p">:</span> <span class="n">has_tokens</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">nc_objs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">reg_ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">fail_ids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">nc_users</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s">&quot;nc_users&quot;</span><span class="p">)</span>
+        <span class="n">nc_users</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;nc_users&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">nc_users</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ncid</span> <span class="ow">in</span> <span class="n">nc_users</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -306,45 +306,45 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">nc_objs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">reg_ids</span><span class="p">)</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s">&quot;application/json&quot;</span><span class="p">,</span>
-            <span class="s">&quot;project_id&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GCM_PROJECT_ID</span><span class="p">,</span>
-            <span class="s">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s">&quot;key={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">GCM_AUTH_KEY</span><span class="p">)</span>
+            <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GCM_PROJECT_ID</span><span class="p">,</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;key={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">GCM_AUTH_KEY</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;registration_ids&quot;</span><span class="p">:</span> <span class="n">reg_ids</span><span class="p">,</span>
-            <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,</span> <span class="s">&quot;Title&quot;</span><span class="p">),</span>
-                <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="s">&quot;Text&quot;</span><span class="p">),</span>
-                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;url&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
-                <span class="s">&quot;sound&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;sound&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
-                <span class="s">&quot;wakeup&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;wakeup&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
-                <span class="s">&quot;vibrate&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;vibrate&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="s2">&quot;registration_ids&quot;</span><span class="p">:</span> <span class="n">reg_ids</span><span class="p">,</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;Text&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+                <span class="s2">&quot;sound&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sound&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+                <span class="s2">&quot;wakeup&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wakeup&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+                <span class="s2">&quot;vibrate&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vibrate&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;https://android.googleapis.com/gcm/send&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://android.googleapis.com/gcm/send&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resp</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="c"># example output:</span>
-        <span class="c"># {&quot;multicast_id&quot;:123456,&quot;success&quot;:1,&quot;failure&quot;:0,&quot;canonical_ids&quot;:0,&quot;results&quot;:[{&quot;message_id&quot;:&quot;0:142%771acd&quot;}]}</span>
+        <span class="c1"># example output:</span>
+        <span class="c1"># {&quot;multicast_id&quot;:123456,&quot;success&quot;:1,&quot;failure&quot;:0,&quot;canonical_ids&quot;:0,&quot;results&quot;:[{&quot;message_id&quot;:&quot;0:142%771acd&quot;}]}</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s">&quot;multicast_id&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">multicast_id</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s">&quot;multicast_id&quot;</span><span class="p">],</span>
-                                               <span class="n">num_success</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s">&quot;success&quot;</span><span class="p">],</span>
-                                               <span class="n">num_failure</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s">&quot;failure&quot;</span><span class="p">],</span>
+        <span class="k">if</span> <span class="s2">&quot;multicast_id&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">multicast_id</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;multicast_id&quot;</span><span class="p">],</span>
+                                               <span class="n">num_success</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">],</span>
+                                               <span class="n">num_failure</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;failure&quot;</span><span class="p">],</span>
                                                <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
                                                <span class="n">sent_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="n">nc_objs</span><span class="p">:</span>
                 <span class="n">n</span><span class="o">.</span><span class="n">sent_to</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span>
             <span class="n">n</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Delivered message: {} success, {} failure&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s">&quot;success&quot;</span><span class="p">],</span> <span class="n">resp</span><span class="p">[</span><span class="s">&quot;failure&quot;</span><span class="p">]))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Delivered message: {} success, {} failure&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">],</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;failure&quot;</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Failed. {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;notifications/gcm_post.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Failed. {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;notifications/gcm_post.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

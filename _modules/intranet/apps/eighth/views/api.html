@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.api &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.views.api &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.api</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -185,7 +185,7 @@
 
 <div class="viewcode-block" id="BlockPagination"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.BlockPagination">[docs]</a><span class="k">class</span> <span class="nc">BlockPagination</span><span class="p">(</span><span class="n">PageNumberPagination</span><span class="p">):</span>
     <span class="n">page_size</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="n">page_size_query_param</span> <span class="o">=</span> <span class="s">&#39;page_size&#39;</span>
+    <span class="n">page_size_query_param</span> <span class="o">=</span> <span class="s1">&#39;page_size&#39;</span>
     <span class="n">max_page_size</span> <span class="o">=</span> <span class="mi">200</span></div>
 
 
@@ -193,21 +193,21 @@
 
     <span class="sd">&quot;&quot;&quot;API endpoint that lists all eighth blocks</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># FIXME: this call throws sphinx for a loop</span>
+    <span class="c1"># FIXME: this call throws sphinx for a loop</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthBlockListSerializer</span>
     <span class="n">pagination_class</span> <span class="o">=</span> <span class="n">BlockPagination</span>
 
     <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># get_current_blocks() actually returns a list, which you</span>
-        <span class="c"># can&#39;t .filter() on</span>
+        <span class="c1"># get_current_blocks() actually returns a list, which you</span>
+        <span class="c1"># can&#39;t .filter() on</span>
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current_blocks</span><span class="p">()</span>
         <span class="n">blk_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s">&quot;start_date&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">blk_ids</span><span class="p">,</span> <span class="n">date__gte</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;start_date&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">&quot;start_date&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">blk_ids</span><span class="p">,</span> <span class="n">date__gte</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="s">&quot;date&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">blk_ids</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">blk_ids</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">queryset</span>
 
@@ -219,11 +219,11 @@
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Http404</span>
 
-        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 
@@ -235,9 +235,9 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user_id</span><span class="p">:</span>
             <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
 
-        <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s">&quot;scheduled_activity__block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
+        <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span>
 
-        <span class="n">serialized</span> <span class="o">=</span> <span class="n">EighthSignupSerializer</span><span class="p">(</span><span class="n">signups</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">},</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">serialized</span> <span class="o">=</span> <span class="n">EighthSignupSerializer</span><span class="p">(</span><span class="n">signups</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">},</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serialized</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
 
@@ -247,25 +247,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
-        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthAddSignupSerializer</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthAddSignupSerializer</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">serializer</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s">&quot;activity&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span> <span class="ow">or</span> <span class="s">&quot;block&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span> <span class="ow">or</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;use_scheduled_activity&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-            <span class="n">schactivity</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s">&quot;scheduled_activity&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;activity&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span> <span class="ow">or</span> <span class="s2">&quot;block&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span> <span class="ow">or</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_scheduled_activity&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+            <span class="n">schactivity</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">schactivity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s">&quot;activity&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s">&quot;block&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s">&#39;force&#39;</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">:</span>
-            <span class="n">force</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s">&#39;force&#39;</span><span class="p">]</span>
+            <span class="n">schactivity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;force&#39;</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">:</span>
+            <span class="n">force</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">validated_data</span><span class="p">[</span><span class="s1">&#39;force&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">force</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">if</span> <span class="n">force</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;error&quot;</span><span class="p">:</span> <span class="s">&quot;You are not an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span>
 
         <span class="n">schactivity</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">(</span><span class="n">schactivity</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">EighthActivityDetailSerializer</span><span class="p">(</span><span class="n">schactivity</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthScheduledActivitySignupList"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthScheduledActivitySignupList">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivitySignupList</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span></div>
@@ -275,7 +275,7 @@
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
-        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthScheduledActivitySerializer</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthScheduledActivitySerializer</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 

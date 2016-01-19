@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.routers &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.views.routers &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.routers</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
@@ -161,13 +161,13 @@
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="eighth_redirect_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.routers.eighth_redirect_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_redirect_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="s">&quot;eighth_signup&quot;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_signup&quot;</span>
     <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="s">&quot;eighth_admin_dashboard&quot;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_admin_dashboard&quot;</span>
     <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_attendance_user</span><span class="p">:</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="s">&quot;eighth_attendance_choose_scheduled_activity&quot;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_attendance_choose_scheduled_activity&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="s">&quot;index&quot;</span>  <span class="c"># should never happen</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>  <span class="c1"># should never happen</span>
 
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="n">view</span><span class="p">))</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 </pre></div>

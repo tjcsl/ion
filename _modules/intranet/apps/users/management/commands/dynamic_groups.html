@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.management.commands.dynamic_groups &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.users.management.commands.dynamic_groups &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.users.management.commands.dynamic_groups</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
@@ -155,12 +155,12 @@
 
 
 <div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.dynamic_groups.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s">&quot;Update dynamic groups, and ensure that all students have an entry in the database.&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Update dynamic groups, and ensure that all students have an entry in the database.&quot;</span>
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.dynamic_groups.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create &quot;Class of 20[16-19]&quot; groups &quot;&quot;&quot;</span>
 
-        <span class="n">students_grp</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Students&quot;</span><span class="p">)</span>
+        <span class="n">students_grp</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Students&quot;</span><span class="p">)</span>
         <span class="n">sg_prop</span> <span class="o">=</span> <span class="n">students_grp</span><span class="o">.</span><span class="n">properties</span>
         <span class="n">sg_prop</span><span class="o">.</span><span class="n">student_visible</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="n">sg_prop</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -168,19 +168,19 @@
 
         <span class="k">for</span> <span class="n">gr</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2016</span><span class="p">,</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">2018</span><span class="p">,</span> <span class="mi">2019</span><span class="p">]:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">users_in_year</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
-            <span class="n">grp</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;Class of {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">))</span>
+            <span class="n">grp</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Class of {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">))</span>
             <span class="n">grp_prop</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">properties</span>
             <span class="n">grp_prop</span><span class="o">.</span><span class="n">student_visible</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="n">grp_prop</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">grp</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;{}: {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{}: {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)))</span>
             <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
                 <span class="n">u</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
                 <span class="n">u</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">students_grp</span><span class="p">)</span>
                 <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;{}: Processed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{}: Processed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gr</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;Done.&quot;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

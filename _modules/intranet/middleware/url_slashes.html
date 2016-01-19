@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.url_slashes &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.middleware.url_slashes &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.middleware.url_slashes</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 
@@ -161,25 +161,25 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># We can&#39;t remove slashes from these urls - they&#39;re included from</span>
-        <span class="c"># first/third party apps</span>
-        <span class="n">exception_prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;/admin&quot;</span><span class="p">,</span>
-                              <span class="s">&quot;/api-auth&quot;</span><span class="p">,</span>
-                              <span class="s">&quot;/djangoadmin&quot;</span><span class="p">,</span>
-                              <span class="s">&quot;/__debug__&quot;</span><span class="p">]</span>
+        <span class="c1"># We can&#39;t remove slashes from these urls - they&#39;re included from</span>
+        <span class="c1"># first/third party apps</span>
+        <span class="n">exception_prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/admin&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;/api-auth&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;/djangoadmin&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;/__debug__&quot;</span><span class="p">]</span>
         <span class="n">needs_trailing_slash</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">exception_prefixes</span><span class="p">:</span>
             <span class="n">needs_trailing_slash</span> <span class="o">|=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">needs_trailing_slash</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">):</span>
-                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="o">=</span> <span class="n">new_url</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_url</span>
-        <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">!=</span> <span class="s">&quot;/&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">):</span>
-                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="n">new_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="o">=</span> <span class="n">new_url</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">new_url</span>
 </pre></div>

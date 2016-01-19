@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.views.admin.activities &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.admin.activities</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -170,30 +170,30 @@
 
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="add_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.activities.add_activity_view">[docs]</a><span class="k">def</span> <span class="nf">add_activity_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">QuickActivityForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">new_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="s">&quot;default&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">new_id</span> <span class="o">==</span> <span class="s">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">new_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_id</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
                 <span class="n">activity</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">],</span>
+                <span class="n">activity</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
                                                           <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">new_id</span><span class="p">)))</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully added activity.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added activity.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span>
                             <span class="n">activity_id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Error adding activity.&quot;</span><span class="p">)</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s">&quot;add_activity_form&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding activity.&quot;</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;add_activity_form&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Add Activity&quot;</span><span class="p">,</span>
-            <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">QuickActivityForm</span><span class="p">(),</span>
-            <span class="s">&quot;available_ids&quot;</span><span class="p">:</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">available_ids</span><span class="p">()</span>
+            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Activity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">QuickActivityForm</span><span class="p">(),</span>
+            <span class="s2">&quot;available_ids&quot;</span><span class="p">:</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">available_ids</span><span class="p">()</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/add_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/add_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@eighth_admin_required</span>
@@ -203,152 +203,152 @@
     <span class="k">except</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">ActivityForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
 
-                <span class="c"># Check if sponsor change</span>
+                <span class="c1"># Check if sponsor change</span>
                 <span class="n">old_sponsors</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                <span class="n">old_sponsor_ids</span> <span class="o">=</span> <span class="n">old_sponsors</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                <span class="n">new_sponsor_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;sponsors&quot;</span><span class="p">]]</span>
+                <span class="n">old_sponsor_ids</span> <span class="o">=</span> <span class="n">old_sponsors</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">new_sponsor_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]]</span>
 
                 <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_sponsor_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_sponsor_ids</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_sponsor_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
                     <span class="n">sched_acts_default</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">sponsors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block__date__lt</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c"># This will change scheduled activities that used overrides in the past.</span>
-                        <span class="c"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
-                        <span class="c"># custom sponsors specified, we *could* prevent anything from visibly</span>
-                        <span class="c"># changing by making an override with the value of the previous default.</span>
+                        <span class="c1"># This will change scheduled activities that used overrides in the past.</span>
+                        <span class="c1"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
+                        <span class="c1"># custom sponsors specified, we *could* prevent anything from visibly</span>
+                        <span class="c1"># changing by making an override with the value of the previous default.</span>
 
-                        <span class="c"># Yes: Save History =&gt; Override old values</span>
-                        <span class="c"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
+                        <span class="c1"># Yes: Save History =&gt; Override old values</span>
+                        <span class="c1"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
 
-                        <span class="k">if</span> <span class="s">&quot;change_sponsor_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;change_sponsor_history&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;change_sponsor_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;change_sponsor_history&quot;</span><span class="p">)</span>
 
-                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;yes&quot;</span><span class="p">:</span>
-                                <span class="c"># Override old entries</span>
+                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+                                <span class="c1"># Override old entries</span>
                                 <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_acts_default</span><span class="p">:</span>
                                     <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">old_sponsors</span><span class="p">:</span>
                                         <span class="n">sa</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span>
                                     <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Overrode {} scheduled activities to old sponsor default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
-                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;no&quot;</span><span class="p">:</span>
-                                <span class="c"># Don&#39;t override</span>
-                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Changing default sponsors globally&quot;</span><span class="p">)</span>
-                                <span class="c"># Continues to form.save()</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Overrode {} scheduled activities to old sponsor default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
+                                <span class="c1"># Don&#39;t override</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Changing default sponsors globally&quot;</span><span class="p">)</span>
+                                <span class="c1"># Continues to form.save()</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="c"># show message, asking whether to change history</span>
+                            <span class="c1"># show message, asking whether to change history</span>
                             <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-                                <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Keep Sponsor History?&quot;</span><span class="p">,</span>
-                                <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
-                                <span class="s">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-                                <span class="s">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
-                                <span class="s">&quot;old_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_sponsor_ids</span><span class="p">),</span>
-                                <span class="s">&quot;new_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_sponsor_ids</span><span class="p">),</span>
-                                <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                                <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Keep Sponsor History?&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+                                <span class="s2">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                                <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
+                                <span class="s2">&quot;old_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_sponsor_ids</span><span class="p">),</span>
+                                <span class="s2">&quot;new_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_sponsor_ids</span><span class="p">),</span>
+                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
                             <span class="p">}</span>
-                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/keep_sponsor_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/keep_sponsor_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You modified the default sponsors, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You modified the default sponsors, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
 
-                <span class="c"># Check if room change</span>
+                <span class="c1"># Check if room change</span>
                 <span class="n">old_rooms</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                <span class="n">old_room_ids</span> <span class="o">=</span> <span class="n">old_rooms</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                <span class="n">new_room_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;rooms&quot;</span><span class="p">]]</span>
+                <span class="n">old_room_ids</span> <span class="o">=</span> <span class="n">old_rooms</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">new_room_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;rooms&quot;</span><span class="p">]]</span>
 
                 <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_room_ids</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_room_ids</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_room_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
                     <span class="n">sched_acts_default</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">rooms</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block__date__lt</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c"># This will change scheduled activities that used overrides in the past.</span>
-                        <span class="c"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
-                        <span class="c"># custom rooms specified, we *could* prevent anything from visibly</span>
-                        <span class="c"># changing by making an override with the value of the previous default.</span>
+                        <span class="c1"># This will change scheduled activities that used overrides in the past.</span>
+                        <span class="c1"># Thus, by looping through the scheduled activities that didn&#39;t have any</span>
+                        <span class="c1"># custom rooms specified, we *could* prevent anything from visibly</span>
+                        <span class="c1"># changing by making an override with the value of the previous default.</span>
 
-                        <span class="c"># Yes: Save History =&gt; Override old values</span>
-                        <span class="c"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
+                        <span class="c1"># Yes: Save History =&gt; Override old values</span>
+                        <span class="c1"># No: Change Globally =&gt; Don&#39;t override old values, they will change to new default</span>
 
-                        <span class="k">if</span> <span class="s">&quot;change_room_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;change_room_history&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;change_room_history&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                            <span class="n">change</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;change_room_history&quot;</span><span class="p">)</span>
 
-                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;yes&quot;</span><span class="p">:</span>
-                                <span class="c"># Override old entries</span>
+                            <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+                                <span class="c1"># Override old entries</span>
                                 <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_acts_default</span><span class="p">:</span>
                                     <span class="k">for</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">old_rooms</span><span class="p">:</span>
                                         <span class="n">sa</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
                                     <span class="n">sa</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Overrode {} scheduled activities to old room default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
-                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s">&quot;no&quot;</span><span class="p">:</span>
-                                <span class="c"># Don&#39;t override</span>
-                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Changing default rooms globally&quot;</span><span class="p">)</span>
-                                <span class="c"># Continues to form.save()</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Overrode {} scheduled activities to old room default&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+                            <span class="k">elif</span> <span class="n">change</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
+                                <span class="c1"># Don&#39;t override</span>
+                                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Changing default rooms globally&quot;</span><span class="p">)</span>
+                                <span class="c1"># Continues to form.save()</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="c"># show message, asking whether to change history</span>
+                            <span class="c1"># show message, asking whether to change history</span>
                             <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-                                <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Keep Room History?&quot;</span><span class="p">,</span>
-                                <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
-                                <span class="s">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-                                <span class="s">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
-                                <span class="s">&quot;old_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_room_ids</span><span class="p">),</span>
-                                <span class="s">&quot;new_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_room_ids</span><span class="p">),</span>
-                                <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
+                                <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Keep Room History?&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+                                <span class="s2">&quot;sched_acts_count&quot;</span><span class="p">:</span> <span class="n">sched_acts_default</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                                <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
+                                <span class="s2">&quot;old_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">old_room_ids</span><span class="p">),</span>
+                                <span class="s2">&quot;new_rooms&quot;</span><span class="p">:</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">new_room_ids</span><span class="p">),</span>
+                                <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span>
                             <span class="p">}</span>
-                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/keep_room_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/keep_room_history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You modified the default rooms, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You modified the default rooms, but those changes will not affect any scheduled activities.&quot;</span><span class="p">)</span>
 
                 <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
                 <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully edited activity.&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="s">&quot;add_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                    <span class="n">grp_name</span> <span class="o">=</span> <span class="s">&quot;Activity: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully edited activity.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;add_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                    <span class="n">grp_name</span> <span class="o">=</span> <span class="s2">&quot;Activity: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                     <span class="n">grp</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">grp_name</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
                     <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="n">activity</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
                     <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;{} to &#39;{}&#39; group&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;Created and added&quot;</span> <span class="k">if</span> <span class="n">status</span> <span class="k">else</span> <span class="s">&quot;Added&quot;</span><span class="p">,</span> <span class="n">grp_name</span><span class="p">))</span>
-                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">grp</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;{} to &#39;{}&#39; group&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Created and added&quot;</span> <span class="k">if</span> <span class="n">status</span> <span class="k">else</span> <span class="s2">&quot;Added&quot;</span><span class="p">,</span> <span class="n">grp_name</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">grp</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_activity&quot;</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Error adding activity.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding activity.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">ActivityForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
 
-    <span class="n">activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
 
     <span class="n">activity_groups</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">activity</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">group</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">id</span>
-        <span class="n">group</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-        <span class="n">group</span><span class="p">[</span><span class="s">&quot;members_alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
-        <span class="n">group</span><span class="p">[</span><span class="s">&quot;members_alpha_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s">&quot;members_alpha&quot;</span><span class="p">])</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members_alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
+        <span class="n">group</span><span class="p">[</span><span class="s2">&quot;members_alpha_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s2">&quot;members_alpha&quot;</span><span class="p">])</span>
         <span class="n">activity_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
 
     <span class="n">activity_members</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">users_allowed</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Edit Activity&quot;</span><span class="p">,</span>
-        <span class="s">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;eighth_admin_delete_activity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit Activity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_activity&quot;</span><span class="p">,</span>
                               <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">activity_id</span><span class="p">]),</span>
-        <span class="s">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
-        <span class="s">&quot;activity_groups&quot;</span><span class="p">:</span> <span class="n">activity_groups</span><span class="p">,</span>
-        <span class="s">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
-        <span class="s">&quot;activity_members&quot;</span><span class="p">:</span> <span class="n">activity_members</span>
+        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+        <span class="s2">&quot;activity_groups&quot;</span><span class="p">:</span> <span class="n">activity_groups</span><span class="p">,</span>
+        <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
+        <span class="s2">&quot;activity_members&quot;</span><span class="p">:</span> <span class="n">activity_members</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/edit_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -394,29 +394,29 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
     <span class="n">perm_delete</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="ow">and</span> <span class="s">&quot;perm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="ow">and</span> <span class="s2">&quot;perm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">perm_delete</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">perm_delete</span><span class="p">:</span>
             <span class="n">activity</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully deleted activity.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted activity.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s">&quot;Delete Activity&quot;</span><span class="p">,</span>
-            <span class="s">&quot;item_name&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s">&quot;help_text&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Deleting will not destroy past attendance data for this &quot;</span>
-                          <span class="s">&quot;activity. The activity will just be marked as deleted &quot;</span>
-                          <span class="s">&quot;and hidden from non-attendance views.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">perm_delete</span>
-                          <span class="k">else</span> <span class="s">&quot;This will destroy past attendance data.&quot;</span><span class="p">)</span>
+            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Activity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Deleting will not destroy past attendance data for this &quot;</span>
+                          <span class="s2">&quot;activity. The activity will just be marked as deleted &quot;</span>
+                          <span class="s2">&quot;and hidden from non-attendance views.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">perm_delete</span>
+                          <span class="k">else</span> <span class="s2">&quot;This will destroy past attendance data.&quot;</span><span class="p">)</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

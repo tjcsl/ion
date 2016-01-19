@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.serializers &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.serializers &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.serializers</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -163,40 +163,40 @@
 
 
 <div class="viewcode-block" id="EighthActivityListSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthActivityListSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityListSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s">&quot;api_eighth_activity_detail&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EighthActivityListSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthActivityListSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthActivity</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;url&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;name&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;name&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthActivityDetailSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthActivityDetailSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityDetailSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">scheduled_on</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;fetch_scheduled_on&quot;</span><span class="p">)</span>
+    <span class="n">scheduled_on</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;fetch_scheduled_on&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EighthActivityDetailSerializer.fetch_scheduled_on"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthActivityDetailSerializer.fetch_scheduled_on">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_scheduled_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">act</span><span class="p">):</span>
         <span class="n">scheduled_on</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({})</span>
-        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">act</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;block__date&quot;</span><span class="p">)</span>
+        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">act</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">)</span>
 
-        <span class="c"># user = self.context.get(&quot;user&quot;, self.context[&quot;request&quot;].user)</span>
-        <span class="c"># favorited_activities = set(user.favorited_activity_set</span>
-        <span class="c">#                               .values_list(&quot;id&quot;, flat=True))</span>
-        <span class="c"># available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)</span>
+        <span class="c1"># user = self.context.get(&quot;user&quot;, self.context[&quot;request&quot;].user)</span>
+        <span class="c1"># favorited_activities = set(user.favorited_activity_set</span>
+        <span class="c1">#                               .values_list(&quot;id&quot;, flat=True))</span>
+        <span class="c1"># available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)</span>
 
         <span class="k">for</span> <span class="n">scheduled_activity</span> <span class="ow">in</span> <span class="n">scheduled_activities</span><span class="p">:</span>
             <span class="n">scheduled_on</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s">&quot;date&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-                <span class="s">&quot;block_letter&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">,</span>
-                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+                <span class="s2">&quot;block_letter&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
                                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                               <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">]),</span>
-                <span class="s">&quot;roster&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
+                               <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]),</span>
+                <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
                                    <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                                   <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">]),</span>
+                                   <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]),</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">scheduled_on</span><span class="p">)</span>
@@ -204,34 +204,34 @@
 
 <div class="viewcode-block" id="EighthActivityDetailSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthActivityDetailSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthActivity</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;name&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;description&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;administrative&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;restricted&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;presign&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;one_a_day&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;both_blocks&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;sticky&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;special&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;scheduled_on&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;administrative&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;restricted&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;presign&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;one_a_day&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;both_blocks&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;special&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;scheduled_on&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthBlockListSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockListSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthBlockListSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s">&quot;api_eighth_block_detail&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EighthBlockListSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockListSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthBlock</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;url&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;date&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;block_letter&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;locked&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;block_letter&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;locked&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthBlockDetailSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthBlockDetailSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ReadOnlyField</span><span class="p">()</span>
-    <span class="n">activities</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;fetch_activity_list_with_metadata&quot;</span><span class="p">)</span>
+    <span class="n">activities</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;fetch_activity_list_with_metadata&quot;</span><span class="p">)</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
     <span class="n">block_letter</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -241,57 +241,57 @@
         <span class="n">restricted_for_user</span> <span class="o">=</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span> <span class="ow">and</span>
                                <span class="ow">not</span> <span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">)</span> <span class="ow">and</span>
                                <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_restricted_acts</span><span class="p">))</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;Special: &quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">special</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;Special: &quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">special</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">prefix</span> <span class="o">+=</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">:</span>
-            <span class="n">prefix</span> <span class="o">+=</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span>
-        <span class="n">middle</span> <span class="o">=</span> <span class="s">&quot; (R)&quot;</span> <span class="k">if</span> <span class="n">restricted_for_user</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">&quot; (S)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">+=</span> <span class="s">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">+=</span> <span class="s">&quot; (A)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">+=</span> <span class="s">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+            <span class="n">prefix</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span>
+        <span class="n">middle</span> <span class="o">=</span> <span class="s2">&quot; (R)&quot;</span> <span class="k">if</span> <span class="n">restricted_for_user</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
         <span class="n">name_with_flags</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">middle</span> <span class="o">+</span> <span class="n">suffix</span>
-        <span class="n">name_with_flags_for_user</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="p">(</span><span class="n">middle</span> <span class="k">if</span> <span class="n">restricted_for_user</span> <span class="k">else</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="n">name_with_flags_for_user</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="p">(</span><span class="n">middle</span> <span class="k">if</span> <span class="n">restricted_for_user</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
 
         <span class="n">activity_info</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s">&quot;aid&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span>
-            <span class="s">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;aid&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span>
+            <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
                                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                                <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
             <span class="p">},</span>
-            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
                            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                            <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">),</span>
-            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s">&quot;name_with_flags&quot;</span><span class="p">:</span> <span class="n">name_with_flags</span><span class="p">,</span>
-            <span class="s">&quot;name_with_flags_for_user&quot;</span><span class="p">:</span> <span class="n">name_with_flags_for_user</span><span class="p">,</span>
-            <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-            <span class="s">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
-            <span class="s">&quot;favorited&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">favorited_activities</span><span class="p">,</span>
-            <span class="s">&quot;roster&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s">&quot;capacity&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;name_with_flags&quot;</span><span class="p">:</span> <span class="n">name_with_flags</span><span class="p">,</span>
+            <span class="s2">&quot;name_with_flags_for_user&quot;</span><span class="p">:</span> <span class="n">name_with_flags_for_user</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
+            <span class="s2">&quot;favorited&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">favorited_activities</span><span class="p">,</span>
+            <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_scheduled_activity_signup_list&quot;</span><span class="p">,</span>
                                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
                                <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
             <span class="p">},</span>
-            <span class="s">&quot;rooms&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s">&quot;sponsors&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s">&quot;restricted&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span><span class="p">,</span>
-            <span class="s">&quot;restricted_for_user&quot;</span><span class="p">:</span> <span class="n">restricted_for_user</span><span class="p">,</span>
-            <span class="s">&quot;both_blocks&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span>
-            <span class="s">&quot;one_a_day&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span><span class="p">,</span>
-            <span class="s">&quot;special&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_special</span><span class="p">(),</span>
-            <span class="s">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span><span class="p">,</span>
-            <span class="s">&quot;presign&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span><span class="p">,</span>
-            <span class="s">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span><span class="p">,</span>
-            <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-            <span class="s">&quot;comments&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
-            <span class="s">&quot;display_text&quot;</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+            <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">restricted</span><span class="p">,</span>
+            <span class="s2">&quot;restricted_for_user&quot;</span><span class="p">:</span> <span class="n">restricted_for_user</span><span class="p">,</span>
+            <span class="s2">&quot;both_blocks&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">,</span>
+            <span class="s2">&quot;one_a_day&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span><span class="p">,</span>
+            <span class="s2">&quot;special&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_special</span><span class="p">(),</span>
+            <span class="s2">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span><span class="p">,</span>
+            <span class="s2">&quot;presign&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span><span class="p">,</span>
+            <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+            <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+            <span class="s2">&quot;display_text&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">activity_info</span></div>
 
@@ -299,20 +299,20 @@
         <span class="n">activity_list</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">scheduled_activity_to_activity_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c"># Find all scheduled activities that don&#39;t correspond to</span>
-        <span class="c"># deleted activities</span>
+        <span class="c1"># Find all scheduled activities that don&#39;t correspond to</span>
+        <span class="c1"># deleted activities</span>
         <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span>
                                      <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                     <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;activity&quot;</span><span class="p">))</span>
+                                     <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">))</span>
 
-        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
         <span class="n">favorited_activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span>
-                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
         <span class="n">available_restricted_acts</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">restricted_activities_available_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">scheduled_activity</span> <span class="ow">in</span> <span class="n">scheduled_activities</span><span class="p">:</span>
             <span class="n">activity_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_scheduled_activity</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span>
-                                                            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">],</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span>
                                                             <span class="n">user</span><span class="p">,</span>
                                                             <span class="n">favorited_activities</span><span class="p">,</span>
                                                             <span class="n">available_restricted_acts</span><span class="p">)</span>
@@ -320,52 +320,52 @@
             <span class="n">scheduled_activity_to_activity_map</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span>
             <span class="n">activity_list</span><span class="p">[</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity_info</span>
 
-        <span class="c"># Find the number of students signed up for every activity</span>
-        <span class="c"># in this block</span>
+        <span class="c1"># Find the number of students signed up for every activity</span>
+        <span class="c1"># in this block</span>
         <span class="n">activities_with_signups</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
                                                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
                                                <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">scheduled_activity__activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                               <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;scheduled_activity__activity_id&quot;</span><span class="p">)</span>
-                                               <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">user_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s">&quot;scheduled_activity&quot;</span><span class="p">)))</span>
+                                               <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity_id&quot;</span><span class="p">)</span>
+                                               <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">user_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">)))</span>
 
         <span class="k">for</span> <span class="n">activity</span><span class="p">,</span> <span class="n">user_count</span> <span class="ow">in</span> <span class="n">activities_with_signups</span><span class="p">:</span>
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_count</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_count</span>
 
         <span class="n">sponsors_dict</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span>
-                                      <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                                                   <span class="s">&quot;user_id&quot;</span><span class="p">,</span>
-                                                   <span class="s">&quot;first_name&quot;</span><span class="p">,</span>
-                                                   <span class="s">&quot;last_name&quot;</span><span class="p">,</span>
-                                                   <span class="s">&quot;show_full_name&quot;</span><span class="p">))</span>
+                                      <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                                                   <span class="s2">&quot;user_id&quot;</span><span class="p">,</span>
+                                                   <span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
+                                                   <span class="s2">&quot;last_name&quot;</span><span class="p">,</span>
+                                                   <span class="s2">&quot;show_full_name&quot;</span><span class="p">))</span>
 
         <span class="n">all_sponsors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">sponsor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                             <span class="p">{</span><span class="s">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                              <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">3</span><span class="p">]})</span> <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors_dict</span><span class="p">)</span>
+                             <span class="p">{</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">else</span> <span class="n">sponsor</span><span class="p">[</span><span class="mi">3</span><span class="p">]})</span> <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors_dict</span><span class="p">)</span>
 
-        <span class="n">activity_ids</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;activity__id&quot;</span><span class="p">)</span>
+        <span class="n">activity_ids</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">)</span>
         <span class="n">sponsorships</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">sponsors</span>
                                       <span class="o">.</span><span class="n">through</span>
                                       <span class="o">.</span><span class="n">objects</span>
                                       <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthactivity_id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span>
-                                      <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;sponsors&quot;</span><span class="p">)</span>
-                                      <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&quot;eighthactivity&quot;</span><span class="p">,</span> <span class="s">&quot;eighthsponsor&quot;</span><span class="p">))</span>
+                                      <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;sponsors&quot;</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;eighthactivity&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthsponsor&quot;</span><span class="p">))</span>
 
-        <span class="n">scheduled_activity_ids</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">scheduled_activity_ids</span> <span class="o">=</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">overidden_sponsorships</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span>
                                                          <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span>
-                                                         <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&quot;eighthscheduledactivity&quot;</span><span class="p">,</span> <span class="s">&quot;eighthsponsor&quot;</span><span class="p">))</span>
+                                                         <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthsponsor&quot;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">sponsorship</span> <span class="ow">in</span> <span class="n">sponsorships</span><span class="p">:</span>
-            <span class="n">activity_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sponsorship</span><span class="p">[</span><span class="s">&quot;eighthactivity&quot;</span><span class="p">])</span>
-            <span class="n">sponsor_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s">&quot;eighthsponsor&quot;</span><span class="p">]</span>
+            <span class="n">activity_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sponsorship</span><span class="p">[</span><span class="s2">&quot;eighthactivity&quot;</span><span class="p">])</span>
+            <span class="n">sponsor_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s2">&quot;eighthsponsor&quot;</span><span class="p">]</span>
             <span class="n">sponsor</span> <span class="o">=</span> <span class="n">all_sponsors</span><span class="p">[</span><span class="n">sponsor_id</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;user_id&quot;</span><span class="p">]:</span>
-                <span class="c"># We&#39;re not using User.get_user() here since we only want</span>
-                <span class="c"># a value from LDAP that is probably already cached.</span>
-                <span class="c"># This eliminates several hundred SQL queries on some</span>
-                <span class="c"># pages.</span>
-                <span class="n">dn</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">dn_from_id</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;user_id&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]:</span>
+                <span class="c1"># We&#39;re not using User.get_user() here since we only want</span>
+                <span class="c1"># a value from LDAP that is probably already cached.</span>
+                <span class="c1"># This eliminates several hundred SQL queries on some</span>
+                <span class="c1"># pages.</span>
+                <span class="n">dn</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">dn_from_id</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">dn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span><span class="o">.</span><span class="n">last_name</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -373,49 +373,49 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
 
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;sponsors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="n">activities_sponsors_overidden</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">sponsorship</span> <span class="ow">in</span> <span class="n">overidden_sponsorships</span><span class="p">:</span>
-            <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s">&quot;eighthscheduledactivity&quot;</span><span class="p">]</span>
+            <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">]</span>
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">scheduled_activity_to_activity_map</span><span class="p">[</span><span class="n">scheduled_activity_id</span><span class="p">]</span>
-            <span class="n">sponsor_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s">&quot;eighthsponsor&quot;</span><span class="p">]</span>
+            <span class="n">sponsor_id</span> <span class="o">=</span> <span class="n">sponsorship</span><span class="p">[</span><span class="s2">&quot;eighthsponsor&quot;</span><span class="p">]</span>
             <span class="n">sponsor</span> <span class="o">=</span> <span class="n">all_sponsors</span><span class="p">[</span><span class="n">sponsor_id</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">activity_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">activities_sponsors_overidden</span><span class="p">:</span>
                 <span class="n">activities_sponsors_overidden</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">activity_id</span><span class="p">)</span>
-                <span class="k">del</span> <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;sponsors&quot;</span><span class="p">][:]</span>
+                <span class="k">del</span> <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;sponsors&quot;</span><span class="p">][:]</span>
 
-            <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;user_id&quot;</span><span class="p">]:</span>
-                <span class="c"># See a few lines up for why we&#39;re not using User.get_user()</span>
-                <span class="n">dn</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">dn_from_id</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;user_id&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]:</span>
+                <span class="c1"># See a few lines up for why we&#39;re not using User.get_user()</span>
+                <span class="n">dn</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">dn_from_id</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">dn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">dn</span><span class="p">)</span><span class="o">.</span><span class="n">last_name</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;sponsors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="n">roomings</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span>
                                   <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthactivity_id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span>
-                                  <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s">&quot;eighthactivity&quot;</span><span class="p">))</span>
+                                  <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthactivity&quot;</span><span class="p">))</span>
         <span class="n">overidden_roomings</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">rooms</span>
                                                      <span class="o">.</span><span class="n">through</span>
                                                      <span class="o">.</span><span class="n">objects</span>
                                                      <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthscheduledactivity_id__in</span><span class="o">=</span><span class="n">scheduled_activity_ids</span><span class="p">)</span>
-                                                     <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s">&quot;eighthscheduledactivity&quot;</span><span class="p">))</span>
+                                                     <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;eighthroom&quot;</span><span class="p">,</span> <span class="s2">&quot;eighthscheduledactivity&quot;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">rooming</span> <span class="ow">in</span> <span class="n">roomings</span><span class="p">:</span>
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthactivity</span><span class="o">.</span><span class="n">id</span>
             <span class="n">activity_cap</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthactivity</span><span class="o">.</span><span class="n">default_capacity</span>
             <span class="n">room_name</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;rooms&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">room_name</span><span class="p">)</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;rooms&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">room_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">activity_cap</span><span class="p">:</span>
-                <span class="c"># use activity default capacity instead of sum of activity rooms</span>
-                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity_cap</span>
+                <span class="c1"># use activity default capacity instead of sum of activity rooms</span>
+                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity_cap</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">capacity</span>
+                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">capacity</span>
 
         <span class="n">activities_rooms_overidden</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">rooming</span> <span class="ow">in</span> <span class="n">overidden_roomings</span><span class="p">:</span>
@@ -424,48 +424,48 @@
             <span class="n">activity_id</span> <span class="o">=</span> <span class="n">scheduled_activity_to_activity_map</span><span class="p">[</span><span class="n">scheduled_activity_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">activity_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">activities_rooms_overidden</span><span class="p">:</span>
                 <span class="n">activities_rooms_overidden</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">activity_id</span><span class="p">)</span>
-                <span class="k">del</span> <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;rooms&quot;</span><span class="p">][:]</span>
-                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">del</span> <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;rooms&quot;</span><span class="p">][:]</span>
+                <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">room_name</span> <span class="o">=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;rooms&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">room_name</span><span class="p">)</span>
-            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">capacity</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;rooms&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">room_name</span><span class="p">)</span>
+            <span class="n">activity_list</span><span class="p">[</span><span class="n">activity_id</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rooming</span><span class="o">.</span><span class="n">eighthroom</span><span class="o">.</span><span class="n">capacity</span>
 
         <span class="k">for</span> <span class="n">scheduled_activity</span> <span class="ow">in</span> <span class="n">scheduled_activities</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">capacity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">capacity</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">capacity</span>
                 <span class="n">sched_act_id</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span>
-                <span class="n">activity_list</span><span class="p">[</span><span class="n">sched_act_id</span><span class="p">][</span><span class="s">&quot;roster&quot;</span><span class="p">][</span><span class="s">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capacity</span>
+                <span class="n">activity_list</span><span class="p">[</span><span class="n">sched_act_id</span><span class="p">][</span><span class="s2">&quot;roster&quot;</span><span class="p">][</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capacity</span>
 
         <span class="k">return</span> <span class="n">activity_list</span></div>
 
 <div class="viewcode-block" id="EighthBlockDetailSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthBlockDetailSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;activities&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;date&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;block_letter&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;activities&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthSignupSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthSignupSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthSignupSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
-    <span class="n">block</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;block_info&quot;</span><span class="p">)</span>
-    <span class="n">activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;activity_info&quot;</span><span class="p">)</span>
-    <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;scheduled_activity_info&quot;</span><span class="p">)</span>
+    <span class="n">block</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;block_info&quot;</span><span class="p">)</span>
+    <span class="n">activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;activity_info&quot;</span><span class="p">)</span>
+    <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;scheduled_activity_info&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EighthSignupSerializer.block_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthSignupSerializer.block_info">[docs]</a>    <span class="k">def</span> <span class="nf">block_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signup</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s">&quot;date&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
                            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">])</span>
+                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">])</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="EighthSignupSerializer.activity_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthSignupSerializer.activity_info">[docs]</a>    <span class="k">def</span> <span class="nf">activity_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signup</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title_with_flags</span><span class="p">,</span>
-            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title_with_flags</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
                            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">])</span>
+                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">])</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="EighthSignupSerializer.scheduled_activity_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthSignupSerializer.scheduled_activity_info">[docs]</a>    <span class="k">def</span> <span class="nf">scheduled_activity_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signup</span><span class="p">):</span>
@@ -473,41 +473,41 @@
 
 <div class="viewcode-block" id="EighthSignupSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthSignupSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthSignup</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;block&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;activity&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;scheduled_activity&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;user&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;block&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;activity&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;user&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="UserSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.UserSerializer">[docs]</a><span class="k">class</span> <span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">()</span>
 
 <div class="viewcode-block" id="UserSerializer.get_url"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.UserSerializer.get_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_user_profile_detail&quot;</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_user_profile_detail&quot;</span><span class="p">,</span>
                        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                       <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">])</span></div>
+                       <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="UserSerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.UserSerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;full_name&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;username&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;url&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;full_name&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;username&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;url&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivitySerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
-    <span class="n">block</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;block_info&quot;</span><span class="p">)</span>
-    <span class="n">activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;activity_info&quot;</span><span class="p">)</span>
-    <span class="n">signups</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s">&quot;signups_info&quot;</span><span class="p">)</span>
+    <span class="n">block</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;block_info&quot;</span><span class="p">)</span>
+    <span class="n">activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;activity_info&quot;</span><span class="p">)</span>
+    <span class="n">signups</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">(</span><span class="s2">&quot;signups_info&quot;</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">()</span>
     <span class="n">capacity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EighthScheduledActivitySerializer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s">&quot;context&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s">&quot;request&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&quot;context&quot;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&quot;context&quot;</span><span class="p">][</span><span class="s">&quot;request&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;context&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;request&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">][</span><span class="s2">&quot;request&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -519,20 +519,20 @@
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer.block_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer.block_info">[docs]</a>    <span class="k">def</span> <span class="nf">block_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s">&quot;date&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_block_detail&quot;</span><span class="p">,</span>
                            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">])</span>
+                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">])</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer.activity_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer.activity_info">[docs]</a>    <span class="k">def</span> <span class="nf">activity_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title_with_flags</span><span class="p">,</span>
-            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title_with_flags</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;api_eighth_activity_detail&quot;</span><span class="p">,</span>
                            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s">&quot;request&quot;</span><span class="p">])</span>
+                           <span class="n">request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">])</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer.signups_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer.signups_info">[docs]</a>    <span class="k">def</span> <span class="nf">signups_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">):</span>
@@ -543,9 +543,9 @@
 
         <span class="n">serializer</span> <span class="o">=</span> <span class="n">UserSerializer</span><span class="p">(</span><span class="n">signups</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">&quot;members&quot;</span><span class="p">:</span> <span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-            <span class="s">&quot;count&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-            <span class="s">&quot;viewable_count&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+            <span class="s2">&quot;viewable_count&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer.num_signups"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer.num_signups">[docs]</a>    <span class="k">def</span> <span class="nf">num_signups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="p">):</span>
@@ -553,26 +553,26 @@
 
 <div class="viewcode-block" id="EighthScheduledActivitySerializer.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthScheduledActivitySerializer.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;name&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;block&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;activity&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;signups&quot;</span><span class="p">,</span>
-                  <span class="s">&quot;capacity&quot;</span><span class="p">)</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;block&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;activity&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;signups&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;capacity&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="add_signup_validator"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.add_signup_validator">[docs]</a><span class="k">def</span> <span class="nf">add_signup_validator</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s">&#39;scheduled_activity&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;scheduled_activity&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="s">&#39;block&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s">&#39;activity&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;use_scheduled_activity&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;block&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;activity&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_scheduled_activity&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
         <span class="k">return</span>
-    <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity.&#39;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Either scheduled_activity, or block and activity must exist. use_scheduled_activity must be false to use block and activity.&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EighthAddSignupSerializer"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.serializers.EighthAddSignupSerializer">[docs]</a><span class="k">class</span> <span class="nc">EighthAddSignupSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
     <span class="n">block</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&#39;activity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&#39;block&#39;</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;activity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;block&#39;</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">use_scheduled_activity</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">force</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 

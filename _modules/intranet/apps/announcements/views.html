@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.views &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.announcements.views &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.announcements.views</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -193,10 +193,10 @@
 
 <span class="sd">        obj: The Announcement object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Announcement posted&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Announcement posted&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">notify_post</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Announcement notify on&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Announcement notify on&quot;</span><span class="p">)</span>
         <span class="n">announcement_posted_twitter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">notify_all</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">notify_email_all</span>
@@ -209,11 +209,11 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">announcement_posted_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Exception when emailing announcement: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Exception when emailing announcement: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Exception when emailing announcement: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Exception when emailing announcement: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">raise</span> <span class="n">e</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Announcement notify off&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Announcement notify off&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="announcement_approved_hook"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.announcement_approved_hook">[docs]</a><span class="k">def</span> <span class="nf">announcement_approved_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
@@ -230,22 +230,22 @@
 <div class="viewcode-block" id="request_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.request_announcement_view">[docs]</a><span class="k">def</span> <span class="nf">request_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The request announcement page</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">teacher_objs</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;teachers_requested&quot;</span><span class="p">]</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;teacher objs:&quot;</span><span class="p">)</span>
+            <span class="n">teacher_objs</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;teacher objs:&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">teacher_objs</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">teacher_objs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Please select a maximum of 2 teachers to approve this post.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please select a maximum of 2 teachers to approve this post.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-                <span class="c"># SAFE HTML</span>
+                <span class="c1"># SAFE HTML</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
                 <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -266,17 +266,17 @@
                     <span class="n">ann</span><span class="o">.</span><span class="n">admin_email_sent</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="n">ann</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully added approved announcement request. An Intranet administrator &quot;</span>
-                                              <span class="s">&quot;will review and post the announcement shortly. (Notification sent.)&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added approved announcement request. An Intranet administrator &quot;</span>
+                                              <span class="s2">&quot;will review and post the announcement shortly. (Notification sent.)&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">request_announcement_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully added announcement request.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added announcement request.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Error adding announcement request&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement request&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s">&quot;action&quot;</span><span class="p">:</span> <span class="s">&quot;add&quot;</span><span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -291,17 +291,17 @@
     <span class="n">requested_teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">requested_teachers</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">requested_teachers</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You do not have permission to approve this announcement.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to approve this announcement.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="c"># SAFE HTML</span>
+            <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="k">if</span> <span class="s">&quot;approve&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;approve&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">teachers_approved</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">admin_email_sent</span><span class="p">:</span>
@@ -309,23 +309,23 @@
                     <span class="n">obj</span><span class="o">.</span><span class="n">admin_email_sent</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully approved announcement request. An Intranet administrator &quot;</span>
-                                              <span class="s">&quot;will review and post the announcement shortly. (Notification sent.)&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully approved announcement request. An Intranet administrator &quot;</span>
+                                              <span class="s2">&quot;will review and post the announcement shortly. (Notification sent.)&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully approved announcement request. An Intranet administrator &quot;</span>
-                                              <span class="s">&quot;will review and post the announcement shortly.&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully approved announcement request. An Intranet administrator &quot;</span>
+                                              <span class="s2">&quot;will review and post the announcement shortly.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You did not approve this request.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You did not approve this request.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
     <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s">&quot;req&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
-        <span class="s">&quot;admin_approve&quot;</span><span class="p">:</span> <span class="bp">False</span>
+        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
+        <span class="s2">&quot;admin_approve&quot;</span><span class="p">:</span> <span class="bp">False</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/approve.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/approve.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@announcements_admin_required</span>
@@ -340,16 +340,16 @@
     <span class="n">requested_teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_requested</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">requested_teachers</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">req</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="c"># SAFE HTML</span>
+            <span class="c1"># SAFE HTML</span>
             <span class="n">req</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s">&quot;approve&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;approve&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">if</span> <span class="s">&quot;groups&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-                    <span class="n">group_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s">&quot;groups&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;groups&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+                    <span class="n">group_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
                     <span class="n">groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">group_ids</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
                 <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
@@ -368,46 +368,46 @@
                 <span class="n">announcement_approved_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
                 <span class="n">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement</span><span class="p">)</span>
 
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully approved announcement request. It has been posted.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully approved announcement request. It has been posted.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">rejected</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">posted_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
                 <span class="n">req</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;You did not approve this request. It will be hidden.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You did not approve this request. It will be hidden.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
     <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">req</span><span class="p">)</span>
     <span class="n">all_groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s">&quot;req&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
-        <span class="s">&quot;admin_approve&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-        <span class="s">&quot;all_groups&quot;</span><span class="p">:</span> <span class="n">all_groups</span>
+        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
+        <span class="s2">&quot;admin_approve&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s2">&quot;all_groups&quot;</span><span class="p">:</span> <span class="n">all_groups</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/approve.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/approve.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@announcements_admin_required</span>
 <div class="viewcode-block" id="add_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.add_announcement_view">[docs]</a><span class="k">def</span> <span class="nf">add_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Add an announcement</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-            <span class="c"># SAFE HTML</span>
+            <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully added announcement.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added announcement.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Error adding announcement&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s">&quot;action&quot;</span><span class="p">:</span> <span class="s">&quot;add&quot;</span><span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -418,7 +418,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">announcement</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span></div>
 
 
 <span class="nd">@announcements_admin_required</span>
@@ -427,33 +427,33 @@
 
 <span class="sd">        id: announcement id</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s">&quot;update_added_date&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;update_added_date&quot;</span><span class="p">]:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Update added date&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;update_added_date&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;update_added_date&quot;</span><span class="p">]:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Update added date&quot;</span><span class="p">)</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="c"># SAFE HTML</span>
+            <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully modified announcement.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified announcement.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Error adding announcement&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding announcement&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">announcement</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s">&quot;action&quot;</span><span class="p">:</span> <span class="s">&quot;modify&quot;</span><span class="p">,</span>
-        <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
-        <span class="s">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span>
+        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
+        <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@announcements_admin_required</span>
@@ -462,28 +462,28 @@
 
 <span class="sd">        id: announcement id</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">post_id</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">post_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]</span>
+            <span class="n">post_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="n">post_id</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">a</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;full_delete&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_delete&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully deleted announcement.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted announcement.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">expiration_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;Successfully expired announcement.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully expired announcement.&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">announcement</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&quot;announcements/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;announcements/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">announcement</span><span class="p">})</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -493,16 +493,16 @@
 <span class="sd">        announcements_hidden in the user model is the related_name for</span>
 <span class="sd">        &quot;users_hidden&quot; in the announcement model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">announcement_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;announcement_id&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">announcement_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_id&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">announcement_id</span><span class="p">:</span>
             <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span>
             <span class="n">announcement</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
             <span class="n">announcement</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;Unhidden&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Unhidden&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
@@ -512,16 +512,16 @@
 <span class="sd">        announcements_hidden in the user model is the related_name for</span>
 <span class="sd">        &quot;users_hidden&quot; in the announcement model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">announcement_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;announcement_id&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">announcement_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_id&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">announcement_id</span><span class="p">:</span>
             <span class="n">announcement</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span>
             <span class="n">announcement</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
             <span class="n">announcement</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;Hidden&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s">&quot;POST&quot;</span><span class="p">],</span> <span class="s">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

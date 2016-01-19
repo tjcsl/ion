@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.profiler &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.middleware.profiler &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,12 +145,12 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.middleware.profiler</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c"># Original version taken from http://www.djangosnippets.org/snippets/186/</span>
-<span class="c"># Original author: udfalkso</span>
-<span class="c"># Modified version taken from http://djangosnippets.org/snippets/605/</span>
-<span class="c"># Modified by: Shwagroo Team</span>
-<span class="c"># Modified further by Doug Stryke</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Original version taken from http://www.djangosnippets.org/snippets/186/</span>
+<span class="c1"># Original author: udfalkso</span>
+<span class="c1"># Modified version taken from http://djangosnippets.org/snippets/605/</span>
+<span class="c1"># Modified by: Shwagroo Team</span>
+<span class="c1"># Modified further by Doug Stryke</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -168,37 +168,37 @@
 
 <span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">cStringIO</span> <span class="k">as</span> <span class="n">StringIO</span>
 
-<span class="c"># FIXME change log base to something appropriate for the particular installation</span>
-<span class="n">PROFILE_LOG_BASE</span> <span class="o">=</span> <span class="s">&#39;/var/tmp/django&#39;</span>
-<span class="c"># FIXME change if needed</span>
-<span class="n">DATABASE_CONNECTION</span> <span class="o">=</span> <span class="s">&#39;default&#39;</span>
+<span class="c1"># FIXME change log base to something appropriate for the particular installation</span>
+<span class="n">PROFILE_LOG_BASE</span> <span class="o">=</span> <span class="s1">&#39;/var/tmp/django&#39;</span>
+<span class="c1"># FIXME change if needed</span>
+<span class="n">DATABASE_CONNECTION</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 
 <span class="n">time_columns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s">&#39;Middleware time&#39;</span><span class="p">,</span> <span class="s">&#39;middleware_time&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;Elapsed time&#39;</span><span class="p">,</span> <span class="s">&#39;total_time&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;User cpu&#39;</span><span class="p">,</span> <span class="s">&#39;utime&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;System cpu&#39;</span><span class="p">,</span> <span class="s">&#39;stime&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;Query time&#39;</span><span class="p">,</span> <span class="s">&#39;query_time&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;Query count&#39;</span><span class="p">,</span> <span class="s">&#39;query_count&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s">&#39;Max RSS(kb)&#39;</span><span class="p">,</span> <span class="s">&#39;max_rss&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Middleware time&#39;</span><span class="p">,</span> <span class="s1">&#39;middleware_time&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Elapsed time&#39;</span><span class="p">,</span> <span class="s1">&#39;total_time&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;User cpu&#39;</span><span class="p">,</span> <span class="s1">&#39;utime&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;System cpu&#39;</span><span class="p">,</span> <span class="s1">&#39;stime&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Query time&#39;</span><span class="p">,</span> <span class="s1">&#39;query_time&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Query count&#39;</span><span class="p">,</span> <span class="s1">&#39;query_count&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Max RSS(kb)&#39;</span><span class="p">,</span> <span class="s1">&#39;max_rss&#39;</span><span class="p">),</span>
 <span class="p">]</span>
 <span class="n">time_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">time_columns</span><span class="p">]</span>
 <span class="n">time_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">time_columns</span><span class="p">]</span>
 <span class="n">time_stats</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="c"># Django middleware is class-based. The module is imported, the profiling class</span>
-<span class="c"># is instantiated, and the instance added to the middleware stack.</span>
-<span class="c"># We put this profiling module on both ends of the middleware stack to obtain</span>
-<span class="c"># the time spent in middleware. Consequently we have one imported module but</span>
-<span class="c"># two instances so most state is maintained at the module level.</span>
+<span class="c1"># Django middleware is class-based. The module is imported, the profiling class</span>
+<span class="c1"># is instantiated, and the instance added to the middleware stack.</span>
+<span class="c1"># We put this profiling module on both ends of the middleware stack to obtain</span>
+<span class="c1"># the time spent in middleware. Consequently we have one imported module but</span>
+<span class="c1"># two instances so most state is maintained at the module level.</span>
 <span class="n">_start_time</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="n">words_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;\s+&#39;</span><span class="p">)</span>
+<span class="n">words_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;\s+&#39;</span><span class="p">)</span>
 <span class="n">group_prefix_re</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;^.*/django/[^/]+&quot;</span><span class="p">),</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;^(.*)/[^/]+$&quot;</span><span class="p">),</span>  <span class="c"># extract module path</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;.*&quot;</span><span class="p">),</span>  <span class="c"># catch strange entries</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^.*/django/[^/]+&quot;</span><span class="p">),</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^(.*)/[^/]+$&quot;</span><span class="p">),</span>  <span class="c1"># extract module path</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">),</span>  <span class="c1"># catch strange entries</span>
 <span class="p">]</span>
 <span class="n">_log_file_path</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">_prof</span> <span class="o">=</span> <span class="bp">None</span>
@@ -231,13 +231,13 @@
 <div class="viewcode-block" id="ProfileMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_request">[docs]</a>    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-                <span class="c"># outer layer of middleware onion</span>
+            <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+                <span class="c1"># outer layer of middleware onion</span>
                 <span class="k">if</span> <span class="n">_middleware_start_time</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c"># inner layer of onion</span>
-                    <span class="k">if</span> <span class="s">&#39;reset&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+                    <span class="c1"># inner layer of onion</span>
+                    <span class="k">if</span> <span class="s1">&#39;reset&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                         <span class="n">time_stats</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_auto_reset_time</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -245,32 +245,32 @@
                     <span class="n">_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_start_rusage</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">getrusage</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RUSAGE_SELF</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="s1">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_prof</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">_prof</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
-                <span class="k">if</span> <span class="s">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">get_log_file_path</span><span class="p">(</span><span class="s">&#39;middleware.profile&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span></div>
+                <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">get_log_file_path</span><span class="p">(</span><span class="s1">&#39;middleware.profile&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="ProfileMiddleware.process_view"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_view">[docs]</a>    <span class="k">def</span> <span class="nf">process_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">callback_args</span><span class="p">,</span> <span class="n">callback_kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span> <span class="ow">and</span> <span class="p">(</span><span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_prof</span><span class="o">.</span><span class="n">runcall</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">callback_args</span><span class="p">,</span> <span class="o">**</span><span class="n">callback_kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProfileMiddleware.process_response"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_response">[docs]</a>    <span class="k">def</span> <span class="nf">process_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">_current_stats</span><span class="p">,</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_profile_layer</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_current_stats</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="c"># inner layer of onion</span>
+                    <span class="c1"># inner layer of onion</span>
                     <span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_time</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c"># outer layer of onion</span>
-                    <span class="n">_current_stats</span><span class="p">[</span><span class="s">&#39;middleware_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span>
-                                                         <span class="n">_middleware_start_time</span> <span class="o">-</span> <span class="n">_current_stats</span><span class="p">[</span><span class="s">&#39;total_time&#39;</span><span class="p">])</span>
+                    <span class="c1"># outer layer of onion</span>
+                    <span class="n">_current_stats</span><span class="p">[</span><span class="s1">&#39;middleware_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span>
+                                                         <span class="n">_middleware_start_time</span> <span class="o">-</span> <span class="n">_current_stats</span><span class="p">[</span><span class="s1">&#39;total_time&#39;</span><span class="p">])</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_display_time</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
                     <span class="n">_middleware_start_time</span> <span class="o">=</span> <span class="bp">None</span>
                     <span class="n">_current_stats</span> <span class="o">=</span> <span class="bp">None</span>
 
-            <span class="k">elif</span> <span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="s1">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_profile_layer</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_profile</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
                     <span class="n">_prof</span> <span class="o">=</span> <span class="bp">None</span>
@@ -280,8 +280,8 @@
                     <span class="n">_profile_layer</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-    <span class="c"># detect when we start timing a different page and auto-reset stats</span>
-    <span class="c"># (another option would be to maintain separate stats)</span>
+    <span class="c1"># detect when we start timing a different page and auto-reset stats</span>
+    <span class="c1"># (another option would be to maintain separate stats)</span>
     <span class="k">def</span> <span class="nf">_auto_reset_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_real_uri</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -291,7 +291,7 @@
                 <span class="n">time_stats</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="n">uri</span>
 
-    <span class="n">_reUri</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^(http.+/)[?&amp;]time.*$&#39;</span><span class="p">)</span>
+    <span class="n">_reUri</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;^(http.+/)[?&amp;]time.*$&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_real_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">()</span>
@@ -300,22 +300,22 @@
             <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># record stats from this request</span>
+        <span class="c1"># record stats from this request</span>
         <span class="n">stats</span> <span class="o">=</span> <span class="n">time_stats</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">_start_time</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;total_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">_start_time</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">_start_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_rusage</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">getrusage</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RUSAGE_SELF</span><span class="p">)</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;max_rss&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_rusage</span><span class="o">.</span><span class="n">ru_maxrss</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;utime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed_ru</span><span class="p">(</span><span class="s">&#39;ru_utime&#39;</span><span class="p">)</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;stime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed_ru</span><span class="p">(</span><span class="s">&#39;ru_stime&#39;</span><span class="p">)</span>
-        <span class="n">queries</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="s">&#39;DATABASE_CONNECTION&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">queries</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;query_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">])</span>
-        <span class="n">stats</span><span class="p">[</span><span class="s">&#39;query_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;max_rss&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_rusage</span><span class="o">.</span><span class="n">ru_maxrss</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;utime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed_ru</span><span class="p">(</span><span class="s1">&#39;ru_utime&#39;</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;stime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed_ru</span><span class="p">(</span><span class="s1">&#39;ru_stime&#39;</span><span class="p">)</span>
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="s1">&#39;DATABASE_CONNECTION&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">queries</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;query_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">])</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;query_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">stats</span>
 
     <span class="k">def</span> <span class="nf">_display_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-        <span class="c"># display all stats since last reset</span>
-        <span class="n">stats_str</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%13s</span><span class="s"> </span><span class="si">%14s</span><span class="s"> </span><span class="si">%10s</span><span class="s"> </span><span class="si">%12s</span><span class="s"> </span><span class="si">%12s</span><span class="s"> </span><span class="si">%12s</span><span class="s"> </span><span class="si">%12s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="p">[</span><span class="s">&#39;Req&#39;</span><span class="p">,</span> <span class="s">&#39;Start time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_labels</span><span class="p">)</span>
+        <span class="c1"># display all stats since last reset</span>
+        <span class="n">stats_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%13s</span><span class="s2"> </span><span class="si">%14s</span><span class="s2"> </span><span class="si">%10s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;Req&#39;</span><span class="p">,</span> <span class="s1">&#39;Start time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_labels</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">mins</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">sums</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -323,54 +323,54 @@
         <span class="n">values</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">start_time</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">time_stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">time_stats</span><span class="p">[</span><span class="n">start_time</span><span class="p">]</span>
-            <span class="c"># accumulate times for summary, except for first request</span>
+            <span class="c1"># accumulate times for summary, except for first request</span>
             <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">:</span>
                 <span class="n">mins</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">mins</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="mi">99999</span><span class="p">))</span>
                 <span class="n">sums</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">+=</span> <span class="n">stats</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
                 <span class="n">maxs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">maxs</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
                 <span class="n">values</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
-            <span class="c"># display line</span>
-            <span class="n">stats_str</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%15.3f</span><span class="s"> </span><span class="si">%14.3f</span><span class="s"> </span><span class="si">%10.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12d</span><span class="s"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="c1"># display line</span>
+            <span class="n">stats_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%15.3f</span><span class="s2"> </span><span class="si">%14.3f</span><span class="s2"> </span><span class="si">%10.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12d</span><span class="s2"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">count</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">start_time</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span>
                                                    <span class="n">time_fields</span><span class="p">])</span>
 
-        <span class="c"># display summary statistics</span>
-        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%15.3f</span><span class="s"> </span><span class="si">%14.3f</span><span class="s"> </span><span class="si">%10.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12d</span><span class="s"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;Minimum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">mins</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
-        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%15.3f</span><span class="s"> </span><span class="si">%14.3f</span><span class="s"> </span><span class="si">%10.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12d</span><span class="s"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;Mean&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">sums</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">/</span> <span class="n">count</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
-        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%15.3f</span><span class="s"> </span><span class="si">%14.3f</span><span class="s"> </span><span class="si">%10.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12d</span><span class="s"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;Maximum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">maxs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
+        <span class="c1"># display summary statistics</span>
+        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%15.3f</span><span class="s2"> </span><span class="si">%14.3f</span><span class="s2"> </span><span class="si">%10.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12d</span><span class="s2"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Minimum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">mins</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
+        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%15.3f</span><span class="s2"> </span><span class="si">%14.3f</span><span class="s2"> </span><span class="si">%10.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12d</span><span class="s2"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Mean&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">sums</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">/</span> <span class="n">count</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
+        <span class="n">stats_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%15.3f</span><span class="s2"> </span><span class="si">%14.3f</span><span class="s2"> </span><span class="si">%10.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12d</span><span class="s2"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Maximum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">maxs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">stats_str</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%-4s</span><span class="s"> </span><span class="si">%-24s</span><span class="s"> </span><span class="si">%15.3f</span><span class="s"> </span><span class="si">%14.3f</span><span class="s"> </span><span class="si">%10.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12.3f</span><span class="s"> </span><span class="si">%12d</span><span class="s"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
-                <span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;Standard deviation&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">stdev</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">field</span><span class="p">])</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
+            <span class="n">stats_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%15.3f</span><span class="s2"> </span><span class="si">%14.3f</span><span class="s2"> </span><span class="si">%10.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12.3f</span><span class="s2"> </span><span class="si">%12d</span><span class="s2"> </span><span class="si">%12d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Standard deviation&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">stdev</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">field</span><span class="p">])</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">time_fields</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">response</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">stats_str</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s">&quot;&lt;pre&gt;</span><span class="si">%s</span><span class="se">\n\n</span><span class="s">options: &amp;reset (clear all stats)</span><span class="se">\n\n</span><span class="si">%s</span><span class="s">&lt;/pre&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(),</span> <span class="n">stats_str</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre&gt;</span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">options: &amp;reset (clear all stats)</span><span class="se">\n\n</span><span class="si">%s</span><span class="s2">&lt;/pre&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(),</span> <span class="n">stats_str</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_elapsed_ru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_end_rusage</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_rusage</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">_prof</span><span class="o">.</span><span class="n">dump_stats</span><span class="p">(</span><span class="n">_log_file_path</span><span class="p">)</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">_log_file_path</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="s">&#39;/tmp&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="s1">&#39;/tmp&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
                 <span class="n">_prof</span><span class="o">.</span><span class="n">dump_stats</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">stats</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
         <span class="n">_prof</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="s">&#39;strip&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;strip&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
             <span class="n">stats</span><span class="o">.</span><span class="n">strip_dirs</span><span class="p">()</span>
-        <span class="n">sorts</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s">&#39;sort&#39;</span><span class="p">)</span>
+        <span class="n">sorts</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;sort&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sorts</span><span class="p">:</span>
             <span class="n">stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="o">*</span><span class="n">sorts</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="s">&#39;cumulative&#39;</span><span class="p">)</span>
-        <span class="n">limit</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;limit&#39;</span><span class="p">)</span>
+            <span class="n">stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="s1">&#39;cumulative&#39;</span><span class="p">)</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">limit</span> <span class="o">=</span> <span class="mi">40</span>
         <span class="k">else</span><span class="p">:</span>
@@ -385,11 +385,11 @@
         <span class="n">stats_str</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">response</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">stats_str</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;&lt;pre&gt;</span><span class="si">%s</span><span class="se">\n\n</span><span class="s"></span>
-<span class="s">            options: &amp;log (write data to file) &amp;strip (remove directories) &amp;limit=LIMIT (lines or fraction)</span><span class="se">\n</span><span class="s"></span>
-<span class="s">            &amp;sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)</span><span class="se">\n\n</span><span class="si">%s</span><span class="s">&lt;/pre&gt;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;pre&gt;</span><span class="si">%s</span><span class="se">\n\n</span><span class="s2"></span>
+<span class="s2">            options: &amp;log (write data to file) &amp;strip (remove directories) &amp;limit=LIMIT (lines or fraction)</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">            &amp;sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)</span><span class="se">\n\n</span><span class="si">%s</span><span class="s2">&lt;/pre&gt;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(),</span> <span class="n">stats_str</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s">&#39;strip&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;strip&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_summary_for_files</span><span class="p">(</span><span class="n">stats_str</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
@@ -403,14 +403,14 @@
         <span class="n">items</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="p">[:</span><span class="mi">40</span><span class="p">]</span>
 
-        <span class="n">res</span> <span class="o">=</span> <span class="s">&quot;      tottime</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;      tottime</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%4.1f%%</span><span class="s"> </span><span class="si">%7.3f</span><span class="s"> </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%4.1f%%</span><span class="s2"> </span><span class="si">%7.3f</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">res</span>
 
     <span class="k">def</span> <span class="nf">_summary_for_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_str</span><span class="p">):</span>
-        <span class="n">stats_str</span> <span class="o">=</span> <span class="n">stats_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">8</span><span class="p">:]</span>
+        <span class="n">stats_str</span> <span class="o">=</span> <span class="n">stats_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">8</span><span class="p">:]</span>
 
         <span class="n">mystats</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">mygroups</span> <span class="o">=</span> <span class="p">{}</span>
@@ -422,7 +422,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
                 <span class="n">time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
                 <span class="n">ttl</span> <span class="o">+=</span> <span class="n">time</span>
-                <span class="n">file_name</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
                 <span class="k">if</span> <span class="n">file_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mystats</span><span class="p">:</span>
                     <span class="n">mystats</span><span class="p">[</span><span class="n">file_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -433,10 +433,10 @@
                     <span class="n">mygroups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">mygroups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">+=</span> <span class="n">time</span>
 
-        <span class="k">return</span> <span class="s">&quot;&lt;pre&gt;&quot;</span> <span class="o">+</span>\
-               <span class="s">&quot; ---- By file ----</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary</span><span class="p">(</span><span class="n">mystats</span><span class="p">,</span> <span class="n">ttl</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>\
-               <span class="s">&quot; ---- By group ---</span><span class="se">\n\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary</span><span class="p">(</span><span class="n">mygroups</span><span class="p">,</span> <span class="n">ttl</span><span class="p">)</span> <span class="o">+</span>\
-               <span class="s">&quot;&lt;/pre&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;pre&gt;&quot;</span> <span class="o">+</span>\
+               <span class="s2">&quot; ---- By file ----</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary</span><span class="p">(</span><span class="n">mystats</span><span class="p">,</span> <span class="n">ttl</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>\
+               <span class="s2">&quot; ---- By group ---</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary</span><span class="p">(</span><span class="n">mygroups</span><span class="p">,</span> <span class="n">ttl</span><span class="p">)</span> <span class="o">+</span>\
+               <span class="s2">&quot;&lt;/pre&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="get_log_file_path"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.get_log_file_path">[docs]</a><span class="k">def</span> <span class="nf">get_log_file_path</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">,</span> <span class="n">called_time</span><span class="p">):</span>
@@ -450,7 +450,7 @@
         <span class="k">pass</span>
 
     <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">)</span>
-    <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="s">&quot;_&quot;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y%m</span><span class="si">%d</span><span class="s">-%H%M%S&quot;</span><span class="p">,</span> <span class="n">called_time</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">,</span> <span class="n">called_time</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">base</span> <span class="o">+</span> <span class="n">ext</span></div>
 
 

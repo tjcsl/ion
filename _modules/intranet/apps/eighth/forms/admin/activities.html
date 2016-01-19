@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.forms.admin.activities &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.forms.admin.activities &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.forms.admin.activities</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -162,18 +162,18 @@
 <div class="viewcode-block" id="ActivityDisplayField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityDisplayField">[docs]</a><span class="k">class</span> <span class="nc">ActivityDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">):</span></div>
 
     <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ActivityMultiDisplayField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityMultiDisplayField">[docs]</a><span class="k">class</span> <span class="nc">ActivityMultiDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelMultipleChoiceField</span><span class="p">):</span></div>
 
     <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ActivitySelectionForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivitySelectionForm">[docs]</a><span class="k">class</span> <span class="nc">ActivitySelectionForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span></div>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;Activity&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sponsor</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sponsor</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">include_cancelled</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ActivitySelectionForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -184,71 +184,71 @@
                 <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
                                                        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
                                                        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsoring_filter</span><span class="p">)</span>
-                                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                                                        <span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
                                                        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                                                        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
-                                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                                       <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                                                        <span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">include_cancelled</span><span class="p">:</span>
                     <span class="n">activity_ids</span> <span class="o">=</span> <span class="n">activity_ids</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
             <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span>
-                                              <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span>
+                                              <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sponsor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span>
                                           <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span>
-                                          <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+                                          <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span>
                                           <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                                          <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+                                          <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActivityDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActivityDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span>
                                                        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-                                                       <span class="n">empty_label</span><span class="o">=</span><span class="s">&quot;Select an activity&quot;</span><span class="p">)</span>
+                                                       <span class="n">empty_label</span><span class="o">=</span><span class="s2">&quot;Select an activity&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="QuickActivityForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.QuickActivityForm">[docs]</a><span class="k">class</span> <span class="nc">QuickActivityForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span></div>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthActivity</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="ActivityMultiSelectForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityMultiSelectForm">[docs]</a><span class="k">class</span> <span class="nc">ActivityMultiSelectForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="n">activities</span> <span class="o">=</span> <span class="n">ActivityMultiDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;Activities&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Activities&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ActivityMultiSelectForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;activities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ScheduledActivityMultiSelectForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ScheduledActivityMultiSelectForm">[docs]</a><span class="k">class</span> <span class="nc">ScheduledActivityMultiSelectForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="n">activities</span> <span class="o">=</span> <span class="n">ActivityMultiDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&quot;Activities&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Activities&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ScheduledActivityMultiSelectForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
                                                    <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                            <span class="c"># .exclude(cancelled=True)</span>
+                            <span class="c1"># .exclude(cancelled=True)</span>
                                                    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
-                                                   <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                                                   <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                                                    <span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
             <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span>
-                                              <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span>
+                                              <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-                                                        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+                                                        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
                                                         <span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;activities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span></div>
 
 
 <div class="viewcode-block" id="ActivityForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityForm">[docs]</a><span class="k">class</span> <span class="nc">ActivityForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span></div>
@@ -256,49 +256,49 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ActivityForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s">&quot;rooms&quot;</span><span class="p">,</span> <span class="s">&quot;users_allowed&quot;</span><span class="p">,</span> <span class="s">&quot;groups_allowed&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;users_allowed&quot;</span><span class="p">,</span> <span class="s2">&quot;groups_allowed&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="bp">None</span>
 
-        <span class="c"># Simple way to filter out teachers without hitting LDAP. This</span>
-        <span class="c"># shouldn&#39;t be a problem unless the username scheme changes and</span>
-        <span class="c"># the consequences of error are not significant.</span>
+        <span class="c1"># Simple way to filter out teachers without hitting LDAP. This</span>
+        <span class="c1"># shouldn&#39;t be a problem unless the username scheme changes and</span>
+        <span class="c1"># the consequences of error are not significant.</span>
 
-        <span class="c"># TODO: What we would like to do here (from users.forms):</span>
-        <span class="c"># self.fields[&quot;users_allowed&quot;] = SortedUserMultipleChoiceField(queryset=User.objects.get_students())</span>
-        <span class="c"># HOWEVER: this will result in LDAP information being queried for *all 1800 users.*</span>
-        <span class="c"># We need a better way to accomplish this. The solution below works because it only prints</span>
-        <span class="c"># the username field which doesn&#39;t require an LDAP query to access.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;users_allowed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span>
+        <span class="c1"># TODO: What we would like to do here (from users.forms):</span>
+        <span class="c1"># self.fields[&quot;users_allowed&quot;] = SortedUserMultipleChoiceField(queryset=User.objects.get_students())</span>
+        <span class="c1"># HOWEVER: this will result in LDAP information being queried for *all 1800 users.*</span>
+        <span class="c1"># We need a better way to accomplish this. The solution below works because it only prints</span>
+        <span class="c1"># the username field which doesn&#39;t require an LDAP query to access.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;users_allowed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;presign&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s">&quot;48 Hour&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&quot;default_capacity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s">&quot;Overrides the sum of each room&#39;s capacity above, if set.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;presign&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;48 Hour&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;default_capacity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;Overrides the sum of each room&#39;s capacity above, if set.&quot;</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthActivity</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s">&quot;name&quot;</span><span class="p">,</span>
-            <span class="s">&quot;description&quot;</span><span class="p">,</span>
-            <span class="s">&quot;sponsors&quot;</span><span class="p">,</span>
-            <span class="s">&quot;rooms&quot;</span><span class="p">,</span>
-            <span class="s">&quot;default_capacity&quot;</span><span class="p">,</span>
-            <span class="s">&quot;id&quot;</span><span class="p">,</span>
-            <span class="s">&quot;presign&quot;</span><span class="p">,</span>
-            <span class="s">&quot;one_a_day&quot;</span><span class="p">,</span>
-            <span class="s">&quot;both_blocks&quot;</span><span class="p">,</span>
-            <span class="s">&quot;sticky&quot;</span><span class="p">,</span>
-            <span class="s">&quot;special&quot;</span><span class="p">,</span>
-            <span class="s">&quot;administrative&quot;</span><span class="p">,</span>
-            <span class="s">&quot;restricted&quot;</span><span class="p">,</span>
-            <span class="s">&quot;users_allowed&quot;</span><span class="p">,</span>
-            <span class="s">&quot;groups_allowed&quot;</span><span class="p">,</span>
-            <span class="s">&quot;freshmen_allowed&quot;</span><span class="p">,</span>
-            <span class="s">&quot;sophomores_allowed&quot;</span><span class="p">,</span>
-            <span class="s">&quot;juniors_allowed&quot;</span><span class="p">,</span>
-            <span class="s">&quot;seniors_allowed&quot;</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rooms&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default_capacity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;presign&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;one_a_day&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;both_blocks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;special&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;administrative&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;restricted&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;users_allowed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;groups_allowed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;freshmen_allowed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sophomores_allowed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;juniors_allowed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;seniors_allowed&quot;</span>
         <span class="p">]</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">}),</span>
-            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;style&quot;</span><span class="p">:</span> <span class="s">&quot;width: 292px&quot;</span><span class="p">})</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">46</span><span class="p">}),</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;width: 292px&quot;</span><span class="p">})</span>
         <span class="p">}</span>
 </pre></div>
 

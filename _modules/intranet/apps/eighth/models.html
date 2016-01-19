@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1238) documentation</title>
+    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1239) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1238)',
+        VERSION:     'v3 (Build #1239)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1238) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1239) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,7 +145,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.models</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -204,22 +204,22 @@
     <span class="n">show_full_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;first_name&quot;</span><span class="p">,</span>
-                            <span class="s">&quot;last_name&quot;</span><span class="p">,</span>
-                            <span class="s">&quot;user&quot;</span><span class="p">,</span>
-                            <span class="s">&quot;online_attendance&quot;</span><span class="p">),)</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;last_name&quot;</span><span class="p">,</span> <span class="s">&quot;first_name&quot;</span><span class="p">,)</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;last_name&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;online_attendance&quot;</span><span class="p">),)</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">,)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_full_name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">to_be_assigned</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s">&quot;to be announced&quot;</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">]])</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -239,7 +239,7 @@
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="n">capacity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
 
-    <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;capacity&quot;</span><span class="p">),)</span>
+    <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">),)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">total_capacity_of_rooms</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">rooms</span><span class="p">):</span>
@@ -254,14 +254,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">to_be_determined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s">&quot;to be announced&quot;</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;to be assigned&quot;</span><span class="p">,</span> <span class="s2">&quot;to be determined&quot;</span><span class="p">,</span> <span class="s2">&quot;to be announced&quot;</span><span class="p">]])</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">)</span>
-        <span class="c"># return &quot;{}&quot;.format(self.name)</span>
+        <span class="k">return</span> <span class="s2">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">)</span>
+        <span class="c1"># return &quot;{}&quot;.format(self.name)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,)</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,)</span>
 
 
 <div class="viewcode-block" id="EighthActivityExcludeDeletedManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivityExcludeDeletedManager">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityExcludeDeletedManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span></div>
@@ -330,7 +330,7 @@
     <span class="n">objects</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span>
     <span class="n">undeleted_objects</span> <span class="o">=</span> <span class="n">EighthActivityExcludeDeletedManager</span><span class="p">()</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c"># This should really be unique</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># This should really be unique</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">sponsors</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">rooms</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">EighthRoom</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -346,10 +346,10 @@
     <span class="n">restricted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="n">users_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span>
-                                           <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;restricted_activity_set&quot;</span><span class="p">,</span>
+                                           <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;restricted_activity_set&quot;</span><span class="p">,</span>
                                            <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">groups_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span>
-                                            <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;restricted_activity_set&quot;</span><span class="p">,</span>
+                                            <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;restricted_activity_set&quot;</span><span class="p">,</span>
                                             <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">freshmen_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -358,14 +358,14 @@
     <span class="n">seniors_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="n">favorites</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">User</span><span class="p">,</span>
-                                       <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;favorited_activity_set&quot;</span><span class="p">,</span>
+                                       <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;favorited_activity_set&quot;</span><span class="p">,</span>
                                        <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">deleted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># Note that this is the default capacity if the</span>
-        <span class="c"># rooms/capacity are not overridden for a particular block.</span>
+        <span class="c1"># Note that this is the default capacity if the</span>
+        <span class="c1"># rooms/capacity are not overridden for a particular block.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_capacity</span>
         <span class="k">else</span><span class="p">:</span>
@@ -391,23 +391,23 @@
 
     <span class="k">def</span> <span class="nf">_name_with_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_restricted</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate the name with flags.&quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Special: &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Special: &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">include_restricted</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; (R)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; (A)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; (S)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">+=</span> <span class="s">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (R)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">both_blocks</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="n">name</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">restricted_activities_available_to_user</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the restricted activities available to the given user.&quot;&quot;&quot;</span>
         <span class="n">activities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">restricted_activity_set</span>
-                             <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                             <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
             <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span>
@@ -417,23 +417,23 @@
         <span class="k">if</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span>
                                             <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">freshmen_allowed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span>
                                             <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sophomores_allowed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span>
                                             <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">juniors_allowed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">grade</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span>
                                             <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">seniors_allowed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                            <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">activities</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">restricted_activity_set</span>
-                                   <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                                   <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
 
@@ -442,14 +442,14 @@
         <span class="n">id_min</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">id_max</span> <span class="o">=</span> <span class="mi">3200</span>
         <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">id_min</span><span class="p">,</span> <span class="n">id_max</span><span class="p">)]</span>
-        <span class="n">used</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)]</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)]</span>
         <span class="n">avail</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">used</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">avail</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">change_id_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Changes the internal ID field.</span>
 <span class="sd">            Possible solution: https://djangosnippets.org/snippets/2691/ &quot;&quot;&quot;</span>
-        <span class="c"># EighthActivity.objects.filter(pk=self.pk).update(id=new_id)</span>
+        <span class="c1"># EighthActivity.objects.filter(pk=self.pk).update(id=new_id)</span>
         <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">get_active_schedulings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -474,7 +474,7 @@
         <span class="k">return</span> <span class="n">scheduled_activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&quot;eighth activities&quot;</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;eighth activities&quot;</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_with_flags</span>
@@ -493,11 +493,11 @@
 
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="c"># Show same day if it&#39;s before 17:00</span>
+        <span class="c1"># Show same day if it&#39;s before 17:00</span>
         <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">:</span>
             <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">max_number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">blocks</span><span class="p">[:</span><span class="n">max_number</span><span class="p">]</span>
 
@@ -514,11 +514,11 @@
 
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="c"># Show same day if it&#39;s before 17:00</span>
+        <span class="c1"># Show same day if it&#39;s before 17:00</span>
         <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">:</span>
             <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">block</span>
 
     <span class="k">def</span> <span class="nf">get_next_upcoming_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -542,7 +542,7 @@
             <span class="n">first_upcoming_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">first_upcoming_block</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">()</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span><span class="p">)</span>
                          <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">first_upcoming_block</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
@@ -601,15 +601,15 @@
     <span class="n">block_letter</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">locked</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">activities</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span>
-                                        <span class="n">through</span><span class="o">=</span><span class="s">&quot;EighthScheduledActivity&quot;</span><span class="p">,</span>
+                                        <span class="n">through</span><span class="o">=</span><span class="s2">&quot;EighthScheduledActivity&quot;</span><span class="p">,</span>
                                         <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-    <span class="n">override_blocks</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s">&quot;EighthBlock&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">override_blocks</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;EighthBlock&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Capitalize the first letter of the block name.&quot;&quot;&quot;</span>
-        <span class="n">letter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">letter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">letter</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span> <span class="o">=</span> <span class="n">letter</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">letter</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
@@ -618,7 +618,7 @@
     <span class="k">def</span> <span class="nf">next_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the next blocks in order.&quot;&quot;&quot;</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span>
-                             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">)</span>
+                             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
                              <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">date__gt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="o">|</span>
                                      <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="o">&amp;</span>
                                       <span class="n">Q</span><span class="p">(</span><span class="n">block_letter__gt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
@@ -630,7 +630,7 @@
     <span class="k">def</span> <span class="nf">previous_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the previous blocks in order.&quot;&quot;&quot;</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span>
-                             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-date&quot;</span><span class="p">,</span> <span class="s">&quot;-block_letter&quot;</span><span class="p">)</span>
+                             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-date&quot;</span><span class="p">,</span> <span class="s2">&quot;-block_letter&quot;</span><span class="p">)</span>
                              <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">date__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="o">|</span>
                                      <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="o">&amp;</span>
                                       <span class="n">Q</span><span class="p">(</span><span class="n">block_letter__lt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
@@ -705,14 +705,14 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">letter_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s">&quot;Block {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;Block {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s">&quot;{} Block&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;{} Block&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">short_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Display the date and block letter (mm/dd B, e.x. &quot;9/1 B&quot;) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%m/</span><span class="si">%d</span><span class="s">&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -731,11 +731,11 @@
         <span class="k">return</span> <span class="n">formats</span><span class="o">.</span><span class="n">date_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">EIGHTH_BLOCK_DATE_FORMAT</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;{} ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_letter</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">),)</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;block_letter&quot;</span><span class="p">)</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">),)</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="EighthScheduledActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthScheduledActivityManager">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
@@ -800,22 +800,22 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c"># Use model manager</span>
+    <span class="c1"># Use model manager</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EighthScheduledActivityManager</span><span class="p">()</span>
 
     <span class="n">block</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">EighthBlock</span><span class="p">)</span>
     <span class="n">activity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">EighthActivity</span><span class="p">)</span>
     <span class="n">members</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span>
         <span class="n">User</span><span class="p">,</span>
-        <span class="n">through</span><span class="o">=</span><span class="s">&quot;EighthSignup&quot;</span><span class="p">,</span>
-        <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;eighthscheduledactivity_set&quot;</span>
+        <span class="n">through</span><span class="o">=</span><span class="s2">&quot;EighthSignup&quot;</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span>
     <span class="p">)</span>
 
     <span class="n">admin_comments</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">comments</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-    <span class="c"># Overridden attributes</span>
+    <span class="c1"># Overridden attributes</span>
     <span class="n">sponsors</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">rooms</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">EighthRoom</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">capacity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -829,21 +829,21 @@
         <span class="sd">&quot;&quot;&quot;Gets the full title for the activity, appending the title of the</span>
 <span class="sd">        scheduled activity to the activity&#39;s name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s2">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">act_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">cancelled_str</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">special</span><span class="p">:</span>
-            <span class="n">act_name</span> <span class="o">=</span> <span class="s">&quot;Special: &quot;</span> <span class="o">+</span> <span class="n">act_name</span>
-        <span class="k">return</span> <span class="n">act_name</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="s">&quot;{} - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">act_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">act_name</span> <span class="o">=</span> <span class="s2">&quot;Special: &quot;</span> <span class="o">+</span> <span class="n">act_name</span>
+        <span class="k">return</span> <span class="n">act_name</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="s2">&quot;{} - {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">act_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">title_with_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the title for the activity, appending the title of the</span>
 <span class="sd">        scheduled activity to the activity&#39;s name and flags.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s2">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">name_with_flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">_name_with_flags</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="n">cancelled_str</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">special</span><span class="p">:</span>
-            <span class="n">name_with_flags</span> <span class="o">=</span> <span class="s">&quot;Special: &quot;</span> <span class="o">+</span> <span class="n">name_with_flags</span>
+            <span class="n">name_with_flags</span> <span class="o">=</span> <span class="s2">&quot;Special: &quot;</span> <span class="o">+</span> <span class="n">name_with_flags</span>
         <span class="k">return</span> <span class="n">name_with_flags</span>
 
     <span class="k">def</span> <span class="nf">get_true_sponsors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -894,7 +894,7 @@
             <span class="k">return</span> <span class="n">c</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span><span class="p">:</span>
-                <span class="c"># use activity-level override</span>
+                <span class="c1"># use activity-level override</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">default_capacity</span>
 
             <span class="n">rooms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()</span>
@@ -951,7 +951,7 @@
         <span class="n">activity_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
                                  <span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
                                           <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
-        <span class="c"># Presign activities can only be signed up for 2 days in advance.</span>
+        <span class="c1"># Presign activities can only be signed up for 2 days in advance.</span>
         <span class="n">presign_period</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">now</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">activity_date</span> <span class="o">-</span> <span class="n">presign_period</span><span class="p">))</span>
@@ -1047,8 +1047,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;B&quot;</span><span class="p">]:</span>
-            <span class="c"># both_blocks is not currently implemented for blocks other than A and B</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
+            <span class="c1"># both_blocks is not currently implemented for blocks other than A and B</span>
             <span class="k">return</span> <span class="bp">None</span>
 
         <span class="n">other_instances</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span>
@@ -1058,7 +1058,7 @@
             <span class="k">if</span> <span class="n">inst</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;B&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">inst</span>
 
         <span class="k">return</span> <span class="bp">False</span>
@@ -1072,13 +1072,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">force</span> <span class="o">=</span> <span class="p">(</span><span class="n">force</span> <span class="ow">or</span> <span class="p">(</span><span class="s">&quot;force&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">))</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span>
+            <span class="n">force</span> <span class="o">=</span> <span class="p">(</span><span class="n">force</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;force&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">))</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span>
 
         <span class="n">exception</span> <span class="o">=</span> <span class="n">eighth_exceptions</span><span class="o">.</span><span class="n">SignupException</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
-            <span class="c"># Finds the other scheduling of the same activity on the same day</span>
-            <span class="c"># See note above in get_both_blocks_sibling()</span>
+            <span class="c1"># Finds the other scheduling of the same activity on the same day</span>
+            <span class="c1"># See note above in get_both_blocks_sibling()</span>
             <span class="n">sibling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
                 <span class="n">all_sched_act</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">sibling</span><span class="p">]</span>
@@ -1093,36 +1093,36 @@
             <span class="n">all_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
-            <span class="c"># Check if the user who sent the request has the permissions</span>
-            <span class="c"># to change the target user&#39;s signups</span>
+            <span class="c1"># Check if the user who sent the request has the permissions</span>
+            <span class="c1"># to change the target user&#39;s signups</span>
             <span class="k">if</span> <span class="n">request</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">SignupForbidden</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">raise</span> <span class="n">exception</span>
 
-            <span class="c"># Check if the activity has been deleted</span>
+            <span class="c1"># Check if the activity has been deleted</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span>
                 <span class="n">exception</span><span class="o">.</span><span class="n">ActivityDeleted</span> <span class="o">=</span> <span class="bp">True</span>
 
             <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
-                <span class="c"># Check if the block has been locked</span>
+                <span class="c1"># Check if the block has been locked</span>
                 <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">BlockLocked</span> <span class="o">=</span> <span class="bp">True</span>
 
-                <span class="c"># Check if the scheduled activity has been cancelled</span>
+                <span class="c1"># Check if the scheduled activity has been cancelled</span>
                 <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="bp">True</span>
 
-                <span class="c"># Check if the activity is full</span>
+                <span class="c1"># Check if the activity is full</span>
                 <span class="k">if</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">ActivityFull</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="c"># Check if it&#39;s too early to sign up for the activity</span>
+            <span class="c1"># Check if it&#39;s too early to sign up for the activity</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">presign</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_too_early_to_signup</span><span class="p">():</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">Presign</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="c"># Check if the user is already stickied into an activity</span>
+            <span class="c1"># Check if the user is already stickied into an activity</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
                 <span class="n">in_stickie</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
                                           <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
@@ -1138,7 +1138,7 @@
             <span class="k">if</span> <span class="n">in_stickie</span><span class="p">:</span>
                 <span class="n">exception</span><span class="o">.</span><span class="n">Sticky</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="c"># Check if signup would violate one-a-day constraint</span>
+            <span class="c1"># Check if signup would violate one-a-day constraint</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">one_a_day</span><span class="p">:</span>
                 <span class="n">in_act</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span>
                                       <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
@@ -1149,13 +1149,13 @@
                 <span class="k">if</span> <span class="n">in_act</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">OneADay</span> <span class="o">=</span> <span class="bp">True</span>
 
-            <span class="c"># Check if user is allowed in the activity if it&#39;s restricted</span>
+            <span class="c1"># Check if user is allowed in the activity if it&#39;s restricted</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">restricted</span><span class="p">:</span>
                 <span class="n">acts</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">restricted_activities_available_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">:</span>
                     <span class="n">exception</span><span class="o">.</span><span class="n">Restricted</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="n">success_message</span> <span class="o">=</span> <span class="s">&quot;Successfully signed up for activity.&quot;</span>
+        <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;Successfully signed up for activity.&quot;</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        final_remove_signups = []</span>
@@ -1191,14 +1191,14 @@
 <span class="sd">                        final_remove_signups.append(signup)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># If we&#39;ve collected any errors, raise the exception and abort</span>
-        <span class="c"># the signup attempt</span>
+        <span class="c1"># If we&#39;ve collected any errors, raise the exception and abort</span>
+        <span class="c1"># the signup attempt</span>
         <span class="k">if</span> <span class="n">exception</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exception</span>
 
-        <span class="c"># Everything&#39;s good to go - complete the signup. If we&#39;ve gotten to</span>
-        <span class="c"># this point, the signup is either before deadline or performed by</span>
-        <span class="c"># an eighth period admin, so previous absences and passes are cleared.</span>
+        <span class="c1"># Everything&#39;s good to go - complete the signup. If we&#39;ve gotten to</span>
+        <span class="c1"># this point, the signup is either before deadline or performed by</span>
+        <span class="c1"># an eighth period admin, so previous absences and passes are cleared.</span>
         <span class="n">after_deadline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -1208,7 +1208,7 @@
 
                 <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span>
                 <span class="n">prev_sponsors</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
-                <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prev_sponsors</span><span class="p">))</span>
+                <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prev_sponsors</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
                     <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="o">=</span> <span class="bp">self</span>
@@ -1220,8 +1220,8 @@
                     <span class="n">existing_signup</span><span class="o">.</span><span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">previous_activity_sponsors</span>
                     <span class="n">existing_signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c"># Clear out the other signups for this block if the user is</span>
-                    <span class="c"># switching out of a both-blocks activity</span>
+                    <span class="c1"># Clear out the other signups for this block if the user is</span>
+                    <span class="c1"># switching out of a both-blocks activity</span>
                     <span class="n">signup_sibling</span> <span class="o">=</span> <span class="n">existing_signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">signup_sibling</span><span class="p">:</span>
                         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
@@ -1252,16 +1252,16 @@
             <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">existing_signups</span><span class="p">:</span>
                 <span class="n">prev_sponsors</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">()</span>
                 <span class="n">prev_data</span><span class="p">[</span><span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span><span class="p">,</span>
-                    <span class="s">&quot;sponsors&quot;</span><span class="p">:</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prev_sponsors</span><span class="p">))</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">name_with_flags</span><span class="p">,</span>
+                    <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">prev_sponsors</span><span class="p">))</span>
                 <span class="p">}</span>
             <span class="n">existing_signups</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">sched_act</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
                 <span class="n">letter</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span>
                 <span class="k">if</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">prev_data</span><span class="p">:</span>
-                    <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">prev_data</span><span class="p">[</span><span class="n">letter</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
-                    <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">prev_data</span><span class="p">[</span><span class="n">letter</span><span class="p">][</span><span class="s">&quot;sponsors&quot;</span><span class="p">]</span>
+                    <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">prev_data</span><span class="p">[</span><span class="n">letter</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+                    <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">prev_data</span><span class="p">[</span><span class="n">letter</span><span class="p">][</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="bp">None</span>
                     <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1272,8 +1272,8 @@
                                             <span class="n">previous_activity_name</span><span class="o">=</span><span class="n">previous_activity_name</span><span class="p">,</span>
                                             <span class="n">previous_activity_sponsors</span><span class="o">=</span><span class="n">previous_activity_sponsors</span><span class="p">)</span>
 
-                <span class="c"># signup.previous_activity_name = signup.activity.name_with_flags</span>
-                <span class="c"># signup.previous_activity_sponsors = &quot;, &quot;.join(map(str, signup.get_true_sponsors()))</span>
+                <span class="c1"># signup.previous_activity_name = signup.activity.name_with_flags</span>
+                <span class="c1"># signup.previous_activity_sponsors = &quot;, &quot;.join(map(str, signup.get_true_sponsors()))</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        # See &quot;If block overrides signup on other blocks&quot; check</span>
@@ -1289,15 +1289,15 @@
         <span class="sd">&quot;&quot;&quot;Cancel an EighthScheduledActivity.</span>
 <span class="sd">        This does nothing besides set the cancelled flag and save the object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># super(EighthScheduledActivity, self).save(*args, **kwargs)</span>
+        <span class="c1"># super(EighthScheduledActivity, self).save(*args, **kwargs)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Running cancel hooks: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Running cancel hooks: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Cancelling {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cancelling {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="c"># NOT USED. Was broken anyway.</span>
+        <span class="c1"># NOT USED. Was broken anyway.</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        cancelled_room = EighthRoom.objects.get_or_create(name=&quot;CANCELLED&quot;, capacity=0)[0]</span>
 <span class="sd">        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name=&quot;&quot;, last_name=&quot;CANCELLED&quot;)[0]</span>
@@ -1318,10 +1318,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Uncancelling {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Uncancelling {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="c"># NOT USED. Was broken anyway.</span>
+        <span class="c1"># NOT USED. Was broken anyway.</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        cancelled_room = EighthRoom.objects.get_or_create(name=&quot;CANCELLED&quot;, capacity=0)[0]</span>
 <span class="sd">        cancelled_sponsor = EighthSponsor.objects.get_or_create(first_name=&quot;&quot;, last_name=&quot;CANCELLED&quot;)[0]</span>
@@ -1338,12 +1338,12 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;block&quot;</span><span class="p">,</span> <span class="s">&quot;activity&quot;</span><span class="p">),)</span>
-        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&quot;eighth scheduled activities&quot;</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">),)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;eighth scheduled activities&quot;</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
-        <span class="k">return</span> <span class="s">&quot;{} on {}{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">cancelled_str</span><span class="p">)</span>
+        <span class="n">cancelled_str</span> <span class="o">=</span> <span class="s2">&quot; (Cancelled)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;{} on {}{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">cancelled_str</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="EighthSignupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthSignupManager">[docs]</a><span class="k">class</span> <span class="nc">EighthSignupManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
@@ -1391,12 +1391,12 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
         <span class="n">EighthScheduledActivity</span><span class="p">,</span>
-        <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;eighthsignup_set&quot;</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;eighthsignup_set&quot;</span><span class="p">,</span>
         <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
         <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span>
     <span class="p">)</span>
 
-    <span class="c"># An after-deadline signup is assumed to be a pass</span>
+    <span class="c1"># An after-deadline signup is assumed to be a pass</span>
     <span class="n">after_deadline</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">previous_activity_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
     <span class="n">previous_activity_sponsors</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
@@ -1420,8 +1420,8 @@
 
         <span class="k">if</span> <span class="n">not_unique</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">({</span>
-                <span class="n">NON_FIELD_ERRORS</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;EighthSignup already exists for the User &quot;</span>
-                                   <span class="s">&quot;and the EighthScheduledActivity&#39;s block&quot;</span><span class="p">,)</span>
+                <span class="n">NON_FIELD_ERRORS</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;EighthSignup already exists for the User &quot;</span>
+                                   <span class="s2">&quot;and the EighthScheduledActivity&#39;s block&quot;</span><span class="p">,)</span>
             <span class="p">})</span>
 
     <span class="k">def</span> <span class="nf">remove_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
@@ -1434,19 +1434,19 @@
             <span class="k">if</span> <span class="n">user</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
                 <span class="n">exception</span><span class="o">.</span><span class="n">SignupForbidden</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="c"># Check if the block has been locked</span>
+        <span class="c1"># Check if the block has been locked</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
             <span class="n">exception</span><span class="o">.</span><span class="n">BlockLocked</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="c"># Check if the scheduled activity has been cancelled</span>
+        <span class="c1"># Check if the scheduled activity has been cancelled</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
             <span class="n">exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="c"># Check if the activity has been deleted</span>
+        <span class="c1"># Check if the activity has been deleted</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span>
             <span class="n">exception</span><span class="o">.</span><span class="n">ActivityDeleted</span> <span class="o">=</span> <span class="bp">True</span>
 
-        <span class="c"># Check if the user is already stickied into an activity</span>
+        <span class="c1"># Check if the user is already stickied into an activity</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">sticky</span><span class="p">:</span>
             <span class="n">exception</span><span class="o">.</span><span class="n">Sticky</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -1455,7 +1455,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-            <span class="k">return</span> <span class="s">&quot;Successfully removed signup for {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;Successfully removed signup for {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">accept_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">was_absent</span> <span class="o">=</span> <span class="bp">False</span>
@@ -1473,11 +1473,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">in_clear_absence_period</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+        <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="s">&quot;scheduled_activity&quot;</span><span class="p">),)</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">),)</span>
 </pre></div>
 
     </div>
