@@ -1423,13 +1423,17 @@ class User(AbstractBaseUser, PermissionsMixin):
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
 
-    def set_ldap_preference(self, item_name, value, is_admin):
+    def set_ldap_preference(self, item_name, value, is_admin=False):
         logger.debug("Pref: {} {}".format(item_name, value))
 
         if item_name.endswith("-self"):
             field_name = item_name.split("-self")[0]
             field_type = "self"
-            ldap_name = field_name + "-self"
+            ldap_name = field_name + "self"
+        elif item_name.endswith("self"):
+            field_name = item_name.split("self")[0]
+            field_type = "self"
+            ldap_name = field_name + "self"
         else:
             field_name = item_name
             field_type = "parent"
@@ -1449,12 +1453,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.set_raw_ldap_photoperm(field_type, grade, value)
             cache.delete(":".join([self.dn, "photo_permissions"]))
         else:
+            logger.debug("Setting raw LDAP: {} = {}".format(ldap_name, value))
             self.set_raw_ldap_attribute(ldap_name, value)
 
         if field_name == "showpictures":
             cache.delete(":".join([self.dn, "photo_permissions"]))
 
-        if field_name in ["showschedule", "showaddress", "showphone", "showbirthday", "showpictures"]:
+        if field_name in ["showschedule", "showaddress", "showphone", "showbirthday", "showpictures", "showeighth"]:
             cache.delete(":".join([self.dn, "user_info_permissions"]))
 
     def set_raw_ldap_photoperm(self, field_type, grade, value):
