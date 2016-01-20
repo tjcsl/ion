@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1248) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1249) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1248)',
+        VERSION:     'v3 (Build #1249)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1248) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1249) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -146,25 +146,26 @@
       
   <h1>Source code for intranet.apps.eighth.views.admin.scheduling</h1><div class="highlight"><pre>
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
 
 from cacheops import invalidate_obj
+
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
 
-from .....utils.serialization import safe_json
-from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
 from ...models import (EighthActivity, EighthBlock, EighthRoom,
                        EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
+from .....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1248) documentation</title>
+    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1249) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1248)',
+        VERSION:     'v3 (Build #1249)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1248) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1249) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -146,7 +146,6 @@
       
   <h1>Source code for intranet.apps.users.models</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -154,19 +153,18 @@
 <span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">import</span> <span class="nn">ldap3</span>
-<span class="kn">import</span> <span class="nn">ldap3.utils.dn</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">UserManager</span> <span class="k">as</span> <span class="n">DjangoUserManager</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">,</span> <span class="n">UserManager</span> <span class="k">as</span> <span class="n">DjangoUserManager</span>
 <span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
 <span class="kn">from</span> <span class="nn">django.core.signing</span> <span class="kn">import</span> <span class="n">Signer</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">iteritems</span>
 
 <span class="kn">from</span> <span class="nn">intranet.db.ldap_db</span> <span class="kn">import</span> <span class="n">LDAPConnection</span><span class="p">,</span> <span class="n">LDAPFilter</span>
 <span class="kn">from</span> <span class="nn">intranet.middleware</span> <span class="kn">import</span> <span class="n">threadlocals</span>
+
+<span class="kn">import</span> <span class="nn">ldap3</span>
+<span class="kn">import</span> <span class="nn">ldap3.utils.dn</span>
 
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
 
@@ -1097,7 +1095,7 @@
                                                   <span class="p">])</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">first_result</span><span class="p">()</span>
             <span class="n">perms</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="p">{}}</span>
-            <span class="k">for</span> <span class="n">perm</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">perm</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">bool_value</span> <span class="o">=</span> <span class="bp">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">False</span>
                 <span class="k">if</span> <span class="n">perm</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
                     <span class="n">perm_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>

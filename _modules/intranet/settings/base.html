@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1248) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1249) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1248)',
+        VERSION:     'v3 (Build #1249)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1248) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1249) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -146,11 +146,11 @@
       
   <h1>Source code for intranet.settings.base</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">.secret</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
 
@@ -364,10 +364,7 @@
 <span class="c1"># Name of current virtualenv</span>
 <span class="n">VIRTUAL_ENV</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;VIRTUAL_ENV&quot;</span><span class="p">])</span>
 
-<span class="n">minutes</span> <span class="o">=</span> <span class="mi">60</span>
-<span class="n">hours</span> <span class="o">=</span> <span class="n">minutes</span> <span class="o">*</span> <span class="mi">60</span>
-<span class="n">days</span> <span class="o">=</span> <span class="n">hours</span> <span class="o">*</span> <span class="mi">24</span>
-<span class="n">months</span> <span class="o">=</span> <span class="n">days</span> <span class="o">*</span> <span class="mi">30</span>
+<span class="n">months</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">30</span>
 <span class="c1"># Age of cache information</span>
 <span class="n">CACHE_AGE</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dn_id_mapping&quot;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
@@ -377,14 +374,11 @@
     <span class="s2">&quot;user_grade&quot;</span><span class="p">:</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
     <span class="s2">&quot;class_teacher&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
     <span class="s2">&quot;class_attribute&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;ldap_permissions&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">days</span><span class="p">,</span>
-    <span class="s2">&quot;bell_schedule&quot;</span><span class="p">:</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">days</span><span class="p">,</span>
-    <span class="s2">&quot;users_list&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">days</span><span class="p">,</span>
-    <span class="s2">&quot;emerg&quot;</span><span class="p">:</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">minutes</span>
+    <span class="s2">&quot;ldap_permissions&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;bell_schedule&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;users_list&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;emerg&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
 <span class="p">}</span>
-<span class="k">del</span> <span class="n">minutes</span>
-<span class="k">del</span> <span class="n">hours</span>
-<span class="k">del</span> <span class="n">days</span>
 <span class="k">del</span> <span class="n">months</span>
 
 <span class="c1"># Cacheops configuration</span>
