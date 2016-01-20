@@ -438,7 +438,7 @@ def toggle_favorite_view(request):
 
     aid = request.POST["aid"]
     activity = get_object_or_404(EighthActivity, id=aid)
-    if activity.favorites.filter(id=request.user.id).exists():
+    if activity.favorites.filter(id=request.user.id).nocache().exists():
         activity.favorites.remove(request.user)
         return http.HttpResponse("Unfavorited activity.")
     else:
