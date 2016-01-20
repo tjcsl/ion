@@ -59,6 +59,7 @@ $(document).ready(function() {
     };
 
     formatDate = function(date) {
+        console.log("date: "+date);
         var parts = date.split("-");
         return new Date(parts[0], parts[1]-1, parts[2]);
     }
@@ -123,7 +124,9 @@ $(document).ready(function() {
 
     getCurrentPeriod = function(now) {
         $sch = $(".schedule");
-        var curDate = formatDate($sch.attr("data-date"));
+        var schDate = $sch.attr("data-date");
+        if(!schDate) return;
+        var curDate = formatDate(schDate);
         var periods = getPeriods();
         if(!now) now = new Date();
 

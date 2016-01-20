@@ -15,8 +15,9 @@ function getTimeRemaining(endtime){
 
 function initClock(id, evt, endtime){
   var clock = document.querySelector(id);
+  if(!clock) return;
 
-  function updateClock(){
+  function updateClock() {
     var t = getTimeRemaining(endtime);
 
     var dys = t.days;
