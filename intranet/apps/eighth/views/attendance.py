@@ -25,15 +25,15 @@ from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
                                 Spacer, Table, TableStyle)
 from six import BytesIO
 
-from ...auth.decorators import attendance_taker_required, eighth_admin_required
-from ...dashboard.views import gen_sponsor_schedule
-from ...schedule.views import decode_date
-from ...users.models import User
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
                       EighthSignup, EighthSponsor)
 from ..utils import get_start_date
+from ...auth.decorators import attendance_taker_required, eighth_admin_required
+from ...dashboard.views import gen_sponsor_schedule
+from ...schedule.views import decode_date
+from ...users.models import User
 
 logger = logging.getLogger(__name__)
 

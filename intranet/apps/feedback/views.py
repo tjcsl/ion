@@ -3,15 +3,14 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from intranet import settings
-
-from ..notifications.emails import email_send
 from .forms import FeedbackForm
 from .models import Feedback
+from ..notifications.emails import email_send
 
 logger = logging.getLogger(__name__)
 

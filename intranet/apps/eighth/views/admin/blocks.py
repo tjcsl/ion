@@ -14,10 +14,10 @@ from django.shortcuts import redirect, render
 
 from six.moves import cPickle
 
-from ....auth.decorators import eighth_admin_required
+from ..attendance import generate_roster_pdf
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
 from ...models import EighthBlock, EighthScheduledActivity
-from ..attendance import generate_roster_pdf
+from ....auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
 

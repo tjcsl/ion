@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
 
-from ...test.ion_test import IonTestCase
 from ..eighth.models import (EighthActivity, EighthBlock, EighthRoom,
                              EighthScheduledActivity)
 from ..groups.models import Group
 from ..users.models import User
+from ...test.ion_test import IonTestCase
 
 
 """

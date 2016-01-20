@@ -7,12 +7,12 @@ from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ....utils.serialization import safe_json
-from ...users.models import User
 from ..exceptions import SignupException
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
                       EighthSignup)
 from ..serializers import EighthBlockDetailSerializer
+from ...users.models import User
+from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 

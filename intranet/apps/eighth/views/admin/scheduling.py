@@ -12,14 +12,14 @@ from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
 
-from .....utils.serialization import safe_json
-from ....auth.decorators import eighth_admin_required
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
 from ...models import (EighthActivity, EighthBlock, EighthRoom,
                        EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
+from .....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 

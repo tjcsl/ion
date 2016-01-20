@@ -12,11 +12,11 @@ from django.contrib import messages
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 
-from ....auth.decorators import eighth_admin_required
-from ....users.models import User
 from ...models import (EighthActivity, EighthBlock, EighthRoom,
                        EighthScheduledActivity, EighthSignup)
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
+from ....users.models import User
 
 logger = logging.getLogger(__name__)
 

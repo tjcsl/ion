@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django import forms
 
-from ..groups.models import Group
 from .models import Event
+from ..groups.models import Group
 
 
 class EventForm(forms.ModelForm):

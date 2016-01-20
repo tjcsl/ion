@@ -15,11 +15,11 @@ from formtools.wizard.views import SessionWizardView
 
 from six.moves import cPickle
 
-from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.rooms import RoomForm
 from ...models import EighthBlock, EighthRoom, EighthScheduledActivity
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
 

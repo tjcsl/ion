@@ -3,12 +3,12 @@ from __future__ import unicode_literals
 
 from django.conf.urls import url
 
+from .views import api_root
 from ..announcements import api as announcements_api
 from ..eighth.views import api as eighth_api
+from ..emerg import api as emerg_api
 from ..schedule import api as schedule_api
 from ..users import api as users_api
-from ..emerg import api as emerg_api
-from .views import api_root
 
 urlpatterns = [
     url(r"^$", api_root, name="api_root"),

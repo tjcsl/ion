@@ -5,16 +5,15 @@ import datetime
 import logging
 
 from django import http
+from django.conf import settings
 from django.shortcuts import render
 
-from intranet import settings
-
-from ...utils.serialization import safe_json
+from .models import Sign
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
 from ..users.models import User
-from .models import Sign
+from ...utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 

@@ -9,8 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from ..users.models import User
 from .models import Answer, Choice, Poll, Question
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 

@@ -5,8 +5,6 @@ import csv
 import logging
 import re
 
-import six
-
 from cacheops import invalidate_model, invalidate_obj
 
 from django import http
@@ -17,12 +15,10 @@ from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
 
+import six
+
 from six.moves import cPickle
 
-from ....auth.decorators import eighth_admin_required
-from ....groups.models import Group
-from ....search.views import get_search_results
-from ....users.models import User
 from ...forms.admin.activities import (ActivitySelectionForm,
                                        ScheduledActivityMultiSelectForm)
 from ...forms.admin.blocks import BlockSelectionForm
@@ -30,6 +26,10 @@ from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
 from ...models import (EighthActivity, EighthBlock, EighthScheduledActivity,
                        EighthSignup)
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
+from ....groups.models import Group
+from ....search.views import get_search_results
+from ....users.models import User
 
 logger = logging.getLogger(__name__)
 

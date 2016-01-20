@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 import json
 import logging
 
-import requests
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
+
+import requests
 
 from .models import GCMNotification, NotificationConfig
 

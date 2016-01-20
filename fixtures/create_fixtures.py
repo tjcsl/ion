@@ -8,11 +8,11 @@ import os.path
 import re
 import sys
 
+import MySQLdb as mdb
+
 import ldap3
 
 import pexpect
-
-import MySQLdb as mdb
 
 from six.moves import input
 

@@ -7,10 +7,10 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 
+from .notifications import event_approval_request
 from ..announcements.models import Announcement
 from ..eighth.models import EighthScheduledActivity
 from ..users.models import User
-from .notifications import event_approval_request
 
 
 class Link(models.Model):

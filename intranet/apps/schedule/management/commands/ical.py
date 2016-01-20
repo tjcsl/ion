@@ -7,10 +7,10 @@ from django.core.management.base import BaseCommand
 
 from icalendar import Calendar
 
+from intranet.apps.schedule.models import CodeName, Day, DayType
+
 from six import iteritems, text_type
 from six.moves.urllib import request
-
-from intranet.apps.schedule.models import CodeName, Day, DayType
 
 
 class Command(BaseCommand):

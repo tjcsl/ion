@@ -5,20 +5,20 @@
 # Modified by: Shwagroo Team
 # Modified further by Doug Stryke
 
-import re
 import os
+import re
 import resource
 import tempfile
 import time
 from collections import defaultdict
 
-import pstats
 
 import cProfile
 
-
 from django.conf import settings
 from django.db import connections
+
+import pstats
 
 from six.moves import cStringIO as StringIO
 

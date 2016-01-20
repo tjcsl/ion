@@ -5,11 +5,11 @@ import logging
 
 from django.http import Http404
 
+from intranet.apps.users.models import User
+
 from rest_framework import generics, status, views
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
-from intranet.apps.users.models import User
 
 from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
                       EighthSignup)

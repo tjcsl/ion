@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from rest_framework import serializers
 
-from ..groups.models import Group
 from .models import Announcement
+from ..groups.models import Group
 
 
 class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):

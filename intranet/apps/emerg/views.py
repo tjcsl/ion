@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import time
-import datetime
+
+from django.conf import settings
+from django.core.cache import cache
 
 import requests
-
-from django.core.cache import cache
-from django.conf import settings
 
 logger = logging.getLogger(__name__)
 

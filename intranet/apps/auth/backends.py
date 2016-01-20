@@ -6,10 +6,10 @@ import os
 import re
 import uuid
 
-import pexpect
-
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
+
+import pexpect
 
 from ..users.models import User
 

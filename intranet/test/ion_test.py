@@ -3,9 +3,9 @@ from unittest import mock
 
 from django.test import TestCase
 
+from .fake_ldap import MockLDAPConnection
 from ..apps.users.models import User
 from ..db.ldap_db import LDAPConnection
-from .fake_ldap import MockLDAPConnection
 
 
 class IonTestCase(TestCase):

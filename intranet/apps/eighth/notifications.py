@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import logging
 
-from ..notifications.emails import email_send
 from .models import EighthSignup
+from ..notifications.emails import email_send
 
 logger = logging.getLogger(__name__)
 

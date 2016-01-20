@@ -6,8 +6,8 @@ import logging
 from django import forms
 from django.db.models import Q
 
-from ....users.models import User
 from ...models import EighthActivity, EighthScheduledActivity
+from ....users.models import User
 
 logger = logging.getLogger(__name__)
 

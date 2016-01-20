@@ -8,11 +8,10 @@ import tempfile
 from os.path import normpath
 from wsgiref.util import FileWrapper
 
-import pysftp
-
 from Crypto import Random
 from Crypto.Cipher import AES
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -21,7 +20,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.debug import (sensitive_post_parameters,
                                            sensitive_variables)
 
-from intranet import settings
+import pysftp
 
 from .forms import UploadFileForm
 from .models import Host

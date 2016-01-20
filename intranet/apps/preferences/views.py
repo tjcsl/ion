@@ -7,10 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from ...db.ldap_db import LDAPConnection
-from ..users.models import User
 from .forms import (NotificationOptionsForm, PersonalInformationForm,
                     PreferredPictureForm, PrivacyOptionsForm)
+from ..users.models import User
+from ...db.ldap_db import LDAPConnection
 
 logger = logging.getLogger(__name__)
 

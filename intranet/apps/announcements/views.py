@@ -12,9 +12,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ..auth.decorators import announcements_admin_required
-from ..dashboard.views import dashboard_view
-from ..groups.models import Group
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email,
@@ -22,6 +19,9 @@ from .notifications import (admin_request_announcement_email,
                             announcement_posted_email,
                             announcement_posted_twitter,
                             request_announcement_email)
+from ..auth.decorators import announcements_admin_required
+from ..dashboard.views import dashboard_view
+from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
 

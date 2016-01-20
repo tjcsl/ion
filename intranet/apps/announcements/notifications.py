@@ -5,15 +5,14 @@ import json
 import logging
 import re
 
-import requests
-
+from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 
-from requests_oauthlib import OAuth1
+import requests
 
-from intranet import settings
+from requests_oauthlib import OAuth1
 
 from ..notifications.emails import email_send, email_send_bcc
 from ..users.models import User

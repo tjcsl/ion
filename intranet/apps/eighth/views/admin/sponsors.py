@@ -8,10 +8,10 @@ from django.shortcuts import redirect, render
 
 from six.moves import cPickle
 
-from ....auth.decorators import eighth_admin_required
 from ...forms.admin.sponsors import SponsorForm
 from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
 
 
 @eighth_admin_required

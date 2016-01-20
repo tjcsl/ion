@@ -6,6 +6,7 @@ import os
 import random
 from datetime import date, datetime
 
+from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.templatetags.static import static
@@ -13,11 +14,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
-from intranet import settings
-
+from .forms import AuthenticateForm
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..schedule.views import schedule_context
-from .forms import AuthenticateForm
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
