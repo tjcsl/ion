@@ -4,12 +4,11 @@ from __future__ import unicode_literals
 import logging
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import render
 from django.utils import timezone
-
-from intranet import settings
 
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup

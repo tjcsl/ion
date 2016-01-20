@@ -3,10 +3,9 @@ from __future__ import unicode_literals
 
 from copy import copy
 
+from django.conf import settings
 from django.utils import log
 from django.views.debug import ExceptionReporter
-
-from intranet import settings
 
 
 class AdminEmailHandler(log.AdminEmailHandler):

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -381,9 +382,6 @@ def privacy_options_view(request):
 
 @login_required
 def ldap_test(request):
-    from intranet.db.ldap_db import LDAPConnection
-    from intranet import settings
-
     c = LDAPConnection()
 
     results = ""

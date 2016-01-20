@@ -4,8 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django import forms
-
-from intranet import settings
+from django.conf import settings
 
 from .models import PrintJob
 

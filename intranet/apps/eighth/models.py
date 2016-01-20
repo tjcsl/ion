@@ -5,13 +5,12 @@ import datetime
 import logging
 from itertools import chain
 
+from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import formats
-
-from intranet import settings
 
 from . import exceptions as eighth_exceptions
 from ..users.models import User

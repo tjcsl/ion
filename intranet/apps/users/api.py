@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 import io
 import os
 
-from intranet import settings
+from django.conf import settings
+
 from intranet.apps.search.views import get_search_results
 
 from rest_framework import generics

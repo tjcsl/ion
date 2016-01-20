@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
-
-from intranet import settings
 
 from ..notifications.emails import email_send
 
