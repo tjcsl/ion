@@ -86,6 +86,7 @@ def get_login_theme():
         }
     return {}
 
+
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
     """Process and show the main login page or dashboard if logged in."""

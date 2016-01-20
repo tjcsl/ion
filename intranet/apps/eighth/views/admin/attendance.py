@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import csv
 import logging
-from datetime import date, datetime, MAXYEAR, MINYEAR, timedelta
+from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
 
 from cacheops import invalidate_obj
 from django import http

@@ -5,13 +5,12 @@ import logging
 import requests
 import time
 import datetime
-from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.shortcuts import render
 
 from intranet import settings
 
 logger = logging.getLogger(__name__)
+
 
 def check_emerg():
     status = True
@@ -35,10 +34,12 @@ def check_emerg():
 
     return status, message
 
+
 def get_emerg_result():
     logger.debug("Fetching emergency info from FCPS")
     status, message = check_emerg()
     return {"status": status, "message": message}
+
 
 def get_emerg():
     key = "emerg:{}".format(datetime.datetime.now().date())

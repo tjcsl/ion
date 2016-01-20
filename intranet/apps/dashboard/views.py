@@ -20,6 +20,7 @@ from ..emerg.views import get_emerg
 
 logger = logging.getLogger(__name__)
 
+
 def get_fcps_emerg(request):
     """
     Return FCPS emergency information
@@ -35,6 +36,7 @@ def get_fcps_emerg(request):
         return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
 
     return False
+
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     """Generate a list of information about a block and a student's
