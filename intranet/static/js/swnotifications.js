@@ -40,7 +40,7 @@ function sendSubscriptionToServer(subscription) {
             $.post("/notifications/chrome/setup", {
                 "token": token
             }, function(r) {
-                console.debug(r);
+                // console.debug(r);
             });
         } else {
             console.info("GCM token already saved.");
