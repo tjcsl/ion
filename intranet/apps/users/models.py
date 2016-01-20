@@ -9,6 +9,7 @@ from datetime import datetime
 
 import ldap3
 import ldap3.utils.dn
+
 from django.conf import settings
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -16,6 +17,7 @@ from django.core import exceptions
 from django.core.cache import cache
 from django.core.signing import Signer
 from django.db import models
+
 from six import iteritems
 
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter

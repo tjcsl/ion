@@ -5,6 +5,7 @@ import logging
 from collections import OrderedDict
 
 from django.db.models import Count
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -29,7 +30,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
 
     def fetch_scheduled_on(self, act):
-        scheduled_on = OrderedDict({})
+        scheduled_on = OrderedDict()
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block").order_by("block__date")
 
         # user = self.context.get("user", self.context["request"].user)

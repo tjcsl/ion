@@ -4,10 +4,12 @@ from __future__ import unicode_literals
 import logging
 
 from cacheops import invalidate_obj
+
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
 
 from .....utils.serialization import safe_json

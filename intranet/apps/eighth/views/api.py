@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.http import Http404
+
 from rest_framework import generics, status, views
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -46,7 +47,6 @@ class EighthBlockList(generics.ListAPIView):
 
     """API endpoint that lists all eighth blocks
     """
-    # FIXME: this call throws sphinx for a loop
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
 

@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
 
 from six.moves import cPickle

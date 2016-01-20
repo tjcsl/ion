@@ -5,6 +5,7 @@ import logging
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+
 from six import iteritems
 
 logger = logging.getLogger(__name__)

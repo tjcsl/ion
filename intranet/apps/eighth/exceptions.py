@@ -2,6 +2,7 @@
 from collections import namedtuple
 
 from django import http
+
 from rest_framework import status
 
 m = namedtuple("Message", ["regular", "admin"])

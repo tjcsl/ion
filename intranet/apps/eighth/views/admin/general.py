@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from cacheops import invalidate_all
+
 from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.conf import settings
 
-from intranet import settings
 from six.moves import cPickle
 from six.moves.urllib.parse import unquote
 

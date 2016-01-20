@@ -6,12 +6,15 @@ import logging
 import re
 
 import six
+
 from cacheops import invalidate_model, invalidate_obj
+
 from django import http
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
 
 from six.moves import cPickle

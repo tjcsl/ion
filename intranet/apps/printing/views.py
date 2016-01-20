@@ -7,11 +7,11 @@ import subprocess
 import tempfile
 
 import magic
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-
-from intranet import settings
+from django.conf import settings
 
 from .forms import PrintJobForm
 

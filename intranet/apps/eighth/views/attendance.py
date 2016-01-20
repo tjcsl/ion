@@ -6,13 +6,16 @@ import logging
 from datetime import datetime
 
 from cacheops import invalidate_obj
+
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+
 from formtools.wizard.views import SessionWizardView
+
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter

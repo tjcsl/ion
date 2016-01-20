@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 import logging
-import requests
 import time
 import datetime
-from django.core.cache import cache
 
-from intranet import settings
+import requests
+
+from django.core.cache import cache
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 

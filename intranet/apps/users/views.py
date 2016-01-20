@@ -10,9 +10,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+from django.conf import settings
 
-from intranet import settings
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
+
 from six.moves import cStringIO as StringIO
 
 from ..eighth.models import (EighthBlock, EighthScheduledActivity,

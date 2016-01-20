@@ -9,8 +9,10 @@ from os.path import normpath
 from wsgiref.util import FileWrapper
 
 import pysftp
+
 from Crypto import Random
 from Crypto.Cipher import AES
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse

@@ -6,9 +6,11 @@ import logging
 import re
 
 import requests
+
 from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
+
 from requests_oauthlib import OAuth1
 
 from intranet import settings

@@ -5,9 +5,11 @@ import logging
 from threading import local
 
 import gssapi
+
 import ldap3
 import ldap3.protocol.sasl
 import ldap3.utils.conv
+
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.signals import request_finished
 from django.dispatch import receiver

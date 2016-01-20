@@ -4,6 +4,7 @@ from __future__ import unicode_literals, with_statement
 import os
 
 import pkg_resources
+
 from fabric.api import (abort, env, hide, lcd, local, prefix, prompt, puts,
                         shell_env)
 from fabric.contrib.console import confirm

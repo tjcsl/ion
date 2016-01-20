@@ -9,9 +9,11 @@ import re
 import sys
 
 import ldap3
+
 import pexpect
 
 import MySQLdb as mdb
+
 from six.moves import input
 
 # Run this on iodine.tjhsst.edu
