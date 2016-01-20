@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.forms &mdash; TJ Intranet v3 (Build #1242) documentation</title>
+    <title>intranet.apps.emerg.views &mdash; TJ Intranet v3 (Build #1242) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -144,48 +144,60 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.auth.forms</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.emerg.views</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.forms</span> <span class="kn">import</span> <span class="n">AuthenticationForm</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">iteritems</span>
+<span class="kn">from</span> <span class="nn">intranet</span> <span class="kn">import</span> <span class="n">settings</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AuthenticateForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.forms.AuthenticateForm">[docs]</a><span class="k">class</span> <span class="nc">AuthenticateForm</span><span class="p">(</span><span class="n">AuthenticationForm</span><span class="p">):</span></div>
+<div class="viewcode-block" id="check_emerg"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.check_emerg">[docs]</a><span class="k">def</span> <span class="nf">check_emerg</span><span class="p">():</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="sd">&quot;&quot;&quot;Implements a login form.</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;{}?{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FCPS_EMERGENCY_PAGE</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">False</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        username</span>
-<span class="sd">            The username text field.</span>
-<span class="sd">        password</span>
-<span class="sd">            The password text field.</span>
+    <span class="n">bad_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;There are no emergency announcements at this time&quot;</span><span class="p">,</span> <span class="s2">&quot;There are no emergency messages at this time&quot;</span><span class="p">,</span> <span class="s2">&quot;There are no emeregency annoncements at this time&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bad_strings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">break</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;Username&quot;</span><span class="p">}),</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username&quot;</span><span class="p">,</span> <span class="s2">&quot;inactive&quot;</span><span class="p">:</span> <span class="s2">&quot;Access disallowed.&quot;</span><span class="p">})</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">PasswordInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;Password&quot;</span><span class="p">}),</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid password&quot;</span><span class="p">,</span> <span class="s2">&quot;inactive&quot;</span><span class="p">:</span> <span class="s2">&quot;Access disallowed.&quot;</span><span class="p">})</span>
+    <span class="n">emerg_split</span> <span class="o">=</span> <span class="s1">&#39;&lt;p&gt;&lt;a href=&quot;https://youtu.be/jo_8QFIEf64&#39;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">emerg_split</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Validates the username and password in the form&quot;&quot;&quot;</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AuthenticateForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="s2">&quot;__all__&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">error</span><span class="p">))})</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                <span class="k">if</span> <span class="s2">&quot;This account is inactive.&quot;</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
-                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Permission denied: account restricted.&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Invalid password&quot;</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">form</span>
+    <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="get_emerg_result"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.get_emerg_result">[docs]</a><span class="k">def</span> <span class="nf">get_emerg_result</span><span class="p">():</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fetching emergency info from FCPS&quot;</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">check_emerg</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_emerg"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.emerg.html#intranet.apps.emerg.views.get_emerg">[docs]</a><span class="k">def</span> <span class="nf">get_emerg</span><span class="p">():</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;emerg:{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+    <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Returning emergency info from cache&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cached</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">get_emerg_result</span><span class="p">()</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;emerg&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 
     </div>

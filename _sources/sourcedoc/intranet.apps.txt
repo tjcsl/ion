@@ -11,6 +11,7 @@ Subpackages
     intranet.apps.auth
     intranet.apps.dashboard
     intranet.apps.eighth
+    intranet.apps.emerg
     intranet.apps.error
     intranet.apps.events
     intranet.apps.feedback
