@@ -318,11 +318,15 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     is_senior = user.is_senior
     eighth_sponsor = user.get_eighth_sponsor()
 
+    # the URL path for forward/back buttons
+    view_announcements_url = "view_announcements"
+
     if show_widgets:
         dashboard_title = "Dashboard"
         dashboard_header = "Announcements"
     elif show_expired:
         dashboard_title = dashboard_header = "Announcement Archive"
+        view_announcements_url = "announcements_archive"
     else:
         dashboard_title = dashboard_header = "Announcements"
 
@@ -349,6 +353,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "user_hidden_announcements": user_hidden_announcements,
         "show_widgets": show_widgets,
         "show_expired": show_expired,
+        "view_announcements_url": view_announcements_url,
         "dashboard_title": dashboard_title,
         "dashboard_header": dashboard_header,
         "is_student": is_student,
