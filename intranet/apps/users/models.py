@@ -89,6 +89,8 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by given name (first/nickname and last)."""
         c = LDAPConnection()
 
+        results = []
+
         if sn and not given_name:
             results = c.search(settings.USER_DN,
                                "sn={}".format(sn),
