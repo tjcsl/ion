@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import subprocess
 import sys
+from datetime import timedelta
 
 from .secret import *  # noqa
 
@@ -217,10 +218,7 @@ WSGI_APPLICATION = "intranet.wsgi.application"
 # Name of current virtualenv
 VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"])
 
-minutes = 60
-hours = minutes * 60
-days = hours * 24
-months = days * 30
+months = timedelta(hours=24).total_seconds() * 30
 # Age of cache information
 CACHE_AGE = {
     "dn_id_mapping": 12 * months,
@@ -230,14 +228,11 @@ CACHE_AGE = {
     "user_grade": 10 * months,
     "class_teacher": 6 * months,
     "class_attribute": 6 * months,
-    "ldap_permissions": 1 * days,
-    "bell_schedule": 7 * days,
-    "users_list": 1 * days,
-    "emerg": 5 * minutes
+    "ldap_permissions": timedelta(hours=24).total_seconds(),
+    "bell_schedule": timedelta(weeks=1).total_seconds(),
+    "users_list": timedelta(hours=24).total_seconds(),
+    "emerg": timedelta(minutes=5).total_seconds()
 }
-del minutes
-del hours
-del days
 del months
 
 # Cacheops configuration
