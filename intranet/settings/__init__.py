@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import os
+import sys
+
+if sys.version_info < (3,):
+    raise Exception("Only Python 3 is supported.")
 
 if os.getenv("PRODUCTION") == "TRUE":
     from .production import *  # noqa

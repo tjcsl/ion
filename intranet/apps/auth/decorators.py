@@ -4,7 +4,6 @@ Decorators that restrict views to certain types of users.
 
 """
 
-from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import user_passes_test
 
