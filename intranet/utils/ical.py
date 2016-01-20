@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from urllib import request
+
 from icalendar import Calendar
 # from intranet.apps.schedule.models import *
-from six import text_type
-
-from six.moves.urllib import request
 
 
 def get_ical():
@@ -22,7 +21,7 @@ def parse(ical):
         categories = event.get('categories')
         if categories in ['Blue Day', 'Red Day', 'Anchor Day']:
             print("{} {} {}".format(date.to_ical(), summary, categories))
-            map[date.to_ical()] = text_type(summary)
+            map[date.to_ical()] = str(summary)
 
     return map
 

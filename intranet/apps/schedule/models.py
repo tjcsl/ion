@@ -4,8 +4,6 @@ import datetime
 
 from django.db import models
 
-from six import text_type
-
 
 class Time(models.Model):
     hour = models.IntegerField()
@@ -94,7 +92,7 @@ class Day(models.Model):
     comment = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
-        return "{}: {}".format(text_type(self.date), self.day_type)
+        return "{}: {}".format(str(self.date), self.day_type)
 
     class Meta:
         ordering = ("date",)

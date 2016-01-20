@@ -10,8 +10,6 @@ from intranet.db.ldap_db import LDAPConnection
 
 from ldap3.utils.conv import escape_filter_chars
 
-import six
-
 from ..announcements.models import Announcement
 from ..eighth.models import EighthActivity
 from ..events.models import Event
@@ -248,18 +246,10 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
-    try:
-        q = q.replace("+", " ")
-        # python 2 only
-        if six.PY2:
-            q = q.encode("utf-8")
-        users = []
+    q = q.replace("+", " ")
+    users = []
 
-        queries = q.split(" OR ")
-    except (UnicodeEncodeError, UnicodeDecodeError):
-        return True, []
-
-    for qu in queries:
+    for qu in q.split(" OR "):
         try:
             users += do_ldap_query(qu, admin)
         except ValueError:

@@ -3,6 +3,7 @@
 import csv
 import logging
 from datetime import datetime
+from io import BytesIO
 
 from cacheops import invalidate_obj
 
@@ -22,7 +23,6 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
                                 Spacer, Table, TableStyle)
-from six import BytesIO
 
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm

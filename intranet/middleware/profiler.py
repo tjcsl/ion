@@ -11,7 +11,7 @@ import resource
 import tempfile
 import time
 from collections import defaultdict
-
+from io import StringIO
 
 import cProfile
 
@@ -19,8 +19,6 @@ from django.conf import settings
 from django.db import connections
 
 import pstats
-
-from six.moves import cStringIO as StringIO
 
 # FIXME change log base to something appropriate for the particular installation
 PROFILE_LOG_BASE = '/var/tmp/django'

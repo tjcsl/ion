@@ -19,8 +19,6 @@ from intranet.middleware import threadlocals
 import ldap3
 import ldap3.utils.dn
 
-from six import iteritems
-
 from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
@@ -950,7 +948,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                   ])
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
-            for perm, value in iteritems(result):
+            for perm, value in result.items():
                 bool_value = True if (value[0] == 'TRUE') else False
                 if perm.endswith("-self"):
                     perm_name = perm[5:-5]

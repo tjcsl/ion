@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import pickle
 
 from cacheops import invalidate_obj
 
@@ -8,8 +9,6 @@ from django import forms, http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
-
-from six.moves import cPickle
 
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
 from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity,
@@ -38,7 +37,7 @@ def add_activity_view(request):
                             activity_id=activity.id)
         else:
             messages.error(request, "Error adding activity.")
-            request.session["add_activity_form"] = cPickle.dumps(form)
+            request.session["add_activity_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         context = {

@@ -2,6 +2,7 @@
 
 import csv
 import logging
+import pickle
 from collections import defaultdict
 
 from django import http
@@ -11,8 +12,6 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
-
-from six.moves import cPickle
 
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.rooms import RoomForm
@@ -33,7 +32,7 @@ def add_room_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding room.")
-            request.session["add_room_form"] = cPickle.dumps(form)
+            request.session["add_room_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

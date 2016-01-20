@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import pickle
+
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
-
-from six.moves import cPickle
 
 from ...forms.admin.sponsors import SponsorForm
 from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
@@ -23,7 +23,7 @@ def add_sponsor_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding sponsor.")
-            request.session["add_sponsor_form"] = cPickle.dumps(form)
+            request.session["add_sponsor_form"] = pickle.dumps(form)
 
     context = {
         "admin_page_title": "Add Sponsor",

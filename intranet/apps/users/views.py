@@ -13,8 +13,6 @@ from django.shortcuts import redirect, render
 
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
-from six.moves import cStringIO as StringIO
-
 from .models import Class, Grade, User
 from ..eighth.models import (EighthBlock, EighthScheduledActivity,
                              EighthSignup, EighthSponsor)
@@ -129,14 +127,14 @@ def picture_view(request, user_id, year=None):
                 if data is None:
                     image_buffer = io.open(default_image_path, mode="rb")
                 else:
-                    image_buffer = StringIO(data)
+                    image_buffer = io.StringIO(data)
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names:
                 data = user.photo_binary(preferred)
 
                 if data:
-                    image_buffer = StringIO(data)
+                    image_buffer = io.StringIO(data)
                 else:
                     image_buffer = io.open(default_image_path, mode="rb")
             else:
@@ -144,7 +142,7 @@ def picture_view(request, user_id, year=None):
         else:
             data = user.photo_binary(year)
             if data:
-                image_buffer = StringIO(data)
+                image_buffer = io.StringIO(data)
             else:
                 image_buffer = io.open(default_image_path, mode="rb")
 

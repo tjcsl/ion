@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import pickle
+
+from urllib.parse import unquote
+
 from cacheops import invalidate_all
 
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
-
-from six.moves import cPickle
-from six.moves.urllib.parse import unquote
 
 from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
@@ -72,7 +73,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
             context["scroll_to_id"] = form_css_id
         elif form_name in request.session:
             pickled_form = request.session.pop(form_name)
-            context[form_name] = cPickle.loads(str(pickled_form))
+            context[form_name] = pickle.loads(str(pickled_form))
             context["scroll_to_id"] = form_css_id
         else:
             context[form_name] = form_class()

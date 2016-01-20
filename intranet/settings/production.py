@@ -2,8 +2,7 @@
 
 import ipaddress
 import logging
-
-from six.moves.urllib import parse
+from urllib import parse
 
 from .base import *  # noqa
 

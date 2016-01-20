@@ -14,8 +14,6 @@ import ldap3
 
 import pexpect
 
-from six.moves import input
-
 # Run this on iodine.tjhsst.edu
 start_date = "2015-09-01"
 csl_realm = "CSL.TJHSST.EDU"

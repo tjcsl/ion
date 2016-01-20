@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import pickle
 import re
 
 from cacheops import invalidate_model
@@ -10,8 +11,6 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-
-from six.moves import cPickle
 
 from ..attendance import generate_roster_pdf
 from ...forms.admin.blocks import BlockForm, QuickBlockForm
@@ -31,7 +30,7 @@ def add_block_view(request):
             return redirect("eighth_admin_dashboard")
         else:
             messages.error(request, "Error adding block.")
-            request.session["add_block_form"] = cPickle.dumps(form)
+            request.session["add_block_form"] = pickle.dumps(form)
 
     date = None
     show_letters = None

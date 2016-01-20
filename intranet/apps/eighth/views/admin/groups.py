@@ -2,6 +2,7 @@
 
 import csv
 import logging
+import pickle
 import re
 
 from cacheops import invalidate_model, invalidate_obj
@@ -13,10 +14,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
-
-import six
-
-from six.moves import cPickle
 
 from ...forms.admin.activities import (ActivitySelectionForm,
                                        ScheduledActivityMultiSelectForm)
@@ -45,7 +42,7 @@ def add_group_view(request):
         else:
             messages.error(request, "Error adding group.")
             try:
-                request.session["add_group_form"] = cPickle.dumps(form)
+                request.session["add_group_form"] = pickle.dumps(form)
             except TypeError:
                 """ Prevent pickle errors """
                 pass
@@ -127,7 +124,7 @@ def edit_group_view(request, group_id):
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
-        filetext += six.text_type(chunk, "ISO-8859-1")
+        filetext += chunk.decode("ISO-8859-1")
     return filetext
 
 
