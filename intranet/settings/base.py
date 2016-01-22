@@ -545,7 +545,8 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?(\w+\.)?tjhsst\.edu$'
 )
 
-CORS_URLS_REGEX = r'^/api/.*$'
+# Uncomment to only allow XHR on API resources from TJ domains
+#CORS_URLS_REGEX = r'^/api/.*$'
 
 # Same origin frame options
 X_FRAME_OPTIONS = 'SAMEORIGIN'
