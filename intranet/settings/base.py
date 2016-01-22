@@ -546,7 +546,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 )
 
 # Uncomment to only allow XHR on API resources from TJ domains
-#CORS_URLS_REGEX = r'^/api/.*$'
+# CORS_URLS_REGEX = r'^/api/.*$'
 
 # Same origin frame options
 X_FRAME_OPTIONS = 'SAMEORIGIN'
