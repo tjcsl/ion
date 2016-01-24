@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1251) documentation</title>
+    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1255) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1251)',
+        VERSION:     'v3 (Build #1255)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1251) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1255) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -171,7 +171,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UserManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager">[docs]</a><span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">DjangoUserManager</span><span class="p">):</span></div>
+<div class="viewcode-block" id="UserManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager">[docs]</a><span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">DjangoUserManager</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;User model Manager for table-level User queries.</span>
 
@@ -181,7 +181,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by student ID.&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
@@ -191,9 +191,9 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dn&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by Ion ID.&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
@@ -203,9 +203,9 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dn&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get a list of users in a specific graduation year. &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
@@ -217,7 +217,7 @@
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
             <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">user</span><span class="p">[</span><span class="s2">&quot;dn&quot;</span><span class="p">]))</span>
 
-        <span class="k">return</span> <span class="n">users</span>
+        <span class="k">return</span> <span class="n">users</span></div>
 
     <span class="k">def</span> <span class="nf">_ldap_and_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Combine LDAP queries with AND</span>
@@ -230,7 +230,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;(&amp;&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 
-    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sn</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sn</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname and last).&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
@@ -258,9 +258,9 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">dn</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dn&quot;</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="k">def</span> <span class="nf">users_with_birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.users_with_birthday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_with_birthday">[docs]</a>    <span class="k">def</span> <span class="nf">users_with_birthday</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of user objects who have a birthday on a given date.&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
@@ -283,13 +283,13 @@
             <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">attribute_is_visible</span><span class="p">(</span><span class="s2">&quot;showbirthday&quot;</span><span class="p">):</span>
                 <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">users</span>
+        <span class="k">return</span> <span class="n">users</span></div>
 
     <span class="c1"># Simple way to filter out teachers and students without hitting LDAP.</span>
     <span class="c1"># This shouldn&#39;t be a problem unless the username scheme changes and</span>
     <span class="c1"># the consequences of error are not significant.</span>
 
-    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;users:students&quot;</span>
         <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -304,9 +304,9 @@
             <span class="c1"># Add possible exceptions handling here</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Set cache for User.get_students&quot;</span><span class="p">)</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;users_list&#39;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">users</span>
+            <span class="k">return</span> <span class="n">users</span></div>
 
-    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get user objects that are teachers (quickly).&quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;users:teachers&quot;</span>
         <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -319,9 +319,9 @@
             <span class="n">users</span> <span class="o">=</span> <span class="n">users</span> <span class="o">|</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">31863</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Set cache for User.get_teachers&quot;</span><span class="p">)</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">users</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;users_list&#39;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">users</span>
+            <span class="k">return</span> <span class="n">users</span></div>
 
-    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get teachers sorted by last name. This is used for the announcement request page.&quot;&quot;&quot;</span>
         <span class="n">teachers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span>
         <span class="n">teachers</span> <span class="o">=</span> <span class="p">[(</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">]</span>
@@ -338,10 +338,10 @@
         <span class="n">ordering</span> <span class="o">=</span> <span class="s1">&#39;CASE </span><span class="si">%s</span><span class="s1"> END&#39;</span> <span class="o">%</span> <span class="n">clauses</span>
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">id_list</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span>
             <span class="n">select</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ordering&#39;</span><span class="p">:</span> <span class="n">ordering</span><span class="p">},</span> <span class="n">order_by</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;ordering&#39;</span><span class="p">,))</span>
-        <span class="k">return</span> <span class="n">queryset</span>
+        <span class="k">return</span> <span class="n">queryset</span></div></div>
 
 
-<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span></div>
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Django User model subclass with properties that fetch data from</span>
 <span class="sd">    LDAP</span>
@@ -383,7 +383,7 @@
     <span class="n">objects</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">dn</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="User.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">dn</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a user object from LDAP and save it to the SQL</span>
 <span class="sd">        database if necessary.</span>
 
@@ -449,10 +449,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;get_user() requires at least one argument.&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">user</span>
+        <span class="k">return</span> <span class="n">user</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">dn_from_id</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+<div class="viewcode-block" id="User.dn_from_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.dn_from_id">[docs]</a>    <span class="k">def</span> <span class="nf">dn_from_id</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a dn, given an ID.</span>
 
 <span class="sd">        Args:</span>
@@ -482,20 +482,20 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No such User with ID {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
                 <span class="n">dn</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;dn_id_mapping&#39;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">dn</span>
+            <span class="k">return</span> <span class="n">dn</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">dn_from_username</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+<div class="viewcode-block" id="User.dn_from_username"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.dn_from_username">[docs]</a>    <span class="k">def</span> <span class="nf">dn_from_username</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
         <span class="c1"># logger.debug(&quot;Fetching DN of User with username {}.&quot;.format(username))</span>
-        <span class="k">return</span> <span class="s2">&quot;iodineUid=&quot;</span> <span class="o">+</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">escape_attribute_value</span><span class="p">(</span><span class="n">username</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span>
+        <span class="k">return</span> <span class="s2">&quot;iodineUid=&quot;</span> <span class="o">+</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">escape_attribute_value</span><span class="p">(</span><span class="n">username</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">username_from_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">):</span>
+<div class="viewcode-block" id="User.username_from_dn"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.username_from_dn">[docs]</a>    <span class="k">def</span> <span class="nf">username_from_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">):</span>
         <span class="c1"># logger.debug(&quot;Fetching username of User with ID {}.&quot;.format(id))</span>
-        <span class="k">return</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">parse_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dn</span><span class="o">.</span><span class="n">parse_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_secure_cache_key</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+<div class="viewcode-block" id="User.create_secure_cache_key"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.create_secure_cache_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_secure_cache_key</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a cache key for sensitive information.</span>
 
 <span class="sd">        Caching personal information that was once access-protected</span>
@@ -528,9 +528,9 @@
         <span class="n">signer</span> <span class="o">=</span> <span class="n">Signer</span><span class="p">()</span>
         <span class="n">signed</span> <span class="o">=</span> <span class="n">signer</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
         <span class="nb">hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">signed</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">member_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+<div class="viewcode-block" id="User.member_of"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.member_of">[docs]</a>    <span class="k">def</span> <span class="nf">member_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns whether a user is a member of a certain group.</span>
 
 <span class="sd">        Args:</span>
@@ -547,9 +547,9 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">Group</span><span class="p">):</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span>
 
-        <span class="k">return</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_groups_cache</span>
+        <span class="k">return</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_groups_cache</span></div>
 
-    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+<div class="viewcode-block" id="User.has_admin_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_admin_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly,</span>
 <span class="sd">        or implied by being in the &quot;admin_all&quot; group)</span>
 
@@ -562,7 +562,7 @@
             <span class="c1"># not all of admin_all has LDAP permissions</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_ldap&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_&quot;</span> <span class="o">+</span> <span class="n">perm</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_all&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_of</span><span class="p">(</span><span class="s2">&quot;admin_&quot;</span> <span class="o">+</span> <span class="n">perm</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -609,9 +609,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
 
-    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.get_short_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_short_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get short (first) name of a user.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_name</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -900,7 +900,7 @@
 
         <span class="k">return</span> <span class="bp">None</span>
 
-    <span class="k">def</span> <span class="nf">photo_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_year</span><span class="p">):</span>
+<div class="viewcode-block" id="User.photo_binary"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.photo_binary">[docs]</a>    <span class="k">def</span> <span class="nf">photo_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_year</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the binary data for a user&#39;s picture.</span>
 
 <span class="sd">        Returns:</span>
@@ -950,9 +950,9 @@
                       <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s1">&#39;ldap_permissions&#39;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="k">def</span> <span class="nf">photo_base64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_year</span><span class="p">):</span>
+<div class="viewcode-block" id="User.photo_base64"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.photo_base64">[docs]</a>    <span class="k">def</span> <span class="nf">photo_base64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photo_year</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns base64 encoded binary data for a user&#39;s picture.</span>
 
 <span class="sd">        Returns:</span>
@@ -963,9 +963,9 @@
         <span class="k">if</span> <span class="n">binary</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">binary</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.default_photo"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.default_photo">[docs]</a>    <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the default photo (in binary) that should be used.</span>
 
 <span class="sd">        Returns:</span>
@@ -991,7 +991,7 @@
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">data</span>
 
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">photo_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1251,7 +1251,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">is_attendance_user</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">is_http_request_sender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.is_http_request_sender"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.is_http_request_sender">[docs]</a>    <span class="k">def</span> <span class="nf">is_http_request_sender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if a user the HTTP request sender (accessing own info)</span>
 
 <span class="sd">        Used primarily to load private personal information from the</span>
@@ -1272,9 +1272,9 @@
             <span class="k">return</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">requesting_user_id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">and</span>
                     <span class="ow">not</span> <span class="n">auth_backend</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">master_pwd_backend</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="bp">False</span></div>
 
-    <span class="k">def</span> <span class="nf">attribute_is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ldap_perm_name</span><span class="p">):</span>
+<div class="viewcode-block" id="User.attribute_is_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.attribute_is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ldap_perm_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if an attribute is visible to the public.</span>
 
 <span class="sd">        Args:</span>
@@ -1307,7 +1307,7 @@
                 <span class="n">public</span> <span class="o">=</span> <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">][</span><span class="n">ldap_perm_name</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">ldap_perm_name</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">]:</span>
                 <span class="n">public</span> <span class="o">=</span> <span class="n">public</span> <span class="ow">and</span> <span class="n">perms</span><span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="n">ldap_perm_name</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">public</span>
+            <span class="k">return</span> <span class="n">public</span></div>
 
     <span class="c1"># Maps Python names for attributes to LDAP names and metadata</span>
     <span class="n">ldap_user_attributes</span> <span class="o">=</span> <span class="p">{</span>
@@ -1539,7 +1539,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-    <span class="k">def</span> <span class="nf">set_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">override_set</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="User.set_ldap_attribute"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_ldap_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">override_set</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set a user attribute in LDAP.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1568,9 +1568,9 @@
         <span class="k">if</span> <span class="n">should_cache</span><span class="p">:</span>
             <span class="n">identifier</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">create_secure_cache_key</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;user_attribute&quot;</span><span class="p">])</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;user_attribute&quot;</span><span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="nf">set_ldap_preference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_admin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="User.set_ldap_preference"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_ldap_preference">[docs]</a>    <span class="k">def</span> <span class="nf">set_ldap_preference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_admin</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Pref: {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">item_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
@@ -1607,9 +1607,9 @@
             <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;photo_permissions&quot;</span><span class="p">]))</span>
 
         <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;showschedule&quot;</span><span class="p">,</span> <span class="s2">&quot;showaddress&quot;</span><span class="p">,</span> <span class="s2">&quot;showphone&quot;</span><span class="p">,</span> <span class="s2">&quot;showbirthday&quot;</span><span class="p">,</span> <span class="s2">&quot;showpictures&quot;</span><span class="p">,</span> <span class="s2">&quot;showeighth&quot;</span><span class="p">]:</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;user_info_permissions&quot;</span><span class="p">]))</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s2">&quot;user_info_permissions&quot;</span><span class="p">]))</span></div>
 
-    <span class="k">def</span> <span class="nf">set_raw_ldap_photoperm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="User.set_raw_ldap_photoperm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_raw_ldap_photoperm">[docs]</a>    <span class="k">def</span> <span class="nf">set_raw_ldap_photoperm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not determine DN of User&quot;</span><span class="p">)</span>
 
@@ -1621,9 +1621,9 @@
 
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SET {}: {} = {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">photo_dn</span><span class="p">,</span> <span class="n">photo_field</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">photo_dn</span><span class="p">,</span> <span class="n">photo_field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">photo_dn</span><span class="p">,</span> <span class="n">photo_field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">set_raw_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="User.set_raw_ldap_attribute"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_raw_ldap_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_raw_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set a raw user attribute in LDAP.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1631,13 +1631,13 @@
 
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SET {}: {} = {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.clear_cache"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.clear_cache">[docs]</a>    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Clearing LDAP user cache for {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">ldap_user_attributes</span><span class="p">:</span>
             <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">create_secure_cache_key</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">attr</span><span class="p">))))</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">create_secure_cache_key</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">attr</span><span class="p">))))</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1651,7 +1651,7 @@
 
         <span class="k">return</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the :class:`EighthSponsor` that a given user is</span>
 <span class="sd">        associated with.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1663,29 +1663,29 @@
         <span class="k">except</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">False</span>
 
-        <span class="k">return</span> <span class="n">sp</span>
+        <span class="k">return</span> <span class="n">sp</span></div>
 
-    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count. If the user has no absences</span>
 <span class="sd">        or is not a signup user, returns 0.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthSignup</span>
 
-        <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="User.absence_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_info">[docs]</a>    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return information about the user&#39;s absences.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthSignup</span>
 
-        <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ion_username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
 
     <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span></div>
 
 
 <div class="viewcode-block" id="Class"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Class">[docs]</a><span class="k">class</span> <span class="nc">Class</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1970,7 +1970,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span></div>
 
 
-<div class="viewcode-block" id="Address"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Address">[docs]</a><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Address"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Address">[docs]</a><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Represents a user&#39;s address.</span>
 
@@ -1996,10 +1996,10 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns full address string.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;{}</span><span class="se">\n</span><span class="s2">{}, {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">,</span>
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Grade"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade">[docs]</a><span class="k">class</span> <span class="nc">Grade</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Grade"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade">[docs]</a><span class="k">class</span> <span class="nc">Grade</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Represents a user&#39;s grade.&quot;&quot;&quot;</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;freshman&quot;</span><span class="p">,</span> <span class="s2">&quot;sophomore&quot;</span><span class="p">,</span> <span class="s2">&quot;junior&quot;</span><span class="p">,</span> <span class="s2">&quot;senior&quot;</span><span class="p">]</span>
@@ -2057,24 +2057,24 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">grade_from_year</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">graduation_year</span><span class="p">):</span>
+<div class="viewcode-block" id="Grade.grade_from_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade.grade_from_year">[docs]</a>    <span class="k">def</span> <span class="nf">grade_from_year</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">graduation_year</span><span class="p">):</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
 
-        <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">-</span> <span class="n">graduation_year</span> <span class="o">+</span> <span class="mi">12</span>
+        <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">-</span> <span class="n">graduation_year</span> <span class="o">+</span> <span class="mi">12</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">year_from_grade</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
+<div class="viewcode-block" id="Grade.year_from_grade"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.Grade.year_from_grade">[docs]</a>    <span class="k">def</span> <span class="nf">year_from_grade</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">grade</span><span class="p">):</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">current_senior_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
 
-        <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">grade</span>
+        <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">grade</span></div>
 
     <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).&quot;&quot;&quot;</span>
@@ -2082,7 +2082,7 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return name of the grade.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
 </pre></div>
 
     </div>

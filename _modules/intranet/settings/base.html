@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1251) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1255) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1251)',
+        VERSION:     'v3 (Build #1255)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1251) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1255) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,17 +150,14 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">.secret</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
 
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
 <span class="c1"># FIXME: figure out a less-hacky way to do this.</span>
-<span class="n">TESTING</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span>
-<span class="c1"># Always force testing mode if we&#39;re running on travis.</span>
-<span class="k">if</span> <span class="n">TRAVIS</span><span class="p">:</span>
-    <span class="n">TESTING</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="n">TRAVIS</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">)</span>
 
 <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
 
@@ -172,7 +169,7 @@
 <span class="n">EMAIL_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;django.core.mail.backends.smtp.EmailBackend&quot;</span>
 <span class="n">EMAIL_HOST</span> <span class="o">=</span> <span class="s2">&quot;mail.tjhsst.edu&quot;</span>
 <span class="n">EMAIL_PORT</span> <span class="o">=</span> <span class="mi">25</span>
-<span class="n">EMAIL_USE_TLS</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">EMAIL_USE_TLS</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># FIXME: use ssl</span>
 <span class="n">EMAIL_SUBJECT_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;[Ion] &quot;</span>
 <span class="n">EMAIL_ANNOUNCEMENTS</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -192,7 +189,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># In-memory sqlite3 databases signifigantly speed up the tests.</span>
+<span class="c1"># In-memory sqlite3 databases signifigantly speeds up the tests.</span>
 <span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
 
@@ -364,22 +361,24 @@
 <span class="c1"># Name of current virtualenv</span>
 <span class="n">VIRTUAL_ENV</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;VIRTUAL_ENV&quot;</span><span class="p">])</span>
 
-<span class="n">months</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">30</span>
+
+<div class="viewcode-block" id="get_month_seconds"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.get_month_seconds">[docs]</a><span class="k">def</span> <span class="nf">get_month_seconds</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">30</span></div>
+
 <span class="c1"># Age of cache information</span>
 <span class="n">CACHE_AGE</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;dn_id_mapping&quot;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;user_attribute&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;user_classes&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;user_photo&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;user_grade&quot;</span><span class="p">:</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;class_teacher&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;class_attribute&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">months</span><span class="p">,</span>
-    <span class="s2">&quot;ldap_permissions&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;dn_id_mapping&quot;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;user_grade&quot;</span><span class="p">:</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;user_classes&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;user_photo&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;class_teacher&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;class_attribute&quot;</span><span class="p">:</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;user_attribute&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">get_month_seconds</span><span class="p">(),</span>
     <span class="s2">&quot;bell_schedule&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+    <span class="s2">&quot;ldap_permissions&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
     <span class="s2">&quot;users_list&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
     <span class="s2">&quot;emerg&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
 <span class="p">}</span>
-<span class="k">del</span> <span class="n">months</span>
 
 <span class="c1"># Cacheops configuration</span>
 <span class="c1"># may be removed in the future</span>
@@ -395,12 +394,12 @@
 <span class="n">CACHEOPS_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;ops&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cache_on_save&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-    <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="n">CACHEOPS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;eighth.*&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1"># 60 * 60</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1"># timedelta(hours=1).total_seconds()</span>
     <span class="p">},</span>
     <span class="s2">&quot;announcements.*&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s2">&quot;events.*&quot;</span><span class="p">:</span> <span class="p">{},</span>
@@ -418,7 +417,7 @@
     <span class="n">SESSION_REDIS_DB</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">SESSION_REDIS_PREFIX</span> <span class="o">=</span> <span class="n">VIRTUAL_ENV</span> <span class="o">+</span> <span class="s2">&quot;:session&quot;</span>
 
-    <span class="n">SESSION_COOKIE_AGE</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">SESSION_COOKIE_AGE</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
     <span class="n">SESSION_SAVE_EVERY_REQUEST</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
@@ -525,9 +524,12 @@
 <span class="c1"># See http://docs.djangoproject.com/en/dev/topics/logging for</span>
 <span class="c1"># more details on how to customize your logging configuration.</span>
 <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span> <span class="k">if</span> <span class="n">PRODUCTION</span> <span class="k">else</span> <span class="s2">&quot;DEBUG&quot;</span>
-<span class="n">_log_levels</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_log_levels</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">):</span>
     <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_log"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.get_log">[docs]</a><span class="k">def</span> <span class="nf">get_log</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span></div>
 
 <span class="n">LOGGING</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -595,25 +597,25 @@
     <span class="s2">&quot;loggers&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="c1"># Django request errors email admins and errorlog</span>
         <span class="s2">&quot;django.request&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;error_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
             <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="c1"># Intranet errors email admins and errorlog</span>
         <span class="s2">&quot;intranet&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;error_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;mail_admins&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;error_log&quot;</span><span class="p">),</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">LOG_LEVEL</span><span class="p">,</span>
             <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="c1"># Intranet access logs to accesslog</span>
         <span class="s2">&quot;intranet_access&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;access_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;access_log&quot;</span><span class="p">),</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">False</span>
         <span class="p">},</span>
         <span class="c1"># Intranet auth logs to authlog</span>
         <span class="s2">&quot;intranet_auth&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;auth_log&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">TRAVIS</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console_access&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">get_log</span><span class="p">(</span><span class="s2">&quot;auth_log&quot;</span><span class="p">),</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;propagate&quot;</span><span class="p">:</span> <span class="bp">False</span>
         <span class="p">}</span>
@@ -700,28 +702,27 @@
 
 
 <span class="k">def</span> <span class="nf">_get_current_commit_short_hash</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git rev-parse --short HEAD&quot;</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;--work-tree&quot;</span><span class="p">,</span> <span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_get_current_commit_long_hash</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git rev-parse HEAD&quot;</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;--work-tree&quot;</span><span class="p">,</span> <span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_get_current_commit_info</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git show -s --format=medium HEAD&quot;</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">14</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">8</span><span class="p">:]])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;   &quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=&#39;Commit %h</span><span class="se">\n</span><span class="s2">%ad&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_get_current_commit_date</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git show -s --format=</span><span class="si">%c</span><span class="s2">i HEAD&quot;</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">PROJECT_ROOT</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">i&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_get_current_commit_github_url</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">&quot;https://github.com/tjcsl/ion/commit/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_get_current_commit_long_hash</span><span class="p">())</span>
+    <span class="k">return</span> <span class="s2">&quot;https://github.com/tjcsl/ion/commit/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_get_current_commit_short_hash</span><span class="p">())</span>
 
 <span class="c1"># Add git information for the login page</span>
 <span class="n">GIT</span> <span class="o">=</span> <span class="p">{</span>
@@ -733,7 +734,7 @@
 <span class="p">}</span>
 
 <span class="c1"># Senior graduation date in Javascript-readable format</span>
-<span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="s2">&quot;June 18 2016 19:00:00&quot;</span>
+<span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2016</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B </span><span class="si">%d</span><span class="s1"> %Y %H:%M:%S&#39;</span><span class="p">)</span>
 <span class="c1"># Senior graduation year</span>
 <span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="mi">2016</span>
 <span class="c1"># The hour on an eighth period day to lock teachers from</span>
