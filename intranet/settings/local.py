@@ -18,7 +18,7 @@ if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
         """An error for undefined context variables in templates."""
 
         def __mod__(self, other):
-            logger.warning("Undefined variable or unknown value for: \"%s\"" % other)
+            logger.warning('Undefined variable or unknown value for: "%s"' % other)
             return ""
 
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = InvalidString("%s")

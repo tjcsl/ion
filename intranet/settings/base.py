@@ -3,17 +3,14 @@
 import os
 import subprocess
 import sys
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from .secret import *  # noqa
 
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"
 # FIXME: figure out a less-hacky way to do this.
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
-# Always force testing mode if we're running on travis.
-if TRAVIS:
-    TESTING = True
+TESTING = TRAVIS or (len(sys.argv) > 1 and sys.argv[1] == 'test')
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +22,7 @@ APPEND_SLASH = False
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mail.tjhsst.edu"
 EMAIL_PORT = 25
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = False  # FIXME: use ssl
 EMAIL_SUBJECT_PREFIX = "[Ion] "
 EMAIL_ANNOUNCEMENTS = True
 
@@ -45,7 +42,7 @@ DATABASES = {
     }
 }
 
-# In-memory sqlite3 databases signifigantly speed up the tests.
+# In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
 
@@ -217,22 +214,24 @@ WSGI_APPLICATION = "intranet.wsgi.application"
 # Name of current virtualenv
 VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"])
 
-months = timedelta(hours=24).total_seconds() * 30
+
+def get_month_seconds():
+    return timedelta(hours=24).total_seconds() * 30
+
 # Age of cache information
 CACHE_AGE = {
-    "dn_id_mapping": 12 * months,
-    "user_attribute": 2 * months,
-    "user_classes": 6 * months,
-    "user_photo": 6 * months,
-    "user_grade": 10 * months,
-    "class_teacher": 6 * months,
-    "class_attribute": 6 * months,
-    "ldap_permissions": timedelta(hours=24).total_seconds(),
+    "dn_id_mapping": 12 * get_month_seconds(),
+    "user_grade": 10 * get_month_seconds(),
+    "user_classes": 6 * get_month_seconds(),
+    "user_photo": 6 * get_month_seconds(),
+    "class_teacher": 6 * get_month_seconds(),
+    "class_attribute": 6 * get_month_seconds(),
+    "user_attribute": 2 * get_month_seconds(),
     "bell_schedule": timedelta(weeks=1).total_seconds(),
+    "ldap_permissions": timedelta(hours=24).total_seconds(),
     "users_list": timedelta(hours=24).total_seconds(),
     "emerg": timedelta(minutes=5).total_seconds()
 }
-del months
 
 # Cacheops configuration
 # may be removed in the future
@@ -248,12 +247,12 @@ CACHEOPS_DEGRADE_ON_FAILURE = True
 CACHEOPS_DEFAULTS = {
     "ops": "all",
     "cache_on_save": True,
-    "timeout": 24 * 60 * 60
+    "timeout": timedelta(hours=24).total_seconds()
 }
 
 CACHEOPS = {
     "eighth.*": {
-        "timeout": 1  # 60 * 60
+        "timeout": 1  # timedelta(hours=1).total_seconds()
     },
     "announcements.*": {},
     "events.*": {},
@@ -271,7 +270,7 @@ if not TESTING:
     SESSION_REDIS_DB = 0
     SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
 
-    SESSION_COOKIE_AGE = 60 * 60 * 2
+    SESSION_COOKIE_AGE = timedelta(hours=2).total_seconds()
     SESSION_SAVE_EVERY_REQUEST = True
 
     CACHES = {
@@ -378,9 +377,12 @@ EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOG_LEVEL = "INFO" if PRODUCTION else "DEBUG"
-_log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
-if os.getenv("LOG_LEVEL") in _log_levels:
+if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
     LOG_LEVEL = os.environ["LOG_LEVEL"]
+
+
+def get_log(name):
+    return [name] if (PRODUCTION and not TRAVIS) else []
 
 LOGGING = {
     "version": 1,
@@ -448,25 +450,25 @@ LOGGING = {
     "loggers": {
         # Django request errors email admins and errorlog
         "django.request": {
-            "handlers": ["mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),
+            "handlers": ["mail_admins"] + get_log("error_log"),
             "level": "ERROR",
             "propagate": True,
         },
         # Intranet errors email admins and errorlog
         "intranet": {
-            "handlers": ["console", "mail_admins"] + (["error_log"] if (PRODUCTION and not TRAVIS) else []),
+            "handlers": ["console", "mail_admins"] + get_log("error_log"),
             "level": LOG_LEVEL,
             "propagate": True,
         },
         # Intranet access logs to accesslog
         "intranet_access": {
-            "handlers": ["console_access"] + (["access_log"] if (PRODUCTION and not TRAVIS) else []),
+            "handlers": ["console_access"] + get_log("access_log"),
             "level": "DEBUG",
             "propagate": False
         },
         # Intranet auth logs to authlog
         "intranet_auth": {
-            "handlers": ["console_access"] + (["auth_log"] if (PRODUCTION and not TRAVIS) else []),
+            "handlers": ["console_access"] + get_log("auth_log"),
             "level": "DEBUG",
             "propagate": False
         }
@@ -553,28 +555,27 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
 def _get_current_commit_short_hash():
-    cmd = "git rev-parse --short HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
+    cmd = ["git", "--work-tree", PROJECT_ROOT, "rev-parse", "--short", "HEAD"]
+    return subprocess.check_output(cmd).decode().strip()
 
 
 def _get_current_commit_long_hash():
-    cmd = "git rev-parse HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
+    cmd = ["git", "--work-tree", PROJECT_ROOT, "rev-parse", "HEAD"]
+    return subprocess.check_output(cmd).decode().strip()
 
 
 def _get_current_commit_info():
-    cmd = "git show -s --format=medium HEAD"
-    lines = subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().splitlines()
-    return "\n".join([lines[0][:14].capitalize(), lines[2][8:]]).replace("   ", " ")
+    cmd = ["git", "show", "-s", "--format='Commit %h\n%ad", "HEAD"]
+    return subprocess.check_output(cmd).decode().strip()
 
 
 def _get_current_commit_date():
-    cmd = "git show -s --format=%ci HEAD"
-    return subprocess.check_output(cmd, shell=True, cwd=PROJECT_ROOT).decode().rstrip()
+    cmd = ["git", "show", "-s", "--format=%ci", "HEAD"]
+    return subprocess.check_output(cmd).decode().strip()
 
 
 def _get_current_commit_github_url():
-    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_long_hash())
+    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_short_hash())
 
 # Add git information for the login page
 GIT = {
@@ -586,7 +587,7 @@ GIT = {
 }
 
 # Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = "June 18 2016 19:00:00"
+SENIOR_GRADUATION = datetime(year=2016, month=7, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2016
 # The hour on an eighth period day to lock teachers from
