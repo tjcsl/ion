@@ -220,17 +220,17 @@ def get_month_seconds():
 
 # Age of cache information
 CACHE_AGE = {
-    "dn_id_mapping": 12 * get_month_seconds(),
-    "user_grade": 10 * get_month_seconds(),
-    "user_classes": 6 * get_month_seconds(),
-    "user_photo": 6 * get_month_seconds(),
-    "class_teacher": 6 * get_month_seconds(),
-    "class_attribute": 6 * get_month_seconds(),
-    "user_attribute": 2 * get_month_seconds(),
-    "bell_schedule": timedelta(weeks=1).total_seconds(),
-    "ldap_permissions": timedelta(hours=24).total_seconds(),
-    "users_list": timedelta(hours=24).total_seconds(),
-    "emerg": timedelta(minutes=5).total_seconds()
+    "dn_id_mapping": int(12 * get_month_seconds()),
+    "user_grade": int(10 * get_month_seconds()),
+    "user_classes": int(6 * get_month_seconds()),
+    "user_photo": int(6 * get_month_seconds()),
+    "class_teacher": int(6 * get_month_seconds()),
+    "class_attribute": int(6 * get_month_seconds()),
+    "user_attribute": int(2 * get_month_seconds()),
+    "bell_schedule": int(timedelta(weeks=1).total_seconds()),
+    "ldap_permissions": int(timedelta(hours=24).total_seconds()),
+    "users_list": int(timedelta(hours=24).total_seconds()),
+    "emerg": int(timedelta(minutes=5).total_seconds())
 }
 
 # Cacheops configuration
@@ -247,12 +247,12 @@ CACHEOPS_DEGRADE_ON_FAILURE = True
 CACHEOPS_DEFAULTS = {
     "ops": "all",
     "cache_on_save": True,
-    "timeout": timedelta(hours=24).total_seconds()
+    "timeout": int(timedelta(hours=24).total_seconds())
 }
 
 CACHEOPS = {
     "eighth.*": {
-        "timeout": 1  # timedelta(hours=1).total_seconds()
+        "timeout": 1  # int(timedelta(hours=1).total_seconds())
     },
     "announcements.*": {},
     "events.*": {},
@@ -270,7 +270,7 @@ if not TESTING:
     SESSION_REDIS_DB = 0
     SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
 
-    SESSION_COOKIE_AGE = timedelta(hours=2).total_seconds()
+    SESSION_COOKIE_AGE = int(timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
 
     CACHES = {
