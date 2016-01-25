@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import sys
 from threading import local
 
 from django.conf import settings
@@ -8,7 +9,10 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.signals import request_finished
 from django.dispatch import receiver
 
-import gssapi
+try:
+    import gssapi
+except ImportError:
+    pass
 
 import ldap3
 import ldap3.protocol.sasl
@@ -74,6 +78,9 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
+        ldap_exceptions = (ldap3.LDAPExceptionError,)
+        if 'gssapi' in sys.modules:
+            ldap_exceptions += (gssapi.exceptions.GSSError,)
 
         if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP...")
@@ -84,7 +91,7 @@ class LDAPConnection(object):
                 _thread_locals.ldap_conn.bind()
                 _thread_locals.simple_bind = False
                 logger.info("Successfully connected to LDAP.")
-            except (ldap3.LDAPExceptionError, gssapi.exceptions.GSSError) as e:
+            except ldap_exceptions as e:
                 logger.warning("SASL bind failed - using simple bind")
                 logger.warning(e)
                 _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
