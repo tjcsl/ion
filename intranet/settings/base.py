@@ -215,7 +215,7 @@ ROOT_URLCONF = "intranet.urls"
 WSGI_APPLICATION = "intranet.wsgi.application"
 
 # Name of current virtualenv
-VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"])
+VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"]) if "VIRTUAL_ENV" in os.environ else "None"
 
 
 def get_month_seconds():
