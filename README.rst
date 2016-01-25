@@ -13,6 +13,9 @@ Intranet 3
     :target: https://coveralls.io/github/tjcsl/ion?branch=master
     :alt: Coverage
 
+.. image:: https://readthedocs.org/projects/ion/badge/?version=latest
+    :target: http://ion.readthedocs.org/en/latest
+    :alt: Docs
 
 Version 3.0.0
 
