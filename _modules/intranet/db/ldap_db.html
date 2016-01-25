@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #1264) documentation</title>
+    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #1265) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1264)',
+        VERSION:     'v3 (Build #1265)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1264) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1265) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,6 +148,7 @@
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
@@ -155,7 +156,10 @@
 <span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="kn">import</span> <span class="n">request_finished</span>
 <span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
 
-<span class="kn">import</span> <span class="nn">gssapi</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gssapi</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="kn">import</span> <span class="nn">ldap3</span>
 <span class="kn">import</span> <span class="nn">ldap3.protocol.sasl</span>
@@ -221,6 +225,9 @@
 <span class="sd">        SetKerberosCache middleware.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ldap_exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPExceptionError</span><span class="p">,)</span>
+        <span class="k">if</span> <span class="s1">&#39;gssapi&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="n">ldap_exceptions</span> <span class="o">+=</span> <span class="p">(</span><span class="n">gssapi</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">GSSError</span><span class="p">,)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;ldap_conn&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connecting to LDAP...&quot;</span><span class="p">)</span>
@@ -231,7 +238,7 @@
                 <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
                 <span class="n">_thread_locals</span><span class="o">.</span><span class="n">simple_bind</span> <span class="o">=</span> <span class="bp">False</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully connected to LDAP.&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="p">(</span><span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPExceptionError</span><span class="p">,</span> <span class="n">gssapi</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">GSSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">ldap_exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;SASL bind failed - using simple bind&quot;</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span> <span class="o">=</span> <span class="n">ldap3</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_DN</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">AUTHUSER_PASSWORD</span><span class="p">)</span>
