@@ -14,6 +14,7 @@ setup(
     url="https://github.com/tjcsl/ion",
     version="1.0",
     license="GPL",
+    test_suite='intranet.test.test_suite.run_tests',
     packages=find_packages(),
     classifiers=[
             'Development Status :: 5 - Production/Stable',

@@ -5,7 +5,10 @@ import subprocess
 import sys
 from datetime import datetime, timedelta
 
-from .secret import *  # noqa
+try:
+    from .secret import *  # noqa
+except ImportError:
+    pass
 
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"
