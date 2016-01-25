@@ -33,7 +33,7 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 **Where can I report a bug?**
 
 * Most bugs and feature requests should be submitted through `GitHub Issues <https://github.com/tjcsl/ion/issues>`_.
-* Security-related or TJ CSL-specific issues should be submitted on `Bugzilla <http://bugs.tjhsst.edu/>` or emailed to `intranet@tjhsst.edu <mailto:intranet@tjhsst.edu>`_.
+* Security-related or TJ CSL-specific issues should be submitted on `Bugzilla <http://bugs.tjhsst.edu/>`_ or emailed to `intranet@tjhsst.edu <mailto:intranet@tjhsst.edu>`_.
 
 
 Current Intranet maintainer: `James Woglom <https://github.com/jwoglom>`_ (TJ 2016)
