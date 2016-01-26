@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timedelta
+from unittest import mock
 
 try:
     from .secret import *  # noqa
@@ -45,9 +46,24 @@ DATABASES = {
     }
 }
 
+
+class MigrationMock(mock.Mock):
+    seen = set()
+
+    def __contains__(self, mod):
+        return True
+
+    def __getitem__(self, mod):
+        if mod in self.seen:
+            return 'migrations'
+        self.seen.add(mod)
+        return None
+
 # In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+    # Horrible hack to suppress all migrations to speed up the tests.
+    MIGRATION_MODULES = MigrationMock()
 
 
 MANAGERS = ADMINS
