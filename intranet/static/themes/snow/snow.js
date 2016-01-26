@@ -234,6 +234,11 @@ function resize() {
 
 function initsnow() {
 	set_urlvars();
+	if(document.body.classList) {
+		document.body.classList.add("has-snow");
+	} else {
+		document.body.className += " has-snow";
+	}
 	container=document.createElement("div");
     container.id="snowcontainer";
 	container.style.position="fixed";
