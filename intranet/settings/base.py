@@ -281,7 +281,8 @@ if not TESTING:
             "BACKEND": "redis_cache.RedisCache",
             "LOCATION": "127.0.0.1:6379",
             "OPTIONS": {
-                "PARSER_CLASS": "redis.connection.HiredisParser"
+                "PARSER_CLASS": "redis.connection.HiredisParser",
+                "PICKLE_VERSION": 4,
             },
             "KEY_PREFIX": VIRTUAL_ENV
         },
