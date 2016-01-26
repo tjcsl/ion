@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -192,7 +192,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
 def find_birthdays(request):
     """Return information on user birthdays."""
-    today = datetime.now().date()
+    today = date.today()
     custom = False
     yr_inc = 0
     if "birthday_month" in request.GET and "birthday_day" in request.GET:
@@ -207,12 +207,12 @@ def find_birthdays(request):
                 yr_inc = 1
 
             real_today = today
-            today = datetime(yr, mon, day).date()
+            today = date(yr, mon, day)
             if today:
                 custom = True
             else:
                 today = real_today
-        except Exception:
+        except ValueError:
             pass
 
     key = "birthdays:{}".format(today)
@@ -231,7 +231,7 @@ def find_birthdays(request):
             data = {
                 "custom": custom,
                 "today": {
-                    "date": today,
+                    "date": str(today),
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -243,7 +243,7 @@ def find_birthdays(request):
                     "inc": 0
                 },
                 "tomorrow": {
-                    "date": tomorrow,
+                    "date": str(tomorrow),
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
