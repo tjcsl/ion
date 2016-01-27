@@ -5,12 +5,8 @@ from django.core.urlresolvers import reverse
 from ...test.ion_test import IonTestCase
 
 
-"""
-Tests for the eighth module.
-"""
-
-
 class ApiTest(IonTestCase):
+    """Tests for the api module."""
 
     def test_get_profile(self):
         self.login()
