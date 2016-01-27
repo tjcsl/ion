@@ -4,14 +4,6 @@ intranet.apps.welcome package
 Submodules
 ----------
 
-intranet.apps.welcome.tests module
-----------------------------------
-
-.. automodule:: intranet.apps.welcome.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.welcome.urls module
 ---------------------------------
 

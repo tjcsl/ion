@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1278) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1279) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1278)',
+        VERSION:     'v3 (Build #1279)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1278) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1279) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -146,8 +146,9 @@
       
   <h1>Source code for intranet.settings.base</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
-
+<span class="kn">import</span> <span class="nn">ipaddress</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
@@ -160,7 +161,8 @@
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
 <span class="c1"># FIXME: figure out a less-hacky way to do this.</span>
-<span class="n">TESTING</span> <span class="o">=</span> <span class="n">TRAVIS</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="n">TRAVIS</span> <span class="ow">or</span> <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+<span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
 
 <span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
 
@@ -205,11 +207,40 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">None</span></div>
 
+
+<div class="viewcode-block" id="is_verbose"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.is_verbose">[docs]</a><span class="k">def</span> <span class="nf">is_verbose</span><span class="p">(</span><span class="n">cmdline</span><span class="p">):</span>
+    <span class="n">cmdline</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmdline</span><span class="p">)</span>
+    <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;-v ?[2-3]|--verbosity [2-3]&#39;</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span></div>
+
 <span class="c1"># In-memory sqlite3 databases signifigantly speeds up the tests.</span>
 <span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
     <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
     <span class="n">MIGRATION_MODULES</span> <span class="o">=</span> <span class="n">MigrationMock</span><span class="p">()</span>
+    <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">is_verbose</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GlobList"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.GlobList">[docs]</a><span class="k">class</span> <span class="nc">GlobList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A list of glob-style strings.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a string matches a glob in the list.&quot;&quot;&quot;</span>
+
+        <span class="c1"># request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited</span>
+        <span class="c1"># list of IP addresses, if the user is using a proxy</span>
+        <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="ow">in</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Internal IP: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
 
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
@@ -544,7 +575,7 @@
 
 <span class="c1"># See http://docs.djangoproject.com/en/dev/topics/logging for</span>
 <span class="c1"># more details on how to customize your logging configuration.</span>
-<span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span> <span class="k">if</span> <span class="n">PRODUCTION</span> <span class="k">else</span> <span class="s2">&quot;DEBUG&quot;</span>
+<span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span> <span class="k">if</span> <span class="n">LOGGING_VERBOSE</span> <span class="k">else</span> <span class="s2">&quot;INFO&quot;</span>
 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">):</span>
     <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span>
 
