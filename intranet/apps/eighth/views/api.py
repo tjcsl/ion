@@ -96,7 +96,6 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
     def create(self, request, user_id=None):
         if user_id:
             user = User.objects.get(id=user_id)
-
         else:
             user = request.user
 
