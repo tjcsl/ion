@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ipaddress
 import logging
 
 from .base import *  # noqa
@@ -50,27 +49,6 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
     for key in CACHE_AGE:
         CACHE_AGE[key] = 60
 
-
-class GlobList(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
 
 # Internal IP ranges for debugging
 INTERNAL_IPS = GlobList([

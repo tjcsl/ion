@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import ipaddress
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timedelta
@@ -13,7 +14,8 @@ except ImportError:
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"
 # FIXME: figure out a less-hacky way to do this.
-TESTING = TRAVIS or (len(sys.argv) > 1 and sys.argv[1] == 'test')
+TESTING = TRAVIS or 'test' in sys.argv
+LOGGING_VERBOSE = PRODUCTION
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -58,11 +60,40 @@ class MigrationMock(object):
         self.seen.add(mod)
         return None
 
+
+def is_verbose(cmdline):
+    cmdline = ' '.join(cmdline)
+    # FIXME: we really shouldn't have to do this.
+    return re.search('-v ?[2-3]|--verbosity [2-3]', cmdline) is not None
+
 # In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     # Horrible hack to suppress all migrations to speed up the tests.
     MIGRATION_MODULES = MigrationMock()
+    LOGGING_VERBOSE = is_verbose(sys.argv)
+
+
+class GlobList(list):
+
+    """A list of glob-style strings."""
+
+    def __contains__(self, key):
+        """Check if a string matches a glob in the list."""
+
+        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
+        # list of IP addresses, if the user is using a proxy
+        if "," in key:
+            key = key.split(",")[0]
+
+        for item in self:
+            try:
+                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)) and key != "127.0.0.1":
+                    logger.info("Internal IP: {}".format(key))
+                    return True
+            except ValueError:
+                pass
+        return False
 
 
 MANAGERS = ADMINS
@@ -397,7 +428,7 @@ EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-LOG_LEVEL = "INFO" if PRODUCTION else "DEBUG"
+LOG_LEVEL = "DEBUG" if LOGGING_VERBOSE else "INFO"
 if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
     LOG_LEVEL = os.environ["LOG_LEVEL"]
 

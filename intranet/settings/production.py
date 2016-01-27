@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ipaddress
 import logging
 from urllib import parse
 
@@ -59,28 +58,6 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG.update({
         "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
     })
-
-
-class GlobList(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)) and key != "127.0.0.1":
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
 
 # Internal IP ranges in production
 INTERNAL_IPS = GlobList([
