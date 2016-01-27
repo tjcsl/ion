@@ -1,5 +1,6 @@
 set -e
 echo "Building docs..."
 excludes="intranet/settings/secret.py intranet/settings/production.py intranet/apps/*/migrations"
-sphinx-apidoc -f -o docs/sourcedoc intranet $excludes
-sphinx-build -W -b html docs -d build/sphinx/doctrees build/sphinx/html
+sphinx-apidoc -f -o build/.tmp intranet $excludes
+rsync --checksum build/.tmp/*.rst docs/sourcedoc/
+sphinx-build -W docs -d build/sphinx/doctrees build/sphinx/html

@@ -1495,7 +1495,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an
-        :class:`EighthSponsor` and, therefore, should view activity
+        :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
         sponsoring information.
 
         """
@@ -1505,7 +1505,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     def get_eighth_sponsor(self):
-        """Return the :class:`EighthSponsor` that a given user is
+        """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
         associated with.
         """
 
