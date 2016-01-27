@@ -51,14 +51,6 @@ intranet.apps.schedule.serializers module
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.schedule.tests module
------------------------------------
-
-.. automodule:: intranet.apps.schedule.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.schedule.urls module
 ----------------------------------
 

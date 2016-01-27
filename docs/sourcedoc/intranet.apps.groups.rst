@@ -20,14 +20,6 @@ intranet.apps.groups.models module
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.groups.tests module
----------------------------------
-
-.. automodule:: intranet.apps.groups.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.groups.urls module
 --------------------------------
 

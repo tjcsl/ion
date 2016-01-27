@@ -4,14 +4,6 @@ intranet.apps.search package
 Submodules
 ----------
 
-intranet.apps.search.tests module
----------------------------------
-
-.. automodule:: intranet.apps.search.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.search.urls module
 --------------------------------
 

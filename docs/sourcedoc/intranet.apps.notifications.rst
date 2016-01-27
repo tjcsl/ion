@@ -20,14 +20,6 @@ intranet.apps.notifications.models module
     :undoc-members:
     :show-inheritance:
 
-intranet.apps.notifications.tests module
-----------------------------------------
-
-.. automodule:: intranet.apps.notifications.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.apps.notifications.urls module
 ---------------------------------------
 
