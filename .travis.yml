@@ -10,9 +10,6 @@ cache:
     directories:
         - $HOME/.cache/pip
 
-services:
-  - postgresql
-
 env:
   matrix:
     - PRODUCTION=TRUE
@@ -26,7 +23,6 @@ install:
 
 before_script:
   - cp intranet/settings/travis_secret.py intranet/settings/secret.py
-  - psql -c 'create database ion;' -U postgres
 
 script:
   - flake8 --max-line-length 200 .
