@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import logging
 from urllib import parse
 
 from .base import *  # noqa
-
-logger = logging.getLogger("intranet_access")
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY and DATABASE_URL. !!

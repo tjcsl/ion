@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging
-
 from .base import *  # noqa
-
-logger = logging.getLogger(__name__)
 
 # Don't send emails unless we're in production.
 EMAIL_ANNOUNCEMENTS = False
