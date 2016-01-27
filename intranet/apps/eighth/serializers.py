@@ -309,7 +309,8 @@ class EighthSignupSerializer(serializers.ModelSerializer):
             "date": signup.scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail",
                            args=[signup.scheduled_activity.block.id],
-                           request=self.context["request"])
+                           request=self.context["request"]),
+            "block_letter": signup.scheduled_activity.block.block_letter
         }
 
     def activity_info(self, signup):

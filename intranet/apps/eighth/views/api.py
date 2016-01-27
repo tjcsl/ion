@@ -87,7 +87,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         if not user_id:
             user_id = request.user.id
 
-        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
+        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity").order_by("scheduled_activity__block__date", "scheduled_activity__block__block_letter")
 
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
