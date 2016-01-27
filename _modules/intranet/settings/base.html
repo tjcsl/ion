@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1277) documentation</title>
+    <title>intranet.settings.base &mdash; TJ Intranet v3 (Build #1278) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1277)',
+        VERSION:     'v3 (Build #1278)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1277) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1278) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -151,7 +151,6 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">mock</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.secret</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
@@ -194,7 +193,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.MigrationMock">[docs]</a><span class="k">class</span> <span class="nc">MigrationMock</span><span class="p">(</span><span class="n">mock</span><span class="o">.</span><span class="n">Mock</span><span class="p">):</span>
+<div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.settings.html#intranet.settings.base.MigrationMock">[docs]</a><span class="k">class</span> <span class="nc">MigrationMock</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
@@ -244,7 +243,9 @@
 <span class="c1"># the app without a slash, and then we add the slash manually in every other rule.</span>
 <span class="c1"># Without this, we&#39;d have urls like /announcements/?show_all=true which is just ugly.</span>
 <span class="c1"># Thus, we silence this system check. -- JW, 12/30/2015</span>
-<span class="n">SILENCED_SYSTEM_CHECKS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;urls.W002&quot;</span><span class="p">]</span>
+<span class="c1"># W001 doesn&#39;t apply, as we use nginx to handle SecurityMiddleware&#39;s functions.</span>
+<span class="c1"># Suppress W019, as we use frames in the signage module.</span>
+<span class="n">SILENCED_SYSTEM_CHECKS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;urls.W002&quot;</span><span class="p">,</span> <span class="s2">&quot;security.W001&quot;</span><span class="p">,</span> <span class="s2">&quot;security.W019&quot;</span><span class="p">]</span>
 
 <span class="c1"># Hosts/domain names that are valid for this site; required if DEBUG is False</span>
 <span class="c1"># See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts</span>
