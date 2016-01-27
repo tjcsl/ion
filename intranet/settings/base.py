@@ -4,7 +4,6 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timedelta
-from unittest import mock
 
 try:
     from .secret import *  # noqa
@@ -47,7 +46,7 @@ DATABASES = {
 }
 
 
-class MigrationMock(mock.Mock):
+class MigrationMock(object):
     seen = set()
 
     def __contains__(self, mod):
@@ -97,7 +96,9 @@ CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 # the app without a slash, and then we add the slash manually in every other rule.
 # Without this, we'd have urls like /announcements/?show_all=true which is just ugly.
 # Thus, we silence this system check. -- JW, 12/30/2015
-SILENCED_SYSTEM_CHECKS = ["urls.W002"]
+# W001 doesn't apply, as we use nginx to handle SecurityMiddleware's functions.
+# Suppress W019, as we use frames in the signage module.
+SILENCED_SYSTEM_CHECKS = ["urls.W002", "security.W001", "security.W019"]
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
