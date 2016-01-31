@@ -262,6 +262,7 @@ def find_birthdays(request):
             cache.set(key, data, timeout=60 * 60 * 6)
             return data
 
+
 def get_prerender_url(request):
     if request.user.is_eighth_admin:
         if request.user.is_student:
