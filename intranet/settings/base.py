@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import ipaddress
+import logging
 import os
 import re
 import subprocess
 import sys
 from datetime import datetime, timedelta
+
+logger = logging.getLogger(__name__)
 
 try:
     from .secret import *  # noqa

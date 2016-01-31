@@ -898,7 +898,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.activity.both_blocks:
             return None
 
-        if self.block.block_letter not in ["A", "B"]:
+        if self.block.block_letter and self.block.block_letter.upper() not in ["A", "B"]:
             # both_blocks is not currently implemented for blocks other than A and B
             return None
 
@@ -931,14 +931,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Finds the other scheduling of the same activity on the same day
             # See note above in get_both_blocks_sibling()
             sibling = self.get_both_blocks_sibling()
-            if sibling:
-                all_sched_act = [self, sibling]
-            else:
-                all_sched_act = [self]
 
-            all_blocks = []
-            for sch in all_sched_act:
-                all_blocks.append(sch.block)
+            all_sched_act = [self]
+            all_blocks = [self.block]
+
+            if sibling:
+                all_sched_act.append(sibling)
+                all_blocks.append(sibling.block)
         else:
             all_sched_act = [self]
             all_blocks = [self.block]
@@ -1096,7 +1095,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
             existing_signups = EighthSignup.objects.filter(
                 user=user,
-                scheduled_activity__block__in=all_blocks
+                scheduled_activity__in=all_sched_act
             )
 
             prev_data = {}
