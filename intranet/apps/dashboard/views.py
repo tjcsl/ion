@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -261,6 +262,17 @@ def find_birthdays(request):
             cache.set(key, data, timeout=60 * 60 * 6)
             return data
 
+def get_prerender_url(request):
+    if request.user.is_eighth_admin:
+        if request.user.is_student:
+            view = 'eighth_signup'
+        else:
+            view = 'eighth_admin_dashboard'
+    else:
+        view = 'eighth_redirect'
+
+    return request.build_absolute_uri(reverse(view))
+
 
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False):
@@ -340,6 +352,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         dash_warning = fcps_emerg
 
     context = {
+        "prerender_url": get_prerender_url(request),
         "dash_warning": dash_warning,
         "announcements": announcements,
         "announcements_admin": announcements_admin,

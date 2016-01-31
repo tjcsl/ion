@@ -605,6 +605,9 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 
 # Same origin frame options
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+# X-XSS-Protection: 1; mode=block
+# Already set on nginx level
+SECURE_BROWSER_XSS_FILTER = True
 
 
 def _get_current_commit_short_hash():
