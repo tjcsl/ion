@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1282) documentation</title>
+    <title>intranet.apps.eighth.models &mdash; TJ Intranet v3 (Build #1283) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1282)',
+        VERSION:     'v3 (Build #1283)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1282) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1283) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -1045,7 +1045,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
             <span class="c1"># both_blocks is not currently implemented for blocks other than A and B</span>
             <span class="k">return</span> <span class="bp">None</span>
 
@@ -1078,14 +1078,13 @@
             <span class="c1"># Finds the other scheduling of the same activity on the same day</span>
             <span class="c1"># See note above in get_both_blocks_sibling()</span>
             <span class="n">sibling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
-                <span class="n">all_sched_act</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">sibling</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">all_sched_act</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
 
-            <span class="n">all_blocks</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">sch</span> <span class="ow">in</span> <span class="n">all_sched_act</span><span class="p">:</span>
-                <span class="n">all_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sch</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
+            <span class="n">all_sched_act</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+            <span class="n">all_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
+                <span class="n">all_sched_act</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="p">)</span>
+                <span class="n">all_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sibling</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">all_sched_act</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
             <span class="n">all_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">]</span>
@@ -1243,7 +1242,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">existing_signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                 <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
-                <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">all_blocks</span>
+                <span class="n">scheduled_activity__in</span><span class="o">=</span><span class="n">all_sched_act</span>
             <span class="p">)</span>
 
             <span class="n">prev_data</span> <span class="o">=</span> <span class="p">{}</span>
