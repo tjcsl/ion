@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from pip.download import PipSession
+from pip.req import parse_requirements
+
 from setuptools import find_packages, setup
 
 with open('README.rst', 'r') as f:
@@ -15,6 +18,8 @@ setup(
     version="1.0",
     license="GPL",
     test_suite='intranet.test.test_suite.run_tests',
+    setup_requires=['pip>=6.0'],  # session param
+    install_requires=[str(dep.req) for dep in parse_requirements('requirements.txt', session=PipSession())],
     packages=find_packages(),
     classifiers=[
             'Development Status :: 5 - Production/Stable',
