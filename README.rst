@@ -30,6 +30,8 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 **How can I create a testing environment?** Read the section on `Setting up Vagrant <http://tjcsl.github.io/ion/setup/vagrant.html>`_ in the documentation. Ask a TJ Sysadmin for VPN access and tokens needed to connect to our servers.
 
+**Why is my build failing?** A PEP 8 syntax checker is set as a post-commit hook. Ensure that your code follows those guidelines by running something like this in the root of the repository: ``autopep8 -ir -aaaaaaaaa --experimental --max-line-length=200 .``
+
 **Where can I report a bug?**
 
 * Most bugs and feature requests should be submitted through `GitHub Issues <https://github.com/tjcsl/ion/issues>`_.
