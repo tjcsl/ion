@@ -2,8 +2,8 @@
 
 from django.core.management.base import BaseCommand
 
+from intranet.apps.eighth.models import EighthBlock, EighthSignup
 from intranet.apps.users.models import User
-from intranet.apps.eighth.models import EighthSignup, EighthBlock
 
 
 class Command(BaseCommand):
@@ -23,7 +23,7 @@ class Command(BaseCommand):
         for u in User.objects.all():
             for b in EighthBlock.objects.all():
                 su = EighthSignup.objects.filter(user=u, scheduled_activity__block=b)
-                if not (su.count() == 0 or su.count() == 1):
+                if su.count() not in [0, 1]:
                     print("Duplicate: {} {}".format(u.id, b.id))
                     print("Scheduled activities:")
                     print(su)
