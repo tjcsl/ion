@@ -93,13 +93,15 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
     else:
         auth_form = auth_form or AuthenticateForm()
         request.session.set_test_cookie()
+
+        fcps_emerg = get_fcps_emerg(request)
+
         try:
             login_warning = settings.LOGIN_WARNING
         except AttributeError:
             login_warning = None
 
-        fcps_emerg = get_fcps_emerg(request)
-        if fcps_emerg:
+        if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
 
         data = {
