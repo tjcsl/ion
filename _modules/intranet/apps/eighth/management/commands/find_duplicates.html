@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.management.commands.absence_email &mdash; TJ Intranet v3 (Build #1288) documentation</title>
+    <title>intranet.apps.eighth.management.commands.find_duplicates &mdash; TJ Intranet v3 (Build #1288) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -144,47 +144,42 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.eighth.management.commands.absence_email</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.eighth.management.commands.find_duplicates</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="n">EighthSignup</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.eighth.notifications</span> <span class="kn">import</span> <span class="n">absence_email</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Notify users who have an Eighth Period absence.&quot;</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.find_duplicates.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Find duplicate signups in the system that violate the one-signup-per-block constraint.&quot;</span>
 
-<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--silent&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.find_duplicates.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fix&#39;</span><span class="p">,</span>
                             <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-                            <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;silent&#39;</span><span class="p">,</span>
+                            <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;fix&#39;</span><span class="p">,</span>
                             <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Be silent.&#39;</span><span class="p">)</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fix.&#39;</span><span class="p">)</span></div>
 
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--pretend&#39;</span><span class="p">,</span>
-                            <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
-                            <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;pretend&#39;</span><span class="p">,</span>
-                            <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Pretend, and don&#39;t actually do anything.&quot;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.find_duplicates.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
 
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.absence_email.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">fix</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;fix&quot;</span><span class="p">]</span>
 
-        <span class="n">log</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;silent&quot;</span><span class="p">]</span>
-
-        <span class="n">absences</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_absences</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">absence_emailed</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">signup</span> <span class="ow">in</span> <span class="n">absences</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">signup</span><span class="p">))</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;pretend&quot;</span><span class="p">]:</span>
-                <span class="n">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">)</span>
-                <span class="n">signup</span><span class="o">.</span><span class="n">absence_emailed</span> <span class="o">=</span> <span class="bp">True</span>
-                <span class="n">signup</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div></div>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="n">su</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">su</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Duplicate: {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Scheduled activities:&quot;</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="n">su</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fix</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">su</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
+                            <span class="n">sibling</span> <span class="o">=</span> <span class="n">su</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">sibling</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                                <span class="n">su</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Deleted {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">su</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div></div>
 </pre></div>
 
     </div>

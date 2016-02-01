@@ -12,6 +12,14 @@ intranet.apps.eighth.management.commands.absence_email module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.eighth.management.commands.find_duplicates module
+---------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.find_duplicates
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.eighth.management.commands.import_attendance module
 -----------------------------------------------------------------
 
