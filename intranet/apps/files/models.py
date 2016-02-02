@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
+
 
 """
     Sample TJ configuration:
@@ -74,7 +74,7 @@ class Host(models.Model):
             return True
         return (self in Host.objects.visible_to_user(user))
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.code)
 
     class Meta:

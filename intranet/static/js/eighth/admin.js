@@ -45,7 +45,7 @@ $(function() {
 
     // Set up checkboxes on activity scheduling and other pages
     var $selectAllBlocksCheckbox = $(".checkboxes-grid thead input[type='checkbox']")
-    var $blockCheckboxes = $(".checkboxes-grid tbody td:not([data-field='unschedule']) input[type='checkbox']");
+    var $blockCheckboxes = $(".checkboxes-grid tbody td:not([data-field='unschedule']):not([data-field='special']) input[type='checkbox']");
 
     var updateSelectAllCheckbox = function() {
         var numChecked = $blockCheckboxes.filter(":checked").length;

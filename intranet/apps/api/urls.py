@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.conf.urls import url
+
+from .views import api_root
 from ..announcements import api as announcements_api
 from ..eighth.views import api as eighth_api
-from ..users import api as users_api
+from ..emerg import api as emerg_api
 from ..schedule import api as schedule_api
-from .views import api_root
-
+from ..users import api as users_api
 
 urlpatterns = [
     url(r"^$", api_root, name="api_root"),
@@ -28,4 +28,5 @@ urlpatterns = [
     url(r"^/signups/scheduled_activity/(?P<scheduled_activity_id>[0-9]+)$", eighth_api.EighthScheduledActivitySignupList.as_view(), name="api_eighth_scheduled_activity_signup_list"),
     url(r"^/schedule$", schedule_api.DayList.as_view(), name="api_schedule_day_list"),
     url(r"^/schedule/(?P<date>.*)$", schedule_api.DayDetail.as_view(), name="api_schedule_day_detail"),
+    url(r"^/emerg$", emerg_api.emerg_status, name="api_emerg_status"),
 ]

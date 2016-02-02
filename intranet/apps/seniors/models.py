@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from random import shuffle
-from django.contrib.auth.models import Group as DjangoGroup
-from django.utils.html import strip_tags
+
 from django.db import models
-from django.db.models import Manager, Q
-from django.utils import timezone
+
 from ..users.models import User
 
 
@@ -13,7 +9,7 @@ class College(models.Model):
     name = models.CharField(max_length=1000)
     ceeb = models.IntegerField(unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.ceeb)
 
     class Meta:
@@ -134,7 +130,7 @@ class Senior(models.Model):
     college_sure = models.BooleanField(default=False)
     major_sure = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.user)
 
     class Meta:

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.conf.urls import url
-from . import views
 
+from . import views
 
 urlpatterns = [
     url(r"^(?:/(?P<user_id>\d+))?$", views.profile_view, name="user_profile"),

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -28,6 +27,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='question',
             name='type',
-            field=models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('ELC', 'Election'), ('APP', 'Approval'), ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),
+            field=models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('ELC', 'Election'), ('APP', 'Approval'),
+                                                                         ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')]),
         ),
     ]

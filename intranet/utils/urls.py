@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from six.moves.urllib import parse
+from urllib import parse
 
 
 def add_get_parameters(url, parameters, percent_encode=True):

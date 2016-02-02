@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from six.moves import cStringIO as StringIO
 import csv
 import io
 import logging
 import os
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import render, redirect
-from .models import User, Grade, Class
-from ..eighth.models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
-from ..eighth.utils import get_start_date
-from intranet import settings
+from django.shortcuts import redirect, render
+
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
+
+from .models import Class, Grade, User
+from ..eighth.models import (EighthBlock, EighthScheduledActivity,
+                             EighthSignup, EighthSponsor)
+from ..eighth.utils import get_start_date
 
 logger = logging.getLogger(__name__)
 
@@ -77,12 +79,18 @@ def profile_view(request, user_id=None):
     else:
         eighth_sponsor_schedule = None
 
-    if not profile_user.can_view_eighth and not request.user == profile_user:
+    admin_or_teacher = (request.user.is_eighth_admin or request.user.is_teacher)
+    can_view_eighth = (profile_user.can_view_eighth or request.user == profile_user)
+    eighth_restricted_msg = (not can_view_eighth and admin_or_teacher)
+
+    if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
+        "can_view_eighth": can_view_eighth,
+        "eighth_restricted_msg": eighth_restricted_msg,
         "eighth_sponsor_schedule": eighth_sponsor_schedule
     }
     return render(request, "users/profile.html", context)
@@ -119,14 +127,14 @@ def picture_view(request, user_id, year=None):
                 if data is None:
                     image_buffer = io.open(default_image_path, mode="rb")
                 else:
-                    image_buffer = StringIO(data)
+                    image_buffer = io.StringIO(data)
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names:
                 data = user.photo_binary(preferred)
 
                 if data:
-                    image_buffer = StringIO(data)
+                    image_buffer = io.StringIO(data)
                 else:
                     image_buffer = io.open(default_image_path, mode="rb")
             else:
@@ -134,7 +142,7 @@ def picture_view(request, user_id, year=None):
         else:
             data = user.photo_binary(year)
             if data:
-                image_buffer = StringIO(data)
+                image_buffer = io.StringIO(data)
             else:
                 image_buffer = io.open(default_image_path, mode="rb")
 
@@ -180,8 +188,6 @@ def class_section_view(request, section_id):
 
         writer = csv.writer(response)
 
-        title_row = []
-
         writer.writerow(["Name",
                          "Student ID",
                          "Grade",
@@ -209,19 +215,19 @@ def class_room_view(request, room_id):
 
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id),
-                       ["tjhsstSectionId"]
+                       ["tjhsstSectionId", "dn"]
                        )
 
     if len(classes) > 0:
         schedule = []
         for row in classes:
-            class_dn = row[0]
+            class_dn = row["dn"]
             class_object = Class(dn=class_dn)
             sortvalue = class_object.sortvalue
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
+        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
     else:
         classes_objs = []
         raise Http404
@@ -240,7 +246,7 @@ def all_classes_view(request):
 
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
                        "objectClass=tjhsstClass",
-                       ["tjhsstSectionId"]
+                       ["tjhsstSectionId", "dn"]
                        )
 
     logger.debug("{} classes found.".format(len(classes)))
@@ -248,13 +254,13 @@ def all_classes_view(request):
     if len(classes) > 0:
         schedule = []
         for row in classes:
-            class_dn = row[0]
+            class_dn = row["dn"]
             class_object = Class(dn=class_dn)
             sortvalue = class_object.sortvalue
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        classes_objs = list(zip(*ordered_schedule)[1])  # The class objects
+        classes_objs = list(zip(*ordered_schedule))[1]  # The class objects
     else:
         classes_objs = []
         raise Http404

@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import base64
 import logging
 import os
-import pysftp
 import tempfile
 from os.path import normpath
+from wsgiref.util import FileWrapper
+
 from Crypto import Random
 from Crypto.Cipher import AES
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect
-from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
-from .models import Host
+from django.http import StreamingHttpResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.debug import (sensitive_post_parameters,
+                                           sensitive_variables)
+
+import pysftp
+
 from .forms import UploadFileForm
-from intranet import settings
+from .models import Host
 
 logger = logging.getLogger(__name__)
 
@@ -62,9 +66,9 @@ def files_auth(request):
         obj = AES.new(key, AES.MODE_CFB, iv)
         message = request.POST.get("password")
         ciphertext = obj.encrypt(message)
-        request.session["files_iv"] = base64.b64encode(iv)
-        request.session["files_text"] = base64.b64encode(ciphertext)
-        cookie_key = base64.b64encode(key)
+        request.session["files_iv"] = base64.b64encode(iv).decode()
+        request.session["files_text"] = base64.b64encode(ciphertext).decode()
+        cookie_key = base64.b64encode(key).decode()
 
         nexturl = request.GET.get("next", None)
         if nexturl and nexturl.startswith("/files"):
@@ -163,7 +167,7 @@ def files_type(request, fstype=None):
 
     if host.directory:
         host_dir = host.directory
-        if "{}" in host_dir:
+        if "{}" in host_dir:  # noqa
             host_dir = host_dir.format(request.user.username)
         if "{win}" in host_dir:
             host_dir = windows_dir_format(host_dir, request.user)
@@ -200,8 +204,8 @@ def files_type(request, fstype=None):
         filepath = request.GET.get("file")
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
-        filebase_escaped = filebase.encode("ascii", "ignore")
-        filebase_escaped = filebase_escaped.replace(",", "")
+        filebase_escaped = filebase.replace(",", "")
+        filebase_escaped = filebase_escaped.encode("ascii", "ignore").decode()
         if can_access_path(filepath):
             try:
                 stat = sftp.stat(filepath)
@@ -322,7 +326,7 @@ def files_upload(request, fstype=None):
 
             if host.directory:
                 host_dir = host.directory
-                if "{}" in host_dir:
+                if "{}" in host_dir:  # noqa
                     host_dir = host_dir.format(authinfo["username"])
                 if "{win}" in host_dir:
                     host_dir = windows_dir_format(host_dir, request.user)

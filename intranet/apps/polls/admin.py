@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Poll, Question, Choice, Answer, AnswerVotes
+
+from .models import Answer, AnswerVotes, Choice, Poll, Question
+
 
 class PollAdmin(admin.ModelAdmin):
     list_display = ('title', 'start_time', 'end_time', 'visible')
     list_filter = ('start_time', 'end_time')
     ordering = ('-end_time',)
+
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('poll', 'num', 'question', 'type')
@@ -15,7 +17,9 @@ class QuestionAdmin(admin.ModelAdmin):
     ordering = ('poll', 'num',)
     raw_id_fields = ('poll',)
 
+
 class ChoiceAdmin(admin.ModelAdmin):
+
     def get_poll(self, obj):
         return obj.question.poll
     get_poll.short_description = 'Poll'
@@ -26,11 +30,13 @@ class ChoiceAdmin(admin.ModelAdmin):
     ordering = ('question', 'num',)
     raw_id_fields = ('question',)
 
+
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('question', 'user', 'choice', 'clear_vote', 'weight',)
     list_filter = ('question',)
     ordering = ('question', 'user',)
     raw_id_fields = ('question', 'user',)
+
 
 class AnswerVotesAdmin(admin.ModelAdmin):
     list_display = ('question', 'choice',)

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 import logging
 
 from rest_framework import generics, permissions
+
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 

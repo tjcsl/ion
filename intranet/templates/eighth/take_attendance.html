@@ -185,7 +185,7 @@ $(function() {
                     {% endif %}
                     {% if wizard.steps.next or default_activity_not_scheduled %}
                         <label>
-                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if "show_all_blocks" in request.GET %} checked{% endif %}/> Show Past Blocks
+                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if show_all_blocks %} checked{% endif %}/> Show Past Blocks
                         </label><br />
                         <!--input type="submit" value="Next" /-->
                     {% else %}
@@ -200,7 +200,8 @@ $(function() {
                 {% if redirect_block_id %}
                     <input type="hidden" name="block-block" value="{{ redirect_block_id }}" />
                     <script>
-                        document.forms["wizard-form"].action = '/eighth/admin/attendance';
+                        document.getElementById("id_block-block").remove();
+                        document.forms["wizard-form"].action = '/eighth/{% if request.user.is_eighth_admin %}admin/{% endif %}attendance?show_all_blocks=1';
                         document.forms["wizard-form"].submit()
                     </script>
                 {% endif %}
@@ -215,7 +216,7 @@ $(function() {
                     </tr>
                     <tr>
                         <th>Date:</th>
-                        <td>{{ scheduled_activity.block.date|date:"EIGHTH_BLOCK_DATE_FORMAT" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                        <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.block_letter }} Block</td>
                     </tr>
                 {% endif %}
                     <tr>

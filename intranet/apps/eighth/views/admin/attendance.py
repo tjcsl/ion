@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import csv
 import logging
+from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
+
 from cacheops import invalidate_obj
-from datetime import date, MINYEAR, MAXYEAR, datetime, timedelta
+
 from django import http
-from django.db.models import Count, Q
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.db.models import Count, Q
+from django.shortcuts import redirect, render
+
+from ...models import (EighthActivity, EighthBlock, EighthRoom,
+                       EighthScheduledActivity, EighthSignup)
+from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....users.models import User
-from ...models import (
-    EighthSignup, EighthBlock, EighthScheduledActivity, EighthActivity,
-    EighthRoom)
-from ...utils import get_start_date
-
 
 logger = logging.getLogger(__name__)
 
@@ -208,10 +208,13 @@ def no_signups_roster(request, block_id):
     unsigned = block.get_unsigned_students()
     unsigned = sorted(unsigned, key=lambda u: (u.last_name, u.first_name))
 
+    user_signups_hidden = block.get_hidden_signups()
+
     if request.resolver_match.url_name == "eighth_admin_no_signups_roster":
         context = {
             "eighthblock": block,
             "users": unsigned,
+            "user_signups_hidden": user_signups_hidden,
 
             "admin_page_title": "No Signups Roster"
         }

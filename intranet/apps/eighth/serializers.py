@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+from collections import OrderedDict
+
 from django.db.models import Count
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+
+from .models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                     EighthSignup, EighthSponsor)
 from ..users.models import User
-from .models import (
-    EighthBlock, EighthActivity, EighthSignup,
-    EighthSponsor, EighthScheduledActivity)
 
 logger = logging.getLogger(__name__)
 
@@ -27,8 +29,8 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
 
     def fetch_scheduled_on(self, act):
-        scheduled_on = {}
-        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block")
+        scheduled_on = OrderedDict()
+        scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block").order_by("block__date")
 
         # user = self.context.get("user", self.context["request"].user)
         # favorited_activities = set(user.favorited_activity_set
@@ -50,6 +52,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
                                    request=self.context["request"]),
                 }
             }
+        logger.debug(scheduled_on)
         return scheduled_on
 
     class Meta:
@@ -107,7 +110,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activity_info = {
             "id": activity.id,
             "aid": activity.aid,
-            "scheduled_activity": scheduled_activity.id,
+            "scheduled_activity": {
+                "id": scheduled_activity.id,
+                "url": reverse("api_eighth_scheduled_activity_signup_list",
+                               args=[scheduled_activity.id],
+                               request=request)
+            },
             "url": reverse("api_eighth_activity_detail",
                            args=[activity.id],
                            request=request),
@@ -130,7 +138,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "restricted_for_user": restricted_for_user,
             "both_blocks": activity.both_blocks,
             "one_a_day": activity.one_a_day,
-            "special": activity.special,
+            "special": scheduled_activity.get_special(),
             "administrative": activity.administrative,
             "presign": activity.presign,
             "sticky": activity.sticky,
@@ -253,9 +261,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for rooming in roomings:
             activity_id = rooming.eighthactivity.id
+            activity_cap = rooming.eighthactivity.default_capacity
             room_name = rooming.eighthroom.name
             activity_list[activity_id]["rooms"].append(room_name)
-            activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
+            if activity_cap:
+                # use activity default capacity instead of sum of activity rooms
+                activity_list[activity_id]["roster"]["capacity"] = activity_cap
+            else:
+                activity_list[activity_id]["roster"]["capacity"] += rooming.eighthroom.capacity
 
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
@@ -296,7 +309,8 @@ class EighthSignupSerializer(serializers.ModelSerializer):
             "date": signup.scheduled_activity.block.date,
             "url": reverse("api_eighth_block_detail",
                            args=[signup.scheduled_activity.block.id],
-                           request=self.context["request"])
+                           request=self.context["request"]),
+            "block_letter": signup.scheduled_activity.block.block_letter
         }
 
     def activity_info(self, signup):

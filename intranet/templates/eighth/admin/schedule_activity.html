@@ -28,6 +28,27 @@
                 location.href = '/eighth/admin/activities/edit/' + v;
             }
         });
+
+        $(".unschedule-link").click(function() {
+            var cbox = $('span.unschedule', $(this).parent().parent());
+            cbox.toggle();
+            $(this).hide();
+        });
+
+        $("td[data-field='unschedule'] input").on("change", function() {
+            var chk = $(this).prop("checked");
+            var already_cancelled = ($(this).parent().attr("data-cancelled") == "true");
+            console.debug(already_cancelled);
+            if(!already_cancelled) {
+                var sch = $("td[data-field='scheduled'] input", $(this).parent().parent().parent());
+                if(chk) {
+                    sch.prop("checked", false);
+                } else {
+                    sch.prop("checked", true);
+                }
+
+            }
+        })
     });
     </script>
 
@@ -71,6 +92,10 @@
             <div class="schedule-activity-buttons">
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
                 <input type="submit" value="Save" />
+
+                {% if activity.default_capacity %}
+                    &nbsp; <b>Activity default capacity: {{ activity.default_capacity }}</b>
+                {% endif %}
             </div>
 
 
@@ -116,6 +141,9 @@
                     <th>Sign/Cap</th><th></th>
                     <th>Sponsors</th><th></th>
                     <th>Title suffix</th><th></th>
+                    <th class="special">
+                        <span>Special</span>
+                    </th><th></th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
                 </tr>
@@ -159,20 +187,24 @@
                                     </select>
                                 {% elif field.name == "capacity" %}
                                     {% with bid=form.block.value %}
-                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid %}
+                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid data-activity-default-capacity=activity.default_capacity %}
                                     {% endwith %}
                                 {% elif field.name == "unschedule" %}
-                                    {% if form.cancelled.value %}
-                                        <span style="white-space: nowrap">
-                                            {{ field }} Unschedule
-                                        </span>
-                                    {% endif %}
+                                    <span class='unschedule' style="{% if not form.cancelled.value %}display:none{% endif %};white-space: nowrap" data-cancelled="{% if form.cancelled.value %}true{% else %}false{% endif %}">
+                                        {{ field }} Unschedule
+                                    </span>
+                                {% elif field.name == "special" %}
+                                    <center>
+                                        {% render_field field class='special' %}
+                                    </center>
+                                {% elif field.name == "scheduled" %}
+                                    {% render_field field class='scheduled' %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title comments admin_comments" %}
+                                {% if field.name in "rooms capacity sponsors title special comments admin_comments" %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fa fa-arrows-v"></i>
@@ -189,6 +221,8 @@
                                     {% if form.cancelled.value %}
                                         <br>
                                         <b class="cancelled">Cancelled</b>
+                                    {% elif form.scheduled.value %}
+                                        <br /><a href="javascript:;" class="unschedule-link">Unschedule</a>
                                     {% endif %}
                                 </td>
                             {% endif %}
@@ -197,13 +231,13 @@
 
                     {% if not forloop.last %}
                         <tr class="spacer">
-                            <td colspan="15"></td>
+                            <td colspan="17"></td>
                         </tr>
                         <tr class="divider">
-                            <td colspan="15"></td>
+                            <td colspan="17"></td>
                         </tr>
                         <tr class="spacer">
-                            <td colspan="15"></td>
+                            <td colspan="17"></td>
                         </tr>
                     {% endif %}
                 {% endfor %}

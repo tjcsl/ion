@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
+from datetime import datetime
+from urllib import request
 
 from django.core.management.base import BaseCommand
-from intranet.apps.schedule.models import CodeName, Day, DayType
+
 from icalendar import Calendar
-from datetime import datetime
-from six import text_type, iteritems
-from six.moves.urllib import request
+
+from intranet.apps.schedule.models import CodeName, Day, DayType
 
 
 class Command(BaseCommand):
@@ -28,12 +29,12 @@ class Command(BaseCommand):
                 categories = event.get('categories')
                 if categories in ['Blue Day', 'Red Day', 'Anchor Day']:
                     print("{} {} {}".format(date.to_ical(), summary, categories))
-                    map[date.to_ical()] = text_type(summary)
+                    map[date.to_ical()] = str(summary)
             return map
 
         # FIXME I'M BROKEN
-        def add(map):
-            for date, type in iteritems(map):
+        def add(ical_map):
+            for date, type in ical_map.items():
                 # type: codename
                 cns = CodeName.objects.filter(name=type)
                 if len(cns) < 1:
@@ -55,7 +56,7 @@ class Command(BaseCommand):
                     daydate = Day.objects.create(date=day, type=dt)
                     print(daydate)
                 else:
-                    print("{} already exists".format(text_type(daydate)))
+                    print("{} already exists".format(str(daydate)))
         map = parse(get_ical())
         print(map)
         # add(map)

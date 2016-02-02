@@ -1,31 +1,31 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from cacheops import invalidate_obj
-from datetime import timedelta
+
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
-from .....utils.serialization import safe_json
-from ....auth.decorators import eighth_admin_required
-from ...models import (
-    EighthBlock, EighthActivity, EighthScheduledActivity, EighthSponsor,
-    EighthRoom
-)
-from ...forms.admin.blocks import BlockSelectionForm
+
 from ...forms.admin.activities import ActivitySelectionForm
+from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
+from ...models import (EighthActivity, EighthBlock, EighthRoom,
+                       EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
+from .....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
 
 @eighth_admin_required
 def schedule_activity_view(request):
-    ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
+    ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)  # noqa
 
     if request.method == "POST":
         formset = ScheduledActivityFormset(request.POST)
@@ -80,12 +80,15 @@ def schedule_activity_view(request):
                                 invalidate_obj(s)
                         instance = schact[0]
 
+                        cancelled = True
+
                 if instance:
                     fields = [
                         "rooms",
                         "capacity",
                         "sponsors",
                         "title",
+                        "special",
                         "comments",
                         "admin_comments"
                     ]
@@ -189,10 +192,10 @@ def schedule_activity_view(request):
 
     if activity is not None:
         start_date = get_start_date(request)
-        #end_date = start_date + timedelta(days=60)
+        # end_date = start_date + timedelta(days=60)
 
         blocks = EighthBlock.objects.filter(date__gte=start_date)
-        #, date__lte=end_date)
+        # , date__lte=end_date)
         initial_formset_data = []
 
         sched_act_queryset = (EighthScheduledActivity.objects
@@ -219,6 +222,7 @@ def schedule_activity_view(request):
                     "capacity": sched_act.capacity,
                     "sponsors": sched_act.sponsors.all(),
                     "title": sched_act.title,
+                    "special": sched_act.special,
                     "comments": sched_act.comments,
                     "admin_comments": sched_act.admin_comments,
                     "scheduled": not sched_act.cancelled,
@@ -328,6 +332,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(
@@ -393,6 +398,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(

@@ -20,6 +20,11 @@
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
+    <style type="text/css">
+    tr.cancelled td {
+        color: red;
+    }
+    </style>
 {% endblock %}
 
 {% block admin_main %}
@@ -60,7 +65,7 @@ Click on column titles to sort.
     </thead>
     <tbody>
         {% for scheduled_activity in scheduled_activities %}
-            <tr>
+            <tr{% if scheduled_activity.cancelled %} class="cancelled"{% endif %}>
                 <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
                 <td>{{ scheduled_activity.activity.aid }}</td>
                 <td>{{ scheduled_activity.title_with_flags }}</td>

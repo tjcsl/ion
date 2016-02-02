@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from .forms import GroupForm
 from .models import Group
 from ..users.models import User
+
 logger = logging.getLogger(__name__)
 
 

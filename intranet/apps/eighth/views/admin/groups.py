@@ -1,26 +1,31 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from six.moves import cPickle as pickle
 import csv
 import logging
+import pickle
 import re
-from cacheops import invalidate_obj, invalidate_model
+
+from cacheops import invalidate_model, invalidate_obj
+
 from django import http
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
+
 from formtools.wizard.views import SessionWizardView
+
+from ...forms.admin.activities import (ActivitySelectionForm,
+                                       ScheduledActivityMultiSelectForm)
+from ...forms.admin.blocks import BlockSelectionForm
+from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
+from ...models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                       EighthSignup)
+from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
-from ....users.models import User
 from ....search.views import get_search_results
-from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
-from ...forms.admin.blocks import BlockSelectionForm
-from ...forms.admin.groups import QuickGroupForm, GroupForm, UploadGroupForm
-from ...models import EighthScheduledActivity, EighthSignup, EighthBlock, EighthActivity
-from ...utils import get_start_date
+from ....users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +124,7 @@ def edit_group_view(request, group_id):
 def get_file_string(fileobj):
     filetext = ""
     for chunk in fileobj.chunks():
-        filetext += unicode(chunk, "ISO-8859-1")
+        filetext += chunk.decode("ISO-8859-1")
     return filetext
 
 
@@ -384,6 +389,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
         scheduled_activity = EighthScheduledActivity.objects.get(
@@ -497,7 +503,10 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 "exclude_before_date": get_start_date(self.request)
             })
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
+            logger.debug("cleaned block: {}".format(self.get_cleaned_data_for_step("block")["block"]))
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
             kwargs.update({"block": block})
 
         labels = {
@@ -536,6 +545,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activities = form_list[1].cleaned_data["activities"]
 

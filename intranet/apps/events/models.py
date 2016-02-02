@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
+from datetime import datetime
 
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-from ..users.models import User
-from ..eighth.models import EighthScheduledActivity
-from ..announcements.models import Announcement
+
 from .notifications import event_approval_request
-from datetime import datetime
+from ..announcements.models import Announcement
+from ..eighth.models import EighthScheduledActivity
+from ..users.models import User
 
 
 class Link(models.Model):
@@ -138,7 +139,7 @@ class Event(models.Model):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.approved:
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
         else:

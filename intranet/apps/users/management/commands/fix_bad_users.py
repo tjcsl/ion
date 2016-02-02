@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.core.management.base import BaseCommand
+
 from intranet.apps.users.models import User
-from six.moves import input
 
 
 class Command(BaseCommand):

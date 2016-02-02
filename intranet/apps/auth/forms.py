@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
-from six import iteritems
-from django.contrib.auth.forms import AuthenticationForm
+
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ class AuthenticateForm(AuthenticationForm):
     def is_valid(self):
         """Validates the username and password in the form"""
         form = super(AuthenticateForm, self).is_valid()
-        for f, error in iteritems(self.errors):
+        for f, error in self.errors.items():
             if f != "__all__":
                 self.fields[f].widget.attrs.update({"class": "error", "placeholder": ", ".join(list(error))})
             else:

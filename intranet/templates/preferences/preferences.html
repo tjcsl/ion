@@ -65,6 +65,12 @@
     <div class="primary-content">
         <h2>Preferences</h2>
         <br>
+        {% if ldap_error %}
+            <span style="color: red">
+                <b>Your changes did <u>NOT</u> apply due to a directory error. To change your Preferences, email intranet@tjhsst.edu or ask the Eighth Period Office.</b>
+            </span>
+            <br /><br />
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
 
@@ -83,13 +89,13 @@
                         </td>
                     </tr>
                 {% endfor %}
-                {% if request.user.notificationconfig and request.user.notificationconfig.android_gcm_token %}
+                {% if request.user.notificationconfig and request.user.notificationconfig.gcm_token %}
                     <tr>
                         <td>
-                            <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.android_gcm_optout %} checked {% endif %}/>
+                            <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}/>
                         </td>
                         <td>
-                            Receive Push Notifications (Android)
+                            Receive Push Notifications
                         </td>
                     </tr>
                 {% else %}
@@ -98,8 +104,7 @@
                             <input type="checkbox" disabled />
                         </td>
                         <td>
-                            Receive Push Notifications (Android)<br />
-                            &nbsp; &nbsp; (Install the TJ Intranet app to enable this option.)
+                            Receive Push Notifications
                         </td>
                     </tr>
                 {% endif %}
@@ -177,11 +182,6 @@
                     <th></th>
                 </thead>
                 {% for field in privacy_options_form %}
-                    <!--tr>
-                        <td><input type="checkbox" disabled="disabled" checked="checked"></td>
-                        <td><input type="checkbox"></td>
-                        <td>Show ---</td>
-                    </tr-->
                     {% if not field.name|endswith:"-self" %}
                         <tr>
                             <td>

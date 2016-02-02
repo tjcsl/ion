@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand, CommandError
-from ....groups.models import Group
+
 from ....eighth.models import User
+from ....groups.models import Group
 
 
 class Command(BaseCommand):
@@ -14,3 +16,4 @@ class Command(BaseCommand):
         username, admin_group = args
         g = Group.objects.get_or_create(name="admin_" + admin_group)[0]
         User.get_user(username=username).groups.add(g)
+        self.stdout.write('Added %s to %s' % (username, admin_group))

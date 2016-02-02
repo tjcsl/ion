@@ -1,22 +1,40 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from django.utils import timezone
 import logging
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from intranet import settings
-from ..users.models import User
-from ..schedule.views import schedule_context
+from django.utils import timezone
+
 from ..announcements.models import Announcement, AnnouncementRequest
+from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
+from ..emerg.views import get_emerg
+from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
-from ..eighth.models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity
-)
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
+
+
+def get_fcps_emerg(request):
+    """
+    Return FCPS emergency information
+    """
+    try:
+        emerg = get_emerg()
+    except Exception:
+        logger.info("Unable to fetch FCPS emergency info")
+        emerg = {"status": False}
+
+    if emerg["status"] or ("show_emerg" in request.GET):
+        msg = emerg["message"]
+        return "{} <span style='display: block;text-align: right'>&mdash; FCPS</span>".format(msg)
+
+    return False
 
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
@@ -92,13 +110,15 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     return schedule, no_signup_today
 
 
-def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None):
+def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None, given_date=None):
     """Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
     Returns:
-        sponsor_schedule
-        no_attendance_today
+        Dictionary with:
+            activities
+            no_attendance_today
+            num_acts
     """
 
     no_attendance_today = None
@@ -122,6 +142,8 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         else:
             sponsoring_block_map[bid] = [sa]
 
+    num_acts = 0
+
     for b in surrounding_blocks:
         num_added = 0
         sponsored_for_block = sponsoring_block_map.get(b.id, [])
@@ -141,14 +163,37 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
                 "id": None,
                 "fake": True
             })
+        else:
+            num_acts += 1
 
     logger.debug(acts)
-    return acts, no_attendance_today
+
+    cur_date = surrounding_blocks[0].date if acts else given_date if given_date else datetime.now().date()
+
+    last_block = surrounding_blocks[len(surrounding_blocks) - 1] if surrounding_blocks else None
+    last_block_date = last_block.date + timedelta(days=1) if last_block else cur_date
+    next_blocks = list(last_block.next_blocks(1)) if last_block else None
+    next_date = next_blocks[0].date if next_blocks else last_block_date
+
+    first_block = surrounding_blocks[0] if surrounding_blocks else None
+    if cur_date and not first_block:
+        first_block = EighthBlock.objects.filter(date__lte=cur_date).last()
+    first_block_date = first_block.date + timedelta(days=-7) if first_block else cur_date
+    prev_blocks = list(first_block.previous_blocks(num_blocks - 1)) if first_block else None
+    prev_date = prev_blocks[0].date if prev_blocks else first_block_date
+    return {
+        "sponsor_schedule": acts,
+        "no_attendance_today": no_attendance_today,
+        "num_attendance_acts": num_acts,
+        "sponsor_schedule_cur_date": cur_date,
+        "sponsor_schedule_next_date": next_date,
+        "sponsor_schedule_prev_date": prev_date
+    }
 
 
 def find_birthdays(request):
     """Return information on user birthdays."""
-    today = datetime.now().date()
+    today = date.today()
     custom = False
     yr_inc = 0
     if "birthday_month" in request.GET and "birthday_day" in request.GET:
@@ -163,12 +208,12 @@ def find_birthdays(request):
                 yr_inc = 1
 
             real_today = today
-            today = datetime(yr, mon, day).date()
+            today = date(yr, mon, day)
             if today:
                 custom = True
             else:
                 today = real_today
-        except Exception:
+        except ValueError:
             pass
 
     key = "birthdays:{}".format(today)
@@ -187,7 +232,7 @@ def find_birthdays(request):
             data = {
                 "custom": custom,
                 "today": {
-                    "date": today,
+                    "date": str(today),
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -199,7 +244,7 @@ def find_birthdays(request):
                     "inc": 0
                 },
                 "tomorrow": {
-                    "date": tomorrow,
+                    "date": str(tomorrow),
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -216,6 +261,18 @@ def find_birthdays(request):
         else:
             cache.set(key, data, timeout=60 * 60 * 6)
             return data
+
+
+def get_prerender_url(request):
+    if request.user.is_eighth_admin:
+        if request.user.is_student:
+            view = 'eighth_signup'
+        else:
+            view = 'eighth_admin_dashboard'
+    else:
+        view = 'eighth_redirect'
+
+    return request.build_absolute_uri(reverse(view))
 
 
 @login_required
@@ -272,17 +329,32 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     is_senior = user.is_senior
     eighth_sponsor = user.get_eighth_sponsor()
 
+    # the URL path for forward/back buttons
+    view_announcements_url = "view_announcements"
+
     if show_widgets:
         dashboard_title = "Dashboard"
         dashboard_header = "Announcements"
     elif show_expired:
         dashboard_title = dashboard_header = "Announcement Archive"
+        view_announcements_url = "announcements_archive"
     else:
         dashboard_title = dashboard_header = "Announcements"
 
     num_senior_destinations = Senior.objects.filled().count()
 
+    try:
+        dash_warning = settings.DASH_WARNING
+    except Exception:
+        dash_warning = None
+
+    fcps_emerg = get_fcps_emerg(request)
+    if fcps_emerg:
+        dash_warning = fcps_emerg
+
     context = {
+        "prerender_url": get_prerender_url(request),
+        "dash_warning": dash_warning,
         "announcements": announcements,
         "announcements_admin": announcements_admin,
         "start_num": start_num,
@@ -293,6 +365,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "user_hidden_announcements": user_hidden_announcements,
         "show_widgets": show_widgets,
         "show_expired": show_expired,
+        "view_announcements_url": view_announcements_url,
         "dashboard_title": dashboard_title,
         "dashboard_header": dashboard_header,
         "is_student": is_student,
@@ -316,11 +389,20 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             })
 
         if eighth_sponsor:
-            sponsor_schedule, no_attendance_today = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks)
-            context.update({
-                "sponsor_schedule": sponsor_schedule,
-                "no_attendance_today": no_attendance_today
-            })
+            sponsor_date = request.GET.get("sponsor_date", None)
+            if sponsor_date:
+                sponsor_date = decode_date(sponsor_date)
+                if sponsor_date:
+                    block = EighthBlock.objects.filter(date__gte=sponsor_date).first()
+                    if block:
+                        surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
+                    else:
+                        surrounding_blocks = []
+
+            sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks, sponsor_date)
+            context.update(sponsor_sch)
+            # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
+            # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
         context.update({
             "eighth_sponsor": eighth_sponsor,

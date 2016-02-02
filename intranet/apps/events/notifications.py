@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
+
 from ..notifications.emails import email_send
-from intranet import settings
 
 
 def event_approval_request(request, event):

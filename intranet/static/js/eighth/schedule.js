@@ -1,7 +1,7 @@
 $(function() {
     toggleRow = function(tr) {
         var i = 0;
-        var cb = $("input[type=checkbox]", tr);
+        var cb = $("input.scheduled[type=checkbox]", tr);
         var checked = cb.prop("checked");
         $("td", tr).each(function() {
             if(i > 1) {
@@ -20,7 +20,7 @@ $(function() {
     }
 
     $(".schedule-activity-grid tbody tr.form-row").each(function() {
-        var cb = $("input[type=checkbox]", this);
+        var cb = $("input.scheduled[type=checkbox]", this);
         var checked = cb.prop("checked");
         var bt = $("td.block-name a", this).text().trim();
         if(!checked) {
@@ -46,6 +46,7 @@ $(function() {
 
         if (capacitySum == Infinity) capacitySum = -1;
         var $capacityInput = $("input.capacity", $select.parent().parent());
+        var defaultActivityCapacity = $capacityInput.data("activity-default-capacity");
         var defaultCapacity = $capacityInput.data("default-capacity");
         $capacityInput.attr("placeholder", capacitySum == 0 ? defaultCapacity : capacitySum);
     });
@@ -136,14 +137,24 @@ $(function() {
                 console.debug("items: ", o_items, "=>", nsel.items);
             });
         } else {
-            mod_val = el.val();
-            console.info("New value:", mod_val);
+            if(el.attr("type") == "checkbox") {
+                mod_val = el.prop("checked");
+                console.info("Checkbox new value:", mod_val);
+                rows.each(function() {
+                    var ntd = $("td[data-field='" + field + "']", $(this));
+                    var ninp = $("input", ntd);
+                    ninp.prop("checked", mod_val);
+                });
+            } else {
+                mod_val = el.val();
+                console.info("New value:", mod_val);
 
-            rows.each(function() {
-                var ntd = $("td[data-field='" + field + "']", $(this));
-                var ninp = $("input, select, textarea", ntd);
-                ninp.val(mod_val);
-            });
+                rows.each(function() {
+                    var ntd = $("td[data-field='" + field + "']", $(this));
+                    var ninp = $("input, select, textarea", ntd);
+                    ninp.val(mod_val);
+                });
+            }
         }
     });
 

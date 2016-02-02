@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from django import http
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from ....utils.serialization import safe_json
-from ...users.models import User
-from ..exceptions import SignupException
-from ..models import (
-    EighthBlock, EighthSignup, EighthScheduledActivity, EighthActivity
-)
-from ..serializers import EighthBlockDetailSerializer
+from django.shortcuts import get_object_or_404, redirect, render
 
+from ..exceptions import SignupException
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                      EighthSignup)
+from ..serializers import EighthBlockDetailSerializer
+from ...users.models import User
+from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
@@ -438,7 +437,7 @@ def toggle_favorite_view(request):
 
     aid = request.POST["aid"]
     activity = get_object_or_404(EighthActivity, id=aid)
-    if activity.favorites.filter(id=request.user.id).exists():
+    if activity.favorites.filter(id=request.user.id).nocache().exists():
         activity.favorites.remove(request.user)
         return http.HttpResponse("Unfavorited activity.")
     else:

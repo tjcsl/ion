@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from django import forms
 from django.db.models import Q
-from ....users.models import User
+
 from ...models import EighthActivity, EighthScheduledActivity
+from ....users.models import User
+
 logger = logging.getLogger(__name__)
 
 
@@ -86,7 +88,7 @@ class ScheduledActivityMultiSelectForm(forms.Form):
         if block is not None:
             activity_ids = (EighthScheduledActivity.objects
                                                    .exclude(activity__deleted=True)
-                            #.exclude(cancelled=True)
+                            # .exclude(cancelled=True)
                                                    .filter(block=block)
                                                    .values_list("activity__id", flat=True)
                                                    .nocache())
@@ -121,6 +123,7 @@ class ActivityForm(forms.ModelForm):
         self.fields["users_allowed"].queryset = User.objects.get_students()
 
         self.fields["presign"].label = "48 Hour"
+        self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
     class Meta:
         model = EighthActivity
@@ -129,6 +132,7 @@ class ActivityForm(forms.ModelForm):
             "description",
             "sponsors",
             "rooms",
+            "default_capacity",
             "id",
             "presign",
             "one_a_day",

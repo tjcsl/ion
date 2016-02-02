@@ -1,32 +1,38 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import logging
-from cacheops import invalidate_obj
-from datetime import datetime
-from six import BytesIO
 import csv
+import logging
+from datetime import datetime
+from io import BytesIO
+
+from cacheops import invalidate_obj
+
 from django import http
-from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+
 from formtools.wizard.views import SessionWizardView
+
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-)
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from ...auth.decorators import eighth_admin_required, attendance_taker_required
-from ...users.models import User
-from ..utils import get_start_date
+from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer, Table, TableStyle)
+
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import EighthScheduledActivity, EighthActivity, EighthSponsor, EighthSignup, EighthBlock
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                      EighthSignup, EighthSponsor)
+from ..utils import get_start_date
+from ...auth.decorators import attendance_taker_required, eighth_admin_required
+from ...dashboard.views import gen_sponsor_schedule
+from ...schedule.views import decode_date
+from ...users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -73,8 +79,11 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
     def get_form_kwargs(self, step):
         kwargs = {}
+        block = None
+
         if step == "block":
-            if "show_all_blocks" in self.request.GET:
+            show_all_blocks = ("show_all_blocks" in self.request.GET or "block" in self.request.GET)
+            if show_all_blocks:
                 now = datetime.now().date()
                 """ Only show blocks after September 1st of the current school year """
                 if now.month < 9:
@@ -89,12 +98,13 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 start_date = get_start_date(self.request)
                 kwargs.update({"exclude_before_date": start_date})
 
-        block = None
         if step == "activity":
-            block = self.get_cleaned_data_for_step("block")["block"]
-            kwargs.update({"block": block})
+            block = self.get_cleaned_data_for_step("block")
+            if block:
+                block = block["block"]
+                kwargs.update({"block": block})
 
-            block_title = ("Take Attendance" if block.locked else "View Roster")
+                block_title = ("Take Attendance" if block.locked else "View Roster")
 
             # try:
             #    sponsor = self.request.user.eighthsponsor
@@ -119,7 +129,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         context.update({"admin_page_title": "Take Attendance"})
 
         block = self.get_cleaned_data_for_step("block")
-
+        context.update({"show_all_blocks": ("show_all_blocks" in self.request.GET or "block" in self.request.GET)})
         context.update({"default_activity_not_scheduled": ("default_activity" in self.request.GET and not block)})
 
         if block:
@@ -150,6 +160,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
+        form_list = [f for f in form_list]
         logger.debug("debug called in attendance")
 
         if hasattr(self, "no_activities"):
@@ -650,7 +661,8 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         <b>Highlight or circle</b> the names of students who are <b>absent</b>, and put an <b>"X"</b> next to those <b>present</b>.<br />
         If a student arrives and their name is not on the roster, please send them to the <b>8th Period Office</b>.<br />
         If a student leaves your activity early, please make a note. <b>Do not make any additions to the roster.</b><br />
-        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>. For questions, please call extension 5046 or 5078. Thank you!<br />"""
+        Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>.
+        For questions, please call extension 5046 or 5078. Thank you!<br />"""
         elements.append(Paragraph(instructions, styles["Normal"]))
 
         if i != len(sched_act_ids) - 1:
@@ -683,3 +695,38 @@ def eighth_absences_view(request, user_id=None):
         "user": user
     }
     return render(request, "eighth/absences.html", context)
+
+
+@login_required
+def sponsor_schedule_widget_view(request):
+    user = request.user
+    eighth_sponsor = user.get_eighth_sponsor()
+    num_blocks = 6
+    surrounding_blocks = None
+    date = None
+    if "date" in request.GET:
+        date = decode_date(request.GET.get("date"))
+        if date:
+            block = EighthBlock.objects.filter(date__gte=date).first()
+            if block:
+                surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
+            else:
+                surrounding_blocks = []
+
+    if surrounding_blocks is None:
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
+
+    logger.debug(surrounding_blocks)
+    context = {}
+
+    if eighth_sponsor:
+        sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks, date)
+        context.update(sponsor_sch)
+        # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
+        # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
+
+    context.update({
+        "eighth_sponsor": eighth_sponsor
+    })
+
+    return render(request, "eighth/sponsor_widget.html", context)

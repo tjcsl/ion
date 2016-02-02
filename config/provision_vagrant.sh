@@ -21,10 +21,9 @@ cp intranet/config/krb5.conf /etc/krb5.conf
 apt-get -y install heimdal-clients
 
 # Python
-apt-get -y install python-pip
-pip install virtualenv
-pip install virtualenvwrapper
-apt-get -y install python-dev
+apt-get -y install python3-pip
+pip3 install virtualenvwrapper
+apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
 
 # LDAP
@@ -33,6 +32,9 @@ apt-get -y install libldap2-dev
 apt-get -y install libsasl2-dev
 apt-get -y install libssl-dev
 apt-get -y install libsasl2-modules-gssapi-mit
+
+# LDAP-GSSAPI
+apt-get -y install libkrb5-dev
 
 # Git
 apt-get -y install git
@@ -87,7 +89,7 @@ grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"
 
 sudo -i -u vagrant bash -c "
     source /etc/ion_env_setup.sh &&
-    mkvirtualenv ion && workon ion &&
+    mkvirtualenv --python=python3.4 ion && workon ion &&
     pip install -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate

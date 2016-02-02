@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
 import re
+
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -19,8 +19,8 @@ class StripNewlinesMiddleware(object):
         is_html = (response["Content-Type"] == "text/html" or
                    response["Content-Type"].startswith("text/html;"))
         if is_html and settings.DEBUG:
-            response.content = re.sub(r'\n(\s*)\n', '\n', response.content.decode("utf-8"))
-            response.content = re.sub(r'^(\s*)\n', '', response.content.decode("utf-8"))
+            response.content = re.sub(r'\n(\s*)\n', '\n', response.content.decode())
+            response.content = re.sub(r'^(\s*)\n', '', response.content.decode())
         return response
 
 
@@ -45,5 +45,5 @@ class AdminSelectizeLoadingIndicatorMiddleware(object):
                     </div>
                 </div>
                 """
-            response.content = re.sub(r'</select>', replacement, response.content.decode("utf-8"))
+            response.content = re.sub(r'</select>', replacement, response.content.decode())
         return response

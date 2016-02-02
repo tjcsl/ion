@@ -3,6 +3,14 @@
 {% load math %}
 {% load strings %}
 
+{% comment %}
+    NOTE: Specific UI and template changes made in this file will most likely
+          also need to be changed in:
+              multi_signup.html
+              profile_signup.html
+              display.html
+{% endcomment %}
+
 {% block title %}
     {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
 {% endblock %}
@@ -12,18 +20,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
     {% if not real_user.is_eighth_admin %}
-    <style type="text/css">
-    #activity-list:not(.show-administrative) li[data-administrative=true] {
-        display: none;
-    }
-    dl.scheduledid {
-        display: none;
-    }
+        <style type="text/css">
+        #activity-list:not(.show-administrative) li[data-administrative=true] {
+            display: none;
+        }
 
-    #activity-list li .activity-ids {
-        display: none;
-    }
-    </style>
+        dl.scheduledid {
+            display: none;
+        }
+
+        #activity-list li .activity-ids {
+            display: none;
+        }
+        </style>
     {% endif %}
 {% endblock %}
 
@@ -74,6 +83,11 @@
                 $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
         })
     {% endif %}
+    {% if not real_user.is_eighth_admin %}
+        $(function() {
+            $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
+        })
+    {% endif %}
     </script>
 {% endblock %}
 
@@ -97,6 +111,9 @@
                 <% if (title) { %>
                     - <%= title %>
                 <% } %>
+            </span>
+
+            <span class="activity-flags">
 
                 <% if (special) { %>
                     <span class="badge green" title="This is a special activity.">Special</span>
@@ -188,7 +205,7 @@
             <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
-        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity.id %>
 
         <dl class="activityid">
             <dt>Activity ID:</dt>
@@ -395,15 +412,26 @@
                 <span>
                     <input type="search" placeholder="Search names, sponsors, rooms..." disabled>
                 </span>
+                <h5 class="search-header">
+                    Search Results<a class="button small-button clear-button">Clear</a>
+                </h5>
             </div>
             <div class="backbtn">
                 <i class="fa fa-chevron-left"></i>
             </div>
             <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
-                <h5 class="sticky-header favorites-header">Favorites</h5>
-                <ul class="favorite-activities"></ul>
-                <h5 class="sticky-header all-header">All</h5>
-                <ul class="all-activities"></ul>
+                <h5 class="sticky-header favorites-header" data-header="favorites-header">
+                    Favorites
+                </h5>
+                <ul class="favorite-activities" data-header="favorites-header"></ul>
+                <h5 class="sticky-header special-header" data-header="special-header">
+                    Special
+                </h5>
+                <ul class="special-activities" data-header="special-header"></ul>
+                <h5 class="sticky-header all-header" data-header="all-header">
+                    All
+                </h5>
+                <ul class="all-activities" data-header="all-header"></ul>
                 <ul class="search-noresults">
                     <li>
                         <span class="activity-name">

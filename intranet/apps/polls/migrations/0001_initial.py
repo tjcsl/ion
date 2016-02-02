@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from django.db import models, migrations
 from django.conf import settings
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -60,7 +59,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('question', models.CharField(max_length=500)),
                 ('num', models.IntegerField()),
-                ('type', models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('APP', 'Approval'), ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')])),
+                ('type', models.CharField(default='STD', max_length=3, choices=[('STD', 'Standard'), ('APP', 'Approval'),
+                                                                                ('SAP', 'Split approval'), ('FRE', 'Free response'), ('SRE', 'Short response'), ('STO', 'Standard other')])),
                 ('poll', models.ForeignKey(to='polls.Poll')),
             ],
         ),

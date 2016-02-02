@@ -1,21 +1,24 @@
+# -*- coding: utf-8 -*-
 # Original version taken from http://www.djangosnippets.org/snippets/186/
 # Original author: udfalkso
 # Modified version taken from http://djangosnippets.org/snippets/605/
 # Modified by: Shwagroo Team
 # Modified further by Doug Stryke
 
-from collections import defaultdict
-
-import pstats
-import re
 import os
-import cProfile
+import re
+import resource
 import tempfile
 import time
-import resource
+from collections import defaultdict
+from io import StringIO
+
+import cProfile
+
 from django.conf import settings
 from django.db import connections
-from six.moves import cStringIO as StringIO
+
+import pstats
 
 # FIXME change log base to something appropriate for the particular installation
 PROFILE_LOG_BASE = '/var/tmp/django'
@@ -234,7 +237,10 @@ class ProfileMiddleware(object):
         stats_str = out.getvalue()
 
         if response and response.content and stats_str:
-            response.content = "<pre>%s\n\noptions: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n         &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>" % (request.build_absolute_uri(), stats_str)
+            response.content = """<pre>%s\n\n
+            options: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n
+            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (
+                request.build_absolute_uri(), stats_str)
             if 'strip' not in request.GET:
                 response.content += self._summary_for_files(stats_str)
 

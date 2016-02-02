@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
+import logging
 import os
 import random
-import logging
 from datetime import date, datetime
-from intranet import settings
-from ..dashboard.views import dashboard_view
-from ..schedule.views import schedule_context
-from .forms import AuthenticateForm
-from django.shortcuts import render, redirect
+
+from django.conf import settings
 from django.contrib.auth import login, logout
+from django.shortcuts import redirect, render
 from django.templatetags.static import static
-from django.views.generic.base import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic.base import View
+
+from .forms import AuthenticateForm
+from ..dashboard.views import dashboard_view, get_fcps_emerg
+from ..schedule.views import schedule_context
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -92,12 +93,24 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
     else:
         auth_form = auth_form or AuthenticateForm()
         request.session.set_test_cookie()
+
+        fcps_emerg = get_fcps_emerg(request)
+
+        try:
+            login_warning = settings.LOGIN_WARNING
+        except AttributeError:
+            login_warning = None
+
+        if fcps_emerg and not login_warning:
+            login_warning = fcps_emerg
+
         data = {
             "auth_form": auth_form,
             "request": request,
             "git_info": settings.GIT,
             "bg_pattern": get_bg_pattern(),
-            "theme": get_login_theme()
+            "theme": get_login_theme(),
+            "login_warning": login_warning
         }
         schedule = schedule_context(request)
         data.update(schedule)
@@ -106,7 +119,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         return render(request, "auth/login.html", data)
 
 
-class login_view(View):
+class LoginView(View):
 
     """Log in and redirect a user."""
 

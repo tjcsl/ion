@@ -96,6 +96,9 @@
                 <% if (title) { %>
                     - <%= title %>
                 <% } %>
+            </span>
+
+            <span class="activity-flags">
 
                 <% if (special) { %>
                     <span class="badge green">Special</span>
@@ -190,7 +193,7 @@
             <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
-        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity.id %>
 
         <dl class="activityid">
             <dt>Activity ID:</dt>
@@ -355,15 +358,33 @@
                 <span>
                     <input type="search" placeholder="Search names, sponsors, rooms..." disabled>
                 </span>
+                <h5 class="search-header">
+                    Search Results<a class="button small-button clear-button">Clear</a>
+                </h5>
             </div>
             <div class="backbtn">
                 <i class="fa fa-chevron-left"></i>
             </div>
             <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
-                <h5 class="sticky-header favorites-header">Favorites</h5>
-                <ul class="favorite-activities"></ul>
-                <h5 class="sticky-header">All</h5>
-                <ul class="all-activities"></ul>
+                <h5 class="sticky-header favorites-header" data-header="favorites-header">
+                    Favorites
+                </h5>
+                <ul class="favorite-activities" data-header="favorites-header"></ul>
+                <h5 class="sticky-header special-header" data-header="special-header">
+                    Special
+                </h5>
+                <ul class="special-activities" data-header="special-header"></ul>
+                <h5 class="sticky-header all-header" data-header="all-header">
+                    All
+                </h5>
+                <ul class="all-activities" data-header="all-header"></ul>
+                <ul class="search-noresults">
+                    <li>
+                        <span class="activity-name">
+                            No results found. Try your search again.
+                        </span>
+                    </li>
+                </ul>
             </div>
             <div id="activity-detail" data-bid="{% for b in blocks %}{{ b.id }}{% if not forloop.last %},{% endif %}{% endfor %}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_multi_signup' %}">
                 <div class="empty-state">

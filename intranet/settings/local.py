@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import ipaddress
-from six.moves.urllib import parse
-import logging
-from .base import *
+from .base import *  # noqa
 
-
-logger = logging.getLogger(__name__)
+# Don't send emails unless we're in production.
+EMAIL_ANNOUNCEMENTS = False
 
 DEBUG = os.getenv("DEBUG", "TRUE") == "TRUE"
 
@@ -17,24 +13,24 @@ if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
         """An error for undefined context variables in templates."""
 
         def __mod__(self, other):
-            logger.warning("Undefined variable or unknown value for: \"%s\"" % other)
+            logger.warning('Undefined variable or unknown value for: "%s"' % other)
             return ""
 
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = InvalidString("%s")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "ion",
-        "USER": "ion",
-        "PASSWORD": "pwd",
-        "HOST": "localhost"
-    }
-}
+DATABASES["default"].update({
+    "NAME": "ion",
+    "USER": "ion",
+    "PASSWORD": "pwd",
+    "HOST": "localhost",
+})
 
+# We don't care about session security when running a testing instance.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
-CACHES["default"]["OPTIONS"]["DB"] = 2
+# Avoid conflict with production redis db
+if not TESTING:
+    CACHES["default"]["OPTIONS"]["DB"] = 2
 
 if os.getenv("DUMMY_CACHE", "NO") == "YES":
     CACHES = {
@@ -50,32 +46,13 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
         CACHE_AGE[key] = 60
 
 
-class glob_list(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-        
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
-
-INTERNAL_IPS = glob_list([
+# Internal IP ranges for debugging
+INTERNAL_IPS = GlobList([
     "127.0.0.0/8",
     "10.0.0.0/8",
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])
 
+# Trust X-Forwarded-For
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')

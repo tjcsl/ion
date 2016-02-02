@@ -1,10 +1,24 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import re
 import logging
+import re
+
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
+
+
+def ion_base_url(request):
+    """Return the base URL through request.build_absolute_uri for the index page."""
+    return {"ion_base_url": request.build_absolute_uri('/')}
+
+
+def global_warning(request):
+    """Display a global warning on all pages throughout the application.
+    """
+    global_warning = settings.GLOBAL_WARNING if hasattr(settings, 'GLOBAL_WARNING') else None
+
+    return {"global_warning": global_warning}
 
 
 def nav_categorizer(request):

@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
+import calendar
 import logging
 from datetime import datetime, timedelta
-import calendar
+
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from intranet import settings
-from .models import Block, DayType, Day, Time
-from .forms import DayTypeForm, DayForm
+from django.shortcuts import redirect, render
+from django.views.decorators.clickjacking import xframe_options_exempt
+
+from .forms import DayForm, DayTypeForm
+from .models import Block, Day, DayType, Time
 
 logger = logging.getLogger(__name__)
 schedule_admin_required = user_passes_test(lambda u: not u.is_anonymous() and u.has_admin_permission("schedule"))
@@ -39,8 +41,8 @@ def is_weekday(date):
 
 
 def schedule_context(request=None, date=None):
-    MONDAY = 1
-    FRIDAY = 5
+    monday = 1
+    friday = 5
     if 'date' in request.GET:
         date = decode_date(request.GET['date'])
     else:
@@ -50,7 +52,7 @@ def schedule_context(request=None, date=None):
         date = datetime.now()
 
         if is_weekday(date) and date.hour > 17:
-            delta = 3 if date.isoweekday() == FRIDAY else 1
+            delta = 3 if date.isoweekday() == friday else 1
             date += timedelta(days=delta)
         else:
             while not is_weekday(date):
@@ -78,12 +80,12 @@ def schedule_context(request=None, date=None):
         else:
             blocks = []
 
-        delta = 3 if date.isoweekday() == FRIDAY else 1
+        delta = 3 if date.isoweekday() == friday else 1
         date_tomorrow = date_format(date + timedelta(days=delta))
 
         date_today = date_format(date)
 
-        delta = -3 if date.isoweekday() == MONDAY else -1
+        delta = -3 if date.isoweekday() == monday else -1
         date_yesterday = date_format(date + timedelta(days=delta))
 
         if request and request.user.is_authenticated() and request.user.is_eighth_admin:
@@ -124,6 +126,7 @@ def schedule_view(request):
 # does NOT require login
 
 
+@xframe_options_exempt
 def schedule_embed(request):
     data = schedule_context(request)
     return render(request, "schedule/embed.html", data)
@@ -165,20 +168,20 @@ def do_default_fill(request):
        Change all Tuesday/Thursdays to 'Blue Day'
        Change all Wednesday/Fridays to 'Red Day'
     """
-    MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
+    monday = 0
+    tuesday = 1
+    wednesday = 2
+    thursday = 3
+    friday = 4
     anchor_day = DayType.objects.get(name="Anchor Day")
     blue_day = DayType.objects.get(name="Blue Day")
     red_day = DayType.objects.get(name="Red Day")
     daymap = {
-        MONDAY: anchor_day,
-        TUESDAY: blue_day,
-        WEDNESDAY: red_day,
-        THURSDAY: blue_day,
-        FRIDAY: red_day
+        monday: anchor_day,
+        tuesday: blue_day,
+        wednesday: red_day,
+        thursday: blue_day,
+        friday: red_day
     }
 
     msgs = []

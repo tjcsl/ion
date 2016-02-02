@@ -1,6 +1,9 @@
-from django.core.management.base import BaseCommand, CommandError
-from ...models import College
+# -*- coding: utf-8 -*-
 import csv
+
+from django.core.management.base import BaseCommand
+
+from ...models import College
 
 
 class Command(BaseCommand):

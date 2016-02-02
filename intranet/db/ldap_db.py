@@ -1,16 +1,22 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
-import ldap
-import ldap.sasl
-import ldap.filter
-from ldap.modlist import modifyModlist
+import sys
 from threading import local
-from django.core.signals import request_finished
+
+from django.conf import settings
 from django.core.handlers.wsgi import WSGIHandler
+from django.core.signals import request_finished
 from django.dispatch import receiver
-from intranet import settings
+
+try:
+    import gssapi
+except ImportError:
+    pass
+
+import ldap3
+import ldap3.protocol.sasl
+import ldap3.utils.conv
 
 logger = logging.getLogger(__name__)
 _thread_locals = local()
@@ -32,7 +38,7 @@ class LDAPFilter(object):
 
     @staticmethod
     def escape(text):
-        return ldap.filter.escape_filter_chars(text)
+        return ldap3.utils.conv.escape_filter_chars(text)
 
     @staticmethod
     def attribute_in_list(attribute, values):
@@ -47,7 +53,7 @@ class LDAPFilter(object):
         """Returns a filter for selecting all user objects in LDAP
         """
 
-        user_object_classes = settings.LDAP_OBJECT_CLASSES.values()
+        user_object_classes = sorted(list(settings.LDAP_OBJECT_CLASSES.values()))
         return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
 
 
@@ -72,33 +78,24 @@ class LDAPConnection(object):
         SetKerberosCache middleware.
 
         """
+        ldap_exceptions = (ldap3.LDAPExceptionError,)
+        if 'gssapi' in sys.modules:
+            ldap_exceptions += (gssapi.exceptions.GSSError,)
 
         if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
             logger.info("Connecting to LDAP...")
-            _thread_locals.ldap_conn = ldap.ldapobject.ReconnectLDAPObject(settings.LDAP_SERVER, trace_stack_limit=None)
+            server = ldap3.Server(settings.LDAP_SERVER)
+            _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
 
             try:
-                auth_tokens = ldap.sasl.gssapi()
-                _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-                logger.info("Successfully connected to LDAP.")
+                _thread_locals.ldap_conn.bind()
                 _thread_locals.simple_bind = False
-            except ldap.LOCAL_ERROR as e:
-                # try again
-                logger.info("Retrying connection to LDAP after local error")
-                try:
-                    auth_tokens = ldap.sasl.gssapi()
-                    _thread_locals.ldap_conn.sasl_interactive_bind_s('', auth_tokens)
-                    logger.info("Successfully connected to LDAP.")
-                    _thread_locals.simple_bind = False
-                except (ldap.LOCAL_ERROR, ldap.INVALID_CREDENTIALS) as e:
-                    _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-                    logger.warning("SASL bind failed - using simple bind")
-                    logger.warning(e)
-                    _thread_locals.simple_bind = True
-            except ldap.INVALID_CREDENTIALS as e:
-                _thread_locals.ldap_conn.simple_bind_s(settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+                logger.info("Successfully connected to LDAP.")
+            except ldap_exceptions as e:
                 logger.warning("SASL bind failed - using simple bind")
                 logger.warning(e)
+                _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+                _thread_locals.ldap_conn.bind()
                 _thread_locals.simple_bind = True
 
             # logger.debug(_thread_locals.ldap_conn.whoami_s())
@@ -139,11 +136,12 @@ class LDAPConnection(object):
         logger.debug("Searching ldap - dn: {}, filter: {}, "
                      "attributes: {}".format(dn, filter, attributes))
 
-        # Tip-toe around unicode bugs - `ldap` expects ASCII strings for
-        # attribute names
-        attributes = [str(attr) for attr in attributes]
+        # ldap3 requires the filter to be in parenthesis
+        if not filter.endswith(')'):
+            filter = "(%s)" % filter
 
-        return self.conn.search_s(dn, ldap.SCOPE_SUBTREE, filter, attributes)
+        self.conn.search(dn, filter, attributes=attributes)
+        return self.conn.response
 
     def user_attributes(self, dn, attributes):
         """Fetch a list of attributes of the specified user.
@@ -168,9 +166,37 @@ class LDAPConnection(object):
         filter = LDAPFilter.all_users()
 
         try:
-            r = self.search(dn, filter, attributes)
-        except ldap.NO_SUCH_OBJECT:
+            r = self.search(dn, filter, attributes=attributes)
+        except ldap3.LDAPNoSuchObjectResult:
             logger.warning("No such user " + dn)
+            raise
+        return LDAPResult(r)
+
+    def photo_attributes(self, dn, attributes):
+        """Fetch a list of attributes of the specified photo for a user.
+
+        Fetch LDAP attributes of an iodinePhoto. The :class:`LDAPResult` will
+        contain an empty set of results if the photo does not exist.
+
+        Args:
+            dn
+                The full DN of the photo
+            attributes
+                A list of the LDAP fields to fetch (strings)
+
+        Returns:
+            :class:`LDAPResult` object (empty if no results)
+
+        """
+        logger.debug("Fetching attributes '{}' of photo "
+                     "{}".format(str(attributes), dn))
+
+        filter = "(objectClass=iodinePhoto)"
+
+        try:
+            r = self.search(dn, filter, attributes)
+        except ldap3.LDAPNoSuchObjectResult:
+            logger.warning("No such photo " + dn)
             raise
         return LDAPResult(r)
 
@@ -196,26 +222,18 @@ class LDAPConnection(object):
         filter = '(objectclass=tjhsstClass)'
 
         try:
-            r = self.search(dn, filter, attributes)
-        except ldap.NO_SUCH_OBJECT:
+            r = self.search(dn, filter, attributes=attributes)
+        except ldap3.LDAPNoSuchObjectResult:
             logger.warning("No such class " + dn)
             raise
         return LDAPResult(r)
 
     def set_attribute(self, dn, attribute, value):
-        old_entry = {
-            attribute: self.user_attributes(dn, [attribute]).first_result()
-        }
-
         if isinstance(value, (list, tuple)):
             value = [str(v) for v in value]
-
-        new_entry = {
-            attribute: value
-        }
-
-        mod = modifyModlist(old_entry, new_entry)
-        self.conn.modify_s(dn, mod)
+        else:
+            value = [value]
+        self.conn.modify(dn, {attribute: [(ldap3.MODIFY_REPLACE, value)]})
 
 
 class LDAPResult(object):
@@ -232,25 +250,12 @@ class LDAPResult(object):
     """
 
     def __init__(self, result):
-        self.result = self.decode_obj(result)  # Encode results as unicode
-
-    def decode_obj(self, obj):  # FIXME: Currently, python-ldap is not unicode safe, so this is the best we can do.
-        if isinstance(obj, list):
-            return list([self.decode_obj(element) for element in obj])
-        elif isinstance(obj, tuple):
-            return tuple(self.decode_obj(element) for element in obj)
-        elif isinstance(obj, dict):
-            return dict({self.decode_obj(key): self.decode_obj(value) for key, value in obj.items()})
-        else:
-            try:
-                return obj.decode("utf-8")
-            except:
-                return obj
+        self.result = result
 
     def first_result(self):
         """Fetch the first LDAP object in the response."""
         if len(self.result) > 0:
-            return self.result[0][1]
+            return self.result[0]['attributes']
         else:
             return []
 
@@ -276,7 +281,8 @@ def close_ldap_connection(sender, **kwargs):
     """
     if hasattr(_thread_locals, "ldap_conn"):
         if _thread_locals.ldap_conn is not None:
-            _thread_locals.ldap_conn.unbind_s()
+            if _thread_locals.ldap_conn.bound:
+                _thread_locals.ldap_conn.unbind()
             _thread_locals.ldap_conn = None
             logger.info("LDAP connection closed.")
     if hasattr(_thread_locals, "simple_bind"):

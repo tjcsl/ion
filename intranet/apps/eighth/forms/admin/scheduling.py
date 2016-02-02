@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django import forms
+
 from ...models import EighthScheduledActivity
 
 
@@ -39,6 +39,7 @@ class ScheduledActivityForm(forms.ModelForm):
             "capacity",
             "sponsors",
             "title",
+            "special",
             "comments",
             "admin_comments"
         ]

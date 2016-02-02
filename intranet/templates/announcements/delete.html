@@ -9,6 +9,15 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript">
+    $(function() {
+        $("#delete").click(function(event) {
+            event.preventDefault();
+            $("form#delete-form").append("<input type='hidden' name='full_delete' value=1 />");
+            document.forms["delete-form"].submit();
+        })
+    })
+    </script>
 {% endblock %}
 
 {% block css %}
@@ -18,17 +27,21 @@
 {% block main %}
 <div class="announcements primary-content">
     <h3>Are you sure you want to delete this announcement?</h3>
+    <p>Please <b>EXPIRE</b> this announcement instead of deleting it, unless the announcement was created by accident.</p>
     <b>{{ announcement.title }}</b>
     <br />
     <br />
     {{ announcement.content|safe }}
     <br />
     <br />
-    <form action="" method="post">
+    <form action="" method="post" name="delete-form" id="delete-form">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ announcement.id }}" />
-        <a class="button" href="{% url 'index' %}">Cancel</a>
-        <input type="submit" value="Delete" />
+        <a class="button" href="{% url 'index' %}">Cancel</a> &nbsp;
+        <input type="submit" value="Expire" />
+        <br />
+        <br />
+        <a href="#" id="delete" class="button"><i class='fa fa-exclamation-triangle'></i> Full Delete</a> &nbsp; 
     </form>
 </div>
 <script type="text/javascript">

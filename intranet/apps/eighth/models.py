@@ -1,17 +1,18 @@
+# -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
-from itertools import chain
-import logging
 import datetime
-from intranet import settings
+import logging
+from itertools import chain
+
+from django.conf import settings
+from django.contrib.auth.models import Group as DjangoGroup
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models
 from django.db.models import Manager, Q
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.contrib.auth.models import Group as DjangoGroup
 from django.utils import formats
-from ..users.models import User
+
 from . import exceptions as eighth_exceptions
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +70,9 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     @property
     def to_be_assigned(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -104,9 +105,9 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @property
     def to_be_determined(self):
-        return sum([x in self.name.lower() for x in ["to be assigned", "tba", "to be determined", "tbd", "to be announced"]])
+        return sum([x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"]])
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.capacity)
         # return "{}".format(self.name)
 
@@ -138,6 +139,9 @@ class EighthActivity(AbstractBaseEighthModel):
         rooms
             The default activity-level rooms for the activity. On an EighthScheduledActivity basis,
             you should NOT query this field. Use scheduled_activity.get_true_rooms()
+        default_capacity
+            The default capacity, which overrides the sum of the default rooms when scheduling the
+            activity. By default, this has a null value and is ignored.
         presign
             If True, the activity can only be signed up for within 48 hours of the day that the activity
             is scheduled.
@@ -181,6 +185,7 @@ class EighthActivity(AbstractBaseEighthModel):
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
+    default_capacity = models.SmallIntegerField(null=True, blank=True)
 
     presign = models.BooleanField(default=False)
     one_a_day = models.BooleanField(default=False)
@@ -212,9 +217,11 @@ class EighthActivity(AbstractBaseEighthModel):
     def capacity(self):
         # Note that this is the default capacity if the
         # rooms/capacity are not overridden for a particular block.
-
-        rooms = self.rooms.all()
-        return EighthRoom.total_capacity_of_rooms(rooms)
+        if self.default_capacity:
+            return self.default_capacity
+        else:
+            rooms = self.rooms.all()
+            return EighthRoom.total_capacity_of_rooms(rooms)
 
     @property
     def aid(self):
@@ -283,9 +290,9 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @classmethod
     def available_ids(cls):
-        ID_MIN = 1
-        ID_MAX = 3200
-        nums = [i for i in range(ID_MIN, ID_MAX)]
+        id_min = 1
+        id_max = 3200
+        nums = [i for i in range(id_min, id_max)]
         used = [row[0] for row in EighthActivity.objects.values_list("id")]
         avail = set(nums) - set(used)
         return list(avail)
@@ -320,7 +327,7 @@ class EighthActivity(AbstractBaseEighthModel):
     class Meta:
         verbose_name_plural = "eighth activities"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name_with_flags
 
 
@@ -469,7 +476,7 @@ class EighthBlock(AbstractBaseEighthModel):
                                      ))
         if quantity == -1:
             return blocks
-        return blocks[:quantity + 1]
+        return blocks[:quantity]
 
     def previous_blocks(self, quantity=-1):
         """Get the previous blocks in order."""
@@ -481,7 +488,7 @@ class EighthBlock(AbstractBaseEighthModel):
                                      ))
         if quantity == -1:
             return reversed(blocks)
-        return reversed(blocks[:quantity + 1])
+        return reversed(blocks[:quantity])
 
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.
@@ -526,7 +533,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def num_signups(self):
         """ How many people have signed up?"""
-        return EighthSignup.objects.filter(scheduled_activity__block=self).count()
+        return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=User.objects.get_students()).count()
 
     def num_no_signups(self):
         """ How many people have not signed up?"""
@@ -536,6 +543,11 @@ class EighthBlock(AbstractBaseEighthModel):
     def get_unsigned_students(self):
         """ Return a list of Users who haven't signed up for an activity. """
         return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
+
+    def get_hidden_signups(self):
+        """ Return a list of Users who are *not* in the All Students list but have signed up for an activity.
+            This is usually a list of signups for z-Withdrawn from TJ """
+        return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=User.objects.get_students())
 
     @property
     def letter_width(self):
@@ -565,9 +577,12 @@ class EighthBlock(AbstractBaseEighthModel):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
-    def __unicode__(self):
-        formatted_date = formats.date_format(self.date, "EIGHTH_BLOCK_DATE_FORMAT")
-        return "{} ({})".format(formatted_date, self.block_letter)
+    @property
+    def formatted_date(self):
+        return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
+
+    def __str__(self):
+        return "{} ({})".format(self.formatted_date, self.block_letter)
 
     class Meta:
         unique_together = (("date", "block_letter"),)
@@ -577,7 +592,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity"""
 
-    def for_sponsor(cls, sponsor):
+    def for_sponsor(self, sponsor, include_cancelled=False):
         """Return a QueryList of EighthScheduledActivities where the given
         EighthSponsor is sponsoring.
 
@@ -593,9 +608,11 @@ class EighthScheduledActivityManager(Manager):
                              (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True)
-                                             .exclude(cancelled=True)
                                              .filter(sponsoring_filter)
                                              .distinct())
+        if not include_cancelled:
+            sched_acts = sched_acts.exclude(cancelled=True)
+
         return sched_acts
 
 
@@ -624,8 +641,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             :class:`EighthRoom`\s that will override the
             :class:`EighthActivity`'s default rooms
         attendance_taken
-            whether the :class:`EighthSponsor` for the scheduled
+            Whether the :class:`EighthSponsor` for the scheduled
             :class:`EighthActivity` has taken attendance yet
+        special
+            Whether this scheduled instance of the activity is special. If
+            not set, falls back on the EighthActivity's special setting.
         cancelled
             whether the :class:`EighthScheduledActivity` has been cancelled
 
@@ -650,6 +670,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     capacity = models.SmallIntegerField(null=True, blank=True)
+    special = models.BooleanField(default=False)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
@@ -661,6 +682,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         act_name = self.activity.name + cancelled_str
+        if self.special and not self.activity.special:
+            act_name = "Special: " + act_name
         return act_name if not self.title else "{} - {}".format(act_name, self.title)
 
     @property
@@ -670,6 +693,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str
+        if self.special and not self.activity.special:
+            name_with_flags = "Special: " + name_with_flags
         return name_with_flags
 
     def get_true_sponsors(self):
@@ -719,8 +744,22 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if c is not None:
             return c
         else:
+            if self.rooms.count() == 0 and self.activity.default_capacity:
+                # use activity-level override
+                return self.activity.default_capacity
+
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
+
+    def get_special(self):
+        """Get whether this scheduled activity is special, checking the
+           activity-level special settings.
+
+        """
+        if self.special:
+            return self.special
+        else:
+            return self.activity.special
 
     def is_full(self):
         """Return whether the activity is full.
@@ -730,6 +769,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
             return num_signed_up >= capacity
+        return False
+
+    def is_almost_full(self):
+        """Return whether the activity is almost full (>90%).
+
+        """
+        capacity = self.get_true_capacity()
+        if capacity != -1:
+            num_signed_up = self.eighthsignup_set.count()
+            return num_signed_up >= (0.9 * capacity)
         return False
 
     def is_overbooked(self):
@@ -849,7 +898,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if not self.activity.both_blocks:
             return None
 
-        if self.block.block_letter not in ["A", "B"]:
+        if self.block.block_letter and self.block.block_letter.upper() not in ["A", "B"]:
             # both_blocks is not currently implemented for blocks other than A and B
             return None
 
@@ -882,14 +931,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             # Finds the other scheduling of the same activity on the same day
             # See note above in get_both_blocks_sibling()
             sibling = self.get_both_blocks_sibling()
-            if sibling:
-                all_sched_act = [self, sibling]
-            else:
-                all_sched_act = [self]
 
-            all_blocks = []
-            for sch in all_sched_act:
-                all_blocks.append(sch.block)
+            all_sched_act = [self]
+            all_blocks = [self.block]
+
+            if sibling:
+                all_sched_act.append(sibling)
+                all_blocks.append(sibling.block)
         else:
             all_sched_act = [self]
             all_blocks = [self.block]
@@ -989,7 +1037,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 for block in override_blocks:
                     ovr_signups = EighthSignup.objects.filter(scheduled_activity__block=block, user=user)
                     for signup in ovr_signups:
-                        logger.debug("Need to remove signup for {}".format(signup))
+                        logger.debug("Need to remove signup for {0}".format(signup))
                         final_remove_signups.append(signup)
         """
 
@@ -1047,7 +1095,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
             existing_signups = EighthSignup.objects.filter(
                 user=user,
-                scheduled_activity__block__in=all_blocks
+                scheduled_activity__in=all_sched_act
             )
 
             prev_data = {}
@@ -1081,7 +1129,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # See "If block overrides signup on other blocks" check
         # If there are EighthSignups that need to be removed, do them at the end
         for signup in final_remove_signups:
-            success_message += "\nYour signup for {} on {} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
+            success_message += "\nYour signup for {0} on {1} was removed. ".format(signup.scheduled_activity.activity, signup.scheduled_activity.block)
             signup.delete()
         """
 
@@ -1143,7 +1191,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         unique_together = (("block", "activity"),)
         verbose_name_plural = "eighth scheduled activities"
 
-    def __unicode__(self):
+    def __str__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         return "{} on {}{}".format(self.activity, self.block, cancelled_str)
 
@@ -1274,7 +1322,7 @@ class EighthSignup(AbstractBaseEighthModel):
         """Is the block for this signup in the clear absence period?"""
         return self.scheduled_activity.block.in_clear_absence_period()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}: {}".format(self.user,
                                self.scheduled_activity)
 

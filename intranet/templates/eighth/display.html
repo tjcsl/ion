@@ -130,7 +130,13 @@
     <script type="text/javascript" src="{% static 'js/eighth/signupUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/signup.search.js' %}"></script>
-
+    {% if not request.user.is_eighth_admin %}
+    <script type="text/javascript">
+        $(function() {
+            $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
+        });
+    </script>
+    {% endif %}
     {% if request.GET.activity %}
         <script type="text/javascript">
         $(function() {
@@ -182,11 +188,25 @@
             displayScroll = function() {
                 var $el = $("#activity-list");
                 if(window.scrollDirection == 1) {
-                    $el.animate({ scrollTop: $el.height() }, window.scrollSpeed);
-                } else {
-                    $el.animate({ scrollTop: 0 }, window.scrollSpeed);
+                    var top = $el.scrollTop() + $el.height();
+                    var max = $el[0].scrollHeight;
+                    var scrmax = max - $el.height();
+                    if(top > scrmax) top = scrmax;
+                    $el.animate({ scrollTop: top }, window.scrollSpeed);
+
+                    var pos = ($el.scrollTop() + $el.innerHeight());
+                    if((pos >= max)) window.scrollDirection *= -1;
                 }
-                window.scrollDirection *= -1;
+
+                if(window.scrollDirection == -1) {
+                    var sec = $el.scrollTop() - $el.height();
+                    if(sec <= 0) {
+                        $el.animate({ scrollTop: 0 }, window.scrollSpeed);
+                        window.scrollDirection *= -1;
+                    } else {
+                        $el.animate({ scrollTop: sec }, window.scrollSpeed);
+                    }
+                }
             }
 
             window.setInterval(displayScroll, window.scrollInterval);
@@ -234,6 +254,9 @@
                 <% if (title) { %>
                     - <%= title %>
                 <% } %>
+            </span>
+
+            <span class="activity-flags">
 
                 <% if (special) { %>
                     <span class="badge green" title="This is a special activity.">Special</span>
@@ -332,7 +355,7 @@
             <span class="badge yellow clickable" data-append-search="is:p" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
         <% } %>
 
-        <% scheduled_activity_id = this.model.attributes.scheduled_activity %>
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity.id %>
 
         <dl class="activityid">
             <dt>Activity ID:</dt>
@@ -492,10 +515,18 @@
                 </div>
             {% endif %}
 
-            <h5 class="sticky-header favorites-header">Favorites</h5>
-            <ul class="favorite-activities"></ul>
-            <h5 class="sticky-header all-header">All</h5>
-            <ul class="all-activities"></ul>
+            <h5 class="sticky-header favorites-header" data-header="favorites-header">
+                Favorites
+            </h5>
+            <ul class="favorite-activities" data-header="favorites-header"></ul>
+            <h5 class="sticky-header special-header" data-header="special-header">
+                Special
+            </h5>
+            <ul class="special-activities" data-header="special-header"></ul>
+            <h5 class="sticky-header all-header" data-header="all-header">
+                All
+            </h5>
+            <ul class="all-activities" data-header="all-header"></ul>
             <ul class="search-noresults">
                 <li>
                     <span class="activity-name">

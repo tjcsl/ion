@@ -233,6 +233,7 @@
     margin-right: 451px;
     z-index: 999;
     border-bottom: 1px solid rgb(216, 216, 216);
+    background: rgb(242, 242, 244); /* prevent overflow from sticky header */
 }
 
 .search-wrapper span {
@@ -273,6 +274,18 @@
     overflow-y: scroll;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+#activity-picker.has-search-header #activity-list {
+    margin-top: 31px;
+}
+
+#activity-picker .search-header {
+    display: none;
+}
+
+#activity-picker.has-search-header .search-header {
+    display: block;
 }
 
 #activity-detail {
@@ -372,14 +385,24 @@ h5.stuck {
     left: 0;
     right: 0;
     z-index: 999;
-    margin-right: 451px;
+    margin-right: 450px;
 }
 
 h5.hidden {
     display: none;
 }
 
-#activity-list h5 .clear-button {
+h5.no-activities {
+    /* fixes sticky headers */
+    visibility: hidden;
+    height: 0;
+}
+
+h5.search-header {
+    margin-top: 1px;
+}
+
+#activity-picker h5 .clear-button {
     float: right;
     margin-top: 4px;
     margin-right: 0;
@@ -422,6 +445,14 @@ h5.hidden {
 }
 
 .activity-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: auto;
+}
+
+.activity-flags {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

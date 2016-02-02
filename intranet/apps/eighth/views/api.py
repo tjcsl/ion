@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 import logging
 
 from django.http import Http404
-from rest_framework import generics, views, status
-from rest_framework.response import Response
+
 from intranet.apps.users.models import User
-from ..models import EighthActivity, EighthBlock, EighthSignup, EighthScheduledActivity
-from ..serializers import EighthBlockListSerializer, EighthBlockDetailSerializer, EighthActivityListSerializer, EighthActivityDetailSerializer, EighthSignupSerializer, EighthAddSignupSerializer, EighthScheduledActivitySerializer
+
+from rest_framework import generics, status, views
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
+                      EighthSignup)
+from ..serializers import (EighthActivityDetailSerializer,
+                           EighthActivityListSerializer,
+                           EighthAddSignupSerializer,
+                           EighthBlockDetailSerializer,
+                           EighthBlockListSerializer,
+                           EighthScheduledActivitySerializer,
+                           EighthSignupSerializer)
 
 logger = logging.getLogger(__name__)
-
-
-# class EighthActivityList(generics.ListAPIView):
-#     """API endpoint that allows viewing a list of eighth activities
-#     """
-#     queryset = EighthActivity.undeleted_objects.all()
-#     serializer_class = EighthActivityDetailSerializer
 
 
 class EighthActivityList(generics.ListAPIView):
@@ -32,13 +36,32 @@ class EighthActivityDetail(generics.RetrieveAPIView):
     serializer_class = EighthActivityDetailSerializer
 
 
+class BlockPagination(PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 200
+
+
 class EighthBlockList(generics.ListAPIView):
 
     """API endpoint that lists all eighth blocks
     """
-    # FIXME: this call throws sphinx for a loop
-    queryset = EighthBlock.objects.get_current_blocks()
     serializer_class = EighthBlockListSerializer
+    pagination_class = BlockPagination
+
+    def get_queryset(self):
+        # get_current_blocks() actually returns a list, which you
+        # can't .filter() on
+        queryset = EighthBlock.objects.get_current_blocks()
+        blk_ids = [b.id for b in queryset]
+
+        if "start_date" in self.request.GET:
+            return EighthBlock.objects.filter(id__in=blk_ids, date__gte=self.request.GET.get("start_date"))
+
+        if "date" in self.request.GET:
+            return EighthBlock.objects.filter(id__in=blk_ids, date=self.request.GET.get("date"))
+
+        return queryset
 
 
 class EighthBlockDetail(views.APIView):
@@ -58,12 +81,14 @@ class EighthBlockDetail(views.APIView):
 
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
+    queryset = EighthSignup.objects.all()
 
     def list(self, request, user_id=None):
         if not user_id:
             user_id = request.user.id
 
-        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity")
+        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related(
+            "scheduled_activity__activity").order_by("scheduled_activity__block__date", "scheduled_activity__block__block_letter")
 
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 

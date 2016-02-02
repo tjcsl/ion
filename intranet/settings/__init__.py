@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import os
+import sys
 
-if os.getenv("PRODUCTION", "FALSE") == "TRUE":
-    from .production import *
+if sys.version_info < (3,):
+    raise Exception("Only Python 3 is supported.")
+
+if os.getenv("PRODUCTION") == "TRUE":
+    from .production import *  # noqa
 else:
-    from .local import *
+    from .local import *  # noqa

@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from django.db import models
+
 from ..users.models import User
 
 
@@ -9,3 +11,6 @@ class Feedback(models.Model):
 
     class Meta:
         ordering = ["-date"]
+
+    def __str__(self):
+        return "{} - {}".format(self.user, self.date)

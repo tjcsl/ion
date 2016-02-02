@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load dictionaries %}
 
 {% block title %}
     {{ block.super }} - Poll Results
@@ -35,6 +36,11 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
+    $(function() {
+        $("#user-sels").click(function() {
+            $(".user-selections").toggle();
+        });
+    })
     </script>
 {% endblock %}
 
@@ -42,14 +48,20 @@
     <div class="primary-content polls">
         <a href="{% url 'polls' %}" class="button">
             <i class="fa fa-arrow-left"></i> Polls
-        </a>
+        </a> &nbsp; <a href="#" class="button small-button" id="user-sels">Show User Selections</a><br />
         <h2>Results: {{ poll }}</h2>
+        
         <ol class="questions">
             {% for q in questions %}
-                <li>
-                    {{ q.question.question }}
-                    <br />
-                    <table class="results-table">
+                <li id="question-{{ q.question.num }}"><b>{{ q.question.question }}</b>
+                {% if q.question.is_choice %}(Choice)<br />
+                {% if q.question.type == "SAP" %}
+                    <b>Note: Because this is a split approval question, each user has one vote to split for up to {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br />
+                {% endif %}
+                {% if q.question.type == "APP" %}
+                    <b>Note: Because this is an approval question, values will not sum to 100%. Each user can vote for {% with m=q.question.max_choices %}{{ m }} choice{{ m|pluralize }}{% endwith %}.</b><br />
+                {% endif %}
+                    <table class="results-table choice-table fancy-table">
                     <thead>
                         <tr>
                             <th rowspan="2" class="choice-header">Choice</th>
@@ -71,6 +83,21 @@
                         <tr {% if c.choice == "Total" %} class="total"{% endif %}>
                             <td class="choice">
                                 {{ c.choice }}
+                                {% if c.choice == "Total" %}
+                                    {% if q.question.type == "SAP" %}
+                                        Votes: {{ c.votes.total.votes_all }}
+                                    {% else %}
+                                        Users: {{ c.votes.total.users_all }}
+                                    {% endif %}
+                                {% endif %}
+                                <ul class="user-selections">
+                                {% for u in c.users %}
+                                    <li>
+                                        <a href="{% url 'user_profile' u.id %}">{{ u }}</a>
+                                        {% if q.user_scale %} - Scale: {{ q.user_scale|lookup:u.id|truncatechars:7 }}{% endif %}
+                                    </li>
+                                {% endfor %}
+                                </ul>
                             </td>
                             {% with t=c.votes.total %}
                                 <td>{{ t.all }} ({{ t.all_percent }}%)</td>
@@ -101,6 +128,27 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                {% elif q.question.is_writing %}(Writing)<br />
+                    <table class="results-table writing-table fancy-table">
+                    <thead>
+                        <tr>
+                            <th>Choice</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in q.answers %}
+                            <tr>
+                                <td>{{ a.answer }}</td>
+                                <td>
+                                    <a href="{% url 'user_profile' a.user.id %}">{{ a.user }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                {% endif %}
+                <br />
                 </li>
             {% endfor %}
         </ol>

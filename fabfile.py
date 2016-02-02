@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, with_statement
 
-from fabric.api import abort, env, hide, lcd, local, prefix, prompt, puts, shell_env
-from fabric.contrib.console import confirm
 import os
-import pkg_resources
 
+from fabric.api import (abort, env, hide, lcd, local, prefix, prompt, puts,
+                        shell_env)
+from fabric.contrib.console import confirm
+
+import pkg_resources
 
 PRODUCTION_DOCUMENT_ROOT = "/usr/local/www/intranet3"
 REDIS_SESSION_DB = 0
@@ -48,16 +49,15 @@ def runserver(port=8080,
         abort("You must specify a port.")
 
     # clean_pyc()
-
     yes_or_no = ("debug_toolbar",
                  "werkzeug",
                  "dummy_cache",
                  "short_cache",
                  "template_warnings",
                  "insecure")
-    for arg, name in [(locals()[s].lower(), s) for s in yes_or_no]:
-        if arg not in ("yes", "no"):
-            abort("Specify 'yes' or 'no' for '" + name + "' option.")
+    for s in yes_or_no:
+        if locals()[s].lower() not in ("yes", "no"):
+            abort("Specify 'yes' or 'no' for {} option.".format(s))
 
     _log_levels = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
     if log_level not in _log_levels:
@@ -240,4 +240,4 @@ def inspect_decorators():
 
 def generate_docs():
     """Build Sphinx documentation."""
-    local("sphinx-build -W -b html docs/source docs/build")
+    local("sphinx-build -W -b html docs -d build/sphinx/doctrees build/sphinx/html")

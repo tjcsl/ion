@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.db import migrations
 
@@ -22,6 +21,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='time',
-            unique_together=set([('hour', 'minute')]),
+            unique_together={('hour', 'minute')},
         ),
     ]

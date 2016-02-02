@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django import forms
 from django.core.validators import RegexValidator
-from ...models import EighthBlock
 
+from ...models import EighthBlock
 
 block_letter_validator = RegexValidator(r"^[a-z A-Z0-9_-]{1,10}$", "A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces.")
 

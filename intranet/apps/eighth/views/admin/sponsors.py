@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from cacheops import invalidate_obj
-from six.moves import cPickle as pickle
+import pickle
+
 from django import http
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
-from ....auth.decorators import eighth_admin_required
+
 from ...forms.admin.sponsors import SponsorForm
-from ...models import EighthSponsor, EighthScheduledActivity, EighthActivity
+from ...models import EighthActivity, EighthScheduledActivity, EighthSponsor
 from ...utils import get_start_date
+from ....auth.decorators import eighth_admin_required
 
 
 @eighth_admin_required
@@ -92,7 +92,8 @@ def sponsor_schedule_view(request, sponsor_id):
 
     start_date = get_start_date(request)
 
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor)
+    # for_sponsor() excludes cancelled activities
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True)
                                          .filter(block__date__gte=start_date)
                                          .order_by("block__date",
                                                    "block__block_letter"))

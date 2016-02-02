@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from django.db import models
+
 from django.contrib.auth import models as auth_models
+from django.db import models
 
 
 class GroupManager(auth_models.GroupManager):
@@ -72,5 +72,5 @@ class GroupProperties(models.Model):
     group = models.OneToOneField(Group)
     student_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.group)

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
 from datetime import datetime, timedelta
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from ..models import (
-    EighthBlock, EighthScheduledActivity, EighthActivity
-)
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
+
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from django.contrib import messages
+
 from ..db.ldap_db import LDAPConnection
 
 logger = logging.getLogger(__name__)

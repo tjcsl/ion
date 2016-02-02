@@ -1,7 +1,6 @@
 language: python
 
 python:
-    - '2.7'
     - '3.4'
     - '3.5'
 
@@ -10,14 +9,6 @@ sudo: false
 cache:
     directories:
         - $HOME/.cache/pip
-
-matrix:
-    allow_failures:
-        - python: '3.4'
-        - python: '3.5'
-
-services:
-  - postgresql
 
 env:
   matrix:
@@ -28,14 +19,14 @@ env:
     - secure: BT+ndG5VAs3UxdrF7dTx7MK6SACHG8lf9ABfcAD1FgMi+gccT+R3b6FiQ6AcBn4P+1FqHnoxrOEL4PsxPBAUVLf+wjynOXBMI6Ee+bmUfqLvcP1WwCRK3WhSZpH5lSUr7TCxkGFX7ROOJLnqPScTgQhiWHbCzwV9RcAwHaKj1PM=
 
 install:
-    - pip install -U coveralls -r requirements.txt
+    - pip install -U coveralls flake8 -r requirements.txt
 
 before_script:
   - cp intranet/settings/travis_secret.py intranet/settings/secret.py
-  - psql -c 'create database ion;' -U postgres
 
 script:
-  - coverage run ./manage.py test
+  - flake8 --max-line-length 200 .
+  - coverage run ./setup.py test
   - ./travis/build_docs.sh
 
 after_success:

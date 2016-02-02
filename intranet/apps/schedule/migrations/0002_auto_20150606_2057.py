@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -18,10 +17,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='block',
-            unique_together=set([('name', 'start', 'end')]),
+            unique_together={('name', 'start', 'end')},
         ),
         migrations.AlterUniqueTogether(
             name='time',
-            unique_together=set([('hour', 'min')]),
+            unique_together={('hour', 'min')},
         ),
     ]

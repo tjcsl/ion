@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import datetime
-from six import text_type
+
 from django.db import models
 
 
@@ -10,7 +9,7 @@ class Time(models.Model):
     hour = models.IntegerField()
     minute = models.IntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         minute = "0" + str(self.minute) if self.minute < 10 else self.minute
         return "{}:{}".format(self.hour, minute)
 
@@ -30,7 +29,7 @@ class Block(models.Model):
     end = models.ForeignKey('Time', related_name='blockend')
     order = models.IntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}: {}-{}".format(self.name, self.start, self.end)
 
     class Meta:
@@ -41,7 +40,7 @@ class Block(models.Model):
 class CodeName(models.Model):
     name = models.CharField(max_length=100)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -51,7 +50,7 @@ class DayType(models.Model):
     special = models.BooleanField(default=False)
     blocks = models.ManyToManyField('Block', blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -92,8 +91,8 @@ class Day(models.Model):
     day_type = models.ForeignKey('DayType')
     comment = models.CharField(max_length=1000, blank=True)
 
-    def __unicode__(self):
-        return "{}: {}".format(text_type(self.date), self.day_type)
+    def __str__(self):
+        return "{}: {}".format(str(self.date), self.day_type)
 
     class Meta:
         ordering = ("date",)

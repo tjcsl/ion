@@ -1,28 +1,30 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from datetime import datetime
 import hashlib
 import logging
-import ldap
 import os
 from base64 import b64encode
-from six import text_type
-from django.db import models
+from datetime import datetime
+
 from django.conf import settings
-from django.core.cache import cache
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.core import exceptions
-from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, UserManager)
+from django.core.cache import cache
 from django.core.signing import Signer
+from django.db import models
+
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 from intranet.middleware import threadlocals
+
+import ldap3
+import ldap3.utils.dn
+
 from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
 
 
-class UserManager(UserManager):
+class UserManager(DjangoUserManager):
 
     """User model Manager for table-level User queries.
 
@@ -41,7 +43,7 @@ class UserManager(UserManager):
                            ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
         return None
 
     def user_with_ion_id(self, student_id):
@@ -53,7 +55,7 @@ class UserManager(UserManager):
                            ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
         return None
 
     def users_in_year(self, year):
@@ -66,7 +68,7 @@ class UserManager(UserManager):
 
         users = []
         for user in results:
-            users.append(User.get_user(dn=user[0]))
+            users.append(User.get_user(dn=user["dn"]))
 
         return users
 
@@ -84,6 +86,8 @@ class UserManager(UserManager):
     def user_with_name(self, given_name=None, sn=None):
         """Get a unique user object by given name (first/nickname and last)."""
         c = LDAPConnection()
+
+        results = []
 
         if sn and not given_name:
             results = c.search(settings.USER_DN,
@@ -105,7 +109,7 @@ class UserManager(UserManager):
                                    ["dn"])
 
         if len(results) == 1:
-            return User.get_user(dn=results[0][0])
+            return User.get_user(dn=results[0]["dn"])
 
         return None
 
@@ -128,7 +132,7 @@ class UserManager(UserManager):
 
         users = []
         for res in results:
-            u = User.get_user(dn=res[0])
+            u = User.get_user(dn=res["dn"])
             if u.attribute_is_visible("showbirthday"):
                 users.append(u)
 
@@ -174,6 +178,9 @@ class UserManager(UserManager):
         """Get teachers sorted by last name. This is used for the announcement request page."""
         teachers = self.get_teachers()
         teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
+        for t in teachers:
+            if t is None or t[0] is None or t[1] is None or t[2] is None:
+                teachers.remove(t)
         teachers.sort(key=lambda u: (u[0], u[1]))
         for t in teachers:
             if t[0] is None or len(t[0]) <= 1 or t[2] in [8888, 7011]:
@@ -288,7 +295,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         raise User.DoesNotExist(
                             "`User` with DN '{}' does not have a username.".format(dn)
                         )
-            except (ldap.INVALID_DN_SYNTAX, ldap.NO_SUCH_OBJECT):
+            except (ldap3.LDAPInvalidDNSyntaxResult, ldap3.LDAPNoSuchObjectResult):
                 raise User.DoesNotExist(
                     "`User` with DN '{}' does not exist.".format(dn)
                 )
@@ -323,7 +330,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                               "iodineUidNumber={}".format(id),
                               ['dn'])
             if len(result) == 1:
-                dn = result[0][0]
+                dn = result[0]['dn']
             else:
                 logger.debug("No such User with ID {}.".format(id))
                 dn = None
@@ -333,12 +340,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     @staticmethod
     def dn_from_username(username):
         # logger.debug("Fetching DN of User with username {}.".format(username))
-        return "iodineUid=" + ldap.dn.escape_dn_chars(username) + "," + settings.USER_DN
+        return "iodineUid=" + ldap3.utils.dn.escape_attribute_value(username) + "," + settings.USER_DN
 
     @staticmethod
     def username_from_dn(dn):
         # logger.debug("Fetching username of User with ID {}.".format(id))
-        return ldap.dn.str2dn(dn)[0][0][1]
+        return ldap3.utils.dn.parse_dn(dn)[0][1]
 
     @staticmethod
     def create_secure_cache_key(identifier):
@@ -373,7 +380,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return identifier
         signer = Signer()
         signed = signer.sign(identifier)
-        hash = hashlib.sha1(signed)
+        hash = hashlib.sha1(signed.encode())
         return hash.hexdigest()
 
     def member_of(self, group):
@@ -584,7 +591,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                         "sponsorDn=" + self.dn
                     )
                     results = c.search(settings.CLASS_DN, query, ["dn"])
-                    classes = [r[0] for r in results]
+                    classes = [r["dn"] for r in results]
 
                 logger.debug("Classes: {}".format(classes))
             except KeyError:
@@ -608,10 +615,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 # (pickling a Class class loads all properties
                 # recursively and quickly reaches the maximum
                 # recursion depth)
-                dn_list = list(zip(*ordered_schedule)[2])
+                dn_list = list(zip(*ordered_schedule))[2]
                 cache.set(key, dn_list,
                           timeout=settings.CACHE_AGE['user_classes'])
-                return list(zip(*ordered_schedule)[1])  # Unpacked class list
+                return list(zip(*ordered_schedule))[1]  # Unpacked class list
         else:
             return None
 
@@ -789,7 +796,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     data = results[0][1]['jpegPhoto'][0]
                 else:
                     data = None
-            except (ldap.NO_SUCH_OBJECT, KeyError):
+            except (ldap3.LDAPNoSuchObjectResult, KeyError):
                 data = None
 
             cache.set(key, data,
@@ -888,7 +895,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             photos = photos_result
 
-            for dn, attrs in photos:
+            for photo in photos:
+                attrs = photo['attributes']
                 grade = attrs["cn"][0][:-len("Photo")]
                 try:
                     public = (attrs["perm-showpictures-self"][0] == "TRUE")
@@ -940,7 +948,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                   ])
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
-            for perm, value in result.iteritems():
+            for perm, value in result.items():
                 bool_value = True if (value[0] == 'TRUE') else False
                 if perm.endswith("-self"):
                     perm_name = perm[5:-5]
@@ -1388,11 +1396,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Set a user attribute in LDAP.
         """
 
-        if name in User.ldap_user_attributes:
-            pass
-        elif override_set:
-            pass
-        else:
+        if name not in User.ldap_user_attributes:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
 
         if User.ldap_user_attributes[name]["can_set"]:
@@ -1411,19 +1415,66 @@ class User(AbstractBaseUser, PermissionsMixin):
         if attr["is_list"] and not isinstance(value, (list, tuple)):
             raise Exception("Expected list for attribute '{}'".format(name))
 
-        # Possible issue with python ldap with unicode values
-        # FIXME: move to ldap3
-        if isinstance(value, text_type):
-            value = str(value)
-
-        c = LDAPConnection()
         field_name = attr["ldap_name"]
-        c.set_attribute(self.dn, field_name, value)
+        self.set_raw_ldap_attribute(field_name, value)
 
         if should_cache:
             identifier = ":".join((self.dn, name))
             key = User.create_secure_cache_key(identifier)
             cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
+
+    def set_ldap_preference(self, item_name, value, is_admin=False):
+        logger.debug("Pref: {} {}".format(item_name, value))
+
+        if item_name.endswith("-self"):
+            field_name = item_name.split("-self")[0]
+            field_type = "self"
+            ldap_name = field_name + "self"
+        elif item_name.endswith("self"):
+            field_name = item_name.split("self")[0]
+            field_type = "self"
+            ldap_name = field_name + "self"
+        else:
+            field_name = item_name
+            field_type = "parent"
+            ldap_name = field_name
+
+        if field_type == "parent" and not is_admin:
+            raise Exception("You do not have permission to change this parent field.")
+
+        if value is True:
+            value = "TRUE"
+
+        if value is False:
+            value = "FALSE"
+
+        if item_name.startswith("photoperm-"):
+            grade = field_name.split("photoperm-")[1]
+            self.set_raw_ldap_photoperm(field_type, grade, value)
+            cache.delete(":".join([self.dn, "photo_permissions"]))
+        else:
+            logger.debug("Setting raw LDAP: {} = {}".format(ldap_name, value))
+            self.set_raw_ldap_attribute(ldap_name, value)
+
+        if field_name == "showpictures":
+            cache.delete(":".join([self.dn, "photo_permissions"]))
+
+        if field_name in ["showschedule", "showaddress", "showphone", "showbirthday", "showpictures", "showeighth"]:
+            cache.delete(":".join([self.dn, "user_info_permissions"]))
+
+    def set_raw_ldap_photoperm(self, field_type, grade, value):
+        if self.dn is None:
+            raise Exception("Could not determine DN of User")
+
+        if field_type not in ["parent", "self"]:
+            raise Exception("Invalid photo field type")
+
+        photo_dn = "cn={}Photo,{}".format(grade, self.dn)
+        photo_field = "perm-showpictures" + ("-self" if field_type == "self" else "")
+
+        c = LDAPConnection()
+        logger.info("SET {}: {} = {}".format(photo_dn, photo_field, value))
+        c.set_attribute(photo_dn, photo_field, value)
 
     def set_raw_ldap_attribute(self, field_name, value):
         """Set a raw user attribute in LDAP.
@@ -1431,12 +1482,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
-        # Possible issue with python-ldap with unicode values
-        # FIXME: move to ldap3
-        if isinstance(value, text_type):
-            value = str(value)
-
         c = LDAPConnection()
+        logger.info("SET {}: {} = {}".format(self.dn, field_name, value))
         c.set_attribute(self.dn, field_name, value)
 
     def clear_cache(self):
@@ -1448,7 +1495,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_eighth_sponsor(self):
         """Determine whether the given user is associated with an
-        :class:`EighthSponsor` and, therefore, should view activity
+        :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
         sponsoring information.
 
         """
@@ -1458,7 +1505,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     def get_eighth_sponsor(self):
-        """Return the :class:`EighthSponsor` that a given user is
+        """Return the :class:`intranet.apps.eighth.models.EighthSponsor` that a given user is
         associated with.
         """
 
@@ -1487,7 +1534,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username or self.ion_username or self.id
 
     def __int__(self):
@@ -1522,7 +1569,7 @@ class Class(object):
         """
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
-    section_id = property(lambda c: ldap.dn.str2dn(c.dn)[0][0][1])
+    section_id = property(lambda c: ldap3.utils.dn.parse_dn(c.dn)[0][1])
     pk = section_id
 
     @property
@@ -1536,11 +1583,11 @@ class Class(object):
 
         """
         c = LDAPConnection()
-        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), [])
+        students = c.search(settings.USER_DN, "enrolledClass={}".format(self.dn), ["dn"])
 
         users = []
         for row in students:
-            dn = row[0]
+            dn = row["dn"]
             try:
                 user = User.get_user(dn=dn)
             except User.DoesNotExist:
@@ -1636,7 +1683,7 @@ class Class(object):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        return list(zip(*ordered_schedule)[1])  # The class objects
+        return list(zip(*ordered_schedule))[1]  # The class objects
 
     def __getattr__(self, name):
         """Return simple attributes of Class
@@ -1722,8 +1769,10 @@ class Class(object):
                           timeout=settings.CACHE_AGE['class_attribute'])
                 return value
 
-    def __unicode__(self):
-        return "{} ({})".format(self.name, self.teacher.last_name) or self.dn
+    def __str__(self):
+        if self.name and self.teacher.last_name:
+            return "{} ({})".format(self.name, self.teacher.last_name)
+        return "{}".format(self.dn)
 
 
 class ClassSections(object):
@@ -1760,15 +1809,18 @@ class ClassSections(object):
 
         """
         c = LDAPConnection()
-        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId"])
+        query = c.search(self.dn, "(&(objectClass=tjhsstClass)(tjhsstClassId={}))".format(self.id), ["tjhsstSectionId", "dn"])
 
         classes = []
         for row in query:
-            dn = row[0]
+            dn = row["dn"]
             c = Class(dn=dn)
             classes.append(c)
 
         return classes
+
+    def __str__(self):
+        return self.id
 
 
 class Address(object):
@@ -1794,7 +1846,7 @@ class Address(object):
         self.state = state
         self.postal_code = postal_code
 
-    def __unicode__(self):
+    def __str__(self):
         """Returns full address string."""
         return "{}\n{}, {} {}".format(self.street, self.city,
                                       self.state, self.postal_code)
@@ -1881,9 +1933,6 @@ class Grade(object):
         """Return the grade as a number (9-12)."""
         return self._number
 
-    def __unicode__(self):
+    def __str__(self):
         """Return name of the grade."""
         return self._name
-
-    def __str__(self):
-        return self.__unicode__()

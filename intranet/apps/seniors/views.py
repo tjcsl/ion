@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
-import datetime
-from django import http
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.utils import timezone
-from ..users.models import User
-from .models import Senior
+
 from .forms import SeniorForm
+from .models import Senior
 
 logger = logging.getLogger(__name__)
 

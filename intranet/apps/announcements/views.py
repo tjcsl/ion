@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
+import datetime
 import logging
+
 import bleach
+
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from ..auth.decorators import announcements_admin_required
-from ..groups.models import Group
-from ..dashboard.views import dashboard_view
-from .models import Announcement, AnnouncementRequest
+
 from .forms import AnnouncementForm, AnnouncementRequestForm
-from .notifications import (request_announcement_email,
-                            admin_request_announcement_email,
-                            announcement_posted_twitter,
+from .models import Announcement, AnnouncementRequest
+from .notifications import (admin_request_announcement_email,
+                            announcement_approved_email,
                             announcement_posted_email,
-                            announcement_approved_email)
+                            announcement_posted_twitter,
+                            request_announcement_email)
+from ..auth.decorators import announcements_admin_required
+from ..dashboard.views import dashboard_view
+from ..groups.models import Group
 
 logger = logging.getLogger(__name__)
 
@@ -53,10 +56,15 @@ def announcement_posted_hook(request, obj):
         except AttributeError:
             notify_all = False
 
-        if notify_all:
-            announcement_posted_email(request, obj, True)
-        else:
-            announcement_posted_email(request, obj)
+        try:
+            if notify_all:
+                announcement_posted_email(request, obj, True)
+            else:
+                announcement_posted_email(request, obj)
+        except Exception as e:
+            logger.error("Exception when emailing announcement: {}".format(e))
+            messages.error("Exception when emailing announcement: {}".format(e))
+            raise e
     else:
         logger.debug("Announcement notify off")
 
@@ -314,8 +322,14 @@ def delete_announcement_view(request, id):
         except AttributeError:
             post_id = None
         try:
-            Announcement.objects.get(id=post_id).delete()
-            messages.success(request, "Successfully deleted announcement.")
+            a = Announcement.objects.get(id=post_id)
+            if request.POST.get("full_delete", False):
+                a.delete()
+                messages.success(request, "Successfully deleted announcement.")
+            else:
+                a.expiration_date = datetime.datetime.now()
+                a.save()
+                messages.success(request, "Successfully expired announcement.")
         except Announcement.DoesNotExist:
             pass
 

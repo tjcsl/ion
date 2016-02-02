@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from ldap.filter import escape_filter_chars
+from django.shortcuts import redirect, render
+
 from intranet.db.ldap_db import LDAPConnection
+
+from ldap3.utils.conv import escape_filter_chars
+
 from ..announcements.models import Announcement
-from ..events.models import Event
 from ..eighth.models import EighthActivity
+from ..events.models import Event
 from ..search.utils import get_query
-from ..users.models import User, Grade
+from ..users.models import Grade, User
 from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
@@ -34,9 +37,9 @@ def do_ldap_query(q, admin=False):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, [])
+        res = c.search(settings.USER_DN, query, ["dn"])
         for row in res:
-            dn = row[0]
+            dn = row["dn"]
             result_dns.append(dn)
     elif ":" in q:
         logger.debug("Advanced search")
@@ -171,9 +174,9 @@ def do_ldap_query(q, admin=False):
 
         logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, [])
+        res = c.search(settings.USER_DN, query, ["dn"])
         for row in res:
-            dn = row[0]
+            dn = row["dn"]
             result_dns.append(dn)
 
     else:
@@ -220,11 +223,11 @@ def do_ldap_query(q, admin=False):
 
             logger.debug("Running LDAP query: {}".format(query))
 
-            res = c.search(settings.USER_DN, query, [])
+            res = c.search(settings.USER_DN, query, ["dn"])
             new_dns = []
             # if multiple words, delete those that weren't in previous searches
             for row in res:
-                dn = row[0]
+                dn = row["dn"]
                 if i == 0:
                     new_dns.append(dn)
                 elif dn in result_dns:
@@ -243,17 +246,14 @@ def do_ldap_query(q, admin=False):
 
 
 def get_search_results(q, admin=False):
-    try:
-        q = q.replace("+", " ")
-        q = q.encode("utf8")
-        users = []
+    q = q.replace("+", " ")
+    users = []
 
-        queries = q.split(" OR ")
-    except (UnicodeEncodeError, UnicodeDecodeError):
-        return True, []
-
-    for qu in queries:
-        users += do_ldap_query(qu, admin)
+    for qu in q.split(" OR "):
+        try:
+            users += do_ldap_query(qu, admin)
+        except ValueError:
+            raise Exception("Invalid query")
 
     return False, users
 
@@ -301,7 +301,11 @@ def search_view(request):
             if u is not None:
                 return profile_view(request, user_id=u.id)
 
-        query_error, users = get_search_results(q, request.user.is_eighthoffice)
+        try:
+            query_error, users = get_search_results(q, request.user.is_eighthoffice)
+        except Exception as e:
+            query_error = "{}".format(e)
+            users = []
 
         if is_admin:
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
@@ -314,7 +318,7 @@ def search_view(request):
         logger.debug(announcements)
         logger.debug(events)
 
-        if len(users) == 1:
+        if users and len(users) == 1:
             no_other_results = (not activities and not announcements)
             if request.user.is_eighthoffice or no_other_results:
                 user_id = users[0].id

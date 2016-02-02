@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import ipaddress
-from six.moves.urllib import parse
-from .base import *
+from urllib import parse
 
-"""In production, add a file called secret.py to the settings package that
-defines SECRET_KEY and DATABASE_URL.
+from .base import *  # noqa
+
+""" !! In production, add a file called secret.py to the settings package that
+defines SECRET_KEY and DATABASE_URL. !!
 
 DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
@@ -21,20 +20,17 @@ CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
 
-CACHES['default']['OPTIONS']['DB'] = 1
+if not TESTING:
+    CACHES['default']['OPTIONS']['DB'] = 1
 
-parse.uses_netloc.append("postgres")
-url = parse.urlparse(DATABASE_URL)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': url.path[1:],
-        'USER': url.username,
-        'PASSWORD': url.password,
-        'HOST': url.hostname
-    }
-}
+def parse_db_url():
+    parse.uses_netloc.append("postgres")
+    url = parse.urlparse(DATABASE_URL)
+    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
+
+
+DATABASES['default'].update(parse_db_url())
 
 
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
@@ -60,30 +56,8 @@ if SHOW_DEBUG_TOOLBAR:
         "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
     })
 
-
-class glob_list(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-        
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)):
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
-
-INTERNAL_IPS = glob_list([
-    "127.0.0.0/8",
+# Internal IP ranges in production
+INTERNAL_IPS = GlobList([
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])

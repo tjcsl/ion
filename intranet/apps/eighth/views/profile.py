@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
-from cacheops import invalidate_obj
 from datetime import datetime, timedelta
+
+from cacheops import invalidate_obj
+
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
-from ....utils.serialization import safe_json
-from ...auth.decorators import eighth_admin_required
-from ...users.models import User
-from ...users.forms import ProfileEditForm
-from ..models import EighthBlock, EighthSignup, EighthScheduledActivity, EighthSponsor
+from django.shortcuts import get_object_or_404, redirect, render
+
+from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup,
+                      EighthSponsor)
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
+from ...auth.decorators import eighth_admin_required
+from ...users.forms import ProfileEditForm
+from ...users.models import User
+from ....utils.serialization import safe_json
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,25 +56,25 @@ def edit_profile_view(request, user_id=None):
                 new_data[field] = new
         logger.debug(new_data)
 
-        RAW_LDAP_ATTRIBUTES = ["birthday", "street", "city", "state", "postal_code", "counselor"]
-        RAW_LDAP_OVERRIDE = {
+        raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
+        raw_ldap_override = {
             "city": "l",
             "state": "st",
             "postal_code": "postalCode",
             "counselor_id": "counselor"
         }
-        OVERRIDE_SET = ["graduation_year"]
+        override_set = ["graduation_year"]
 
         for key in new_data:
-            if key in RAW_LDAP_ATTRIBUTES:
-                if key in RAW_LDAP_OVERRIDE:
-                    key = RAW_LDAP_OVERRIDE[key]
+            if key in raw_ldap_attributes:
+                if key in raw_ldap_override:
+                    key = raw_ldap_override[key]
                 logger.debug("Setting raw {}={}".format(key, new_data[key]))
                 user.set_raw_ldap_attribute(key, new_data[key])
             else:
                 logger.debug("Setting regular {}={}".format(key, new_data[key]))
                 try:
-                    user.set_ldap_attribute(key, new_data[key], key in OVERRIDE_SET)
+                    user.set_ldap_attribute(key, new_data[key], key in override_set)
                 except Exception as e:
                     messages.error(request, "Field {} with value {}: {}".format(key, new_data[key], e))
                     logger.debug("Field {} with value {}: {}".format(key, new_data[key], e))

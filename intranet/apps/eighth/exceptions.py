@@ -1,6 +1,9 @@
-from django import http
-from rest_framework import status
+# -*- coding: utf-8 -*-
 from collections import namedtuple
+
+from django import http
+
+from rest_framework import status
 
 m = namedtuple("Message", ["regular", "admin"])
 
@@ -27,10 +30,10 @@ class SignupException(Exception):
                      "This is a one-a-day activity."),
         "Restricted": m("You may not sign up for this restricted activity. You are not on the authorized list.",
                         "This activity is restricted for this student."),
-        "OverrideBlockLocked": m("An override block ({}) has been locked. Signup is not allowed at this time.",
-                                 "An override block ({}) has been locked."),
-        "OverrideBlockPermissions": m("Your signup ({}) on an override block ({}) cannot be changed out of. You will be unable to sign up for any activities on this block.",
-                                      "Your signup ({}) on an override block ({}) cannot be changed out of.")
+        "OverrideBlockLocked": m("An override block ({0}) has been locked. Signup is not allowed at this time.",
+                                 "An override block ({1}) has been locked."),
+        "OverrideBlockPermissions": m("Your signup ({0}) on an override block ({1}) cannot be changed out of. You will be unable to sign up for any activities on this block.",
+                                      "Your signup ({0}) on an override block ({1}) cannot be changed out of.")
     }
 
     def __init__(self):
@@ -38,7 +41,7 @@ class SignupException(Exception):
         self.desc_errors = {}
 
     def __repr__(self):
-        return "SignupException(" + ", ".join(self.errors) + ")"
+        return "SignupException(%s)" % ", ".join(self.errors)
 
     def __str__(self):
         return ", ".join(self.errors)

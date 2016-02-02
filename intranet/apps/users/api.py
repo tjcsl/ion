@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import os
 import io
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+import os
+
+from django.conf import settings
+
 from intranet.apps.search.views import get_search_results
-from .models import User, Class, Grade
-from .serializers import UserSerializer, ClassSerializer, StudentSerializer, CounselorTeacherSerializer
+
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Class, Grade, User
 from .renderers import JPEGRenderer
-from intranet import settings
+from .serializers import (ClassSerializer, CounselorTeacherSerializer,
+                          StudentSerializer, UserSerializer)
 
 
 class ProfileDetail(generics.RetrieveAPIView):
@@ -84,6 +88,7 @@ class Search(generics.RetrieveAPIView):
     """
 
     permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         query = kwargs['query']
