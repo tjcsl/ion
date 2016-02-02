@@ -9,6 +9,7 @@ from ..db.ldap_db import LDAPConnection
 
 
 class IonTestCase(TestCase):
+
     def login(self):
         # We need to add the user to the db before trying to login as them.
         User.get_user(username='awilliam').save()
