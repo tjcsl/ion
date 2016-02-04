@@ -20,18 +20,18 @@
         var tr = $(btn).parent().parent();
         var pr = tr.prev();
         var newPr = pr.clone();
-        var inp = $("input", newPr);
-        inp.val("");
-        var newName = inp.attr("name");
-        var r = newName.split("_");
-        newName = [parseInt(r.pop())+1, r.join("_")].reverse().join("_");
+        var inp = $('input', newPr);
+        inp.val('');
+        var newName = inp.attr('name');
+        var r = newName.split('_');
+        newName = [parseInt(r.pop())+1, r.join('_')].reverse().join('_');
         inp.attr("name", newName);
         inp.attr("id", "id_" + newName);
 
-        $("td.label", newPr).html("");
+        $('td.label', newPr).html('');
 
-        var r = $("td.remove", newPr);
-        if(r.html().trim().length == 0) {
+        var r = $('td.remove', newPr);
+        if (r.html().trim().length == 0) {
             r.html('<button onclick="remove_field(this)"><i class="fa fa-times"></i></button>')
         }
 
@@ -44,15 +44,15 @@
     }
 
     $(function() {
-        $("input.disabled").each(function() {
-            $(this).attr("data-state", $(this).prop("checked"));
+        $('input.disabled').each(function() {
+            $(this).attr('data-state', $(this).prop('checked'));
             $(this).click(function(e) {
                 e.preventDefault();
-                var state = $(this).attr("data-state");
-                if(!state) {
-                    $(this).removeProp("checked");
+                var state = $(this).attr('data-state');
+                if (!state) {
+                    $(this).removeProp('checked');
                 } else {
-                    $(this).prop("checked", state);
+                    $(this).prop('checked', state);
                 }
             })
         })
@@ -95,16 +95,16 @@
                             <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}/>
                         </td>
                         <td>
-                            Receive Push Notifications
+                            <label for="id_receive_push_notifications">Receive Push Notifications</label>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
                         <td>
-                            <input type="checkbox" disabled />
+                            <input id="id_receive_push_notifications" type="checkbox" disabled />
                         </td>
                         <td>
-                            Receive Push Notifications
+                            <label for="id_receive_push_notifications">Receive Push Notifications</label>
                         </td>
                     </tr>
                 {% endif %}
