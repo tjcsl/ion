@@ -35,7 +35,7 @@ class Command(BaseCommand):
         # FIXME I'M BROKEN
         def add(ical_map):
             for date, type in ical_map.items():
-                # type: codename
+                # type = codename
                 cns = CodeName.objects.filter(name=type)
                 if len(cns) < 1:
                     cn = CodeName.objects.create(name=type)

@@ -27,6 +27,7 @@ before_script:
 script:
   - flake8 --max-line-length 200 .
   - coverage run ./setup.py test
+  - ./manage.py migrate
   - ./travis/build_docs.sh
 
 after_success:
