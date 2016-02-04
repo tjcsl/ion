@@ -2,8 +2,8 @@
 import os
 import sys
 
-if sys.version_info < (3,):
-    raise Exception("Only Python 3 is supported.")
+if sys.version_info < (3, 2):
+    raise Exception("Python 3.2 or higher is required.")
 
 if os.getenv("PRODUCTION") == "TRUE":
     from .production import *  # noqa
