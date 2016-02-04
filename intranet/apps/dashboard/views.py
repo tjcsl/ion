@@ -232,7 +232,7 @@ def find_birthdays(request):
             data = {
                 "custom": custom,
                 "today": {
-                    "date": str(today),
+                    "date": today,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -244,7 +244,7 @@ def find_birthdays(request):
                     "inc": 0
                 },
                 "tomorrow": {
-                    "date": str(tomorrow),
+                    "date": tomorrow,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
