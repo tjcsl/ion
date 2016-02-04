@@ -28,10 +28,11 @@ script:
   - flake8 --max-line-length 200 .
   - coverage run ./setup.py test
   - ./manage.py migrate
-  - ./travis/build_docs.sh
+  - ./scripts/build_docs.sh
+  - ./scripts/mypy.sh || true  # FIXME: make this work properly
 
 after_success:
-  - ./travis/push_docs.sh
+  - ./scripts/push_docs.sh
   - coveralls
 
 notifications:
