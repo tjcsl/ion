@@ -18,14 +18,8 @@ setup(
     version="1.0",
     license="GPL",
     test_suite='intranet.test.test_suite.run_tests',
-    setup_requires=['pip>=6.0'],  # session param
+    setup_requires=['pip>=6.0', 'setuptools_git'],  # session param
     install_requires=[str(dep.req) for dep in parse_requirements('requirements.txt', session=PipSession())],
-    package_data={
-        '': [
-            'static/**/*.*',
-            'templates/**/*.*'
-        ],
-    },
     packages=find_packages(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
