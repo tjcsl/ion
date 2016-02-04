@@ -22,8 +22,8 @@ setup(
     install_requires=[str(dep.req) for dep in parse_requirements('requirements.txt', session=PipSession())],
     package_data={
         '': [
-            'static/**/*',
-            'templates/**/*'
+            'static/**/*.*',
+            'templates/**/*.*'
         ],
     },
     packages=find_packages(),
