@@ -41,7 +41,7 @@ You then need to import the base ldif.
 
 .. code-block:: bash
 
-  $ ./config/setup_ldap.sh
+  $ ./scripts/setup_ldap.sh
 
 
 ----------
