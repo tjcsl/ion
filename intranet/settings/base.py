@@ -17,7 +17,7 @@ except ImportError:
 PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
 TRAVIS = os.getenv("TRAVIS") == "true"
 # FIXME: figure out a less-hacky way to do this.
-TESTING = TRAVIS or 'test' in sys.argv
+TESTING = 'test' in sys.argv
 LOGGING_VERBOSE = PRODUCTION
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
