@@ -19,7 +19,7 @@ setup(
     license="GPL",
     test_suite='intranet.test.test_suite.run_tests',
     setup_requires=['pip>=6.0', 'setuptools_git'],  # session param
-    install_requires=[str(dep.req) for dep in parse_requirements('requirements.txt', session=PipSession())],
+    install_requires=[str(dep.req) for dep in parse_requirements('requirements.txt', session=PipSession())],  # FIXME: preserve markers
     packages=find_packages(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',

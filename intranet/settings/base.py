@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
+import datetime
 import ipaddress
 import logging
 import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timedelta
+
+from typing import Any  # noqa
 
 logger = logging.getLogger(__name__)
+
+DATABASE_URL = None  # type: str
 
 try:
     from .secret import *  # noqa
@@ -48,11 +52,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'CONN_MAX_AGE': 30
     }
-}
+}  # type: Dict[str,Dict[str,Any]]
 
 
 class MigrationMock(object):
-    seen = set()
+    seen = set()  # type: Set[str]
 
     def __contains__(self, mod):
         return True
@@ -237,7 +241,7 @@ TEMPLATES = [
             "debug": True  # Only enabled if DEBUG is true as well
         }
     },
-]
+]  # type: List[Dict[str,Any]]
 
 MIDDLEWARE_CLASSES = [
     "intranet.middleware.url_slashes.FixSlashes",               # Remove slashes in URLs
@@ -271,7 +275,7 @@ VIRTUAL_ENV = os.path.basename(os.environ["VIRTUAL_ENV"]) if "VIRTUAL_ENV" in os
 
 
 def get_month_seconds():
-    return timedelta(hours=24).total_seconds() * 30
+    return datetime.timedelta(hours=24).total_seconds() * 30
 
 # Age of cache information
 CACHE_AGE = {
@@ -282,10 +286,10 @@ CACHE_AGE = {
     "class_teacher": int(6 * get_month_seconds()),
     "class_attribute": int(6 * get_month_seconds()),
     "user_attribute": int(2 * get_month_seconds()),
-    "bell_schedule": int(timedelta(weeks=1).total_seconds()),
-    "ldap_permissions": int(timedelta(hours=24).total_seconds()),
-    "users_list": int(timedelta(hours=24).total_seconds()),
-    "emerg": int(timedelta(minutes=5).total_seconds())
+    "bell_schedule": int(datetime.timedelta(weeks=1).total_seconds()),
+    "ldap_permissions": int(datetime.timedelta(hours=24).total_seconds()),
+    "users_list": int(datetime.timedelta(hours=24).total_seconds()),
+    "emerg": int(datetime.timedelta(minutes=5).total_seconds())
 }
 
 # Cacheops configuration
@@ -302,12 +306,12 @@ CACHEOPS_DEGRADE_ON_FAILURE = True
 CACHEOPS_DEFAULTS = {
     "ops": "all",
     "cache_on_save": True,
-    "timeout": int(timedelta(hours=24).total_seconds())
+    "timeout": int(datetime.timedelta(hours=24).total_seconds())
 }
 
 CACHEOPS = {
     "eighth.*": {
-        "timeout": 1  # int(timedelta(hours=1).total_seconds())
+        "timeout": 1  # int(datetime.timedelta(hours=1).total_seconds())
     },
     "announcements.*": {},
     "events.*": {},
@@ -325,20 +329,24 @@ if not TESTING:
     SESSION_REDIS_DB = 0
     SESSION_REDIS_PREFIX = VIRTUAL_ENV + ":session"
 
-    SESSION_COOKIE_AGE = int(timedelta(hours=2).total_seconds())
+    SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
 
-    CACHES = {
-        "default": {
-            "BACKEND": "redis_cache.RedisCache",
-            "LOCATION": "127.0.0.1:6379",
-            "OPTIONS": {
-                "PARSER_CLASS": "redis.connection.HiredisParser",
-                "PICKLE_VERSION": 4,
-            },
-            "KEY_PREFIX": VIRTUAL_ENV
+CACHES = {"default": {"OPTIONS": {}}}  # type: Dict[str,Dict[str,Any]]
+
+if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES":
+    CACHES["default"]["BACKEND"] = "django.core.cache.backends.dummy.DummyCache"
+else:
+    CACHES["default"] = {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": "127.0.0.1:6379",
+        "OPTIONS": {
+            "PARSER_CLASS": "redis.connection.HiredisParser",
+            "PICKLE_VERSION": 4,
         },
+        "KEY_PREFIX": VIRTUAL_ENV
     }
+
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
@@ -386,7 +394,7 @@ REST_FRAMEWORK = {
     )
 }
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     # internal Django
     "django.contrib.auth",
     "django.contrib.admin",
@@ -425,7 +433,7 @@ INSTALLED_APPS = (
     "widget_tweaks",
     "corsheaders",
     "cacheops"
-)
+]
 
 # Eighth period default block date format
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
@@ -542,8 +550,8 @@ if SHOW_DEBUG_TOOLBAR:
     _panels = [
         ("debug_toolbar.panels.versions.VersionsPanel", False),
         ("debug_toolbar.panels.timer.TimerPanel", True),
-        # ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        # FIXME: broken in python3 ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
+        ("debug_toolbar.panels.profiling.ProfilingPanel", False),
+        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
         ("debug_toolbar.panels.settings.SettingsPanel", False),
         ("debug_toolbar.panels.headers.HeadersPanel", False),
         ("debug_toolbar.panels.request.RequestPanel", False),
@@ -568,10 +576,10 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.middleware.DebugToolbarMiddleware",      # Debug toolbar
     ])
 
-    INSTALLED_APPS += (
+    INSTALLED_APPS += [
         "debug_toolbar",
         "debug_toolbar_line_profiler",
-    )
+    ]
 
     def debug_toolbar_callback(request):
         """Show the debug toolbar to those with the Django staff permission, excluding
@@ -590,9 +598,7 @@ if SHOW_DEBUG_TOOLBAR:
 
     # Only show debug toolbar when requested if in production.
     if PRODUCTION:
-        DEBUG_TOOLBAR_CONFIG.update({
-            "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
-        })
+        DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.settings.debug_toolbar_callback"
 
 # Maintenance mode
 MAINTENANCE_MODE = False
@@ -646,7 +652,7 @@ GIT = {
 }
 
 # Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = datetime(year=2016, month=7, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
+SENIOR_GRADUATION = datetime.datetime(year=2016, month=7, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2016
 # The hour on an eighth period day to lock teachers from

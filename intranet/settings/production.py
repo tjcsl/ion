@@ -20,12 +20,13 @@ CSRF_COOKIE_SECURE = True
 
 SHOW_DEBUG_TOOLBAR = False
 
-if not TESTING:
-    CACHES['default']['OPTIONS']['DB'] = 1
+CACHES['default']['OPTIONS']['DB'] = 1
 
 
 def parse_db_url():
     parse.uses_netloc.append("postgres")
+    if DATABASE_URL is None:
+        raise Exception("You must set DATABASE_URL in secret.py")
     url = parse.urlparse(DATABASE_URL)
     return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
 
@@ -50,11 +51,6 @@ def debug_toolbar_callback(request):
                 "debug" in request.GET)
 
     return False
-
-if SHOW_DEBUG_TOOLBAR:
-    DEBUG_TOOLBAR_CONFIG.update({
-        "SHOW_TOOLBAR_CALLBACK": "intranet.settings.debug_toolbar_callback"
-    })
 
 # Internal IP ranges in production
 INTERNAL_IPS = GlobList([
