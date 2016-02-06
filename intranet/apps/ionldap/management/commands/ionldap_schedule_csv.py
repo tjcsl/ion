@@ -142,11 +142,16 @@ class Command(BaseCommand):
 
             for student_id in users_dict:
                 user_dict = users_dict[student_id]
-                user = None
+                sid = student_id.lower()
+                if not sid:
+                    print("User does not exist")
+                    continue
+                print(sid)
                 try:
-                    user = User.objects.get(username=student_id)
+                    user = User.objects.get(username=sid)
                 except User.DoesNotExist:
-                    print("User {} does not exist".format(student_id))
+                    print("User does not exist")
+                    continue
                 if not add_db:
                     break
 
