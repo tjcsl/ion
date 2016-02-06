@@ -36,26 +36,26 @@ class Command(BaseCommand):
 
         with open(csv_file, 'r') as csv_open:
             csv_reader = csv.reader(csv_open)
-            next(csv_reader) # skip first line
+            next(csv_reader)  # skip first line
             CLASS_ROWS = [
-                    "Period",
-                    "EndPeriod",
-                    "Teacher",
-                    "TeacherStaffName",
-                    "Room",
-                    "SectionID",
-                    "CourseID",
-                    "CourseTitle",
-                    "CourseShortTitle",
-                    "CourseIDTitle",
-                    "CourseTitleId",
-                    "TermName",
-                    "TermCode",
-                    "TeacherAide",
-                    "TermOverride",
-                    "SectionEnterDate",
-                    "SectionLeaveDate",
-                    "MeetDays"
+                "Period",
+                "EndPeriod",
+                "Teacher",
+                "TeacherStaffName",
+                "Room",
+                "SectionID",
+                "CourseID",
+                "CourseTitle",
+                "CourseShortTitle",
+                "CourseIDTitle",
+                "CourseTitleId",
+                "TermName",
+                "TermCode",
+                "TeacherAide",
+                "TermOverride",
+                "SectionEnterDate",
+                "SectionLeaveDate",
+                "MeetDays"
             ]
             ROWS = ["StudentID",
                     "Gender",
@@ -129,7 +129,7 @@ class Command(BaseCommand):
                     "Phone4",
                     "Type4",
                     "Extension4"
-            ]
+                    ]
             for row in csv_reader:
                 row_dict = {ROWS[i]: row[i] for i in range(len(row))}
                 class_dict = {i: row_dict[i] for i in CLASS_ROWS}
@@ -139,7 +139,6 @@ class Command(BaseCommand):
                         "classes": {}
                     }
                 users_dict[row_dict[users_dict_base]]["classes"][class_dict[class_dict_base]] = class_dict
-
 
             for student_id in users_dict:
                 user_dict = users_dict[student_id]
@@ -171,4 +170,3 @@ class Command(BaseCommand):
                     ldap_course.users.add(user)
                     ldap_course.save()
                     print("{} \t\tadded to\t\t {}".format(user, ldap_course))
-

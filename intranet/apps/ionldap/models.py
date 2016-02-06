@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-
-import hashlib
-import json
-
 from django.db import models
-
 from ..users.models import User
+
 
 class LDAPCourse(models.Model):
     users = models.ManyToManyField(User)
