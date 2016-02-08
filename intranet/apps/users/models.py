@@ -226,7 +226,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_eighth_emails = models.BooleanField(default=False)
 
     # Private dn cache
-    _dn = None
+    _dn = None  # type: str
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -736,16 +736,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.sex.lower()[:1] == "f" if self.sex else False
 
     @property
-    def age(self, date=None):
+    def age(self):
         """Returns a user's age, based on their birthday.
-           Optional date argument to find their age on a given day.
 
         Returns:
             integer
 
         """
-        if not date:
-            date = datetime.now()
+        date = datetime.now()
 
         b = self.birthday
         if b:
@@ -1569,7 +1567,9 @@ class Class(object):
         """
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
-    section_id = property(lambda c: ldap3.utils.dn.parse_dn(c.dn)[0][1])
+    @property
+    def section_id(self):
+        return ldap3.utils.dn.parse_dn(self.dn)[0][1]
     pk = section_id
 
     @property

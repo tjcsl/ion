@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from unittest import mock
 
+from typing import Any  # noqa
+
 # FIXME: make more general, load from fixtures
 all_users = '(|(objectclass=simpleUser)(objectclass=tjhsstStudent)(objectclass=tjhsstTeacher)(objectclass=tjhsstUser))'
 uid_dn = 'iodineUid=awilliam,ou=people,dc=tjhsst,dc=edu'
@@ -13,7 +15,7 @@ values = {
     ('ou=people,dc=tjhsst,dc=edu', '(graduationYear=2017)', ('dn',)): [],
     ('ou=people,dc=tjhsst,dc=edu', '(graduationYear=2018)', ('dn',)): [],
     ('ou=people,dc=tjhsst,dc=edu', '(graduationYear=2019)', ('dn',)): [],
-}
+}  # type: Dict[Any,Any]
 
 
 def get_attr(dn, filt, attr, value):
@@ -22,13 +24,13 @@ def get_attr(dn, filt, attr, value):
 attrs = [('iodineUidNumber', 1337), ('iodineUid', 'awilliam'), ('objectClass', 'tjhsstStudent'), ('givenName', 'Angela'), ('gender', 'F'),
          ('title', 'HRH'), ('displayName', 'Angela'), ('cn', 'Angela'), ('middlename', 'dank'), ('sn', 'Williams'), ('nickname', 'Active Directory'),
          ('mail', 'bob@bob.com'), ('graduationYear', 2016), ('birthday', '1337420'), ('homePhone', '1234567890'), ('mobile', '1234567890'),
-         ('telephoneNumber', '1234567890'), ('webpage', 'dankmemes.net'), ('counselor', 420), ('enrolledclass', class_dn)]
+         ('telephoneNumber', '1234567890'), ('webpage', 'dankmemes.net'), ('counselor', 420), ('enrolledclass', class_dn)]  # type: List[Any]
 for x, y in attrs:
     values.update(get_attr(uid_dn, all_users, x, y))
-cattrs = [('iodineUidNumber', 420), ('iodineUid', 'rms'), ('objectClass', 'tjhsstTeacher'), ('cn', 'Richard'), ('sn', 'Stallman')]
+cattrs = [('iodineUidNumber', 420), ('iodineUid', 'rms'), ('objectClass', 'tjhsstTeacher'), ('cn', 'Richard'), ('sn', 'Stallman')]  # type: List[Any]
 for x, y in cattrs:
     values.update(get_attr(counselor_dn, all_users, x, y))
-class_attrs = [('classPeriod', 8), ('quarterNumber', 5), ('cn', 'Memes 101'), ('sponsorDn', counselor_dn)]
+class_attrs = [('classPeriod', 8), ('quarterNumber', 5), ('cn', 'Memes 101'), ('sponsorDn', counselor_dn)]  # type: List[Any]
 for x, y in class_attrs:
     values.update(get_attr(class_dn, '(objectclass=tjhsstClass)', x, y))
 perms = ('perm-showaddress', 'perm-showtelephone', 'perm-showbirthday', 'perm-showschedule', 'perm-showeighth', 'perm-showpictures',

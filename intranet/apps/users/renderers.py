@@ -8,7 +8,7 @@ class JPEGRenderer(renderers.BaseRenderer):
     """
     media_type = 'image/jpg'
     format = 'jpg'
-    charset = None
+    charset = None  # type: str
     render_style = 'binary'
 
     def render(self, data, media_type=None, renderer_context=None):
