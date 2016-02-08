@@ -85,6 +85,7 @@ def touch_signage(request):
 
     context = schedule_context(request)
     context["signage"] = True
+    context["eighth_url"] = "/signage/eighth"
     return render(request, "signage/touch.html", context)
 
 
