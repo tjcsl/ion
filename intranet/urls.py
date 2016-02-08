@@ -35,6 +35,7 @@ urlpatterns = [
     url(r"^notifications", include("intranet.apps.notifications.urls")),
     url(r"^signage", include("intranet.apps.signage.urls")),
     url(r"^printing", include("intranet.apps.printing.urls")),
+    url(r"^ionldap", include("intranet.apps.ionldap.urls")),
 
     url(r"^djangoadmin/", include(admin.site.urls)),
 ]

@@ -1,0 +1,48 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Class Schedule
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
+    <style type="text/css">
+
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Class Schedule for {{ profile_user.full_name }}
+                               {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+        </h2>
+        
+        <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Course</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Term</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course.period }}
+                {% if course.period_end and course.end_period != course.period %} - {{ course.end_period }}{% endif %}
+            </td>
+            <td>{{ course.course_title }}</td>
+            <td>{{ course.teacher_name }}</td>
+            <td>{{ course.room_name }}</td>
+            <td>{{ course.term_code }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+    </div>
+{% endblock %}
