@@ -22,4 +22,3 @@ def main_view(request):
         "courses": courses
     }
     return render(request, "ionldap/main.html", context)
-
