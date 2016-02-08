@@ -15,11 +15,10 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>Class Schedule for {{ profile_user.full_name }}
-                               {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+        <h2>Class Schedule for {{ user.full_name }}{% if user.nickname %} ({{ user.nickname }}){% endif %}:
         </h2>
         
-        <table>
+        <table class="fancy-table zebra">
         <thead>
             <tr>
                 <th>Period</th>
@@ -32,13 +31,13 @@
         <tbody>
         {% for course in courses %}
         <tr>
-            <td>{{ course.period }}
+            <td style="text-align: center">{{ course.period }}
                 {% if course.period_end and course.end_period != course.period %} - {{ course.end_period }}{% endif %}
             </td>
             <td>{{ course.course_title }}</td>
             <td>{{ course.teacher_name }}</td>
-            <td>{{ course.room_name }}</td>
-            <td>{{ course.term_code }}</td>
+            <td style="text-align: center">{{ course.room_name }}</td>
+            <td style="text-align: center">{{ course.term_code }}</td>
         </tr>
         {% endfor %}
         </tbody>
