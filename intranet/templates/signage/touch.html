@@ -8,11 +8,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/signage.base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signage.touch.css' %}" />
 
     <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
@@ -42,20 +46,70 @@
         setTimeout(function() { location=location; }, 20 * 60 * 1000)
     })
     </script>
+
+    <script type="text/javascript">
+    $(function() {
+        $("a[data-link]").click(function() {
+            var link = $(this).attr("data-link");
+            var section = $("section#" + link);
+            $("section").hide();
+            section.show();
+        });
+
+        $("section#clock").show();
+    });
+    </script>
 </head>
 
 <body>
-
-    <div class="center-wrapper">
-        <div class="center">
-            <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
-            <div class="time">&nbsp;</div>
-            <div class="schedule-outer">
-            {% with hide_arrows=1 %}
-                {% include "schedule/view.html" %}
-            {% endwith %}
+    <div class="container">
+        <section id="clock">
+            <div class="center-wrapper">
+                <div class="center">
+                    <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+                    <div class="time">&nbsp;</div>
+                    <div class="schedule-outer">
+                    {% with hide_arrows=1 %}
+                        {% include "schedule/view.html" %}
+                    {% endwith %}
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <section id="eighth">
+
+        </section>
+    </div>
+
+    <div class="nav-container">
+        <ul class="nav">
+            <li class="selected">
+                <a data-link="clock">
+                <i class="nav-icon dashboard-icon"></i>
+                Schedule
+                </a>
+            </li>
+            <li>
+                <a data-link="eighth">
+                <i class="nav-icon eighth-icon"></i>
+                Eighth Period
+                </a>
+            </li>
+            <li>
+                <a data-link="eighth">
+                <i class="nav-icon events-icon"></i>
+                Calendar
+                </a>
+            </li>
+            <li>
+                <a data-link="eighth">
+                <i class="nav-icon help-icon"></i>
+                Info
+                </a>
+            </li>
+        </ul>
     </div>
 </body>
 </html>
+

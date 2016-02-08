@@ -11,4 +11,5 @@ urlpatterns = [
     url(r"^/eighth(?:/(?P<block_id>\d+))?$", views.eighth_signage, name="eighth_signage"),
     url(r"^/schedule$", views.schedule_signage, name="schedule_signage"),
     url(r"^/status$", views.status_signage, name="status_signage"),
+    url(r"^/touch$", views.touch_signage, name="touch_signage"),
 ]
