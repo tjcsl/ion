@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import csv
+
 from django.core.management.base import BaseCommand
 
-from intranet.apps.users.models import User
 from intranet.apps.ionldap.models import LDAPCourse
+from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
@@ -37,7 +38,7 @@ class Command(BaseCommand):
         with open(csv_file, 'r') as csv_open:
             csv_reader = csv.reader(csv_open)
             next(csv_reader)  # skip first line
-            CLASS_ROWS = [
+            class_rows = [
                 "Period",
                 "EndPeriod",
                 "Teacher",
@@ -57,7 +58,7 @@ class Command(BaseCommand):
                 "SectionLeaveDate",
                 "MeetDays"
             ]
-            ROWS = ["StudentID",
+            rows = ["StudentID",
                     "Gender",
                     "Grade",
                     "FirstName",
@@ -131,8 +132,8 @@ class Command(BaseCommand):
                     "Extension4"
                     ]
             for row in csv_reader:
-                row_dict = {ROWS[i]: row[i] for i in range(len(row))}
-                class_dict = {i: row_dict[i] for i in CLASS_ROWS}
+                row_dict = {rows[i]: row[i] for i in range(len(row))}
+                class_dict = {i: row_dict[i] for i in class_rows}
                 if row_dict[users_dict_base] not in users_dict:
                     users_dict[row_dict[users_dict_base]] = {
                         "user": row_dict,
