@@ -78,6 +78,16 @@ def signage_display(request, display_id=None):
             return status_signage(request)
 
 
+def touch_signage(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    context = schedule_context(request)
+    context["signage"] = True
+    return render(request, "signage/touch.html", context)
+
+
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
