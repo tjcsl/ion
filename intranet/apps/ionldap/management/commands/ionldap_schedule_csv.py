@@ -10,6 +10,7 @@ from intranet.apps.ionldap.models import LDAPCourse
 
 class Command(BaseCommand):
     help = "Import student and class data from a Kosatka-formatted CSV file."
+    """ To import: ./manage.py ionldap_schedule_csv --csv /path/to/sis-dump.csv --add """
 
     def add_arguments(self, parser):
         parser.add_argument('--csv',
@@ -144,16 +145,21 @@ class Command(BaseCommand):
                 user_dict = users_dict[student_id]
                 sid = student_id.lower()
                 if not sid:
-                    print("User does not exist")
+                    print("Blank studentid")
+                    print(user_dict)
                     continue
-                print(sid)
+
+                print("User: {}".format(sid))
+
                 try:
                     user = User.objects.get(username=sid)
                 except User.DoesNotExist:
-                    print("User does not exist")
+                    print("User does not exist with username '{}'".format(sid))
+                    print(user_dict)
                     continue
+
                 if not add_db:
-                    break
+                    continue
 
                 for class_id in user_dict["classes"]:
                     class_obj = user_dict["classes"][class_id]
