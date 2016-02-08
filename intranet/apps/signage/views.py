@@ -86,6 +86,7 @@ def touch_signage(request):
     context = schedule_context(request)
     context["signage"] = True
     context["eighth_url"] = "/signage/eighth"
+    context["calendar_url"] = "https://postman.tjhsst.edu/"
     return render(request, "signage/touch.html", context)
 
 
