@@ -1,3 +1,0 @@
-class ModelAdmin: ...
-class site:
-  def register(self, *args): ...  # FIXME: figure out args

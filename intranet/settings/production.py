@@ -2,6 +2,8 @@
 
 from urllib import parse
 
+from ..utils import helpers
+
 from .base import *  # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
@@ -53,7 +55,7 @@ def debug_toolbar_callback(request):
     return False
 
 # Internal IP ranges in production
-INTERNAL_IPS = GlobList([
+INTERNAL_IPS = helpers.GlobList([
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])
