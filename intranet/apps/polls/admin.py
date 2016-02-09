@@ -22,8 +22,8 @@ class ChoiceAdmin(admin.ModelAdmin):
 
     def get_poll(self, obj):
         return obj.question.poll
-    get_poll.short_description = 'Poll'
-    get_poll.admin_order_field = 'question__poll'
+    get_poll.short_description = 'Poll'  # type: ignore
+    get_poll.admin_order_field = 'question__poll'  # type: ignore
 
     list_display = ('info', 'get_poll', 'question', 'num', 'std', 'app',)
     list_filter = ('question',)
