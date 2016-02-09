@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.threadlocals &mdash; TJ Intranet v3 (Build #1330) documentation</title>
+    <title>intranet.utils.helpers &mdash; TJ Intranet v3 (Build #1330) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -144,37 +144,56 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.middleware.threadlocals</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.utils.helpers</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
-
+<span class="kn">import</span> <span class="nn">ipaddress</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-<span class="n">_thread_locals</span> <span class="o">=</span> <span class="n">local</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;intranet.settings&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.threadlocals.request">[docs]</a><span class="k">def</span> <span class="nf">request</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Return the currently authorized User object.</span>
+<div class="viewcode-block" id="InvalidString"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.InvalidString">[docs]</a><span class="k">class</span> <span class="nc">InvalidString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        User object</span>
+    <span class="sd">&quot;&quot;&quot;An error for undefined context variables in templates.&quot;&quot;&quot;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Undefined variable or unknown value for: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="ThreadLocalsMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.threadlocals.ThreadLocalsMiddleware">[docs]</a><span class="k">class</span> <span class="nc">ThreadLocalsMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.MigrationMock">[docs]</a><span class="k">class</span> <span class="nc">MigrationMock</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: Set[str]</span>
 
-    <span class="sd">&quot;&quot;&quot;Stores the current authorized User object in thread locals for</span>
-<span class="sd">    access in models (and elsewhere) without passing the user around as</span>
-<span class="sd">    an argument.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
 
-<div class="viewcode-block" id="ThreadLocalsMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request">[docs]</a>    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the request to thread locals&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mod</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;migrations&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-        <span class="n">_thread_locals</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">request</span></div></div>
+
+<div class="viewcode-block" id="GlobList"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList">[docs]</a><span class="k">class</span> <span class="nc">GlobList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A list of glob-style strings.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a string matches a glob in the list.&quot;&quot;&quot;</span>
+
+        <span class="c1"># request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited</span>
+        <span class="c1"># list of IP addresses, if the user is using a proxy</span>
+        <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">!=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Internal IP: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
 </pre></div>
 
     </div>
