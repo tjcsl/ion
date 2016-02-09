@@ -1,2 +1,2 @@
 class Library:
-  def filter(self, *args): ... # FIXME: figure out args
+  def filter(self, *args, **kwargs): ... # FIXME: figure out args

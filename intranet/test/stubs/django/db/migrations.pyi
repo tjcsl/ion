@@ -1,6 +1,9 @@
 class CreateModel:
   # FIXME: actually figure out args
   def __init__(self, **kwargs): ...
+class DeleteModel:
+  # FIXME: actually figure out args
+  def __init__(self, **kwargs): ...
 class Migration: ...
 class AlterModelOptions:
   # FIXME: actually figure out args
