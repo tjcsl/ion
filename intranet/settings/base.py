@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-import ipaddress
-import logging
 import os
 import re
 import subprocess
@@ -9,7 +7,7 @@ import sys
 
 from typing import Any  # noqa
 
-logger = logging.getLogger(__name__)
+from ..utils import helpers
 
 DATABASE_URL = None  # type: str
 
@@ -55,19 +53,6 @@ DATABASES = {
 }  # type: Dict[str,Dict[str,Any]]
 
 
-class MigrationMock(object):
-    seen = set()  # type: Set[str]
-
-    def __contains__(self, mod):
-        return True
-
-    def __getitem__(self, mod):
-        if mod in self.seen:
-            return 'migrations'
-        self.seen.add(mod)
-        return None
-
-
 def is_verbose(cmdline):
     cmdline = ' '.join(cmdline)
     # FIXME: we really shouldn't have to do this.
@@ -77,30 +62,8 @@ def is_verbose(cmdline):
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     # Horrible hack to suppress all migrations to speed up the tests.
-    MIGRATION_MODULES = MigrationMock()
+    MIGRATION_MODULES = helpers.MigrationMock()
     LOGGING_VERBOSE = is_verbose(sys.argv)
-
-
-class GlobList(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)) and key != "127.0.0.1":
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
 
 
 MANAGERS = ADMINS

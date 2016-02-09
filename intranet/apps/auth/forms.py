@@ -3,8 +3,8 @@
 import logging
 
 from django import forms
-from django.forms import widgets
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms import widgets
 
 logger = logging.getLogger(__name__)
 

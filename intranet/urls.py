@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.admin import site
 from django.views.generic.base import RedirectView, TemplateView
 
 from intranet.apps.error.views import (handle_404_view, handle_500_view,
@@ -37,7 +38,7 @@ urlpatterns = [
     url(r"^printing", include("intranet.apps.printing.urls")),
     url(r"^ionldap", include("intranet.apps.ionldap.urls")),
 
-    url(r"^djangoadmin/", include(admin.site.urls)),
+    url(r"^djangoadmin/", include(site.urls)),
 ]
 
 

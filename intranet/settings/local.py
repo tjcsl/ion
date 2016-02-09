@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from ..utils import helpers
+
 from .base import *  # noqa
 
 # Don't send emails unless we're in production.
@@ -8,15 +10,7 @@ EMAIL_ANNOUNCEMENTS = False
 DEBUG = os.getenv("DEBUG", "TRUE") == "TRUE"
 
 if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
-    class InvalidString(str):
-
-        """An error for undefined context variables in templates."""
-
-        def __mod__(self, other):
-            logger.warning('Undefined variable or unknown value for: "%s"' % other)
-            return ""
-
-    TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = InvalidString("%s")
+    TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
 
 DATABASES["default"].update({
     "NAME": "ion",
@@ -39,7 +33,7 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
 
 
 # Internal IP ranges for debugging
-INTERNAL_IPS = GlobList([
+INTERNAL_IPS = helpers.GlobList([
     "127.0.0.0/8",
     "10.0.0.0/8",
     "198.38.16.0/20",
