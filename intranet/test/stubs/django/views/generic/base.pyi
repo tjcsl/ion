@@ -1,0 +1,3 @@
+class View:
+  @staticmethod
+  def as_view(): ...
