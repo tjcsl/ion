@@ -1,3 +1,6 @@
+class Count:
+  # FIXME: figure out args
+  def __init__(self, *args, **kwargs): ...
 class Field:
   # FIXME: actually figure out args
   def __init__(self, *args, **kwargs): ...
@@ -17,6 +20,7 @@ class ForeignKey:
   # FIXME: actually figure out args
   def __init__(self, *args, **kwargs): ...
 class Model:
+  def __init__(self, *args, **kwargs): ... # FIXME: figure out args
   def validate_unique(self, *args, **kwargs): ...  # FIXME: figure out args
   def save(self, *args, **kwargs): ...  # FIXME: figure out args
 class Q:
@@ -25,3 +29,4 @@ class Q:
 class Manager:
   def all(self): ...
   def get_query_set(self): ...
+  def select_related(self, *args, **kwargs): ...  # FIXME: figure out args
