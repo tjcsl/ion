@@ -1,0 +1,3 @@
+from django.forms import Form
+class AuthenticationForm(Form):
+  def is_valid(self): ...
