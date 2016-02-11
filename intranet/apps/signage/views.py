@@ -6,6 +6,7 @@ import logging
 from django import http
 from django.conf import settings
 from django.shortcuts import render
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
 from ..eighth.models import EighthBlock
@@ -33,7 +34,7 @@ def check_internal_ip(request):
             "reason": "You are not authorized to view this page."
         }, status=403)
 
-
+@xframe_options_exempt
 def signage_display(request, display_id=None):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -77,7 +78,7 @@ def signage_display(request, display_id=None):
         else:
             return status_signage(request)
 
-
+@xframe_options_exempt
 def touch_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -89,7 +90,7 @@ def touch_signage(request):
     context["calendar_url"] = "https://postman.tjhsst.edu/"
     return render(request, "signage/touch.html", context)
 
-
+@xframe_options_exempt
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -100,7 +101,7 @@ def schedule_signage(request):
     context["hide_arrows"] = True
     return render(request, "schedule/embed.html", context)
 
-
+@xframe_options_exempt
 def status_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -110,7 +111,7 @@ def status_signage(request):
     context["signage"] = True
     return render(request, "signage/status.html", context)
 
-
+@xframe_options_exempt
 def iframe_signage(request, url):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -121,7 +122,7 @@ def iframe_signage(request, url):
     context["url"] = url
     return render(request, "signage/iframe.html", context)
 
-
+@xframe_options_exempt
 def eighth_signage(request, block_id=None, block_increment=0):
     internal_ip = check_internal_ip(request)
     if internal_ip:
