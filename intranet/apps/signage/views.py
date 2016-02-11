@@ -62,20 +62,29 @@ def signage_display(request, display_id=None):
             iframe = "/signage/eighth?no_reload&block_increment={}&".format(sign.eighth_block_increment)
         else:
             iframe = "/signage/eighth?no_reload&"
-        return iframe_signage(request, iframe)
+        if sign and sign.use_frameset:
+            return frameset_signage(request, iframe)
+        else:
+            return iframe_signage(request, iframe)
     elif sign_status == "schedule":
         return schedule_signage(request)
     elif sign_status == "status":
         return status_signage(request)
     elif sign_status == "url" or "url" in request.GET:
-        return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+        if sign and sign.use_frameset:
+            return frameset_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+        else:
+            return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
                 iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
                 iframe = "/signage/eighth?no_reload&"
-            return iframe_signage(request, iframe)
+            if sign and sign.use_frameset:
+                return frameset_signage(request, iframe)
+            else:
+                return iframe_signage(request, iframe)
         else:
             return status_signage(request)
 
@@ -126,6 +135,26 @@ def iframe_signage(request, url):
     context["signage"] = True
     context["url"] = url
     return render(request, "signage/iframe.html", context)
+
+
+@xframe_options_exempt
+def frameset_signage(request, url):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    context = schedule_context(request)
+    context["signage"] = True
+    context["url"] = url
+    return render(request, "signage/frameset.html", context)
+
+
+@xframe_options_exempt
+def frameset_signage_header(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+    return render(request, "signage/frameset-header.html", {})
 
 
 @xframe_options_exempt

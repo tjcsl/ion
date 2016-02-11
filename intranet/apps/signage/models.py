@@ -25,6 +25,7 @@ class Sign(models.Model):
         ("status", "Schedule/Clock"),
         ("url", "Custom URL")
     )
+    use_frameset = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUSES, default="auto")
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     url = models.CharField(max_length=2000, null=True, blank=True)
