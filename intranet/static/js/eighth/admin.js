@@ -108,7 +108,13 @@ $(function() {
         var blockTypeFilter = blockTypeRowFilter(blockType);
         $("tr.form-row").each(function() {
             var $blocksOfType = $(this).filter(blockTypeFilter);
-            $blocksOfType.find("input[type='checkbox']").prop("checked", true);
+            var $checkboxes = $blocksOfType.find("input[type='checkbox']");
+            // Ignore special and unschedule checkbox
+            $checkboxes.each(function() {
+                if(!$(this).hasClass("special") && !$(this).hasClass("unschedule")) {
+                    $(this).prop("checked", true);
+                }
+            });
             $blocksOfType.removeClass("hidden");
         })
 
