@@ -12,4 +12,5 @@ urlpatterns = [
     url(r"^/schedule$", views.schedule_signage, name="schedule_signage"),
     url(r"^/status$", views.status_signage, name="status_signage"),
     url(r"^/touch$", views.touch_signage, name="touch_signage"),
+    url(r"^/header$", views.frameset_signage_header, name="frameset_signage_header"),
 ]
