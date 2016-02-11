@@ -15,6 +15,14 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/signage.base.css' %}" />
 
+    {% if request.GET.zoom %}
+    <style>
+    body {
+        zoom: {{ request.GET.zoom|escape }};
+    }
+    </style>
+    {% endif %}
+
     <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
