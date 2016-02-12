@@ -71,10 +71,11 @@ def signage_display(request, display_id=None):
     elif sign_status == "status":
         return status_signage(request)
     elif sign_status == "url" or "url" in request.GET:
+        url = request.GET.get('url') or (sign.url if sign else "about:blank")
         if sign and sign.use_frameset:
-            return frameset_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+            return frameset_signage(request, url)
         else:
-            return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+            return iframe_signage(request, url)
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
@@ -85,6 +86,12 @@ def signage_display(request, display_id=None):
                 return frameset_signage(request, iframe)
             else:
                 return iframe_signage(request, iframe)
+        elif sign_status == "autourl":
+            url = request.GET.get('url') or (sign.url if sign else "about:blank")
+            if sign and sign.use_frameset:
+                return frameset_signage(request, url)
+            else:
+                return iframe_signage(request, url)
         else:
             return status_signage(request)
 
