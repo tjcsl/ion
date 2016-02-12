@@ -27,7 +27,7 @@ class Command(BaseCommand):
         }
         users = get_gcm_schedule_uids()
         user = User.objects.get(id=9999)
-        gcm_post(users, data, user)
+        post, reqtext = gcm_post(users, data, user)
 
     def handle(self, *args, **options):
 

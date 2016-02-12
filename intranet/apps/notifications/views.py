@@ -64,14 +64,14 @@ def chrome_getdata_view(request):
             notif = notifs.first()
             ndata = notif.data
             data = {
-                "title": ndata['title'],
-                "text": ndata['text'],
-                "url": ndata['url']
+                "title": ndata['title'] if 'title' in ndata else '',
+                "text": ndata['text'] if 'text' in ndata else '',
+                "url": ndata['url'] if 'url' in ndata else ''
             }
         else:
             return HttpResponse("null", content_type="text/json")
     else:
-        schedule_chk = chrome_getdata_check()
+        schedule_chk = chrome_getdata_check(request)
         if schedule_chk:
             data = schedule_chk
         else:
@@ -173,8 +173,8 @@ def gcm_post(nc_users, data, user=None, request=None):
             n.sent_to.add(nc)
         n.save()
         logger.debug(n)
-        return resp
-    return False
+        return resp, req.text
+    return False, req.text
 
 
 @login_required
@@ -207,11 +207,11 @@ def gcm_post_view(request):
 
     if request.method == "POST":
         nc_users = request.POST.getlist("nc_users")
-        post = gcm_post(nc_users, data, request.user)
+        post, reqtext = gcm_post(nc_users, data, request.user)
         if post:
             messages.success(request, "Delivered message: {} success, {} failure".format(post["success"], post["failure"]))
         else:
-            messages.error(request, "Failed. {}".format(req.text))
+            messages.error(request, "Failed. {}".format(reqtext))
     return render(request, "notifications/gcm_post.html", context)
 
 def get_gcm_schedule_uids():
