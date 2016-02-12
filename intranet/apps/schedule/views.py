@@ -43,7 +43,7 @@ def is_weekday(date):
 def schedule_context(request=None, date=None):
     monday = 1
     friday = 5
-    if 'date' in request.GET:
+    if request and 'date' in request.GET:
         date = decode_date(request.GET['date'])
     else:
         date = None
