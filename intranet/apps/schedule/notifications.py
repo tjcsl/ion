@@ -10,9 +10,10 @@ def chrome_getdata_check(request):
     ctx = schedule_context(request)
     blocks = ctx["sched_ctx"]["blocks"]
     point, block = at_period_point(blocks)
+    logger.debug((point, block))
     if point == 1:
         return {
-            "title": "{} is started".format(block.name),
+            "title": "{} has started".format(block.name),
             "text": "{}".format(block)
         }
     elif point == 2:
@@ -28,6 +29,7 @@ def at_period_point(blocks):
     now = datetime.datetime.now()
     now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute)
     for b in blocks:
+        logger.debug(now, b.start.date_obj(now))
         if now == b.start.date_obj(now):
             return (1, b)
         elif now == b.end.date_obj(now):
