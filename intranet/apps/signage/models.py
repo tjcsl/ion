@@ -19,7 +19,8 @@ class Sign(models.Model):
     name = models.CharField(max_length=1000)
     display = models.CharField(max_length=100, unique=True)
     STATUSES = (
-        ("auto", "Auto"),
+        ("auto", "Auto - Schedule/Eighth"),
+        ("autourl", "Auto - URL/Eighth"),
         ("eighth", "Eighth Period"),
         ("schedule", "Bell Schedule"),
         ("status", "Schedule/Clock"),
