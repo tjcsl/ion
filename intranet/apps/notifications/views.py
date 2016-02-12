@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 
 from .models import GCMNotification, NotificationConfig
+from ..schedule.notifications import chrome_getdata_check
 
 logger = logging.getLogger(__name__)
 
@@ -70,10 +71,14 @@ def chrome_getdata_view(request):
         else:
             return HttpResponse("null", content_type="text/json")
     else:
-        data = {
-            "title": "Check Intranet",
-            "text": "You have a new notification that couldn't be loaded right now."
-        }
+        schedule_chk = chrome_getdata_check()
+        if schedule_chk:
+            data = schedule_chk
+        else:
+            data = {
+                "title": "Check Intranet",
+                "text": "You have a new notification that couldn't be loaded right now."
+            }
     j = json.dumps(data)
     return HttpResponse(j, content_type="text/json")
 
@@ -117,6 +122,60 @@ def gcm_list_view(request):
 
     return render(request, "notifications/gcm_list.html", context)
 
+def gcm_post(nc_users, data, user=None, request=None):
+    if not user:
+        user = request.user
+
+    nc_objs = []
+    reg_ids = []
+    fail_ids = []
+    logger.debug(nc_users)
+    for ncid in nc_users:
+        try:
+            nc = NotificationConfig.objects.get(id=ncid)
+        except NotificationConfig.DoesNotExist:
+            continue
+
+        if nc.gcm_token:
+            reg_ids.append(nc.gcm_token)
+            nc_objs.append(nc)
+        else:
+            fail_ids.append(ncid)
+
+    logger.debug(nc_objs)
+    logger.debug(reg_ids)
+    headers = {
+        "Content-Type": "application/json",
+        "project_id": settings.GCM_PROJECT_ID,
+        "Authorization": "key={}".format(settings.GCM_AUTH_KEY)
+    }
+    postdata = {
+        "registration_ids": reg_ids,
+        "data": data
+    }
+    postjson = json.dumps(postdata)
+    req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson)
+    logger.debug(req.text)
+    try:
+        resp = req.json()
+    except ValueError as e:
+        logger.debug(e)
+    # example output:
+    # {"multicast_id":123456,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:142%771acd"}]}
+    logger.debug(resp)
+    if "multicast_id" in resp:
+        n = GCMNotification.objects.create(multicast_id=resp["multicast_id"],
+                                           num_success=resp["success"],
+                                           num_failure=resp["failure"],
+                                           user=user,
+                                           sent_data=json.dumps(data))
+        for nc in nc_objs:
+            n.sent_to.add(nc)
+        n.save()
+        logger.debug(n)
+        return resp
+    return False
+
 
 @login_required
 def gcm_post_view(request):
@@ -133,68 +192,30 @@ def gcm_post_view(request):
 
     # exclude those with no GCM token, or opted out
     nc_all = NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True)
+    data = {
+        "title": request.POST.get("title", "Title"),
+        "text": request.POST.get("text", "Text"),
+        "url": request.POST.get("url", None),
+        "sound": request.POST.get("sound", False),
+        "wakeup": request.POST.get("wakeup", False),
+        "vibrate": request.POST.get("vibrate", 0)
+    }
     context = {
         "nc_all": nc_all,
         "has_tokens": has_tokens
     }
 
     if request.method == "POST":
-        nc_objs = []
-        reg_ids = []
-        fail_ids = []
         nc_users = request.POST.getlist("nc_users")
-        logger.debug(nc_users)
-        for ncid in nc_users:
-            try:
-                nc = NotificationConfig.objects.get(id=ncid)
-            except NotificationConfig.DoesNotExist:
-                continue
-
-            if nc.gcm_token:
-                reg_ids.append(nc.gcm_token)
-                nc_objs.append(nc)
-            else:
-                fail_ids.append(ncid)
-
-        logger.debug(nc_objs)
-        logger.debug(reg_ids)
-        headers = {
-            "Content-Type": "application/json",
-            "project_id": settings.GCM_PROJECT_ID,
-            "Authorization": "key={}".format(settings.GCM_AUTH_KEY)
-        }
-        data = {
-            "registration_ids": reg_ids,
-            "data": {
-                "title": request.POST.get("title", "Title"),
-                "text": request.POST.get("text", "Text"),
-                "url": request.POST.get("url", None),
-                "sound": request.POST.get("sound", False),
-                "wakeup": request.POST.get("wakeup", False),
-                "vibrate": request.POST.get("vibrate", 0)
-            }
-        }
-        logger.debug(json.dumps(data))
-        req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=json.dumps(data))
-        logger.debug(req.text)
-        try:
-            resp = req.json()
-        except ValueError as e:
-            logger.debug(e)
-        # example output:
-        # {"multicast_id":123456,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:142%771acd"}]}
-        logger.debug(resp)
-        if "multicast_id" in resp:
-            n = GCMNotification.objects.create(multicast_id=resp["multicast_id"],
-                                               num_success=resp["success"],
-                                               num_failure=resp["failure"],
-                                               user=request.user,
-                                               sent_data=json.dumps(data))
-            for nc in nc_objs:
-                n.sent_to.add(nc)
-            n.save()
-            logger.debug(n)
-            messages.success(request, "Delivered message: {} success, {} failure".format(resp["success"], resp["failure"]))
+        post = gcm_post(nc_users, data, request.user)
+        if post:
+            messages.success(request, "Delivered message: {} success, {} failure".format(post["success"], post["failure"]))
         else:
             messages.error(request, "Failed. {}".format(req.text))
     return render(request, "notifications/gcm_post.html", context)
+
+def get_gcm_schedule_uids():
+    nc_all = (NotificationConfig.objects.exclude(gcm_token=None)
+                                        .exclude(gcm_optout=True))
+    nc = nc_all.filter(user__receive_schedule_notifications=True)
+    return nc.values_list("id", flat=True)
