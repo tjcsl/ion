@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.signage.views &mdash; TJ Intranet v3 (Build #1334) documentation</title>
+    <title>intranet.apps.signage.views &mdash; TJ Intranet v3 (Build #1341) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1334)',
+        VERSION:     'v3 (Build #1341)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1334) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1341) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -153,6 +153,7 @@
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="kn">import</span> <span class="n">xframe_options_exempt</span>
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Sign</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
@@ -181,6 +182,7 @@
         <span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.signage_display">[docs]</a><span class="k">def</span> <span class="nf">signage_display</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">display_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
@@ -225,6 +227,7 @@
             <span class="k">return</span> <span class="n">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="touch_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.touch_signage">[docs]</a><span class="k">def</span> <span class="nf">touch_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
@@ -237,6 +240,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/touch.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="schedule_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.schedule_signage">[docs]</a><span class="k">def</span> <span class="nf">schedule_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
@@ -248,6 +252,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/embed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="status_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.status_signage">[docs]</a><span class="k">def</span> <span class="nf">status_signage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
@@ -258,6 +263,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/status.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="iframe_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.iframe_signage">[docs]</a><span class="k">def</span> <span class="nf">iframe_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
@@ -269,6 +275,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/iframe.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
+<span class="nd">@xframe_options_exempt</span>
 <div class="viewcode-block" id="eighth_signage"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.views.eighth_signage">[docs]</a><span class="k">def</span> <span class="nf">eighth_signage</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">block_increment</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
