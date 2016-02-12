@@ -18,6 +18,9 @@ class Time(models.Model):
         minute = "0" + str(self.minute) if self.minute < 10 else self.minute
         return "{}:{}".format(hour, minute)
 
+    def date_obj(self, date):
+        return datetime.datetime(date.year, date.month, date.day, self.hour, self.minute)
+
     class Meta:
         unique_together = (("hour", "minute"))
         ordering = ("hour", "minute")
@@ -30,7 +33,7 @@ class Block(models.Model):
     order = models.IntegerField(default=0)
 
     def __str__(self):
-        return "{}: {}-{}".format(self.name, self.start, self.end)
+        return "{}: {} - {}".format(self.name, self.start, self.end)
 
     class Meta:
         unique_together = (("order", "name", "start", "end"))
