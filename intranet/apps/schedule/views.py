@@ -40,7 +40,7 @@ def is_weekday(date):
     return date.isoweekday() in range(1, 6)
 
 
-def schedule_context(request=None, date=None):
+def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True):
     monday = 1
     friday = 5
     if request and 'date' in request.GET:
@@ -51,7 +51,7 @@ def schedule_context(request=None, date=None):
     if date is None:
         date = datetime.now()
 
-        if is_weekday(date) and date.hour > 17:
+        if is_weekday(date) and date.hour > 17 and show_tomorrow:
             delta = 3 if date.isoweekday() == friday else 1
             date += timedelta(days=delta)
         else:
@@ -61,7 +61,7 @@ def schedule_context(request=None, date=None):
     date_fmt = date_format(date)
     key = "bell_schedule:{}".format(date_fmt)
     cached = cache.get(key)
-    if cached:
+    if cached and use_cache:
         logger.debug("Returning schedule context for {} from cache.".format(date_fmt))
         return cached
     else:
