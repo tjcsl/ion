@@ -71,3 +71,33 @@ After 36,000 seconds (1 hour), the token will expire; you need to renew it. This
 .. code-block:: python
   > args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
   > token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
+
+PHP
+---
+
+Here is some sample code using `PHP-OAuth2 <https://github.com/adoy/PHP-OAuth2>`_.
+.. code-block:: php
+    <?php
+    require('Client.php');
+    require('GrantType/IGrantType.php');
+    require('GrantType/AuthorizationCode.php');
+
+    const CLIENT_ID     = 'XXX';
+    const CLIENT_SECRET = 'XXX';
+
+    const REDIRECT_URI           = 'XXX';
+    const AUTHORIZATION_ENDPOINT = 'https://ion.tjhsst.edu/oauth/authorize/';
+    const TOKEN_ENDPOINT         = 'https://ion.tjhsst.edu/oauth/token/';
+
+    $client = new OAuth2\Client(CLIENT_ID, CLIENT_SECRET);
+    if(!isset($_GET['code'])) {
+        $auth_url = $client->getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
+        die(header('Location: ' . $auth_url));
+    } else {
+        $params = array('code' => $_GET['code'], 'redirect_uri' => REDIRECT_URI);
+        $response = $client->getAccessToken(TOKEN_ENDPOINT, 'authorization_code', $params);
+        $client->setAccessToken($response['result']['access_token']);
+        $response = $client->fetch('https://ion.tjhsst.edu/api/profile');
+        var_dump($response, $response['result']);
+    }
+    ?>
