@@ -13,8 +13,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='sign',
-            name='status',
-            field=models.CharField(choices=[('auto', 'Auto - Schedule/Eighth'), ('autourl', 'Auto - URL/Eighth'), ('eighth', 'Eighth Period'), ('schedule', 'Bell Schedule'), ('status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),
-        ),
-    ]
+            model_name='sign', name='status', field=models.CharField(
+                choices=[('auto', 'Auto - Schedule/Eighth'),
+                         ('autourl', 'Auto - URL/Eighth'),
+                         ('eighth', 'Eighth Period'),
+                         ('schedule', 'Bell Schedule'),
+                         ('status', 'Schedule/Clock'),
+                         ('url', 'Custom URL')],
+                default='auto', max_length=10),), ]
