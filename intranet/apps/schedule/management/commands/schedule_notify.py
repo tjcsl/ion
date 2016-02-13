@@ -2,9 +2,11 @@
 
 from django.core.management.base import BaseCommand
 
+import json
 from intranet.apps.users.models import User
 from intranet.apps.schedule.models import Day
 from intranet.apps.schedule.views import schedule_context
+from intranet.apps.schedule.notifications import period_start_end_data
 from intranet.apps.notifications.views import gcm_post, get_gcm_schedule_uids
 
 
@@ -18,20 +20,17 @@ class Command(BaseCommand):
                             default=False,
                             help='notify')
 
-    def do_notify(title, text):
-        data = {
-            "title": title,
-            "text": text,
-            "wakeup": True,
-            "vibrate": True
-        }
+    def do_notify(self, pd_data):
         users = get_gcm_schedule_uids()
         user = User.objects.get(id=9999)
-        post, reqtext = gcm_post(users, data, user)
+        post, reqtext = gcm_post(users, pd_data, user=user)
 
     def handle(self, *args, **options):
 
         notify = options["notify"]
-
-
+        pd_data = period_start_end_data(None)
+        if pd_data:
+            self.stdout.write(json.dumps(pd_data))
         
+        if pd_data and notify:
+            self.do_notify(pd_data)

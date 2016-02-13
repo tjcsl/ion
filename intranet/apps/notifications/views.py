@@ -63,13 +63,22 @@ def chrome_getdata_view(request):
         if notifs.count() > 0:
             notif = notifs.first()
             ndata = notif.data
-            data = {
-                "title": ndata['title'] if 'title' in ndata else '',
-                "text": ndata['text'] if 'text' in ndata else '',
-                "url": ndata['url'] if 'url' in ndata else ''
-            }
+            if "title" in ndata and "text" in ndata:
+                data = {
+                    "title": ndata['title'] if 'title' in ndata else '',
+                    "text": ndata['text'] if 'text' in ndata else '',
+                    "url": ndata['url'] if 'url' in ndata else ''
+                }
+            else:
+                schedule_chk = chrome_getdata_check(request)
+                if schedule_chk:
+                    data = schedule_chk
         else:
-            return HttpResponse("null", content_type="text/json")
+            schedule_chk = chrome_getdata_check(request)
+            if schedule_chk:
+                data = schedule_chk
+            else:
+                return HttpResponse("null", content_type="text/json")
     else:
         schedule_chk = chrome_getdata_check(request)
         if schedule_chk:
@@ -153,6 +162,7 @@ def gcm_post(nc_users, data, user=None, request=None):
         "registration_ids": reg_ids,
         "data": data
     }
+    logger.debug(postdata)
     postjson = json.dumps(postdata)
     req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson)
     logger.debug(req.text)

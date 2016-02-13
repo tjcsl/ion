@@ -7,7 +7,10 @@ from .views import schedule_context
 logger = logging.getLogger(__name__)
 
 def chrome_getdata_check(request):
-    ctx = schedule_context(request)
+    return period_start_end_data(request)
+
+def period_start_end_data(request):
+    ctx = schedule_context(request, use_cache=False, show_tomorrow=False)
     blocks = ctx["sched_ctx"]["blocks"]
     point, block = at_period_point(blocks)
     logger.debug((point, block))
