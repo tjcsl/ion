@@ -4,8 +4,6 @@ from django.core.management.base import BaseCommand
 
 import json
 from intranet.apps.users.models import User
-from intranet.apps.schedule.models import Day
-from intranet.apps.schedule.views import schedule_context
 from intranet.apps.schedule.notifications import period_start_end_data
 from intranet.apps.notifications.views import gcm_post, get_gcm_schedule_uids
 
@@ -31,6 +29,6 @@ class Command(BaseCommand):
         pd_data = period_start_end_data(None)
         if pd_data:
             self.stdout.write(json.dumps(pd_data))
-        
+
         if pd_data and notify:
             self.do_notify(pd_data)

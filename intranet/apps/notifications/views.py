@@ -131,6 +131,7 @@ def gcm_list_view(request):
 
     return render(request, "notifications/gcm_list.html", context)
 
+
 def gcm_post(nc_users, data, user=None, request=None):
     if not user:
         user = request.user
@@ -223,6 +224,7 @@ def gcm_post_view(request):
         else:
             messages.error(request, "Failed. {}".format(reqtext))
     return render(request, "notifications/gcm_post.html", context)
+
 
 def get_gcm_schedule_uids():
     nc_all = (NotificationConfig.objects.exclude(gcm_token=None)

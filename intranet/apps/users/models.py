@@ -224,7 +224,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Local preference fields
     receive_news_emails = models.BooleanField(default=False)
     receive_eighth_emails = models.BooleanField(default=False)
-    
+
     receive_schedule_notifications = models.BooleanField(default=False)
 
     # Private dn cache
