@@ -178,6 +178,7 @@ STATICFILES_FINDERS = (
 AUTHENTICATION_BACKENDS = (
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
+    "oauth2_provider.backends.OAuth2Backend",
 )
 
 # Use the custom User model defined in apps/users/models.py
@@ -214,6 +215,7 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",   # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "django.contrib.auth.middleware.SessionAuthenticationMiddleware",  # Django session auth
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",         # Django Oauth toolkit
     "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
@@ -355,6 +357,10 @@ REST_FRAMEWORK = {
         "intranet.apps.api.authentication.KerberosBasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "oauth2_provider.ext.rest_framework.OAuth2Authentication"
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
     )
 }
 
