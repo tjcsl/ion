@@ -39,6 +39,7 @@ urlpatterns = [
     url(r"^ionldap", include("intranet.apps.ionldap.urls")),
 
     url(r"^djangoadmin/", include(site.urls)),
+    url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
 ]
 
 

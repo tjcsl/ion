@@ -353,8 +353,15 @@ REST_FRAMEWORK = {
 
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "intranet.apps.api.authentication.KerberosBasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication"
+        "rest_framework.authentication.SessionAuthentication",
+        "oauth2_provider.ext.rest_framework.OAuth2Authentication"
     )
+}
+
+# Django Oauth Toolkit configuration
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
 }
 
 INSTALLED_APPS = [
@@ -395,6 +402,7 @@ INSTALLED_APPS = [
     "intranet.middleware.environment",
     # Django plugins
     "widget_tweaks",
+    "oauth2_provider",
     "corsheaders",
     "cacheops"
 ]
