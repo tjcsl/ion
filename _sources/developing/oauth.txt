@@ -81,6 +81,7 @@ PHP
 ---
 
 Here is some sample code using `PHP-OAuth2 <https://github.com/adoy/PHP-OAuth2>`_.
+
 .. code-block:: php
 
     <?php

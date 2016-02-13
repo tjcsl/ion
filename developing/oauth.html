@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using OAuth &mdash; TJ Intranet v3 (Build #1349) documentation</title>
+    <title>Using OAuth &mdash; TJ Intranet v3 (Build #1350) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1349)',
+        VERSION:     'v3 (Build #1350)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1349) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1350) documentation" href="../index.html" />
     <link rel="up" title="Developing for Intranet" href="index.html" />
     <link rel="next" title="Coding Style Guide" href="styleguide.html" />
     <link rel="prev" title="How to perform common tasks" href="howto.html" />
@@ -238,31 +238,33 @@
 </div>
 <div class="section" id="php">
 <h3>PHP<a class="headerlink" href="#php" title="Permalink to this headline">¶</a></h3>
-<p>Here is some sample code using <a class="reference external" href="https://github.com/adoy/PHP-OAuth2">PHP-OAuth2</a>.
-.. code-block:: php</p>
-<blockquote>
-<div><p>&lt;?php
-require(&#8216;Client.php&#8217;);
-require(&#8216;GrantType/IGrantType.php&#8217;);
-require(&#8216;GrantType/AuthorizationCode.php&#8217;);</p>
-<p>const CLIENT_ID     = &#8216;XXX&#8217;;
-const CLIENT_SECRET = &#8216;XXX&#8217;;</p>
-<p>const REDIRECT_URI           = &#8216;XXX&#8217;;
-const AUTHORIZATION_ENDPOINT = &#8216;<a class="reference external" href="https://ion.tjhsst.edu/oauth/authorize/">https://ion.tjhsst.edu/oauth/authorize/</a>&#8216;;
-const TOKEN_ENDPOINT         = &#8216;<a class="reference external" href="https://ion.tjhsst.edu/oauth/token/">https://ion.tjhsst.edu/oauth/token/</a>&#8216;;</p>
-<p>$client = new OAuth2\Client(CLIENT_ID, CLIENT_SECRET);
-if(!isset($_GET[&#8216;code&#8217;])) {
-$auth_url = $client-&gt;getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
-die(header(&#8216;Location: &#8216; . $auth_url));
-} else {
-$params = array(&#8216;code&#8217; =&gt;&gt;&gt; $_GET[&#8216;code&#8217;], &#8216;redirect_uri&#8217; =&gt;&gt;&gt; REDIRECT_URI);
-$response = $client-&gt;getAccessToken(TOKEN_ENDPOINT, &#8216;authorization_code&#8217;, $params);
-$client-&gt;setAccessToken($response[&#8216;result&#8217;][&#8216;access_token&#8217;]);
-$response = $client-&gt;fetch(&#8216;<a class="reference external" href="https://ion.tjhsst.edu/api/profile">https://ion.tjhsst.edu/api/profile</a>&#8216;);
-var_dump($response, $response[&#8216;result&#8217;]);
-}
-?&gt;</p>
-</div></blockquote>
+<p>Here is some sample code using <a class="reference external" href="https://github.com/adoy/PHP-OAuth2">PHP-OAuth2</a>.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="k">require</span><span class="p">(</span><span class="s1">&#39;Client.php&#39;</span><span class="p">);</span>
+<span class="k">require</span><span class="p">(</span><span class="s1">&#39;GrantType/IGrantType.php&#39;</span><span class="p">);</span>
+<span class="k">require</span><span class="p">(</span><span class="s1">&#39;GrantType/AuthorizationCode.php&#39;</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="no">CLIENT_ID</span>     <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
+<span class="k">const</span> <span class="no">CLIENT_SECRET</span> <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="no">REDIRECT_URI</span>           <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span><span class="p">;</span>
+<span class="k">const</span> <span class="no">AUTHORIZATION_ENDPOINT</span> <span class="o">=</span> <span class="s1">&#39;https://ion.tjhsst.edu/oauth/authorize/&#39;</span><span class="p">;</span>
+<span class="k">const</span> <span class="no">TOKEN_ENDPOINT</span>         <span class="o">=</span> <span class="s1">&#39;https://ion.tjhsst.edu/oauth/token/&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OAuth2\\Client</span><span class="p">(</span><span class="nx">CLIENT_ID</span><span class="p">,</span> <span class="nx">CLIENT_SECRET</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]))</span> <span class="p">{</span>
+<span class="nv">$auth_url</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getAuthenticationUrl</span><span class="p">(</span><span class="nx">AUTHORIZATION_ENDPOINT</span><span class="p">,</span> <span class="nx">REDIRECT_URI</span><span class="p">);</span>
+<span class="k">die</span><span class="p">(</span><span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: &#39;</span> <span class="o">.</span> <span class="nv">$auth_url</span><span class="p">));</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;code&#39;</span> <span class="o">=&gt;&gt;&gt;</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span> <span class="s1">&#39;redirect_uri&#39;</span> <span class="o">=&gt;&gt;&gt;</span> <span class="nx">REDIRECT_URI</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getAccessToken</span><span class="p">(</span><span class="nx">TOKEN_ENDPOINT</span><span class="p">,</span> <span class="s1">&#39;authorization_code&#39;</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">setAccessToken</span><span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;access_token&#39;</span><span class="p">]);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">(</span><span class="s1">&#39;https://ion.tjhsst.edu/api/profile&#39;</span><span class="p">);</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">,</span> <span class="nv">$response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
