@@ -1,0 +1,73 @@
+***********
+Using OAuth
+***********
+
+With the Django OAuth Toolkit, Ion supports accessing API and other resources via OAuth2. This allows for applications to be written using the Ion API without the need to prompt for user credentials from within the application. Instead, access tokens are used to gain access to Ion API resources.
+
+Register an application
+=======================
+
+Go to https://ion.tjhsst.edu/oauth/applications/ and log in to create and register a client application. Specify the following values in the form, as prompted:
+
+Name
+ * Some descriptive name for your application.
+Client Type
+ * Choose "Confidential"
+Authorization Grant Type
+ * Choose "Authorization code"
+Redirect URIs
+ * Enter one or more URLs that your application will redirect back to after the authorization is completed.
+
+Store the Client ID and Client Secret tokens for use with your application.
+
+Requesting authorization
+========================
+
+Inside your application, redirect to the OAuth authorization endpoint to receive a (temporary) access token. The URL is https://ion.tjhsst.edu/oauth/authorize/
+
+Python
+------
+
+For a Python client, use requests with requests-oauthlib.
+
+If running locally (without HTTPS), override the SSL requirement for OAuth2.
+.. code-block:: python
+  > import os
+  > os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+Create an OAuth2Session, with the CLIENT_ID and REDIRECT_URI you entered in the application form. Redirect the user to authorization_url.
+.. code-block:: python
+  > from requests_oauthlib import OAuth2Session
+  > oauth = OAuth2Session(CLIENT_ID,
+  >                       redirect_uri=REDIRECT_URI,
+  >                       scope=["read","write"])
+  >
+  > authorization_url, state = oauth.authorization_url("https://ion.tjhsst.edu/oauth/authorize/")
+
+The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a "code" GET parameter.
+
+.. code-block:: python
+  > token = oauth.fetch_token("https://ion.tjhsst.edu/oauth/token/",
+  >                           code=CODE,
+  >                           client_secret=CLIENT_SECRET)
+  > print(token)
+  {'refresh_token': 'XXX', 'access_token': 'XXX', 'expires_in': 36000, 'expires_at': 1455370143.573362, 'scope': ['read', 'write'], 'token_type': 'Bearer'}
+
+At this point, a valid access token has been gained, and you can request API resources.
+
+.. code-block:: python
+  > try:
+  >     profile = oauth.get("http://127.0.0.1/api/profile")
+  > except TokenExpiredError as e:
+  >     args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
+  >     token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
+  >
+  > import json
+  > print(json.loads(profile.content.decode()))
+  { 'ion_username': '2016jwoglom', ... }
+
+After 36,000 seconds (1 hour), the token will expire; you need to renew it. This can be handled by putting API commands inside a try-except for a oauthlib.oauth2.TokenExpiredError, such as seen above. Alternatively, you can provide "auto_refresh_url=refresh_url, auto_refresh_kwargs=args" as additional arguments to OAuth2Session when it is created.
+
+.. code-block:: python
+  > args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
+  > token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
