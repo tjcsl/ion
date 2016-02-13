@@ -179,7 +179,7 @@ class LoginView(View):
                 else:
                     pass  # exclude eighth office/special accounts
 
-            next_page = request.GET.get("next", default_next_page)
+            next_page = request.POST.get("next", request.GET.get("next", default_next_page))
             return redirect(next_page)
         else:
             log_auth(request, "failed")
