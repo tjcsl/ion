@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users package &mdash; TJ Intranet v3 (Build #1345) documentation</title>
+    <title>intranet.apps.users package &mdash; TJ Intranet v3 (Build #1348) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1345)',
+        VERSION:     'v3 (Build #1348)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1345) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1348) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.users.management package" href="intranet.apps.users.management.html" />
     <link rel="prev" title="intranet.apps.templatetags package" href="intranet.apps.templatetags.html" />
@@ -87,6 +87,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developing/index.html">Developing for Intranet</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../developing/styleguide.html">Coding Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../developing/testing.html">Test Writing Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../developing/workflow.html">Workflow</a></li>
@@ -324,7 +325,7 @@
 
 <dl class="attribute">
 <dt id="intranet.apps.users.forms.ProfileEditForm.declared_fields">
-<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('admin_comments', &lt;django.forms.fields.CharField object at 0x7f4e157c70b8&gt;), ('student_id', &lt;django.forms.fields.IntegerField object at 0x7f4e157c71d0&gt;), ('first_name', &lt;django.forms.fields.CharField object at 0x7f4e157c7240&gt;), ('middle_name', &lt;django.forms.fields.CharField object at 0x7f4e157c72b0&gt;), ('last_name', &lt;django.forms.fields.CharField object at 0x7f4e157c7320&gt;), ('title', &lt;django.forms.fields.CharField object at 0x7f4e157c7390&gt;), ('nickname', &lt;django.forms.fields.CharField object at 0x7f4e157c7400&gt;), ('graduation_year', &lt;django.forms.fields.IntegerField object at 0x7f4e157c7470&gt;), ('sex', &lt;django.forms.fields.CharField object at 0x7f4e157c74e0&gt;), ('birthday', &lt;django.forms.fields.DateField object at 0x7f4e157c7550&gt;), ('home_phone', &lt;django.forms.fields.CharField object at 0x7f4e157c75c0&gt;), ('street', &lt;django.forms.fields.CharField object at 0x7f4e157c7630&gt;), ('city', &lt;django.forms.fields.CharField object at 0x7f4e157c76a0&gt;), ('state', &lt;django.forms.fields.CharField object at 0x7f4e157c7710&gt;), ('postal_code', &lt;django.forms.fields.CharField object at 0x7f4e157c7780&gt;), ('counselor_id', &lt;django.forms.fields.IntegerField object at 0x7f4e157c77f0&gt;)])</em><a class="headerlink" href="#intranet.apps.users.forms.ProfileEditForm.declared_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declared_fields</code><em class="property"> = OrderedDict([('admin_comments', &lt;django.forms.fields.CharField object at 0x7fdf81fecd30&gt;), ('student_id', &lt;django.forms.fields.IntegerField object at 0x7fdf81fece48&gt;), ('first_name', &lt;django.forms.fields.CharField object at 0x7fdf81feceb8&gt;), ('middle_name', &lt;django.forms.fields.CharField object at 0x7fdf81fecf28&gt;), ('last_name', &lt;django.forms.fields.CharField object at 0x7fdf81fecf98&gt;), ('title', &lt;django.forms.fields.CharField object at 0x7fdf81fec358&gt;), ('nickname', &lt;django.forms.fields.CharField object at 0x7fdf81f71048&gt;), ('graduation_year', &lt;django.forms.fields.IntegerField object at 0x7fdf81f710b8&gt;), ('sex', &lt;django.forms.fields.CharField object at 0x7fdf81f71128&gt;), ('birthday', &lt;django.forms.fields.DateField object at 0x7fdf81f71198&gt;), ('home_phone', &lt;django.forms.fields.CharField object at 0x7fdf81f71208&gt;), ('street', &lt;django.forms.fields.CharField object at 0x7fdf81f71278&gt;), ('city', &lt;django.forms.fields.CharField object at 0x7fdf81f712e8&gt;), ('state', &lt;django.forms.fields.CharField object at 0x7fdf81f71358&gt;), ('postal_code', &lt;django.forms.fields.CharField object at 0x7fdf81f713c8&gt;), ('counselor_id', &lt;django.forms.fields.IntegerField object at 0x7fdf81f71438&gt;)])</em><a class="headerlink" href="#intranet.apps.users.forms.ProfileEditForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -627,6 +628,21 @@ or is not a signup user, returns 0.</p>
 <dt id="intranet.apps.users.models.User.absence_info">
 <code class="descclassname">User.</code><code class="descname">absence_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/models.html#User.absence_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.users.models.User.absence_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return information about the user&#8217;s absences.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.accesstoken_set">
+<code class="descclassname">User.</code><code class="descname">accesstoken_set</code><a class="headerlink" href="#intranet.apps.users.models.User.accesstoken_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1054,6 +1070,21 @@ otherwise User.DoesNotExist is raised.</dd>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="intranet.apps.users.models.User.grant_set">
+<code class="descclassname">User.</code><code class="descname">grant_set</code><a class="headerlink" href="#intranet.apps.users.models.User.grant_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.users.models.User.groups">
 <code class="descclassname">User.</code><code class="descname">groups</code><a class="headerlink" href="#intranet.apps.users.models.User.groups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the forward and reverse sides of
@@ -1255,7 +1286,7 @@ Lastname, F [(Nickname)]</p>
 
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.ldap_user_attributes">
-<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'ion_username': {'ldap_name': 'iodineUid', 'can_set': False, 'is_list': False, 'cache': True, 'perm': None}, 'first_name': {'ldap_name': 'givenName', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'display_name': {'ldap_name': 'displayName', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'preferred_photo': {'ldap_name': 'preferredPhoto', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'title': {'ldap_name': 'title', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'webpages': {'ldap_name': 'webpage', 'can_set': True, 'is_list': True, 'cache': True, 'perm': None}, 'graduation_year': {'ldap_name': 'graduationYear', 'can_set': False, 'is_list': False, 'cache': True, 'perm': None}, 'home_phone': {'ldap_name': 'homePhone', 'can_set': True, 'is_list': False, 'cache': True, 'perm': 'showtelephone'}, 'other_phones': {'ldap_name': 'telephoneNumber', 'can_set': True, 'is_list': True, 'cache': True, 'perm': None}, 'emails': {'ldap_name': 'mail', 'can_set': True, 'is_list': True, 'cache': True, 'perm': None}, 'student_id': {'ldap_name': 'tjhsstStudentId', 'can_set': True, 'is_list': False, 'cache': True, 'perm': 'specialPerm_studentID'}, 'ion_id': {'ldap_name': 'iodineUidNumber', 'can_set': False, 'is_list': False, 'cache': True, 'perm': None}, 'last_name': {'ldap_name': 'sn', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'nickname': {'ldap_name': 'nickname', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'common_name': {'ldap_name': 'cn', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'admin_comments': {'ldap_name': 'eighthoffice-comments', 'can_set': True, 'is_list': False, 'cache': False, 'perm': None}, 'middle_name': {'ldap_name': 'middlename', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'startpage': {'ldap_name': 'startpage', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'sex': {'ldap_name': 'gender', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}, 'user_type': {'ldap_name': 'objectClass', 'can_set': False, 'is_list': False, 'cache': True, 'perm': None}, 'mobile_phone': {'ldap_name': 'mobile', 'can_set': True, 'is_list': False, 'cache': True, 'perm': None}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">User.</code><code class="descname">ldap_user_attributes</code><em class="property"> = {'graduation_year': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'graduationYear', 'can_set': False}, 'mobile_phone': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'mobile', 'can_set': True}, 'webpages': {'perm': None, 'is_list': True, 'cache': True, 'ldap_name': 'webpage', 'can_set': True}, 'student_id': {'perm': 'specialPerm_studentID', 'is_list': False, 'cache': True, 'ldap_name': 'tjhsstStudentId', 'can_set': True}, 'user_type': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'objectClass', 'can_set': False}, 'last_name': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'sn', 'can_set': True}, 'preferred_photo': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'preferredPhoto', 'can_set': True}, 'emails': {'perm': None, 'is_list': True, 'cache': True, 'ldap_name': 'mail', 'can_set': True}, 'sex': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'gender', 'can_set': True}, 'middle_name': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'middlename', 'can_set': True}, 'home_phone': {'perm': 'showtelephone', 'is_list': False, 'cache': True, 'ldap_name': 'homePhone', 'can_set': True}, 'nickname': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'nickname', 'can_set': True}, 'ion_id': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'iodineUidNumber', 'can_set': False}, 'other_phones': {'perm': None, 'is_list': True, 'cache': True, 'ldap_name': 'telephoneNumber', 'can_set': True}, 'title': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'title', 'can_set': True}, 'first_name': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'givenName', 'can_set': True}, 'ion_username': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'iodineUid', 'can_set': False}, 'display_name': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'displayName', 'can_set': True}, 'common_name': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'cn', 'can_set': True}, 'startpage': {'perm': None, 'is_list': False, 'cache': True, 'ldap_name': 'startpage', 'can_set': True}, 'admin_comments': {'perm': None, 'is_list': False, 'cache': False, 'ldap_name': 'eighthoffice-comments', 'can_set': True}}</em><a class="headerlink" href="#intranet.apps.users.models.User.ldap_user_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1316,6 +1347,21 @@ relation.</p>
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">place.restaurant</span></code> is a <code class="docutils literal"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.oauth2_provider_application">
+<code class="descclassname">User.</code><code class="descname">oauth2_provider_application</code><a class="headerlink" href="#intranet.apps.users.models.User.oauth2_provider_application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1382,6 +1428,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="intranet.apps.users.models.User.printjob_set">
 <code class="descclassname">User.</code><code class="descname">printjob_set</code><a class="headerlink" href="#intranet.apps.users.models.User.printjob_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.users.models.User.refreshtoken_set">
+<code class="descclassname">User.</code><code class="descname">refreshtoken_set</code><a class="headerlink" href="#intranet.apps.users.models.User.refreshtoken_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
 many-to-one relation.</p>
 <p>In the example:</p>

@@ -12,6 +12,14 @@ intranet.apps.schedule.management.commands.ical module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.schedule.management.commands.schedule_notify module
+-----------------------------------------------------------------
+
+.. automodule:: intranet.apps.schedule.management.commands.schedule_notify
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

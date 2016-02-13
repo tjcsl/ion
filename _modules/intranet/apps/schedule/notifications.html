@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.api &mdash; TJ Intranet v3 (Build #1348) documentation</title>
+    <title>intranet.apps.schedule.notifications &mdash; TJ Intranet v3 (Build #1348) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -145,46 +145,49 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.schedule.api</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.schedule.notifications</h1><div class="highlight"><pre>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">generics</span>
-<span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="kn">import</span> <span class="n">PageNumberPagination</span>
-<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">AllowAny</span>
-
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Day</span>
-<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">DaySerializer</span>
+<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">schedule_context</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="OnePagePagination"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.OnePagePagination">[docs]</a><span class="k">class</span> <span class="nc">OnePagePagination</span><span class="p">(</span><span class="n">PageNumberPagination</span><span class="p">):</span>
-    <span class="n">page_size</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">page_size_query_param</span> <span class="o">=</span> <span class="s1">&#39;page_size&#39;</span>
-    <span class="n">max_page_size</span> <span class="o">=</span> <span class="mi">7</span></div>
+<div class="viewcode-block" id="chrome_getdata_check"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.notifications.chrome_getdata_check">[docs]</a><span class="k">def</span> <span class="nf">chrome_getdata_check</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">period_start_end_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DayList"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayList">[docs]</a><span class="k">class</span> <span class="nc">DayList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_future_days</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">DaySerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowAny</span><span class="p">,)</span>
-    <span class="n">pagination_class</span> <span class="o">=</span> <span class="n">OnePagePagination</span></div>
+<div class="viewcode-block" id="period_start_end_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.notifications.period_start_end_data">[docs]</a><span class="k">def</span> <span class="nf">period_start_end_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_tomorrow</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">[</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span>
+    <span class="n">point</span><span class="p">,</span> <span class="n">block</span> <span class="o">=</span> <span class="n">at_period_point</span><span class="p">(</span><span class="n">blocks</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">((</span><span class="n">point</span><span class="p">,</span> <span class="n">block</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">point</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;{} has started&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">point</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;{} has ended&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
 
-<div class="viewcode-block" id="DayDetail"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayDetail">[docs]</a><span class="k">class</span> <span class="nc">DayDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">DaySerializer</span>
-    <span class="n">lookup_field</span> <span class="o">=</span> <span class="s2">&quot;date&quot;</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowAny</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="DayDetail.get_object"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayDetail.get_object">[docs]</a>    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">day</span>
-        <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span></div></div>
+<div class="viewcode-block" id="at_period_point"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.notifications.at_period_point">[docs]</a><span class="k">def</span> <span class="nf">at_period_point</span><span class="p">(</span><span class="n">blocks</span><span class="p">):</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">now</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">now</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

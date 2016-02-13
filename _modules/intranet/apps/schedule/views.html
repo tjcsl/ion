@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #1345) documentation</title>
+    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #1348) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1345)',
+        VERSION:     'v3 (Build #1348)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1345) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1348) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -85,6 +85,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to perform common tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Test Writing Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../developing/workflow.html">Workflow</a></li>
@@ -187,10 +188,10 @@
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="schedule_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.schedule_context">[docs]</a><span class="k">def</span> <span class="nf">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="schedule_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.schedule_context">[docs]</a><span class="k">def</span> <span class="nf">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_tomorrow</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="n">monday</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">friday</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="k">if</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span> <span class="ow">and</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="bp">None</span>
@@ -198,7 +199,7 @@
     <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="mi">17</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;</span> <span class="mi">17</span> <span class="ow">and</span> <span class="n">show_tomorrow</span><span class="p">:</span>
             <span class="n">delta</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="o">==</span> <span class="n">friday</span> <span class="k">else</span> <span class="mi">1</span>
             <span class="n">date</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -208,7 +209,7 @@
     <span class="n">date_fmt</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;bell_schedule:{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">)</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">use_cache</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Returning schedule context for {} from cache.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date_fmt</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">cached</span>
     <span class="k">else</span><span class="p">:</span>
