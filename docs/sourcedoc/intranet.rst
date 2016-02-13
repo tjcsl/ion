@@ -10,6 +10,7 @@ Subpackages
     intranet.db
     intranet.middleware
     intranet.settings
+    intranet.test
     intranet.utils
 
 Submodules

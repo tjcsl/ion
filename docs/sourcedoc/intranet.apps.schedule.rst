@@ -43,6 +43,14 @@ intranet.apps.schedule.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.schedule.notifications module
+-------------------------------------------
+
+.. automodule:: intranet.apps.schedule.notifications
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.schedule.serializers module
 -----------------------------------------
 
