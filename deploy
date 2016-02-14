@@ -7,12 +7,13 @@ flake8 --max-line-length 200 .
 ./setup.py test
 ./manage.py migrate
 ./scripts/build_docs.sh
-./scripts/mypy.sh
 
 if ! [ -z "`git status --porcelain -uno`" ]; then
     echo "Modified files found, did you forget to commit something?"
     git status --porcelain
     exit 1
 fi
+
+./scripts/mypy.sh
 
 git push
