@@ -63,7 +63,11 @@
                     </div>
                 {% endif %}
                 <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login" method="post" name="auth_form">
-                {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next|escape }}" />{% endif %}
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}" />
+                {% elif request.POST.next %}
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}" />
+                {% endif %}
                     {% csrf_token %}
                     {% for field in auth_form %}
                         {{ field }}<br />
