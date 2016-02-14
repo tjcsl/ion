@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.apps.events package &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.feedback package" href="intranet.apps.feedback.html" />
     <link rel="prev" title="intranet.apps.error package" href="intranet.apps.error.html" />
@@ -235,40 +235,40 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>An event available to the TJ community.</p>
 <dl class="docutils">
-<dt>title</dt>
+<dt>title:</dt>
 <dd>The title for the event</dd>
-<dt>description</dt>
+<dt>description:</dt>
 <dd>A description about the event</dd>
-<dt>links</dt>
+<dt>links:</dt>
 <dd>Not currently used</dd>
-<dt>created_time</dt>
+<dt>created_time:</dt>
 <dd>Time created (automatically set)</dd>
-<dt>last_modified_time</dt>
+<dt>last_modified_time:</dt>
 <dd>Time last modified (automatically set)</dd>
-<dt>time</dt>
+<dt>time:</dt>
 <dd>The date and time of the event</dd>
-<dt>location</dt>
+<dt>location:</dt>
 <dd>Where the event is located</dd>
-<dt>user</dt>
+<dt>user:</dt>
 <dd>The user who created the event.</dd>
-<dt>scheduled_activity</dt>
+<dt>scheduled_activity:</dt>
 <dd>An EighthScheduledActivity that should be linked with the event.</dd>
-<dt>announcement</dt>
+<dt>announcement:</dt>
 <dd>An Announcement that should be linked with the event.</dd>
-<dt>groups</dt>
+<dt>groups:</dt>
 <dd>Groups that the event is visible to.</dd>
-<dt>attending</dt>
+<dt>attending:</dt>
 <dd>A ManyToManyField of User objects that are attending the event.</dd>
-<dt>show_attending</dt>
+<dt>show_attending:</dt>
 <dd>Boolean, whether users can mark if they are attending or not attending.</dd>
-<dt>approved</dt>
+<dt>approved:</dt>
 <dd>Boolean, whether the event has been approved and will be displayed.</dd>
-<dt>approved_by</dt>
+<dt>approved_by:</dt>
 <dd>ForeignKey to User object, the user who approved the event.</dd>
-<dt>rejected</dt>
+<dt>rejected:</dt>
 <dd>Boolean, whether the event was rejected and shouldn&#8217;t be shown in the
 list of events that need to be approved.</dd>
-<dt>rejected_by</dt>
+<dt>rejected_by:</dt>
 <dd>ForeignKey to User object, the user who rejected the event.</dd>
 </dl>
 <dl class="exception">
@@ -380,8 +380,7 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="attribute">
 <dt id="intranet.apps.events.models.Event.is_this_year">
 <code class="descclassname">Event.</code><code class="descname">is_this_year</code><a class="headerlink" href="#intranet.apps.events.models.Event.is_this_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return whether the event was created after September 1st
-of this school year.</p>
+<dd><p>Return whether the event was created after September 1st of this school year.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -434,8 +433,8 @@ one-to-one relation.</p>
 <dl class="method">
 <dt id="intranet.apps.events.models.Event.show_fuzzy_date">
 <code class="descclassname">Event.</code><code class="descname">show_fuzzy_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#Event.show_fuzzy_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.Event.show_fuzzy_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return whether the event is in the next or previous 2 weeks.
-Determines whether to display the fuzzy date.</p>
+<dd><p>Return whether the event is in the next or previous 2 weeks.</p>
+<p>Determines whether to display the fuzzy date.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -460,11 +459,10 @@ one-to-one relation.</p>
 <dl class="method">
 <dt id="intranet.apps.events.models.EventManager.visible_to_user">
 <code class="descname">visible_to_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/models.html#EventManager.visible_to_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.models.EventManager.visible_to_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of visible events for a given user (usually
-request.user).</p>
+<dd><p>Get a list of visible events for a given user (usually request.user).</p>
 <p>These visible events will be those that either have no groups
-assigned to them (and are therefore public) or those in which the
-user is a member.</p>
+assigned to them (and are therefore public) or those in which
+the user is a member.</p>
 </dd></dl>
 
 </dd></dl>
@@ -673,9 +671,10 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <dl class="function">
 <dt id="intranet.apps.events.views.add_event_view">
 <code class="descclassname">intranet.apps.events.views.</code><code class="descname">add_event_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#add_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.add_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add event page. Currently, there is an approval process for events.
-If a user is an events administrator, they can create events directly.
-Otherwise, their event is added in the system but must be approved.</p>
+<dd><p>Add event page.</p>
+<p>Currently, there is an approval process for events. If a user is an
+events administrator, they can create events directly. Otherwise,
+their event is added in the system but must be approved.</p>
 </dd></dl>
 
 <dl class="function">
@@ -689,24 +688,25 @@ administrator. Confirmation page if not POST.</p>
 <dl class="function">
 <dt id="intranet.apps.events.views.event_roster_view">
 <code class="descclassname">intranet.apps.events.views.</code><code class="descname">event_roster_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#event_roster_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.event_roster_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the event roster. Users with hidden eighth period permissions will not be
-displayed. Users will be able to view all other users, along with a count of the
-number of hidden users. (Same as 8th roster page.) Admins will see a full roster
-at the bottom.</p>
+<dd><p>Show the event roster. Users with hidden eighth period permissions will not be displayed.
+Users will be able to view all other users, along with a count of the number of hidden users.
+(Same as 8th roster page.) Admins will see a full roster at the bottom.</p>
 <p>id: event id</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.events_view">
 <code class="descclassname">intranet.apps.events.views.</code><code class="descname">events_view</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#events_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.events_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Events homepage. Shows a list of events occurring in the next week, month, and future.</p>
+<dd><p>Events homepage.</p>
+<p>Shows a list of events occurring in the next week, month, and
+future.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="intranet.apps.events.views.join_event_view">
 <code class="descclassname">intranet.apps.events.views.</code><code class="descname">join_event_view</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/views.html#join_event_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.events.views.join_event_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join event page. If a POST request, actually add or remove the attendance of
-the current user. Otherwise, display a page with confirmation.</p>
+<dd><p>Join event page. If a POST request, actually add or remove the attendance of the current
+user. Otherwise, display a page with confirmation.</p>
 <p>id: event id</p>
 </dd></dl>
 

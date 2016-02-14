@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware package &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.middleware package &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../index.html" />
     <link rel="up" title="intranet package" href="intranet.html" />
     <link rel="next" title="intranet.settings package" href="intranet.settings.html" />
     <link rel="prev" title="intranet.db package" href="intranet.db.html" />
@@ -189,8 +189,9 @@
 <dt id="intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare">
 <em class="property">class </em><code class="descclassname">intranet.middleware.ajax.</code><code class="descname">AjaxNotAuthenticatedMiddleWare</code><a class="reference internal" href="../_modules/intranet/middleware/ajax.html#AjaxNotAuthenticatedMiddleWare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Django doesn&#8217;t handle login redirects with AJAX very nicely,
-so we have to work around the default behavior a little. If a user&#8217;s
+<p>Django doesn&#8217;t handle login redirects with AJAX very nicely, so we have to work around the
+default behavior a little.</p>
+<p>If a user&#8217;s
 session has expired, but they still have a window open, they client
 may send AJAX requests to a view wrapped in &#64;login_required or
 something similar. When this happens, Django <code class="docutils literal"><span class="pre">302</span></code> redirects to
@@ -227,8 +228,8 @@ know that the request actually failed.</p>
 <dt id="intranet.middleware.environment.KerberosCacheMiddleware">
 <em class="property">class </em><code class="descclassname">intranet.middleware.environment.</code><code class="descname">KerberosCacheMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Reloads the KRB5CCNAME environmental variable from the session
-for potential use in future LDAP requests.</p>
+<p>Reloads the KRB5CCNAME environmental variable from the session for potential use in future
+LDAP requests.</p>
 <p>For a login request, the KRB5CCNAME environmental variable has
 already been set in the authentication backend, but for all other
 requests, it must be reset from the Kerberos cache stored in a
@@ -243,8 +244,7 @@ it does not have access to the current session (request.session).</p>
 <dl class="method">
 <dt id="intranet.middleware.environment.KerberosCacheMiddleware.process_request">
 <code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/environment.html#KerberosCacheMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.environment.KerberosCacheMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propogate KRB5CCNAME session variable to the environmental
-variable</p>
+<dd><p>Propogate KRB5CCNAME session variable to the environmental variable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -323,8 +323,7 @@ std = sqrt(sum_i (x_i - mean)^2 over n-1)
 <dt id="intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware">
 <em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">AdminSelectizeLoadingIndicatorMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#AdminSelectizeLoadingIndicatorMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Automatically add a loading placeholder for Selectize inputs
-in admin templates.</p>
+<p>Automatically add a loading placeholder for Selectize inputs in admin templates.</p>
 <p>This is probably not a good practice, but it really needs to be done
 server-side for the loading indicators to show up instantly.</p>
 <dl class="method">
@@ -338,8 +337,7 @@ server-side for the loading indicators to show up instantly.</p>
 <dt id="intranet.middleware.templates.StripNewlinesMiddleware">
 <em class="property">class </em><code class="descclassname">intranet.middleware.templates.</code><code class="descname">StripNewlinesMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Strip extra newlines from rendered templates to
-enhance readability.</p>
+<p>Strip extra newlines from rendered templates to enhance readability.</p>
 <dl class="method">
 <dt id="intranet.middleware.templates.StripNewlinesMiddleware.process_response">
 <code class="descname">process_response</code><span class="sig-paren">(</span><em>request</em>, <em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/templates.html#StripNewlinesMiddleware.process_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.templates.StripNewlinesMiddleware.process_response" title="Permalink to this definition">¶</a></dt>
@@ -355,13 +353,12 @@ enhance readability.</p>
 <dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware">
 <em class="property">class </em><code class="descclassname">intranet.middleware.threadlocals.</code><code class="descname">ThreadLocalsMiddleware</code><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Stores the current authorized User object in thread locals for
-access in models (and elsewhere) without passing the user around as
-an argument.</p>
+<p>Stores the current authorized User object in thread locals for access in models (and
+elsewhere) without passing the user around as an argument.</p>
 <dl class="method">
 <dt id="intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request">
 <code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/threadlocals.html#ThreadLocalsMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the request to thread locals</p>
+<dd><p>Adds the request to thread locals.</p>
 </dd></dl>
 
 </dd></dl>
@@ -403,10 +400,9 @@ show up in error emails.</p>
 <dt id="intranet.middleware.url_slashes.FixSlashes.process_request">
 <code class="descname">process_request</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/middleware/url_slashes.html#FixSlashes.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.middleware.url_slashes.FixSlashes.process_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add or remove trailing slashes where needed.</p>
-<p>Note that there is no HTTP redirection actually happening.
-This just fixes the trailing slashes before the URLs are matched
-to any URL patterns by changing the request&#8217;s internal
-properties.</p>
+<p>Note that there is no HTTP redirection actually happening. This
+just fixes the trailing slashes before the URLs are matched to
+any URL patterns by changing the request&#8217;s internal properties.</p>
 </dd></dl>
 
 </dd></dl>

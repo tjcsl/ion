@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.db.ldap_db &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -190,16 +190,14 @@
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="LDAPFilter.attribute_in_list"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.attribute_in_list">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_in_list</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all entries for which a</span>
-<span class="sd">        specified attribute is contained in a specified list of values.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all entries for which a specified attribute is contained</span>
+<span class="sd">        in a specified list of values.&quot;&quot;&quot;</span>
         <span class="n">conditions</span> <span class="o">=</span> <span class="p">(</span><span class="n">attribute</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">or_filter</span><span class="p">(</span><span class="o">*</span><span class="n">conditions</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="LDAPFilter.all_users"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPFilter.all_users">[docs]</a>    <span class="k">def</span> <span class="nf">all_users</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all user objects in LDAP</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a filter for selecting all user objects in LDAP.&quot;&quot;&quot;</span>
 
         <span class="n">user_object_classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LDAP_OBJECT_CLASSES</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="k">return</span> <span class="n">LDAPFilter</span><span class="o">.</span><span class="n">attribute_in_list</span><span class="p">(</span><span class="s2">&quot;objectclass&quot;</span><span class="p">,</span> <span class="n">user_object_classes</span><span class="p">)</span></div></div>
@@ -207,8 +205,7 @@
 
 <div class="viewcode-block" id="LDAPConnection"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection">[docs]</a><span class="k">class</span> <span class="nc">LDAPConnection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Represents an LDAP connection with wrappers for the raw ldap</span>
-<span class="sd">    queries.</span>
+    <span class="sd">&quot;&quot;&quot;Represents an LDAP connection with wrappers for the raw ldap queries.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        conn</span>
@@ -220,10 +217,10 @@
     <span class="k">def</span> <span class="nf">conn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Lazily load and return the raw connection from threadlocals.</span>
 
-<span class="sd">        Connect to the LDAP server specified in settings and bind</span>
-<span class="sd">        using the GSSAPI protocol. The requisite KRB5CCNAME</span>
-<span class="sd">        environmental variable should have already been set by the</span>
-<span class="sd">        SetKerberosCache middleware.</span>
+<span class="sd">        Connect to the LDAP server specified in settings and bind using</span>
+<span class="sd">        the GSSAPI protocol. The requisite KRB5CCNAME environmental</span>
+<span class="sd">        variable should have already been set by the SetKerberosCache</span>
+<span class="sd">        middleware.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ldap_exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">ldap3</span><span class="o">.</span><span class="n">LDAPExceptionError</span><span class="p">,)</span>
@@ -251,10 +248,7 @@
         <span class="k">return</span> <span class="n">_thread_locals</span><span class="o">.</span><span class="n">ldap_conn</span>
 
 <div class="viewcode-block" id="LDAPConnection.did_use_simple_bind"><a class="viewcode-back" href="../../../sourcedoc/intranet.db.html#intranet.db.ldap_db.LDAPConnection.did_use_simple_bind">[docs]</a>    <span class="k">def</span> <span class="nf">did_use_simple_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether a simple bind was used, or ``False`` for an</span>
-<span class="sd">        uninitialized connection.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether a simple bind was used, or ``False`` for an uninitialized connection.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_locals</span><span class="p">,</span> <span class="s2">&quot;simple_bind&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span></div>
 

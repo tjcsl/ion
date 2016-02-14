@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.apps.users.models &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -207,7 +207,7 @@
         <span class="k">return</span> <span class="bp">None</span></div>
 
 <div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get a list of users in a specific graduation year. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">LDAPConnection</span><span class="p">()</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">USER_DN</span><span class="p">,</span>
@@ -221,10 +221,11 @@
         <span class="k">return</span> <span class="n">users</span></div>
 
     <span class="k">def</span> <span class="nf">_ldap_and_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Combine LDAP queries with AND</span>
+        <span class="sd">&quot;&quot;&quot;Combine LDAP queries with AND.</span>
 
 <span class="sd">        e.x.: [&quot;a=b&quot;]        =&gt; &quot;a=b&quot;</span>
 <span class="sd">              [&quot;a=b&quot;, &quot;c=d&quot;] =&gt; &quot;(&amp;(a=b)(c=d))&quot;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">opts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -323,7 +324,11 @@
             <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get teachers sorted by last name. This is used for the announcement request page.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get teachers sorted by last name.</span>
+
+<span class="sd">        This is used for the announcement request page.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">teachers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span>
         <span class="n">teachers</span> <span class="o">=</span> <span class="p">[(</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teachers</span><span class="p">:</span>
@@ -344,8 +349,7 @@
 
 <div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Django User model subclass with properties that fetch data from</span>
-<span class="sd">    LDAP</span>
+    <span class="sd">&quot;&quot;&quot;Django User model subclass with properties that fetch data from LDAP.</span>
 
 <span class="sd">    Represents a user object in LDAP.Extends AbstractBaseUser so the</span>
 <span class="sd">    model will work with Django&#39;s built-in authorization functionality.</span>
@@ -387,8 +391,7 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="User.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">dn</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve a user object from LDAP and save it to the SQL</span>
-<span class="sd">        database if necessary.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a user object from LDAP and save it to the SQL database if necessary.</span>
 
 <span class="sd">        Creates a User object from a dn, user id, or a username based on</span>
 <span class="sd">        data in the LDAP database. If the user also exists in the SQL</span>
@@ -406,6 +409,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The User object if the user could be found in LDAP,</span>
 <span class="sd">            otherwise User.DoesNotExist is raised.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -553,8 +557,8 @@
         <span class="k">return</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_groups_cache</span></div>
 
 <div class="viewcode-block" id="User.has_admin_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.has_admin_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly,</span>
-<span class="sd">        or implied by being in the &quot;admin_all&quot; group)</span>
+        <span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly, or implied by being in the</span>
+<span class="sd">        &quot;admin_all&quot; group)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean</span>
@@ -569,8 +573,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William. This is required</span>
-<span class="sd">        for subclasses of User.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
+
+<span class="sd">        This is required for subclasses of User.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_name</span>
 
     <span class="nd">@property</span>
@@ -607,8 +614,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return short name (first name) of a user. This is required</span>
-<span class="sd">        for subclasses of User.</span>
+        <span class="sd">&quot;&quot;&quot;Return short name (first name) of a user.</span>
+
+<span class="sd">        This is required for subclasses of User.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
 
@@ -627,8 +636,7 @@
 
     <span class="nd">@dn.setter</span>
     <span class="k">def</span> <span class="nf">dn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set DN for a user.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set DN for a user.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dn</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_dn</span> <span class="o">=</span> <span class="n">dn</span>
         <span class="c1"># if not self.username:</span>
@@ -636,11 +644,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get (or guess) a user&#39;s TJ email. If a fcps.edu or</span>
-<span class="sd">        tjhsst.edu email is specified in their email list, use</span>
-<span class="sd">        that. Otherwise, append the user&#39;s username to the proper</span>
-<span class="sd">        email suffix, depending on whether they are a student or teacher.</span>
+        <span class="sd">&quot;&quot;&quot;Get (or guess) a user&#39;s TJ email.</span>
+
+<span class="sd">        If a fcps.edu or tjhsst.edu email is specified in their email</span>
+<span class="sd">        list, use that. Otherwise, append the user&#39;s username to the</span>
+<span class="sd">        proper email suffix, depending on whether they are a student or</span>
+<span class="sd">        teacher.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">emails</span><span class="p">:</span>
@@ -661,6 +671,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Grade object</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">])</span>
 
@@ -682,10 +693,8 @@
             <span class="k">return</span> <span class="n">grade</span>
 
     <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return whether the currently logged in user is a teacher,</span>
-<span class="sd">            and can view all of a student&#39;s information regardless of</span>
-<span class="sd">            their privacy settings.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher, and can view all of a student&#39;s</span>
+<span class="sd">        information regardless of their privacy settings.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># threadlocals is a module, not an actual thread locals object</span>
             <span class="n">requesting_user</span> <span class="o">=</span> <span class="n">threadlocals</span><span class="o">.</span><span class="n">request</span><span class="p">()</span><span class="o">.</span><span class="n">user</span>
@@ -698,8 +707,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list of Class objects for a user ordered by</span>
-<span class="sd">        period number.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of Class objects for a user ordered by period number.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List of Class objects</span>
@@ -1000,6 +1008,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dictionary</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="s1">&#39;photo_permissions&#39;</span><span class="p">])</span>
 
@@ -1067,6 +1076,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Dictionary with keys &quot;parent&quot; and &quot;self&quot;, each mapping to a</span>
 <span class="sd">            list of permissions.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">False</span>
@@ -1194,20 +1204,24 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">9999</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if the user is active.</span>
+
 <span class="sd">        This is currently used to catch invalid logins.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;INVALID_USER&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_staff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a user should have access to the Django Admin</span>
+        <span class="sd">&quot;&quot;&quot;Checks if a user should have access to the Django Admin.</span>
+
 <span class="sd">        interface. This has nothing to do with staff at TJ - `is_staff`</span>
 <span class="sd">        has to be overridden to make this a valid user model.</span>
 
@@ -1463,7 +1477,7 @@
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return simple attributes of User</span>
+        <span class="sd">&quot;&quot;&quot;Return simple attributes of User.</span>
 
 <span class="sd">        This is used to retrieve ldap fields that don&#39;t require special</span>
 <span class="sd">        processing, e.g. email or graduation year. Fields names are</span>
@@ -1541,8 +1555,7 @@
             <span class="k">return</span> <span class="bp">None</span>
 
 <div class="viewcode-block" id="User.set_ldap_attribute"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_ldap_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">override_set</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set a user attribute in LDAP.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set a user attribute in LDAP.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">User</span><span class="o">.</span><span class="n">ldap_user_attributes</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can not set User attribute &#39;{}&#39; -- not in user attribute list.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
@@ -1625,8 +1638,7 @@
         <span class="n">c</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">photo_dn</span><span class="p">,</span> <span class="n">photo_field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.set_raw_ldap_attribute"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.set_raw_ldap_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_raw_ldap_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set a raw user attribute in LDAP.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set a raw user attribute in LDAP.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not determine DN of User&quot;</span><span class="p">)</span>
 
@@ -1642,7 +1654,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Determine whether the given user is associated with an</span>
+        <span class="sd">&quot;&quot;&quot;Determine whether the given user is associated with an.</span>
+
 <span class="sd">        :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity</span>
 <span class="sd">        sponsoring information.</span>
 
@@ -1667,7 +1680,9 @@
         <span class="k">return</span> <span class="n">sp</span></div>
 
 <div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count. If the user has no absences</span>
+        <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count.</span>
+
+<span class="sd">        If the user has no absences</span>
 <span class="sd">        or is not a signup user, returns 0.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1676,8 +1691,7 @@
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.absence_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.eighth.serializers.User.absence_info">[docs]</a>    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return information about the user&#39;s absences.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return information about the user&#39;s absences.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthSignup</span>
 
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
@@ -1724,9 +1738,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list of students in the class.</span>
-<span class="sd">        This may not always return all of the actual students if you do</span>
-<span class="sd">        not have permission to view that information.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of students in the class. This may not always return all of the actual</span>
+<span class="sd">        students if you do not have permission to view that information.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List of user objects</span>
@@ -1748,7 +1761,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the teacher/sponsor of the class</span>
+        <span class="sd">&quot;&quot;&quot;Returns the teacher/sponsor of the class.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            User object</span>
@@ -1801,7 +1814,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sortvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the sort value of this class</span>
+        <span class="sd">&quot;&quot;&quot;Returns the sort value of this class.</span>
 
 <span class="sd">        This can be derived from the following formula:</span>
 <span class="sd">            Minimum Period + Sum of values of quarters / 11</span>
@@ -1817,11 +1830,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a list of other Class objects which are of</span>
-<span class="sd">           the same class type.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of other Class objects which are of the same class type.</span>
 
-<span class="sd">           Returns:</span>
-<span class="sd">               A list of class objects.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of class objects.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">class_sections</span> <span class="o">=</span> <span class="n">ClassSections</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_id</span><span class="p">)</span>
 
@@ -1836,7 +1849,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">ordered_schedule</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># The class objects</span>
 
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return simple attributes of Class</span>
+        <span class="sd">&quot;&quot;&quot;Return simple attributes of Class.</span>
 
 <span class="sd">        This is used to retrieve ldap fields that don&#39;t require special</span>
 <span class="sd">        processing, e.g. roomNumber or period. Fields names are</span>
@@ -1858,7 +1871,6 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Either a list of strings or a string, depending on the attribute fetched.</span>
-
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -2013,6 +2025,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            graduation_year</span>
 <span class="sd">                The numerical graduation year of the user</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">graduation_year</span><span class="p">)</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>

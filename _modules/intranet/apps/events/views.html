@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events.views &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.apps.events.views &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -166,8 +166,10 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="events_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.events_view">[docs]</a><span class="k">def</span> <span class="nf">events_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Events homepage. Shows a list of events occurring in the next week, month, and future.</span>
+    <span class="sd">&quot;&quot;&quot;Events homepage.</span>
+
+<span class="sd">    Shows a list of events occurring in the next week, month, and</span>
+<span class="sd">    future.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
@@ -249,11 +251,10 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="join_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.join_event_view">[docs]</a><span class="k">def</span> <span class="nf">join_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Join event page. If a POST request, actually add or remove the attendance of</span>
-<span class="sd">        the current user. Otherwise, display a page with confirmation.</span>
+    <span class="sd">&quot;&quot;&quot;Join event page. If a POST request, actually add or remove the attendance of the current</span>
+<span class="sd">    user. Otherwise, display a page with confirmation.</span>
 
-<span class="sd">        id: event id</span>
+<span class="sd">    id: event id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
@@ -284,13 +285,11 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="event_roster_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.event_roster_view">[docs]</a><span class="k">def</span> <span class="nf">event_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Show the event roster. Users with hidden eighth period permissions will not be</span>
-<span class="sd">        displayed. Users will be able to view all other users, along with a count of the</span>
-<span class="sd">        number of hidden users. (Same as 8th roster page.) Admins will see a full roster</span>
-<span class="sd">        at the bottom.</span>
+    <span class="sd">&quot;&quot;&quot;Show the event roster. Users with hidden eighth period permissions will not be displayed.</span>
+<span class="sd">    Users will be able to view all other users, along with a count of the number of hidden users.</span>
+<span class="sd">    (Same as 8th roster page.) Admins will see a full roster at the bottom.</span>
 
-<span class="sd">        id: event id</span>
+<span class="sd">    id: event id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -320,10 +319,11 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="add_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.add_event_view">[docs]</a><span class="k">def</span> <span class="nf">add_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add event page. Currently, there is an approval process for events.</span>
-<span class="sd">        If a user is an events administrator, they can create events directly.</span>
-<span class="sd">        Otherwise, their event is added in the system but must be approved.</span>
+    <span class="sd">&quot;&quot;&quot;Add event page.</span>
+
+<span class="sd">    Currently, there is an approval process for events. If a user is an</span>
+<span class="sd">    events administrator, they can create events directly. Otherwise,</span>
+<span class="sd">    their event is added in the system but must be approved.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
@@ -367,11 +367,10 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="modify_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.modify_event_view">[docs]</a><span class="k">def</span> <span class="nf">modify_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Modify event page. You may only modify an event if you were the creator or you are an</span>
-<span class="sd">        administrator.</span>
+    <span class="sd">&quot;&quot;&quot;Modify event page. You may only modify an event if you were the creator or you are an</span>
+<span class="sd">    administrator.</span>
 
-<span class="sd">        id: event id</span>
+<span class="sd">    id: event id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
@@ -413,11 +412,10 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="delete_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.delete_event_view">[docs]</a><span class="k">def</span> <span class="nf">delete_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete event page. You may only delete an event if you were the creator or you are an</span>
-<span class="sd">        administrator. Confirmation page if not POST.</span>
+    <span class="sd">&quot;&quot;&quot;Delete event page. You may only delete an event if you were the creator or you are an</span>
+<span class="sd">    administrator. Confirmation page if not POST.</span>
 
-<span class="sd">        id: event id</span>
+<span class="sd">    id: event id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>

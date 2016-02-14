@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -164,8 +164,10 @@
 
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">KerberosAuthenticationBackend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Authenticate using Kerberos. This is the default</span>
-<span class="sd">    authentication backend.</span>
+    <span class="sd">&quot;&quot;&quot;Authenticate using Kerberos.</span>
+
+<span class="sd">    This is the default authentication backend.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_kerberos_ticket"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">[docs]</a>    <span class="k">def</span> <span class="nf">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
@@ -179,10 +181,13 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean indicating success or failure of ticket creation</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.</span>
+
 <span class="sd">            If the user does not exist in LDAP, only throw a warning.</span>
+
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
@@ -272,8 +277,7 @@
             <span class="k">return</span> <span class="n">user</span></div>
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a</span>
-<span class="sd">        custom authentication backend.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
@@ -281,6 +285,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
@@ -289,8 +294,10 @@
 
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">MasterPasswordAuthenticationBackend</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is</span>
-<span class="sd">    in secret.py. Forces a simple LDAP bind.</span>
+    <span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is in secret.py.</span>
+
+<span class="sd">    Forces a simple LDAP bind.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -320,8 +327,7 @@
         <span class="k">return</span> <span class="bp">None</span></div>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a</span>
-<span class="sd">        custom authentication backend.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
@@ -329,6 +335,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>

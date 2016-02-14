@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events.models &mdash; TJ Intranet v3 (Build #1354) documentation</title>
+    <title>intranet.apps.events.models &mdash; TJ Intranet v3 (Build #1355) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1354)',
+        VERSION:     'v3 (Build #1355)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1355) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -161,8 +161,7 @@
 
 
 <div class="viewcode-block" id="Link"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.Link">[docs]</a><span class="k">class</span> <span class="nc">Link</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A link about an item (Facebook event link, etc).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A link about an item (Facebook event link, etc).&quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></div>
 
@@ -170,12 +169,11 @@
 <div class="viewcode-block" id="EventManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.EventManager">[docs]</a><span class="k">class</span> <span class="nc">EventManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
 
 <div class="viewcode-block" id="EventManager.visible_to_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.EventManager.visible_to_user">[docs]</a>    <span class="k">def</span> <span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a list of visible events for a given user (usually</span>
-<span class="sd">        request.user).</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of visible events for a given user (usually request.user).</span>
 
 <span class="sd">        These visible events will be those that either have no groups</span>
-<span class="sd">        assigned to them (and are therefore public) or those in which the</span>
-<span class="sd">        user is a member.</span>
+<span class="sd">        assigned to them (and are therefore public) or those in which</span>
+<span class="sd">        the user is a member.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -188,41 +186,41 @@
 <div class="viewcode-block" id="Event"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An event available to the TJ community.</span>
 
-<span class="sd">        title</span>
-<span class="sd">            The title for the event</span>
-<span class="sd">        description</span>
-<span class="sd">            A description about the event</span>
-<span class="sd">        links</span>
-<span class="sd">            Not currently used</span>
-<span class="sd">        created_time</span>
-<span class="sd">            Time created (automatically set)</span>
-<span class="sd">        last_modified_time</span>
-<span class="sd">            Time last modified (automatically set)</span>
-<span class="sd">        time</span>
-<span class="sd">            The date and time of the event</span>
-<span class="sd">        location</span>
-<span class="sd">            Where the event is located</span>
-<span class="sd">        user</span>
-<span class="sd">            The user who created the event.</span>
-<span class="sd">        scheduled_activity</span>
-<span class="sd">            An EighthScheduledActivity that should be linked with the event.</span>
-<span class="sd">        announcement</span>
-<span class="sd">            An Announcement that should be linked with the event.</span>
-<span class="sd">        groups</span>
-<span class="sd">            Groups that the event is visible to.</span>
-<span class="sd">        attending</span>
-<span class="sd">            A ManyToManyField of User objects that are attending the event.</span>
-<span class="sd">        show_attending</span>
-<span class="sd">            Boolean, whether users can mark if they are attending or not attending.</span>
-<span class="sd">        approved</span>
-<span class="sd">            Boolean, whether the event has been approved and will be displayed.</span>
-<span class="sd">        approved_by</span>
-<span class="sd">            ForeignKey to User object, the user who approved the event.</span>
-<span class="sd">        rejected</span>
-<span class="sd">            Boolean, whether the event was rejected and shouldn&#39;t be shown in the</span>
-<span class="sd">            list of events that need to be approved.</span>
-<span class="sd">        rejected_by</span>
-<span class="sd">            ForeignKey to User object, the user who rejected the event.</span>
+<span class="sd">    title:</span>
+<span class="sd">        The title for the event</span>
+<span class="sd">    description:</span>
+<span class="sd">        A description about the event</span>
+<span class="sd">    links:</span>
+<span class="sd">        Not currently used</span>
+<span class="sd">    created_time:</span>
+<span class="sd">        Time created (automatically set)</span>
+<span class="sd">    last_modified_time:</span>
+<span class="sd">        Time last modified (automatically set)</span>
+<span class="sd">    time:</span>
+<span class="sd">        The date and time of the event</span>
+<span class="sd">    location:</span>
+<span class="sd">        Where the event is located</span>
+<span class="sd">    user:</span>
+<span class="sd">        The user who created the event.</span>
+<span class="sd">    scheduled_activity:</span>
+<span class="sd">        An EighthScheduledActivity that should be linked with the event.</span>
+<span class="sd">    announcement:</span>
+<span class="sd">        An Announcement that should be linked with the event.</span>
+<span class="sd">    groups:</span>
+<span class="sd">        Groups that the event is visible to.</span>
+<span class="sd">    attending:</span>
+<span class="sd">        A ManyToManyField of User objects that are attending the event.</span>
+<span class="sd">    show_attending:</span>
+<span class="sd">        Boolean, whether users can mark if they are attending or not attending.</span>
+<span class="sd">    approved:</span>
+<span class="sd">        Boolean, whether the event has been approved and will be displayed.</span>
+<span class="sd">    approved_by:</span>
+<span class="sd">        ForeignKey to User object, the user who approved the event.</span>
+<span class="sd">    rejected:</span>
+<span class="sd">        Boolean, whether the event was rejected and shouldn&#39;t be shown in the</span>
+<span class="sd">        list of events that need to be approved.</span>
+<span class="sd">    rejected_by:</span>
+<span class="sd">        ForeignKey to User object, the user who rejected the event.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">()</span>
@@ -251,8 +249,8 @@
     <span class="n">rejected_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;rejected_event&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Event.show_fuzzy_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.Event.show_fuzzy_date">[docs]</a>    <span class="k">def</span> <span class="nf">show_fuzzy_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return whether the event is in the next or previous 2 weeks.</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the event is in the next or previous 2 weeks.</span>
+
 <span class="sd">        Determines whether to display the fuzzy date.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -269,16 +267,14 @@
         <span class="k">return</span> <span class="bp">True</span></div>
 
 <div class="viewcode-block" id="Event.created_hook"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.forms.Event.created_hook">[docs]</a>    <span class="k">def</span> <span class="nf">created_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Run when an event is created.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Run when an event is created.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">):</span>
             <span class="c1"># Send approval email</span>
             <span class="n">event_approval_request</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the event was created after September 1st</span>
-<span class="sd">           of this school year.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the event was created after September 1st of this school year.&quot;&quot;&quot;</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="n">ann</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_time</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
