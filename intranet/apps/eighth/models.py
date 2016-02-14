@@ -569,7 +569,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
     @property
     def short_text(self):
-        """Display the date and block letter (mm/dd B, e.x. '9/1 B')
+        """Display the date and block letter (mm/dd B, for example: '9/1 B')
 
         """
         return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
