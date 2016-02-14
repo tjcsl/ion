@@ -1,2 +1,4 @@
 #!/bin/bash
-MYPYPATH=intranet/test/stubs mypy intranet
+export MYPYPATH=intranet/test/stubs
+echo "Checking static types..."
+mypy intranet
