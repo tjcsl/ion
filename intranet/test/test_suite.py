@@ -8,7 +8,7 @@ from django.test.utils import get_runner
 
 
 def run_tests():
-    """Wrapper for ./setup.py test"""
+    """Wrapper for ./setup.py test."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
     django.setup()
     test_runner = get_runner(settings)()

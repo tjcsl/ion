@@ -45,9 +45,10 @@ def log_auth(request, success):
 
 
 def get_bg_pattern():
-    """
-    Choose a background pattern image.
+    """Choose a background pattern image.
+
     One will be selected at random.
+
     """
     files = [
         "brushed.png",
@@ -72,8 +73,10 @@ def get_bg_pattern():
 
 
 def get_login_theme():
-    """
-    Load a custom login theme (e.x. snow)
+    """Load a custom login theme (e.x.
+
+    snow)
+
     """
     today = datetime.now().date()
     if today.month == 12 or today.month == 1:

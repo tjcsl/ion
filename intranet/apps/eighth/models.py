@@ -46,6 +46,7 @@ class EighthSponsor(AbstractBaseEighthModel):
         show_full_name
             Whether to always show the sponsor's full name
             (e.x. because there are two teachers named Lewis)
+
     """
 
     first_name = models.CharField(max_length=50)
@@ -78,7 +79,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 class EighthRoom(AbstractBaseEighthModel):
 
-    """Represents a room in which an eighth period activity can be held
+    """Represents a room in which an eighth period activity can be held.
 
     Attributes:
         name
@@ -225,19 +226,19 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def aid(self):
-        """ The publicly visible activity ID """
+        """The publicly visible activity ID."""
         return self.id
 
     @property
     def name_with_flags(self):
-        """Return the activity name with special, both blocks,
-        restricted, administrative, sticky, and deleted flags."""
+        """Return the activity name with special, both blocks, restricted, administrative, sticky,
+        and deleted flags."""
         return self._name_with_flags(True)
 
     @property
     def name_with_flags_no_restricted(self):
-        """Return the activity name with special, both blocks,
-        administrative, sticky, and deleted flags."""
+        """Return the activity name with special, both blocks, administrative, sticky, and deleted
+        flags."""
         return self._name_with_flags(False)
 
     def _name_with_flags(self, include_restricted, title=None):
@@ -298,15 +299,16 @@ class EighthActivity(AbstractBaseEighthModel):
         return list(avail)
 
     def change_id_to(self, new_id):
-        """ Changes the internal ID field.
-            Possible solution: https://djangosnippets.org/snippets/2691/ """
+        """Changes the internal ID field.
+
+        Possible solution: https://djangosnippets.org/snippets/2691/
+
+        """
         # EighthActivity.objects.filter(pk=self.pk).update(id=new_id)
         pass
 
     def get_active_schedulings(self):
-        """Return EighthScheduledActivity's of this activity
-           within the next two months.
-        """
+        """Return EighthScheduledActivity's of this activity within the next two months."""
         first_block = EighthBlock.objects.get_first_upcoming_block()
         two_months = datetime.datetime.now().date() + datetime.timedelta(days=62)
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=self)
@@ -317,10 +319,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def is_active(self):
-        """Return whether an activity is "active."
-           An activity is considered to be active if it
-           is scheduled within the next two months.
-        """
+        """Return whether an activity is "active." An activity is considered to be active if it is
+        scheduled within the next two months."""
         scheduled_activities = self.get_active_schedulings()
         return scheduled_activities.count() > 0
 
@@ -334,9 +334,8 @@ class EighthActivity(AbstractBaseEighthModel):
 class EighthBlockManager(models.Manager):
 
     def get_upcoming_blocks(self, max_number=-1):
-        """Gets the X number of upcoming blocks (that will take place
-        in the future). If there is no block in the future, the most
-        recent block will be returned.
+        """Gets the X number of upcoming blocks (that will take place in the future). If there is no
+        block in the future, the most recent block will be returned.
 
         Returns: A QuerySet of `EighthBlock` objects
 
@@ -355,9 +354,8 @@ class EighthBlockManager(models.Manager):
         return blocks
 
     def get_first_upcoming_block(self):
-        """Gets the first upcoming block (the first block that will
-        take place in the future). If there is no block in the future,
-        the most recent block will be returned
+        """Gets the first upcoming block (the first block that will take place in the future). If
+        there is no block in the future, the most recent block will be returned.
 
         Returns: the `EighthBlock` object
 
@@ -373,10 +371,10 @@ class EighthBlockManager(models.Manager):
         return block
 
     def get_next_upcoming_blocks(self):
-        """Gets the next upccoming blocks. (Finds the other blocks
-           that are occurring on the day of the first upcoming block.)
+        """Gets the next upccoming blocks. (Finds the other blocks that are occurring on the day of
+        the first upcoming block.)
 
-           Returns: A QuerySet of `EighthBlock` objects.
+        Returns: A QuerySet of `EighthBlock` objects.
 
         """
 
@@ -401,7 +399,7 @@ class EighthBlockManager(models.Manager):
         return block.get_surrounding_blocks()
 
     def get_blocks_this_year(self):
-        """ Get a list of blocks that occur this school year. """
+        """Get a list of blocks that occur this school year."""
         now = datetime.datetime.now().date()
         if now.month < 9:
             date_start = datetime.date(now.year - 1, 9, 1)
@@ -492,7 +490,10 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def get_surrounding_blocks(self):
         """Get the blocks around the one given.
-           Returns: a list of all of those blocks."""
+
+        Returns: a list of all of those blocks.
+
+        """
 
         next = self.next_blocks()
         prev = self.previous_blocks()
@@ -512,13 +513,19 @@ class EighthBlock(AbstractBaseEighthModel):
                  self.signup_time > now.time()))
 
     def date_in_past(self):
-        """Is the block's date in the past? (Has it not yet happened?)"""
+        """Is the block's date in the past?
+
+        (Has it not yet happened?)
+
+        """
         now = datetime.datetime.now()
         return (now.date() > self.date)
 
     def in_clear_absence_period(self):
         """Is the current date in the block's clear absence period?
-           (Should info on clearing the absence show?)
+
+        (Should info on clearing the absence show?)
+
         """
         now = datetime.datetime.now()
         two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
@@ -532,16 +539,16 @@ class EighthBlock(AbstractBaseEighthModel):
                  now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0)))
 
     def num_signups(self):
-        """ How many people have signed up?"""
+        """How many people have signed up?"""
         return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=User.objects.get_students()).count()
 
     def num_no_signups(self):
-        """ How many people have not signed up?"""
+        """How many people have not signed up?"""
         signup_users_count = User.objects.get_students().count()
         return signup_users_count - self.num_signups()
 
     def get_unsigned_students(self):
-        """ Return a list of Users who haven't signed up for an activity. """
+        """Return a list of Users who haven't signed up for an activity."""
         return User.objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
 
     def get_hidden_signups(self):
@@ -562,13 +569,14 @@ class EighthBlock(AbstractBaseEighthModel):
 
     @property
     def short_text(self):
-        """ Display the date and block letter (mm/dd B, e.x. "9/1 B") """
+        """Display the date and block letter (mm/dd B, e.x. '9/1 B')
+
+        """
         return ("{} {}".format(self.date.strftime("%m/%d"), self.block_letter))
 
     @property
     def is_this_year(self):
-        """Return whether the block occurs after September 1st
-           of this school year."""
+        """Return whether the block occurs after September 1st of this school year."""
         now = datetime.now().date()
         ann = self.date
         if now.month < 9:
@@ -590,11 +598,11 @@ class EighthBlock(AbstractBaseEighthModel):
 
 
 class EighthScheduledActivityManager(Manager):
-    """Model Manager for EighthScheduledActivity"""
+    """Model Manager for EighthScheduledActivity."""
 
     def for_sponsor(self, sponsor, include_cancelled=False):
-        """Return a QueryList of EighthScheduledActivities where the given
-        EighthSponsor is sponsoring.
+        """Return a QueryList of EighthScheduledActivities where the given EighthSponsor is
+        sponsoring.
 
         If a sponsorship is defined in an EighthActivity, it may be overridden
         on a block by block basis in an EighthScheduledActivity. Sponsors from
@@ -618,8 +626,7 @@ class EighthScheduledActivityManager(Manager):
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
 
-    """Represents the relationship between an activity and a block in
-    which it has been scheduled.
+    """Represents the relationship between an activity and a block in which it has been scheduled.
 
     Attributes:
         block : :class:`EighthBlock`
@@ -677,9 +684,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     @property
     def full_title(self):
-        """Gets the full title for the activity, appending the title of the
-        scheduled activity to the activity's name.
-        """
+        """Gets the full title for the activity, appending the title of the scheduled activity to
+        the activity's name."""
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         act_name = self.activity.name + cancelled_str
         if self.special and not self.activity.special:
@@ -688,9 +694,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     @property
     def title_with_flags(self):
-        """Gets the title for the activity, appending the title of the
-        scheduled activity to the activity's name and flags.
-        """
+        """Gets the title for the activity, appending the title of the scheduled activity to the
+        activity's name and flags."""
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str
         if self.special and not self.activity.special:
@@ -698,9 +703,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return name_with_flags
 
     def get_true_sponsors(self):
-        """Get the sponsors for the scheduled activity, taking into account
-        activity defaults and overrides.
-        """
+        """Get the sponsors for the scheduled activity, taking into account activity defaults and
+        overrides."""
 
         sponsors = self.sponsors.all()
         if len(sponsors) > 0:
@@ -713,6 +717,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         Returns:
             Boolean
+
         """
         sponsors = self.get_true_sponsors()
         for sponsor in sponsors:
@@ -723,10 +728,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def get_true_rooms(self):
-        """Get the rooms for the scheduled activity, taking into account
-        activity defaults and overrides.
-
-        """
+        """Get the rooms for the scheduled activity, taking into account activity defaults and
+        overrides."""
 
         rooms = self.rooms.all()
         if len(rooms) > 0:
@@ -735,10 +738,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return self.activity.rooms.all()
 
     def get_true_capacity(self):
-        """Get the capacity for the scheduled activity, taking into
-        account activity defaults and overrides.
-
-        """
+        """Get the capacity for the scheduled activity, taking into account activity defaults and
+        overrides."""
 
         c = self.capacity
         if c is not None:
@@ -762,9 +763,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return self.activity.special
 
     def is_full(self):
-        """Return whether the activity is full.
-
-        """
+        """Return whether the activity is full."""
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -772,9 +771,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_almost_full(self):
-        """Return whether the activity is almost full (>90%).
-
-        """
+        """Return whether the activity is almost full (>90%)."""
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -782,9 +779,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_overbooked(self):
-        """Return whether the activity is overbooked.
-
-        """
+        """Return whether the activity is overbooked."""
         capacity = self.get_true_capacity()
         if capacity != -1:
             num_signed_up = self.eighthsignup_set.count()
@@ -792,10 +787,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def is_too_early_to_signup(self, now=None):
-        """Return whether it is too early to sign up for the
-        activity if it is a presign (48 hour logic is here).
-
-        """
+        """Return whether it is too early to sign up for the activity if it is a presign (48 hour
+        logic is here)."""
         if now is None:
             now = datetime.datetime.now()
 
@@ -808,15 +801,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return (now < (activity_date - presign_period))
 
     def has_open_passes(self):
-        """Return whether there are passes that have not been acknowledged.
-
-        """
+        """Return whether there are passes that have not been acknowledged."""
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False)
 
     def get_viewable_members(self, user=None):
         """Get the list of members that you have permissions to view.
 
         Returns: List of members
+
         """
         members = []
         for member in self.members.all():
@@ -837,10 +829,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return sorted(members, key=lambda u: (u.last_name, u.first_name))
 
     def get_viewable_members_serializer(self, request):
-        """Get a QuerySet of User objects of students in the activity.
-        Needed for the EighthScheduledActivitySerializer.
+        """Get a QuerySet of User objects of students in the activity. Needed for the
+        EighthScheduledActivitySerializer.
 
         Returns: QuerySet
+
         """
         ids = []
         user = request.user
@@ -865,6 +858,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """Get the members that you do not have permission to view.
 
         Returns: List of members hidden based on their permission preferences
+
         """
         hidden_members = []
         for member in self.members.all():
@@ -915,8 +909,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         return False
 
     def add_user(self, user, request=None, force=False):
-        """Sign up a user to this scheduled activity if possible.
-        This is where the magic happens.
+        """Sign up a user to this scheduled activity if possible. This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
         unless the signup is forced.
@@ -1137,7 +1130,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def cancel(self):
         """Cancel an EighthScheduledActivity.
-        This does nothing besides set the cancelled flag and save the object.
+
+        This does nothing besides set the cancelled flag and save the
+        object.
+
         """
         # super(EighthScheduledActivity, self).save(*args, **kwargs)
 
@@ -1164,7 +1160,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.
-        This does nothing besides unset the cancelled flag and save the object.
+
+        This does nothing besides unset the cancelled flag and save the
+        object.
+
         """
 
         if self.cancelled:
@@ -1257,8 +1256,7 @@ class EighthSignup(AbstractBaseEighthModel):
     absence_emailed = models.BooleanField(default=False, blank=True)
 
     def validate_unique(self, *args, **kwargs):
-        """Checked whether more than one EighthSignup exists for a User
-        on a given EighthBlock."""
+        """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
         not_unique = (self.__class__
@@ -1275,8 +1273,7 @@ class EighthSignup(AbstractBaseEighthModel):
             })
 
     def remove_signup(self, user=None, force=False):
-        """Attempt to remove the EighthSignup if the user has permission
-        to do so."""
+        """Attempt to remove the EighthSignup if the user has permission to do so."""
 
         exception = eighth_exceptions.SignupException()
 

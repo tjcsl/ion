@@ -44,7 +44,7 @@ def add_group_view(request):
             try:
                 request.session["add_group_form"] = pickle.dumps(form)
             except TypeError:
-                """ Prevent pickle errors """
+                """Prevent pickle errors."""
                 pass
             return redirect("eighth_admin_dashboard")
     else:

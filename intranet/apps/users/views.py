@@ -29,6 +29,7 @@ def profile_view(request, user_id=None):
         user_id
             The ID of the user whose profile is being viewed. If not
             specified, show the user's own profile.
+
     """
     if request.user.is_eighthoffice and "full" not in request.GET and user_id is not None:
         return redirect("eighth_profile", user_id=user_id)
@@ -106,6 +107,7 @@ def picture_view(request, user_id, year=None):
         year
             The user's picture from this year is fetched. If not
             specified, use the preferred picture.
+
     """
     try:
         user = User.get_user(id=user_id)

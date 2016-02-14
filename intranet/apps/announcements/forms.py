@@ -8,10 +8,7 @@ from ..users.models import User
 
 
 class AnnouncementForm(forms.ModelForm):
-    """
-    A form for generating an announcement.
-
-    """
+    """A form for generating an announcement."""
 
     def __init__(self, *args, **kwargs):
         super(AnnouncementForm, self).__init__(*args, **kwargs)
@@ -55,10 +52,7 @@ class AnnouncementForm(forms.ModelForm):
 
 
 class AnnouncementRequestForm(forms.ModelForm):
-    """
-    A form for generating an announcement request.
-
-    """
+    """A form for generating an announcement request."""
 
     def __init__(self, *args, **kwargs):
         super(AnnouncementRequestForm, self).__init__(*args, **kwargs)

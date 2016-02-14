@@ -20,11 +20,10 @@ logger = logging.getLogger(__name__)
 
 
 def request_announcement_email(request, form, obj):
-    """
-        Send an announcement request email
+    """Send an announcement request email.
 
-        form: The announcement request form
-        obj: The announcement request object
+    form: The announcement request form
+    obj: The announcement request object
 
     """
 
@@ -57,11 +56,10 @@ def request_announcement_email(request, form, obj):
 
 
 def admin_request_announcement_email(request, form, obj):
-    """
-        Send an admin announcement request email
+    """Send an admin announcement request email.
 
-        form: The announcement request form
-        obj: The announcement request object
+    form: The announcement request form
+    obj: The announcement request object
 
     """
 
@@ -80,12 +78,11 @@ def admin_request_announcement_email(request, form, obj):
 
 
 def announcement_approved_email(request, obj, req):
-    """
-        Email the requested teachers and submitter whenever an
-        administrator approves an announcement request.
+    """Email the requested teachers and submitter whenever an administrator approves an announcement
+    request.
 
-        obj: the Announcement object
-        req: the AnnouncementRequest object
+    obj: the Announcement object
+    req: the AnnouncementRequest object
 
     """
     subject = "Announcement Approved: {}".format(obj.title)
@@ -134,10 +131,10 @@ def announcement_approved_email(request, obj, req):
 
 
 def announcement_posted_email(request, obj, send_all=False):
-    """
-        Send a notification posted email
+    """Send a notification posted email.
 
-        obj: The announcement object
+    obj: The announcement object
+
     """
 
     if settings.EMAIL_ANNOUNCEMENTS:

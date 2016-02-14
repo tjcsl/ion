@@ -21,9 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_fcps_emerg(request):
-    """
-    Return FCPS emergency information
-    """
+    """Return FCPS emergency information."""
     try:
         emerg = get_emerg()
     except Exception:
@@ -38,8 +36,7 @@ def get_fcps_emerg(request):
 
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
-    """Generate a list of information about a block and a student's
-    current activity signup.
+    """Generate a list of information about a block and a student's current activity signup.
 
     Returns:
         schedule

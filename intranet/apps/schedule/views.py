@@ -164,10 +164,8 @@ def get_day_data(firstday, daynum):
 
 @schedule_admin_required
 def do_default_fill(request):
-    """Change all Mondays to 'Anchor Day'
-       Change all Tuesday/Thursdays to 'Blue Day'
-       Change all Wednesday/Fridays to 'Red Day'
-    """
+    """Change all Mondays to 'Anchor Day' Change all Tuesday/Thursdays to 'Blue Day' Change all
+    Wednesday/Fridays to 'Red Day'."""
     monday = 0
     tuesday = 1
     wednesday = 2

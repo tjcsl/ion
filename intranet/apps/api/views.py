@@ -23,6 +23,7 @@ def api_root(request, format=None):
     The general form of the api link (with /api/ assumed to be prepended) is shown, along with an example URL.
 
     All of the API methods, except for those relating to the Bell Schedule, require authentication.
+
     """
 
     views = OrderedDict((

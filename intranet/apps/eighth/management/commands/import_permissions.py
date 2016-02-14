@@ -13,9 +13,7 @@ class Command(BaseCommand):
     help = "Transfer attendance data"
 
     def handle(self, **options):
-        """
-            Exported "eighth_activity_permissions" table in CSV format
-        """
+        """Exported "eighth_activity_permissions" table in CSV format."""
         perm_map = {}
         with open('eighth_activity_permissions.csv', 'r') as absperms:
             perms = csv.reader(absperms)
