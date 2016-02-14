@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
 
 from django.core.management.base import BaseCommand
 
-import json
-from intranet.apps.users.models import User
-from intranet.apps.schedule.notifications import period_start_end_data
 from intranet.apps.notifications.views import gcm_post, get_gcm_schedule_uids
+from intranet.apps.schedule.notifications import period_start_end_data
+from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
