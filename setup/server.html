@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>Setting up the Server &mdash; TJ Intranet v3 (Build #1354) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1353)',
+        VERSION:     'v3 (Build #1354)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1353) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1354) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Setting up Vagrant" href="vagrant.html" />
     <link rel="prev" title="Setting up Your Sandbox Manually" href="sandbox.html" />
@@ -167,7 +167,7 @@
 <div class="section" id="portage-use-flags">
 <h2>Portage USE flags<a class="headerlink" href="#portage-use-flags" title="Permalink to this headline">¶</a></h2>
 <p>Add the following flags to <code class="docutils literal"><span class="pre">/etc/portage/package.use</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre>net-nds/openldap kerberos sasl
+<div class="highlight-python"><div class="highlight"><pre><span></span>net-nds/openldap kerberos sasl
 dev-python/python-ldap sasl
 dev-libs/cyrus-sasl kerberos ldap
 </pre></div>
@@ -177,12 +177,12 @@ dev-libs/cyrus-sasl kerberos ldap
 <h2>LDAP Configuration<a class="headerlink" href="#ldap-configuration" title="Permalink to this headline">¶</a></h2>
 <p>In /etc/slapd.conf on the ldap server, change the <cite>suffix</cite> config option to <cite>dc=tjhsst,dc=edu</cite></p>
 <p>Copy the iodine ldap schema to /etc.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ cp intranet/static/ldap/iodine.schema /etc/openldap/schema/
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cp intranet/static/ldap/iodine.schema /etc/openldap/schema/
 $ cp intranet/static/ldap/slapd.acl /etc/openldap/
 </pre></div>
 </div>
 <p>In order to have LDAP work properly, you have to include the following schemas in <code class="docutils literal"><span class="pre">/etc/slapd.conf</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">include</span>         <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">openldap</span><span class="o">/</span><span class="n">schema</span><span class="o">/</span><span class="n">cosine</span><span class="o">.</span><span class="n">schema</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">include</span>         <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">openldap</span><span class="o">/</span><span class="n">schema</span><span class="o">/</span><span class="n">cosine</span><span class="o">.</span><span class="n">schema</span>
 <span class="n">include</span>         <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">openldap</span><span class="o">/</span><span class="n">schema</span><span class="o">/</span><span class="n">nis</span><span class="o">.</span><span class="n">schema</span>
 <span class="n">include</span>         <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">openldap</span><span class="o">/</span><span class="n">schema</span><span class="o">/</span><span class="n">inetorgperson</span><span class="o">.</span><span class="n">schema</span>
 <span class="n">include</span>         <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">openldap</span><span class="o">/</span><span class="n">schema</span><span class="o">/</span><span class="n">dyngroup</span><span class="o">.</span><span class="n">schema</span>
@@ -191,43 +191,43 @@ $ cp intranet/static/ldap/slapd.acl /etc/openldap/
 </pre></div>
 </div>
 <p>You then need to import the base ldif.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ ./scripts/setup_ldap.sh
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./scripts/setup_ldap.sh
 </pre></div>
 </div>
 </div>
 <div class="section" id="postgresql">
 <h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
 <p>First, install the PostgreSQL server.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge dev-db/postgresql
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge dev-db/postgresql
 </pre></div>
 </div>
 <p>The following command will print out the command you should run to configure postgres.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ grep <span class="s2">&quot;config =dev-db/postgres&quot;</span> /var/log/portage/elog/summary.log
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ grep <span class="s2">&quot;config =dev-db/postgres&quot;</span> /var/log/portage/elog/summary.log
 </pre></div>
 </div>
 <p>Run the printed command. Then start the PostgreSQL server.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ /etc/init.d/postgresql-9.4 start
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ /etc/init.d/postgresql-9.4 start
 </pre></div>
 </div>
 <p>Add the Postgres service to the default runlevel.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ rc-update add postgresql-9.4 default
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ rc-update add postgresql-9.4 default
 </pre></div>
 </div>
 <p>Become root, then run the following command to add an admin user to the postgres group. Replace &lt;admin username&gt; with the username of someone you would like to make a Postgres admin.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ usermod -aG postgres &lt;admin username&gt;
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ usermod -aG postgres &lt;admin username&gt;
 </pre></div>
 </div>
 <p>Become the user <code class="docutils literal"><span class="pre">postgres</span></code>.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ su - postgres
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ su - postgres
 </pre></div>
 </div>
 <p>Create the admin user in postgres</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ createuser -s &lt;admin username&gt;
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ createuser -s &lt;admin username&gt;
 </pre></div>
 </div>
 <p>Exit from <code class="docutils literal"><span class="pre">su</span></code>. Repeat the last three steps (since you became root) for all the users who should have admin Postgres access. Then exit from <code class="docutils literal"><span class="pre">ksu</span></code>.</p>
 <p>Create the production Ion database.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ createdb -h localhost ion
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ createdb -h localhost ion
 $ createdb -h localhost ion-dev
 </pre></div>
 </div>
@@ -235,22 +235,22 @@ $ createdb -h localhost ion-dev
 Libreoffice
 &#8212;</p>
 <p>Install Libreoffice to support printing doc/docx files.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge app-office/libreoffice
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge app-office/libreoffice
 </pre></div>
 </div>
 </div>
 <div class="section" id="redis">
 <h2>Redis<a class="headerlink" href="#redis" title="Permalink to this headline">¶</a></h2>
 <p>Install Redis.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge redis
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge redis
 </pre></div>
 </div>
 <p>Start Redis.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ /etc/init.d/redis start
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ /etc/init.d/redis start
 </pre></div>
 </div>
 <p>Add the Redis service to the default runlevel.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ rc-update add redis default
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ rc-update add redis default
 </pre></div>
 </div>
 <p>Note: It may be necessary to bump the amount of memory allocated to redis to handle a large number of concurrent sessions.
@@ -260,7 +260,7 @@ Warning: If sessions are constantly being logged-out, this could be a symptom of
 <div class="section" id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
 <p>Install the <code class="docutils literal"><span class="pre">python-ldap</span></code> module, the Cyrus-SASL C library, and the Pip package manager.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge net-nds/openldap
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge net-nds/openldap
 $ emerge dev-libs/cyrus-sasl
 $ emerge python-ldap
 $ emerge dev-python/pip
@@ -270,15 +270,15 @@ $ emerge dev-python/pip
 <div class="section" id="virtualenv">
 <h2>Virtualenv<a class="headerlink" href="#virtualenv" title="Permalink to this headline">¶</a></h2>
 <p>Create a directory for virualenvs.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ mkdir /etc/local/virtualenvs
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ mkdir /etc/local/virtualenvs
 </pre></div>
 </div>
 <p>Install virtualenv and virtualenvwrapper.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ pip install virtualenv virtualenvwrapper
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install virtualenv virtualenvwrapper
 </pre></div>
 </div>
 <p>Append the following to <code class="docutils literal"><span class="pre">/etc/bash/bashrc</span></code>.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="c1"># Virtualenv/Pip config</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Virtualenv/Pip config</span>
 <span class="nb">export</span> <span class="nv">VIRTUALENV_DISTRIBUTE</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span> <span class="nv">PIP_VIRTUALENV_BASE</span><span class="o">=</span>/usr/local/virtualenvs
 <span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span>/usr/local/virtualenvs
@@ -288,70 +288,70 @@ $ emerge dev-python/pip
 </pre></div>
 </div>
 <p>Reload the bashrc.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ <span class="nb">source</span> /etc/bash/bashrc
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> /etc/bash/bashrc
 </pre></div>
 </div>
 <p>Make a production virtualenv.</p>
-<div class="highlight-bash"><div class="highlight"><pre>mkvirtualenv --python<span class="o">=</span><span class="k">$(</span>which python3.4<span class="k">)</span> ion
+<div class="highlight-bash"><div class="highlight"><pre><span></span>mkvirtualenv --python<span class="o">=</span><span class="k">$(</span>which python3.4<span class="k">)</span> ion
 </pre></div>
 </div>
 <p>Confirm that your prompt now appears something like this:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>ion<span class="o">)</span>awilliam@ion ~ $
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="o">(</span>ion<span class="o">)</span>awilliam@ion ~ $
 </pre></div>
 </div>
 </div>
 <div class="section" id="git">
 <h2>Git<a class="headerlink" href="#git" title="Permalink to this headline">¶</a></h2>
 <p>Install Git.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge dev-vcs/git
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge dev-vcs/git
 </pre></div>
 </div>
 </div>
 <div class="section" id="set-up-the-production-code-base">
 <h2>Set up the production code base<a class="headerlink" href="#set-up-the-production-code-base" title="Permalink to this headline">¶</a></h2>
 <p>Exit from root. Create the local shared Git repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ <span class="nb">cd</span> /shared/git
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /shared/git
 </pre></div>
 </div>
 <p>Set up SSH access to Github by following <a class="reference external" href="https://help.github.com/articles/generating-ssh-keys">this tutorial</a>. Then clone the Ion Git repository and give all users in the &#8220;ion&#8221; group access.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ git clone --bare git@github.com:tjcsl/ion.git
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git clone --bare git@github.com:tjcsl/ion.git
 $ <span class="nb">cd</span> ion.git
 $ git config core.sharedRepository <span class="nb">true</span>
 $ chgrp -R ion .
 </pre></div>
 </div>
 <p>Rename the main branch to &#8220;upstream&#8221; (<code class="docutils literal"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">rename</span></code> doesn&#8217;t seem to work in this situation).</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ git remote add upstream git@github.com:tjcsl/ion.git
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git remote add upstream git@github.com:tjcsl/ion.git
 $ git fetch upstream
 $ git remote rm origin
 </pre></div>
 </div>
 <p>Add the Git hook to automatically push changes to Github by creating a post-receive hook (<code class="docutils literal"><span class="pre">touch</span> <span class="pre">hooks/post-receive</span></code>) and appending the following to that file:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="ch">#!/bin/bash</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 git push --all --tags github
 </pre></div>
 </div>
 <p>Make the post-receive hook executable.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ chmod +x hooks/post-receive
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ chmod +x hooks/post-receive
 </pre></div>
 </div>
 <p>Create a directory for the production code.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ ksu
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ksu
 $ mkdir /var/www
 $ <span class="nb">cd</span> /var/www
 </pre></div>
 </div>
 <p>Clone the shared repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ git clone /shared/git/ion.git
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ git clone /shared/git/ion.git
 </pre></div>
 </div>
 <p>Ensure that your prompt still starts with <code class="docutils literal"><span class="pre">(ion)</span></code>. If it doesn&#8217;t, run the following.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ workon ion
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ workon ion
 </pre></div>
 </div>
 <p>Install all of the dependencies.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ pip install -U -r ion/requirements/production.txt
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install -U -r ion/requirements/production.txt
 </pre></div>
 </div>
 <p>Initialize the ldap db.
@@ -362,50 +362,50 @@ $ <span class="nb">cd</span> /var/www
 <div class="section" id="nginx">
 <h2>Nginx<a class="headerlink" href="#nginx" title="Permalink to this headline">¶</a></h2>
 <p>Install Nginx.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ emerge www-servers/nginx
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ emerge www-servers/nginx
 </pre></div>
 </div>
 <p>Replace <code class="docutils literal"><span class="pre">/etc/nginx/nginx.conf</span></code> with the config file in the Ion git repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ ksu
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ksu
 $ mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
 $ cp /var/www/ion/extras/nginx/nginx.conf /etc/nginx/nginx.conf
 </pre></div>
 </div>
 <p>Start Nginx.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ /etc/init.d/nginx start
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ /etc/init.d/nginx start
 </pre></div>
 </div>
 <p>Add the Nginx service to the default runlevel.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ rc-update add nginx default
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ rc-update add nginx default
 </pre></div>
 </div>
 </div>
 <div class="section" id="supervisor">
 <h2>Supervisor<a class="headerlink" href="#supervisor" title="Permalink to this headline">¶</a></h2>
 <p>Deactivate the virtualenv if your prompt still starts with (ion).</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ deactivate
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ deactivate
 </pre></div>
 </div>
 <p>Install Supervisor.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ pip install supervisor
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install supervisor
 </pre></div>
 </div>
 <p>Add the Supervisor config file from the Ion repository.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ ksu
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ksu
 $ cp /var/www/ion/extras/supervisord.conf /etc/supervisord.conf
 </pre></div>
 </div>
 <p>Add the init.d script from the Ion repository. (Based on the script from <a class="reference external" href="https://github.com/Supervisor/initscripts/blob/master/gentoo-matagus">here</a>)</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ cp /var/www/ion/extras/supervisord /etc/init.d/
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cp /var/www/ion/extras/supervisord /etc/init.d/
 $ chmod +x /etc/init.d/supervisord
 </pre></div>
 </div>
 <p>Start Supervisor.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ /etc/init.d/supervisord start
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ /etc/init.d/supervisord start
 </pre></div>
 </div>
 <p>Add the Supervisor service to the default runlevel.</p>
-<div class="highlight-bash"><div class="highlight"><pre>$ rc-update add supervisord default
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ rc-update add supervisord default
 </pre></div>
 </div>
 </div>
