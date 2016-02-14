@@ -82,8 +82,7 @@ def files_auth(request):
 
 
 def get_authinfo(request):
-    """Get authentication info from the encrypted message.
-    """
+    """Get authentication info from the encrypted message."""
     if (("files_iv" not in request.session) or
             ("files_text" not in request.session) or
             ("files_key" not in request.COOKIES)):
@@ -110,9 +109,7 @@ def get_authinfo(request):
 
 
 def windows_dir_format(host_dir, user):
-    """Format a string for the location of the user's folder on the
-       Windows (TJ03) fileserver.
-    """
+    """Format a string for the location of the user's folder on the Windows (TJ03) fileserver."""
     grade_folders = {
         9: "Freshman M:",
         10: "Sophomore M:",
@@ -133,9 +130,7 @@ def windows_dir_format(host_dir, user):
 
 @login_required
 def files_type(request, fstype=None):
-    """Do all processing (directory listing, file downloads) for a
-       given filesystem.
-    """
+    """Do all processing (directory listing, file downloads) for a given filesystem."""
     try:
         host = Host.objects.get(code=fstype)
     except Host.DoesNotExist:

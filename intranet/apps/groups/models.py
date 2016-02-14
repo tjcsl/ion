@@ -5,9 +5,8 @@ from django.db import models
 
 
 class GroupManager(auth_models.GroupManager):
-    """ This GroupManager model is really just the default Django
-        django.contrib.auth.models.GroupManager, just with an extra method.
-    """
+    """This GroupManager model is really just the default Django
+    django.contrib.auth.models.GroupManager, just with an extra method."""
 
     def student_visible(self):
         """Return a list of groups that are student-visible.

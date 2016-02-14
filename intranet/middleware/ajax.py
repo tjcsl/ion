@@ -4,8 +4,10 @@ from django.http import HttpResponseRedirect
 
 class AjaxNotAuthenticatedMiddleWare(object):
 
-    """Django doesn't handle login redirects with AJAX very nicely,
-    so we have to work around the default behavior a little. If a user's
+    """Django doesn't handle login redirects with AJAX very nicely, so we have to work around the
+    default behavior a little.
+
+    If a user's
     session has expired, but they still have a window open, they client
     may send AJAX requests to a view wrapped in @login_required or
     something similar. When this happens, Django ``302`` redirects to

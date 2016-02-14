@@ -42,16 +42,14 @@ class LDAPFilter(object):
 
     @staticmethod
     def attribute_in_list(attribute, values):
-        """Returns a filter for selecting all entries for which a
-        specified attribute is contained in a specified list of values.
-        """
+        """Returns a filter for selecting all entries for which a specified attribute is contained
+        in a specified list of values."""
         conditions = (attribute + "=" + v for v in values)
         return LDAPFilter.or_filter(*conditions)
 
     @staticmethod
     def all_users():
-        """Returns a filter for selecting all user objects in LDAP
-        """
+        """Returns a filter for selecting all user objects in LDAP."""
 
         user_object_classes = sorted(list(settings.LDAP_OBJECT_CLASSES.values()))
         return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
@@ -59,8 +57,7 @@ class LDAPFilter(object):
 
 class LDAPConnection(object):
 
-    """Represents an LDAP connection with wrappers for the raw ldap
-    queries.
+    """Represents an LDAP connection with wrappers for the raw ldap queries.
 
     Attributes:
         conn
@@ -72,10 +69,10 @@ class LDAPConnection(object):
     def conn(self):
         """Lazily load and return the raw connection from threadlocals.
 
-        Connect to the LDAP server specified in settings and bind
-        using the GSSAPI protocol. The requisite KRB5CCNAME
-        environmental variable should have already been set by the
-        SetKerberosCache middleware.
+        Connect to the LDAP server specified in settings and bind using
+        the GSSAPI protocol. The requisite KRB5CCNAME environmental
+        variable should have already been set by the SetKerberosCache
+        middleware.
 
         """
         ldap_exceptions = (ldap3.LDAPExceptionError,)
@@ -103,10 +100,7 @@ class LDAPConnection(object):
         return _thread_locals.ldap_conn
 
     def did_use_simple_bind(self):
-        """Returns whether a simple bind was used, or ``False`` for an
-        uninitialized connection.
-
-        """
+        """Returns whether a simple bind was used, or ``False`` for an uninitialized connection."""
 
         return getattr(_thread_locals, "simple_bind", False)
 

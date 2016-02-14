@@ -24,7 +24,7 @@ class AuthenticateForm(AuthenticationForm):
     password = forms.CharField(required=True, widget=widgets.PasswordInput(attrs={"placeholder": "Password"}), error_messages={"required": "Invalid password", "inactive": "Access disallowed."})
 
     def is_valid(self):
-        """Validates the username and password in the form"""
+        """Validates the username and password in the form."""
         form = super(AuthenticateForm, self).is_valid()
         for f, error in self.errors.items():
             if f != "__all__":

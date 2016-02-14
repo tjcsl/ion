@@ -8,9 +8,7 @@ from ...test.ion_test import IonTestCase
 
 
 class DynamicGroupTest(IonTestCase):
-    """
-    Tests creating dynamic groups.
-    """
+    """Tests creating dynamic groups."""
 
     def test_dynamic_groups(self):
         out = StringIO()

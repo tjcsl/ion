@@ -560,9 +560,8 @@ if SHOW_DEBUG_TOOLBAR:
     ]
 
     def debug_toolbar_callback(request):
-        """Show the debug toolbar to those with the Django staff permission, excluding
-           the Eighth Period office.
-        """
+        """Show the debug toolbar to those with the Django staff permission, excluding the Eighth
+        Period office."""
         if request.is_ajax():
             return False
 

@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def events_view(request):
-    """
-        Events homepage. Shows a list of events occurring in the next week, month, and future.
+    """Events homepage.
+
+    Shows a list of events occurring in the next week, month, and
+    future.
 
     """
     # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
@@ -101,11 +103,10 @@ def events_view(request):
 
 @login_required
 def join_event_view(request, id):
-    """
-        Join event page. If a POST request, actually add or remove the attendance of
-        the current user. Otherwise, display a page with confirmation.
+    """Join event page. If a POST request, actually add or remove the attendance of the current
+    user. Otherwise, display a page with confirmation.
 
-        id: event id
+    id: event id
 
     """
     # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
@@ -136,13 +137,11 @@ def join_event_view(request, id):
 
 @login_required
 def event_roster_view(request, id):
-    """
-        Show the event roster. Users with hidden eighth period permissions will not be
-        displayed. Users will be able to view all other users, along with a count of the
-        number of hidden users. (Same as 8th roster page.) Admins will see a full roster
-        at the bottom.
+    """Show the event roster. Users with hidden eighth period permissions will not be displayed.
+    Users will be able to view all other users, along with a count of the number of hidden users.
+    (Same as 8th roster page.) Admins will see a full roster at the bottom.
 
-        id: event id
+    id: event id
 
     """
 
@@ -172,10 +171,11 @@ def event_roster_view(request, id):
 
 @login_required
 def add_event_view(request):
-    """
-        Add event page. Currently, there is an approval process for events.
-        If a user is an events administrator, they can create events directly.
-        Otherwise, their event is added in the system but must be approved.
+    """Add event page.
+
+    Currently, there is an approval process for events. If a user is an
+    events administrator, they can create events directly. Otherwise,
+    their event is added in the system but must be approved.
 
     """
     # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
@@ -219,11 +219,10 @@ def add_event_view(request):
 
 @login_required
 def modify_event_view(request, id=None):
-    """
-        Modify event page. You may only modify an event if you were the creator or you are an
-        administrator.
+    """Modify event page. You may only modify an event if you were the creator or you are an
+    administrator.
 
-        id: event id
+    id: event id
 
     """
     event = get_object_or_404(Event, id=id)
@@ -265,11 +264,10 @@ def modify_event_view(request, id=None):
 
 @login_required
 def delete_event_view(request, id):
-    """
-        Delete event page. You may only delete an event if you were the creator or you are an
-        administrator. Confirmation page if not POST.
+    """Delete event page. You may only delete an event if you were the creator or you are an
+    administrator. Confirmation page if not POST.
 
-        id: event id
+    id: event id
 
     """
     event = get_object_or_404(Event, id=id)

@@ -27,24 +27,21 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def view_announcements(request):
-    """ Show the dashboard with only announcements.
-    """
+    """Show the dashboard with only announcements."""
     return dashboard_view(request, show_widgets=False)
 
 
 @login_required
 def view_announcements_archive(request):
-    """ Show the dashboard with only announcements,
-        showing expired posts.
-    """
+    """Show the dashboard with only announcements, showing expired posts."""
     return dashboard_view(request, show_widgets=False, show_expired=True)
 
 
 def announcement_posted_hook(request, obj):
-    """ Runs whenever a new announcement is created, or
-        a request is approved and posted.
+    """Runs whenever a new announcement is created, or a request is approved and posted.
 
-        obj: The Announcement object
+    obj: The Announcement object
+
     """
     logger.debug("Announcement posted")
 
@@ -70,19 +67,18 @@ def announcement_posted_hook(request, obj):
 
 
 def announcement_approved_hook(request, obj, req):
-    """ Runs whenever an administrator approves an
-        announcement request.
+    """Runs whenever an administrator approves an announcement request.
 
-        obj: the Announcement object
-        req: the AnnouncementRequest object
+    obj: the Announcement object
+    req: the AnnouncementRequest object
+
     """
     announcement_approved_email(request, obj, req)
 
 
 @login_required
 def request_announcement_view(request):
-    """ The request announcement page
-    """
+    """The request announcement page."""
     if request.method == "POST":
         form = AnnouncementRequestForm(request.POST)
         logger.debug(form)
@@ -134,10 +130,10 @@ def request_announcement_view(request):
 
 @login_required
 def approve_announcement_view(request, req_id):
-    """ The approve announcement page.
-        Teachers will be linked to this page from an email.
+    """The approve announcement page. Teachers will be linked to this page from an email.
 
-        req_id: The ID of the AnnouncementRequest
+    req_id: The ID of the AnnouncementRequest
+
     """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
@@ -183,10 +179,11 @@ def approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def admin_approve_announcement_view(request, req_id):
-    """ The administrator approval announcement request page.
-        Admins will view this page through the UI.
+    """The administrator approval announcement request page. Admins will view this page through the
+    UI.
 
-        req_id: The ID of the AnnouncementRequest
+    req_id: The ID of the AnnouncementRequest
+
     """
     req = get_object_or_404(AnnouncementRequest, id=req_id)
 
@@ -242,8 +239,7 @@ def admin_approve_announcement_view(request, req_id):
 
 @announcements_admin_required
 def add_announcement_view(request):
-    """ Add an announcement
-    """
+    """Add an announcement."""
     if request.method == "POST":
         form = AnnouncementForm(request.POST)
         logger.debug(form)
@@ -265,9 +261,10 @@ def add_announcement_view(request):
 
 @login_required
 def view_announcement_view(request, id):
-    """ View an announcement
+    """View an announcement.
 
-        id: announcement id
+    id: announcement id
+
     """
     announcement = get_object_or_404(Announcement, id=id)
 
@@ -276,9 +273,10 @@ def view_announcement_view(request, id):
 
 @announcements_admin_required
 def modify_announcement_view(request, id=None):
-    """ Modify an announcement
+    """Modify an announcement.
 
-        id: announcement id
+    id: announcement id
+
     """
     if request.method == "POST":
         announcement = Announcement.objects.get(id=id)
@@ -311,9 +309,10 @@ def modify_announcement_view(request, id=None):
 
 @announcements_admin_required
 def delete_announcement_view(request, id):
-    """ Delete an announcement
+    """Delete an announcement.
 
-        id: announcement id
+    id: announcement id
+
     """
     if request.method == "POST":
         post_id = None

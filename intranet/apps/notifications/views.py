@@ -52,9 +52,11 @@ def android_setup_view(request):
 @csrf_exempt
 def chrome_getdata_view(request):
     """Get the data of the last notification sent to the current user.
-    This is needed because Chrome, as of version 44, doesn't support sending a data
-    payload to a notification. Thus, information on what the notification is actually for
-    must be manually fetched.
+
+    This is needed because Chrome, as of version 44, doesn't support
+    sending a data payload to a notification. Thus, information on what
+    the notification is actually for must be manually fetched.
+
     """
     data = {}
     if request.user.is_authenticated():

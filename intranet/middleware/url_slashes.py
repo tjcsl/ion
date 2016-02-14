@@ -6,10 +6,9 @@ class FixSlashes(object):
     def process_request(self, request):
         """Add or remove trailing slashes where needed.
 
-        Note that there is no HTTP redirection actually happening.
-        This just fixes the trailing slashes before the URLs are matched
-        to any URL patterns by changing the request's internal
-        properties.
+        Note that there is no HTTP redirection actually happening. This
+        just fixes the trailing slashes before the URLs are matched to
+        any URL patterns by changing the request's internal properties.
 
         """
 

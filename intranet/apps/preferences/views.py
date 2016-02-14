@@ -16,9 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_personal_info(user):
-    """Get a user's personal info attributes to pass as an initial
-       value to a PersonalInformationForm
-    """
+    """Get a user's personal info attributes to pass as an initial value to a
+    PersonalInformationForm."""
     # number of additional phones (other_phones)
     num_phones = len(user.other_phones or [])
     num_emails = len(user.emails or [])
@@ -149,9 +148,8 @@ def save_personal_info(request, user):
 
 
 def get_preferred_pic(user):
-    """Get a user's preferred picture attributes to pass as an initial
-       value to a PreferredPictureForm.
-    """
+    """Get a user's preferred picture attributes to pass as an initial value to a
+    PreferredPictureForm."""
 
     preferred_pic = {
         "preferred_photo": user.preferred_photo
@@ -188,9 +186,7 @@ def save_preferred_pic(request, user):
 
 
 def get_privacy_options(user):
-    """Get a user's privacy options to pass as an initial value to
-       a PrivacyOptionsForm.
-    """
+    """Get a user's privacy options to pass as an initial value to a PrivacyOptionsForm."""
 
     privacy_options = {}
 
@@ -237,9 +233,8 @@ def save_privacy_options(request, user):
 
 
 def get_notification_options(user):
-    """Get a user's notification options to pass as an initial value to
-       a NotificationOptionsForm.
-    """
+    """Get a user's notification options to pass as an initial value to a
+    NotificationOptionsForm."""
 
     notification_options = {}
     notification_options["receive_news_emails"] = user.receive_news_emails
@@ -292,8 +287,7 @@ def save_gcm_options(request, user):
 
 @login_required
 def preferences_view(request):
-    """View and process updates to the preferences page.
-    """
+    """View and process updates to the preferences page."""
     user = request.user
 
     # Clear cache on every pageload
@@ -353,8 +347,7 @@ def preferences_view(request):
 
 @login_required
 def privacy_options_view(request):
-    """View and edit privacy options for a user.
-    """
+    """View and edit privacy options for a user."""
     if "user" in request.GET:
         user = User.objects.get(id=request.GET.get("user"))
     elif "student_id" in request.GET:

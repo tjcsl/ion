@@ -19,12 +19,10 @@ def request():
 
 class ThreadLocalsMiddleware(object):
 
-    """Stores the current authorized User object in thread locals for
-    access in models (and elsewhere) without passing the user around as
-    an argument.
-    """
+    """Stores the current authorized User object in thread locals for access in models (and
+    elsewhere) without passing the user around as an argument."""
 
     def process_request(self, request):
-        """Adds the request to thread locals"""
+        """Adds the request to thread locals."""
 
         _thread_locals.request = request

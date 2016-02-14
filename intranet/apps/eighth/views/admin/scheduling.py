@@ -419,7 +419,7 @@ unsignup_students_view = eighth_admin_required(
 
 @eighth_admin_required
 def transfer_students_action(request):
-    """ Do the actual process of transferring students."""
+    """Do the actual process of transferring students."""
     if "source_act" in request.GET:
         source_act = EighthScheduledActivity.objects.get(id=request.GET.get("source_act"))
     elif "source_act" in request.POST:

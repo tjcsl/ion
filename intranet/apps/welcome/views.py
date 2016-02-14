@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def student_welcome_view(request):
-    """ Welcome/first run page for students. """
+    """Welcome/first run page for students."""
     if not request.user.is_student:
         return redirect("index")
     context = {
