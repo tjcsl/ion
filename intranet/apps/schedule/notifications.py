@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+
 from .views import schedule_context
 
 logger = logging.getLogger(__name__)
