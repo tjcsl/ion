@@ -237,8 +237,8 @@ def room_utilization_action(request, start_id, end_id):
         "show_listing": show_listing,
         "show_all_rooms": show_all_rooms
     }
-
-    if show_listing:
+    get_csv = request.resolver_match.url_name == "eighth_admin_room_utilization_csv"
+    if show_listing or get_csv:
         sched_acts = (EighthScheduledActivity.objects
                                              .exclude(activity__deleted=True))
         # .exclude(cancelled=True) # include cancelled activities
@@ -278,7 +278,7 @@ def room_utilization_action(request, start_id, end_id):
             "room_ids": [int(i) for i in room_ids]
         })
 
-    if request.resolver_match.url_name == "eighth_admin_room_utilization_csv":
+    if get_csv:
         response = http.HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=\"room_utilization.csv\""
 
