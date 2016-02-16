@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.rooms &mdash; TJ Intranet v3 (Build #1357) documentation</title>
+    <title>intranet.apps.eighth.views.admin.rooms &mdash; TJ Intranet v3 (Build #1359) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1357)',
+        VERSION:     'v3 (Build #1359)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1357) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1359) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -385,8 +385,8 @@
         <span class="s2">&quot;show_listing&quot;</span><span class="p">:</span> <span class="n">show_listing</span><span class="p">,</span>
         <span class="s2">&quot;show_all_rooms&quot;</span><span class="p">:</span> <span class="n">show_all_rooms</span>
     <span class="p">}</span>
-
-    <span class="k">if</span> <span class="n">show_listing</span><span class="p">:</span>
+    <span class="n">get_csv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_room_utilization_csv&quot;</span>
+    <span class="k">if</span> <span class="n">show_listing</span> <span class="ow">or</span> <span class="n">get_csv</span><span class="p">:</span>
         <span class="n">sched_acts</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span>
                                              <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
         <span class="c1"># .exclude(cancelled=True) # include cancelled activities</span>
@@ -426,7 +426,7 @@
             <span class="s2">&quot;room_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">room_ids</span><span class="p">]</span>
         <span class="p">})</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_room_utilization_csv&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">get_csv</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
         <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="s2">room_utilization.csv</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
 
