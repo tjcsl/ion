@@ -209,7 +209,7 @@ def poll_results_view(request, poll_id):
                     "users": [v.user for v in votes]
                 }
                 for yr in range(9, 13):
-                    yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                    yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                     yr_votes = list(filter(None, yr_votes))
                     choice["votes"][yr] = {
                         "all": len(set(yr_votes)),
@@ -235,7 +235,7 @@ def poll_results_view(request, poll_id):
                 "users": clr_users
             }
             for yr in range(9, 13):
-                yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(yr_votes),
@@ -258,7 +258,7 @@ def poll_results_view(request, poll_id):
                 }
             }
             for yr in range(9, 13):
-                yr_votes = [u if u.grade.number == yr else None for u in users]
+                yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(set(yr_votes)),
@@ -293,7 +293,7 @@ def poll_results_view(request, poll_id):
                     "users": [v.user for v in votes]
                 }
                 for yr in range(9, 13):
-                    yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                    yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                     yr_votes = list(filter(None, yr_votes))
                     choice["votes"][yr] = {
                         "all": len(yr_votes),
@@ -318,7 +318,7 @@ def poll_results_view(request, poll_id):
                 "users": [v.user for v in votes]
             }
             for yr in range(9, 13):
-                yr_votes = [v.user if v.user.grade.number == yr else None for v in votes]
+                yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(yr_votes),
@@ -341,7 +341,7 @@ def poll_results_view(request, poll_id):
                 }
             }
             for yr in range(9, 13):
-                yr_votes = [u if u.grade.number == yr else None for u in users]
+                yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
                 yr_votes = list(filter(None, yr_votes))
                 choice["votes"][yr] = {
                     "all": len(yr_votes),
