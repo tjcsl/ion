@@ -22,7 +22,8 @@ def check_emerg():
         status = False
 
     bad_strings = ["There are no emergency announcements at this time", "There are no emergency messages at this time",
-                   "There are no emeregency annoncements at this time", "There are no major announcements at this time."]
+                   "There are no emeregency annoncements at this time", "There are no major announcements at this time.",
+                   "There are no major emergency announcements at this time."]
     for b in bad_strings:
         if b in res:
             status = False
