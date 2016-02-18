@@ -30,8 +30,7 @@ class EighthActivityList(generics.ListAPIView):
 
 class EighthActivityDetail(generics.RetrieveAPIView):
 
-    """API endpoint that shows details of an eighth activity.
-    """
+    """API endpoint that shows details of an eighth activity."""
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityDetailSerializer
 
@@ -44,8 +43,7 @@ class BlockPagination(PageNumberPagination):
 
 class EighthBlockList(generics.ListAPIView):
 
-    """API endpoint that lists all eighth blocks
-    """
+    """API endpoint that lists all eighth blocks."""
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
 
@@ -66,8 +64,7 @@ class EighthBlockList(generics.ListAPIView):
 
 class EighthBlockDetail(views.APIView):
 
-    """API endpoint that shows details for an eighth block
-    """
+    """API endpoint that shows details for an eighth block."""
 
     def get(self, request, pk):
         try:
@@ -123,8 +120,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
 class EighthScheduledActivitySignupList(views.APIView):
 
-    """API endpoint that lists all signups for a certain scheduled activity
-    """
+    """API endpoint that lists all signups for a certain scheduled activity."""
 
     def get(self, request, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -135,7 +131,6 @@ class EighthScheduledActivitySignupList(views.APIView):
 
 class EighthSignupDetail(generics.RetrieveAPIView):
 
-    """API endpoint that shows details of an eighth signup
-    """
+    """API endpoint that shows details of an eighth signup."""
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer

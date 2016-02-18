@@ -4,6 +4,14 @@ intranet.utils package
 Submodules
 ----------
 
+intranet.utils.helpers module
+-----------------------------
+
+.. automodule:: intranet.utils.helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.ical module
 --------------------------
 

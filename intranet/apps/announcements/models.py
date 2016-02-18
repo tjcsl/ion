@@ -12,12 +12,11 @@ from ..users.models import User
 class AnnouncementManager(Manager):
 
     def visible_to_user(self, user):
-        """Get a list of visible announcements for a given user (usually
-        request.user).
+        """Get a list of visible announcements for a given user (usually request.user).
 
-        These visible announcements will be those that either have no groups
-        assigned to them (and are therefore public) or those in which the
-        user is a member.
+        These visible announcements will be those that either have no
+        groups assigned to them (and are therefore public) or those in
+        which the user is a member.
 
         """
 
@@ -25,8 +24,7 @@ class AnnouncementManager(Manager):
                                            Q(groups__isnull=True))
 
     def hidden_announcements(self, user):
-        """Get a list of announcements marked as hidden for a given user (usually
-        request.user).
+        """Get a list of announcements marked as hidden for a given user (usually request.user).
 
         These are all announcements visible to the user -- they have just decided to
         hide them.
@@ -39,21 +37,21 @@ class AnnouncementManager(Manager):
 class AnnouncementUserMap(models.Model):
     """Represents mapping fields between announcements and users.
 
-        These attributes would be a part of the Announcement model, but if they are,
-        the last updated date is changed whenever a student sees or hides an announcement.
+    These attributes would be a part of the Announcement model, but if they are,
+    the last updated date is changed whenever a student sees or hides an announcement.
 
-        Access these through announcement.user_map
+    Access these through announcement.user_map
 
-        If you are checking to see whether a user has hidden an announcement, use:
-            Announcement.objects.hidden_announcements(user)
+    If you are checking to see whether a user has hidden an announcement, use:
+        Announcement.objects.hidden_announcements(user)
 
-        Attributes:
-            announcement
-                The one-to-one mapping between this object and the Announcement it is for
-            users_hidden
-                A many-to-many field of Users who have hidden this announcement
-            users_seen
-                A many-to-many field of Users who have seen this announcement
+    Attributes:
+        announcement
+            The one-to-one mapping between this object and the Announcement it is for
+        users_hidden
+            A many-to-many field of Users who have hidden this announcement
+        users_seen
+            A many-to-many field of Users who have seen this announcement
 
     """
     announcement = models.OneToOneField("Announcement", related_name="_user_map")
@@ -119,8 +117,7 @@ class Announcement(models.Model):
 
     @property
     def is_this_year(self):
-        """Return whether the announcement was created after September 1st
-           of this school year."""
+        """Return whether the announcement was created after September 1st of this school year."""
         now = datetime.now().date()
         ann = self.added.date()
         if now.month < 9:

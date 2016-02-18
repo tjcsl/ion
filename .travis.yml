@@ -32,9 +32,9 @@ before_script:
 script:
   - flake8 --max-line-length 200 .
   - coverage run ./setup.py test
-  - ./manage.py migrate
+  - coverage run -a ./manage.py migrate
   - ./scripts/build_docs.sh
-  - ./scripts/mypy.sh || true  # FIXME: make this work properly
+  - ./scripts/mypy.sh
 
 after_success:
   - ./scripts/push_docs.sh

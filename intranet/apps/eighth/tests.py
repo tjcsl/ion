@@ -17,9 +17,7 @@ Tests for the eighth module.
 class EighthTest(IonTestCase):
 
     def test_add_user(self):
-        """
-        Tests adding a user to a EighthScheduledActivity.
-        """
+        """Tests adding a user to a EighthScheduledActivity."""
         self.login()
         # Make user an eighth admin
         user = User.get_user(username='awilliam')
@@ -62,8 +60,7 @@ class EighthTest(IonTestCase):
                               .count()), 1)
 
     def test_signups(self):
-        """Do some sample signups.
-        """
+        """Do some sample signups."""
 
         user1 = User.objects.create(username="user1")
         block1 = EighthBlock.objects.create(date='2015-01-01',

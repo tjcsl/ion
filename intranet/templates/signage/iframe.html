@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang='en'>
 <head>
+    <title>Ion Signage</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
 
@@ -12,81 +13,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
 
-    <style type="text/css">
-    .center-wrapper {
-        min-height: auto;
-    }
-    
-    .center-wrapper .center {
-        margin: 0;
-        top: 0;
-    }
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signage.base.css' %}" />
 
-    .center, .center-wrapper {
-        height: 32px;
-    }
-
-    .center {
-        margin-left: 0;
-    }
-
+    {% if request.GET.zoom %}
+    <style>
     body {
-        background: transparent;
-        zoom: 3;
-        overflow: hidden;
-        background-color: rgb(242, 242, 244);
-    }
-
-    @media (max-width: 600px) {
-        body {
-            zoom: 2;
-        }
-    }
-
-    .tjlogo {
-        height: 32px;
-        position: absolute;
-        left: 50%;
-        margin-left: -16px;
-        top: 0;
-    }
-
-    .time {
-        font-size: 24px;
-        color: black;
-        width: calc(50% - 16px);
-    }
-
-    .schedule-outer {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 32px;
-        width: calc(50% - 16px);
-        overflow: hidden;
-    }
-
-    .schedule {
-        margin: 0px -13px;
-        zoom: 0.7;
-    }
-
-    @media (max-width: 790px) {
-        .schedule {
-            margin: 12px -13px;
-            zoom: 0.5;
-        }
-    }
-
-    .iframe {
-        position: absolute;
-        top: 32px;
-        left: 0;
-        width: 100%;
-        height: calc(100% - 40px);
+        zoom: {{ request.GET.zoom|escape }};
     }
     </style>
-
+    {% endif %}
 
     <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
@@ -111,17 +46,16 @@
     </script>
 </head>
 
-<body>
+<body class="auto-zoom-out">
 
-    <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
-    <div class="time">&nbsp;</div>
-    <div class="schedule-outer">
-        {% include "schedule/view.html" %}
-    </div>
-    <div class="center-wrapper">
-        <div class="center">
+    <div class="small-header">
+        <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+        <div class="time">&nbsp;</div>
+        <div class="schedule-outer">
+            {% include "schedule/view.html" %}
         </div>
     </div>
+
     <iframe class="iframe" src="{{ url }}"></iframe>
 </body>
 </html>

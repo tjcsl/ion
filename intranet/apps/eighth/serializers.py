@@ -226,7 +226,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             else:
                 name = None
 
-            activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
+            if activity_id in activity_list:
+                activity_list[activity_id]["sponsors"].append(sponsor["name"] or name)
 
         activities_sponsors_overidden = []
         for sponsorship in overidden_sponsorships:

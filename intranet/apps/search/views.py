@@ -294,7 +294,7 @@ def search_view(request):
     is_admin = (not request.user.is_student and request.user.is_eighthoffice)
 
     if q:
-        """ User search """
+        """User search."""
         if q.isdigit() and (len(str(q)) == settings.FCPS_STUDENT_ID_LENGTH):
             # Match exact student ID if the input looks like an ID
             u = User.objects.user_with_student_id(q)

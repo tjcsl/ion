@@ -9,6 +9,3 @@ class Migration(migrations.Migration):
         ('announcements', '0005_auto_20150515_1355'),
         ('announcements', '0005_auto_20150515_1353'),
     ]
-
-    operations = [
-    ]

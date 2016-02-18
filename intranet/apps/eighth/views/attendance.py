@@ -544,7 +544,8 @@ def accept_all_passes_view(request, scheduled_activity_id):
 
 
 def generate_roster_pdf(sched_act_ids, include_instructions):
-    """Generates a PDF roster for one or more
+    """Generates a PDF roster for one or more.
+
     :class:`EighthScheduledActivity`\s.
 
     Args

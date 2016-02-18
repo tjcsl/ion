@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Decorators that restrict views to certain types of users.
-
-"""
+"""Decorators that restrict views to certain types of users."""
 
 
 from django.contrib.auth.decorators import user_passes_test
@@ -10,6 +7,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 def admin_required(group):
     """Decorator that requires the user to be in a certain admin group.
+
     For example, @admin_required("polls") would check whether a user is
     in the "admin_polls" group or in the "admin_all" group.
 

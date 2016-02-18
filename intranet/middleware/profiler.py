@@ -12,6 +12,7 @@ import tempfile
 import time
 from collections import defaultdict
 from io import StringIO
+from typing import Any  # noqa
 
 import cProfile
 
@@ -36,7 +37,7 @@ time_columns = [
 ]
 time_labels = [col[0] for col in time_columns]
 time_fields = [col[1] for col in time_columns]
-time_stats = {}
+time_stats = {}  # type: Dict[float,Dict[str,Any]]
 # Django middleware is class-based. The module is imported, the profiling class
 # is instantiated, and the instance added to the middleware stack.
 # We put this profiling module on both ends of the middleware stack to obtain

@@ -9,6 +9,3 @@ class Migration(migrations.Migration):
         ('users', '0002_auto_20150402_1847'),
         ('users', '0002_auto_20150404_1622'),
     ]
-
-    operations = [
-    ]

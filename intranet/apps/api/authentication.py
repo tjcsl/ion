@@ -12,9 +12,7 @@ class KerberosBasicAuthentication(authentication.BasicAuthentication):
         return super(KerberosBasicAuthentication, self).authenticate(request)
 
     def authenticate_credentials(self, userid, password):
-        """
-        Authenticate the userid and password using Kerberos
-        """
+        """Authenticate the userid and password using Kerberos."""
 
         authenticator = KerberosAuthenticationBackend()
         user = authenticator.authenticate(userid, password)

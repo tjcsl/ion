@@ -16,10 +16,15 @@ class CheckLDAPBindMiddleware:
             # Nothing to check if user isn't already logged in
             return response
 
+        if "_auth_user_backend" not in request.session:
+            # Can't check the backend
+            logger.debug("Can't check the auth user backend for an LDAP bind")
+            return response
+
         auth_backend = request.session["_auth_user_backend"]
-        master_pwd_backend = "MasterPasswordAuthenticationBackend"
+        kerberos_backend = "KerberosAuthenticationBackend"
         if (LDAPConnection().did_use_simple_bind() and
-                not auth_backend.endswith(master_pwd_backend)):
+                auth_backend.startswith(kerberos_backend)):
             # if request.user.is_eighth_admin:
             #    logger.info("Simple bind being used: staying logged in because eighth admin.")
             #    return response

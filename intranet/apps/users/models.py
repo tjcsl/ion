@@ -59,7 +59,7 @@ class UserManager(DjangoUserManager):
         return None
 
     def users_in_year(self, year):
-        """ Get a list of users in a specific graduation year. """
+        """Get a list of users in a specific graduation year."""
         c = LDAPConnection()
 
         results = c.search(settings.USER_DN,
@@ -73,10 +73,11 @@ class UserManager(DjangoUserManager):
         return users
 
     def _ldap_and_string(self, opts):
-        """Combine LDAP queries with AND
+        """Combine LDAP queries with AND.
 
         e.x.: ["a=b"]        => "a=b"
               ["a=b", "c=d"] => "(&(a=b)(c=d))"
+
         """
         if len(opts) == 1:
             return opts[0]
@@ -175,7 +176,11 @@ class UserManager(DjangoUserManager):
             return users
 
     def get_teachers_sorted(self):
-        """Get teachers sorted by last name. This is used for the announcement request page."""
+        """Get teachers sorted by last name.
+
+        This is used for the announcement request page.
+
+        """
         teachers = self.get_teachers()
         teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
         for t in teachers:
@@ -196,8 +201,7 @@ class UserManager(DjangoUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    """Django User model subclass with properties that fetch data from
-    LDAP
+    """Django User model subclass with properties that fetch data from LDAP.
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
     model will work with Django's built-in authorization functionality.
@@ -225,8 +229,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_news_emails = models.BooleanField(default=False)
     receive_eighth_emails = models.BooleanField(default=False)
 
+    receive_schedule_notifications = models.BooleanField(default=False)
+
     # Private dn cache
-    _dn = None
+    _dn = None  # type: str
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -237,8 +243,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     def get_user(cls, dn=None, id=None, username=None):
-        """Retrieve a user object from LDAP and save it to the SQL
-        database if necessary.
+        """Retrieve a user object from LDAP and save it to the SQL database if necessary.
 
         Creates a User object from a dn, user id, or a username based on
         data in the LDAP database. If the user also exists in the SQL
@@ -256,6 +261,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns:
             The User object if the user could be found in LDAP,
             otherwise User.DoesNotExist is raised.
+
         """
 
         if id is not None:
@@ -403,8 +409,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return group in self._groups_cache
 
     def has_admin_permission(self, perm):
-        """Returns whether a user has an admin permission (explicitly,
-        or implied by being in the "admin_all" group)
+        """Returns whether a user has an admin permission (explicitly, or implied by being in the
+        "admin_all" group)
 
         Returns:
             Boolean
@@ -419,8 +425,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def full_name(self):
-        """Return full name, e.g. Angela William. This is required
-        for subclasses of User."""
+        """Return full name, e.g. Angela William.
+
+        This is required for subclasses of User.
+
+        """
         return self.common_name
 
     @property
@@ -457,8 +466,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def short_name(self):
-        """Return short name (first name) of a user. This is required
-        for subclasses of User.
+        """Return short name (first name) of a user.
+
+        This is required for subclasses of User.
+
         """
         return self.first_name
 
@@ -477,8 +488,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @dn.setter
     def dn(self, dn):
-        """Set DN for a user.
-        """
+        """Set DN for a user."""
         if not self._dn:
             self._dn = dn
         # if not self.username:
@@ -486,11 +496,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def tj_email(self):
-        """
-        Get (or guess) a user's TJ email. If a fcps.edu or
-        tjhsst.edu email is specified in their email list, use
-        that. Otherwise, append the user's username to the proper
-        email suffix, depending on whether they are a student or teacher.
+        """Get (or guess) a user's TJ email.
+
+        If a fcps.edu or tjhsst.edu email is specified in their email
+        list, use that. Otherwise, append the user's username to the
+        proper email suffix, depending on whether they are a student or
+        teacher.
+
         """
 
         if self.emails:
@@ -511,6 +523,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Grade object
+
         """
         key = ":".join([self.dn, 'grade'])
 
@@ -532,10 +545,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             return grade
 
     def _current_user_override(self):
-        """ Return whether the currently logged in user is a teacher,
-            and can view all of a student's information regardless of
-            their privacy settings.
-        """
+        """Return whether the currently logged in user is a teacher, and can view all of a student's
+        information regardless of their privacy settings."""
         try:
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
@@ -548,8 +559,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def classes(self):
-        """Returns a list of Class objects for a user ordered by
-        period number.
+        """Returns a list of Class objects for a user ordered by period number.
 
         Returns:
             List of Class objects
@@ -736,16 +746,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.sex.lower()[:1] == "f" if self.sex else False
 
     @property
-    def age(self, date=None):
+    def age(self):
         """Returns a user's age, based on their birthday.
-           Optional date argument to find their age on a given day.
 
         Returns:
             integer
 
         """
-        if not date:
-            date = datetime.now()
+        date = datetime.now()
 
         b = self.birthday
         if b:
@@ -852,6 +860,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Dictionary
+
         """
         key = ":".join([self.dn, 'photo_permissions'])
 
@@ -919,6 +928,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns:
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
+
         """
         if self.dn is None:
             return False
@@ -1046,20 +1056,24 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Boolean
+
         """
         return self.id == 9999
 
     @property
     def is_active(self):
         """Checks if the user is active.
+
         This is currently used to catch invalid logins.
+
         """
 
         return not self.username.startswith("INVALID_USER")
 
     @property
     def is_staff(self):
-        """Checks if a user should have access to the Django Admin
+        """Checks if a user should have access to the Django Admin.
+
         interface. This has nothing to do with staff at TJ - `is_staff`
         has to be overridden to make this a valid user model.
 
@@ -1315,7 +1329,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     }
 
     def __getattr__(self, name):
-        """Return simple attributes of User
+        """Return simple attributes of User.
 
         This is used to retrieve ldap fields that don't require special
         processing, e.g. email or graduation year. Fields names are
@@ -1393,8 +1407,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     def set_ldap_attribute(self, name, value, override_set=False):
-        """Set a user attribute in LDAP.
-        """
+        """Set a user attribute in LDAP."""
 
         if name not in User.ldap_user_attributes:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
@@ -1477,8 +1490,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         c.set_attribute(photo_dn, photo_field, value)
 
     def set_raw_ldap_attribute(self, field_name, value):
-        """Set a raw user attribute in LDAP.
-        """
+        """Set a raw user attribute in LDAP."""
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
@@ -1494,7 +1506,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_eighth_sponsor(self):
-        """Determine whether the given user is associated with an
+        """Determine whether the given user is associated with an.
+
         :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
         sponsoring information.
 
@@ -1519,7 +1532,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def absence_count(self):
-        """Return the user's absence count. If the user has no absences
+        """Return the user's absence count.
+
+        If the user has no absences
         or is not a signup user, returns 0.
 
         """
@@ -1528,8 +1543,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
     def absence_info(self):
-        """Return information about the user's absences.
-        """
+        """Return information about the user's absences."""
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
@@ -1569,14 +1583,15 @@ class Class(object):
         """
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
-    section_id = property(lambda c: ldap3.utils.dn.parse_dn(c.dn)[0][1])
+    @property
+    def section_id(self):
+        return ldap3.utils.dn.parse_dn(self.dn)[0][1]
     pk = section_id
 
     @property
     def students(self):
-        """Returns a list of students in the class.
-        This may not always return all of the actual students if you do
-        not have permission to view that information.
+        """Returns a list of students in the class. This may not always return all of the actual
+        students if you do not have permission to view that information.
 
         Returns:
             List of user objects
@@ -1598,7 +1613,7 @@ class Class(object):
 
     @property
     def teacher(self):
-        """Returns the teacher/sponsor of the class
+        """Returns the teacher/sponsor of the class.
 
         Returns:
             User object
@@ -1651,7 +1666,7 @@ class Class(object):
 
     @property
     def sortvalue(self):
-        """Returns the sort value of this class
+        """Returns the sort value of this class.
 
         This can be derived from the following formula:
             Minimum Period + Sum of values of quarters / 11
@@ -1667,11 +1682,11 @@ class Class(object):
 
     @property
     def sections(self):
-        """Returns a list of other Class objects which are of
-           the same class type.
+        """Returns a list of other Class objects which are of the same class type.
 
-           Returns:
-               A list of class objects.
+        Returns:
+            A list of class objects.
+
         """
         class_sections = ClassSections(id=self.class_id)
 
@@ -1686,7 +1701,7 @@ class Class(object):
         return list(zip(*ordered_schedule))[1]  # The class objects
 
     def __getattr__(self, name):
-        """Return simple attributes of Class
+        """Return simple attributes of Class.
 
         This is used to retrieve ldap fields that don't require special
         processing, e.g. roomNumber or period. Fields names are
@@ -1708,7 +1723,6 @@ class Class(object):
 
         Returns:
             Either a list of strings or a string, depending on the attribute fetched.
-
 
         """
 
@@ -1863,6 +1877,7 @@ class Grade(object):
         Args:
             graduation_year
                 The numerical graduation year of the user
+
         """
         self._year = int(graduation_year)
         today = datetime.now()

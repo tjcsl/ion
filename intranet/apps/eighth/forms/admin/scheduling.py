@@ -7,7 +7,7 @@ from ...models import EighthScheduledActivity
 
 class ScheduledActivityForm(forms.ModelForm):
 
-    """Represents a row in the table activity scheduling admin page"""
+    """Represents a row in the table activity scheduling admin page."""
 
     # Whether the activity should actually be scheduled for the block
     scheduled = forms.BooleanField(required=False)

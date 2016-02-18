@@ -13,9 +13,7 @@ class Command(BaseCommand):
     help = "Transfer attendance data"
 
     def handle(self, **options):
-        """
-            Exported "eighth_absentees" table in CSV format
-        """
+        """Exported "eighth_absentees" table in CSV format."""
 
         with open('eighth_absentees.csv', 'r') as absopen:
             absences = csv.reader(absopen)

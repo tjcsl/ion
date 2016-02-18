@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-import ipaddress
-import logging
 import os
 import re
 import subprocess
@@ -9,7 +7,7 @@ import sys
 
 from typing import Any  # noqa
 
-logger = logging.getLogger(__name__)
+from ..utils import helpers
 
 DATABASE_URL = None  # type: str
 
@@ -55,19 +53,6 @@ DATABASES = {
 }  # type: Dict[str,Dict[str,Any]]
 
 
-class MigrationMock(object):
-    seen = set()  # type: Set[str]
-
-    def __contains__(self, mod):
-        return True
-
-    def __getitem__(self, mod):
-        if mod in self.seen:
-            return 'migrations'
-        self.seen.add(mod)
-        return None
-
-
 def is_verbose(cmdline):
     cmdline = ' '.join(cmdline)
     # FIXME: we really shouldn't have to do this.
@@ -77,30 +62,8 @@ def is_verbose(cmdline):
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     # Horrible hack to suppress all migrations to speed up the tests.
-    MIGRATION_MODULES = MigrationMock()
+    MIGRATION_MODULES = helpers.MigrationMock()
     LOGGING_VERBOSE = is_verbose(sys.argv)
-
-
-class GlobList(list):
-
-    """A list of glob-style strings."""
-
-    def __contains__(self, key):
-        """Check if a string matches a glob in the list."""
-
-        # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
-        # list of IP addresses, if the user is using a proxy
-        if "," in key:
-            key = key.split(",")[0]
-
-        for item in self:
-            try:
-                if ipaddress.ip_address("{}".format(key)) in ipaddress.ip_network("{}".format(item)) and key != "127.0.0.1":
-                    logger.info("Internal IP: {}".format(key))
-                    return True
-            except ValueError:
-                pass
-        return False
 
 
 MANAGERS = ADMINS
@@ -215,6 +178,7 @@ STATICFILES_FINDERS = (
 AUTHENTICATION_BACKENDS = (
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.KerberosAuthenticationBackend",
+    "oauth2_provider.backends.OAuth2Backend",
 )
 
 # Use the custom User model defined in apps/users/models.py
@@ -251,6 +215,7 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",   # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "django.contrib.auth.middleware.SessionAuthenticationMiddleware",  # Django session auth
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",         # Django Oauth toolkit
     "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
@@ -390,8 +355,19 @@ REST_FRAMEWORK = {
 
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "intranet.apps.api.authentication.KerberosBasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication"
+        "rest_framework.authentication.SessionAuthentication",
+        "oauth2_provider.ext.rest_framework.OAuth2Authentication"
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
     )
+}
+
+# Django Oauth Toolkit configuration
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
 }
 
 INSTALLED_APPS = [
@@ -427,10 +403,12 @@ INSTALLED_APPS = [
     "intranet.apps.signage",
     "intranet.apps.seniors",
     "intranet.apps.emerg",
+    "intranet.apps.ionldap",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
     "widget_tweaks",
+    "oauth2_provider",
     "corsheaders",
     "cacheops"
 ]
@@ -551,7 +529,7 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.versions.VersionsPanel", False),
         ("debug_toolbar.panels.timer.TimerPanel", True),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
+        # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
         ("debug_toolbar.panels.settings.SettingsPanel", False),
         ("debug_toolbar.panels.headers.HeadersPanel", False),
         ("debug_toolbar.panels.request.RequestPanel", False),
@@ -582,9 +560,8 @@ if SHOW_DEBUG_TOOLBAR:
     ]
 
     def debug_toolbar_callback(request):
-        """Show the debug toolbar to those with the Django staff permission, excluding
-           the Eighth Period office.
-        """
+        """Show the debug toolbar to those with the Django staff permission, excluding the Eighth
+        Period office."""
         if request.is_ajax():
             return False
 

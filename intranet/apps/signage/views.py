@@ -6,6 +6,7 @@ import logging
 from django import http
 from django.conf import settings
 from django.shortcuts import render
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
 from ..eighth.models import EighthBlock
@@ -34,6 +35,7 @@ def check_internal_ip(request):
         }, status=403)
 
 
+@xframe_options_exempt
 def signage_display(request, display_id=None):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -60,24 +62,54 @@ def signage_display(request, display_id=None):
             iframe = "/signage/eighth?no_reload&block_increment={}&".format(sign.eighth_block_increment)
         else:
             iframe = "/signage/eighth?no_reload&"
-        return iframe_signage(request, iframe)
+        if sign and sign.use_frameset:
+            return frameset_signage(request, iframe)
+        else:
+            return iframe_signage(request, iframe)
     elif sign_status == "schedule":
         return schedule_signage(request)
     elif sign_status == "status":
         return status_signage(request)
     elif sign_status == "url" or "url" in request.GET:
-        return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+        url = request.GET.get('url') or (sign.url if sign else "about:blank")
+        if sign and sign.use_frameset:
+            return frameset_signage(request, url)
+        else:
+            return iframe_signage(request, url)
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
                 iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
                 iframe = "/signage/eighth?no_reload&"
-            return iframe_signage(request, iframe)
+            if sign and sign.use_frameset:
+                return frameset_signage(request, iframe)
+            else:
+                return iframe_signage(request, iframe)
+        elif sign_status == "autourl":
+            url = request.GET.get('url') or (sign.url if sign else "about:blank")
+            if sign and sign.use_frameset:
+                return frameset_signage(request, url)
+            else:
+                return iframe_signage(request, url)
         else:
             return status_signage(request)
 
 
+@xframe_options_exempt
+def touch_signage(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    context = schedule_context(request)
+    context["signage"] = True
+    context["eighth_url"] = "/signage/eighth"
+    context["calendar_url"] = "https://postman.tjhsst.edu/"
+    return render(request, "signage/touch.html", context)
+
+
+@xframe_options_exempt
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -89,6 +121,7 @@ def schedule_signage(request):
     return render(request, "schedule/embed.html", context)
 
 
+@xframe_options_exempt
 def status_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -99,6 +132,7 @@ def status_signage(request):
     return render(request, "signage/status.html", context)
 
 
+@xframe_options_exempt
 def iframe_signage(request, url):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -110,6 +144,27 @@ def iframe_signage(request, url):
     return render(request, "signage/iframe.html", context)
 
 
+@xframe_options_exempt
+def frameset_signage(request, url):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    context = schedule_context(request)
+    context["signage"] = True
+    context["url"] = url
+    return render(request, "signage/frameset.html", context)
+
+
+@xframe_options_exempt
+def frameset_signage_header(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+    return render(request, "signage/frameset-header.html", {})
+
+
+@xframe_options_exempt
 def eighth_signage(request, block_id=None, block_increment=0):
     internal_ip = check_internal_ip(request)
     if internal_ip:

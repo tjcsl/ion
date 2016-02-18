@@ -39,13 +39,13 @@ class EighthSignupAdmin(admin.ModelAdmin):
 
     def get_activity(self, obj):
         return obj.scheduled_activity.activity
-    get_activity.short_description = "Activity"
-    get_activity.admin_order_field = "scheduled_activity__activity"
+    get_activity.short_description = "Activity"  # type: ignore
+    get_activity.admin_order_field = "scheduled_activity__activity"  # type: ignore
 
     def get_block(self, obj):
         return obj.scheduled_activity.block
-    get_block.short_description = "Block"
-    get_block.admin_order_field = "scheduled_activity__block"
+    get_block.short_description = "Block"  # type: ignore
+    get_block.admin_order_field = "scheduled_activity__block"  # type: ignore
 
     list_display = ('user', 'get_activity', 'get_block', 'after_deadline', 'was_absent',)
     list_filter = ('scheduled_activity__block',)
