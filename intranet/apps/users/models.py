@@ -633,6 +633,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     @property
+    def ionldap_courses(self):
+        if self.is_student:
+            courses = self.ldapcourse_set.all()
+        elif self.is_teacher:
+            from django.apps import apps  # FIXME: resolve recursive dep
+            LDAPCourse = apps.get_model(app_label="ionldap", model_name="LDAPCourse")  # noqa
+            courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
+        else:
+            return None
+
+        return courses.order_by("period", "end_period")
+
+    @property
     def counselor(self):
         """Returns a user's counselor as a User object.
 

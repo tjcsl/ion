@@ -87,14 +87,31 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
+    ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
+
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
         "can_view_eighth": can_view_eighth,
         "eighth_restricted_msg": eighth_restricted_msg,
-        "eighth_sponsor_schedule": eighth_sponsor_schedule
+        "eighth_sponsor_schedule": eighth_sponsor_schedule,
+        "ionldap_courses": ionldap_courses
     }
     return render(request, "users/profile.html", context)
+
+
+def get_ionldap_courses(profile_user, current_user=None):
+    can_view = (not current_user or
+                (current_user and (current_user == profile_user or
+                                   current_user.is_teacher or
+                                   current_user.is_eighth_admin)))
+    if not can_view:
+        return None
+
+    if profile_user.is_student or profile_user.is_teacher:
+        courses = profile_user.ionldap_courses
+
+    return courses
 
 
 @login_required

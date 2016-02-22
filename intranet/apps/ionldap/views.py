@@ -13,7 +13,7 @@ def main_view(request):
     """Show the current user's class schedule."""
 
     user = request.user
-    courses = user.ldapcourse_set.all().order_by("period", "end_period")
+    courses = user.ionldap_courses
 
     context = {
         "user": user,
