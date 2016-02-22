@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
+
 from django.db import models
 
-from ..users.models import User
 from ..search.views import get_search_results
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +25,8 @@ class LDAPCourse(models.Model):
     end_period = models.IntegerField()
 
     def teacher_user(self):
-        query = self.teacher_name.replace(",", "") # Remove comma between last and first
-        query = " ".join(query.split(" ")[:2]) # Remove middle initial
+        query = self.teacher_name.replace(",", "")  # Remove comma between last and first
+        query = " ".join(query.split(" ")[:2])  # Remove middle initial
         try:
             query_error, users = get_search_results(query, False)
         except Exception:
