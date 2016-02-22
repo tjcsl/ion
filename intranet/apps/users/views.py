@@ -102,9 +102,9 @@ def profile_view(request, user_id=None):
 
 def get_ionldap_courses(profile_user, current_user=None):
     can_view = (not current_user or
-               (current_user and (current_user == profile_user or
-                                  current_user.is_teacher or
-                                  current_user.is_eighth_admin)))
+                (current_user and (current_user == profile_user or
+                                   current_user.is_teacher or
+                                   current_user.is_eighth_admin)))
     if not can_view:
         return None
 

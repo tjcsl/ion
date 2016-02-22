@@ -642,9 +642,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
         else:
             return None
-        
+
         return courses.order_by("period", "end_period")
-    
 
     @property
     def counselor(self):

@@ -8,6 +8,7 @@ from ..search.views import get_search_results
 
 logger = logging.getLogger(__name__)
 
+
 class LDAPCourse(models.Model):
     users = models.ManyToManyField(User)
 
