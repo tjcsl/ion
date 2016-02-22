@@ -38,11 +38,11 @@ EMAIL_ANNOUNCEMENTS = True
 
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
-# Addresses to send production error messages
+# Address to send production error messages
 ADMINS = (
-    ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
-    ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu"),
-    ("Andrew Hamilton", "ahamilto+ion@tjhsst.edu")
+    ("Ion Errors", "ion-errors@lists.tjhsst.edu"),
+    # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
+    # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
 )
 
 DATABASES = {
