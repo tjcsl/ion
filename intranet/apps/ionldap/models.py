@@ -24,8 +24,10 @@ class LDAPCourse(models.Model):
     end_period = models.IntegerField()
 
     def teacher_user(self):
+        query = self.teacher_name.replace(",", "") # Remove comma between last and first
+        query = " ".join(query.split(" ")[:2]) # Remove middle initial
         try:
-            query_error, users = get_search_results(self.teacher_name.replace(",", ""), False)
+            query_error, users = get_search_results(query, False)
         except Exception:
             return None
 
