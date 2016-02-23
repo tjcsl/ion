@@ -96,7 +96,8 @@ def convert_file(tmpfile_name):
     ]
     soffice_convert = [
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/msword"
+        "application/msword",
+        "application/vnd.oasis.opendocument.text"
     ]
     if detected in no_conversion:
         return tmpfile_name
