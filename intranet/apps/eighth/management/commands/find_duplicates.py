@@ -19,11 +19,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         fix = options["fix"]
+        found = False
 
         for u in User.objects.all():
             for b in EighthBlock.objects.all():
                 su = EighthSignup.objects.filter(user=u, scheduled_activity__block=b)
                 if su.count() != 0 and su.count() != 1:
+                    found = True
                     print("Duplicate: {} {}".format(u.id, b.id))
                     print("Scheduled activities:", su)
                     if fix:
@@ -37,3 +39,5 @@ class Command(BaseCommand):
                             if EighthSignup.objects.filter(user=u, scheduled_activity=sibling).exists():
                                 print("Deleted su0 {}".format(su[0]))
                                 su[0].delete()
+        if not found:
+            print("No duplicate signups found.")

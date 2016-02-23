@@ -476,7 +476,7 @@ def accept_pass_view(request, signup_id):
 
     if not can_accept:
         return render(request, "error/403.html", {
-            "reason": "You do not have permission to take accept this pass."
+            "reason": "You do not have permission to accept this pass."
         }, status=403)
 
     status = request.POST.get("status")

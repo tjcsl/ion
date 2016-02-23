@@ -605,16 +605,9 @@ def eighth_admin_distribute_action(request):
         changes = 0
         logger.debug(activity_user_map)
         for schact, userids in activity_user_map.items():
-            EighthSignup.objects.filter(
-                user__id__in=userids,
-                scheduled_activity__block=schact.block
-            ).delete()
             for uid in userids:
                 changes += 1
-                EighthSignup.objects.create(
-                    user=User.objects.get(id=int(uid)),
-                    scheduled_activity=schact
-                )
+                schact.add_user(User.objects.get(id=int(uid)), None, True)
 
         messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
