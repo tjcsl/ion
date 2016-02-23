@@ -2,18 +2,8 @@
 Administration
 **************
 
-Task 1
-======
+Running manage.py
+=================
 
-Task 1 info here
-
-
-Task 2
-======
-
-Task 2 info here
-
-Task 3
-======
-
-Task 3 info here
+Note that when running `./manage.py` in production you must first export `PRODUCTION=TRUE`.
+Otherwise you will not be able to connect to the db.
