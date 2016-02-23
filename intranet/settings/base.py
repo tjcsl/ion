@@ -9,7 +9,7 @@ from typing import Any  # noqa
 
 from ..utils import helpers
 
-DATABASE_URL = None  # type: str
+SECRET_DATABASE_URL = None  # type: str
 
 try:
     from .secret import *  # noqa

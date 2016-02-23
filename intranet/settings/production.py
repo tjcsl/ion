@@ -7,9 +7,9 @@ from ..utils import helpers
 from .base import *  # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
-defines SECRET_KEY and DATABASE_URL. !!
+defines SECRET_KEY and SECRET_DATABASE_URL. !!
 
-DATABASE_URL should be of the following form:
+SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 
@@ -27,9 +27,9 @@ CACHES['default']['OPTIONS']['DB'] = 1
 
 def parse_db_url():
     parse.uses_netloc.append("postgres")
-    if DATABASE_URL is None:
-        raise Exception("You must set DATABASE_URL in secret.py")
-    url = parse.urlparse(DATABASE_URL)
+    if SECRET_DATABASE_URL is None:
+        raise Exception("You must set SECRET_DATABASE_URL in secret.py")
+    url = parse.urlparse(SECRET_DATABASE_URL)
     return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password, 'HOST': url.hostname}
 
 
