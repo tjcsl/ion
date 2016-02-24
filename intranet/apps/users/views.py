@@ -109,9 +109,9 @@ def get_ionldap_courses(profile_user, current_user=None):
         return None
 
     if profile_user.is_student or profile_user.is_teacher:
-        courses = profile_user.ionldap_courses
+        return profile_user.ionldap_courses
 
-    return courses
+    return None
 
 
 @login_required
