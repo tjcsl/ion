@@ -944,7 +944,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         if self.dn is None:
-            return False
+            return None
 
         key = "{}:{}".format(self.dn, "user_info_permissions")
 
@@ -1178,10 +1178,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         perms = self.permissions
 
-        if self.is_http_request_sender():
+        if self.is_http_request_sender() or perms is None:
             return True
         else:
-
             public = True
             if ldap_perm_name in perms["parent"]:
                 public = perms["parent"][ldap_perm_name]
