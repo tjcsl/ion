@@ -1362,6 +1362,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         if name not in User.ldap_user_attributes:
+            # If the property raises an AttributeError, __getattribute__ falls back to __getattr__, hence this special case.
+            if isinstance(User.__dict__.get(name), property):
+                return User.__dict__.get(name).fget(self)
             raise AttributeError("'User' has no attribute '{}'".format(name))
 
         if self.dn is None:
