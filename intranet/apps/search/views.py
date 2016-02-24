@@ -240,7 +240,8 @@ def do_ldap_query(q, admin=False):
     users = []
     for dn in result_dns:
         user = User.get_user(dn=dn)
-        users.append(user)
+        if user.is_active:
+            users.append(user)
 
     return users
 
