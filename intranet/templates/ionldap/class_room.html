@@ -1,0 +1,99 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Room {{ room }}
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <style type="text/css">
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    section {
+        float: left;
+        padding: 0 100px 25px 0;
+    }
+
+    section:last-child {
+        padding-right: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content class-info">
+        <h2>Room {{ room }}</h2>
+        <h3>The following classes reside in this room:</h3>
+        <table class="fancy-table zebra">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Course</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Term</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for course in courses %}
+        <tr>
+            <td style="text-align: center">{{ course.period }}
+                {% if course.period_end and course.end_period != course.period %} - {{ course.end_period }}{% endif %}
+            </td>
+            <td>
+                <a href="{% url 'ionldap_class_section' course.section_id %}">
+                    {{ course.course_title }}
+                </td>
+            <td>
+            {% with teacher_user=course.teacher_user %}
+                {% if teacher_user %}
+                    <a href="{% url 'user_profile' teacher_user.id %}">
+                        {{ course.teacher_name }}
+                    </a>
+                {% else %}
+                    {{ course.teacher_name }}
+                {% endif %}
+            {% endwith %}</td>
+            <td style="text-align: center">
+                <a href="{% url 'ionldap_class_room' course.room_name %}">
+                    {{ course.room_name }}
+                </a>
+            </td>
+            <td>
+            {% if course.term_code %}
+                {% if course.term_code == "YR" %}
+                    <b>Full Year</b>
+                {% elif course.term_code == "S1" %}
+                    First Semester
+                {% elif course.term_code == "S2" %}
+                    <b>Second Semester</b>
+                {% else %}
+                {{ course.term_code }}
+                {% endif %}
+            {% endif %}</td>
+        </tr>
+        {% empty %}
+            <tr>
+                <td colspan=5>
+                    <p>No classes were found in this room.</p>
+                </td>
+            </tr> 
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% endblock %}
