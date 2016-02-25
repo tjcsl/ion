@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Post-Install Steps &mdash; TJ Intranet v3 (Build #1407) documentation</title>
+    <title>Post-Install Steps &mdash; TJ Intranet v3 (Build #1409) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1407)',
+        VERSION:     'v3 (Build #1409)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1407) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1409) documentation" href="../index.html" />
     <link rel="up" title="Setup" href="index.html" />
     <link rel="next" title="Setting up Your Sandbox Manually" href="sandbox.html" />
     <link rel="prev" title="Creating Iodine fixtures" href="fixtures.html" />
@@ -118,6 +118,7 @@
 <li><a class="reference internal" href="#setting-up-groups">Setting Up Groups</a></li>
 <li><a class="reference internal" href="#connecting-and-disconnecting-from-the-vm">Connecting and Disconnecting from the VM</a></li>
 <li><a class="reference internal" href="#updating-block-dates">Updating Block Dates</a></li>
+<li><a class="reference internal" href="#setting-up-files">Setting up Files</a></li>
 <li><a class="reference internal" href="#increasing-ram">Increasing RAM</a></li>
 </ul>
 </li>
@@ -188,6 +189,16 @@ Python 2.7.6 <span class="o">(</span>default, Jun <span class="m">22</span> 2015
 &gt;&gt;&gt; <span class="k">for</span> blk in blks:
 ...     blk.date +<span class="o">=</span> relativedelta<span class="o">(</span><span class="nv">months</span><span class="o">=</span>+6<span class="o">)</span>
 ...     blk.save<span class="o">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-up-files">
+<h2>Setting up Files<a class="headerlink" href="#setting-up-files" title="Permalink to this headline">¶</a></h2>
+<p>You can find a list of file systems at <code class="docutils literal"><span class="pre">intranet/apps/files/models.py</span></code>. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./manage.py shell_plus
+Python 3.4.3 <span class="o">(</span>default, Oct <span class="m">14</span> 2015, 20:28:29<span class="o">)</span>
+<span class="o">(</span>InteractiveConsole<span class="o">)</span>
+&gt;&gt;&gt; Host.objects.create<span class="o">(</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Computer Systems Lab&quot;</span>, <span class="nv">code</span><span class="o">=</span><span class="s2">&quot;csl&quot;</span>, <span class="nv">address</span><span class="o">=</span><span class="s2">&quot;remote.tjhsst.edu&quot;</span>, <span class="nv">linux</span><span class="o">=</span>True<span class="o">)</span>
 </pre></div>
 </div>
 </div>
