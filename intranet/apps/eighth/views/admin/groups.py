@@ -19,8 +19,7 @@ from ...forms.admin.activities import (ActivitySelectionForm,
                                        ScheduledActivityMultiSelectForm)
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
-from ...models import (EighthActivity, EighthBlock, EighthScheduledActivity,
-                       EighthSignup)
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -417,8 +416,6 @@ def eighth_admin_signup_group_action(request, group_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
-        block = scheduled_activity.block
-        activity = scheduled_activity.activity
         group = Group.objects.get(id=group_id)
     except (EighthScheduledActivity.DoesNotExist, Group.DoesNotExist):
         raise http.Http404
@@ -426,36 +423,8 @@ def eighth_admin_signup_group_action(request, group_id):
     users = group.user_set.all()
 
     if "confirm" in request.POST:
-        signup_bulk = []
-        if not activity.both_blocks:
-            EighthSignup.objects.filter(
-                user__in=users,
-                scheduled_activity__block=block
-            ).delete()
-            for user in users:
-                signup_bulk.append(EighthSignup(
-                    user=user,
-                    scheduled_activity=scheduled_activity
-                ))
-        else:
-            all_instances = [scheduled_activity]
-            sibling = scheduled_activity.get_both_blocks_sibling()
-            if sibling:
-                all_instances.append(sibling)
-
-            EighthSignup.objects.filter(
-                user__in=users,
-                scheduled_activity__in=all_instances
-            ).delete()
-            for user in users:
-                for sched_act in all_instances:
-                    signup_bulk.append(EighthSignup(
-                        user=user,
-                        scheduled_activity=sched_act
-                    ))
-
-        EighthSignup.objects.bulk_create(signup_bulk)
-
+        for user in users:
+            scheduled_activity.add_user(user, request, True)
         messages.success(request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
 
