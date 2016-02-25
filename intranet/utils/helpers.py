@@ -1,8 +1,60 @@
 # -*- coding: utf-8 -*-
 import ipaddress
 import logging
+import subprocess
+from urllib import parse
 
 logger = logging.getLogger('intranet.settings')
+
+
+def parse_db_url(db_url):
+    parse.uses_netloc.append("postgres")
+    if db_url is None:
+        raise Exception("You must set SECRET_DATABASE_URL in secret.py")
+    url = parse.urlparse(db_url)
+    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
+
+
+def debug_toolbar_callback(request):
+    """Show the debug toolbar to those with the Django staff permission, excluding the Eighth
+    Period office."""
+    if request.is_ajax():
+        return False
+
+    if not hasattr(request, 'user'):
+        return False
+    if not request.user.is_authenticated():
+        return False
+    if not request.user.is_staff:
+        return False
+    if request.user.id == 9999:
+        return False
+
+    return "debug" in request.GET
+
+
+def get_current_commit_short_hash(workdir):
+    cmd = ["git", "--work-tree", workdir, "rev-parse", "--short", "HEAD"]
+    return subprocess.check_output(cmd, universal_newlines=True).strip()
+
+
+def get_current_commit_long_hash(workdir):
+    cmd = ["git", "--work-tree", workdir, "rev-parse", "HEAD"]
+    return subprocess.check_output(cmd, universal_newlines=True).strip()
+
+
+def get_current_commit_info():
+    cmd = ["git", "show", "-s", "--format='Commit %h\n%ad", "HEAD"]
+    return subprocess.check_output(cmd, universal_newlines=True).strip()
+
+
+def get_current_commit_date():
+    cmd = ["git", "show", "-s", "--format=%ci", "HEAD"]
+    return subprocess.check_output(cmd, universal_newlines=True).strip()
+
+
+def get_current_commit_github_url(workdir):
+    return "https://github.com/tjcsl/ion/commit/{}".format(get_current_commit_short_hash(workdir))
 
 
 class InvalidString(str):

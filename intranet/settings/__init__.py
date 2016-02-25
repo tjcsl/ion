@@ -2,11 +2,9 @@
 import datetime
 import os
 import re
-import subprocess
 import sys
 
 from typing import Any  # noqa
-from urllib import parse
 
 
 if sys.version_info < (3, 3):
@@ -97,16 +95,8 @@ DATABASES = {
 }  # type: Dict[str,Dict[str,Any]]
 
 
-def parse_db_url():
-    parse.uses_netloc.append("postgres")
-    if SECRET_DATABASE_URL is None:
-        raise Exception("You must set SECRET_DATABASE_URL in secret.py")
-    url = parse.urlparse(SECRET_DATABASE_URL)
-    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
-
-
 if PRODUCTION or SECRET_DATABASE_URL is not None:
-    DATABASES['default'].update(parse_db_url())
+    DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
 else:
     # Default testing db config.
     DATABASES["default"].update({
@@ -117,17 +107,13 @@ else:
     })
 
 
-def is_verbose(cmdline):
-    cmdline = ' '.join(cmdline)
-    # FIXME: we really shouldn't have to do this.
-    return re.search('-v ?[2-3]|--verbosity [2-3]', cmdline) is not None
-
 # In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     # Horrible hack to suppress all migrations to speed up the tests.
     MIGRATION_MODULES = helpers.MigrationMock()
-    LOGGING_VERBOSE = is_verbose(sys.argv)
+    # FIXME: we really shouldn't have to do this.
+    LOGGING_VERBOSE = re.search('-v ?[2-3]|--verbosity [2-3]', ' '.join(sys.argv)) is not None
 
 
 MANAGERS = ADMINS
@@ -638,23 +624,9 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar_line_profiler",
     ]
 
-    def debug_toolbar_callback(request):
-        """Show the debug toolbar to those with the Django staff permission, excluding the Eighth
-        Period office."""
-        if request.is_ajax():
-            return False
-
-        if (hasattr(request, 'user') and
-                request.user.is_authenticated()):
-            return (request.user.is_staff and
-                    not request.user.id == 9999 and
-                    "debug" in request.GET)
-
-        return False
-
     # Only show debug toolbar when requested if in production.
     if PRODUCTION:
-        DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.settings.debug_toolbar_callback"
+        DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.utils.helpers.debug_toolbar_callback"
 
 # Maintenance mode
 MAINTENANCE_MODE = False
@@ -675,36 +647,13 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 SECURE_BROWSER_XSS_FILTER = True
 
 
-def _get_current_commit_short_hash():
-    cmd = ["git", "--work-tree", PROJECT_ROOT, "rev-parse", "--short", "HEAD"]
-    return subprocess.check_output(cmd).decode().strip()
-
-
-def _get_current_commit_long_hash():
-    cmd = ["git", "--work-tree", PROJECT_ROOT, "rev-parse", "HEAD"]
-    return subprocess.check_output(cmd).decode().strip()
-
-
-def _get_current_commit_info():
-    cmd = ["git", "show", "-s", "--format='Commit %h\n%ad", "HEAD"]
-    return subprocess.check_output(cmd).decode().strip()
-
-
-def _get_current_commit_date():
-    cmd = ["git", "show", "-s", "--format=%ci", "HEAD"]
-    return subprocess.check_output(cmd).decode().strip()
-
-
-def _get_current_commit_github_url():
-    return "https://github.com/tjcsl/ion/commit/{}".format(_get_current_commit_short_hash())
-
 # Add git information for the login page
 GIT = {
-    "commit_short_hash": _get_current_commit_short_hash(),
-    "commit_long_hash": _get_current_commit_long_hash(),
-    "commit_info": _get_current_commit_info(),
-    "commit_date": _get_current_commit_date(),
-    "commit_github_url": _get_current_commit_github_url()
+    "commit_short_hash": helpers.get_current_commit_short_hash(PROJECT_ROOT),
+    "commit_long_hash": helpers.get_current_commit_long_hash(PROJECT_ROOT),
+    "commit_info": helpers.get_current_commit_info(),
+    "commit_date": helpers.get_current_commit_date(),
+    "commit_github_url": helpers.get_current_commit_github_url(PROJECT_ROOT)
 }
 
 # Senior graduation date in Javascript-readable format
