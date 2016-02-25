@@ -4,9 +4,6 @@ from ..utils import helpers
 
 from .base import *  # noqa
 
-# Don't send emails unless we're in production.
-EMAIL_ANNOUNCEMENTS = False
-
 DEBUG = os.getenv("DEBUG", "TRUE") == "TRUE"
 
 if os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":

@@ -21,6 +21,9 @@ TRAVIS = os.getenv("TRAVIS") == "true"
 # FIXME: figure out a less-hacky way to do this.
 TESTING = 'test' in sys.argv
 LOGGING_VERBOSE = PRODUCTION
+# Don't send emails unless we're in production.
+EMAIL_ANNOUNCEMENTS = PRODUCTION
+
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -519,7 +522,6 @@ LOGGING = {
 }
 
 # The debug toolbar is always loaded, unless you manually override SHOW_DEBUG_TOOLBAR
-# This is overridden in production.py and local.py
 SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
 
 if SHOW_DEBUG_TOOLBAR:

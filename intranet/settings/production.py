@@ -13,14 +13,10 @@ SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 
-EMAIL_ANNOUNCEMENTS = True
-
 DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
-SHOW_DEBUG_TOOLBAR = False
 
 CACHES['default']['OPTIONS']['DB'] = 1
 
@@ -35,23 +31,6 @@ def parse_db_url():
 
 DATABASES['default'].update(parse_db_url())
 
-
-SHOW_DEBUG_TOOLBAR = os.getenv("SHOW_DEBUG_TOOLBAR", "YES") == "YES"
-
-
-def debug_toolbar_callback(request):
-    """Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
-    office."""
-    if request.is_ajax():
-        return False
-
-    if (hasattr(request, 'user') and
-            request.user.is_authenticated()):
-        return (request.user.is_staff and
-                not request.user.id == 9999 and
-                "debug" in request.GET)
-
-    return False
 
 # Internal IP ranges in production
 INTERNAL_IPS = helpers.GlobList([
