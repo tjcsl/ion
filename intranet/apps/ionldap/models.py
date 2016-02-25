@@ -39,3 +39,6 @@ class LDAPCourse(models.Model):
 
     def __str__(self):
         return "{} - {} ({})".format(self.course_title, self.teacher_name, self.section_id)
+
+    class Meta:
+        ordering = ("period", "end_period")
