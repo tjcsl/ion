@@ -637,8 +637,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.is_student:
             courses = self.ldapcourse_set.all()
         elif self.is_teacher:
-            from django.apps import apps  # FIXME: resolve recursive dep
-            LDAPCourse = apps.get_model(app_label="ionldap", model_name="LDAPCourse")  # noqa
+            from ..ionldap.models import LDAPCourse
             courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
         else:
             return None

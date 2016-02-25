@@ -162,7 +162,7 @@ def files_type(request, fstype=None):
 
     if host.directory:
         host_dir = host.directory
-        if "{}" in host_dir:  # noqa
+        if "{}" in host_dir:
             host_dir = host_dir.format(request.user.username)
         if "{win}" in host_dir:
             host_dir = windows_dir_format(host_dir, request.user)
@@ -321,7 +321,7 @@ def files_upload(request, fstype=None):
 
             if host.directory:
                 host_dir = host.directory
-                if "{}" in host_dir:  # noqa
+                if "{}" in host_dir:
                     host_dir = host_dir.format(authinfo["username"])
                 if "{win}" in host_dir:
                     host_dir = windows_dir_format(host_dir, request.user)

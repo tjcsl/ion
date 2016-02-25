@@ -22,10 +22,11 @@ from .....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
+ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
+
 
 @eighth_admin_required
 def schedule_activity_view(request):
-    ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)  # noqa
 
     if request.method == "POST":
         formset = ScheduledActivityFormset(request.POST)
