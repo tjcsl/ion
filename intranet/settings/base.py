@@ -6,9 +6,17 @@ import subprocess
 import sys
 
 from typing import Any  # noqa
+from urllib import parse
 
 from ..utils import helpers
 
+
+""" !! In production, add a file called secret.py to the settings package that
+defines SECRET_KEY and SECRET_DATABASE_URL. !!
+
+SECRET_DATABASE_URL should be of the following form:
+    postgres://<user>:<password>@<host>/<database>
+"""
 SECRET_DATABASE_URL = None  # type: str
 
 try:
@@ -75,6 +83,26 @@ DATABASES = {
         'CONN_MAX_AGE': 30
     }
 }  # type: Dict[str,Dict[str,Any]]
+
+
+def parse_db_url():
+    parse.uses_netloc.append("postgres")
+    if SECRET_DATABASE_URL is None:
+        raise Exception("You must set SECRET_DATABASE_URL in secret.py")
+    url = parse.urlparse(SECRET_DATABASE_URL)
+    return {'NAME': url.path[1:], 'USER': url.username, 'PASSWORD': url.password}
+
+
+if PRODUCTION or SECRET_DATABASE_URL is not None:
+    DATABASES['default'].update(parse_db_url())
+else:
+    # Default testing db config.
+    DATABASES["default"].update({
+        "NAME": "ion",
+        "USER": "ion",
+        "PASSWORD": "pwd",
+        "HOST": "localhost",
+    })
 
 
 def is_verbose(cmdline):
