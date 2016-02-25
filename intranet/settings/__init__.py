@@ -71,6 +71,8 @@ LOGIN_REDIRECT_URL = "/"
 
 APPEND_SLASH = False
 
+# Email backend and mailserver configuration
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mail.tjhsst.edu"
 EMAIL_PORT = 465
@@ -81,11 +83,14 @@ EMAIL_ANNOUNCEMENTS = True
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Address to send production error messages
+
 ADMINS = (
     ("Ion Errors", "ion-errors@lists.tjhsst.edu"),
     # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
     # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
 )
+
+# Use PostgreSQL database
 
 DATABASES = {
     'default': {
@@ -129,7 +134,7 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 # The maximum number of pages in one document that can be
-# printed through the printing functionality (through pdfinfo)
+# printed through the printing functionality (determined through pdfinfo)
 PRINTING_PAGES_LIMIT = 15
 
 # The maximum file upload and download size for files
@@ -383,7 +388,7 @@ else:
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
-LDAP_REALM = "CSL.TJHSST.EDU"
+LDAP_REALM = CSL_REALM
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
@@ -479,6 +484,7 @@ INSTALLED_APPS = [
 ]
 
 # Eighth period default block date format
+# Post Django 1.8.7, this can no longer be used in templates.
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 
 # See http://docs.djangoproject.com/en/dev/topics/logging for
@@ -630,7 +636,7 @@ if SHOW_DEBUG_TOOLBAR:
 # Maintenance mode
 MAINTENANCE_MODE = False
 
-# Allow *.tjhsst.edu sites to access the API
+# Allow *.tjhsst.edu sites to access API, signage, and other resources
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?(\w+\.)?tjhsst\.edu$'
@@ -641,6 +647,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 
 # Same origin frame options
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # X-XSS-Protection: 1; mode=block
 # Already set on nginx level
 SECURE_BROWSER_XSS_FILTER = True
@@ -657,14 +664,22 @@ GIT = {
 
 # Senior graduation date in Javascript-readable format
 SENIOR_GRADUATION = datetime.datetime(year=2016, month=7, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
+
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2016
+
 # The hour on an eighth period day to lock teachers from
 # taking attendance (10PM)
 ATTENDANCE_LOCK_HOUR = 20
+
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
+
 # The address for FCPS' Emergency Announcement page
 FCPS_EMERGENCY_PAGE = "http://www.fcps.edu/content/emergencyContent.html"
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
+
+# Shows a warning message with yellow background on the login and all interior pages
+# GLOBAL_WARNING = "This is a message to display throughout the application."
