@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #1406) documentation</title>
+    <title>intranet.settings &mdash; TJ Intranet v3 (Build #1407) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #1406)',
+        VERSION:     'v3 (Build #1407)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1406) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1407) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,11 +148,9 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">parse</span>
 
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
@@ -243,16 +241,8 @@
 <span class="p">}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
 
 
-<div class="viewcode-block" id="parse_db_url"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.parse_db_url">[docs]</a><span class="k">def</span> <span class="nf">parse_db_url</span><span class="p">():</span>
-    <span class="n">parse</span><span class="o">.</span><span class="n">uses_netloc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;postgres&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">SECRET_DATABASE_URL</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You must set SECRET_DATABASE_URL in secret.py&quot;</span><span class="p">)</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">SECRET_DATABASE_URL</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="n">url</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="n">url</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="n">url</span><span class="o">.</span><span class="n">password</span><span class="p">}</span></div>
-
-
 <span class="k">if</span> <span class="n">PRODUCTION</span> <span class="ow">or</span> <span class="n">SECRET_DATABASE_URL</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-    <span class="n">DATABASES</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">parse_db_url</span><span class="p">())</span>
+    <span class="n">DATABASES</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">parse_db_url</span><span class="p">(</span><span class="n">SECRET_DATABASE_URL</span><span class="p">))</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># Default testing db config.</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -263,17 +253,13 @@
     <span class="p">})</span>
 
 
-<div class="viewcode-block" id="is_verbose"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.is_verbose">[docs]</a><span class="k">def</span> <span class="nf">is_verbose</span><span class="p">(</span><span class="n">cmdline</span><span class="p">):</span>
-    <span class="n">cmdline</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmdline</span><span class="p">)</span>
-    <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;-v ?[2-3]|--verbosity [2-3]&#39;</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span></div>
-
 <span class="c1"># In-memory sqlite3 databases signifigantly speeds up the tests.</span>
 <span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
     <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
     <span class="n">MIGRATION_MODULES</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">MigrationMock</span><span class="p">()</span>
-    <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">is_verbose</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="c1"># FIXME: we really shouldn&#39;t have to do this.</span>
+    <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;-v ?[2-3]|--verbosity [2-3]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
 
 
 <span class="n">MANAGERS</span> <span class="o">=</span> <span class="n">ADMINS</span>
@@ -784,23 +770,9 @@
         <span class="s2">&quot;debug_toolbar_line_profiler&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
-<div class="viewcode-block" id="debug_toolbar_callback"><a class="viewcode-back" href="../../sourcedoc/intranet.settings.html#intranet.settings.debug_toolbar_callback">[docs]</a>    <span class="k">def</span> <span class="nf">debug_toolbar_callback</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show the debug toolbar to those with the Django staff permission, excluding the Eighth</span>
-<span class="sd">        Period office.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_ajax</span><span class="p">():</span>
-            <span class="k">return</span> <span class="bp">False</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">()):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_staff</span> <span class="ow">and</span>
-                    <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">9999</span> <span class="ow">and</span>
-                    <span class="s2">&quot;debug&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">False</span></div>
-
     <span class="c1"># Only show debug toolbar when requested if in production.</span>
     <span class="k">if</span> <span class="n">PRODUCTION</span><span class="p">:</span>
-        <span class="n">DEBUG_TOOLBAR_CONFIG</span><span class="p">[</span><span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;intranet.settings.debug_toolbar_callback&quot;</span>
+        <span class="n">DEBUG_TOOLBAR_CONFIG</span><span class="p">[</span><span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;intranet.utils.helpers.debug_toolbar_callback&quot;</span>
 
 <span class="c1"># Maintenance mode</span>
 <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="bp">False</span>
@@ -821,36 +793,13 @@
 <span class="n">SECURE_BROWSER_XSS_FILTER</span> <span class="o">=</span> <span class="bp">True</span>
 
 
-<span class="k">def</span> <span class="nf">_get_current_commit_short_hash</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;--work-tree&quot;</span><span class="p">,</span> <span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_get_current_commit_long_hash</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;--work-tree&quot;</span><span class="p">,</span> <span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_get_current_commit_info</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=&#39;Commit %h</span><span class="se">\n</span><span class="s2">%ad&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_get_current_commit_date</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">i&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_get_current_commit_github_url</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">&quot;https://github.com/tjcsl/ion/commit/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_get_current_commit_short_hash</span><span class="p">())</span>
-
 <span class="c1"># Add git information for the login page</span>
 <span class="n">GIT</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;commit_short_hash&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_short_hash</span><span class="p">(),</span>
-    <span class="s2">&quot;commit_long_hash&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_long_hash</span><span class="p">(),</span>
-    <span class="s2">&quot;commit_info&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_info</span><span class="p">(),</span>
-    <span class="s2">&quot;commit_date&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_date</span><span class="p">(),</span>
-    <span class="s2">&quot;commit_github_url&quot;</span><span class="p">:</span> <span class="n">_get_current_commit_github_url</span><span class="p">()</span>
+    <span class="s2">&quot;commit_short_hash&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_short_hash</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">),</span>
+    <span class="s2">&quot;commit_long_hash&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_long_hash</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">),</span>
+    <span class="s2">&quot;commit_info&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_info</span><span class="p">(),</span>
+    <span class="s2">&quot;commit_date&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_date</span><span class="p">(),</span>
+    <span class="s2">&quot;commit_github_url&quot;</span><span class="p">:</span> <span class="n">helpers</span><span class="o">.</span><span class="n">get_current_commit_github_url</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1"># Senior graduation date in Javascript-readable format</span>
