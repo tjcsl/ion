@@ -39,6 +39,13 @@ EMAIL_ANNOUNCEMENTS = PRODUCTION
 SESSION_COOKIE_SECURE = PRODUCTION
 CSRF_COOKIE_SECURE = PRODUCTION
 
+if not PRODUCTION:
+    # We don't care about session security when running a testing instance.
+    SECRET_KEY = "_5kc##e7(!4=4)h4slxlgm010l+43zd_84g@82771ay6no-1&i"
+    # Trust X-Forwarded-For when testing
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+
+
 # Internal IP ranges in production
 _internal_ip_list = [
     "198.38.16.0/20",
@@ -259,6 +266,9 @@ TEMPLATES = [
     },
 ]  # type: List[Dict[str,Any]]
 
+if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
+    TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
+
 MIDDLEWARE_CLASSES = [
     "intranet.middleware.url_slashes.FixSlashes",               # Remove slashes in URLs
     "django.middleware.common.CommonMiddleware",                # Django default
@@ -308,6 +318,13 @@ CACHE_AGE = {
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds())
 }
+
+if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
+    # Make the cache age last just long enough to reload the page to
+    # check if caching worked
+    for key in CACHE_AGE:
+        CACHE_AGE[key] = 60
+
 
 # Cacheops configuration
 # may be removed in the future
