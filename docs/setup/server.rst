@@ -271,7 +271,7 @@ Install all of the dependencies.
 
 .. code-block:: bash
 
-    $ pip install -U -r ion/requirements/production.txt
+    $ pip install -U -r requirements.txt
 
 Initialize the ldap db.
 .. code-block:: bash

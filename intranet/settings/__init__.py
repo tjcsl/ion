@@ -7,6 +7,6 @@ if sys.version_info < (3, 3):
     raise Exception("Python 3.3 or higher is required.")
 
 if os.getenv("PRODUCTION") == "TRUE":
-    from .production import *  # noqa
+    from .base import *  # noqa
 else:
     from .local import *  # noqa
