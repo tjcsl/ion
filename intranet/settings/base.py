@@ -21,8 +21,15 @@ TRAVIS = os.getenv("TRAVIS") == "true"
 # FIXME: figure out a less-hacky way to do this.
 TESTING = 'test' in sys.argv
 LOGGING_VERBOSE = PRODUCTION
+
+# DEBUG defaults to off in PRODUCTION, on otherwise.
+DEBUG = os.getenv("DEBUG", str(not PRODUCTION).upper()) == "TRUE"
+
 # Don't send emails unless we're in production.
 EMAIL_ANNOUNCEMENTS = PRODUCTION
+# Don't require https for testing.
+SESSION_COOKIE_SECURE = PRODUCTION
+CSRF_COOKIE_SECURE = PRODUCTION
 
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

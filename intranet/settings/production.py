@@ -13,10 +13,6 @@ SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 
-DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
 
 CACHES['default']['OPTIONS']['DB'] = 1
 
@@ -37,5 +33,3 @@ INTERNAL_IPS = helpers.GlobList([
     "198.38.16.0/20",
     "2001:468:cc0::/48"
 ])
-
-# MIDDLEWARE_CLASSES += ('intranet.middleware.profiler.ProfileMiddleware',)
