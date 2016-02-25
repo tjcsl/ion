@@ -48,6 +48,18 @@ Currently, the fixtures containing test data include Iodine data from the 2014-2
     ...     blk.date += relativedelta(months=+6)
     ...     blk.save()
 
+Setting up Files
+================
+
+You can find a list of file systems at ``intranet/apps/files/models.py``. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:
+
+.. code-block:: bash
+
+    $ ./manage.py shell_plus
+    Python 3.4.3 (default, Oct 14 2015, 20:28:29) 
+    (InteractiveConsole)
+    >>> Host.objects.create(name="Computer Systems Lab", code="csl", address="remote.tjhsst.edu", linux=True)
+
 Increasing RAM
 ==============
 
