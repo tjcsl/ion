@@ -4,22 +4,6 @@ intranet.settings package
 Submodules
 ----------
 
-intranet.settings.base module
------------------------------
-
-.. automodule:: intranet.settings.base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-intranet.settings.local module
-------------------------------
-
-.. automodule:: intranet.settings.local
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.settings.travis_secret module
 --------------------------------------
 
