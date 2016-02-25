@@ -16,7 +16,8 @@ if sys.version_info < (3, 3):
 from ..utils import helpers  # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
-defines SECRET_KEY and SECRET_DATABASE_URL. !!
+defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
+
 
 SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
@@ -402,8 +403,6 @@ LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
-
-# !! define AUTHUSER_PASSWORD in secret.py !!
 
 # LDAP schema config
 BASE_DN = "dc=tjhsst,dc=edu"
