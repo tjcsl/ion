@@ -2,8 +2,6 @@
 
 from urllib import parse
 
-from ..utils import helpers
-
 from .base import *  # noqa
 
 """ !! In production, add a file called secret.py to the settings package that
@@ -23,10 +21,3 @@ def parse_db_url():
 
 
 DATABASES['default'].update(parse_db_url())
-
-
-# Internal IP ranges in production
-INTERNAL_IPS = helpers.GlobList([
-    "198.38.16.0/20",
-    "2001:468:cc0::/48"
-])

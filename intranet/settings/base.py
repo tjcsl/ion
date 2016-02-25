@@ -31,6 +31,20 @@ EMAIL_ANNOUNCEMENTS = PRODUCTION
 SESSION_COOKIE_SECURE = PRODUCTION
 CSRF_COOKIE_SECURE = PRODUCTION
 
+# Internal IP ranges in production
+_internal_ip_list = [
+    "198.38.16.0/20",
+    "2001:468:cc0::/48",
+]
+
+if not PRODUCTION:
+    # Additional Internal IP ranges for debugging
+    _internal_ip_list.extend([
+        "127.0.0.0/8",
+        "10.0.0.0/8",
+    ])
+
+INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

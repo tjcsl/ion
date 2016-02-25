@@ -24,13 +24,5 @@ if os.getenv("SHORT_CACHE", "NO") == "YES":
         CACHE_AGE[key] = 60
 
 
-# Internal IP ranges for debugging
-INTERNAL_IPS = helpers.GlobList([
-    "127.0.0.0/8",
-    "10.0.0.0/8",
-    "198.38.16.0/20",
-    "2001:468:cc0::/48"
-])
-
 # Trust X-Forwarded-For
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
