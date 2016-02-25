@@ -238,6 +238,24 @@ def admin_approve_announcement_view(request, req_id):
 
 
 @announcements_admin_required
+def admin_request_status_view(request):
+    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
+    awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
+    awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
+    approved = AnnouncementRequest.objects.filter(posted=True)
+    rejected = AnnouncementRequest.objects.filter(rejected=True)
+
+    context = {
+        "awaiting_teacher": awaiting_teacher,
+        "awaiting_approval": awaiting_approval,
+        "approved": approved,
+        "rejected": rejected
+    }
+
+    return render(request, "announcements/request_status.html", context)
+
+
+@announcements_admin_required
 def add_announcement_view(request):
     """Add an announcement."""
     if request.method == "POST":
