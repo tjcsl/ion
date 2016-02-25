@@ -1090,8 +1090,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         else:
             existing_signups = EighthSignup.objects.filter(
                 user=user,
-                scheduled_activity__in=all_sched_act
-            )
+                scheduled_activity__block__in=all_blocks)
 
             prev_data = {}
             for signup in existing_signups:
