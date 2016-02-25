@@ -17,9 +17,6 @@ DATABASES["default"].update({
 # We don't care about session security when running a testing instance.
 SECRET_KEY = "crjl#r4(@8xv*x5ogeygrt@w%$$z9o8jlf7=25^!9k16pqsi!h"
 
-# Avoid conflict with production redis db
-CACHES["default"]["OPTIONS"]["DB"] = 2
-
 if os.getenv("SHORT_CACHE", "NO") == "YES":
     # Make the cache age last just long enough to reload the page to
     # check if caching worked

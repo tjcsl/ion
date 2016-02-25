@@ -307,7 +307,14 @@ if not TESTING:
     SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
 
-CACHES = {"default": {"OPTIONS": {}}}  # type: Dict[str,Dict[str,Any]]
+CACHES = {
+    "default": {
+        "OPTIONS": {
+            # Avoid conflict between production and testing redis db
+            "DB": 1 if PRODUCTION else 2,
+        }
+    }
+}  # type: Dict[str,Dict[str,Any]]
 
 if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES":
     CACHES["default"]["BACKEND"] = "django.core.cache.backends.dummy.DummyCache"

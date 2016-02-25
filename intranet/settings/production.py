@@ -14,9 +14,6 @@ SECRET_DATABASE_URL should be of the following form:
 """
 
 
-CACHES['default']['OPTIONS']['DB'] = 1
-
-
 def parse_db_url():
     parse.uses_netloc.append("postgres")
     if SECRET_DATABASE_URL is None:
