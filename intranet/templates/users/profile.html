@@ -283,7 +283,10 @@
                         <td style="text-align: center">{{ course.period }}
                             {% if course.period_end and course.end_period != course.period %} - {{ course.end_period }}{% endif %}
                         </td>
-                        <td>{{ course.course_title }}</td>
+                        <td>
+                            <a href="{% url 'ionldap_class_section' course.section_id %}">
+                                {{ course.course_title }}
+                            </td>
                         <td>
                         {% with teacher_user=course.teacher_user %}
                             {% if teacher_user %}
@@ -294,7 +297,11 @@
                                 {{ course.teacher_name }}
                             {% endif %}
                         {% endwith %}</td>
-                        <td style="text-align: center">{{ course.room_name }}</td>
+                        <td style="text-align: center">
+                            <a href="{% url 'ionldap_class_room' course.room_name %}">
+                                {{ course.room_name }}
+                            </a>
+                        </td>
                         <td>
                         {% if course.term_code %}
                             {% if course.term_code == "YR" %}
