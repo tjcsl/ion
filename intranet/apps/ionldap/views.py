@@ -60,4 +60,10 @@ def class_room_view(request, room_id):
 
 @login_required
 def all_classes_view(request):
-    pass
+    courses = LDAPCourse.objects.all()
+
+    context = {
+        "courses": courses
+    }
+
+    return render(request, "ionldap/all_classes.html", context)
