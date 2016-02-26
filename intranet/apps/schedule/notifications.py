@@ -18,15 +18,9 @@ def period_start_end_data(request):
     point, block = at_period_point(blocks)
     logger.debug((point, block))
     if point == 1:
-        return {
-            "title": "{} has started".format(block.name),
-            "text": "{}".format(block)
-        }
+        return {"title": "{} has started".format(block.name), "text": "{}".format(block)}
     elif point == 2:
-        return {
-            "title": "{} has ended".format(block.name),
-            "text": "{}".format(block)
-        }
+        return {"title": "{} has ended".format(block.name), "text": "{}".format(block)}
     else:
         return None
 

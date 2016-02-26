@@ -24,21 +24,9 @@ class ProfileEditForm(forms.Form):
     counselor_id = forms.IntegerField(label="Counselor ID")
     # locker = forms.CharField(label="Locker")
 
-    FIELDS = ["admin_comments",
-              "student_id",
-              "first_name",
-              "middle_name",
-              "last_name",
-              "title",
-              "nickname",
-              "graduation_year",
-              "sex",
-              "birthday",
+    FIELDS = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "sex", "birthday",
               "home_phone"]
-    ADDRESS_FIELDS = ["street",
-                      "city",
-                      "state",
-                      "postal_code"]
+    ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
 
 
 class UserChoiceField(forms.ModelChoiceField):

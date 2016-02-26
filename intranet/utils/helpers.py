@@ -16,8 +16,8 @@ def parse_db_url(db_url):
 
 
 def debug_toolbar_callback(request):
-    """Show the debug toolbar to those with the Django staff permission, excluding the Eighth
-    Period office."""
+    """Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
+    office."""
     if request.is_ajax():
         return False
 
@@ -58,7 +58,6 @@ def get_current_commit_github_url(workdir):
 
 
 class InvalidString(str):
-
     """An error for undefined context variables in templates."""
 
     def __mod__(self, other):
@@ -80,7 +79,6 @@ class MigrationMock(object):
 
 
 class GlobList(list):
-
     """A list of glob-style strings."""
 
     def __contains__(self, key):

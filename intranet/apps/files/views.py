@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import logging
 import os
 import tempfile
@@ -18,8 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.debug import (sensitive_post_parameters,
-                                           sensitive_variables)
+from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
 
 import pysftp
 
@@ -39,9 +39,7 @@ def files_view(request):
 
     hosts = Host.objects.visible_to_user(request.user)
 
-    context = {
-        "hosts": hosts
-    }
+    context = {"hosts": hosts}
     return render(request, "files/home.html", context)
 
 
@@ -85,11 +83,8 @@ def files_auth(request):
 
 def get_authinfo(request):
     """Get authentication info from the encrypted message."""
-    if (("files_iv" not in request.session) or
-            ("files_text" not in request.session) or
-            ("files_key" not in request.COOKIES)):
+    if (("files_iv" not in request.session) or ("files_text" not in request.session) or ("files_key" not in request.COOKIES)):
         return False
-
     """
         Decrypt the password given the SERVER-side IV, SERVER-side
         ciphertext, and CLIENT-side key.
@@ -104,20 +99,12 @@ def get_authinfo(request):
     obj = AES.new(key, AES.MODE_CFB, iv)
     password = obj.decrypt(text)
 
-    return {
-        "username": request.user.username,
-        "password": password
-    }
+    return {"username": request.user.username, "password": password}
 
 
 def windows_dir_format(host_dir, user):
     """Format a string for the location of the user's folder on the Windows (TJ03) fileserver."""
-    grade_folders = {
-        9: "Freshman M:",
-        10: "Sophomore M:",
-        11: "Junior M:",
-        12: "Senior M:"
-    }
+    grade_folders = {9: "Freshman M:", 10: "Sophomore M:", 11: "Junior M:", 12: "Senior M:"}
     if user and user.grade:
         grade = int(user.grade)
     else:
@@ -313,8 +300,11 @@ def files_type(request, fstype=None):
                 "name": f,
                 "folder": sftp.isdir(f),
                 "stat": fstat,
-                "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
+                "stat_mtime": datetime.datetime.fromtimestamp(int(stat.st_mtime or 0)),
+                "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
+
+    logger.debug(files)
 
     current_dir = sftp.pwd  # current directory
     dir_list = current_dir.split("/")
@@ -399,12 +389,7 @@ def files_upload(request, fstype=None):
             return redirect("/files/{}/?dir={}".format(fstype, fsdir))
     else:
         form = UploadFileForm()
-    context = {
-        "host": host,
-        "remote_dir": fsdir,
-        "form": form,
-        "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)
-    }
+    context = {"host": host, "remote_dir": fsdir, "form": form, "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)}
     return render(request, "files/upload.html", context)
 
 

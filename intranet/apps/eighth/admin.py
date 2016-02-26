@@ -2,8 +2,7 @@
 
 from django.contrib import admin
 
-from .models import (EighthActivity, EighthBlock, EighthRoom,
-                     EighthScheduledActivity, EighthSignup, EighthSponsor)
+from .models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor)
 
 
 class EighthSponsorAdmin(admin.ModelAdmin):
@@ -39,11 +38,13 @@ class EighthSignupAdmin(admin.ModelAdmin):
 
     def get_activity(self, obj):
         return obj.scheduled_activity.activity
+
     get_activity.short_description = "Activity"  # type: ignore
     get_activity.admin_order_field = "scheduled_activity__activity"  # type: ignore
 
     def get_block(self, obj):
         return obj.scheduled_activity.block
+
     get_block.short_description = "Block"  # type: ignore
     get_block.admin_order_field = "scheduled_activity__block"  # type: ignore
 

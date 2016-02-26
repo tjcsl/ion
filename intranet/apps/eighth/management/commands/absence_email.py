@@ -10,17 +10,9 @@ class Command(BaseCommand):
     help = "Notify users who have an Eighth Period absence."
 
     def add_arguments(self, parser):
-        parser.add_argument('--silent',
-                            action='store_true',
-                            dest='silent',
-                            default=False,
-                            help='Be silent.')
+        parser.add_argument('--silent', action='store_true', dest='silent', default=False, help='Be silent.')
 
-        parser.add_argument('--pretend',
-                            action='store_true',
-                            dest='pretend',
-                            default=False,
-                            help="Pretend, and don't actually do anything.")
+        parser.add_argument('--pretend', action='store_true', dest='pretend', default=False, help="Pretend, and don't actually do anything.")
 
     def handle(self, *args, **options):
 

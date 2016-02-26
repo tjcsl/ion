@@ -13,34 +13,16 @@ class Command(BaseCommand):
     help = "Notify users who have not signed up for Eighth Period or need to change their signup selection."
 
     def add_arguments(self, parser):
-        parser.add_argument('--silent',
-                            action='store_true',
-                            dest='silent',
-                            default=False,
-                            help='Be silent.')
+        parser.add_argument('--silent', action='store_true', dest='silent', default=False, help='Be silent.')
 
-        parser.add_argument('--only-tomorrow',
-                            action='store_true',
-                            dest='only-tomorrow',
-                            default=False,
+        parser.add_argument('--only-tomorrow', action='store_true', dest='only-tomorrow', default=False,
                             help='Only run if there is a block tomorrow.')
 
-        parser.add_argument('--only-today',
-                            action='store_true',
-                            dest='only-today',
-                            default=False,
-                            help='Only run if there is a block today.')
+        parser.add_argument('--only-today', action='store_true', dest='only-today', default=False, help='Only run if there is a block today.')
 
-        parser.add_argument('--pretend',
-                            action='store_true',
-                            dest='pretend',
-                            default=False,
-                            help="Pretend, and don't actually do anything.")
+        parser.add_argument('--pretend', action='store_true', dest='pretend', default=False, help="Pretend, and don't actually do anything.")
 
-        parser.add_argument('--everyone',
-                            action='store_true',
-                            dest='everyone',
-                            default=False,
+        parser.add_argument('--everyone', action='store_true', dest='everyone', default=False,
                             help="Send to everyone, even those who have no eighth emails set.")
 
     def handle(self, *args, **options):

@@ -13,10 +13,7 @@ from django.utils import timezone
 
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (admin_request_announcement_email,
-                            announcement_approved_email,
-                            announcement_posted_email,
-                            announcement_posted_twitter,
+from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
                             request_announcement_email)
 from ..auth.decorators import announcements_admin_required
 from ..dashboard.views import dashboard_view
@@ -116,7 +113,7 @@ def request_announcement_view(request):
                     ann.save()
 
                     messages.success(request, "Successfully added approved announcement request. An Intranet administrator "
-                                              "will review and post the announcement shortly. (Notification sent.)")
+                                     "will review and post the announcement shortly. (Notification sent.)")
                 else:
                     request_announcement_email(request, form, obj)
                     messages.success(request, "Successfully added announcement request.")
@@ -159,21 +156,17 @@ def approve_announcement_view(request, req_id):
                     obj.save()
 
                     messages.success(request, "Successfully approved announcement request. An Intranet administrator "
-                                              "will review and post the announcement shortly. (Notification sent.)")
+                                     "will review and post the announcement shortly. (Notification sent.)")
                 else:
                     messages.success(request, "Successfully approved announcement request. An Intranet administrator "
-                                              "will review and post the announcement shortly.")
+                                     "will review and post the announcement shortly.")
             else:
                 obj.save()
                 messages.success(request, "You did not approve this request.")
                 return redirect("index")
 
     form = AnnouncementRequestForm(instance=req)
-    context = {
-        "form": form,
-        "req": req,
-        "admin_approve": False
-    }
+    context = {"form": form, "req": req, "admin_approve": False}
     return render(request, "announcements/approve.html", context)
 
 
@@ -202,10 +195,7 @@ def admin_approve_announcement_view(request, req_id):
                     group_ids = request.POST.getlist("groups")
                     groups = Group.objects.filter(id__in=group_ids)
                 logger.debug(groups)
-                announcement = Announcement.objects.create(title=req.title,
-                                                           content=req.content,
-                                                           author=req.author,
-                                                           user=req.user,
+                announcement = Announcement.objects.create(title=req.title, content=req.content, author=req.author, user=req.user,
                                                            expiration_date=req.expiration_date)
                 for g in groups:
                     announcement.groups.add(g)
@@ -228,12 +218,7 @@ def admin_approve_announcement_view(request, req_id):
 
     form = AnnouncementRequestForm(instance=req)
     all_groups = Group.objects.all()
-    context = {
-        "form": form,
-        "req": req,
-        "admin_approve": True,
-        "all_groups": all_groups
-    }
+    context = {"form": form, "req": req, "admin_approve": True, "all_groups": all_groups}
     return render(request, "announcements/approve.html", context)
 
 
@@ -242,15 +227,10 @@ def admin_request_status_view(request):
     all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
     awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    approved = AnnouncementRequest.objects.filter(posted=True)
+    approved = AnnouncementRequest.objects.exclude(posted=None)
     rejected = AnnouncementRequest.objects.filter(rejected=True)
 
-    context = {
-        "awaiting_teacher": awaiting_teacher,
-        "awaiting_approval": awaiting_approval,
-        "approved": approved,
-        "rejected": rejected
-    }
+    context = {"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval, "approved": approved, "rejected": rejected}
 
     return render(request, "announcements/request_status.html", context)
 
@@ -316,12 +296,7 @@ def modify_announcement_view(request, id=None):
         announcement = Announcement.objects.get(id=id)
         form = AnnouncementForm(instance=announcement)
 
-    context = {
-        "form": form,
-        "action": "modify",
-        "id": id,
-        "announcement": announcement
-    }
+    context = {"form": form, "action": "modify", "id": id, "announcement": announcement}
     return render(request, "announcements/add_modify.html", context)
 
 

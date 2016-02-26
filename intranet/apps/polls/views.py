@@ -30,10 +30,7 @@ def polls_view(request):
     if not is_polls_admin:
         polls = polls.filter(visible=True)
 
-    context = {
-        "polls": polls,
-        "is_polls_admin": is_polls_admin
-    }
+    context = {"polls": polls, "is_polls_admin": is_polls_admin}
     return render(request, "polls/home.html", context)
 
 
@@ -157,13 +154,7 @@ def poll_vote_view(request, poll_id):
     logger.debug(questions)
 
     can_vote = poll.can_vote(user)
-    context = {
-        "poll": poll,
-        "can_vote": can_vote,
-        "user": user,
-        "questions": questions,
-        "question_types": Question.get_question_types()
-    }
+    context = {"poll": poll, "can_vote": can_vote, "user": user, "questions": questions, "question_types": Question.get_question_types()}
     return render(request, "polls/vote.html", context)
 
 
@@ -201,7 +192,8 @@ def poll_results_view(request, poll_id):
                     "votes": {
                         "total": {
                             "all": len(vote_users),
-                            "all_percent": perc(len(vote_users), users.count()),
+                            "all_percent": perc(
+                                len(vote_users), users.count()),
                             "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
                             "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
                         }
@@ -218,7 +210,6 @@ def poll_results_view(request, poll_id):
                     }
                 logger.debug(choice)
                 choices.append(choice)
-
             """ Clear vote """
             votes = question_votes.filter(clear_vote=True)
             clr_users = set([v.user for v in votes])
@@ -227,7 +218,8 @@ def poll_results_view(request, poll_id):
                 "votes": {
                     "total": {
                         "all": len(clr_users),
-                        "all_percent": perc(len(clr_users), users.count()),
+                        "all_percent": perc(
+                            len(clr_users), users.count()),
                         "male": fmt(sum([v.user.is_male * user_scale[v.user.id] for v in votes])),
                         "female": fmt(sum([v.user.is_female * user_scale[v.user.id] for v in votes]))
                     }
@@ -237,11 +229,9 @@ def poll_results_view(request, poll_id):
             for yr in range(9, 13):
                 yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                 yr_votes = list(filter(None, yr_votes))
-                choice["votes"][yr] = {
-                    "all": len(yr_votes),
-                    "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
-                    "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))
-                }
+                choice["votes"][yr] = {"all": len(yr_votes),
+                                       "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
+                                       "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))}
             logger.debug(choice)
             choices.append(choice)
 
@@ -268,11 +258,7 @@ def poll_results_view(request, poll_id):
 
             choices.append(choice)
 
-            question = {
-                "question": q,
-                "choices": choices,
-                "user_scale": user_scale
-            }
+            question = {"question": q, "choices": choices, "user_scale": user_scale}
             questions.append(question)
         elif q.is_choice():
             question_votes = votes = Answer.objects.filter(question=q)
@@ -295,14 +281,11 @@ def poll_results_view(request, poll_id):
                 for yr in range(9, 13):
                     yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                     yr_votes = list(filter(None, yr_votes))
-                    choice["votes"][yr] = {
-                        "all": len(yr_votes),
-                        "male": sum([u.is_male for u in yr_votes]),
-                        "female": sum([u.is_female for u in yr_votes])
-                    }
+                    choice["votes"][yr] = {"all": len(yr_votes),
+                                           "male": sum([u.is_male for u in yr_votes]),
+                                           "female": sum([u.is_female for u in yr_votes])}
                 logger.debug(choice)
                 choices.append(choice)
-
             """ Clear vote """
             votes = question_votes.filter(clear_vote=True)
             choice = {
@@ -320,11 +303,9 @@ def poll_results_view(request, poll_id):
             for yr in range(9, 13):
                 yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
                 yr_votes = list(filter(None, yr_votes))
-                choice["votes"][yr] = {
-                    "all": len(yr_votes),
-                    "male": sum([u.is_male for u in yr_votes]),
-                    "female": sum([u.is_female for u in yr_votes])
-                }
+                choice["votes"][yr] = {"all": len(yr_votes),
+                                       "male": sum([u.is_male for u in yr_votes]),
+                                       "female": sum([u.is_female for u in yr_votes])}
             logger.debug(choice)
             choices.append(choice)
 
@@ -343,32 +324,20 @@ def poll_results_view(request, poll_id):
             for yr in range(9, 13):
                 yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
                 yr_votes = list(filter(None, yr_votes))
-                choice["votes"][yr] = {
-                    "all": len(yr_votes),
-                    "male": sum([u.is_male for u in yr_votes]),
-                    "female": sum([u.is_female for u in yr_votes])
-                }
+                choice["votes"][yr] = {"all": len(yr_votes),
+                                       "male": sum([u.is_male for u in yr_votes]),
+                                       "female": sum([u.is_female for u in yr_votes])}
 
             choices.append(choice)
 
-            question = {
-                "question": q,
-                "choices": choices
-            }
+            question = {"question": q, "choices": choices}
             questions.append(question)
         elif q.is_writing():
             answers = Answer.objects.filter(question=q)
-            question = {
-                "question": q,
-                "answers": answers
-            }
+            question = {"question": q, "answers": answers}
             questions.append(question)
 
-    context = {
-        "poll": poll,
-        "grades": range(9, 13),
-        "questions": questions
-    }
+    context = {"poll": poll, "grades": range(9, 13), "questions": questions}
     return render(request, "polls/results.html", context)
 
 

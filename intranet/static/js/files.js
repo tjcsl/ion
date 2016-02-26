@@ -2,9 +2,7 @@ $(document).ready(function() {
     // check for drop support, file support, and file upload support
     if (Modernizr.draganddrop && window.File && window.FormData) {
         $("#additional-upload-option").show();
-        var params = {};
-        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
-        var dir = params["dir"];
+        var endpoint = $("#directory-list").attr("data-endpoint");
         // dragover event must be cancelled to drop
         $(window).on("dragover", function(e) {
             e.originalEvent.dataTransfer.dropEffect = "copy";
@@ -17,7 +15,7 @@ $(document).ready(function() {
                     var count = dt.files.length;
                     $.each(dt.files, function(index, file) {
                         var safeName = $("<div>").text(file.name).html();
-                        Messenger().post({
+                        var message = Messenger().post({
                             "message": "Uploading <b>" + safeName + "</b>",
                             "type": "info"
                         });
@@ -25,7 +23,7 @@ $(document).ready(function() {
                         fd.append("file", file);
                         fd.append("csrfmiddlewaretoken", $.cookie("csrftoken"));
                         $.ajax({
-                            url: "upload?dir=" + encodeURIComponent(dir),
+                            url: endpoint,
                             type: "POST",
                             contentType: false,
                             processData: false,
@@ -37,11 +35,17 @@ $(document).ready(function() {
                                 // this could be made better if a notification could
                                 // be displayed and the list of files could be refreshed
                                 if (count <= 0) {
-                                    window.location.reload();
+                                    message.update({
+                                        "message": "Upload succeeded.",
+                                        "type": "info"
+                                    });
+                                    
+                                    var dirList = $("#directory-list", $(data)).html();
+                                    $("#directory-list").html(dirList);
                                 }
                             },
                             error: function(xhr, stat, err) {
-                                Messenger().post({
+                                message.update({
                                     "message": "Failed to upload <b>" + safeName + "</b>",
                                     "type": "error"
                                 });

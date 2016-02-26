@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class AuthenticateForm(AuthenticationForm):
-
     """Implements a login form.
 
     Attributes:
@@ -20,10 +19,14 @@ class AuthenticateForm(AuthenticationForm):
             The password text field.
 
     """
-    username = forms.CharField(required=True, widget=widgets.TextInput(attrs={"placeholder": "Username", "aria-label": "Enter Username"}),
-                               error_messages={"required": "Invalid username", "inactive": "Access disallowed."})
+    username = forms.CharField(required=True, widget=widgets.TextInput(attrs={"placeholder": "Username",
+                                                                              "aria-label": "Enter Username"}),
+                               error_messages={"required": "Invalid username",
+                                               "inactive": "Access disallowed."})
     password = forms.CharField(required=True, widget=widgets.PasswordInput(attrs={"placeholder": "Password",
-                                                                                  "aria-label": "Enter Password"}), error_messages={"required": "Invalid password", "inactive": "Access disallowed."})
+                                                                                  "aria-label": "Enter Password"}),
+                               error_messages={"required": "Invalid password",
+                                               "inactive": "Access disallowed."})
 
     def is_valid(self):
         """Validates the username and password in the form."""

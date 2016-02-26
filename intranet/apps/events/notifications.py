@@ -11,12 +11,6 @@ def event_approval_request(request, event):
     emails = [settings.APPROVAL_EMAIL]
 
     base_url = request.build_absolute_uri(reverse('index'))
-    data = {
-        "event": event,
-        "info_link": request.build_absolute_uri(reverse("event", args=[event.id])),
-        "base_url": base_url
-    }
+    data = {"event": event, "info_link": request.build_absolute_uri(reverse("event", args=[event.id])), "base_url": base_url}
 
-    email_send("events/emails/admin_approve.txt",
-               "events/emails/admin_approve.html",
-               data, subject, emails)
+    email_send("events/emails/admin_approve.txt", "events/emails/admin_approve.html", data, subject, emails)

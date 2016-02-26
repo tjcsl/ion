@@ -7,14 +7,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ionldap', '0003_auto_20160205_2210'),
-    ]
+    dependencies = [('ionldap', '0003_auto_20160205_2210')]
 
-    operations = [
-        migrations.AlterField(
-            model_name='ldapcourse',
-            name='course_id',
-            field=models.CharField(max_length=10),
-        ),
-    ]
+    operations = [migrations.AlterField(model_name='ldapcourse', name='course_id', field=models.CharField(max_length=10),)]

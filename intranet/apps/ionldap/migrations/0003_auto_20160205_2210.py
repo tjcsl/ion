@@ -7,14 +7,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ionldap', '0002_auto_20160205_2156'),
-    ]
+    dependencies = [('ionldap', '0002_auto_20160205_2156')]
 
-    operations = [
-        migrations.RenameField(
-            model_name='ldapcourse',
-            old_name='user',
-            new_name='users',
-        ),
-    ]
+    operations = [migrations.RenameField(model_name='ldapcourse', old_name='user', new_name='users',)]

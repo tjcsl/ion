@@ -13,8 +13,7 @@ class TimeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Time
-        fields = ("hour",
-                  "minute")
+        fields = ("hour", "minute")
 
 
 class BlockSerializer(serializers.ModelSerializer):
@@ -23,10 +22,7 @@ class BlockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Block
-        fields = ("order",
-                  "name",
-                  "start",
-                  "end")
+        fields = ("order", "name", "start", "end")
 
 
 class DayTypeSerializer(serializers.ModelSerializer):
@@ -35,9 +31,7 @@ class DayTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DayType
-        fields = ("name",
-                  "special",
-                  "blocks")
+        fields = ("name", "special", "blocks")
 
 
 class DaySerializer(serializers.HyperlinkedModelSerializer):
@@ -46,6 +40,4 @@ class DaySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Day
-        fields = ("url",
-                  "date",
-                  "day_type")
+        fields = ("url", "date", "day_type")

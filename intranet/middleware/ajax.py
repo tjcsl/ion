@@ -3,7 +3,6 @@ from django.http import HttpResponseRedirect
 
 
 class AjaxNotAuthenticatedMiddleWare(object):
-
     """Django doesn't handle login redirects with AJAX very nicely, so we have to work around the
     default behavior a little.
 
@@ -20,8 +19,6 @@ class AjaxNotAuthenticatedMiddleWare(object):
     """
 
     def process_response(self, request, response):
-        if (request.is_ajax() and
-                not request.user.is_authenticated() and
-                isinstance(response, HttpResponseRedirect)):
+        if (request.is_ajax() and not request.user.is_authenticated() and isinstance(response, HttpResponseRedirect)):
             response.status_code = 401
         return response

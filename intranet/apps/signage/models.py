@@ -9,14 +9,8 @@ class Sign(models.Model):
     status is eighth url The url if the status is url."""
     name = models.CharField(max_length=1000)
     display = models.CharField(max_length=100, unique=True)
-    STATUSES = (
-        ("auto", "Auto - Schedule/Eighth"),
-        ("autourl", "Auto - URL/Eighth"),
-        ("eighth", "Eighth Period"),
-        ("schedule", "Bell Schedule"),
-        ("status", "Schedule/Clock"),
-        ("url", "Custom URL")
-    )
+    STATUSES = (("auto", "Auto - Schedule/Eighth"), ("autourl", "Auto - URL/Eighth"), ("eighth", "Eighth Period"), ("schedule", "Bell Schedule"),
+                ("status", "Schedule/Clock"), ("url", "Custom URL"))
     use_frameset = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUSES, default="auto")
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)

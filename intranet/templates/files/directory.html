@@ -39,10 +39,10 @@
             <i class="fa fa-upload"></i> Upload
         </a>
 
-        <span id="additional-upload-option">You can also drag files onto this page to upload them.</span>
+        <span id="additional-upload-option"><b>New:</b> You can also drag files onto this page to upload them.</span>
 
         <h3>Current directory: {{ current_dir }}</h3>
-        <table class="directory-list">
+        <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
         {% if parent_dir %}
             <tr>
                 <td class="item folder">
@@ -74,8 +74,10 @@
                         &nbsp; &nbsp; &nbsp; <i class="fa fa-exclamation-triangle"></i> Too large to download (>{{ max_download_mb }}MB)
                     {% endif %}
                 </td>
-                {% endif %}
+                <td class="last-modified">
+                    Last Modified: {{ file.stat_mtime }}
                 </td>
+                {% endif %}
             </tr>
         {% empty %}
             <tr>

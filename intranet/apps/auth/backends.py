@@ -21,6 +21,7 @@ class KerberosAuthenticationBackend(object):
     This is the default authentication backend.
 
     """
+
     @staticmethod
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
@@ -35,6 +36,7 @@ class KerberosAuthenticationBackend(object):
             Boolean indicating success or failure of ticket creation
 
         """
+
         def kinit_timeout_handle(username, realm):
             """Check if the user exists before we throw an error.
 
@@ -122,8 +124,7 @@ class KerberosAuthenticationBackend(object):
                 user = User.get_user(username=username)
             except User.DoesNotExist:
                 # Shouldn't happen
-                logger.error("User {} successfully authenticated but not found "
-                             "in LDAP.".format(username))
+                logger.error("User {} successfully authenticated but not found " "in LDAP.".format(username))
 
                 user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
             return user

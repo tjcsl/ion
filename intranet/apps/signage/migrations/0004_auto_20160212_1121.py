@@ -7,17 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('signage', '0003_sign_use_frameset'),
-    ]
+    dependencies = [('signage', '0003_sign_use_frameset')]
 
     operations = [
         migrations.AlterField(
-            model_name='sign', name='status', field=models.CharField(
-                choices=[('auto', 'Auto - Schedule/Eighth'),
-                         ('autourl', 'Auto - URL/Eighth'),
-                         ('eighth', 'Eighth Period'),
-                         ('schedule', 'Bell Schedule'),
-                         ('status', 'Schedule/Clock'),
-                         ('url', 'Custom URL')],
-                default='auto', max_length=10),), ]
+            model_name='sign',
+            name='status',
+            field=models.CharField(choices=[('auto', 'Auto - Schedule/Eighth'), ('autourl', 'Auto - URL/Eighth'), ('eighth', 'Eighth Period'), (
+                'schedule', 'Bell Schedule'), ('status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),),
+    ]

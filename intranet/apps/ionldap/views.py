@@ -5,6 +5,7 @@ import logging
 from django import http
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+
 from .models import LDAPCourse
 
 logger = logging.getLogger(__name__)
@@ -17,10 +18,7 @@ def main_view(request):
     user = request.user
     courses = user.ionldap_courses
 
-    context = {
-        "user": user,
-        "courses": courses
-    }
+    context = {"user": user, "courses": courses}
 
     return render(request, "ionldap/main.html", context)
 
@@ -34,6 +32,8 @@ def class_section_view(request, section_id):
 
     in_class = (course.users.filter(id=request.user.id).count() == 1)
     can_view_students = (request.user.is_teacher or request.user.is_eighth_admin)
+    course_users = list(course.users.all())
+    course_users.sort(key=lambda u: (u.last_name, u.first_name))
     teacher_classes = LDAPCourse.objects.filter(teacher_name=course.teacher_name)
     section_classes = LDAPCourse.objects.filter(course_id=course.course_id)
 
@@ -43,7 +43,8 @@ def class_section_view(request, section_id):
         "can_view_students": can_view_students,
         "teacher_user": course.teacher_user,
         "teacher_classes": teacher_classes,
-        "section_classes": section_classes
+        "section_classes": section_classes,
+        "course_users": course_users
     }
 
     return render(request, "ionldap/class.html", context)
@@ -53,10 +54,7 @@ def class_section_view(request, section_id):
 def class_room_view(request, room_id):
     courses = LDAPCourse.objects.filter(room_name="{}".format(room_id))
 
-    context = {
-        "room": room_id,
-        "courses": courses
-    }
+    context = {"room": room_id, "courses": courses}
 
     return render(request, "ionldap/class_room.html", context)
 
@@ -65,8 +63,6 @@ def class_room_view(request, room_id):
 def all_classes_view(request):
     courses = LDAPCourse.objects.all()
 
-    context = {
-        "courses": courses
-    }
+    context = {"courses": courses}
 
     return render(request, "ionldap/all_classes.html", context)

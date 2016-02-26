@@ -66,11 +66,9 @@ def chrome_getdata_view(request):
             notif = notifs.first()
             ndata = notif.data
             if "title" in ndata and "text" in ndata:
-                data = {
-                    "title": ndata['title'] if 'title' in ndata else '',
-                    "text": ndata['text'] if 'text' in ndata else '',
-                    "url": ndata['url'] if 'url' in ndata else ''
-                }
+                data = {"title": ndata['title'] if 'title' in ndata else '',
+                        "text": ndata['text'] if 'text' in ndata else '',
+                        "url": ndata['url'] if 'url' in ndata else ''}
             else:
                 schedule_chk = chrome_getdata_check(request)
                 if schedule_chk:
@@ -86,10 +84,7 @@ def chrome_getdata_view(request):
         if schedule_chk:
             data = schedule_chk
         else:
-            data = {
-                "title": "Check Intranet",
-                "text": "You have a new notification that couldn't be loaded right now."
-            }
+            data = {"title": "Check Intranet", "text": "You have a new notification that couldn't be loaded right now."}
     j = json.dumps(data)
     return HttpResponse(j, content_type="text/json")
 
@@ -122,14 +117,9 @@ def gcm_list_view(request):
     gcm_notifs = GCMNotification.objects.all().order_by("-time")
     posts = []
     for n in gcm_notifs:
-        posts.append({
-            "gcm": n,
-            "data": json.loads(n.sent_data)["data"]
-        })
+        posts.append({"gcm": n, "data": json.loads(n.sent_data)["data"]})
 
-    context = {
-        "posts": posts
-    }
+    context = {"posts": posts}
 
     return render(request, "notifications/gcm_list.html", context)
 
@@ -156,15 +146,8 @@ def gcm_post(nc_users, data, user=None, request=None):
 
     logger.debug(nc_objs)
     logger.debug(reg_ids)
-    headers = {
-        "Content-Type": "application/json",
-        "project_id": settings.GCM_PROJECT_ID,
-        "Authorization": "key={}".format(settings.GCM_AUTH_KEY)
-    }
-    postdata = {
-        "registration_ids": reg_ids,
-        "data": data
-    }
+    headers = {"Content-Type": "application/json", "project_id": settings.GCM_PROJECT_ID, "Authorization": "key={}".format(settings.GCM_AUTH_KEY)}
+    postdata = {"registration_ids": reg_ids, "data": data}
     logger.debug(postdata)
     postjson = json.dumps(postdata)
     req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson)
@@ -177,10 +160,7 @@ def gcm_post(nc_users, data, user=None, request=None):
     # {"multicast_id":123456,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:142%771acd"}]}
     logger.debug(resp)
     if "multicast_id" in resp:
-        n = GCMNotification.objects.create(multicast_id=resp["multicast_id"],
-                                           num_success=resp["success"],
-                                           num_failure=resp["failure"],
-                                           user=user,
+        n = GCMNotification.objects.create(multicast_id=resp["multicast_id"], num_success=resp["success"], num_failure=resp["failure"], user=user,
                                            sent_data=json.dumps(data))
         for nc in nc_objs:
             n.sent_to.add(nc)
@@ -213,10 +193,7 @@ def gcm_post_view(request):
         "wakeup": request.POST.get("wakeup", False),
         "vibrate": request.POST.get("vibrate", 0)
     }
-    context = {
-        "nc_all": nc_all,
-        "has_tokens": has_tokens
-    }
+    context = {"nc_all": nc_all, "has_tokens": has_tokens}
 
     if request.method == "POST":
         nc_users = request.POST.getlist("nc_users")
@@ -229,7 +206,6 @@ def gcm_post_view(request):
 
 
 def get_gcm_schedule_uids():
-    nc_all = (NotificationConfig.objects.exclude(gcm_token=None)
-                                        .exclude(gcm_optout=True))
+    nc_all = (NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True))
     nc = nc_all.filter(user__receive_schedule_notifications=True)
     return nc.values_list("id", flat=True)

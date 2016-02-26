@@ -117,8 +117,7 @@ class ProfileMiddleware(object):
                     _current_stats = self._collect_time()
                 else:
                     # outer layer of onion
-                    _current_stats['middleware_time'] = (time.time() -
-                                                         _middleware_start_time - _current_stats['total_time'])
+                    _current_stats['middleware_time'] = (time.time() - _middleware_start_time - _current_stats['total_time'])
                     self._display_time(request, response)
                     _middleware_start_time = None
                     _current_stats = None
@@ -167,8 +166,7 @@ class ProfileMiddleware(object):
 
     def _display_time(self, request, response):
         # display all stats since last reset
-        stats_str = "%-4s %-24s %13s %14s %10s %12s %12s %12s %12s\n" % tuple(
-            ['Req', 'Start time'] + time_labels)
+        stats_str = "%-4s %-24s %13s %14s %10s %12s %12s %12s %12s\n" % tuple(['Req', 'Start time'] + time_labels)
         count = 0
         mins = defaultdict(int)
         sums = defaultdict(int)
@@ -184,20 +182,17 @@ class ProfileMiddleware(object):
                 maxs[field] = max(stats[field], maxs[field])
                 values[field].append(stats[field])
             # display line
-            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-                [count, time.ctime(start_time)] + [stats[field] for field in
-                                                   time_fields])
+            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple([count, time.ctime(start_time)] + [stats[
+                field] for field in time_fields])
 
         # display summary statistics
-        stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-            ['', 'Minimum'] + [mins[field] for field in time_fields])
-        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-            ['', 'Mean'] + [sums[field] / count for field in time_fields])
-        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-            ['', 'Maximum'] + [maxs[field] for field in time_fields])
+        stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Minimum'] + [mins[field] for field in time_fields])
+        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Mean'] + [sums[field] / count for field in time_fields
+                                                                                                         ])
+        stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Maximum'] + [maxs[field] for field in time_fields])
         if count > 1:
-            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(
-                ['', 'Standard deviation'] + [stdev(values[field]) for field in time_fields])
+            stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Standard deviation'] + [stdev(values[field])
+                                                                                                                           for field in time_fields])
 
         if response and response.content and stats_str:
             response.content = "<pre>%s\n\noptions: &reset (clear all stats)\n\n%s</pre>" % (request.build_absolute_uri(), stats_str)
@@ -240,8 +235,7 @@ class ProfileMiddleware(object):
         if response and response.content and stats_str:
             response.content = """<pre>%s\n\n
             options: &log (write data to file) &strip (remove directories) &limit=LIMIT (lines or fraction)\n
-            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (
-                request.build_absolute_uri(), stats_str)
+            &sort=KEY (e.g., cumulative (default), time, calls, pcalls, etc.)\n\n%s</pre>""" % (request.build_absolute_uri(), stats_str)
             if 'strip' not in request.GET:
                 response.content += self._summary_for_files(stats_str)
 
@@ -319,6 +313,6 @@ def stdev(x):
         mean += a
     mean /= float(n)
     for a in x:
-        std += (a - mean) ** 2
+        std += (a - mean)**2
     std = sqrt(std / float(n - 1))
     return std

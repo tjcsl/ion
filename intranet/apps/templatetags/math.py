@@ -17,7 +17,7 @@ def round_num(number, precision=0):
     place and a precision of -1 will round to the tens place.
 
     Returns:
-        Float
+    Float
 
     """
 

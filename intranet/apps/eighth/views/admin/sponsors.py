@@ -25,10 +25,7 @@ def add_sponsor_view(request):
             messages.error(request, "Error adding sponsor.")
             request.session["add_sponsor_form"] = pickle.dumps(form)
 
-    context = {
-        "admin_page_title": "Add Sponsor",
-        "form": SponsorForm
-    }
+    context = {"admin_page_title": "Add Sponsor", "form": SponsorForm}
     return render(request, "eighth/admin/add_sponsor.html", context)
 
 
@@ -50,12 +47,7 @@ def edit_sponsor_view(request, sponsor_id):
     else:
         form = SponsorForm(instance=sponsor)
 
-    context = {
-        "form": form,
-        "admin_page_title": "Edit Sponsor",
-        "delete_url": reverse("eighth_admin_delete_sponsor",
-                              args=[sponsor_id])
-    }
+    context = {"form": form, "admin_page_title": "Edit Sponsor", "delete_url": reverse("eighth_admin_delete_sponsor", args=[sponsor_id])}
     return render(request, "eighth/admin/edit_form.html", context)
 
 
@@ -93,10 +85,8 @@ def sponsor_schedule_view(request, sponsor_id):
     start_date = get_start_date(request)
 
     # for_sponsor() excludes cancelled activities
-    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True)
-                                         .filter(block__date__gte=start_date)
-                                         .order_by("block__date",
-                                                   "block__block_letter"))
+    sched_acts = (EighthScheduledActivity.objects.for_sponsor(sponsor, True).filter(block__date__gte=start_date).order_by("block__date",
+                                                                                                                          "block__block_letter"))
 
     # Find list of all activities before the list is filtered to only show one activity
     activities = set()

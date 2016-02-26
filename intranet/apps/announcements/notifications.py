@@ -42,17 +42,13 @@ def request_announcement_email(request, form, obj):
     logger.debug(emails)
     logger.info("%s: Announcement request to %s, %s", request.user, teachers, emails)
     base_url = request.build_absolute_uri(reverse('index'))
-    data = {
-        "teachers": teachers,
-        "user": request.user,
-        "formdata": form.data,
-        "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
-        "base_url": base_url
-    }
+    data = {"teachers": teachers,
+            "user": request.user,
+            "formdata": form.data,
+            "info_link": request.build_absolute_uri(reverse("approve_announcement", args=[obj.id])),
+            "base_url": base_url}
     logger.info("%s: Announcement request %s", request.user, data)
-    email_send("announcements/emails/teacher_approve.txt",
-               "announcements/emails/teacher_approve.html",
-               data, subject, emails)
+    email_send("announcements/emails/teacher_approve.txt", "announcements/emails/teacher_approve.html", data, subject, emails)
 
 
 def admin_request_announcement_email(request, form, obj):
@@ -66,15 +62,11 @@ def admin_request_announcement_email(request, form, obj):
     subject = "News Post Approval Needed ({})".format(obj.title)
     emails = [settings.APPROVAL_EMAIL]
     base_url = request.build_absolute_uri(reverse('index'))
-    data = {
-        "req": obj,
-        "formdata": form.data,
-        "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
-        "base_url": base_url
-    }
-    email_send("announcements/emails/admin_approve.txt",
-               "announcements/emails/admin_approve.html",
-               data, subject, emails)
+    data = {"req": obj,
+            "formdata": form.data,
+            "info_link": request.build_absolute_uri(reverse("admin_approve_announcement", args=[obj.id])),
+            "base_url": base_url}
+    email_send("announcements/emails/admin_approve.txt", "announcements/emails/admin_approve.html", data, subject, emails)
 
 
 def announcement_approved_email(request, obj, req):
@@ -86,7 +78,6 @@ def announcement_approved_email(request, obj, req):
 
     """
     subject = "Announcement Approved: {}".format(obj.title)
-
     """ Email to teachers who approved. """
     teachers = req.teachers_approved.all()
 
@@ -100,33 +91,17 @@ def announcement_approved_email(request, obj, req):
     url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
 
     if len(teacher_emails) > 0:
-        data = {
-            "announcement": obj,
-            "request": req,
-            "info_link": url,
-            "base_url": base_url,
-            "role": "approved"
-        }
-        email_send("announcements/emails/announcement_approved.txt",
-                   "announcements/emails/announcement_approved.html",
-                   data, subject, teacher_emails)
+        data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "approved"}
+        email_send("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, teacher_emails)
         messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
-
     """ Email to submitter. """
     submitter = req.user
     submitter_email = submitter.tj_email
     if submitter_email:
         submitter_emails = [submitter_email]
-        data = {
-            "announcement": obj,
-            "request": req,
-            "info_link": url,
-            "base_url": base_url,
-            "role": "submitted"
-        }
-        email_send("announcements/emails/announcement_approved.txt",
-                   "announcements/emails/announcement_approved.html",
-                   data, subject, submitter_emails)
+        data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
+        email_send("announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject,
+                   submitter_emails)
         messages.success(request, "Sent teacher approved email to {} users".format(len(submitter_emails)))
 
 
@@ -173,14 +148,8 @@ def announcement_posted_email(request, obj, send_all=False):
 
         base_url = request.build_absolute_uri(reverse('index'))
         url = request.build_absolute_uri(reverse('view_announcement', args=[obj.id]))
-        data = {
-            "announcement": obj,
-            "info_link": url,
-            "base_url": base_url
-        }
-        email_send_bcc("announcements/emails/announcement_posted.txt",
-                       "announcements/emails/announcement_posted.html",
-                       data, subject, emails)
+        data = {"announcement": obj, "info_link": url, "base_url": base_url}
+        email_send_bcc("announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails)
         messages.success(request, "Sent email to {} users".format(len(users_send)))
     else:
         logger.debug("Emailing announcements disabled")
@@ -223,14 +192,9 @@ def notify_twitter(status):
     if not cfg:
         return False
 
-    auth = OAuth1(cfg["consumer_key"],
-                  cfg["consumer_secret"],
-                  cfg["access_token_key"],
-                  cfg["access_token_secret"])
+    auth = OAuth1(cfg["consumer_key"], cfg["consumer_secret"], cfg["access_token_key"], cfg["access_token_secret"])
 
-    data = {
-        "status": status
-    }
+    data = {"status": status}
 
     req = requests.post(url, data=data, auth=auth)
 

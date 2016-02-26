@@ -2,8 +2,7 @@
 
 import os
 
-from fabric.api import (abort, env, hide, lcd, local, prefix, prompt, puts,
-                        shell_env)
+from fabric.api import (abort, env, hide, lcd, local, prefix, prompt, puts, shell_env)
 from fabric.contrib.console import confirm
 
 import pkg_resources
@@ -36,25 +35,14 @@ def clean_pyc():
     local("find . -name '*.pyc' -delete")
 
 
-def runserver(port=8080,
-              debug_toolbar="yes",
-              werkzeug="no",
-              dummy_cache="no",
-              short_cache="no",
-              template_warnings="no",
-              log_level="DEBUG",
+def runserver(port=8080, debug_toolbar="yes", werkzeug="no", dummy_cache="no", short_cache="no", template_warnings="no", log_level="DEBUG",
               insecure="no"):
     """Clear compiled python files and start the Django dev server."""
     if not port or (not isinstance(port, int) and not port.isdigit()):
         abort("You must specify a port.")
 
     # clean_pyc()
-    yes_or_no = ("debug_toolbar",
-                 "werkzeug",
-                 "dummy_cache",
-                 "short_cache",
-                 "template_warnings",
-                 "insecure")
+    yes_or_no = ("debug_toolbar", "werkzeug", "dummy_cache", "short_cache", "template_warnings", "insecure")
     for s in yes_or_no:
         if locals()[s].lower() not in ("yes", "no"):
             abort("Specify 'yes' or 'no' for {} option.".format(s))
@@ -63,17 +51,10 @@ def runserver(port=8080,
     if log_level not in _log_levels:
         abort("Invalid log level.")
 
-    with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(),
-                   DUMMY_CACHE=dummy_cache.upper(),
-                   SHORT_CACHE=short_cache.upper(),
-                   WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(),
-                   LOG_LEVEL=log_level):
-        local("./manage.py runserver{} 0.0.0.0:{}{}".format(
-            "_plus" if werkzeug.lower() == "yes" else "",
-            port,
-            " --insecure" if insecure.lower() == "yes" else ""
-        )
-        )
+    with shell_env(SHOW_DEBUG_TOOLBAR=debug_toolbar.upper(), DUMMY_CACHE=dummy_cache.upper(), SHORT_CACHE=short_cache.upper(),
+                   WARN_INVALID_TEMPLATE_VARS=template_warnings.upper(), LOG_LEVEL=log_level):
+        local("./manage.py runserver{} 0.0.0.0:{}{}".format("_plus" if werkzeug.lower() == "yes" else "", port, " --insecure" if insecure.lower() ==
+                                                            "yes" else ""))
 
 
 def killserver():
@@ -99,8 +80,7 @@ def restart_production_gunicorn(skip=False):
     """Restart the production gunicorn instance as root."""
     _require_root()
 
-    if skip or confirm("Are you sure you want to restart the production "
-                       "Gunicorn instance?"):
+    if skip or confirm("Are you sure you want to restart the production " "Gunicorn instance?"):
         clean_production_pyc()
         local("supervisorctl restart ion")
 
@@ -117,8 +97,7 @@ def clear_sessions(venv=None):
     else:
         ve = prompt("Enter the name of the "
                     "sandbox whose sessions you would like to delete, or "
-                    "\"ion\" to clear production sessions:",
-                    default=ve)
+                    "\"ion\" to clear production sessions:", default=ve)
 
     c = "redis-cli -n {0} KEYS {1}:session:* | sed 's/\"^.*\")//g'"
     keys_command = c.format(REDIS_SESSION_DB, ve)
@@ -132,15 +111,11 @@ def clear_sessions(venv=None):
 
     plural = "s" if count != 1 else ""
 
-    if not confirm("Are you sure you want to destroy {} {}"
-                   "session{}?".format(count,
-                                       "production " if ve == "ion" else "",
-                                       plural)):
+    if not confirm("Are you sure you want to destroy {} {}" "session{}?".format(count, "production " if ve == "ion" else "", plural)):
         return 0
 
     if count > 0:
-        local("{0}| xargs redis-cli -n "
-              "{1} DEL".format(keys_command, REDIS_SESSION_DB))
+        local("{0}| xargs redis-cli -n " "{1} DEL".format(keys_command, REDIS_SESSION_DB))
 
         puts("Destroyed {} session{}.".format(count, plural))
 
@@ -150,9 +125,7 @@ def clear_cache(input=None):
     if input is not None:
         n = input
     else:
-        n = _choose_from_list(["Production cache",
-                               "Sandbox cache"],
-                              "Which cache would you like to clear?")
+        n = _choose_from_list(["Production cache", "Sandbox cache"], "Which cache would you like to clear?")
 
     if n == 0:
         local("redis-cli -n {} FLUSHDB".format(REDIS_PRODUCTION_CACHE_DB))
@@ -169,28 +142,21 @@ def contributors():
 def linecount():
     """Get a total line count of files with these types:"""
     with hide("running"):
-        local("cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
+        local(
+            "cloc --exclude-ext=json --exclude-dir=intranet/static/vendor,intranet/static/{css,js}/vendor,docs,intranet/apps/{eighth,schedule,announcements,users}/migrations .")
 
 
 def load_fixtures():
     """Populate a database with data from fixtures."""
 
     if local("pwd", capture=True) == PRODUCTION_DOCUMENT_ROOT:
-        abort("Refusing to automatically load "
-              "fixtures into production database")
+        abort("Refusing to automatically load " "fixtures into production database")
 
-    if not confirm("Are you sure you want to load all fixtures? This could "
-                   "have unintended consequences if the database "
-                   "is not empty."):
+    if not confirm("Are you sure you want to load all fixtures? This could " "have unintended consequences if the database " "is not empty."):
         abort("Aborted.")
 
-    files = ["fixtures/users/users.json",
-             "fixtures/eighth/sponsors.json",
-             "fixtures/eighth/rooms.json",
-             "fixtures/eighth/blocks.json",
-             "fixtures/eighth/activities.json",
-             "fixtures/eighth/scheduled_activities.json",
-             "fixtures/eighth/signups.json",
+    files = ["fixtures/users/users.json", "fixtures/eighth/sponsors.json", "fixtures/eighth/rooms.json", "fixtures/eighth/blocks.json",
+             "fixtures/eighth/activities.json", "fixtures/eighth/scheduled_activities.json", "fixtures/eighth/signups.json",
              "fixtures/announcements/announcements.json"]
 
     for f in files:

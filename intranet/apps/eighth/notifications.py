@@ -31,11 +31,7 @@ def signup_status_email(user, next_blocks):
         if signup and signup.scheduled_activity.cancelled:
             issues += 1
             cancelled = True
-        blocks.append({
-            "block": blk,
-            "signup": signup,
-            "cancelled": cancelled
-        })
+        blocks.append({"block": blk, "signup": signup, "cancelled": cancelled})
 
     block_date = next_blocks[0].date
     block_signup_time = next_blocks[0].signup_time
@@ -60,9 +56,7 @@ def signup_status_email(user, next_blocks):
         "info_link": base_url + "eighth/signup"
     }
 
-    email_send("eighth/emails/signup_status.txt",
-               "eighth/emails/signup_status.html",
-               data, subject, emails)
+    email_send("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, subject, emails)
 
 
 def absence_email(signup):
@@ -80,14 +74,6 @@ def absence_email(signup):
     # We can't build an absolute URI because this isn't being executed
     # in the context of a Django request
     base_url = "https://ion.tjhsst.edu/"  # request.build_absolute_uri(reverse('index'))
-    data = {
-        "user": user,
-        "signup": signup,
-        "num_absences": num_absences,
-        "base_url": base_url,
-        "info_link": base_url + "eighth/absences"
-    }
+    data = {"user": user, "signup": signup, "num_absences": num_absences, "base_url": base_url, "info_link": base_url + "eighth/absences"}
 
-    email_send("eighth/emails/absence.txt",
-               "eighth/emails/absence.html",
-               data, subject, emails)
+    email_send("eighth/emails/absence.txt", "eighth/emails/absence.html", data, subject, emails)

@@ -24,9 +24,7 @@ from ....users.models import User
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
     all_activities = EighthActivity.undeleted_objects.order_by("name")
-    blocks_after_start_date = (EighthBlock.objects
-                                          .filter(date__gte=start_date)
-                                          .order_by("date"))
+    blocks_after_start_date = (EighthBlock.objects.filter(date__gte=start_date).order_by("date"))
     if blocks_after_start_date.count() == 0:
         blocks_next = []
         blocks_next_date = None
@@ -49,7 +47,6 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "blocks_next": blocks_next,
         "blocks_next_date": blocks_next_date,
         "signup_users_count": signup_users_count,
-
         "admin_page_title": "Eighth Period Admin",
 
         # Used in place of IDs in data-href-pattern tags of .dynamic-links
@@ -60,10 +57,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "url_id_placeholder": "734784857438457843756435654645642343465"
     }
 
-    forms = {
-        "add_group_form": group_forms.QuickGroupForm,
-        "add_room_form": room_forms.RoomForm,
-    }
+    forms = {"add_group_form": group_forms.QuickGroupForm, "add_room_form": room_forms.RoomForm}
 
     for form_name, form_class in forms.items():
         form_css_id = form_name.replace("_", "-")
@@ -98,15 +92,10 @@ def edit_start_date_view(request):
         else:
             messages.error(request, "Error changing start date.")
     else:
-        initial_data = {
-            "date": get_start_date(request)
-        }
+        initial_data = {"date": get_start_date(request)}
         form = general_forms.StartDateForm(initial=initial_data)
 
-    context = {
-        "form": form,
-        "admin_page_title": "Change Start Date"
-    }
+    context = {"form": form, "admin_page_title": "Change Start Date"}
     return render(request, "eighth/admin/edit_start_date.html", context)
 
 
@@ -133,10 +122,7 @@ def cache_view(request):
             to = default["timeout"]
         cache[c] = int(to / (60 * 60))
 
-    context = {
-        "admin_page_title": "Cache Configuration",
-        "cache_length": cache
-    }
+    context = {"admin_page_title": "Cache Configuration", "cache_length": cache}
     return render(request, "eighth/admin/cache.html", context)
 
 

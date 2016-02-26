@@ -20,8 +20,7 @@ class AnnouncementManager(Manager):
 
         """
 
-        return Announcement.objects.filter(Q(groups__in=user.groups.all()) |
-                                           Q(groups__isnull=True))
+        return Announcement.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
 
     def hidden_announcements(self, user):
         """Get a list of announcements marked as hidden for a given user (usually request.user).
@@ -63,7 +62,6 @@ class AnnouncementUserMap(models.Model):
 
 
 class Announcement(models.Model):
-
     """Represents an announcement.
 
     Attributes:
@@ -111,9 +109,7 @@ class Announcement(models.Model):
         try:
             return self._user_map
         except AnnouncementUserMap.DoesNotExist:
-            return AnnouncementUserMap.objects.create(
-                announcement=self
-            )
+            return AnnouncementUserMap.objects.create(announcement=self)
 
     @property
     def is_this_year(self):
@@ -121,8 +117,7 @@ class Announcement(models.Model):
         now = datetime.now().date()
         ann = self.added.date()
         if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or
-                    (ann.year == now.year - 1 and ann.month >= 9))
+            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
         else:
             return ann.year == now.year and ann.month >= 9
 
@@ -131,7 +126,6 @@ class Announcement(models.Model):
 
 
 class AnnouncementRequest(models.Model):
-
     """Represents a request for an announcement.
 
     Attributes:
