@@ -103,7 +103,6 @@ else:
         "NAME": "ion",
         "USER": "ion",
         "PASSWORD": "pwd",
-        "HOST": "localhost",
     })
 
 
