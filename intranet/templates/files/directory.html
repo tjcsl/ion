@@ -42,7 +42,7 @@
         <span id="additional-upload-option">You can also drag files onto this page to upload them.</span>
 
         <h3>Current directory: {{ current_dir }}</h3>
-        <table class="directory-list">
+        <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
         {% if parent_dir %}
             <tr>
                 <td class="item folder">
