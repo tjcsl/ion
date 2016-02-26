@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.ionldap.views &mdash; TJ Intranet v3 (Build #1417) documentation</title>
+    <title>intranet.apps.ionldap.views &mdash; TJ Intranet v3 (Build #1418) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1417)',
+        VERSION:     'v3 (Build #1418)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1417) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -180,6 +180,8 @@
 
     <span class="n">in_class</span> <span class="o">=</span> <span class="p">(</span><span class="n">course</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">can_view_students</span> <span class="o">=</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
+    <span class="n">course_users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">course</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="n">course_users</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
     <span class="n">teacher_classes</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teacher_name</span><span class="o">=</span><span class="n">course</span><span class="o">.</span><span class="n">teacher_name</span><span class="p">)</span>
     <span class="n">section_classes</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course</span><span class="o">.</span><span class="n">course_id</span><span class="p">)</span>
 
@@ -189,7 +191,8 @@
         <span class="s2">&quot;can_view_students&quot;</span><span class="p">:</span> <span class="n">can_view_students</span><span class="p">,</span>
         <span class="s2">&quot;teacher_user&quot;</span><span class="p">:</span> <span class="n">course</span><span class="o">.</span><span class="n">teacher_user</span><span class="p">,</span>
         <span class="s2">&quot;teacher_classes&quot;</span><span class="p">:</span> <span class="n">teacher_classes</span><span class="p">,</span>
-        <span class="s2">&quot;section_classes&quot;</span><span class="p">:</span> <span class="n">section_classes</span>
+        <span class="s2">&quot;section_classes&quot;</span><span class="p">:</span> <span class="n">section_classes</span><span class="p">,</span>
+        <span class="s2">&quot;course_users&quot;</span><span class="p">:</span> <span class="n">course_users</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;ionldap/class.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
