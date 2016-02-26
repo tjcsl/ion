@@ -211,7 +211,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "APP_DIRS": True,
+        "APP_DIRS": False,
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
             "context_processors":
@@ -226,7 +226,11 @@ TEMPLATES = [
              "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
              "intranet.apps.context_processors.mobile_app"  # For the custom android app functionality (tbd?)
              ),
-            "debug": True  # Only enabled if DEBUG is true as well
+            "debug": True,  # Only enabled if DEBUG is true as well
+            'loaders': [
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader']),
+            ],
         }
     },
 ]  # type: List[Dict[str,Any]]
