@@ -5,6 +5,8 @@ import datetime
 import logging
 import os
 import tempfile
+import zipfile
+import stat
 from os.path import normpath
 from wsgiref.util import FileWrapper
 
@@ -190,12 +192,12 @@ def files_type(request, fstype=None):
         filebase_escaped = filebase_escaped.encode("ascii", "ignore").decode()
         if can_access_path(filepath):
             try:
-                stat = sftp.stat(filepath)
+                fstat = sftp.stat(filepath)
             except:
                 messages.error(request, "Unable to access {}".format(filebase))
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
-            if stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
+            if fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
                 messages.error(request, "Too large to download (>200MB)")
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
@@ -229,6 +231,57 @@ def files_type(request, fstype=None):
             messages.error(request, "Access to the path you provided is restricted.")
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
+    if "zip" in request.GET:
+        dirbase_escaped = os.path.basename(fsdir).replace(",", "")
+        dirbase_escaped = dirbase_escaped.encode("ascii", "ignore").decode()
+        tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
+
+        with tempfile.TemporaryDirectory(prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)) as tmpdir:
+            remote_directories = [fsdir]
+            totalsize = 0
+            while remote_directories:
+                rd = remote_directories.pop()
+                remotelist = sftp.listdir(rd)
+                for item in remotelist:
+                    itempath = os.path.join(rd, item)
+                    try:
+                        fstat = sftp.stat(itempath)
+                    except:
+                        logger.debug("Could not read " + item)
+                        continue
+
+                    if stat.S_ISDIR(fstat.st_mode):
+                        remote_directories.append(itempath)
+                        continue
+
+                    totalsize += fstat.st_size
+                    if totalsize > settings.FILES_MAX_DOWNLOAD_SIZE:
+                        messages.error(request, "Too large to download (>200MB)")
+                        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(fsdir)))
+
+                    try:
+                        localpath = os.path.join(tmpdir, os.path.relpath(rd, fsdir))
+                        if not os.path.exists(localpath):
+                            os.makedirs(localpath)
+                        fh = open(os.path.join(localpath, item), "wb")
+                        sftp.getfo(itempath, fh)
+                    except IOError as e:
+                        logger.debug("IOError on " + item)
+                        continue
+
+            with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:
+                for root, dirs, files in os.walk(tmpdir):
+                    for f in files:
+                        zf.write(os.path.join(root, f), os.path.join(os.path.relpath(root, tmpdir), f))
+
+        content_len = tmpfile.tell()
+        tmpfile.seek(0)
+        chunk_size = 8192
+        response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+        response["Content-Length"] = content_len
+        response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
+        return response
+
     try:
         listdir = sftp.listdir()
     except IOError as e:
@@ -238,16 +291,16 @@ def files_type(request, fstype=None):
     for f in listdir:
         if not f.startswith("."):
             try:
-                stat = sftp.stat(f)
+                fstat = sftp.stat(f)
             except:
                 # If we can't stat the file, don't show it
                 continue
             files.append({
                 "name": f,
                 "folder": sftp.isdir(f),
-                "stat": stat,
-                "stat_mtime": datetime.datetime.fromtimestamp(int(stat.st_mtime or 0)),
-                "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
+                "stat": fstat,
+                "stat_mtime": datetime.datetime.fromtimestamp(int(fstat.st_mtime or 0)),
+                "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
 
     logger.debug(files)
