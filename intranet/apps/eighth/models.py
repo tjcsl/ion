@@ -33,18 +33,18 @@ class EighthSponsor(AbstractBaseEighthModel):
     A sponsor could be linked to an actual user or just a name.
 
     Attributes:
-    first_name
-        The first name of the sponsor
-    last_name
-        The last name of the sponsor
-    user
-        A :model:`users.User` object
-        linked to the sponsor.
-    online_attendance
-        Whether the sponsor takes attendance online.
-    show_full_name
-        Whether to always show the sponsor's full name
-        (e.x. because there are two teachers named Lewis)
+        first_name
+            The first name of the sponsor
+        last_name
+            The last name of the sponsor
+        user
+            A :class:`users.User` object
+            linked to the sponsor.
+        online_attendance
+            Whether the sponsor takes attendance online.
+        show_full_name
+            Whether to always show the sponsor's full name
+            (e.x. because there are two teachers named Lewis)
 
     """
 
