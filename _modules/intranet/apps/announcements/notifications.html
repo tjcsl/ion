@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.notifications &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.announcements.notifications &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -188,17 +188,13 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">emails</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: Announcement request to </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">teachers</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
     <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;teachers&quot;</span><span class="p">:</span> <span class="n">teachers</span><span class="p">,</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
-        <span class="s2">&quot;formdata&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-        <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;approve_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">])),</span>
-        <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span>
-    <span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;teachers&quot;</span><span class="p">:</span> <span class="n">teachers</span><span class="p">,</span>
+            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+            <span class="s2">&quot;formdata&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;approve_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">])),</span>
+            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">}</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: Announcement request </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/teacher_approve.txt&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;announcements/emails/teacher_approve.html&quot;</span><span class="p">,</span>
-               <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
+    <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/teacher_approve.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/teacher_approve.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="admin_request_announcement_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.admin_request_announcement_email">[docs]</a><span class="k">def</span> <span class="nf">admin_request_announcement_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -212,15 +208,11 @@
     <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;News Post Approval Needed ({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
     <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">settings</span><span class="o">.</span><span class="n">APPROVAL_EMAIL</span><span class="p">]</span>
     <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
-        <span class="s2">&quot;formdata&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-        <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin_approve_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">])),</span>
-        <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span>
-    <span class="p">}</span>
-    <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/admin_approve.txt&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;announcements/emails/admin_approve.html&quot;</span><span class="p">,</span>
-               <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
+            <span class="s2">&quot;formdata&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin_approve_announcement&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">])),</span>
+            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">}</span>
+    <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/admin_approve.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/admin_approve.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="announcement_approved_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.notifications.announcement_approved_email">[docs]</a><span class="k">def</span> <span class="nf">announcement_approved_email</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
@@ -232,7 +224,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;Announcement Approved: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
-
     <span class="sd">&quot;&quot;&quot; Email to teachers who approved. &quot;&quot;&quot;</span>
     <span class="n">teachers</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">teachers_approved</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
@@ -246,33 +237,17 @@
     <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;view_announcement&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
-            <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
-            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
-            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;approved&quot;</span>
-        <span class="p">}</span>
-        <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span>
-                   <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">teacher_emails</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;approved&quot;</span><span class="p">}</span>
+        <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">teacher_emails</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">teacher_emails</span><span class="p">)))</span>
-
     <span class="sd">&quot;&quot;&quot; Email to submitter. &quot;&quot;&quot;</span>
     <span class="n">submitter</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">user</span>
     <span class="n">submitter_email</span> <span class="o">=</span> <span class="n">submitter</span><span class="o">.</span><span class="n">tj_email</span>
     <span class="k">if</span> <span class="n">submitter_email</span><span class="p">:</span>
         <span class="n">submitter_emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">submitter_email</span><span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
-            <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span>
-            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
-            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;submitted&quot;</span>
-        <span class="p">}</span>
-        <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span>
-                   <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">submitter_emails</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">req</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;submitted&quot;</span><span class="p">}</span>
+        <span class="n">email_send</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_approved.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_approved.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span>
+                   <span class="n">submitter_emails</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent teacher approved email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">submitter_emails</span><span class="p">)))</span></div>
 
 
@@ -319,14 +294,8 @@
 
         <span class="n">base_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;view_announcement&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span>
-            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
-            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span>
-        <span class="p">}</span>
-        <span class="n">email_send_bcc</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_posted.txt&quot;</span><span class="p">,</span>
-                       <span class="s2">&quot;announcements/emails/announcement_posted.html&quot;</span><span class="p">,</span>
-                       <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">}</span>
+        <span class="n">email_send_bcc</span><span class="p">(</span><span class="s2">&quot;announcements/emails/announcement_posted.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;announcements/emails/announcement_posted.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">emails</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Sent email to {} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users_send</span><span class="p">)))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Emailing announcements disabled&quot;</span><span class="p">)</span></div>
@@ -369,14 +338,9 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
 
-    <span class="n">auth</span> <span class="o">=</span> <span class="n">OAuth1</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_key&quot;</span><span class="p">],</span>
-                  <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_secret&quot;</span><span class="p">],</span>
-                  <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_key&quot;</span><span class="p">],</span>
-                  <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_secret&quot;</span><span class="p">])</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">OAuth1</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_key&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;consumer_secret&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_key&quot;</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;access_token_secret&quot;</span><span class="p">])</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span>
-    <span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">}</span>
 
     <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">)</span>
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.groups &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.eighth.views.admin.groups &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -161,8 +161,7 @@
 
 <span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
 
-<span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ActivitySelectionForm</span><span class="p">,</span>
-                                       <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ActivitySelectionForm</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
 <span class="kn">from</span> <span class="nn">...forms.admin.groups</span> <span class="kn">import</span> <span class="n">GroupForm</span><span class="p">,</span> <span class="n">QuickGroupForm</span><span class="p">,</span> <span class="n">UploadGroupForm</span>
 <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
@@ -182,8 +181,7 @@
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added group.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span>
-                            <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding group.&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
@@ -254,8 +252,7 @@
         <span class="s2">&quot;added_ids&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">),</span>
         <span class="s2">&quot;linked_activities&quot;</span><span class="p">:</span> <span class="n">linked_activities</span><span class="p">,</span>
         <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit Group&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_group&quot;</span><span class="p">,</span>
-                              <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">])</span>
+        <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_group&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">])</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="s2">&quot;possible_student&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
@@ -422,14 +419,12 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">()</span>
     <span class="n">all_groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Upload/Import Group Members: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
-        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
-        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-        <span class="s2">&quot;all_groups&quot;</span><span class="p">:</span> <span class="n">all_groups</span>
-    <span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Upload/Import Group Members: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+               <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+               <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
+               <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
+               <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+               <span class="s2">&quot;all_groups&quot;</span><span class="p">:</span> <span class="n">all_groups</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">filetext</span><span class="p">:</span>
         <span class="n">context</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;parse&quot;</span>
@@ -451,12 +446,10 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted group.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Group&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this group will remove all records &quot;</span>
-                         <span class="s2">&quot;of it related to eighth period.&quot;</span>
-        <span class="p">}</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Group&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+                   <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this group will remove all records &quot;</span>
+                                <span class="s2">&quot;of it related to eighth period.&quot;</span><span class="p">}</span>
 
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
@@ -490,15 +483,9 @@
 
 
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminSignUpGroupWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span>
-    <span class="p">]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
 
-    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">}</span>
 
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
@@ -506,25 +493,19 @@
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                <span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
-            <span class="p">})</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
 
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity&quot;</span><span class="p">,</span>
-        <span class="p">}</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity&quot;</span><span class="p">}</span>
 
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
 
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminSignUpGroupWizard</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminSignUpGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
@@ -537,10 +518,7 @@
         <span class="n">form_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">form_list</span><span class="p">]</span>
         <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
         <span class="n">activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
-        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span>
-            <span class="n">activity</span><span class="o">=</span><span class="n">activity</span>
-        <span class="p">)</span>
+        <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">])</span>
@@ -550,11 +528,8 @@
         <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;?schact={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_signup_group_action&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">])</span> <span class="o">+</span> <span class="n">query</span><span class="p">)</span></div></div>
 
-<span class="n">eighth_admin_signup_group</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span>
-    <span class="n">EighthAdminSignUpGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
-        <span class="n">EighthAdminSignUpGroupWizard</span><span class="o">.</span><span class="n">FORMS</span>
-    <span class="p">)</span>
-<span class="p">)</span>
+
+<span class="n">eighth_admin_signup_group</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminSignUpGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminSignUpGroupWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="eighth_admin_signup_group_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group_action">[docs]</a><span class="k">def</span> <span class="nf">eighth_admin_signup_group_action</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
@@ -574,25 +549,18 @@
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully signed up group for activity.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Confirm Group Signup&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
-        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-        <span class="s2">&quot;users_num&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-    <span class="p">})</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Confirm Group Signup&quot;</span><span class="p">,</span>
+                                                               <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
+                                                               <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+                                                               <span class="s2">&quot;users_num&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()})</span></div>
 
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminDistributeGroupWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">),</span>
-    <span class="p">]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)]</span>
 
-    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;choose&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;choose&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">}</span>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
@@ -607,16 +575,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span>
-                     <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                <span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
-            <span class="p">})</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cleaned block: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]))</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
@@ -624,18 +589,14 @@
                 <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
 
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select multiple activities&quot;</span><span class="p">,</span>
-        <span class="p">}</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select multiple activities&quot;</span><span class="p">}</span>
 
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
 
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
 
@@ -643,10 +604,7 @@
             <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">})</span>
         <span class="k">elif</span> <span class="n">block</span><span class="p">:</span>
             <span class="n">unsigned</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_unsigned_students</span><span class="p">()</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">unsigned</span><span class="p">,</span>
-                <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-            <span class="p">})</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">unsigned</span><span class="p">,</span> <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]})</span>
 
         <span class="k">if</span> <span class="s2">&quot;block&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
             <span class="n">block_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
@@ -688,17 +646,10 @@
 
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/admin/groups/distribute_action?{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div></div>
 
-<span class="n">eighth_admin_distribute_group</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span>
-    <span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
-        <span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">FORMS</span>
-    <span class="p">)</span>
-<span class="p">)</span>
 
-<span class="n">eighth_admin_distribute_unsigned</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span>
-    <span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
-        <span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">FORMS</span>
-    <span class="p">)</span>
-<span class="p">)</span>
+<span class="n">eighth_admin_distribute_group</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
+
+<span class="n">eighth_admin_distribute_unsigned</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminDistributeGroupWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
 
 
 <span class="nd">@eighth_admin_required</span>
@@ -832,12 +783,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">results</span>
         <span class="n">results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
-            <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Members to Group&quot;</span>
-        <span class="p">}</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Members to Group&quot;</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/possible_students_add_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 

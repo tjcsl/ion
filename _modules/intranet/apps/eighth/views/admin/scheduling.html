@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -160,8 +160,7 @@ from formtools.wizard.views import SessionWizardView
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import (EighthActivity, EighthBlock, EighthRoom,
-                       EighthScheduledActivity, EighthSponsor)
+from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from .....utils.serialization import safe_json
@@ -183,25 +182,16 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
                 activity = form.cleaned_data[&quot;activity&quot;]
 
                 # Save changes to cancelled activities and scheduled activities
-                cancelled = (EighthScheduledActivity.objects
-                                                    .filter(block=block,
-                                                            activity=activity,
-                                                            cancelled=True)
-                                                    .exists())
+                cancelled = (EighthScheduledActivity.objects.filter(block=block, activity=activity, cancelled=True).exists())
 
                 instance = None
                 if form[&quot;scheduled&quot;].value() or cancelled:
-                    instance, created = (EighthScheduledActivity.objects
-                                                                .get_or_create(block=block,
-                                                                               activity=activity))
+                    instance, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
                     invalidate_obj(instance)
                     invalidate_obj(block)
                     invalidate_obj(activity)
                 else:
-                    schact = EighthScheduledActivity.objects.filter(
-                        block=block,
-                        activity=activity
-                    )
+                    schact = EighthScheduledActivity.objects.filter(block=block, activity=activity)
                     logger.debug(block)
                     logger.debug(activity)
                     logger.debug(schact)
@@ -230,15 +220,7 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
                         cancelled = True
 
                 if instance:
-                    fields = [
-                        &quot;rooms&quot;,
-                        &quot;capacity&quot;,
-                        &quot;sponsors&quot;,
-                        &quot;title&quot;,
-                        &quot;special&quot;,
-                        &quot;comments&quot;,
-                        &quot;admin_comments&quot;
-                    ]
+                    fields = [&quot;rooms&quot;, &quot;capacity&quot;, &quot;sponsors&quot;, &quot;title&quot;, &quot;special&quot;, &quot;comments&quot;, &quot;admin_comments&quot;]
                     if &quot;rooms&quot; in form.cleaned_data:
                         for o in form.cleaned_data[&quot;rooms&quot;]:
                             invalidate_obj(o)
@@ -345,19 +327,12 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
         # , date__lte=end_date)
         initial_formset_data = []
 
-        sched_act_queryset = (EighthScheduledActivity.objects
-                                                     .filter(activity=activity)
-                                                     .select_related(&quot;block&quot;)
-                                                     .prefetch_related(&quot;rooms&quot;,
-                                                                       &quot;sponsors&quot;,
-                                                                       &quot;members&quot;))
+        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related(&quot;block&quot;).prefetch_related(&quot;rooms&quot;, &quot;sponsors&quot;,
+                                                                                                                                 &quot;members&quot;))
         all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
 
         for block in blocks:
-            initial_form_data = {
-                &quot;block&quot;: block,
-                &quot;activity&quot;: activity
-            }
+            initial_form_data = {&quot;block&quot;: block, &quot;activity&quot;: activity}
             try:
                 sched_act = all_sched_acts[block.id]
 
@@ -407,17 +382,12 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
         except (EighthActivity.DoesNotExist, ValueError):
             pass
 
-    context = {
-        &quot;activities&quot;: activities,
-        &quot;activity&quot;: activity
-    }
+    context = {&quot;activities&quot;: activities, &quot;activity&quot;: activity}
 
     if activity is not None:
         start_date = get_start_date(request)
-        scheduled_activities = (activity.eighthscheduledactivity_set
-                                        .filter(block__date__gte=start_date)
-                                        .order_by(&quot;block__date&quot;,
-                                                  &quot;block__block_letter&quot;))
+        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by(&quot;block__date&quot;,
+                                                                                                                  &quot;block__block_letter&quot;))
         context[&quot;scheduled_activities&quot;] = scheduled_activities
 
     context[&quot;admin_page_title&quot;] = &quot;View Activity Schedule&quot;
@@ -431,12 +401,8 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
 
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a>class EighthAdminTransferStudentsWizard(SessionWizardView):
-    FORMS = [
-        (&quot;block_1&quot;, BlockSelectionForm),
-        (&quot;activity_1&quot;, ActivitySelectionForm),
-        (&quot;block_2&quot;, BlockSelectionForm),
-        (&quot;activity_2&quot;, ActivitySelectionForm)
-    ]
+    FORMS = [(&quot;block_1&quot;, BlockSelectionForm), (&quot;activity_1&quot;, ActivitySelectionForm), (&quot;block_2&quot;, BlockSelectionForm),
+             (&quot;activity_2&quot;, ActivitySelectionForm)]
 
     TEMPLATES = {
         &quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
@@ -451,9 +417,7 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
         kwargs = {}
         if step in (&quot;block_1&quot;, &quot;block_2&quot;):
-            kwargs.update({
-                &quot;exclude_before_date&quot;: get_start_date(self.request)
-            })
+            kwargs.update({&quot;exclude_before_date&quot;: get_start_date(self.request)})
         if step == &quot;activity_1&quot;:
             block = self.get_cleaned_data_for_step(&quot;block_1&quot;)[&quot;block&quot;]
             kwargs.update({&quot;block&quot;: block})
@@ -473,8 +437,7 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
         return kwargs</div>
 
 <div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminTransferStudentsWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminTransferStudentsWizard, self).get_context_data(form=form, **kwargs)
         context.update({&quot;admin_page_title&quot;: &quot;Transfer Students&quot;})
         return context</div>
 
@@ -482,39 +445,24 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data[&quot;block&quot;]
         source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=source_block,
-            activity=source_activity
-        )
+        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
 
         dest_block = form_list[2].cleaned_data[&quot;block&quot;]
         dest_activity = form_list[3].cleaned_data[&quot;activity&quot;]
-        dest_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=dest_block,
-            activity=dest_activity
-        )
+        dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
 
         req = &quot;source_act={}&amp;dest_act={}&quot;.format(source_scheduled_activity.id, dest_scheduled_activity.id)
 
         return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
 
-transfer_students_view = eighth_admin_required(
-    EighthAdminTransferStudentsWizard.as_view(
-        EighthAdminTransferStudentsWizard.FORMS
-    )
-)
+
+transfer_students_view = eighth_admin_required(EighthAdminTransferStudentsWizard.as_view(EighthAdminTransferStudentsWizard.FORMS))
 
 
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard">[docs]</a>class EighthAdminUnsignupStudentsWizard(SessionWizardView):
-    FORMS = [
-        (&quot;block_1&quot;, BlockSelectionForm),
-        (&quot;activity_1&quot;, ActivitySelectionForm)
-    ]
+    FORMS = [(&quot;block_1&quot;, BlockSelectionForm), (&quot;activity_1&quot;, ActivitySelectionForm)]
 
-    TEMPLATES = {
-        &quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
-        &quot;activity_1&quot;: &quot;eighth/admin/transfer_students.html&quot;
-    }
+    TEMPLATES = {&quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;, &quot;activity_1&quot;: &quot;eighth/admin/transfer_students.html&quot;}
 
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]</div>
@@ -522,25 +470,19 @@ transfer_students_view = eighth_admin_required(
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
         kwargs = {}
         if step == &quot;block_1&quot;:
-            kwargs.update({
-                &quot;exclude_before_date&quot;: get_start_date(self.request)
-            })
+            kwargs.update({&quot;exclude_before_date&quot;: get_start_date(self.request)})
         if step == &quot;activity_1&quot;:
             block = self.get_cleaned_data_for_step(&quot;block_1&quot;)[&quot;block&quot;]
             kwargs.update({&quot;block&quot;: block})
 
-        labels = {
-            &quot;block_1&quot;: &quot;Select a block to move students from&quot;,
-            &quot;activity_1&quot;: &quot;Select an activity to unsignup students from&quot;
-        }
+        labels = {&quot;block_1&quot;: &quot;Select a block to move students from&quot;, &quot;activity_1&quot;: &quot;Select an activity to unsignup students from&quot;}
 
         kwargs.update({&quot;label&quot;: labels[step]})
 
         return kwargs</div>
 
 <div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminUnsignupStudentsWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminUnsignupStudentsWizard, self).get_context_data(form=form, **kwargs)
         context.update({&quot;admin_page_title&quot;: &quot;Clear Student Signups for Activity&quot;})
         return context</div>
 
@@ -548,20 +490,14 @@ transfer_students_view = eighth_admin_required(
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data[&quot;block&quot;]
         source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=source_block,
-            activity=source_activity
-        )
+        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
 
         req = &quot;source_act={}&amp;dest_unsignup=1&quot;.format(source_scheduled_activity.id)
 
         return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
 
-unsignup_students_view = eighth_admin_required(
-    EighthAdminUnsignupStudentsWizard.as_view(
-        EighthAdminUnsignupStudentsWizard.FORMS
-    )
-)
+
+unsignup_students_view = eighth_admin_required(EighthAdminUnsignupStudentsWizard.as_view(EighthAdminUnsignupStudentsWizard.FORMS))
 
 
 @eighth_admin_required
@@ -588,13 +524,7 @@ unsignup_students_view = eighth_admin_required(
 
     num = source_act.members.count()
 
-    context = {
-        &quot;admin_page_title&quot;: &quot;Transfer Students&quot;,
-        &quot;source_act&quot;: source_act,
-        &quot;dest_act&quot;: dest_act,
-        &quot;dest_unsignup&quot;: dest_unsignup,
-        &quot;num&quot;: num
-    }
+    context = {&quot;admin_page_title&quot;: &quot;Transfer Students&quot;, &quot;source_act&quot;: source_act, &quot;dest_act&quot;: dest_act, &quot;dest_unsignup&quot;: dest_unsignup, &quot;num&quot;: num}
 
     if request.method == &quot;POST&quot;:
         if dest_unsignup and not dest_act:
@@ -602,9 +532,7 @@ unsignup_students_view = eighth_admin_required(
             invalidate_obj(source_act)
             messages.success(request, &quot;Successfully removed signups for {} students.&quot;.format(num))
         else:
-            source_act.eighthsignup_set.update(
-                scheduled_activity=dest_act
-            )
+            source_act.eighthsignup_set.update(scheduled_activity=dest_act)
 
             invalidate_obj(source_act)
             invalidate_obj(dest_act)

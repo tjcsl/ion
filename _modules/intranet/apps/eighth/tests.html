@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.tests &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.eighth.tests &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,13 +148,10 @@
 
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span>
-                             <span class="n">EighthScheduledActivity</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
-
-
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Tests for the eighth module.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -186,8 +183,14 @@
 
         <span class="c1"># Schedule an activity</span>
         <span class="c1"># FIXME: figure out a way to do this that involves less hard-coding.</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_schedule_activity&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;form-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;form-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;form-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                                                <span class="s1">&#39;form-0-block&#39;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;form-0-activity&#39;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;form-0-scheduled&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;form-0-capacity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;eighth_admin_schedule_activity&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;form-TOTAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-INITIAL_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-MAX_NUM_FORMS&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-0-block&#39;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-0-activity&#39;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-0-scheduled&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                                                        <span class="s1">&#39;form-0-capacity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
 
         <span class="c1"># Signup for an activity</span>
@@ -196,30 +199,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthTest.verify_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.verify_signup">[docs]</a>    <span class="k">def</span> <span class="nf">verify_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">schact</span><span class="p">):</span>
-        <span class="n">old_count</span> <span class="o">=</span> <span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span>
-                           <span class="o">.</span><span class="n">count</span><span class="p">())</span>
+        <span class="n">old_count</span> <span class="o">=</span> <span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
         <span class="n">schact</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span>
-                                <span class="o">.</span><span class="n">count</span><span class="p">()),</span> <span class="n">old_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span>
-                              <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">block</span><span class="p">)</span>
-                              <span class="o">.</span><span class="n">count</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()),</span> <span class="n">old_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()),</span> <span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthTest.test_signups"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.tests.EighthTest.test_signups">[docs]</a>    <span class="k">def</span> <span class="nf">test_signups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Do some sample signups.&quot;&quot;&quot;</span>
 
         <span class="n">user1</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">)</span>
-        <span class="n">block1</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2015-01-01&#39;</span><span class="p">,</span>
-                                            <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span>
-                                            <span class="p">)</span>
+        <span class="n">block1</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2015-01-01&#39;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
         <span class="n">room1</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;room1&quot;</span><span class="p">)</span>
 
         <span class="n">act1</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity 1&quot;</span><span class="p">)</span>
         <span class="n">act1</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">room1</span><span class="p">)</span>
-        <span class="n">schact1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">,</span>
-            <span class="n">block</span><span class="o">=</span><span class="n">block1</span>
-        <span class="p">)</span>
+        <span class="n">schact1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="n">block1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">verify_signup</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="n">schact1</span><span class="p">)</span></div></div>
 </pre></div>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.test.fake_ldap &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.test.fake_ldap &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -167,6 +167,7 @@
 <div class="viewcode-block" id="get_attr"><a class="viewcode-back" href="../../../sourcedoc/intranet.test.html#intranet.test.fake_ldap.get_attr">[docs]</a><span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{(</span><span class="n">dn</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="p">(</span><span class="n">attr</span><span class="p">,)):</span> <span class="p">[{</span><span class="s1">&#39;attributes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="p">[</span><span class="n">value</span><span class="p">]}}]}</span></div>
 
+
 <span class="n">attrs</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;iodineUidNumber&#39;</span><span class="p">,</span> <span class="mi">1337</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;iodineUid&#39;</span><span class="p">,</span> <span class="s1">&#39;awilliam&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;objectClass&#39;</span><span class="p">,</span> <span class="s1">&#39;tjhsstStudent&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;givenName&#39;</span><span class="p">,</span> <span class="s1">&#39;Angela&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;HRH&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;displayName&#39;</span><span class="p">,</span> <span class="s1">&#39;Angela&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;Angela&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;middlename&#39;</span><span class="p">,</span> <span class="s1">&#39;dank&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;sn&#39;</span><span class="p">,</span> <span class="s1">&#39;Williams&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;nickname&#39;</span><span class="p">,</span> <span class="s1">&#39;Active Directory&#39;</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;bob@bob.com&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;graduationYear&#39;</span><span class="p">,</span> <span class="mi">2016</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;1337420&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;homePhone&#39;</span><span class="p">,</span> <span class="s1">&#39;1234567890&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mobile&#39;</span><span class="p">,</span> <span class="s1">&#39;1234567890&#39;</span><span class="p">),</span>
@@ -180,7 +181,8 @@
 <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">class_attrs</span><span class="p">:</span>
     <span class="n">values</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_attr</span><span class="p">(</span><span class="n">class_dn</span><span class="p">,</span> <span class="s1">&#39;(objectclass=tjhsstClass)&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 <span class="n">perms</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;perm-showaddress&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showtelephone&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showbirthday&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showschedule&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showeighth&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showpictures&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;perm-showaddress-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showtelephone-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showbirthday-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showschedule-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showeighth-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showpictures-self&#39;</span><span class="p">)</span>
+         <span class="s1">&#39;perm-showaddress-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showtelephone-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showbirthday-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showschedule-self&#39;</span><span class="p">,</span> <span class="s1">&#39;perm-showeighth-self&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;perm-showpictures-self&#39;</span><span class="p">)</span>
 <span class="n">values</span><span class="p">[(</span><span class="n">uid_dn</span><span class="p">,</span> <span class="n">all_users</span><span class="p">,</span> <span class="n">perms</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;attributes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">perms</span><span class="p">}}]</span>
 <span class="n">street</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;street&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;st&#39;</span><span class="p">,</span> <span class="s1">&#39;postalCode&#39;</span><span class="p">)</span>
 <span class="n">values</span><span class="p">[(</span><span class="n">uid_dn</span><span class="p">,</span> <span class="n">all_users</span><span class="p">,</span> <span class="n">street</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;attributes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;memes&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">street</span><span class="p">}}]</span>

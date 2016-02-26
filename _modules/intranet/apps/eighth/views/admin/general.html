@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.general &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.eighth.views.admin.general &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -170,9 +170,7 @@
 <div class="viewcode-block" id="eighth_admin_dashboard_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.eighth_admin_dashboard_view">[docs]</a><span class="k">def</span> <span class="nf">eighth_admin_dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">all_activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-    <span class="n">blocks_after_start_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span>
-                                          <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
-                                          <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">))</span>
+    <span class="n">blocks_after_start_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">blocks_after_start_date</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">blocks_next</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">blocks_next_date</span> <span class="o">=</span> <span class="bp">None</span>
@@ -195,7 +193,6 @@
         <span class="s2">&quot;blocks_next&quot;</span><span class="p">:</span> <span class="n">blocks_next</span><span class="p">,</span>
         <span class="s2">&quot;blocks_next_date&quot;</span><span class="p">:</span> <span class="n">blocks_next_date</span><span class="p">,</span>
         <span class="s2">&quot;signup_users_count&quot;</span><span class="p">:</span> <span class="n">signup_users_count</span><span class="p">,</span>
-
         <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Eighth Period Admin&quot;</span><span class="p">,</span>
 
         <span class="c1"># Used in place of IDs in data-href-pattern tags of .dynamic-links</span>
@@ -206,10 +203,7 @@
         <span class="s2">&quot;url_id_placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;734784857438457843756435654645642343465&quot;</span>
     <span class="p">}</span>
 
-    <span class="n">forms</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;add_group_form&quot;</span><span class="p">:</span> <span class="n">group_forms</span><span class="o">.</span><span class="n">QuickGroupForm</span><span class="p">,</span>
-        <span class="s2">&quot;add_room_form&quot;</span><span class="p">:</span> <span class="n">room_forms</span><span class="o">.</span><span class="n">RoomForm</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="n">forms</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;add_group_form&quot;</span><span class="p">:</span> <span class="n">group_forms</span><span class="o">.</span><span class="n">QuickGroupForm</span><span class="p">,</span> <span class="s2">&quot;add_room_form&quot;</span><span class="p">:</span> <span class="n">room_forms</span><span class="o">.</span><span class="n">RoomForm</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">form_name</span><span class="p">,</span> <span class="n">form_class</span> <span class="ow">in</span> <span class="n">forms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">form_css_id</span> <span class="o">=</span> <span class="n">form_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
@@ -244,15 +238,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error changing start date.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">initial_data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="p">}</span>
+        <span class="n">initial_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)}</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">general_forms</span><span class="o">.</span><span class="n">StartDateForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">initial_data</span><span class="p">)</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Change Start Date&quot;</span>
-    <span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Change Start Date&quot;</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_start_date.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
@@ -279,10 +268,7 @@
             <span class="n">to</span> <span class="o">=</span> <span class="n">default</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span>
         <span class="n">cache</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">to</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Cache Configuration&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;cache_length&quot;</span><span class="p">:</span> <span class="n">cache</span>
-    <span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Cache Configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;cache_length&quot;</span><span class="p">:</span> <span class="n">cache</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/cache.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 

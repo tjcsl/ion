@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.forms &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.announcements.forms &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -158,14 +158,10 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AnnouncementForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;expiration_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;By default, announcements expire after two weeks. To change this, click in the box above.&quot;</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;expiration_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;By default, announcements expire after two weeks. To change this, click in the box above.&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_post&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;If this box is checked, students who have signed up for notifications &quot;</span>
-            <span class="s2">&quot;will receive an email. If the announcement is public, a link will be posted on Twitter.&quot;</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_post&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;If this box is checked, students who have signed up for notifications &quot;</span>
+                                                <span class="s2">&quot;will receive an email. If the announcement is public, a link will be posted on Twitter.&quot;</span><span class="p">)</span>
 
         <span class="c1"># self.fields[&quot;notify_email_all&quot;].help_text = (</span>
         <span class="c1">#    &quot;This will send an email notification to all of the users who can see this post. This option &quot;</span>
@@ -175,8 +171,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;update_added_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;If this announcement has already been added, update the added date to now so that the &quot;</span>
             <span class="s2">&quot;announcement is pushed to the top. If this option is not selected, the announcement will stay in &quot;</span>
-            <span class="s2">&quot;its current position.&quot;</span>
-        <span class="p">)</span>
+            <span class="s2">&quot;its current position.&quot;</span><span class="p">)</span>
 
     <span class="n">expiration_date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateTimeInput</span><span class="p">()</span>
     <span class="c1"># notify_email_all = forms.BooleanField(required=False, label=&quot;Send Email to All&quot;)</span>
@@ -202,44 +197,25 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AnnouncementRequestForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;The title of the announcement that will appear on Intranet. Please enter &quot;</span>
-            <span class="s2">&quot;a title more specific than just </span><span class="se">\&quot;</span><span class="s2">[Club name]&#39;s Intranet Posting</span><span class="se">\&#39;</span><span class="s2">.&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;If you want this post to have a custom author entry, such as &quot;</span>
-            <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">Basket Weaving Club</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">TJ Faculty,</span><span class="se">\&quot;</span><span class="s2"> enter that name here. &quot;</span>
-            <span class="s2">&quot;Otherwise, your name will appear in this field automatically.&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;The contents of the news post which will appear on Intranet.&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;expiration_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;By default, announcements expire after two weeks. To change this, click in the box above.&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;Any information about this announcement you wish to share with the Intranet &quot;</span>
-            <span class="s2">&quot;administrators and teachers selected above. If you want to restrict this posting &quot;</span>
-            <span class="s2">&quot;to a specific group of students, such as the Class of 2016, enter that request here.&quot;</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The title of the announcement that will appear on Intranet. Please enter &quot;</span>
+                                          <span class="s2">&quot;a title more specific than just </span><span class="se">\&quot;</span><span class="s2">[Club name]&#39;s Intranet Posting</span><span class="se">\&#39;</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;If you want this post to have a custom author entry, such as &quot;</span>
+                                           <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">Basket Weaving Club</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">TJ Faculty,</span><span class="se">\&quot;</span><span class="s2"> enter that name here. &quot;</span>
+                                           <span class="s2">&quot;Otherwise, your name will appear in this field automatically.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The contents of the news post which will appear on Intranet.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;expiration_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;By default, announcements expire after two weeks. To change this, click in the box above.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Any information about this announcement you wish to share with the Intranet &quot;</span>
+                                          <span class="s2">&quot;administrators and teachers selected above. If you want to restrict this posting &quot;</span>
+                                          <span class="s2">&quot;to a specific group of students, such as the Class of 2016, enter that request here.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SortedTeacherMultipleChoiceField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_teachers_sorted</span><span class="p">(),</span> <span class="n">show_username</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Sponsor&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;The teacher(s) who will approve your announcement. They will be sent an email &quot;</span>
-            <span class="s2">&quot;with instructions on how to approve this post. Please do not select more than &quot;</span>
-            <span class="s2">&quot;one or two.&quot;</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;teachers_requested&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The teacher(s) who will approve your announcement. They will be sent an email &quot;</span>
+                                                       <span class="s2">&quot;with instructions on how to approve this post. Please do not select more than &quot;</span>
+                                                       <span class="s2">&quot;one or two.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AnnouncementRequestForm.Meta"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementRequestForm.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;author&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;content&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;expiration_date&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;teachers_requested&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;notes&quot;</span>
-        <span class="p">]</span></div></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;expiration_date&quot;</span><span class="p">,</span> <span class="s2">&quot;teachers_requested&quot;</span><span class="p">,</span> <span class="s2">&quot;notes&quot;</span><span class="p">]</span></div></div>
 </pre></div>
 
     </div>

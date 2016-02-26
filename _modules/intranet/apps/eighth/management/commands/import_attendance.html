@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.management.commands.import_attendance &mdash; TJ Intranet v3 (Build #1418) documentation</title>
+    <title>intranet.apps.eighth.management.commands.import_attendance &mdash; TJ Intranet v3 (Build #1420) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1418)',
+        VERSION:     'v3 (Build #1420)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1418) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1420) documentation" href="../../../../../../index.html" />
     <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,8 +150,7 @@
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span>
-                                         <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
 
 
@@ -180,11 +179,8 @@
                         <span class="k">if</span> <span class="n">usr_signup</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="n">other_abs_act</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;z-OTHER ABSENCE (transferred from Iodine)&quot;</span><span class="p">,</span>
                                                                                     <span class="n">administrative</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                            <span class="n">other_abs_sch</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blk</span><span class="p">,</span>
-                                                                                             <span class="n">activity</span><span class="o">=</span><span class="n">other_abs_act</span><span class="p">)</span>
-                            <span class="n">other_abs_su</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">usr</span><span class="p">,</span>
-                                                                       <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">other_abs_sch</span><span class="p">,</span>
-                                                                       <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                            <span class="n">other_abs_sch</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">blk</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">other_abs_act</span><span class="p">)</span>
+                            <span class="n">other_abs_su</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">usr</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">other_abs_sch</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;{} Signup on {} created: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">usr</span><span class="p">,</span> <span class="n">bid</span><span class="p">,</span> <span class="n">other_abs_su</span><span class="p">))</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">s</span> <span class="o">=</span> <span class="n">usr_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
