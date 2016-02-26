@@ -58,7 +58,6 @@ def get_current_commit_github_url(workdir):
 
 
 class InvalidString(str):
-
     """An error for undefined context variables in templates."""
 
     def __mod__(self, other):
@@ -80,7 +79,6 @@ class MigrationMock(object):
 
 
 class GlobList(list):
-
     """A list of glob-style strings."""
 
     def __contains__(self, key):

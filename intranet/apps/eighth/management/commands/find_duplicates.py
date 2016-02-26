@@ -10,11 +10,7 @@ class Command(BaseCommand):
     help = "Find duplicate signups in the system that violate the one-signup-per-block constraint."
 
     def add_arguments(self, parser):
-        parser.add_argument('--fix',
-                            action='store_true',
-                            dest='fix',
-                            default=False,
-                            help='Fix.')
+        parser.add_argument('--fix', action='store_true', dest='fix', default=False, help='Fix.')
 
     def handle(self, *args, **options):
 

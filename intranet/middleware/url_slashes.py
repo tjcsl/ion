@@ -14,11 +14,7 @@ class FixSlashes(object):
 
         # We can't remove slashes from these urls - they're included from
         # first/third party apps
-        exception_prefixes = ["/admin",
-                              "/api-auth",
-                              "/djangoadmin",
-                              "/__debug__",
-                              "/oauth"]
+        exception_prefixes = ["/admin", "/api-auth", "/djangoadmin", "/__debug__", "/oauth"]
         needs_trailing_slash = False
 
         for prefix in exception_prefixes:

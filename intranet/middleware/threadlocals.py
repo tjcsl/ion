@@ -18,7 +18,6 @@ def request():
 
 
 class ThreadLocalsMiddleware(object):
-
     """Stores the current authorized User object in thread locals for access in models (and
     elsewhere) without passing the user around as an argument."""
 

@@ -29,10 +29,7 @@ class EventManager(Manager):
 
         """
 
-        return (Event.objects.filter(approved=True)
-                             .filter(Q(groups__in=user.groups.all()) |
-                                     Q(groups__isnull=True) |
-                                     Q(user=user)))
+        return (Event.objects.filter(approved=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(user=user)))
 
 
 class Event(models.Model):
@@ -130,8 +127,7 @@ class Event(models.Model):
         now = datetime.now().date()
         ann = self.created_time.date()
         if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or
-                    (ann.year == now.year - 1 and ann.month >= 9))
+            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
         else:
             return (ann.year == now.year and ann.month >= 9)
 

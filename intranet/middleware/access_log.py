@@ -21,13 +21,8 @@ class AccessLogMiddleWare(object):
         if isinstance(ip, set):
             ip = ip[0]
 
-        log_line = "{} - {} - [{}] \"{}\" \"{}\"".format(
-            ip,
-            username,
-            datetime.now(),
-            request.get_full_path(),
-            request.META.get("HTTP_USER_AGENT", "")
-        )
+        log_line = "{} - {} - [{}] \"{}\" \"{}\"".format(ip, username, datetime.now(), request.get_full_path(), request.META.get("HTTP_USER_AGENT",
+                                                                                                                                 ""))
 
         logger.info(log_line)
 

@@ -15,6 +15,7 @@ class Command(BaseCommand):
     help = 'Adds schedule entries from iCal to the database.'
 
     def handle(self, *args, **options):
+
         def get_ical():
             resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
             ical = resp.read()
@@ -57,6 +58,7 @@ class Command(BaseCommand):
                     print(daydate)
                 else:
                     print("{} already exists".format(str(daydate)))
+
         map = parse(get_ical())
         print(map)
         # add(map)

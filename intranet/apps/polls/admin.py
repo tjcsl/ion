@@ -22,6 +22,7 @@ class ChoiceAdmin(admin.ModelAdmin):
 
     def get_poll(self, obj):
         return obj.question.poll
+
     get_poll.short_description = 'Poll'  # type: ignore
     get_poll.admin_order_field = 'question__poll'  # type: ignore
 
@@ -43,6 +44,7 @@ class AnswerVotesAdmin(admin.ModelAdmin):
     list_filter = ('question',)
     ordering = ('question',)
     raw_id_fields = ('question', 'users',)
+
 
 admin.site.register(Poll, PollAdmin)
 admin.site.register(Question, QuestionAdmin)

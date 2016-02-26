@@ -4,7 +4,4 @@ from django.conf.urls import url
 
 from . import views
 
-urlpatterns = [
-    url(r"^$", views.print_view, name="printing")
-
-]
+urlpatterns = [url(r"^$", views.print_view, name="printing")]

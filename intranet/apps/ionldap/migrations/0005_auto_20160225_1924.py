@@ -7,13 +7,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('ionldap', '0004_auto_20160205_2218'),
-    ]
+    dependencies = [('ionldap', '0004_auto_20160205_2218')]
 
-    operations = [
-        migrations.AlterModelOptions(
-            name='ldapcourse',
-            options={'ordering': ('period', 'end_period')},
-        ),
-    ]
+    operations = [migrations.AlterModelOptions(name='ldapcourse', options={'ordering': ('period', 'end_period')},)]

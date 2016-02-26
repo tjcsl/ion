@@ -7,9 +7,7 @@ def start_date(request):
     """Add the start date to the context for eighth admin views."""
 
     if request.user.is_authenticated() and request.user.is_eighth_admin:
-        return {
-            "admin_start_date": get_start_date(request)
-        }
+        return {"admin_start_date": get_start_date(request)}
 
     return {}
 
@@ -31,9 +29,6 @@ def absence_count(request):
             if show_notif:
                 request.session['eighth_absence_notif_seen'] = True
 
-        return {
-            "eighth_absence_count": num_absences,
-            "eighth_absence_notif": show_notif
-        }
+        return {"eighth_absence_count": num_absences, "eighth_absence_notif": show_notif}
 
     return {}

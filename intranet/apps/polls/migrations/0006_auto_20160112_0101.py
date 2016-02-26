@@ -6,13 +6,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('polls', '0005_question_max_choices'),
-    ]
+    dependencies = [('polls', '0005_question_max_choices')]
 
-    operations = [
-        migrations.AlterModelOptions(
-            name='choice',
-            options={'ordering': ['num']},
-        ),
-    ]
+    operations = [migrations.AlterModelOptions(name='choice', options={'ordering': ['num']},)]

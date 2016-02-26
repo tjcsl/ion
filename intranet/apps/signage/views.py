@@ -30,9 +30,7 @@ def check_show_eighth(now):
 def check_internal_ip(request):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
-        return render(request, "error/403.html", {
-            "reason": "You are not authorized to view this page."
-        }, status=403)
+        return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
 
 @xframe_options_exempt
@@ -195,9 +193,7 @@ def eighth_signage(request, block_id=None, block_increment=0):
 
     if not block:
         try:
-            block = (EighthBlock.objects
-                                .prefetch_related("eighthscheduledactivity_set")
-                                .get(id=block_id))
+            block = (EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id))
         except EighthBlock.DoesNotExist:
             if EighthBlock.objects.count() == 0:
                 # No blocks have been added yet
@@ -208,10 +204,7 @@ def eighth_signage(request, block_id=None, block_increment=0):
 
     user = User.objects.get(username="awilliam")
 
-    serializer_context = {
-        "request": request,
-        "user": user
-    }
+    serializer_context = {"request": request, "user": user}
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
     try:
         reload_mins = float(request.GET.get("reload_mins") or 5)

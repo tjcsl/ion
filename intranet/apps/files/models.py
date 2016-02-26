@@ -3,8 +3,6 @@
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-
-
 """
     Sample TJ configuration:
 
@@ -51,8 +49,7 @@ class HostManager(Manager):
 
         """
 
-        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) |
-                                   Q(groups_visible__isnull=True))
+        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) | Q(groups_visible__isnull=True))
 
 
 class Host(models.Model):

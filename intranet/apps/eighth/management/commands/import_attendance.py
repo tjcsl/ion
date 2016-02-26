@@ -4,8 +4,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from intranet.apps.eighth.models import (EighthActivity, EighthBlock,
-                                         EighthScheduledActivity, EighthSignup)
+from intranet.apps.eighth.models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
 from intranet.apps.users.models import User
 
 
@@ -34,11 +33,8 @@ class Command(BaseCommand):
                         if usr_signup.count() == 0:
                             other_abs_act, _ = EighthActivity.objects.get_or_create(name="z-OTHER ABSENCE (transferred from Iodine)",
                                                                                     administrative=True)
-                            other_abs_sch, _ = EighthScheduledActivity.objects.get_or_create(block=blk,
-                                                                                             activity=other_abs_act)
-                            other_abs_su = EighthSignup.objects.create(user=usr,
-                                                                       scheduled_activity=other_abs_sch,
-                                                                       was_absent=True)
+                            other_abs_sch, _ = EighthScheduledActivity.objects.get_or_create(block=blk, activity=other_abs_act)
+                            other_abs_su = EighthSignup.objects.create(user=usr, scheduled_activity=other_abs_sch, was_absent=True)
                             self.stdout.write("{} Signup on {} created: {}".format(usr, bid, other_abs_su))
                         else:
                             s = usr_signup[0]

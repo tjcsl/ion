@@ -13,5 +13,4 @@ urlpatterns = [
     url(r"^/daytype(?:/(?P<id>\d+))?$", views.admin_daytype_view, name="schedule_daytype"),
     url(r"^/add$", views.admin_add_view, name="schedule_add"),
     url(r"^/comment$", views.admin_comment_view, name="schedule_comment"),
-
 ]

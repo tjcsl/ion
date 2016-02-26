@@ -21,6 +21,7 @@ values = {
 def get_attr(dn, filt, attr, value):
     return {(dn, filt, (attr,)): [{'attributes': {attr: [value]}}]}
 
+
 attrs = [('iodineUidNumber', 1337), ('iodineUid', 'awilliam'), ('objectClass', 'tjhsstStudent'), ('givenName', 'Angela'), ('gender', 'F'),
          ('title', 'HRH'), ('displayName', 'Angela'), ('cn', 'Angela'), ('middlename', 'dank'), ('sn', 'Williams'), ('nickname', 'Active Directory'),
          ('mail', 'bob@bob.com'), ('graduationYear', 2016), ('birthday', '1337420'), ('homePhone', '1234567890'), ('mobile', '1234567890'),
@@ -34,7 +35,8 @@ class_attrs = [('classPeriod', 8), ('quarterNumber', 5), ('cn', 'Memes 101'), ('
 for x, y in class_attrs:
     values.update(get_attr(class_dn, '(objectclass=tjhsstClass)', x, y))
 perms = ('perm-showaddress', 'perm-showtelephone', 'perm-showbirthday', 'perm-showschedule', 'perm-showeighth', 'perm-showpictures',
-         'perm-showaddress-self', 'perm-showtelephone-self', 'perm-showbirthday-self', 'perm-showschedule-self', 'perm-showeighth-self', 'perm-showpictures-self')
+         'perm-showaddress-self', 'perm-showtelephone-self', 'perm-showbirthday-self', 'perm-showschedule-self', 'perm-showeighth-self',
+         'perm-showpictures-self')
 values[(uid_dn, all_users, perms)] = [{'attributes': {x: [True] for x in perms}}]
 street = ('street', 'l', 'st', 'postalCode')
 values[(uid_dn, all_users, street)] = [{'attributes': {x: ['memes'] for x in street}}]

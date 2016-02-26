@@ -14,40 +14,30 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Event',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.CharField(max_length=10000)),
-                ('created_time', models.DateTimeField(auto_now=True)),
-                ('last_modified_time', models.DateTimeField(auto_now_add=True)),
-                ('time', models.DateTimeField(auto_now=True)),
-                ('location', models.CharField(max_length=100)),
-                ('announcement', models.ForeignKey(to='announcements.Announcement', null=True)),
-                ('groups', models.ManyToManyField(to='auth.Group', blank=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Link',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('url', models.URLField(max_length=2000)),
-            ],
-        ),
-        migrations.AddField(
-            model_name='event',
-            name='links',
-            field=models.ManyToManyField(to='events.Link'),
-        ),
-        migrations.AddField(
-            model_name='event',
-            name='scheduled_activity',
-            field=models.ForeignKey(to='eighth.EighthScheduledActivity', null=True),
-        ),
-        migrations.AddField(
-            model_name='event',
-            name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-        ),
+        migrations.CreateModel(name='Event',
+                               fields=[
+                                   ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                                   ('name', models.CharField(max_length=100)),
+                                   ('description', models.CharField(max_length=10000)),
+                                   ('created_time', models.DateTimeField(auto_now=True)),
+                                   ('last_modified_time', models.DateTimeField(auto_now_add=True)),
+                                   ('time', models.DateTimeField(auto_now=True)),
+                                   ('location', models.CharField(max_length=100)),
+                                   ('announcement', models.ForeignKey(to='announcements.Announcement', null=True)),
+                                   ('groups', models.ManyToManyField(to='auth.Group', blank=True)),
+                               ],),
+        migrations.CreateModel(name='Link',
+                               fields=[
+                                   ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                                   ('url', models.URLField(max_length=2000)),
+                               ],),
+        migrations.AddField(model_name='event',
+                            name='links',
+                            field=models.ManyToManyField(to='events.Link'),),
+        migrations.AddField(model_name='event',
+                            name='scheduled_activity',
+                            field=models.ForeignKey(to='eighth.EighthScheduledActivity', null=True),),
+        migrations.AddField(model_name='event',
+                            name='user',
+                            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),),
     ]

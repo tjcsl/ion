@@ -11,4 +11,5 @@ class PrintJobAdmin(admin.ModelAdmin):
     ordering = ('-time',)
     raw_id_fields = ('user',)
 
+
 admin.site.register(PrintJob, PrintJobAdmin)

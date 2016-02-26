@@ -8,4 +8,5 @@ from .models import Sign
 class SignAdmin(admin.ModelAdmin):
     list_display = ('name', 'display', 'status')
 
+
 admin.site.register(Sign, SignAdmin)

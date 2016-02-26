@@ -3,6 +3,7 @@
 from urllib import request
 
 from icalendar import Calendar
+
 # from intranet.apps.schedule.models import *
 
 
@@ -24,6 +25,7 @@ def parse(ical):
             map[date.to_ical()] = str(summary)
 
     return map
+
 
 if __name__ == '__main__':
     map = parse(get_ical())

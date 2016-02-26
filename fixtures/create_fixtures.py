@@ -47,6 +47,7 @@ def user_attrs(uid, attr):
         return ""
     return r[attr][0]
 
+
 os.system("mkdir -p fixtures/{eighth,users,announcements}")
 
 f_blocks = open("fixtures/eighth/blocks.json", "w")
@@ -58,10 +59,7 @@ f_users = open("fixtures/users/users.json", "w")
 f_signups = open("fixtures/eighth/signups.json", "w")
 f_announcements = open("fixtures/announcements/announcements.json", "w")
 
-con = mdb.connect("localhost",
-                  "iodine",
-                  input("Iodine MySQL password: "),
-                  "iodine")
+con = mdb.connect("localhost", "iodine", input("Iodine MySQL password: "), "iodine")
 
 cur = con.cursor()
 
@@ -79,22 +77,17 @@ cur.execute("SELECT * FROM eighth_blocks WHERE date > '{}';".format(start_date))
 rows = cur.fetchall()
 
 for row in rows:
-    obj = {
-        "pk": row[0],
-        "model": "eighth.EighthBlock",
-        "fields": {
-            "date": row[1].strftime("%Y-%m-%d"),
-            "locked": row[3] == 1,
-            "block_letter": row[2]
-        }
-    }
+    obj = {"pk": row[0],
+           "model": "eighth.EighthBlock",
+           "fields": {"date": row[1].strftime("%Y-%m-%d"),
+                      "locked": row[3] == 1,
+                      "block_letter": row[2]}}
     eighth_objects.append(obj)
     block_pks.append(row[0])
 
 json.dump(eighth_objects, f_blocks)
 eighth_objects = []
 print("Blocks complete")
-
 
 # SPONSORS #
 cur.execute("SELECT * FROM eighth_sponsors;")
@@ -114,30 +107,22 @@ for row in rows:
     else:
         seen_uids.add(uid)
 
-    obj = {
-        "pk": pk,
-        "model": "eighth.EighthSponsor",
-        "fields": {
-            "user": uid,
-            "first_name": row[1],
-            "last_name": row[2],
-            "online_attendance": row[3] == "onlin"
-        }
-    }
+    obj = {"pk": pk,
+           "model": "eighth.EighthSponsor",
+           "fields": {"user": uid,
+                      "first_name": row[1],
+                      "last_name": row[2],
+                      "online_attendance": row[3] == "onlin"}}
     eighth_objects.append(obj)
     sponsor_pks.append(pk)
 
     user_pk = uid
     if (user_pk is not None) and (user_pk not in user_pks):
         username = user_attrs(user_pk, "iodineUid")
-        obj = {
-            "pk": user_pk,
-            "model": "users.User",
-            "fields": {
-                "username": username if username != "" else (row[1][:1] + row[2])[:15],
-                "password": "!"
-            }
-        }
+        obj = {"pk": user_pk,
+               "model": "users.User",
+               "fields": {"username": username if username != "" else (row[1][:1] + row[2])[:15],
+                          "password": "!"}}
         if username != "":
             # print (row[1][:1] + row[2])[:15], user_pk
             user_objects.append(obj)
@@ -153,14 +138,7 @@ cur.execute("SELECT * FROM eighth_rooms;")
 rows = cur.fetchall()
 
 for row in rows:
-    obj = {
-        "pk": row[0],
-        "model": "eighth.EighthRoom",
-        "fields": {
-            "name": re.sub(" \(.*\)$", "", row[1]),
-            "capacity": row[2]
-        }
-    }
+    obj = {"pk": row[0], "model": "eighth.EighthRoom", "fields": {"name": re.sub(" \(.*\)$", "", row[1]), "capacity": row[2]}}
     eighth_objects.append(obj)
     room_pks.append(row[0])
 
@@ -256,16 +234,12 @@ for pk, row in enumerate(rows):
     except KeyError:
         pass
     else:
-        obj = {
-            "pk": pk + 1,
-            "model": "eighth.EighthSignup",
-            "fields": {
-                "time": str(datetime.datetime.now()),
-                "user": row[2],
-                "scheduled_activity": scheduled_activity,
-                "after_deadline": row[3] == 1
-            }
-        }
+        obj = {"pk": pk + 1,
+               "model": "eighth.EighthSignup",
+               "fields": {"time": str(datetime.datetime.now()),
+                          "user": row[2],
+                          "scheduled_activity": scheduled_activity,
+                          "after_deadline": row[3] == 1}}
         if scheduled_activity not in bad_sa:
             eighth_objects.append(obj)
 
@@ -273,14 +247,7 @@ for pk, row in enumerate(rows):
         if user_pk not in user_pks:
             username = user_attrs(user_pk, "iodineUid")
 
-            obj = {
-                "pk": user_pk,
-                "model": "users.User",
-                "fields": {
-                    "username": username,
-                    "password": "!"
-                }
-            }
+            obj = {"pk": user_pk, "model": "users.User", "fields": {"username": username, "password": "!"}}
             user_objects.append(obj)
             user_pks.append(user_pk)
 
@@ -301,17 +268,13 @@ for row in rows:
     date = row[4].strftime("%Y-%m-%d")
     author = user_attrs(row[3], "cn")
 
-    obj = {
-        "pk": row[0],
-        "model": "announcements.Announcement",
-        "fields": {
-            "title": row[1],
-            "content": row[2],
-            "author": author,
-            "added": date,
-            "updated": date,
-        }
-    }
+    obj = {"pk": row[0],
+           "model": "announcements.Announcement",
+           "fields": {"title": row[1],
+                      "content": row[2],
+                      "author": author,
+                      "added": date,
+                      "updated": date,}}
     news.append(obj)
 
 json.dump(news, f_announcements)

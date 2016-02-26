@@ -10,8 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup,
-                      EighthSponsor)
+from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required
@@ -57,12 +56,7 @@ def edit_profile_view(request, user_id=None):
         logger.debug(new_data)
 
         raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
-        raw_ldap_override = {
-            "city": "l",
-            "state": "st",
-            "postal_code": "postalCode",
-            "counselor_id": "counselor"
-        }
+        raw_ldap_override = {"city": "l", "state": "st", "postal_code": "postalCode", "counselor_id": "counselor"}
         override_set = ["graduation_year"]
 
         for key in new_data:
@@ -88,10 +82,7 @@ def edit_profile_view(request, user_id=None):
     else:
         form = ProfileEditForm(initial=defaults)
 
-    context = {
-        "profile_user": user,
-        "form": form
-    }
+    context = {"profile_user": user, "form": form}
     return render(request, "eighth/edit_profile.html", context)
 
 
@@ -167,10 +158,8 @@ def get_profile_context(request, user_id=None, date=None):
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
-        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                   .filter(block__date__gte=start_date)
-                                   .order_by("block__date",
-                                             "block__block_letter"))
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by(
+            "block__date", "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
         logger.debug("Eighth sponsor {}".format(sponsor))
@@ -223,10 +212,7 @@ def profile_history_view(request, user_id=None):
 
     logger.debug(eighth_schedule)
 
-    context = {
-        "profile_user": profile_user,
-        "eighth_schedule": eighth_schedule
-    }
+    context = {"profile_user": profile_user, "eighth_schedule": eighth_schedule}
 
     return render(request, "eighth/profile_history.html", context)
 
@@ -255,19 +241,13 @@ def profile_often_view(request, user_id=None):
     oftens = []
     unique_activities = set(activities)
     for act in unique_activities:
-        oftens.append({
-            "count": activities.count(act),
-            "activity": act
-        })
+        oftens.append({"count": activities.count(act), "activity": act})
 
     oftens = sorted(oftens, key=lambda x: (-1 * x["count"]))
 
     logger.debug(oftens)
 
-    context = {
-        "profile_user": profile_user,
-        "oftens": oftens
-    }
+    context = {"profile_user": profile_user, "oftens": oftens}
 
     return render(request, "eighth/profile_often.html", context)
 
@@ -289,9 +269,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         return redirect(request, "eighth_profile", user_id)
 
     try:
-        block = (EighthBlock.objects
-                            .prefetch_related("eighthscheduledactivity_set")
-                            .get(id=block_id))
+        block = (EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id))
     except EighthBlock.DoesNotExist:
         if EighthBlock.objects.count() == 0:
             # No blocks have been added yet
@@ -300,10 +278,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
             # The provided block_id is invalid
             raise http.Http404
 
-    serializer_context = {
-        "request": request,
-        "user": user
-    }
+    serializer_context = {"request": request, "user": user}
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
     activities_list = safe_json(block_info["activities"])
 

@@ -24,7 +24,6 @@ urlpatterns = [
     url(r"^/attendance/accept_all_passes/(?P<scheduled_activity_id>\d+)$", attendance.accept_all_passes_view, name="eighth_accept_all_passes"),
     url(r"^/attendance/widget$", attendance.sponsor_schedule_widget_view, name="eighth_sponsor_schedule_widget"),
 
-
     # Profile
     url(r"^/profile(?:/(?P<user_id>\d+))?$", profile.profile_view, name="eighth_profile"),
     url(r"^/profile(?:/(?P<user_id>\d+))/signup/(?P<block_id>\d+)?$", profile.profile_signup_view, name="eighth_profile_signup"),
@@ -41,7 +40,6 @@ urlpatterns = [
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
-
     url(r"^/display(?:/(?P<block_id>\d+))?$", signup.eighth_display_view, name="eighth_display"),
 ]
 
@@ -65,7 +63,6 @@ eighth_admin_patterns = [
     url(r"^scheduling/distribute_students$", scheduling.distribute_students_view, name="eighth_admin_distribute_students"),
     url(r"^scheduling/unsignup_students$", scheduling.unsignup_students_view, name="eighth_admin_unsignup_students"),
 
-
     # Attendance
     url(r"^attendance$", attendance.admin_choose_scheduled_activity_view, name="eighth_admin_attendance_choose_scheduled_activity"),
     url(r"^attendance/(?P<scheduled_activity_id>\d+)$", attendance.take_attendance_view, name="eighth_admin_take_attendance"),
@@ -73,11 +70,14 @@ eighth_admin_patterns = [
     url(r"^attendance/delinquent_students$", admin_attendance.delinquent_students_view, name="eighth_admin_view_delinquent_students"),
     url(r"^attendance/delinquent_students/csv$", admin_attendance.delinquent_students_view, name="eighth_admin_download_delinquent_students_csv"),
     url(r"^attendance/after_deadline_signups$", admin_attendance.after_deadline_signup_view, name="eighth_admin_view_after_deadline_signups"),
-    url(r"^attendance/after_deadline_signups/csv$", admin_attendance.after_deadline_signup_view, name="eighth_admin_download_after_deadline_signups_csv"),
+    url(r"^attendance/after_deadline_signups/csv$", admin_attendance.after_deadline_signup_view,
+        name="eighth_admin_download_after_deadline_signups_csv"),
     url(r"^attendance/no_attendance$", admin_attendance.activities_without_attendance_view, name="eighth_admin_view_activities_without_attendance"),
     url(r"^attendance/migrate_outstanding_passes$", admin_attendance.migrate_outstanding_passes_view, name="eighth_admin_migrate_outstanding_passes"),
-    url(r"^attendance/export_out_of_building_schedules$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules"),
-    url(r"^attendance/export_out_of_building_schedules/csv/(?P<block_id>\d+)$", admin_attendance.out_of_building_schedules_view, name="eighth_admin_export_out_of_building_schedules_csv"),
+    url(r"^attendance/export_out_of_building_schedules$", admin_attendance.out_of_building_schedules_view,
+        name="eighth_admin_export_out_of_building_schedules"),
+    url(r"^attendance/export_out_of_building_schedules/csv/(?P<block_id>\d+)$", admin_attendance.out_of_building_schedules_view,
+        name="eighth_admin_export_out_of_building_schedules_csv"),
     url(r"^attendance/clear_absences/(?P<signup_id>\d+)$", admin_attendance.clear_absence_view, name="eighth_admin_clear_absence"),
     url(r"^attendance/open_passes$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes"),
     url(r"^attendance/open_passes/csv$", admin_attendance.open_passes_view, name="eighth_admin_view_open_passes_csv"),
@@ -87,7 +87,8 @@ eighth_admin_patterns = [
     # Groups
     url(r"^groups/add$", groups.add_group_view, name="eighth_admin_add_group"),
     url(r"^groups/add_member/(?P<group_id>\d+)$", groups.add_member_to_group_view, name="eighth_admin_add_member_to_group"),
-    url(r"^groups/remove_member/(?P<group_id>\d+)/(?P<user_id>\d+)$", groups.remove_member_from_group_view, name="eighth_admin_remove_member_from_group"),
+    url(r"^groups/remove_member/(?P<group_id>\d+)/(?P<user_id>\d+)$", groups.remove_member_from_group_view,
+        name="eighth_admin_remove_member_from_group"),
     url(r"^groups/edit/(?P<group_id>\d+)$", groups.edit_group_view, name="eighth_admin_edit_group"),
     url(r"^groups/delete/(?P<group_id>\d+)$", groups.delete_group_view, name="eighth_admin_delete_group"),
     url(r"^groups/signup/(?P<group_id>\d+)$", groups.eighth_admin_signup_group, name="eighth_admin_signup_group"),
@@ -97,7 +98,6 @@ eighth_admin_patterns = [
     url(r"^groups/distribute_action$", groups.eighth_admin_distribute_action, name="eighth_admin_distribute_action"),
     url(r"^groups/download/(?P<group_id>\d+)$", groups.download_group_csv_view, name="eighth_admin_download_group_csv"),
     url(r"^groups/upload/(?P<group_id>\d+)$", groups.upload_group_members_view, name="eighth_admin_upload_group_members"),
-
 
     # Rooms
     url(r"^rooms/add$", rooms.add_room_view, name="eighth_admin_add_room"),
@@ -110,18 +110,13 @@ eighth_admin_patterns = [
     url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)$", rooms.room_utilization_action, name="eighth_admin_room_utilization"),
     url(r"^rooms/utilization/(?P<start_id>\d+)/(?P<end_id>\d+)/csv$", rooms.room_utilization_action, name="eighth_admin_room_utilization_csv"),
 
-
     # Sponsors
     url(r"^sponsors/add$", sponsors.add_sponsor_view, name="eighth_admin_add_sponsor"),
     url(r"^sponsors/edit/(?P<sponsor_id>\d+)$", sponsors.edit_sponsor_view, name="eighth_admin_edit_sponsor"),
     url(r"^sponsors/delete/(?P<sponsor_id>\d+)$", sponsors.delete_sponsor_view, name="eighth_admin_delete_sponsor"),
     url(r"^sponsors/schedule/(?P<sponsor_id>\d+)$", sponsors.sponsor_schedule_view, name="eighth_admin_sponsor_schedule"),
-
     url(r"^startdate$", general.edit_start_date_view, name="eighth_admin_edit_start_date"),
     url(r"^cache$", general.cache_view, name="eighth_admin_cache"),
-
 ]
 
-urlpatterns += [
-    url(r"^/admin/", include(eighth_admin_patterns)),
-]
+urlpatterns += [url(r"^/admin/", include(eighth_admin_patterns)),]

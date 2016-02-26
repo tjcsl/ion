@@ -12,11 +12,7 @@ class Command(BaseCommand):
     help = "Send Google Cloud Messaging notifications at needed times at the beginning and end of a class period."
 
     def add_arguments(self, parser):
-        parser.add_argument('--notify',
-                            action='store_true',
-                            dest='notify',
-                            default=False,
-                            help='notify')
+        parser.add_argument('--notify', action='store_true', dest='notify', default=False, help='notify')
 
     def do_notify(self, pd_data):
         users = get_gcm_schedule_uids()

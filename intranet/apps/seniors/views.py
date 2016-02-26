@@ -20,11 +20,7 @@ def seniors_home_view(request):
         own_senior = Senior.objects.get(user=request.user)
     except Senior.DoesNotExist:
         own_senior = None
-    context = {
-        "is_senior": request.user.is_senior,
-        "seniors": seniors,
-        "own_senior": own_senior
-    }
+    context = {"is_senior": request.user.is_senior, "seniors": seniors, "own_senior": own_senior}
     return render(request, "seniors/home.html", context)
 
 
@@ -55,9 +51,6 @@ def seniors_add_view(request):
         else:
             form = SeniorForm()
 
-    context = {
-        "form": form,
-        "senior": senior
-    }
+    context = {"form": form, "senior": senior}
 
     return render(request, "seniors/add.html", context)

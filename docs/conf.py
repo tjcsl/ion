@@ -31,15 +31,8 @@ import sphinx_bootstrap_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    "djangodocs"
-]
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',
+              "djangodocs"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -106,7 +99,6 @@ pygments_style = 'sphinx'
 
 # If true, keep warnings as "system message" paragraphs in the built documents.
 # keep_warnings = False
-
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -233,7 +225,6 @@ html_show_sphinx = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'TJIntranetdoc'
 
-
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -250,10 +241,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    ('index', 'TJIntranet.tex', 'TJ Intranet Documentation',
-     'TJ Intranet Development Team', 'manual'),
-]
+latex_documents = [('index', 'TJIntranet.tex', 'TJ Intranet Documentation', 'TJ Intranet Development Team', 'manual'),]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
@@ -275,30 +263,22 @@ latex_documents = [
 # If false, no module index is generated.
 # latex_domain_indices = True
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'tjintranet', 'TJ Intranet Documentation',
-     ['TJ Intranet Development Team'], 1)
-]
+man_pages = [('index', 'tjintranet', 'TJ Intranet Documentation', ['TJ Intranet Development Team'], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
-
 
 # -- Options for Texinfo output -------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    ('index', 'TJIntranet', 'TJ Intranet Documentation',
-     'TJ Intranet Development Team', 'TJIntranet', 'One line description of project.',
-     'Miscellaneous'),
-]
+texinfo_documents = [('index', 'TJIntranet', 'TJ Intranet Documentation', 'TJ Intranet Development Team', 'TJIntranet',
+                      'One line description of project.', 'Miscellaneous'),]
 
 # Documents to append as an appendix to all manuals.
 # texinfo_appendices = []
@@ -312,12 +292,9 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
 
-
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {
-    'python': ('http://docs.python.org/3/', None),
-    'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/')
-}
+intersphinx_mapping = {'python': ('http://docs.python.org/3/', None),
+                       'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/')}
 
 # -- Django Setup -------------------------------------------------------------
 
@@ -325,7 +302,6 @@ intersphinx_mapping = {
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
-
 
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))

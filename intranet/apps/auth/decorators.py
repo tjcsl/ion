@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Decorators that restrict views to certain types of users."""
 
-
 from django.contrib.auth.decorators import user_passes_test
 
 
@@ -12,11 +11,11 @@ def admin_required(group):
     in the "admin_polls" group or in the "admin_all" group.
 
     """
+
     def in_admin_group(user):
         return user.is_authenticated() and user.has_admin_permission(group)
 
     return user_passes_test(in_admin_group)
-
 
 #: Restrict the wrapped view to eighth admins
 eighth_admin_required = admin_required("eighth")

@@ -7,8 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from .forms import (NotificationOptionsForm, PersonalInformationForm,
-                    PreferredPictureForm, PrivacyOptionsForm)
+from .forms import (NotificationOptionsForm, PersonalInformationForm, PreferredPictureForm, PrivacyOptionsForm)
 from ..users.models import User
 from ...db.ldap_db import LDAPConnection
 
@@ -23,10 +22,7 @@ def get_personal_info(user):
     num_emails = len(user.emails or [])
     num_webpages = len(user.webpages or [])
 
-    personal_info = {
-        "mobile_phone": user.mobile_phone,
-        "home_phone": user.home_phone
-    }
+    personal_info = {"mobile_phone": user.mobile_phone, "home_phone": user.home_phone}
 
     for i in range(num_phones):
         personal_info["other_phone_{}".format(i)] = user.other_phones[i]
@@ -37,11 +33,7 @@ def get_personal_info(user):
     for i in range(num_webpages):
         personal_info["webpage_{}".format(i)] = user.webpages[i]
 
-    num_fields = {
-        "phones": num_phones,
-        "emails": num_emails,
-        "webpages": num_webpages
-    }
+    num_fields = {"phones": num_phones, "emails": num_emails, "webpages": num_webpages}
 
     return personal_info, num_fields
 
@@ -100,9 +92,7 @@ def save_personal_info(request, user):
                 if field in personal_info and personal_info[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field,
-                                                               fields[field],
-                                                               personal_info[field] if field in personal_info else None))
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], personal_info[field] if field in personal_info else None))
                     if field in single_fields:
                         if len(fields[field]) < 1:
                             logger.debug("Field {} with blank value becomes None".format(field))
@@ -118,7 +108,8 @@ def save_personal_info(request, user):
                                 if fields[field] is None or len(fields[field]) < 1:
                                     pass
                                 else:
-                                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                                    messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list)
+                                                                                          else ", ".join(fields[field])))
                             except Exception as e:
                                 messages.error(request, "Unable to set field {}: {}".format(field, e))
                     else:
@@ -143,7 +134,8 @@ def save_personal_info(request, user):
                     if field_vals is None or len(field_vals) == 0 or (len(field_vals) == 1 and (field_vals[0] is None or len(field_vals[0]) < 1)):
                         pass
                     else:
-                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else ", ".join(field_vals)))
+                        messages.success(request, "Set field {} to {}".format(ldap_full_field, field_vals if not isinstance(field_vals, list) else
+                                                                              ", ".join(field_vals)))
     return personal_info_form
 
 
@@ -151,9 +143,7 @@ def get_preferred_pic(user):
     """Get a user's preferred picture attributes to pass as an initial value to a
     PreferredPictureForm."""
 
-    preferred_pic = {
-        "preferred_photo": user.preferred_photo
-    }
+    preferred_pic = {"preferred_photo": user.preferred_photo}
 
     return preferred_pic
 
@@ -172,16 +162,15 @@ def save_preferred_pic(request, user):
                     if preferred_pic[field] == fields[field]:
                         logger.debug("{}: same ({})".format(field, fields[field]))
                     else:
-                        logger.debug("{}: new: {} from: {}".format(field,
-                                                                   fields[field],
-                                                                   preferred_pic[field] if field in preferred_pic else None))
+                        logger.debug("{}: new: {} from: {}".format(field, fields[field], preferred_pic[field] if field in preferred_pic else None))
                         try:
                             user.set_ldap_attribute(field, fields[field])
                         except Exception as e:
                             messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                             logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         else:
-                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                            messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
+                                                                                  ", ".join(fields[field])))
     return preferred_pic_form
 
 
@@ -219,16 +208,15 @@ def save_privacy_options(request, user):
                 if field in privacy_options and privacy_options[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field,
-                                                               fields[field],
-                                                               privacy_options[field] if field in privacy_options else None))
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], privacy_options[field] if field in privacy_options else None))
                     try:
                         user.set_ldap_preference(field, fields[field], request.user.is_eighth_admin)
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
                         logger.debug("Unable to set field {} with value {}: {}".format(field, fields[field], e))
                     else:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
+                                                                              ", ".join(fields[field])))
     return privacy_options_form
 
 
@@ -256,13 +244,13 @@ def save_notification_options(request, user):
                 if field in notification_options and notification_options[field] == fields[field]:
                     logger.debug("{}: same ({})".format(field, fields[field]))
                 else:
-                    logger.debug("{}: new: {} from: {}".format(field,
-                                                               fields[field],
-                                                               notification_options[field] if field in notification_options else None))
+                    logger.debug("{}: new: {} from: {}".format(field, fields[field], notification_options[field] if field in notification_options else
+                                                               None))
                     setattr(user, field, fields[field])
                     user.save()
                     try:
-                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])))
+                        messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else
+                                                                              ", ".join(fields[field])))
                     except TypeError:
                         pass
     return notification_options_form
@@ -316,8 +304,7 @@ def preferences_view(request):
     else:
         personal_info, num_fields = get_personal_info(user)
         logger.debug(personal_info)
-        personal_info_form = PersonalInformationForm(num_fields=num_fields,
-                                                     initial=personal_info)
+        personal_info_form = PersonalInformationForm(num_fields=num_fields, initial=personal_info)
 
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
@@ -365,10 +352,7 @@ def privacy_options_view(request):
         privacy_options = get_privacy_options(user)
         privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
 
-    context = {
-        "privacy_options_form": privacy_options_form,
-        "profile_user": user
-    }
+    context = {"privacy_options_form": privacy_options_form, "profile_user": user}
     return render(request, "preferences/privacy_options.html", context)
 
 

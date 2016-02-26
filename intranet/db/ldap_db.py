@@ -56,7 +56,6 @@ class LDAPFilter(object):
 
 
 class LDAPConnection(object):
-
     """Represents an LDAP connection with wrappers for the raw ldap queries.
 
     Attributes:
@@ -127,8 +126,7 @@ class LDAPConnection(object):
             Should raise stuff but it doesn't yet
 
         """
-        logger.debug("Searching ldap - dn: {}, filter: {}, "
-                     "attributes: {}".format(dn, filter, attributes))
+        logger.debug("Searching ldap - dn: {}, filter: {}, " "attributes: {}".format(dn, filter, attributes))
 
         # ldap3 requires the filter to be in parenthesis
         if not filter.endswith(')'):
@@ -154,8 +152,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '{}' of user "
-                     "{}".format(str(attributes), dn))
+        logger.debug("Fetching attributes '{}' of user " "{}".format(str(attributes), dn))
 
         filter = LDAPFilter.all_users()
 
@@ -182,8 +179,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '{}' of photo "
-                     "{}".format(str(attributes), dn))
+        logger.debug("Fetching attributes '{}' of photo " "{}".format(str(attributes), dn))
 
         filter = "(objectClass=iodinePhoto)"
 
@@ -211,8 +207,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '" + str(attributes) +
-                     "' of class " + dn)
+        logger.debug("Fetching attributes '" + str(attributes) + "' of class " + dn)
         filter = '(objectclass=tjhsstClass)'
 
         try:
@@ -231,7 +226,6 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
-
     """Represents the result of an LDAP query.
 
     LDAPResult stores the raw result of an LDAP query and can process
@@ -258,9 +252,7 @@ class LDAPResult(object):
         return self.result
 
 
-@receiver(request_finished,
-          dispatch_uid="close_ldap_connection",
-          sender=WSGIHandler)
+@receiver(request_finished, dispatch_uid="close_ldap_connection", sender=WSGIHandler)
 def close_ldap_connection(sender, **kwargs):
     """Closes the request's LDAP connection and clears up thread locals.
 

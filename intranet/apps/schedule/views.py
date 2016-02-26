@@ -73,10 +73,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
             comment = None
 
         if dayobj is not None:
-            blocks = (dayobj.day_type
-                            .blocks
-                            .select_related("start", "end")
-                            .order_by("start__hour", "start__minute"))
+            blocks = (dayobj.day_type.blocks.select_related("start", "end").order_by("start__hour", "start__minute"))
         else:
             blocks = []
 
@@ -145,11 +142,7 @@ def get_day_data(firstday, daynum):
         return {"empty": True}
 
     date = firstday + timedelta(days=daynum - 1)
-    data = {
-        "day": daynum,
-        "formatted_date": date_format(date),
-        "date": date
-    }
+    data = {"day": daynum, "formatted_date": date_format(date), "date": date}
 
     try:
         dayobj = Day.objects.get(date=date)
@@ -174,13 +167,7 @@ def do_default_fill(request):
     anchor_day = DayType.objects.get(name="Anchor Day")
     blue_day = DayType.objects.get(name="Blue Day")
     red_day = DayType.objects.get(name="Red Day")
-    daymap = {
-        monday: anchor_day,
-        tuesday: blue_day,
-        wednesday: red_day,
-        thursday: blue_day,
-        friday: red_day
-    }
+    daymap = {monday: anchor_day, tuesday: blue_day, wednesday: red_day, thursday: blue_day, friday: red_day}
 
     msgs = []
 
@@ -253,16 +240,14 @@ def admin_home_view(request):
 
     daytypes = DayType.objects.all()
 
-    data = {
-        "month_name": month_name,
-        "year_name": year_name,
-        "sch": sch,
-        "add_form": add_form,
-        "this_month": this_month,
-        "next_month": next_month,
-        "last_month": last_month,
-        "daytypes": daytypes
-    }
+    data = {"month_name": month_name,
+            "year_name": year_name,
+            "sch": sch,
+            "add_form": add_form,
+            "this_month": this_month,
+            "next_month": next_month,
+            "last_month": last_month,
+            "daytypes": daytypes}
 
     return render(request, "schedule/admin_home.html", data)
 
@@ -286,9 +271,7 @@ def admin_add_view(request):
     else:
         form = DayForm()
 
-    context = {
-        "form": form
-    }
+    context = {"form": form}
     return render(request, "schedule/admin_add.html", context)
 
 
@@ -311,11 +294,7 @@ def admin_comment_view(request):
             day = None
             comment = None
 
-    context = {
-        "day": day,
-        "date": date,
-        "comment": comment
-    }
+    context = {"day": day, "date": date, "comment": comment}
 
     return render(request, "schedule/admin_comment.html", context)
 
@@ -362,29 +341,16 @@ def admin_daytype_view(request, id=None):
             model = form.save()
             """Add blocks"""
             blocks = zip(
-                request.POST.getlist('block_order'),
-                request.POST.getlist('block_name'),
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist('block_start')],
-                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist('block_end')]
-            )
+                request.POST.getlist('block_order'), request.POST.getlist('block_name'), [[int(j) if j else 0 for j in i.split(":")] if ":" in i else
+                                                                                          [9, 0] for i in request.POST.getlist('block_start')],
+                [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist('block_end')])
             logger.debug(blocks)
             model.blocks.all().delete()
             for blk in blocks:
                 logger.debug(blk)
-                start, scr = Time.objects.get_or_create(
-                    hour=blk[2][0],
-                    minute=blk[2][1]
-                )
-                end, ecr = Time.objects.get_or_create(
-                    hour=blk[3][0],
-                    minute=blk[3][1]
-                )
-                bobj, bcr = Block.objects.get_or_create(
-                    order=blk[0],
-                    name=blk[1],
-                    start=start,
-                    end=end
-                )
+                start, scr = Time.objects.get_or_create(hour=blk[2][0], minute=blk[2][1])
+                end, ecr = Time.objects.get_or_create(hour=blk[3][0], minute=blk[3][1])
+                bobj, bcr = Block.objects.get_or_create(order=blk[0], name=blk[1], start=start, end=end)
                 model.blocks.add(bobj)
             model.save()
 
@@ -410,11 +376,7 @@ def admin_daytype_view(request, id=None):
         daytype = None
         form = DayTypeForm()
 
-    context = {
-        "form": form,
-        "action": "add",
-        "daytype": daytype
-    }
+    context = {"form": form, "action": "add", "daytype": daytype}
 
     if "assign_date" in request.GET:
         context["assign_date"] = request.GET.get("assign_date")

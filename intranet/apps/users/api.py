@@ -13,8 +13,7 @@ from rest_framework.response import Response
 
 from .models import Class, Grade, User
 from .renderers import JPEGRenderer
-from .serializers import (ClassSerializer, CounselorTeacherSerializer,
-                          StudentSerializer, UserSerializer)
+from .serializers import (ClassSerializer, CounselorTeacherSerializer, StudentSerializer, UserSerializer)
 
 
 class ProfileDetail(generics.RetrieveAPIView):

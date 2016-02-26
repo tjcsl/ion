@@ -6,13 +6,11 @@ import sys
 
 from typing import Any  # noqa
 
-
 if sys.version_info < (3, 3):
     # dependency on ipaddress module
     raise Exception("Python 3.3 or higher is required.")
 
 from ..utils import helpers  # noqa
-
 """ !! In production, add a file called secret.py to the settings package that
 defines AUTHUSER_PASSWORD, SECRET_KEY, SECRET_DATABASE_URL. !!
 
@@ -48,19 +46,12 @@ if not PRODUCTION:
     # Trust X-Forwarded-For when testing
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
-
 # Internal IP ranges in production
-_internal_ip_list = [
-    "198.38.16.0/20",
-    "2001:468:cc0::/48",
-]
+_internal_ip_list = ["198.38.16.0/20", "2001:468:cc0::/48",]
 
 if not PRODUCTION:
     # Additional Internal IP ranges for debugging
-    _internal_ip_list.extend([
-        "127.0.0.0/8",
-        "10.0.0.0/8",
-    ])
+    _internal_ip_list.extend(["127.0.0.0/8", "10.0.0.0/8",])
 
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
@@ -84,32 +75,20 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Address to send production error messages
 
-ADMINS = (
-    ("Ion Errors", "ion-errors@lists.tjhsst.edu"),
-    # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
-    # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
-)
+ADMINS = (("Ion Errors", "ion-errors@lists.tjhsst.edu"),
+          # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
+          # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
+         )
 
 # Use PostgreSQL database
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'CONN_MAX_AGE': 30
-    }
-}  # type: Dict[str,Dict[str,Any]]
-
+DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
 
 if PRODUCTION or SECRET_DATABASE_URL is not None:
     DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
 else:
     # Default testing db config.
-    DATABASES["default"].update({
-        "NAME": "ion",
-        "USER": "ion",
-        "PASSWORD": "pwd",
-    })
-
+    DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd",})
 
 # In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
@@ -119,7 +98,6 @@ if TESTING:
     # FIXME: we really shouldn't have to do this.
     LOGGING_VERBOSE = re.search('-v ?[2-3]|--verbosity [2-3]', ' '.join(sys.argv)) is not None
 
-
 MANAGERS = ADMINS
 
 # Address to send feedback messages to
@@ -128,10 +106,7 @@ FEEDBACK_EMAIL = "intranet@lists.tjhsst.edu"
 # Address to send approval messages to
 APPROVAL_EMAIL = "intranet-approval@lists.tjhsst.edu"
 
-FILE_UPLOAD_HANDLERS = [
-    "django.core.files.uploadhandler.MemoryFileUploadHandler",
-    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
-]
+FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler", "django.core.files.uploadhandler.TemporaryFileUploadHandler"]
 
 # The maximum number of pages in one document that can be
 # printed through the printing functionality (determined through pdfinfo)
@@ -142,7 +117,6 @@ FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
 FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
 CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
-
 
 # Django 1.9 gives the warning that "Your url pattern has a regex beginning with
 # a '/'. Remove this slash as it is unnecessary." In our use case, the slash actually
@@ -218,22 +192,18 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don"t forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, "static"),
-)
+    os.path.join(PROJECT_ROOT, "static"),)
 
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_FINDERS = (
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    # "django.contrib.staticfiles.finders.DefaultStorageFinder",
-)
+STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",
+                       "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+                       # "django.contrib.staticfiles.finders.DefaultStorageFinder",
+                      )
 
-AUTHENTICATION_BACKENDS = (
-    "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
-    "intranet.apps.auth.backends.KerberosAuthenticationBackend",
-    "oauth2_provider.backends.OAuth2Backend",
-)
+AUTHENTICATION_BACKENDS = ("intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+                           "intranet.apps.auth.backends.KerberosAuthenticationBackend",
+                           "oauth2_provider.backends.OAuth2Backend",)
 
 # Use the custom User model defined in apps/users/models.py
 AUTH_USER_MODEL = "users.User"
@@ -244,17 +214,17 @@ TEMPLATES = [
         "APP_DIRS": True,
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
-            "context_processors": (
-                "django.contrib.auth.context_processors.auth",          # Authentication; must be defined first
-                "django.template.context_processors.debug",             # Django default
-                "django.template.context_processors.request",           # Django default
-                "django.contrib.messages.context_processors.messages",  # For page messages
-                "intranet.apps.context_processors.ion_base_url",        # For determining the base url
-                "intranet.apps.context_processors.nav_categorizer",     # For determining the category in the navbar
-                "intranet.apps.context_processors.global_warning",      # For showing a global warning throughout the application (in page_base.html)
-                "intranet.apps.eighth.context_processors.start_date",   # For determining the eighth pd start date
-                "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
-                "intranet.apps.context_processors.mobile_app"           # For the custom android app functionality (tbd?)
+            "context_processors":
+            ("django.contrib.auth.context_processors.auth",  # Authentication; must be defined first
+             "django.template.context_processors.debug",  # Django default
+             "django.template.context_processors.request",  # Django default
+             "django.contrib.messages.context_processors.messages",  # For page messages
+             "intranet.apps.context_processors.ion_base_url",  # For determining the base url
+             "intranet.apps.context_processors.nav_categorizer",  # For determining the category in the navbar
+             "intranet.apps.context_processors.global_warning",  # For showing a global warning throughout the application (in page_base.html)
+             "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
+             "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
+             "intranet.apps.context_processors.mobile_app"  # For the custom android app functionality (tbd?)
             ),
             "debug": True  # Only enabled if DEBUG is true as well
         }
@@ -265,25 +235,25 @@ if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
 
 MIDDLEWARE_CLASSES = [
-    "intranet.middleware.url_slashes.FixSlashes",               # Remove slashes in URLs
-    "django.middleware.common.CommonMiddleware",                # Django default
-    "django.contrib.sessions.middleware.SessionMiddleware",     # Django sessions
-    "django.middleware.csrf.CsrfViewMiddleware",                # Django CSRF
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",   # Django X-Frame-Options
+    "intranet.middleware.url_slashes.FixSlashes",  # Remove slashes in URLs
+    "django.middleware.common.CommonMiddleware",  # Django default
+    "django.contrib.sessions.middleware.SessionMiddleware",  # Django sessions
+    "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
     "django.contrib.auth.middleware.SessionAuthenticationMiddleware",  # Django session auth
-    "oauth2_provider.middleware.OAuth2TokenMiddleware",         # Django Oauth toolkit
-    "maintenancemode.middleware.MaintenanceModeMiddleware",     # Maintenance mode
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
+    "maintenancemode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.environment.KerberosCacheMiddleware",  # Kerberos
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
-    "intranet.middleware.traceback.UserTracebackMiddleware",    # Include user in traceback
-    "django.contrib.messages.middleware.MessageMiddleware",     # Messages
+    "intranet.middleware.traceback.UserTracebackMiddleware",  # Include user in traceback
+    "django.contrib.messages.middleware.MessageMiddleware",  # Messages
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
-    "intranet.middleware.access_log.AccessLogMiddleWare",       # Access log
-    "corsheaders.middleware.CorsMiddleware",                    # CORS headers, for ext. API use
+    "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
+    "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
-    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",      # Show ldap simple bind message
+    "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
 ]
 
 # URLconf at urls.py
@@ -320,23 +290,13 @@ if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
     for key in CACHE_AGE:
         CACHE_AGE[key] = 60
 
-
 # Cacheops configuration
 # may be removed in the future
-CACHEOPS_REDIS = {
-    "host": "127.0.0.1",
-    "port": 6379,
-    "db": 1,
-    "socket_timeout": 1
-}
+CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
 
 CACHEOPS_DEGRADE_ON_FAILURE = True
 
-CACHEOPS_DEFAULTS = {
-    "ops": "all",
-    "cache_on_save": True,
-    "timeout": int(datetime.timedelta(hours=24).total_seconds())
-}
+CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
 CACHEOPS = {
     "eighth.*": {
@@ -383,7 +343,6 @@ else:
         "KEY_PREFIX": VIRTUAL_ENV
     }
 
-
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
@@ -399,12 +358,7 @@ BASE_DN = "dc=tjhsst,dc=edu"
 USER_DN = "ou=people,dc=tjhsst,dc=edu"
 CLASS_DN = "ou=schedule,dc=tjhsst,dc=edu"
 
-LDAP_OBJECT_CLASSES = {
-    "student": "tjhsstStudent",
-    "teacher": "tjhsstTeacher",
-    "simple_user": "simpleUser",
-    "attendance_user": "tjhsstUser"
-}
+LDAP_OBJECT_CLASSES = {"student": "tjhsstStudent", "teacher": "tjhsstTeacher", "simple_user": "simpleUser", "attendance_user": "tjhsstUser"}
 
 FCPS_STUDENT_ID_LENGTH = 7
 
@@ -417,26 +371,20 @@ REST_FRAMEWORK = {
     "DATETIME_FORMAT": None,
     "DATE_FORMAT": None,
     "TIME_FORMAT": None,
-
     "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
-
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "intranet.apps.api.authentication.KerberosBasicAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-        "oauth2_provider.ext.rest_framework.OAuth2Authentication"
-    ),
-
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    )
+    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.KerberosBasicAuthentication",
+                                       "rest_framework.authentication.SessionAuthentication",
+                                       "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
 }
 
 # Django Oauth Toolkit configuration
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
+    'SCOPES': {'read': 'Read scope',
+               'write': 'Write scope'}
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 
@@ -496,6 +444,7 @@ if os.getenv("LOG_LEVEL") in ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"):
 
 def get_log(name):
     return [name] if (PRODUCTION and not TRAVIS) else []
+
 
 LOGGING = {
     "version": 1,
@@ -611,23 +560,17 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
     ]
 
-    DEBUG_TOOLBAR_CONFIG = {
-        "INTERCEPT_REDIRECTS": False,
-        "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]
-    }
+    DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 
     # Add middleware
     MIDDLEWARE_CLASSES.extend([
         "intranet.middleware.templates.StripNewlinesMiddleware",  # Strip newlines
-        "debug_toolbar.middleware.DebugToolbarMiddleware",      # Debug toolbar
+        "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
     ])
 
-    INSTALLED_APPS += [
-        "debug_toolbar",
-        "debug_toolbar_line_profiler",
-    ]
+    INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler",]
 
     # Only show debug toolbar when requested if in production.
     if PRODUCTION:
@@ -638,9 +581,7 @@ MAINTENANCE_MODE = False
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_REGEX_WHITELIST = (
-    '^(https?://)?(\w+\.)?tjhsst\.edu$'
-)
+CORS_ORIGIN_REGEX_WHITELIST = ('^(https?://)?(\w+\.)?tjhsst\.edu$')
 
 # Uncomment to only allow XHR on API resources from TJ domains
 # CORS_URLS_REGEX = r'^/api/.*$'
@@ -651,7 +592,6 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # X-XSS-Protection: 1; mode=block
 # Already set on nginx level
 SECURE_BROWSER_XSS_FILTER = True
-
 
 # Add git information for the login page
 GIT = {

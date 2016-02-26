@@ -22,8 +22,7 @@ class PollManager(Manager):
 
         """
 
-        return Poll.objects.filter(Q(groups__in=user.groups.all()) |
-                                   Q(groups__isnull=True))
+        return Poll.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
 
 
 class Poll(models.Model):
@@ -55,6 +54,7 @@ class Poll(models.Model):
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
+
     # Access questions through .question_set
 
     def before_end_time(self):
@@ -141,15 +141,13 @@ class Question(models.Model):
     FREE_RESP = 'FRE'
     SHORT_RESP = 'SRE'
     STD_OTHER = 'STO'
-    TYPE = (
-        (STD, 'Standard'),
-        (ELECTION, 'Election'),
-        (APP, 'Approval'),
-        (SPLIT_APP, 'Split approval'),
-        (FREE_RESP, 'Free response'),
-        (SHORT_RESP, 'Short response'),
-        (STD_OTHER, 'Standard other'),
-    )
+    TYPE = ((STD, 'Standard'),
+            (ELECTION, 'Election'),
+            (APP, 'Approval'),
+            (SPLIT_APP, 'Split approval'),
+            (FREE_RESP, 'Free response'),
+            (SHORT_RESP, 'Short response'),
+            (STD_OTHER, 'Standard other'),)
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
     max_choices = models.IntegerField(default=1)
 

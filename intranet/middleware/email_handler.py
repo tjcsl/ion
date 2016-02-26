@@ -12,18 +12,11 @@ class AdminEmailHandler(log.AdminEmailHandler):
     def emit(self, record):
         try:
             request = record.request
-            subject = '%s (%s IP: %s): %s' % (
-                record.levelname,
-                (request.user if request.user else 'No user'),
-                ('internal' if request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS
-                 else 'EXTERNAL'),
-                record.getMessage()
-            )
+            subject = '%s (%s IP: %s): %s' % (record.levelname, (request.user if request.user else 'No user'),
+                                              ('internal' if request.META.get('REMOTE_ADDR') in settings.INTERNAL_IPS else
+                                               'EXTERNAL'), record.getMessage())
         except Exception:
-            subject = '%s: %s' % (
-                record.levelname,
-                record.getMessage()
-            )
+            subject = '%s: %s' % (record.levelname, record.getMessage())
             request = None
         subject = self.format_subject(subject)
 

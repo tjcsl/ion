@@ -15,17 +15,8 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ["created_time",
-                   "last_modified_time",
-                   "user",
-                   "scheduled_activity",
-                   "announcement",
-                   "attending",
-                   "links",
-                   "approved",
-                   "rejected",
-                   "approved_by",
-                   "rejected_by"]
+        exclude = ["created_time", "last_modified_time", "user", "scheduled_activity", "announcement", "attending", "links", "approved", "rejected",
+                   "approved_by", "rejected_by"]
 
 
 class AdminEventForm(forms.ModelForm):
@@ -41,12 +32,4 @@ class AdminEventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ["created_time",
-                   "last_modified_time",
-                   "user",
-                   "attending",
-                   "links",
-                   "approved",
-                   "rejected",
-                   "approved_by",
-                   "rejected_by"]
+        exclude = ["created_time", "last_modified_time", "user", "attending", "links", "approved", "rejected", "approved_by", "rejected_by"]

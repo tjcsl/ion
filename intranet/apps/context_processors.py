@@ -26,14 +26,8 @@ def nav_categorizer(request):
     """
 
     categories = [
-        (r"^/$", "dashboard"),
-        (r"^/announcements", "dashboard"),
-        (r"^/eighth/admin", "eighth_admin"),
-        (r"^/eighth", "eighth"),
-        (r"^/events", "events"),
-        (r"^/files", "files"),
-        (r"^/groups", "groups"),
-        (r"^/polls", "polls")
+        (r"^/$", "dashboard"), (r"^/announcements", "dashboard"), (r"^/eighth/admin", "eighth_admin"), (r"^/eighth", "eighth"),
+        (r"^/events", "events"), (r"^/files", "files"), (r"^/groups", "groups"), (r"^/polls", "polls")
     ]
 
     for pattern, category in categories:
