@@ -34,6 +34,8 @@ def class_section_view(request, section_id):
 
     in_class = (course.users.filter(id=request.user.id).count() == 1)
     can_view_students = (request.user.is_teacher or request.user.is_eighth_admin)
+    course_users = list(course.users.all())
+    course_users.sort(key=lambda u: (u.last_name, u.first_name))
     teacher_classes = LDAPCourse.objects.filter(teacher_name=course.teacher_name)
     section_classes = LDAPCourse.objects.filter(course_id=course.course_id)
 
@@ -43,7 +45,8 @@ def class_section_view(request, section_id):
         "can_view_students": can_view_students,
         "teacher_user": course.teacher_user,
         "teacher_classes": teacher_classes,
-        "section_classes": section_classes
+        "section_classes": section_classes,
+        "course_users": course_users
     }
 
     return render(request, "ionldap/class.html", context)
