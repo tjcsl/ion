@@ -267,7 +267,6 @@ def files_type(request, fstype=None):
                         sftp.getfo(itempath, fh)
                     except IOError as e:
                         logger.debug("IOError on " + item)
-                        print(e)
                         continue
 
             with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:
