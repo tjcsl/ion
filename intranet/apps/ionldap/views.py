@@ -24,6 +24,7 @@ def main_view(request):
 
     return render(request, "ionldap/main.html", context)
 
+
 @login_required
 def class_section_view(request, section_id):
     try:
@@ -32,7 +33,7 @@ def class_section_view(request, section_id):
         raise http.Http404
 
     in_class = (course.users.filter(id=request.user.id).count() == 1)
-    can_view_students = (request.user.is_teacher)# or request.user.is_eighth_admin)
+    can_view_students = (request.user.is_teacher)  # or request.user.is_eighth_admin)
     teacher_classes = LDAPCourse.objects.filter(teacher_name=course.teacher_name)
     section_classes = LDAPCourse.objects.filter(course_id=course.course_id)
 
@@ -47,6 +48,7 @@ def class_section_view(request, section_id):
 
     return render(request, "ionldap/class.html", context)
 
+
 @login_required
 def class_room_view(request, room_id):
     courses = LDAPCourse.objects.filter(room_name="{}".format(room_id))
@@ -57,6 +59,7 @@ def class_room_view(request, room_id):
     }
 
     return render(request, "ionldap/class_room.html", context)
+
 
 @login_required
 def all_classes_view(request):
