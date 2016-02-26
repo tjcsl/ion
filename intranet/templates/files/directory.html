@@ -15,6 +15,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/files.js' %}"></script>
     <script type="text/javascript">
     </script>
 {% endblock %}
@@ -37,6 +38,8 @@
         <a class="button" href="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
             <i class="fa fa-upload"></i> Upload
         </a>
+
+        <span id="additional-upload-option">You can also drag files onto this page to upload them.</span>
 
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list">
