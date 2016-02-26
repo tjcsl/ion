@@ -301,7 +301,7 @@ def files_type(request, fstype=None):
                 "folder": sftp.isdir(f),
                 "stat": fstat,
                 "stat_mtime": datetime.datetime.fromtimestamp(int(fstat.st_mtime or 0)),
-                "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
+                "too_big": fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
 
     logger.debug(files)
