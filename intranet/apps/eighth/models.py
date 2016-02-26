@@ -28,8 +28,7 @@ class AbstractBaseEighthModel(models.Model):
 
 
 class EighthSponsor(AbstractBaseEighthModel):
-    """
-    Represents a sponsor for an eighth period activity.
+    """Represents a sponsor for an eighth period activity.
 
     A sponsor could be linked to an actual user or just a name.
 

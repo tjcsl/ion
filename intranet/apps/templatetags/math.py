@@ -10,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 @register.filter
 def round_num(number, precision=0):
-    """
-    Rounds a number to a given precision in decimal digits (default 0 digits) and returns the
+    """Rounds a number to a given precision in decimal digits (default 0 digits) and returns the
     integer value.
 
     Precision may be negative. A precision of 1 will round to the tenths
