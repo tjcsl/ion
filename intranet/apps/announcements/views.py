@@ -242,7 +242,7 @@ def admin_request_status_view(request):
     all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
     awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    approved = AnnouncementRequest.objects.filter(posted=True)
+    approved = AnnouncementRequest.objects.exclude(posted=None)
     rejected = AnnouncementRequest.objects.filter(rejected=True)
 
     context = {

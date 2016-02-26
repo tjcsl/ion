@@ -4,6 +4,7 @@ import base64
 import logging
 import os
 import tempfile
+import datetime
 from os.path import normpath
 from wsgiref.util import FileWrapper
 
@@ -259,8 +260,11 @@ def files_type(request, fstype=None):
                 "name": f,
                 "folder": sftp.isdir(f),
                 "stat": stat,
+                "stat_mtime": datetime.datetime.fromtimestamp(int(stat.st_mtime or 0)),
                 "too_big": stat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE
             })
+
+    logger.debug(files)
 
     current_dir = sftp.pwd  # current directory
     dir_list = current_dir.split("/")
