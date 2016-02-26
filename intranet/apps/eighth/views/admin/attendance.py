@@ -85,7 +85,7 @@ def delinquent_students_view(request):
             users_with_absence = (EighthSignup.objects.filter(
                 was_absent=True, scheduled_activity__attendance_taken=True, scheduled_activity__block__date__gte=start_date_filter,
                 scheduled_activity__block__date__lte=end_date_filter).values("user").annotate(absences=Count("user")).filter(absences__gte=1)
-                                  .values("user", "absences").order_by("user"))
+                .values("user", "absences").order_by("user"))
 
             uids_with_absence = [row["user"] for row in users_with_absence]
             all_students = User.objects.get_students().values_list("id")
@@ -102,8 +102,8 @@ def delinquent_students_view(request):
             delinquents = (EighthSignup.objects.filter(
                 was_absent=True, scheduled_activity__attendance_taken=True, scheduled_activity__block__date__gte=start_date_filter,
                 scheduled_activity__block__date__lte=end_date_filter).values("user").annotate(absences=Count("user"))
-                           .filter(absences__gte=lower_absence_limit_filter,
-                                   absences__lte=upper_absence_limit_filter).values("user", "absences").order_by("user"))
+                .filter(absences__gte=lower_absence_limit_filter,
+                        absences__lte=upper_absence_limit_filter).values("user", "absences").order_by("user"))
 
             user_ids = [d["user"] for d in delinquents]
             delinquent_users = User.objects.filter(id__in=user_ids).order_by("id")
@@ -337,7 +337,7 @@ def out_of_building_schedules_view(request, block_id=None):
         if len(rooms) > 0:
             signups = (EighthSignup.objects.filter(scheduled_activity__block=block).filter(Q(scheduled_activity__rooms__in=rooms) | (Q(
                 scheduled_activity__rooms=None) & Q(scheduled_activity__activity__rooms__in=rooms))).distinct()
-                       .order_by("scheduled_activity__activity"))
+                .order_by("scheduled_activity__activity"))
             context["signups"] = signups
 
     if request.resolver_match.url_name == "eighth_admin_export_out_of_building_schedules":

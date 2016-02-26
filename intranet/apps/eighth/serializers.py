@@ -144,7 +144,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         # in this block
         activities_with_signups = (EighthSignup.objects.filter(scheduled_activity__block=block).exclude(
             scheduled_activity__activity__deleted=True).values_list("scheduled_activity__activity_id")
-                                   .annotate(user_count=Count("scheduled_activity")))
+            .annotate(user_count=Count("scheduled_activity")))
 
         for activity, user_count in activities_with_signups:
             activity_list[activity]["roster"]["count"] = user_count

@@ -188,7 +188,7 @@ class ProfileMiddleware(object):
         # display summary statistics
         stats_str += "\n%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Minimum'] + [mins[field] for field in time_fields])
         stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Mean'] + [sums[field] / count for field in time_fields
-                                                                                                        ])
+                                                                                                         ])
         stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Maximum'] + [maxs[field] for field in time_fields])
         if count > 1:
             stats_str += "%-4s %-24s %15.3f %14.3f %10.3f %12.3f %12.3f %12d %12d\n" % tuple(['', 'Standard deviation'] + [stdev(values[field])

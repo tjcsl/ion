@@ -78,7 +78,7 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 ADMINS = (("Ion Errors", "ion-errors@lists.tjhsst.edu"),
           # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
           # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
-         )
+          )
 
 # Use PostgreSQL database
 
@@ -199,7 +199,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",
                        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
                        # "django.contrib.staticfiles.finders.DefaultStorageFinder",
-                      )
+                       )
 
 AUTHENTICATION_BACKENDS = ("intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
                            "intranet.apps.auth.backends.KerberosAuthenticationBackend",
@@ -225,7 +225,7 @@ TEMPLATES = [
              "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
              "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
              "intranet.apps.context_processors.mobile_app"  # For the custom android app functionality (tbd?)
-            ),
+             ),
             "debug": True  # Only enabled if DEBUG is true as well
         }
     },
