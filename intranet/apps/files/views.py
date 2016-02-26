@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import logging
 import os
-import datetime
 import tempfile
 from os.path import normpath
 from wsgiref.util import FileWrapper
