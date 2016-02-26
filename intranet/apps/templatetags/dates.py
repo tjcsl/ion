@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 @register.filter(expects_localtime=True)
 def fuzzy_time(time):
-    """Formats a :class:`datetime.time` object relative to the current time
+    """
+    Formats a `datetime.time` object relative to the current time
     """
     d = datetime_date.today()
     dt = datetime.combine(d, time)
@@ -21,7 +22,8 @@ def fuzzy_time(time):
 
 @register.filter(expects_localtime=True)
 def fuzzy_date(date):
-    """Formats a :class:`datetime.datetime` object relative to the current time
+    """
+    Formats a `datetime.datetime` object relative to the current time
     """
 
     date = date.replace(tzinfo=None)

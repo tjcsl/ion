@@ -211,7 +211,6 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "APP_DIRS": False,
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
         "OPTIONS": {
             "context_processors":
@@ -229,7 +228,8 @@ TEMPLATES = [
             "debug": True,  # Only enabled if DEBUG is true as well
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader']),
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader']),
             ],
         }
     },
@@ -396,6 +396,7 @@ INSTALLED_APPS = [
     # internal Django
     "django.contrib.auth",
     "django.contrib.admin",
+    "django.contrib.admindocs",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
