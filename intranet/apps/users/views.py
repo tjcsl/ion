@@ -180,6 +180,9 @@ def picture_view(request, user_id, year=None):
 
 @login_required
 def class_section_view(request, section_id):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_class_section", section_id=section_id)
+
     c = Class(id=section_id)
     try:
         c.name
@@ -229,6 +232,9 @@ def class_section_view(request, section_id):
 
 @login_required
 def class_room_view(request, room_id):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_class_room", room_id=room_id)
+
     c = LDAPConnection()
     room_id = LDAPFilter.escape(room_id)
 
@@ -261,6 +267,9 @@ def class_room_view(request, room_id):
 
 @login_required
 def all_classes_view(request):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_all_classes")
+
     c = LDAPConnection()
 
     classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
