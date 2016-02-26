@@ -64,7 +64,7 @@ def should_show_activity_list(wizard):
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     FORMS = [("block", BlockSelectionForm), ("activity", ActivitySelectionForm)]
 
-    TEMPLATES = {"block": "eighth/take_attendance.html", "activity": "eighth/take_attendance.html",}
+    TEMPLATES = {"block": "eighth/take_attendance.html", "activity": "eighth/take_attendance.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -106,7 +106,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             # if not (self.request.user.is_eighth_admin or (sponsor is None)):
             #    kwargs.update({"sponsor": sponsor})
 
-        labels = {"block": "Select a block", "activity": "Select an activity" if not block else block_title,}
+        labels = {"block": "Select a block", "activity": "Select an activity" if not block else block_title}
 
         kwargs.update({"label": labels[step]})
 
@@ -522,7 +522,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         header_style = TableStyle([("VALIGN", (0, 0), (0, 0), "TOP"),
                                    ("VALIGN", (1, 0), (2, 0), "MIDDLE"),
                                    ("TOPPADDING", (0, 0), (0, 0), 15),
-                                   ("RIGHTPADDING", (1, 0), (1, 0), 0),])
+                                   ("RIGHTPADDING", (1, 0), (1, 0), 0)])
 
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, block_letter_width]))
         elements.append(Spacer(0, 10))

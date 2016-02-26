@@ -41,7 +41,7 @@ urlpatterns = [
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
-    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls)),]
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
 
 handler404 = handle_404_view
 handler500 = handle_500_view

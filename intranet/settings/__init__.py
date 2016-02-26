@@ -47,11 +47,11 @@ if not PRODUCTION:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 # Internal IP ranges in production
-_internal_ip_list = ["198.38.16.0/20", "2001:468:cc0::/48",]
+_internal_ip_list = ["198.38.16.0/20", "2001:468:cc0::/48"]
 
 if not PRODUCTION:
     # Additional Internal IP ranges for debugging
-    _internal_ip_list.extend(["127.0.0.0/8", "10.0.0.0/8",])
+    _internal_ip_list.extend(["127.0.0.0/8", "10.0.0.0/8"])
 
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
@@ -88,7 +88,7 @@ if PRODUCTION or SECRET_DATABASE_URL is not None:
     DATABASES['default'].update(helpers.parse_db_url(SECRET_DATABASE_URL))
 else:
     # Default testing db config.
-    DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd",})
+    DATABASES["default"].update({"NAME": "ion", "USER": "ion", "PASSWORD": "pwd"})
 
 # In-memory sqlite3 databases signifigantly speeds up the tests.
 if TESTING:
@@ -570,7 +570,7 @@ if SHOW_DEBUG_TOOLBAR:
         "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug toolbar
     ])
 
-    INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler",]
+    INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]
 
     # Only show debug toolbar when requested if in production.
     if PRODUCTION:

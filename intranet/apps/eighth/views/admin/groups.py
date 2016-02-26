@@ -337,9 +337,9 @@ def download_group_csv_view(request, group_id):
 
 
 class EighthAdminSignUpGroupWizard(SessionWizardView):
-    FORMS = [("block", BlockSelectionForm), ("activity", ActivitySelectionForm),]
+    FORMS = [("block", BlockSelectionForm), ("activity", ActivitySelectionForm)]
 
-    TEMPLATES = {"block": "eighth/admin/sign_up_group.html", "activity": "eighth/admin/sign_up_group.html",}
+    TEMPLATES = {"block": "eighth/admin/sign_up_group.html", "activity": "eighth/admin/sign_up_group.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -352,7 +352,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
             block = self.get_cleaned_data_for_step("block")["block"]
             kwargs.update({"block": block})
 
-        labels = {"block": "Select a block", "activity": "Select an activity",}
+        labels = {"block": "Select a block", "activity": "Select an activity"}
 
         kwargs.update({"label": labels[step]})
 
@@ -410,11 +410,11 @@ def eighth_admin_signup_group_action(request, group_id):
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):
-    FORMS = [("block", BlockSelectionForm), ("activity", ScheduledActivityMultiSelectForm),]
+    FORMS = [("block", BlockSelectionForm), ("activity", ScheduledActivityMultiSelectForm)]
 
     TEMPLATES = {"block": "eighth/admin/distribute_group.html",
                  "activity": "eighth/admin/distribute_group.html",
-                 "choose": "eighth/admin/distribute_group.html",}
+                 "choose": "eighth/admin/distribute_group.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -443,7 +443,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 block = block["block"]
             kwargs.update({"block": block})
 
-        labels = {"block": "Select a block", "activity": "Select multiple activities",}
+        labels = {"block": "Select a block", "activity": "Select multiple activities"}
 
         kwargs.update({"label": labels[step]})
 

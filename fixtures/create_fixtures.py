@@ -274,7 +274,7 @@ for row in rows:
                       "content": row[2],
                       "author": author,
                       "added": date,
-                      "updated": date,}}
+                      "updated": date}}
     news.append(obj)
 
 json.dump(news, f_announcements)

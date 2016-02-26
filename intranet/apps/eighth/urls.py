@@ -119,4 +119,4 @@ eighth_admin_patterns = [
     url(r"^cache$", general.cache_view, name="eighth_admin_cache"),
 ]
 
-urlpatterns += [url(r"^/admin/", include(eighth_admin_patterns)),]
+urlpatterns += [url(r"^/admin/", include(eighth_admin_patterns))]

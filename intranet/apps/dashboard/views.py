@@ -365,7 +365,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             context.update({"schedule": schedule,
                             "no_signup_today": no_signup_today,
                             "senior_graduation": settings.SENIOR_GRADUATION,
-                            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,})
+                            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR})
 
         if eighth_sponsor:
             sponsor_date = request.GET.get("sponsor_date", None)
@@ -390,6 +390,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
 
-        context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval,})
+        context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval})
 
     return render(request, "dashboard/dashboard.html", context)

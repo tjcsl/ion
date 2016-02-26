@@ -30,8 +30,8 @@ def api_root(request, format=None):
         "/schedule": ["Get today's schedule", perma_reverse(request, "api_schedule_day_list")],
         "/schedule?page_size=<num>": ["Get the schedule for the next <num> days", "{}?page_size=7".format(perma_reverse(request,
                                                                                                                         "api_schedule_day_list"))],
-        "/schedule/<date>": ["Get the schedule for a specific day, in YYYY-MM-DD format", perma_reverse(request, "api_schedule_day_detail", kwargs=
-                                                                                                        {"date": "2016-04-04"})],
+        "/schedule/<date>": ["Get the schedule for a specific day, in YYYY-MM-DD format", perma_reverse(request, "api_schedule_day_detail",
+                                                                                                        kwargs={"date": "2016-04-04"})],
     }), ("Announcements", {
         "/announcements": ["Get announcement list", perma_reverse(request, "api_announcements_list_create")],
         "/announcements/<pk>": ["Get announcement details", perma_reverse(request, "api_announcements_detail", kwargs={"pk": 2999})],

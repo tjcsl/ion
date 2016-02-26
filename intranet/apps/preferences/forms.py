@@ -34,7 +34,7 @@ class PreferredPictureForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(PreferredPictureForm, self).__init__(*args, **kwargs)
-        self.PREFERRED_PICTURE_CHOICES = [("AUTO", "Auto-select the most recent photo"),]
+        self.PREFERRED_PICTURE_CHOICES = [("AUTO", "Auto-select the most recent photo")]
 
         photos = user.photo_permissions["self"]
 

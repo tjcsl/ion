@@ -130,9 +130,9 @@ def room_utilization_for_block_view(request):
 
 
 class EighthAdminRoomUtilizationWizard(SessionWizardView):
-    FORMS = [("start_block", BlockSelectionForm), ("end_block", BlockSelectionForm),]
+    FORMS = [("start_block", BlockSelectionForm), ("end_block", BlockSelectionForm)]
 
-    TEMPLATES = {"start_block": "eighth/admin/room_utilization.html", "end_block": "eighth/admin/room_utilization.html",}
+    TEMPLATES = {"start_block": "eighth/admin/room_utilization.html", "end_block": "eighth/admin/room_utilization.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -145,7 +145,7 @@ class EighthAdminRoomUtilizationWizard(SessionWizardView):
             block = self.get_cleaned_data_for_step("start_block")["block"]
             kwargs.update({"exclude_before_date": block.date})
 
-        labels = {"start_block": "Select a start block", "end_block": "Select an end block",}
+        labels = {"start_block": "Select a start block", "end_block": "Select an end block"}
 
         kwargs.update({"label": labels[step]})
 

@@ -111,7 +111,7 @@ def join_event_view(request, id):
 
             return redirect("events")
 
-    context = {"event": event, "is_events_admin": request.user.has_admin_permission('events'),}
+    context = {"event": event, "is_events_admin": request.user.has_admin_permission('events')}
     return render(request, "events/join_event.html", context)
 
 

@@ -57,7 +57,7 @@ def eighth_admin_dashboard_view(request, **kwargs):
         "url_id_placeholder": "734784857438457843756435654645642343465"
     }
 
-    forms = {"add_group_form": group_forms.QuickGroupForm, "add_room_form": room_forms.RoomForm,}
+    forms = {"add_group_form": group_forms.QuickGroupForm, "add_room_form": room_forms.RoomForm}
 
     for form_name, form_class in forms.items():
         form_css_id = form_name.replace("_", "-")
