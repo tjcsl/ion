@@ -3,7 +3,7 @@
 from django.core.urlresolvers import reverse
 
 from unittest.mock import patch, MagicMock
-from ..users.models import User
+from .models import Host
 from ...test.ion_test import IonTestCase
 """
 Tests for the filecenter.
@@ -12,23 +12,42 @@ Tests for the filecenter.
 
 class FilesTest(IonTestCase):
 
-    @patch('stat.S_ISDIR')
-    @patch('intranet.apps.files.views.get_authinfo')
     @patch('pysftp.Connection')
-    @patch('intranet.apps.files.models.Host')
-    def test_delete_file(self, m_host, m_sftp, m_auth, m_stat):
+    def test_delete_file(self, m_sftp):
         """Tests deleting a file in the filecenter."""
         self.login()
 
-        m_host.available_to_all.return_value = True
-        m_auth.return_value = {"username":"awilliam", "password":"hunter2"}
+        # Create hosts entry.
+        Host.objects.create(name="Computer Systems Lab",
+                            code="csl",
+                            address="remote.tjhsst.edu",
+                            linux=True)
+
+        # Login to remote file system
+        response = self.client.post(reverse('files_auth'), {'password': 'hunter2'})
+        # Check redirect back to filesystem selection menu.
+        self.assertRedirects(response, "/files", status_code=302)
+
+        # Create fake directory root.
         m_sftp().pwd = "/"
-        m_stat.return_value = False
+
+        # Create fake return code for stat call.
+        m_stat = MagicMock()
+        m_stat.st_mode = 33188
+        m_sftp().stat.return_value = m_stat
+
         # Ensure that we can see the deletion confirmation dialog.
         response = self.client.get(reverse('files_delete', args=['csl']), {'dir': '/test/deleteme.txt'})
-        # Check if server is obtaining host.
-        m_host.objects.get.assert_called_once_with(code='csl')
         # Check if sftp connection is created.
         self.assertTrue(m_sftp.called)
         # Verify that the user is not redirected.
         self.assertEqual(response.status_code, 200)
+
+        # Attempt to delete file.
+        response = self.client.post(reverse('files_delete', args=['csl']), {'path': '/test/deleteme.txt', 'confirm': ''})
+        # Check if sftp connection is created.
+        self.assertTrue(m_sftp.called)
+        # Verify that the file was deleted.
+        m_sftp().remove.assert_called_once_with('/test/deleteme.txt')
+        # Verify that the user is redirected back to folder.
+        self.assertRedirects(response, "/files/csl?dir=/test", status_code=302)
