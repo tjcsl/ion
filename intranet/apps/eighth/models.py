@@ -994,10 +994,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     # Clear out the other signups for this block if the user is
                     # switching out of a both-blocks activity
                     EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
-                    EighthSignup.objects.create(user=user, scheduled_activity=self, after_deadline=after_deadline,
-                                                previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
+                    EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
+                                                       previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
             except EighthSignup.DoesNotExist:
-                EighthSignup.objects.create(user=user, scheduled_activity=self, after_deadline=after_deadline)
+                EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
         else:
             existing_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
 
@@ -1017,8 +1017,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     previous_activity_name = None
                     previous_activity_sponsors = None
 
-                EighthSignup.objects.create(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
-                                            previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
+                EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
+                                                   previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
 
                 # signup.previous_activity_name = signup.activity.name_with_flags
                 # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
@@ -1102,6 +1102,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 class EighthSignupManager(Manager):
     """Model manager for EighthSignup."""
 
+    def create_signup(self, user, scheduled_activity, **kwargs):
+        if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).count() > 0:
+            raise ValidationError("EighthSignup already exists for this user on this block.")
+        self.create(user=user, scheduled_activity=scheduled_activity, **kwargs)
+
     def get_absences(self):
         return (EighthSignup.objects.filter(was_absent=True, scheduled_activity__attendance_taken=True))
 
@@ -1151,15 +1156,21 @@ class EighthSignup(AbstractBaseEighthModel):
     absence_acknowledged = models.BooleanField(default=False, blank=True)
     absence_emailed = models.BooleanField(default=False, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.has_conflict():
+            raise ValidationError("EighthSignup already exists for this user on this block.")
+        super(EighthSignup, self).save(*args, **kwargs)
+
     def validate_unique(self, *args, **kwargs):
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""
         super(EighthSignup, self).validate_unique(*args, **kwargs)
 
-        not_unique = (self.__class__.objects.exclude(pk=self.pk).filter(user=self.user,
-                                                                        scheduled_activity__block=self.scheduled_activity.block).exists())
+        if self.has_conflict():
+            raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User and the EighthScheduledActivity's block",)})
 
-        if not_unique:
-            raise ValidationError({NON_FIELD_ERRORS: ("EighthSignup already exists for the User " "and the EighthScheduledActivity's block",)})
+    def has_conflict(self):
+        signup_count = EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block).count()
+        return signup_count > 0
 
     def remove_signup(self, user=None, force=False):
         """Attempt to remove the EighthSignup if the user has permission to do so."""
