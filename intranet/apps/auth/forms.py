@@ -37,7 +37,7 @@ class AuthenticateForm(AuthenticationForm):
             else:
                 errors = list(error)
                 if "This account is inactive." in errors:
-                    message = "Permission denied: account restricted."
+                    message = "Intranet access restricted"
                 else:
                     message = "Invalid password"
                 self.fields["password"].widget.attrs.update({"class": "error", "placeholder": message})
