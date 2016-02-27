@@ -61,7 +61,11 @@
                         <i class="fa fa-folder"></i>
                         {{ file.name }}
                     </a>
-                    <a class="zip" href="?dir={{current_dir}}/{{ file.name }}&zip"><i class="fa fa-file-archive-o"></i></a>
+                </td>
+                <td class="download-zip">
+                    <a class="zip" href="?dir={{ current_dir }}/{{ file.name|escape }}&zip" data-name="{{ file.name|escape }}" onclick="return zip_folder()">
+                        <i class="fa fa-file-archive-o"></i> Download as ZIP
+                    </a>
                 </td>
                 {% else %}
                 <td class="item file"{% for k, v in file.stat.items %} stat-{{ k }}="{{ v }}"{% endfor %}>
@@ -74,8 +78,8 @@
                         &nbsp; &nbsp; &nbsp; <i class="fa fa-exclamation-triangle"></i> Too large to download (>{{ max_download_mb }}MB)
                     {% endif %}
                 </td>
-                <td class="last-modified">
-                    Last Modified: {{ file.stat_mtime }}
+                <td class="last-modified" title="Last Modified">
+                    <i class="fa fa-clock-o"></i> {{ file.stat_mtime }}
                 </td>
                 {% endif %}
             </tr>
