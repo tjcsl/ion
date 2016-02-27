@@ -857,7 +857,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return False
 
-    def add_user(self, user, request=None, force=False):
+    def add_user(self, user, request=None, force=False, no_after_deadline=False):
         """Sign up a user to this scheduled activity if possible. This is where the magic happens.
 
         Raises an exception if there's a problem signing the user up
@@ -973,6 +973,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # this point, the signup is either before deadline or performed by
         # an eighth period admin, so previous absences and passes are cleared.
         after_deadline = self.block.locked
+
+        # If we're doing an eighth admin action (like signing up a group),
+        # don't make an after deadline signup, which creates a pass.
+        if no_after_deadline:
+            after_deadline = False
+
         if not self.activity.both_blocks:
             try:
                 existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)

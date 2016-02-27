@@ -399,7 +399,7 @@ def eighth_admin_signup_group_action(request, group_id):
 
     if "confirm" in request.POST:
         for user in users:
-            scheduled_activity.add_user(user, request, True)
+            scheduled_activity.add_user(user, request, force=True, no_after_deadline=True)
         messages.success(request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
 
