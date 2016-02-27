@@ -135,6 +135,9 @@ $(function() {
             });
         });
 
+        // Blacklist should be always enabled
+        $("#id_users_blacklisted").parent("td").find("input").attr("disabled", false);
+        var select = $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
     }
 
     $("#id_restricted").click(updateRestrictedFormFields);

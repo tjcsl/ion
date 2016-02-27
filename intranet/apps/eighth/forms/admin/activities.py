@@ -90,7 +90,7 @@ class ActivityForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ActivityForm, self).__init__(*args, **kwargs)
 
-        for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed"]:
+        for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed", "users_blacklisted"]:
             self.fields[fieldname].help_text = None
 
         # Simple way to filter out teachers without hitting LDAP. This
@@ -102,7 +102,9 @@ class ActivityForm(forms.ModelForm):
         # HOWEVER: this will result in LDAP information being queried for *all 1800 users.*
         # We need a better way to accomplish this. The solution below works because it only prints
         # the username field which doesn't require an LDAP query to access.
-        self.fields["users_allowed"].queryset = User.objects.get_students()
+        student_objects = User.objects.get_students()
+        self.fields["users_allowed"].queryset = student_objects
+        self.fields["users_blacklisted"].queryset = student_objects
 
         self.fields["presign"].label = "48 Hour"
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
@@ -111,7 +113,7 @@ class ActivityForm(forms.ModelForm):
         model = EighthActivity
         fields = [
             "name", "description", "sponsors", "rooms", "default_capacity", "id", "presign", "one_a_day", "both_blocks", "sticky", "special",
-            "administrative", "restricted", "users_allowed", "groups_allowed", "freshmen_allowed", "sophomores_allowed", "juniors_allowed",
+            "administrative", "restricted", "users_allowed", "groups_allowed", "users_blacklisted", "freshmen_allowed", "sophomores_allowed", "juniors_allowed",
             "seniors_allowed"
         ]
         widgets = {"description": forms.Textarea(attrs={"rows": 5, "cols": 46}), "name": forms.TextInput(attrs={"style": "width: 292px"})}
