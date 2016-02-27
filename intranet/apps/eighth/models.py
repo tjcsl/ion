@@ -869,20 +869,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         exception = eighth_exceptions.SignupException()
 
+        all_sched_act = [self]
+        all_blocks = [self.block]
+
         if self.activity.both_blocks:
             # Finds the other scheduling of the same activity on the same day
             # See note above in get_both_blocks_sibling()
             sibling = self.get_both_blocks_sibling()
 
-            all_sched_act = [self]
-            all_blocks = [self.block]
-
             if sibling:
                 all_sched_act.append(sibling)
                 all_blocks.append(sibling.block)
-        else:
-            all_sched_act = [self]
-            all_blocks = [self.block]
 
         if not force:
             # Check if the user who sent the request has the permissions
@@ -890,7 +887,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if request is not None:
                 if user != request.user and not request.user.is_eighth_admin:
                     exception.SignupForbidden = True
-                    raise exception
 
             # Check if the activity has been deleted
             if self.activity.deleted:
@@ -915,12 +911,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.Presign = True
 
             # Check if the user is already stickied into an activity
-            if not self.activity.both_blocks:
-                in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
-                                                          scheduled_activity__block=self.block).exists())
-            else:
-                in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
-                                                          scheduled_activity__block__in=all_blocks).exists())
+            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
+                                                      scheduled_activity__block__in=all_blocks).exists())
             if in_stickie:
                 exception.Sticky = True
 
@@ -983,7 +975,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         after_deadline = self.block.locked
         if not self.activity.both_blocks:
             try:
-                existing_signup = (EighthSignup.objects.get(user=user, scheduled_activity__block=self.block))
+                existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
 
                 previous_activity_name = existing_signup.scheduled_activity.activity.name_with_flags
                 prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
@@ -1001,11 +993,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 else:
                     # Clear out the other signups for this block if the user is
                     # switching out of a both-blocks activity
-                    signup_sibling = existing_signup.scheduled_activity.get_both_blocks_sibling()
-                    if signup_sibling:
-                        EighthSignup.objects.filter(user=user, scheduled_activity=signup_sibling).delete()
-
-                    EighthSignup.objects.filter(user=user, scheduled_activity__block=self.block).delete()
+                    EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
                     EighthSignup.objects.create(user=user, scheduled_activity=self, after_deadline=after_deadline,
                                                 previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
             except EighthSignup.DoesNotExist:
