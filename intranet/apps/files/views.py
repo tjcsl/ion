@@ -328,6 +328,95 @@ def files_type(request, fstype=None):
 
 
 @login_required
+def files_delete(request, fstype=None):
+    if "confirm" in request.POST:
+        filepath = request.POST.get("path", None)
+    else:
+        filepath = request.GET.get("dir", None)
+    if filepath is None:
+        return redirect("files")
+
+    try:
+        host = Host.objects.get(code=fstype)
+    except Host.DoesNotExist:
+        messages.error(request, "Could not find host in database.")
+        return redirect("files")
+
+    if host.available_to_all:
+        pass
+    elif not host.visible_to(request.user):
+        messages.error(request, "You don't have permission to access this host.")
+        return redirect("files")
+
+    authinfo = get_authinfo(request)
+
+    if not authinfo:
+        return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
+
+    try:
+        sftp = create_session(host.address, authinfo["username"], authinfo["password"])
+    except pysftp.SSHException as e:
+        messages.error(request, e)
+        error_msg = str(e).lower()
+        if "authentication" in error_msg:
+            return redirect("files_auth")
+        return redirect("files")
+    finally:
+        # Delete the stored credentials, so they aren't mistakenly used or accessed later.
+        del authinfo
+
+    if host.directory:
+        host_dir = host.directory
+        if "{}" in host_dir:
+            host_dir = host_dir.format(request.user.username)
+        if "{win}" in host_dir:
+            host_dir = windows_dir_format(host_dir, request.user)
+        try:
+            sftp.chdir(host_dir)
+        except IOError as e:
+            messages.error(request, e)
+            return redirect("files")
+
+    default_dir = sftp.pwd
+
+    def can_access_path(fsdir):
+        return normpath(fsdir).startswith(default_dir)
+
+    filepath = normpath(filepath)
+    if can_access_path(filepath):
+        try:
+            fstat = sftp.stat(filepath)
+            is_directory = stat.S_ISDIR(fstat.st_mode)
+        except:
+            messages.error(request, "Unable to access {}".format(filepath))
+            return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+
+    def rmtree(sftp, path):
+        for f in sftp.listdir_attr(path):
+            npath = os.path.join(path, f.filename)
+            if stat.S_ISDIR(f.st_mode):
+                rmtree(sftp, npath)
+            else:
+                sftp.remove(npath)
+        sftp.rmdir(path)
+
+    if "confirm" in request.POST:
+        if not is_directory:
+            sftp.remove(filepath)
+        else:
+            rmtree(sftp, filepath)
+        messages.success(request, ("Folder" if is_directory else "File") + " deleted!")
+        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+
+    context = {
+        "host": host,
+        "remote_dir": os.path.dirname(filepath),
+        "is_directory": is_directory
+    }
+    return render(request, "files/delete.html", context)
+
+
+@login_required
 def files_upload(request, fstype=None):
     fsdir = request.GET.get("dir", None)
     if fsdir is None:
