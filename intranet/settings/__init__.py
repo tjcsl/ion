@@ -231,6 +231,9 @@ TEMPLATES = [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader']),
             ],
+            'libraries': {
+                'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
+            },
         }
     },
 ]  # type: List[Dict[str,Any]]
