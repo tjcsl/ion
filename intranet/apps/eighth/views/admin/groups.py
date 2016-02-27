@@ -527,7 +527,7 @@ def eighth_admin_distribute_action(request):
         for schact, userids in activity_user_map.items():
             for uid in userids:
                 changes += 1
-                schact.add_user(User.objects.get(id=int(uid)), None, True)
+                schact.add_user(User.objects.get(id=int(uid)), request=None, force=True, no_after_deadline=True)
 
         messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
