@@ -226,11 +226,14 @@ TEMPLATES = [
              "intranet.apps.context_processors.mobile_app"  # For the custom android app functionality (tbd?)
              ),
             "debug": True,  # Only enabled if DEBUG is true as well
-            'loaders': [
+            'loaders': ([
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader']),
-            ],
+            ] if PRODUCTION else (
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader'
+            )),
             'libraries': {
                 'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
             },
