@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.files.views &mdash; TJ Intranet v3 (Build #1459) documentation</title>
+    <title>intranet.apps.files.views &mdash; TJ Intranet v3 (Build #1462) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1459)',
+        VERSION:     'v3 (Build #1462)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1459) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1462) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -471,6 +471,95 @@
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/directory.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="files_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.files_delete">[docs]</a><span class="k">def</span> <span class="nf">files_delete</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="n">fstype</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Host</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Could not find host in database.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">host</span><span class="o">.</span><span class="n">available_to_all</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">host</span><span class="o">.</span><span class="n">visible_to</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You don&#39;t have permission to access this host.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+
+    <span class="n">authinfo</span> <span class="o">=</span> <span class="n">get_authinfo</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">authinfo</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;{}?next={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;files_auth&quot;</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">()))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sftp</span> <span class="o">=</span> <span class="n">create_session</span><span class="p">(</span><span class="n">host</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">authinfo</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">],</span> <span class="n">authinfo</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">pysftp</span><span class="o">.</span><span class="n">SSHException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;authentication&quot;</span> <span class="ow">in</span> <span class="n">error_msg</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files_auth&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Delete the stored credentials, so they aren&#39;t mistakenly used or accessed later.</span>
+        <span class="k">del</span> <span class="n">authinfo</span>
+
+    <span class="k">if</span> <span class="n">host</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+        <span class="n">host_dir</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">directory</span>
+        <span class="k">if</span> <span class="s2">&quot;{}&quot;</span> <span class="ow">in</span> <span class="n">host_dir</span><span class="p">:</span>
+            <span class="n">host_dir</span> <span class="o">=</span> <span class="n">host_dir</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;{win}&quot;</span> <span class="ow">in</span> <span class="n">host_dir</span><span class="p">:</span>
+            <span class="n">host_dir</span> <span class="o">=</span> <span class="n">windows_dir_format</span><span class="p">(</span><span class="n">host_dir</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sftp</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">host_dir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;files&quot;</span><span class="p">)</span>
+
+    <span class="n">default_dir</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">pwd</span>
+
+    <span class="k">def</span> <span class="nf">can_access_path</span><span class="p">(</span><span class="n">fsdir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">normpath</span><span class="p">(</span><span class="n">fsdir</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">default_dir</span><span class="p">)</span>
+
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">normpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">can_access_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fstat</span> <span class="o">=</span> <span class="n">sftp</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+            <span class="n">is_directory</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Unable to access {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/files/{}?dir={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fstype</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">rmtree</span><span class="p">(</span><span class="n">sftp</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sftp</span><span class="o">.</span><span class="n">listdir_attr</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">npath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="n">rmtree</span><span class="p">(</span><span class="n">sftp</span><span class="p">,</span> <span class="n">npath</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sftp</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">npath</span><span class="p">)</span>
+        <span class="n">sftp</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_directory</span><span class="p">:</span>
+            <span class="n">sftp</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rmtree</span><span class="p">(</span><span class="n">sftp</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Folder&quot;</span> <span class="k">if</span> <span class="n">is_directory</span> <span class="k">else</span> <span class="s2">&quot;File&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; deleted!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/files/{}?dir={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fstype</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)))</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span>
+        <span class="s2">&quot;remote_dir&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span>
+        <span class="s2">&quot;is_directory&quot;</span><span class="p">:</span> <span class="n">is_directory</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;files/delete.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>

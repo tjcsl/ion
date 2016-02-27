@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.api.tests &mdash; TJ Intranet v3 (Build #1462) documentation</title>
+    <title>intranet.apps.files.tests &mdash; TJ Intranet v3 (Build #1462) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -143,23 +143,60 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.api.tests</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.files.tests</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
 
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">MagicMock</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Host</span>
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tests for the filecenter.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="ApiTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest">[docs]</a><span class="k">class</span> <span class="nc">ApiTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tests for the api module.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="FilesTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.tests.FilesTest">[docs]</a><span class="k">class</span> <span class="nc">FilesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="ApiTest.test_get_profile"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.api.html#intranet.apps.api.tests.ApiTest.test_get_profile">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;pysftp.Connection&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="FilesTest.test_delete_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.tests.FilesTest.test_delete_file">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m_sftp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests deleting a file in the filecenter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_user_myprofile_detail&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Create hosts entry.</span>
+        <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Computer Systems Lab&quot;</span><span class="p">,</span>
+                            <span class="n">code</span><span class="o">=</span><span class="s2">&quot;csl&quot;</span><span class="p">,</span>
+                            <span class="n">address</span><span class="o">=</span><span class="s2">&quot;remote.tjhsst.edu&quot;</span><span class="p">,</span>
+                            <span class="n">linux</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># Login to remote file system</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;files_auth&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;hunter2&#39;</span><span class="p">})</span>
+        <span class="c1"># Check redirect back to filesystem selection menu.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/files&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span>
+
+        <span class="c1"># Create fake directory root.</span>
+        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">pwd</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+
+        <span class="c1"># Create fake return code for stat call.</span>
+        <span class="n">m_stat</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">=</span> <span class="mi">33188</span>
+        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">m_stat</span>
+
+        <span class="c1"># Ensure that we can see the deletion confirmation dialog.</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;files_delete&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;csl&#39;</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/test/deleteme.txt&#39;</span><span class="p">})</span>
+        <span class="c1"># Check if sftp connection is created.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">m_sftp</span><span class="o">.</span><span class="n">called</span><span class="p">)</span>
+        <span class="c1"># Verify that the user is not redirected.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;api_user_profile_detail&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">9001</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div></div>
+
+        <span class="c1"># Attempt to delete file.</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;files_delete&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;csl&#39;</span><span class="p">]),</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;/test/deleteme.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;confirm&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">})</span>
+        <span class="c1"># Check if sftp connection is created.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">m_sftp</span><span class="o">.</span><span class="n">called</span><span class="p">)</span>
+        <span class="c1"># Verify that the file was deleted.</span>
+        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s1">&#39;/test/deleteme.txt&#39;</span><span class="p">)</span>
+        <span class="c1"># Verify that the user is redirected back to folder.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/files/csl?dir=/test&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
