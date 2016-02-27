@@ -59,11 +59,13 @@ $(document).ready(function() {
     }
 
 
-    zip_folder = function() {
-        var c = confirm('Are you sure you want to download this folder?');
+    zip_folder = function(ths) {
+        var name = $(ths).attr("data-name");
+        var safeName = $("<div>").text(name).html();
+        var c = confirm('Are you sure you want to download "' + safeName + '"?');
         if(!c) return false;
         Messenger().post({
-            "message": "Generating archive for <b>" + $(this).attr("data-name") + "</b>",
+            "message": "Generating archive for <b>" + safeName + "</b>",
             "type": "info"
         });
         return true;
