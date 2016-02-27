@@ -3,6 +3,7 @@
 from django.core.urlresolvers import reverse
 
 from ..eighth.models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity)
+from ..eighth.exceptions import SignupException
 from ..groups.models import Group
 from ..users.models import User
 from ...test.ion_test import IonTestCase
@@ -70,3 +71,18 @@ class EighthTest(IonTestCase):
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
 
         self.verify_signup(user1, schact1)
+
+    def test_blacklist(self):
+        """ Make sure users cannot sign up for blacklisted activities. """
+
+        user1 = User.objects.create(username="user1")
+        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        room1 = EighthRoom.objects.create(name="room1")
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1.rooms.add(room1)
+        act1.users_blacklisted.add(user1)
+        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+
+        with self.assertRaisesMessage(SignupException, "Blacklist"):
+            schact1.add_user(user1)
