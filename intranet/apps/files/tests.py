@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from unittest.mock import MagicMock, patch
+
 from django.core.urlresolvers import reverse
 
-from unittest.mock import patch, MagicMock
 from .models import Host
 from ...test.ion_test import IonTestCase
 """
