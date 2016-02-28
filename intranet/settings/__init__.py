@@ -226,20 +226,21 @@ TEMPLATES = [
              "intranet.apps.context_processors.mobile_app"  # For the custom android app functionality (tbd?)
              ),
             "debug": True,  # Only enabled if DEBUG is true as well
-            'loaders': ([
-                ('django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader']),
-            ] if PRODUCTION else (
+            'loaders': (
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader'
-            )),
+            ),
             'libraries': {
                 'staticfiles': 'django.contrib.staticfiles.templatetags.staticfiles',
             },
         }
     },
 ]  # type: List[Dict[str,Any]]
+
+if PRODUCTION:
+    TEMPLATES[0]["OPTIONS"]["loaders"] = [('django.template.loaders.cached.Loader', [
+                                           'django.template.loaders.filesystem.Loader',
+                                           'django.template.loaders.app_directories.Loader']),]
 
 if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
