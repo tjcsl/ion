@@ -97,7 +97,7 @@ class ActivityForm(forms.ModelForm):
         # shouldn't be a problem unless the username scheme changes and
         # the consequences of error are not significant.
 
-        # TODO: What we would like to do here (from users.forms):
+        # FIXME: TODO: What we would like to do here (from users.forms):
         # self.fields["users_allowed"] = SortedUserMultipleChoiceField(queryset=User.objects.get_students())
         # HOWEVER: this will result in LDAP information being queried for *all 1800 users.*
         # We need a better way to accomplish this. The solution below works because it only prints
