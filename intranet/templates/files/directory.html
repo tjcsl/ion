@@ -51,6 +51,8 @@
                         Parent Directory
                     </a>
                 </td>
+                <td></td>
+                <td></td>
             </tr>
         {% endif %}
         {% for file in files %}
@@ -62,7 +64,8 @@
                         {{ file.name }}
                     </a>
                 </td>
-                <td class="file-information">
+                <td class="file-information" title="Last Modified">
+                    <i class="fa fa-clock-o"></i> {{ file.stat_mtime }}
                 </td>
                 <td class="file-options">
                     <a class="zip" href="?dir={{ current_dir|escape }}/{{ file.name|escape }}&amp;zip=1" data-name="{{ file.name|escape }}" onclick="return zip_folder(this)">
@@ -98,6 +101,8 @@
                 <td>
                     This directory is empty.
                 </td>
+                <td></td>
+                <td></td>
             </tr>
         {% endfor %}
         </table>
