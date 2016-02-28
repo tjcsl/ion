@@ -128,6 +128,8 @@ class UserManager(DjangoUserManager):
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
 
+    # FIXME: save userClass in db.
+
     def get_students(self):
         """Get user objects that are students (quickly)."""
         key = "users:students"
@@ -502,7 +504,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Grade of user {} loaded " "from cache.".format(self.id))
+            logger.debug("Grade of user {} loaded from cache.".format(self.id))
             return cached
         else:
             grad_year = self.graduation_year
@@ -550,7 +552,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = True
 
         if cached and visible:
-            logger.debug("Attribute 'classes' of user {} loaded " "from cache.".format(self.id))
+            logger.debug("Attribute 'classes' of user {} loaded from cache.".format(self.id))
             schedule = []
             for dn in cached:
                 class_object = Class(dn=dn)
@@ -601,6 +603,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.is_student:
             courses = self.ldapcourse_set.all()
         elif self.is_teacher:
+            # FIXME: refactor to remove recursive dep
             from ..ionldap.models import LDAPCourse
             courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
         else:
@@ -1006,9 +1009,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        """Checks if a user should have access to the Django Admin.
+        """Checks if a user should have access to the Django Admin interface.
 
-        interface. This has nothing to do with staff at TJ - `is_staff`
+        This has nothing to do with staff at TJ - `is_staff`
         has to be overridden to make this a valid user model.
 
         Returns:
@@ -1016,7 +1019,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.is_superuser
+        return self.is_superuser or self.member_of("admin_all")
 
     @property
     def is_attendance_user(self):
@@ -1442,7 +1445,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         sponsoring information.
 
         """
-
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSponsor
 
         return EighthSponsor.objects.filter(user=self).exists()
@@ -1452,6 +1455,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         associated with.
         """
 
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSponsor
 
         try:
@@ -1468,12 +1472,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         or is not a signup user, returns 0.
 
         """
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
     def absence_info(self):
         """Return information about the user's absences."""
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
@@ -1802,13 +1808,8 @@ class Grade(object):
 
         """
         self._year = int(graduation_year)
-        today = datetime.now()
-        if today.month >= 7:
-            current_senior_year = today.year + 1
-        else:
-            current_senior_year = today.year
 
-        self._number = current_senior_year - self._year + 12
+        self._number = settings.SENIOR_GRADUATION_YEAR - self._year + 12
 
         if 9 <= self._number <= 12:
             self._name = Grade.names[self._number - 9]

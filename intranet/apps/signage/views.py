@@ -202,6 +202,7 @@ def eighth_signage(request, block_id=None, block_increment=0):
                 # The provided block_id is invalid
                 raise http.Http404
 
+    # FIXME: don't hard-code
     user = User.objects.get(username="awilliam")
 
     serializer_context = {"request": request, "user": user}
