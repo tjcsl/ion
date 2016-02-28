@@ -2,6 +2,19 @@
 
 {% load i18n %}
 {% load url from compat %}
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+    ul.unstyled {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    ul li b:after {
+        content: ":";
+    }
+    </style>
+{% endblock %}
 {% block content %}
     <div class="block-center">
         <h3 class="block-center-heading">{{ application.name }}</h3>
@@ -34,9 +47,9 @@
         </ul>
 
         <div class="btn-toolbar">
-            <a class="btn" href="{% url "oauth2_provider:list" %}">{% trans "Go Back" %}</a>
-            <a class="btn btn-primary" href="{% url "oauth2_provider:update" application.id %}">{% trans "Edit" %}</a>
-            <a class="btn btn-danger" href="{% url "oauth2_provider:delete" application.id %}">{% trans "Delete" %}</a>
+            <a class="button" href="{% url "oauth2_provider:list" %}">{% trans "Go Back" %}</a>
+            <a class="button btn-primary" href="{% url "oauth2_provider:update" application.id %}">{% trans "Edit" %}</a>
+            <a class="button" style="color: red" href="{% url "oauth2_provider:delete" application.id %}"><i class="fa fa-trash"></i> {% trans "Delete" %}</a>
         </div>
     </div>
 {% endblock content %}
