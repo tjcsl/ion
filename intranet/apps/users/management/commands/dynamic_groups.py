@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from intranet.apps.groups.models import Group
@@ -18,7 +19,7 @@ class Command(BaseCommand):
         sg_prop.save()
         students_grp.save()
 
-        for gr in [2016, 2017, 2018, 2019]:
+        for gr in [settings.SENIOR_GRADUATION_YEAR + y for y in range(0, 4)]:
             users = User.objects.users_in_year(gr)
             grp, _ = Group.objects.get_or_create(name="Class of {}".format(gr))
             grp_prop = grp.properties
