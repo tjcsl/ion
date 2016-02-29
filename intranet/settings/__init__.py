@@ -615,7 +615,7 @@ GIT = {
 }
 
 # Senior graduation date in Javascript-readable format
-SENIOR_GRADUATION = datetime.datetime(year=2016, month=7, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
+SENIOR_GRADUATION = datetime.datetime(year=2016, month=6, day=18, hour=19).strftime('%B %d %Y %H:%M:%S')
 
 # Senior graduation year
 SENIOR_GRADUATION_YEAR = 2016
