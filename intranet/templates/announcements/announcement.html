@@ -1,4 +1,10 @@
 {% load dates %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
+
 <div class="announcement{% if hide_announcements and announcement.id in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
         {% if announcement.pinned %}
@@ -34,7 +40,7 @@
     </h3>
 
     <div class="announcement-metadata">
-        by {{ announcement.get_author|escape }} &bull; <span title="{{ announcement.added }}">{{ announcement.added|fuzzy_date|capfirst }}</span> &bull; to
+        by {{ announcement.get_author|escape }} &bull; <span class="timeago" title="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</span> &bull; to
         {% for group in announcement.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}
