@@ -36,6 +36,7 @@ urlpatterns = [
     url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
     url(r"^djangoadmin/", include(admin.site.urls)),
     url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
+    url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:
