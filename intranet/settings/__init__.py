@@ -240,7 +240,7 @@ TEMPLATES = [
 if PRODUCTION:
     TEMPLATES[0]["OPTIONS"]["loaders"] = [('django.template.loaders.cached.Loader', [
                                            'django.template.loaders.filesystem.Loader',
-                                           'django.template.loaders.app_directories.Loader']),]
+                                           'django.template.loaders.app_directories.Loader'])]
 
 if not PRODUCTION and os.getenv("WARN_INVALID_TEMPLATE_VARS", "NO") == "YES":
     TEMPLATES[0]["OPTIONS"]["string_if_invalid"] = helpers.InvalidString("%s")
