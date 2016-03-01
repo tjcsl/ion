@@ -16,6 +16,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/files.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
     <script type="text/javascript">
     </script>
 {% endblock %}
@@ -64,8 +65,8 @@
                         {{ file.name }}
                     </a>
                 </td>
-                <td class="file-information" title="Last Modified">
-                    <i class="fa fa-clock-o"></i> {{ file.stat_mtime }}
+                <td class="file-information">
+                    <i title="Last Modified" class="fa fa-clock-o"></i> <span class="timeago" title="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</span>
                 </td>
                 <td class="file-options">
                     <a class="zip" href="?dir={{ current_dir|escape }}/{{ file.name|escape }}&amp;zip=1" data-name="{{ file.name|escape }}" onclick="return zip_folder(this)">
@@ -86,8 +87,8 @@
                         &nbsp; &nbsp; &nbsp; <i class="fa fa-exclamation-triangle"></i> Too large to download (&gt;{{ max_download_mb }}MB)
                     {% endif %}
                 </td>
-                <td class="file-information" title="Last Modified">
-                    <i class="fa fa-clock-o"></i> {{ file.stat_mtime }}
+                <td class="file-information">
+                    <i title="Last Modified" class="fa fa-clock-o"></i> <span class="timeago" title="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</span>
                 </td>
                 <td class="file-options">
                     <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
