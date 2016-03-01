@@ -25,6 +25,8 @@ class SignupException(Exception):
                      "change your signup on the other block where you selected this activity.", "This is a one-a-day activity."),
         "Restricted":
         m("You may not sign up for this restricted activity. You are not on the authorized list.", "This activity is restricted for this student."),
+        "Blacklisted":
+        m("You are blacklisted from this activity.", "This student is blacklisted from this activity."),
         "OverrideBlockLocked":
         m("An override block ({0}) has been locked. Signup is not allowed at this time.", "An override block ({1}) has been locked."),
         "OverrideBlockPermissions": m(

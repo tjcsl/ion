@@ -163,6 +163,9 @@ class EighthActivity(AbstractBaseEighthModel):
         groups_allowed
             Individual groups allowed to sign up for this activity. Only takes effect if the activity is
             restricted.
+        users_blacklisted
+            Individual users who are not allowed to sign up for this activity. Only takes effect if the activity
+            is not restricted.
         freshman_allowed, sophomores_allowed, juniors_allowed, seniors_allowed
             Whether Freshman/Sophomores/Juniors/Seniors are allowed to sign up for this activity. Only
             takes effect if the activity is restricted.
@@ -192,6 +195,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     users_allowed = models.ManyToManyField(User, related_name="restricted_activity_set", blank=True)
     groups_allowed = models.ManyToManyField(DjangoGroup, related_name="restricted_activity_set", blank=True)
+
+    users_blacklisted = models.ManyToManyField(User, blank=True)
 
     freshmen_allowed = models.BooleanField(default=False)
     sophomores_allowed = models.BooleanField(default=False)
@@ -928,6 +933,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 acts = EighthActivity.restricted_activities_available_to_user(user)
                 if self.activity.id not in acts:
                     exception.Restricted = True
+
+            # Check if user is blacklisted from activity
+            if self.activity.users_blacklisted.filter(username=user).exists():
+                exception.Blacklisted = True
 
         success_message = "Successfully signed up for activity."
         """
