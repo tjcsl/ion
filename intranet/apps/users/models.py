@@ -1565,8 +1565,9 @@ class Class(object):
             return User.get_user(dn=cached)
         else:
             c = LDAPConnection()
-            results = c.class_attributes(self.dn, ['sponsorDn'])
-            result = results.first_result()
+            result = c.class_attributes(self.dn, ['sponsorDn']).first_result()
+            if not result:
+                return None
             dn = result['sponsorDn'][0]
 
             # Only cache the dn, since pickling would recursively fetch
@@ -1588,12 +1589,14 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute 'quarters' of class {} loaded " "from cache.".format(self.section_id))
+            logger.debug("Attribute 'quarters' of class {} loaded from cache.".format(self.section_id))
             return cached
         else:
             c = LDAPConnection()
-            results = c.class_attributes(self.dn, ["quarterNumber"])
-            result = [int(i) for i in results.first_result()["quarterNumber"]]
+            result = c.class_attributes(self.dn, ["quarterNumber"]).first_result()
+            if not result:
+                return None
+            result = [int(i) for i in result["quarterNumber"]]
 
             cache.set(key, result, timeout=settings.CACHE_AGE["class_attribute"])
             return result
@@ -1698,8 +1701,11 @@ class Class(object):
             attr = class_attributes[name]
             field_name = attr["ldap_name"]
             try:
-                results = c.class_attributes(self.dn, [field_name])
-                result = results.first_result()[field_name]
+                result = c.class_attributes(self.dn, [field_name]).first_result()
+                if result:
+                    result = result[field_name]
+                else:
+                    return None
             except KeyError:
                 logger.warning("KeyError fetching " + name + " for class " + self.dn)
                 return None
