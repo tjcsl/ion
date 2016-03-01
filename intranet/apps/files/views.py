@@ -178,7 +178,7 @@ def files_type(request, fstype=None):
                 messages.error(request, e)
                 return redirect("files")
 
-    default_dir = sftp.pwd
+    default_dir = normpath(sftp.pwd)
 
     def can_access_path(fsdir):
         return normpath(fsdir).startswith(default_dir)
@@ -305,7 +305,7 @@ def files_type(request, fstype=None):
 
     logger.debug(files)
 
-    current_dir = sftp.pwd  # current directory
+    current_dir = normpath(sftp.pwd)  # current directory
     dir_list = current_dir.split("/")
     if len(dir_list) > 1 and len(dir_list[-1]) == 0:
         dir_list.pop()
@@ -377,7 +377,7 @@ def files_delete(request, fstype=None):
             messages.error(request, e)
             return redirect("files")
 
-    default_dir = sftp.pwd
+    default_dir = normpath(sftp.pwd)
 
     def can_access_path(fsdir):
         return normpath(fsdir).startswith(default_dir)
@@ -463,7 +463,7 @@ def files_upload(request, fstype=None):
                     messages.error(request, e)
                     return redirect("files")
 
-            default_dir = sftp.pwd
+            default_dir = normpath(sftp.pwd)
 
             def can_access_path(fsdir):
                 return normpath(fsdir).startswith(default_dir)
