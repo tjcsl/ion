@@ -402,10 +402,10 @@ def files_delete(request, fstype=None):
 
     if "confirm" in request.POST:
         try:
-            if not is_directory:
-                sftp.remove(filepath)
-            else:
+            if is_directory:
                 rmtree(sftp, filepath)
+            else:
+                sftp.remove(filepath)
             messages.success(request, ("Folder" if is_directory else "File") + " deleted!")
         except PermissionError:
             messages.error(request, "You are not allowed to delete this " + ("folder" if is_directory else "file") + "!")
