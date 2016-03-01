@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #1499) documentation</title>
+    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #1502) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1499)',
+        VERSION:     'v3 (Build #1502)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1499) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1502) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -310,9 +310,13 @@
     <span class="n">wednesday</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">thursday</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">friday</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">anchor_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Anchor Day&quot;</span><span class="p">)</span>
-    <span class="n">blue_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Blue Day&quot;</span><span class="p">)</span>
-    <span class="n">red_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red Day&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">anchor_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Anchor Day&quot;</span><span class="p">)</span>
+        <span class="n">blue_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Blue Day&quot;</span><span class="p">)</span>
+        <span class="n">red_day</span> <span class="o">=</span> <span class="n">DayType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red Day&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">DayType</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/fill.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;msgs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Failed to insert any schedules.&quot;</span><span class="p">,</span> <span class="s2">&quot;Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days.&quot;</span><span class="p">]})</span>
+
     <span class="n">daymap</span> <span class="o">=</span> <span class="p">{</span><span class="n">monday</span><span class="p">:</span> <span class="n">anchor_day</span><span class="p">,</span> <span class="n">tuesday</span><span class="p">:</span> <span class="n">blue_day</span><span class="p">,</span> <span class="n">wednesday</span><span class="p">:</span> <span class="n">red_day</span><span class="p">,</span> <span class="n">thursday</span><span class="p">:</span> <span class="n">blue_day</span><span class="p">,</span> <span class="n">friday</span><span class="p">:</span> <span class="n">red_day</span><span class="p">}</span>
 
     <span class="n">msgs</span> <span class="o">=</span> <span class="p">[]</span>
