@@ -164,9 +164,13 @@ def do_default_fill(request):
     wednesday = 2
     thursday = 3
     friday = 4
-    anchor_day = DayType.objects.get(name="Anchor Day")
-    blue_day = DayType.objects.get(name="Blue Day")
-    red_day = DayType.objects.get(name="Red Day")
+    try:
+        anchor_day = DayType.objects.get(name="Anchor Day")
+        blue_day = DayType.objects.get(name="Blue Day")
+        red_day = DayType.objects.get(name="Red Day")
+    except DayType.DoesNotExist:
+        return render(request, "schedule/fill.html", {"msgs": ["Failed to insert any schedules.", "Make sure you have DayTypes defined for Anchor Days, Blue Days, and Red Days."]})
+
     daymap = {monday: anchor_day, tuesday: blue_day, wednesday: red_day, thursday: blue_day, friday: red_day}
 
     msgs = []
