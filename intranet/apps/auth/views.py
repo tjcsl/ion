@@ -3,6 +3,7 @@
 import logging
 import os
 import random
+import subprocess
 from datetime import date, datetime
 
 from django.conf import settings
@@ -184,12 +185,8 @@ def about_view(request):
 
 def do_logout(request):
     """Clear the Kerberos cache and logout."""
-    try:
-        kerberos_cache = request.session["KRB5CCNAME"]
-        os.system("/usr/bin/kdestroy -c " + kerberos_cache)
-    except KeyError:
-        pass
-
+    if "KRB5CCNAME" in request.session:
+        subprocess.check_call(['kdestroy', '-c', request.session["KRB5CCNAME"]])
     logger.info("Destroying kerberos cache and logging out")
     logout(request)
 

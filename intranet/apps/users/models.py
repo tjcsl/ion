@@ -1075,7 +1075,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
             requesting_user_id = request.user.id
-            auth_backend = request.session["_auth_user_backend"]
+            auth_backend = request.user.backend
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
             return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))

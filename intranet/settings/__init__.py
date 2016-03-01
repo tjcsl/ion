@@ -385,7 +385,7 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
-    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.KerberosBasicAuthentication",
+    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.ApiBasicAuthentication",
                                        "rest_framework.authentication.SessionAuthentication",
                                        "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
