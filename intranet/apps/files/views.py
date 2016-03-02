@@ -409,6 +409,8 @@ def files_delete(request, fstype=None):
             messages.success(request, ("Folder" if is_directory else "File") + " deleted!")
         except PermissionError:
             messages.error(request, "You are not allowed to delete this " + ("folder" if is_directory else "file") + "!")
+        except Exception as e:
+            messages.error(request, "{}".format(e))
         return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
     context = {
