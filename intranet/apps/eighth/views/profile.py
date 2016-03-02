@@ -51,8 +51,9 @@ def edit_profile_view(request, user_id=None):
         for field in items:
             new = items[field]
             old = defaults[field]
-            if str(new) != str(old):
-                new_data[field] = new
+            #if str(new) != str(old):
+            #   new_data[field] = new
+            new_data[field] = new
         logger.debug(new_data)
 
         raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
