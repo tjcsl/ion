@@ -50,9 +50,9 @@ def edit_profile_view(request, user_id=None):
         new_data = {}
         for field in items:
             new = items[field]
-            old = defaults[field]
-            #if str(new) != str(old):
-            #   new_data[field] = new
+            # old = defaults[field]
+            # if str(new) != str(old):
+            #    new_data[field] = new
             new_data[field] = new
         logger.debug(new_data)
 
