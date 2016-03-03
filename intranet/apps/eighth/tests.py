@@ -73,7 +73,7 @@ class EighthTest(IonTestCase):
         self.verify_signup(user1, schact1)
 
     def test_blacklist(self):
-        """ Make sure users cannot sign up for blacklisted activities. """
+        """Make sure users cannot sign up for blacklisted activities."""
 
         user1 = User.objects.create(username="user1")
         block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
