@@ -68,12 +68,15 @@ def signage_display(request, display_id=None):
         return schedule_signage(request)
     elif sign_status == "status":
         return status_signage(request)
+    elif sign_status == "touch":
+        return touch_signage(request)
     elif sign_status == "url" or "url" in request.GET:
         url = request.GET.get('url') or (sign.url if sign else "about:blank")
+        use_header = ('use_header' in request.GET) or sign.use_header or True
         if sign and sign.use_frameset:
             return frameset_signage(request, url)
         else:
-            return iframe_signage(request, url)
+            return iframe_signage(request, url, use_header=use_header)
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
@@ -131,7 +134,7 @@ def status_signage(request):
 
 
 @xframe_options_exempt
-def iframe_signage(request, url):
+def iframe_signage(request, url, use_header=True):
     internal_ip = check_internal_ip(request)
     if internal_ip:
         return internal_ip
@@ -139,6 +142,7 @@ def iframe_signage(request, url):
     context = schedule_context(request)
     context["signage"] = True
     context["url"] = url
+    context["use_header"] = use_header
     return render(request, "signage/iframe.html", context)
 
 
