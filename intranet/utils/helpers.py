@@ -4,6 +4,8 @@ import logging
 import subprocess
 from urllib import parse
 
+from django.conf import settings
+
 logger = logging.getLogger('intranet.settings')
 
 
@@ -30,7 +32,7 @@ def debug_toolbar_callback(request):
     if request.user.id == 9999:
         return False
 
-    return "debug" in request.GET
+    return "debug" in request.GET or settings.DEBUG
 
 
 def get_current_commit_short_hash(workdir):

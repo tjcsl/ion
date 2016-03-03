@@ -558,17 +558,18 @@ if SHOW_DEBUG_TOOLBAR:
     _panels = [
         ("debug_toolbar.panels.versions.VersionsPanel", False),
         ("debug_toolbar.panels.timer.TimerPanel", True),
-        ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
         ("debug_toolbar.panels.settings.SettingsPanel", False),
         ("debug_toolbar.panels.headers.HeadersPanel", False),
         ("debug_toolbar.panels.request.RequestPanel", False),
         ("debug_toolbar.panels.sql.SQLPanel", True),
         ("debug_toolbar.panels.staticfiles.StaticFilesPanel", False),
         ("debug_toolbar.panels.templates.TemplatesPanel", False),
+        ("debug_toolbar.panels.cache.CachePanel", False),
         ("debug_toolbar.panels.signals.SignalsPanel", False),
         ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
+        ("debug_toolbar.panels.profiling.ProfilingPanel", False),
+        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
     ]
 
     DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
@@ -584,8 +585,7 @@ if SHOW_DEBUG_TOOLBAR:
     INSTALLED_APPS += ["debug_toolbar", "debug_toolbar_line_profiler"]
 
     # Only show debug toolbar when requested if in production.
-    if PRODUCTION:
-        DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.utils.helpers.debug_toolbar_callback"
+    DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.utils.helpers.debug_toolbar_callback"
 
 # Maintenance mode
 MAINTENANCE_MODE = False
