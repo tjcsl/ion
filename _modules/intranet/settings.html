@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #1527) documentation</title>
+    <title>intranet.settings &mdash; TJ Intranet v3 (Build #1530) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #1527)',
+        VERSION:     'v3 (Build #1530)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1527) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1530) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,7 +150,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>  <span class="c1"># noqa</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
     <span class="c1"># dependency on ipaddress module</span>
@@ -165,6 +165,7 @@
 <span class="sd">    postgres://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;/&lt;database&gt;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">SECRET_DATABASE_URL</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: str</span>
+<span class="n">ADMINS</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: List[Tuple[str,str]]</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.secret</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span>
@@ -221,10 +222,8 @@
 
 <span class="c1"># Address to send production error messages</span>
 
-<span class="n">ADMINS</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;Ion Errors&quot;</span><span class="p">,</span> <span class="s2">&quot;ion-errors@lists.tjhsst.edu&quot;</span><span class="p">),</span>
-          <span class="c1"># (&quot;James Woglom&quot;, &quot;2016jwoglom+ion@tjhsst.edu&quot;),</span>
-          <span class="c1"># (&quot;Samuel Damashek&quot;, &quot;2017sdamashe+ion@tjhsst.edu&quot;)</span>
-          <span class="p">)</span>
+<span class="k">if</span> <span class="n">ADMINS</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">ADMINS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span> <span class="s2">&quot;root@localhost&quot;</span><span class="p">)]</span>
 
 <span class="c1"># Use PostgreSQL database</span>
 
