@@ -28,9 +28,11 @@
 
         <form action="" method="post">
             {% csrf_token %}
+            {% if is_admin %}
+                <input type="text" name="username" value="" aria-label="Enter Username" size="25" /><br />
+            {% endif %}
             <input type="password" name="password" value="" aria-label="Enter Password" size="25" /><br />
             <input type="submit" value="Login" />
         </form>
-
     </div>
 {% endblock %}

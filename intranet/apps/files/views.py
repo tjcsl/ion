@@ -76,9 +76,11 @@ def files_auth(request):
         else:
             response = redirect("files")
         response.set_cookie(key="files_key", value=cookie_key)
+        if "username" in request.POST:
+            request.session["filecenter_username"] = request.POST.get("username")
         return response
     else:
-        return render(request, "files/auth.html", {})
+        return render(request, "files/auth.html", {"is_admin": request.user.member_of("admin_all")})
 
 
 def get_authinfo(request):
@@ -99,7 +101,9 @@ def get_authinfo(request):
     obj = AES.new(key, AES.MODE_CFB, iv)
     password = obj.decrypt(text)
 
-    return {"username": request.user.username, "password": password}
+    username = request.session["filecenter_username"] if "filecenter_username" in request.session else request.user.username
+
+    return {"username": username, "password": password}
 
 
 def windows_dir_format(host_dir, user):
@@ -453,7 +457,6 @@ def files_upload(request, fstype=None):
                 return redirect("files")
             else:
                 # Delete the stored credentials, so they aren't mistakenly used or accessed later.
-                authinfo = None
                 del authinfo
 
             if host.directory:
