@@ -64,10 +64,11 @@ def edit_profile_view(request, user_id=None):
             if key in raw_ldap_attributes:
                 if key in raw_ldap_override:
                     key = raw_ldap_override[key]
-                if new_data[key] == " ":
-                    new_data[key] = None
-                logger.debug("Setting raw {}={}".format(key, new_data[key]))
-                user.set_raw_ldap_attribute(key, new_data[key])
+                if key in new_data:
+                    if new_data[key] == " ":
+                        new_data[key] = None
+                    logger.debug("Setting raw {}={}".format(key, new_data[key]))
+                    user.set_raw_ldap_attribute(key, new_data[key])
             else:
                 logger.debug("Setting regular {}={}".format(key, new_data[key]))
                 try:

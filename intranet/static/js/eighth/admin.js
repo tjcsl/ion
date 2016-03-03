@@ -124,6 +124,9 @@ $(function() {
     // Disable *_allowed form elements if Restricted isn't checked
     var updateRestrictedFormFields = function() {
         var restricted = $("#id_restricted").prop("checked");
+        if(!restricted) {
+            return;
+        }
         $("#id_restricted").parents("tr").nextAll().slice(0, -1).each(function(index, tr) {
             $(tr).find("input").attr("disabled", !restricted);
             $(tr).find("select").each(function(index, select) {
