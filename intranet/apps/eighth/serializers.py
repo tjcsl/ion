@@ -186,6 +186,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_sponsors_overidden = []
         for sponsorship in overidden_sponsorships:
             scheduled_activity_id = sponsorship["eighthscheduledactivity"]
+            if scheduled_activity_id not in scheduled_activity_to_activity_map:
+                # FIXME: query the db instead?
+                activity_list[activity_id]["sponsors"].append("Unknown")
+                continue
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             sponsor_id = sponsorship["eighthsponsor"]
             sponsor = all_sponsors[sponsor_id]
@@ -223,6 +227,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
             scheduled_activity_id = rooming.eighthscheduledactivity.id
+            if scheduled_activity_id not in scheduled_activity_to_activity_map:
+                # FIXME: query the db instead?
+                activity_list[activity_id]["rooms"].append("Unknown")
+                continue
 
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overidden:
