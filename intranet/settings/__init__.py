@@ -75,10 +75,11 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Address to send production error messages
 
-ADMINS = (("Ion Errors", "ion-errors@lists.tjhsst.edu"),
-          # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
-          # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
-          )
+if not ADMINS:
+    ADMINS = (("Dummy User", "root@localhost"),
+              # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
+              # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
+              )
 
 # Use PostgreSQL database
 
