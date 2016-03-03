@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-from typing import Any  # noqa
+from typing import Any, Tuple  # noqa
 
 if sys.version_info < (3, 3):
     # dependency on ipaddress module
@@ -19,6 +19,7 @@ SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 SECRET_DATABASE_URL = None  # type: str
+ADMINS = None  # type: List[Tuple[str,str]]
 
 try:
     from .secret import *  # noqa
@@ -75,16 +76,8 @@ EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Address to send production error messages
 
-DEFAULT_ADMINS = (("Dummy User", "root@localhost"),
-          # ("James Woglom", "2016jwoglom+ion@tjhsst.edu"),
-          # ("Samuel Damashek", "2017sdamashe+ion@tjhsst.edu")
-          )
-
-try:
-    if not ADMINS:
-        ADMINS = DEFAULT_ADMINS
-except NameError:
-    ADMINS = DEFAULT_ADMINS
+if ADMINS is None:
+    ADMINS = [("Dummy User", "root@localhost")]
 
 # Use PostgreSQL database
 
