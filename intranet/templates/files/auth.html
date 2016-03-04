@@ -28,11 +28,31 @@
 
         <form action="" method="post">
             {% csrf_token %}
+            <table>
             {% if is_admin %}
-                <input type="text" name="username" value="" aria-label="Enter Username" size="25" /><br />
+            <tr>
+                <td>
+                    <label for="username">Username:</label> &nbsp; &nbsp;
+                </td>
+                <td>
+                    <input type="text" name="username" value="{{ user.username }}" aria-label="Enter Username" size="25" />
+                </td>
+            </tr>
             {% endif %}
-            <input type="password" name="password" value="" aria-label="Enter Password" size="25" /><br />
-            <input type="submit" value="Login" />
+            <tr>
+                <td>
+                    <label for="password">Password:</label> &nbsp; &nbsp;
+                </td>
+                <td>
+                    <input type="password" name="password" value="" aria-label="Enter Password" size="25" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="Login" />
+                </td>
+            </tr>
+            </table>
         </form>
     </div>
 {% endblock %}
