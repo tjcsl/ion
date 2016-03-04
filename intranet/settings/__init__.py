@@ -523,7 +523,7 @@ LOGGING = {
     "loggers": {
         # Django request errors email admins and errorlog
         "django.request": {
-            "handlers": ["mail_admins"] + get_log("error_log"),
+            "handlers": get_log("error_log"),
             "level": "ERROR",
             "propagate": True,
         },
