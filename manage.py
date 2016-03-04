@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import warnings
+
+warnings.simplefilter('default')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
