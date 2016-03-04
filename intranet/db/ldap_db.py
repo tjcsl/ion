@@ -64,6 +64,11 @@ class LDAPConnection(object):
 
     """
 
+    def simple_bind(self, server):
+        _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+        _thread_locals.ldap_conn.bind()
+        _thread_locals.simple_bind = True
+
     @property
     def conn(self):
         """Lazily load and return the raw connection from threadlocals.
@@ -78,23 +83,21 @@ class LDAPConnection(object):
         if 'gssapi' in sys.modules:
             ldap_exceptions += (gssapi.exceptions.GSSError,)
 
-        if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
+        if not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None:
             logger.info("Connecting to LDAP...")
             server = ldap3.Server(settings.LDAP_SERVER)
-            _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
-
-            try:
-                _thread_locals.ldap_conn.bind()
-                _thread_locals.simple_bind = False
-                logger.info("Successfully connected to LDAP.")
-            except ldap_exceptions as e:
-                logger.warning("SASL bind failed - using simple bind")
-                logger.warning(e)
-                _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-                _thread_locals.ldap_conn.bind()
-                _thread_locals.simple_bind = True
-
-            # logger.debug(_thread_locals.ldap_conn.whoami_s())
+            if settings.USE_SASL:
+                try:
+                    _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
+                    _thread_locals.ldap_conn.bind()
+                    _thread_locals.simple_bind = False
+                    logger.info("Successfully connected to LDAP.")
+                except ldap_exceptions as e:
+                    logger.warning("SASL bind failed - using simple bind")
+                    logger.warning(e)
+                    self.simple_bind(server)
+            else:
+                self.simple_bind(server)
 
         return _thread_locals.ldap_conn
 

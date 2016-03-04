@@ -11,7 +11,7 @@ mock_server = LdapServer({'base': {'objectclass': 'organization', 'dn': 'dc=tjhs
 mock_server.start()
 
 
-@override_settings(LDAP_SERVER='ldap://localhost:%d' % mock_server.config['port'])
+@override_settings(LDAP_SERVER='ldap://localhost:%d' % mock_server.config['port'], USE_SASL=False)
 class IonTestCase(TestCase):
 
     def login(self):

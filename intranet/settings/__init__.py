@@ -358,6 +358,7 @@ CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
 LDAP_REALM = CSL_REALM
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
+USE_SASL = True
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
