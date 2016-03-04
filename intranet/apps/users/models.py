@@ -507,11 +507,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             logger.debug("Grade of user {} loaded from cache.".format(self.id))
             return cached
         else:
-            grad_year = self.graduation_year
-            if not grad_year:
-                grade = None
-            else:
-                grade = Grade(grad_year)
+            grade = Grade(self.graduation_year)
 
             cache.set(key, grade, timeout=settings.CACHE_AGE['ldap_permissions'])
             return grade
@@ -1813,17 +1809,15 @@ class Grade(object):
                 The numerical graduation year of the user
 
         """
-        self._year = int(graduation_year)
-
-        self._number = settings.SENIOR_GRADUATION_YEAR - self._year + 12
+        if graduation_year is None:
+            self._number = 13
+        else:
+            self._number = settings.SENIOR_GRADUATION_YEAR - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
             self._name = Grade.names[self._number - 9]
         else:
             self._name = "graduate"
-
-        if self._number is None:
-            self._number = 13
 
     @property
     def number(self):
