@@ -4,14 +4,6 @@ intranet.test package
 Submodules
 ----------
 
-intranet.test.fake_ldap module
-------------------------------
-
-.. automodule:: intranet.test.fake_ldap
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 intranet.test.ion_test module
 -----------------------------
 
