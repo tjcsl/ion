@@ -568,7 +568,7 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
-        ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
+        # FIXME: broken ("debug_toolbar_line_profiler.panel.ProfilingPanel", False),
     ]
 
     DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled]}
