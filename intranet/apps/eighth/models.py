@@ -897,6 +897,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if self.activity.deleted:
                 exception.ActivityDeleted = True
 
+            # Check if the user is already stickied into an activity
+            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
+                                                      scheduled_activity__block__in=all_blocks).exists())
+            if in_stickie:
+                exception.Sticky = True
+
             for sched_act in all_sched_act:
                 # Check if the block has been locked
                 if sched_act.block.locked:
@@ -915,11 +921,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if self.is_too_early_to_signup():
                     exception.Presign = True
 
-            # Check if the user is already stickied into an activity
-            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
-                                                      scheduled_activity__block__in=all_blocks).exists())
-            if in_stickie:
-                exception.Sticky = True
 
             # Check if signup would violate one-a-day constraint
             if not self.activity.both_blocks and self.activity.one_a_day:

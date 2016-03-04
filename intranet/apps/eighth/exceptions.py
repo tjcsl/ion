@@ -20,7 +20,8 @@ class SignupException(Exception):
         "BlockLocked": m("This block has been locked. Signup is not allowed at this time.", "This block has been locked."),
         "Presign":
         m("You may not sign up for this activity more than two days in advance.", "This activity can't be signed up for more two days in advance."),
-        "Sticky": m("You may not switch out of a sticky activity.", "This student is already in a sticky activity."),
+        "Sticky": m("You may not switch out of a sticky activity.",
+                    "<strong style='font-size: 32px'><u>This student is already in a sticky activity.</u></strong>"),
         "OneADay": m("You may only sign up for this activity once per day. To sign up for the activity during this block, "
                      "change your signup on the other block where you selected this activity.", "This is a one-a-day activity."),
         "Restricted":
