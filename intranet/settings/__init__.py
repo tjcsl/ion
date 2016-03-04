@@ -521,9 +521,9 @@ LOGGING = {
         },
     },
     "loggers": {
-        # Django request errors email admins and errorlog
-        "django.request": {
-            "handlers": get_log("error_log"),
+        # Django errors get sent to the error log
+        "django": {
+            "handlers": ["console"] + get_log("error_log"),
             "level": "ERROR",
             "propagate": True,
         },
