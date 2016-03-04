@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // check for drop support, file support, and file upload support
     if (Modernizr.draganddrop && window.File && window.FormData) {
-        $("#additional-upload-option").show();
+        $("#additional-upload-option").addClass("visible");
         var endpoint = $("#directory-list").attr("data-endpoint");
         // dragover event must be cancelled to drop
         $(window).on("dragover", function(e) {

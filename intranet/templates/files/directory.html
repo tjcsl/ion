@@ -40,7 +40,7 @@
             <i class="fa fa-upload"></i> Upload
         </a>
 
-        <span id="additional-upload-option"><b>New:</b> You can also drag files onto this page to upload them.</span>
+        <span id="additional-upload-option" class="hidden-sm"><b>New:</b> You can also drag files onto this page to upload them.</span>
 
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">
@@ -70,10 +70,10 @@
                 </td>
                 <td class="file-options">
                     <a class="zip" href="?dir={{ current_dir|escape }}/{{ file.name|escape }}&amp;zip=1" data-name="{{ file.name|escape }}" onclick="return zip_folder(this)">
-                        <i class="fa fa-file-archive-o"></i> Download as ZIP
+                        <i class="fa fa-file-archive-o"></i><span class="hidden-sm"> Download as ZIP</span>
                     </a>
                     <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
-                        <i class="fa fa-trash-o"></i> Delete
+                        <i class="fa fa-trash-o"></i><span class="hidden-sm"> Delete</span>
                     </a>
                 </td>
                 {% else %}
@@ -92,7 +92,7 @@
                 </td>
                 <td class="file-options">
                     <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
-                        <i class="fa fa-trash-o"></i> Delete
+                        <i class="fa fa-trash-o"></i><span class="hidden-sm"> Delete</span>
                     </a>
                 </td>
                 {% endif %}
