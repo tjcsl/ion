@@ -125,18 +125,18 @@ $(function() {
     var updateRestrictedFormFields = function() {
         var restricted = $("#id_restricted").prop("checked");
         $("#id_restricted").parents("tr").nextAll().slice(0, -1).each(function(index, tr) {
-            $(tr).find("input").attr("disabled", !restricted);
+            $(tr).find("input").attr("readonly", !restricted);
             $(tr).find("select").each(function(index, select) {
                 if (restricted) {
                     select.selectize.enable();
                 } else {
                     select.selectize.disable();
                 }
-            });
+            }).attr('disabled',false);
         });
 
         // Blacklist should be always enabled
-        $("#id_users_blacklisted").parent("td").find("input").attr("disabled", false);
+        $("#id_users_blacklisted").parent("td").find("input").attr("readonly", false);
         var select = $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
     }
 
