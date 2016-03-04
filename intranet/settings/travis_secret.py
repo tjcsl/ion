@@ -5,3 +5,4 @@ SECRET_DATABASE_URL = "postgres://postgres:@localhost/ion"
 
 # 'password'
 MASTER_PASSWORD = "pbkdf2_sha256$12000$91eMu4Mn8Orv$Ep+D8cxD9TH+HzoeOq8gSrJXtxYvtHNY3RN4kG2c7lo="
+AUTHUSER_PASSWORD = 'secret'
