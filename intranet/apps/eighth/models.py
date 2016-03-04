@@ -921,7 +921,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 if self.is_too_early_to_signup():
                     exception.Presign = True
 
-
             # Check if signup would violate one-a-day constraint
             if not self.activity.both_blocks and self.activity.one_a_day:
                 in_act = (EighthSignup.objects.exclude(scheduled_activity__block=self.block).filter(
