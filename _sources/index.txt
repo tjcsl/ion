@@ -25,7 +25,7 @@ Setup
 -----
 
 - :doc:`Setting up the server<setup/server>`
-- :doc:`Setting up a the Vagrant development environment<setup/vagrant>`
+- :doc:`Setting up a Vagrant development environment<setup/vagrant>`
 - :doc:`Setting up fixtures from Iodine<setup/fixtures>`
 
 
