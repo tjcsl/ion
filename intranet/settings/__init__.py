@@ -20,6 +20,7 @@ SECRET_DATABASE_URL should be of the following form:
 """
 SECRET_DATABASE_URL = None  # type: str
 ADMINS = None  # type: List[Tuple[str,str]]
+USE_SASL = True
 
 try:
     from .secret import *  # noqa
@@ -358,7 +359,6 @@ CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 HOST = "ion.tjhsst.edu"
 LDAP_REALM = CSL_REALM
 LDAP_SERVER = "ldap://iodine-ldap.tjhsst.edu"
-USE_SASL = True
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 AUTHUSER_DN = "cn=authuser,dc=tjhsst,dc=edu"
