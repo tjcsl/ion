@@ -6,9 +6,11 @@ import logging
 from django import http
 from django.conf import settings
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
+from ..announcements.models import Announcement
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
@@ -107,6 +109,7 @@ def touch_signage(request):
     context["signage"] = True
     context["eighth_url"] = "/signage/eighth"
     context["calendar_url"] = "https://postman.tjhsst.edu/"
+    context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__lt=timezone.now())
     return render(request, "signage/touch.html", context)
 
 

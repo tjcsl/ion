@@ -1,3 +1,4 @@
+{% load dates %}
 {% load staticfiles %}
 <!doctype html>
 <html lang='en'>
@@ -10,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
 
@@ -107,11 +110,31 @@
                 </div>
             </div>
 
+            <div class="iframe-hide"></div>
             <iframe class="iframe" src="{{ calendar_url }}"></iframe>
         </section>
 
         <section id="info">
-            <h2>Other information can go here.</h2>
+            <h2>Announcements</h2>
+            <div class="announcements">
+            {% for announcement in public_announcements %}
+            <div class="announcement">
+                <h3>{{ announcement.title }}</h3>
+                <div class="announcement-metadata">
+                    by {{ announcement.get_author|escape }} &bull; <span class="timeago" title="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</span> &bull; to
+                    {% for group in announcement.groups.all %}
+                        {{ group }}
+                        {% if not forloop.last %},{% endif %}
+                    {% empty %}
+                        everyone
+                    {% endfor %}
+                </div>
+                <div class="announcement-content">
+                    {{ announcement.content|safe }}
+                </div>
+            </div>
+            {% endfor %}
+            </div>
         </section>
     </div>
 
