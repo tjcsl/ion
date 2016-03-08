@@ -17,7 +17,7 @@ def get_requirements():
         # FIXME: there should really be a better way to handle this...
         if dep.markers == "python_version < '3.5'" and sys.version_info >= (3, 5):
             continue
-        if dep.req.project_name != 'gssapi':
+        if dep.req.project_name not in ['gssapi', 'python-ldap-test']:
             print(dep.req, file=rtd_file)
         yield dep.req
     rtd_file.close()
