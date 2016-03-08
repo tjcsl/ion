@@ -121,6 +121,7 @@ class EighthActivityExcludeDeletedManager(models.Manager):
     def get_query_set(self):
         return (super(EighthActivityExcludeDeletedManager, self).get_query_set().exclude(deleted=True))
 
+
 class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
 
@@ -1020,7 +1021,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     # switching out of a both-blocks activity
                     EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
                     EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
-                                                       previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user==request.user))
+                                                       previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
             except EighthSignup.DoesNotExist:
                 EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
         else:
@@ -1043,7 +1044,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     previous_activity_sponsors = None
 
                 EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
-                                                   previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user==request.user))
+                                                   previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
 
                 # signup.previous_activity_name = signup.activity.name_with_flags
                 # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pickle
 
+from datetime import datetime, timedelta
 from urllib.parse import unquote
 
 from cacheops import invalidate_all
@@ -12,7 +13,7 @@ from django.shortcuts import redirect, render
 from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
 from ...forms.admin import rooms as room_forms
-from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, EighthScheduledActivity
+from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, EighthScheduledActivity, EighthSignup
 from ...utils import get_start_date, set_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -132,7 +133,7 @@ def not_implemented_view(request, *args, **kwargs):
 
 @eighth_admin_required
 def history_view(request):
-    history_timeframe = datetime.now()-timedelta(minutes=15)
+    history_timeframe = datetime.now() - timedelta(minutes=15)
     history = {
         "EighthSignup": EighthSignup.history.filter(history_date__gt=history_timeframe),
         "EighthScheduledActivity": EighthScheduledActivity.history.filter(history_date__gt=history_timeframe),

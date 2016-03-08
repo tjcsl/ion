@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
-import django.db.models.deletion
 from django.conf import settings
 
 
@@ -39,7 +38,7 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
@@ -61,7 +60,7 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
@@ -80,7 +79,7 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
@@ -103,9 +102,9 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('activity', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthActivity', null=True)),
-                ('block', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthBlock', null=True)),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('activity', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthActivity', null=True)),
+                ('block', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthBlock', null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
@@ -129,9 +128,10 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
-                ('scheduled_activity', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.DO_NOTHING, db_constraint=False, blank=True, to='eighth.EighthScheduledActivity', null=True)),
-                ('user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.DO_NOTHING, db_constraint=False, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('scheduled_activity', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING,
+                                                         db_constraint=False, blank=True, to='eighth.EighthScheduledActivity', null=True)),
+                ('user', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),
@@ -152,8 +152,8 @@ class Migration(migrations.Migration):
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
                 ('history_date', models.DateTimeField()),
                 ('history_type', models.CharField(max_length=1, choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')])),
-                ('history_user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.DO_NOTHING, db_constraint=False, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('history_user', models.ForeignKey(related_name='+', on_delete=models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(related_name='+', on_delete=models.deletion.DO_NOTHING, db_constraint=False, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('-history_date', '-history_id'),

@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('eighth', '0028_historicaleighthactivity_historicaleighthblock_historicaleighthroom_historicaleighthscheduledactivit'),
+        ('eighth', '0028_historicaleighthactivity'),
     ]
 
     operations = [
