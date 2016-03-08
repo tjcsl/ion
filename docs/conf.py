@@ -15,6 +15,7 @@
 import os
 import sys
 from datetime import datetime
+from unittest import mock
 
 import sphinx_bootstrap_theme
 
@@ -302,6 +303,9 @@ intersphinx_mapping = {'python': ('http://docs.python.org/3/', None),
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
+
+if os.environ.get('READTHEDOCS') == 'True':
+    sys.modules['ldap_test'] = mock.MagicMock()
 
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
