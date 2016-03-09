@@ -71,7 +71,7 @@ def signage_display(request, display_id=None):
     elif sign_status == "status":
         return status_signage(request)
     elif sign_status == "touch":
-        return touch_signage(request)
+        return touch_signage(request, sign)
     elif sign_status == "url" or "url" in request.GET:
         url = request.GET.get('url') or (sign.url if sign else "about:blank")
         use_header = ('use_header' in request.GET) or sign.use_header or True
@@ -100,15 +100,26 @@ def signage_display(request, display_id=None):
 
 
 @xframe_options_exempt
-def touch_signage(request):
+def touch_signage(request, sign=None):
     internal_ip = check_internal_ip(request)
     if internal_ip:
         return internal_ip
 
+    block_increment = 0
+    if sign and sign.eighth_block_increment:
+        block_increment = sign.eighth_block_increment
+
+    default_page = "clock"
+    now = datetime.datetime.now()
+    if check_show_eighth(now):
+        default_page = "eighth"
+
+
     context = schedule_context(request)
     context["signage"] = True
-    context["eighth_url"] = "/signage/eighth"
+    context["eighth_url"] = "/signage/eighth?no_reload&block_increment={}".format(block_increment)
     context["calendar_url"] = "https://postman.tjhsst.edu/"
+    context["default_page"] = default_page
     context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__lt=timezone.now())
     return render(request, "signage/touch.html", context)
 

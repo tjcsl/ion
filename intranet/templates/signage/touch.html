@@ -68,7 +68,9 @@
             section.show();
         });
 
-        $("section#clock").show();
+        var default_page = "{{ default_page }}";
+        $("section#" + default_page).show();
+        $("ul.nav li[data-name='" + default_page + "']").addClass("selected");
     });
     </script>
 </head>
@@ -140,27 +142,27 @@
 
     <div class="nav-container">
         <ul class="nav">
-            <li class="selected">
+            <li data-name="clock">
                 <a data-link="clock">
                 <i class="nav-icon dashboard-icon"></i>
                 Bell Schedule
                 </a>
             </li>
-            <li>
+            <li data-name="eighth">
                 <a data-link="eighth">
                 <i class="nav-icon eighth-icon"></i>
                 8th Period
                 </a>
             </li>
-            <li>
+            <li data-name="calendar">
                 <a data-link="calendar">
                 <i class="nav-icon events-icon"></i>
                 Calendar
                 </a>
             </li>
-            <li>
-                <a data-link="info">
-                <i class="nav-icon help-icon"></i>
+            <li data-name="announcements">
+                <a data-link="announcements">
+                <i class="nav-icon dashboard-icon"></i>
                 Info
                 </a>
             </li>
