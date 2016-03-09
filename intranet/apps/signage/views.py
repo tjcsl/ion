@@ -114,7 +114,6 @@ def touch_signage(request, sign=None):
     if check_show_eighth(now):
         default_page = "eighth"
 
-
     context = schedule_context(request)
     context["signage"] = True
     context["eighth_url"] = "/signage/eighth?no_reload&block_increment={}".format(block_increment)
