@@ -32,6 +32,7 @@
 
     <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.overscroll.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
@@ -60,17 +61,29 @@
     </script>
 
     <script type="text/javascript">
-    $(function() {
+    $(document).ready(function() {
         $("a[data-link]").click(function() {
             var link = $(this).attr("data-link");
             var section = $("section#" + link);
             $("section").hide();
             section.show();
+            
         });
 
         var default_page = "{{ default_page }}";
         $("section#" + default_page).show();
         $("ul.nav li[data-name='" + default_page + "']").addClass("selected");
+
+        $(".announcements-scroll").overscroll({
+            direction: 'vertical'
+        });
+
+        $(".announcements a").attr("href", null).click(function(event) {
+            event.preventDefault();
+            return false;
+        });
+
+        
     });
     </script>
 </head>
@@ -117,6 +130,8 @@
         </section>
 
         <section id="info">
+
+            <div class="announcements-scroll">
             <h2>Announcements</h2>
             <div class="announcements">
             {% for announcement in public_announcements %}
@@ -135,7 +150,23 @@
                     {{ announcement.content|safe }}
                 </div>
             </div>
+            <div class="announcement">
+                <h3>{{ announcement.title }}</h3>
+                <div class="announcement-metadata">
+                    by {{ announcement.get_author|escape }} &bull; <span class="timeago" title="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</span> &bull; to
+                    {% for group in announcement.groups.all %}
+                        {{ group }}
+                        {% if not forloop.last %},{% endif %}
+                    {% empty %}
+                        everyone
+                    {% endfor %}
+                </div>
+                <div class="announcement-content">
+                    {{ announcement.content|safe }}
+                </div>
+            </div>
             {% endfor %}
+            </div>
             </div>
         </section>
     </div>
