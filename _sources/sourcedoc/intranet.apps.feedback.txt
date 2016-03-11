@@ -4,6 +4,14 @@ intranet.apps.feedback package
 Submodules
 ----------
 
+intranet.apps.feedback.admin module
+-----------------------------------
+
+.. automodule:: intranet.apps.feedback.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.feedback.forms module
 -----------------------------------
 
