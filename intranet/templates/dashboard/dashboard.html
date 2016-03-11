@@ -48,6 +48,11 @@
 
     <button class="widget extra-widgets-show">Show more widgets</button>
     {% include "dashboard/birthdays.html" %}
+
+    {% if is_global_admin %}
+        {% include "dashboard/admin.html" %}
+    {% endif %}
+    
     {% include "dashboard/links.html" %}
     
     {% if is_student %}
@@ -69,9 +74,6 @@
                 &nbsp;
             {% endif %}
             {% if announcements_admin %}
-                <a class="button" href="{% url 'admin_request_status' %}">
-                    <i class="fa fa-group fa-large"></i> Approval
-                </a>
                 {% if "show_all" not in request.GET %}
                     <a class="button" href="{% url 'view_announcements' %}?show_all=1">
                         Show All
