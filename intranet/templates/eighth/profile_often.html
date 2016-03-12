@@ -11,6 +11,26 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    <style type="text/css">
+    #signups-chart {
+        position: absolute;
+        right: 40px;
+    }
+
+    @media (max-width: 850px) {
+        #signups-chart {
+            position: initial;
+            padding: 10px;
+        }
+    }
+
+    @media (min-width: 1000px) {
+        #signups-chart {
+            position: absolute;
+            left: 735px;
+        }
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -53,10 +73,13 @@
                     label: $(v).find("td:nth-child(2)").text().trim()
                 });
             });
-            var chart;
+            var chart, canvas;
             if (data) {
                 $("#signups-chart").show();
-                chart = new Chart($("#signups-chart")[0].getContext("2d")).Pie(data, {
+                canvas = $("#signups-chart")[0];
+                canvas.width = 225;
+                canvas.height = 225;
+                chart = new Chart(canvas.getContext("2d")).Pie(data, {
                     tooltipTemplate: "<%= label %> - <%= value %>",
                     animation: false
                 });
@@ -73,14 +96,25 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% with show_eighth_profile_link=1 show_view_history_link=1 %}
-        {% include "eighth/profile_header.html" %}
-    {% endwith %}
+    {% if show_profile_header %}
+        {% with show_eighth_profile_link=1 show_view_history_link=1 %}
+            {% include "eighth/profile_header.html" %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'eighth_signup' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Eighth Home
+        </a>
+        &nbsp; <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a>
+        <br />
+        <h2>Most Frequent Signups{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}</h2>
+    {% endif %}
 
     <section class="user-history">
-        <h3>
-            Most Frequent Signups{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
-        </h3>
+        {% if show_profile_header %}
+            <h3>
+                Most Frequent Signups{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
+            </h3>
+        {% endif %}
 
         <canvas id="signups-chart" style="display:none"></canvas>
         <div id="chartjs-tooltip"></div>
@@ -113,7 +147,9 @@
                 No default
             {% endfor %}
             </td>
+        </tr>
         {% endfor %}
+        </tbody>
         </table>
 
     </section>
