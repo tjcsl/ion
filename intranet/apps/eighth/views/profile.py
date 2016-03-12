@@ -174,6 +174,7 @@ def get_profile_context(request, user_id=None, date=None):
 @login_required
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
+    context["show_profile_header"] = request.user.is_eighth_admin
     if context:
         return render(request, "eighth/profile.html", context)
     else:
@@ -214,7 +215,11 @@ def profile_history_view(request, user_id=None):
 
     logger.debug(eighth_schedule)
 
-    context = {"profile_user": profile_user, "eighth_schedule": eighth_schedule}
+    context = {
+        "profile_user": profile_user,
+        "eighth_schedule": eighth_schedule,
+        "show_profile_header": request.user.is_eighth_admin
+    }
 
     return render(request, "eighth/profile_history.html", context)
 
@@ -249,7 +254,11 @@ def profile_often_view(request, user_id=None):
 
     logger.debug(oftens)
 
-    context = {"profile_user": profile_user, "oftens": oftens}
+    context = {
+        "profile_user": profile_user,
+        "oftens": oftens,
+        "show_profile_header": request.user.is_eighth_admin
+    }
 
     return render(request, "eighth/profile_often.html", context)
 
