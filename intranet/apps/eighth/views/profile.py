@@ -305,7 +305,8 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "activities_list": activities_list,
         "active_block": block,
         "active_block_current_signup": active_block_current_signup,
-        "show_eighth_profile_link": True
+        "show_eighth_profile_link": True,
+        "block_info": block_info
     }
     profile_ctx = get_profile_context(request, user_id, block.date)
     if profile_ctx:
