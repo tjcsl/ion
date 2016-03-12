@@ -17,6 +17,52 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
+    <script type="text/javascript">
+        Chart.defaults.global.customTooltips = function(tooltip) {
+            var tooltipEl = $('#chartjs-tooltip');
+            if (!tooltip) {
+                tooltipEl.css({
+                    opacity: 0
+                });
+            return;
+            }
+            tooltipEl.removeClass('above below');
+            tooltipEl.addClass(tooltip.yAlign);
+            tooltipEl.html(tooltip.text);
+            var top;
+            if (tooltip.yAlign == 'above') {
+                top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
+            } else {
+                top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
+            }
+            tooltipEl.css({
+                opacity: 1,
+                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+                top: tooltip.chart.canvas.offsetTop + top + 'px',
+                fontFamily: tooltip.fontFamily,
+                fontSize: tooltip.fontSize,
+                fontStyle: tooltip.fontStyle,
+            });
+        };
+        $(document).ready(function() {
+            var data = [];
+            $(".user-signups-table>tbody>tr").each(function(k, v) {
+                data.push({
+                    value: parseInt($(v).find("td:nth-child(1)").text()),
+                    label: $(v).find("td:nth-child(2)").text().trim()
+                });
+            });
+            var chart;
+            if (data) {
+                $("#signups-chart").show();
+                chart = new Chart($("#signups-chart")[0].getContext("2d")).Pie(data, {
+                    tooltipTemplate: "<%= label %> - <%= value %>",
+                    animation: false
+                });
+            }
+        });
+    </script>
 {% endblock %}
 
 {% block main %}
@@ -35,6 +81,9 @@
         <h3>
             Most Frequent Signups{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
         </h3>
+
+        <canvas id="signups-chart" style="display:none"></canvas>
+        <div id="chartjs-tooltip"></div>
 
         <table class="fancy-table user-signups-table">
         <thead>
