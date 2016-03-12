@@ -644,6 +644,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     capacity = models.SmallIntegerField(null=True, blank=True)
     special = models.BooleanField(default=False)
+    administrative = models.BooleanField(default=False)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
@@ -719,6 +720,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
+
+    def get_administrative(self):
+        """Get whether this scheduled activity is administrative."""
+        if self.administrative:
+            return self.administrative
+        else:
+            return self.activity.administrative
 
     def get_special(self):
         """Get whether this scheduled activity is special, checking the

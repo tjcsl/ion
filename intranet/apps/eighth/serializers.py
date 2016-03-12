@@ -112,7 +112,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "both_blocks": activity.both_blocks,
             "one_a_day": activity.one_a_day,
             "special": scheduled_activity.get_special(),
-            "administrative": activity.administrative,
+            "administrative": scheduled_activity.activity.get_administrative(),
             "presign": activity.presign,
             "sticky": activity.sticky,
             "title": scheduled_activity.title,

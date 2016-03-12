@@ -144,6 +144,9 @@
                     <th class="special">
                         <span>Special</span>
                     </th><th></th>
+                    <th class="administrative">
+                        <span>Administrative</span>
+                    </th><th></th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
                 </tr>
@@ -197,6 +200,10 @@
                                     <center>
                                         {% render_field field class='special' %}
                                     </center>
+                                {% elif field.name == "administrative" %}
+                                    <center>
+                                        {% render_field field class='administrative' %}
+                                    </center>
                                 {% elif field.name == "scheduled" %}
                                     {% render_field field class='scheduled' %}
                                 {% else %}
@@ -204,7 +211,7 @@
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title special comments admin_comments" %}
+                                {% if field.name in "rooms capacity sponsors title special administrative comments admin_comments" %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fa fa-arrows-v"></i>

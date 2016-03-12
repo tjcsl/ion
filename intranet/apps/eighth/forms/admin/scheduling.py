@@ -28,7 +28,7 @@ class ScheduledActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthScheduledActivity
-        fields = ["cancelled", "scheduled", "unschedule", "block", "activity", "rooms", "capacity", "sponsors", "title", "special", "comments",
+        fields = ["cancelled", "scheduled", "unschedule", "block", "activity", "rooms", "capacity", "sponsors", "title", "special", "administrative", "comments",
                   "admin_comments"]
         widgets = {
             "capacity": forms.TextInput(),
