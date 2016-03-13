@@ -39,21 +39,23 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_user_profile_detail")
     first_name = serializers.CharField(max_length=200)
     user_type = serializers.CharField(max_length=100)
+    username = serializers.CharField(max_length=100)
     grade = GradeSerializer()
 
     class Meta:
         model = User
-        fields = ('id', 'url', 'user_type', 'full_name', 'first_name', 'grade')
+        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'grade')
 
 
 class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_user_profile_detail")
     last_name = serializers.CharField(max_length=200)
     user_type = serializers.CharField(max_length=100)
+    username = serializers.CharField(max_length=100)
 
     class Meta:
         model = User
-        fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
+        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'last_name')
 
 
 class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
