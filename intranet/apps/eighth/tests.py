@@ -2,8 +2,8 @@
 
 from django.core.urlresolvers import reverse
 
-from ..eighth.models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity)
 from ..eighth.exceptions import SignupException
+from ..eighth.models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity)
 from ..groups.models import Group
 from ..users.models import User
 from ...test.ion_test import IonTestCase

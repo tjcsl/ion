@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase, override_settings
 
-from ..apps.users.models import User
-
 from ldap_test import LdapServer
+
+from ..apps.users.models import User
 
 # We don't want to actually call out to ldap for testing, so setup a fake server.
 mock_server = LdapServer({'base': {'objectclass': 'organization', 'dn': 'dc=tjhsst,dc=edu'},
