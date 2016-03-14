@@ -67,15 +67,17 @@ def get_bg_pattern():
 
 
 def get_login_theme():
-    """Load a custom login theme (e.x.
-
-    snow)
+    """Load a custom login theme (e.x. snow)
 
     """
     today = datetime.now().date()
     if today.month == 12 or today.month == 1:
         # Snow
         return {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"}
+
+    if today.month == 3 and (14 <= today.day <= 16):
+        return {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"}
+
     return {}
 
 
