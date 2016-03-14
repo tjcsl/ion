@@ -9,6 +9,10 @@ if(window.ion.authenticated && !window.ion.gcm_optout) {
 }
 
 function subscribe() {
+    if($.cookie("no_notifications") == "true") {
+        console.warn('User denied notification via cookie.');
+        return;
+    }
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         serviceWorkerRegistration.pushManager.subscribe({ userVisibleOnly: true })
             .then(function(subscription) {
@@ -18,6 +22,7 @@ function subscribe() {
             .catch(function(e) {
                 if (Notification.permission === 'denied') {
                     console.warn('Permission for Notification is denied');
+                    document.cookie = "no_notifications=true; expires=" + new Date(+new Date + 30 * 24 * 60 * 60 * 1000);
                 } else {
                     console.error('Unable to subscribe to push', e);
                 }
