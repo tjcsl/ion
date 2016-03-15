@@ -10,15 +10,29 @@
     <div class="widget-content">
     <table>
     <tr><td>
-        <a href="{% url 'admin_request_status' %}">Announcement Approval</a><br />
-        <a href="{% url 'schedule_admin' %}">Bell Schedule</a><br />
-        <a href="{% url 'eighth_admin_dashboard' %}">Eighth Admin</a><br />
-        <a href="/djangoadmin/oauth2_provider/application/">OAuth Applications</a><br />
+        {% if request.user.is_announcements_admin %}
+            <a href="{% url 'admin_request_status' %}">Announcement Approval</a><br />
+        {% endif %}
+        {% if request.user.is_schedule_admin %}
+            <a href="{% url 'schedule_admin' %}">Bell Schedule</a><br />
+        {% endif %}
+        {% if request.user.is_eighth_admin %}
+            <a href="{% url 'eighth_admin_dashboard' %}">Eighth Admin</a><br />
+        {% endif %}
+        {% if is_global_admin %}
+            <a href="/djangoadmin/oauth2_provider/application/">OAuth Applications</a><br />
+        {% endif %}
     </td><td>
-        <a href="/djangoadmin/polls/">Polls Management</a><br />
-        <a href="/djangoadmin/printing/printjob/">Print Jobs</a><br />
-        <a href="{% url 'privacy_options' %}">Privacy Options</a><br />
-        <a href="/djangoadmin/signage/sign/">Signage Displays</a><br />
+        {% if is_global_admin %}
+            <a href="/djangoadmin/polls/">Polls Management</a><br />
+            <a href="/djangoadmin/printing/printjob/">Print Jobs</a><br />
+        {% endif %}
+        {% if request.user.is_eighth_admin %}
+            <a href="{% url 'privacy_options' %}">Privacy Options</a><br />
+        {% endif %}
+        {% if is_global_admin %}
+            <a href="/djangoadmin/signage/sign/">Signage Displays</a><br />
+        {% endif %}
     </td></tr>
     </table>
     </div>

@@ -949,6 +949,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("announcements")
 
     @property
+    def is_schedule_admin(self):
+        """Checks if user is a schedule admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission("schedule")
+
+    @property
     def is_teacher(self):
         """Checks if user is a teacher.
 

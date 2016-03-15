@@ -309,6 +309,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     is_teacher = user.is_teacher
     is_senior = user.is_senior
     is_global_admin = user.member_of("admin_all")
+    show_admin_widget = is_global_admin or announcements_admin or user.is_eighth_admin
     eighth_sponsor = user.get_eighth_sponsor()
 
     # the URL path for forward/back buttons
@@ -354,6 +355,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "is_teacher": is_teacher,
         "is_senior": is_senior,
         "is_global_admin": is_global_admin,
+        "show_admin_widget": show_admin_widget,
         "num_senior_destinations": num_senior_destinations
     }
 
