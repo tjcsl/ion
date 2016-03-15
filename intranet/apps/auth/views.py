@@ -67,9 +67,7 @@ def get_bg_pattern():
 
 
 def get_login_theme():
-    """Load a custom login theme (e.x. snow)
-
-    """
+    """Load a custom login theme (e.g. snow)"""
     today = datetime.now().date()
     if today.month == 12 or today.month == 1:
         # Snow

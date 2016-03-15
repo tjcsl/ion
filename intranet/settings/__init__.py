@@ -223,7 +223,7 @@ TEMPLATES = [
              "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
              "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
              "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
-             "intranet.apps.context_processors.global_custom_theme" # Sitewide custom themes (special events, etc)
+             "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
              ),
             "debug": True,  # Only enabled if DEBUG is true as well
             'loaders': (

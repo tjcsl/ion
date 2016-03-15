@@ -81,11 +81,12 @@ def mobile_app(request):
 
     return ctx
 
+
 def global_custom_theme(request):
-    """ Add custom theme javascript and css. """
+    """Add custom theme javascript and css."""
     today = datetime.datetime.now().date()
     theme = {}
-    
+
     if today.month == 3 and (14 <= today.day <= 16):
         theme = {"css": "themes/piday/piday.css"}
 
