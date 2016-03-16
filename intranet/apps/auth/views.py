@@ -197,4 +197,10 @@ def do_logout(request):
 def logout_view(request):
     """Clear the Kerberos cache and logout."""
     do_logout(request)
+
+    app_redirects = {"collegerecs": "https://apps.tjhsst.edu/collegerecs/logout?ion_logout=1"}
+    app = request.GET.get("app", "")
+    if app and app in app_redirects:
+        return redirect(app_redirects[app])
+
     return redirect("/")
