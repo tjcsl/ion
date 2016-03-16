@@ -262,7 +262,7 @@ def room_utilization_action(request, start_id, end_id):
             if show["block"]:
                 row.append(sch_act.block)
             if show["rooms"]:
-                row.append(";".join([str(rm) for rm in sch_act.get_true_rooms()]))
+                row.append(";".join([str(rm) for rm.name in sch_act.get_true_rooms()]))
             if show["capacity"]:
                 row.append(sch_act.get_true_capacity())
             if show["signups"]:
