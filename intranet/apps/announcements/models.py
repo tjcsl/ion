@@ -12,21 +12,18 @@ from ..users.models import User
 class AnnouncementManager(Manager):
 
     def visible_to_user(self, user):
-        """Get a list of visible announcements for a given user (usually
-        request.user).
+        """Get a list of visible announcements for a given user (usually request.user).
 
-        These visible announcements will be those that either have no groups
-        assigned to them (and are therefore public) or those in which the
-        user is a member.
+        These visible announcements will be those that either have no
+        groups assigned to them (and are therefore public) or those in
+        which the user is a member.
 
         """
 
-        return Announcement.objects.filter(Q(groups__in=user.groups.all()) |
-                                           Q(groups__isnull=True))
+        return Announcement.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
 
     def hidden_announcements(self, user):
-        """Get a list of announcements marked as hidden for a given user (usually
-        request.user).
+        """Get a list of announcements marked as hidden for a given user (usually request.user).
 
         These are all announcements visible to the user -- they have just decided to
         hide them.
@@ -39,21 +36,21 @@ class AnnouncementManager(Manager):
 class AnnouncementUserMap(models.Model):
     """Represents mapping fields between announcements and users.
 
-        These attributes would be a part of the Announcement model, but if they are,
-        the last updated date is changed whenever a student sees or hides an announcement.
+    These attributes would be a part of the Announcement model, but if they are,
+    the last updated date is changed whenever a student sees or hides an announcement.
 
-        Access these through announcement.user_map
+    Access these through announcement.user_map
 
-        If you are checking to see whether a user has hidden an announcement, use:
-            Announcement.objects.hidden_announcements(user)
+    If you are checking to see whether a user has hidden an announcement, use:
+        Announcement.objects.hidden_announcements(user)
 
-        Attributes:
-            announcement
-                The one-to-one mapping between this object and the Announcement it is for
-            users_hidden
-                A many-to-many field of Users who have hidden this announcement
-            users_seen
-                A many-to-many field of Users who have seen this announcement
+    Attributes:
+        announcement
+            The one-to-one mapping between this object and the Announcement it is for
+        users_hidden
+            A many-to-many field of Users who have hidden this announcement
+        users_seen
+            A many-to-many field of Users who have seen this announcement
 
     """
     announcement = models.OneToOneField("Announcement", related_name="_user_map")
@@ -65,7 +62,6 @@ class AnnouncementUserMap(models.Model):
 
 
 class Announcement(models.Model):
-
     """Represents an announcement.
 
     Attributes:
@@ -113,19 +109,15 @@ class Announcement(models.Model):
         try:
             return self._user_map
         except AnnouncementUserMap.DoesNotExist:
-            return AnnouncementUserMap.objects.create(
-                announcement=self
-            )
+            return AnnouncementUserMap.objects.create(announcement=self)
 
     @property
     def is_this_year(self):
-        """Return whether the announcement was created after September 1st
-           of this school year."""
+        """Return whether the announcement was created after September 1st of this school year."""
         now = datetime.now().date()
         ann = self.added.date()
         if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or
-                    (ann.year == now.year - 1 and ann.month >= 9))
+            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
         else:
             return ann.year == now.year and ann.month >= 9
 
@@ -134,7 +126,6 @@ class Announcement(models.Model):
 
 
 class AnnouncementRequest(models.Model):
-
     """Represents a request for an announcement.
 
     Attributes:

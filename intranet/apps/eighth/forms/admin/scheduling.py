@@ -6,8 +6,7 @@ from ...models import EighthScheduledActivity
 
 
 class ScheduledActivityForm(forms.ModelForm):
-
-    """Represents a row in the table activity scheduling admin page"""
+    """Represents a row in the table activity scheduling admin page."""
 
     # Whether the activity should actually be scheduled for the block
     scheduled = forms.BooleanField(required=False)
@@ -29,23 +28,13 @@ class ScheduledActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthScheduledActivity
-        fields = [
-            "cancelled",
-            "scheduled",
-            "unschedule",
-            "block",
-            "activity",
-            "rooms",
-            "capacity",
-            "sponsors",
-            "title",
-            "special",
-            "comments",
-            "admin_comments"
-        ]
+        fields = ["cancelled", "scheduled", "unschedule", "block", "activity", "rooms", "capacity", "sponsors", "title", "special", "comments",
+                  "admin_comments"]
         widgets = {
             "capacity": forms.TextInput(),
             "title": forms.TextInput(attrs={"size": 30}),
-            "comments": forms.Textarea(attrs={"rows": 2, "cols": 30}),
-            "admin_comments": forms.Textarea(attrs={"rows": 2, "cols": 30})
+            "comments": forms.Textarea(attrs={"rows": 2,
+                                              "cols": 30}),
+            "admin_comments": forms.Textarea(attrs={"rows": 2,
+                                                    "cols": 30})
         }

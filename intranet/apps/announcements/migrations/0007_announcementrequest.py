@@ -6,10 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('announcements', '0006_merge'),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL), ('announcements', '0006_merge')]
 
     operations = [
         migrations.CreateModel(
@@ -28,6 +25,5 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['-added'],
-            },
-        ),
+            },),
     ]

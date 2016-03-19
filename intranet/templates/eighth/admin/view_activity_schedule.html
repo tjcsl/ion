@@ -45,7 +45,7 @@
             {% for scheduled_activity in scheduled_activities %}
                 <tr>
                     <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
-                    <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                    <td>{% for rm in scheduled_activity.get_true_rooms %}{{ rm.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                     <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
                     <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                     <td>{{ scheduled_activity.get_true_capacity }}</td>

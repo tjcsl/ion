@@ -16,36 +16,37 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.0/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
     <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
     <script type="text/javascript" src="{% static 'js/eighth/attendance.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/ui_init.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/eighth/user_link.js' %}"></script>
     {% if wizard %}
     <script type="text/javascript">
-$(function() {
-    $("form > select").on("change", function() {
-        this.form.submit();
-    });
+    $(function() {
+        $('form > select').on('change', function() {
+            this.form.submit();
+        });
 
-    $("#show_all_blocks").click(function() {
-        if($(this).prop('checked')) {
-            location.href = '?show_all_blocks=1';
-        } else {
-            location.href = '?';
-        }
+        $('#show_all_blocks').click(function() {
+            if ($(this).prop('checked')) {
+                location.href = '?show_all_blocks=1';
+            } else {
+                location.href = '?';
+            }
+        });
     });
-});
     </script>
     {% else %}
     <script type="text/javascript">
-$(function() {
-    $("form[name='choose-activity'] > select").on("change", function() {
-        var val = $(this).val();
-        if(val.length > 0) {
-            location.href = $(".choose-activity").attr("data-endpoint") + "/" + val;
-        }
+    $(function() {
+        $("form[name='choose-activity'] > select").on('change', function() {
+            var val = $(this).val();
+            if (val.length > 0) {
+                location.href = $('.choose-activity').attr('data-endpoint') + '/' + val;
+            }
+        });
     });
-})
     </script>
     {% endif %}
 {% endblock %}
@@ -292,7 +293,7 @@ $(function() {
                                 </td>
                                 <td>
                                     {% if pass.last_modified_time %}
-                                        {{ pass.last_modified_time|fuzzy_date }}
+                                        <span class="timeago" title="{{ pass.last_modified_time|date:'c' }}">{{ pass.last_modified_time|fuzzy_date }}</span>
                                     {% endif %}
                                 </td>
                                 {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}

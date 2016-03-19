@@ -6,8 +6,11 @@ import logging
 from django import http
 from django.conf import settings
 from django.shortcuts import render
+from django.utils import timezone
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from .models import Sign
+from ..announcements.models import Announcement
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
 from ..schedule.views import schedule_context
@@ -29,11 +32,10 @@ def check_show_eighth(now):
 def check_internal_ip(request):
     remote_addr = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     if not request.user.is_authenticated() and remote_addr not in settings.INTERNAL_IPS:
-        return render(request, "error/403.html", {
-            "reason": "You are not authorized to view this page."
-        }, status=403)
+        return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
 
+@xframe_options_exempt
 def signage_display(request, display_id=None):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -60,24 +62,68 @@ def signage_display(request, display_id=None):
             iframe = "/signage/eighth?no_reload&block_increment={}&".format(sign.eighth_block_increment)
         else:
             iframe = "/signage/eighth?no_reload&"
-        return iframe_signage(request, iframe)
+        if sign and sign.use_frameset:
+            return frameset_signage(request, iframe)
+        else:
+            return iframe_signage(request, iframe)
     elif sign_status == "schedule":
         return schedule_signage(request)
     elif sign_status == "status":
         return status_signage(request)
+    elif sign_status == "touch":
+        return touch_signage(request, sign)
     elif sign_status == "url" or "url" in request.GET:
-        return iframe_signage(request, request.GET.get('url') or (sign.url if sign else "about:blank"))
+        url = request.GET.get('url') or (sign.url if sign else "about:blank")
+        use_header = ('use_header' in request.GET) or sign.use_header or True
+        if sign and sign.use_frameset:
+            return frameset_signage(request, url)
+        else:
+            return iframe_signage(request, url, use_header=use_header)
     else:
         if check_show_eighth(now):
             if sign and sign.eighth_block_increment:
                 iframe = "/signage/eighth?block_increment={}&".format(sign.eighth_block_increment)
             else:
                 iframe = "/signage/eighth?no_reload&"
-            return iframe_signage(request, iframe)
+            if sign and sign.use_frameset:
+                return frameset_signage(request, iframe)
+            else:
+                return iframe_signage(request, iframe)
+        elif sign_status == "autourl":
+            url = request.GET.get('url') or (sign.url if sign else "about:blank")
+            if sign and sign.use_frameset:
+                return frameset_signage(request, url)
+            else:
+                return iframe_signage(request, url)
         else:
             return status_signage(request)
 
 
+@xframe_options_exempt
+def touch_signage(request, sign=None):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    block_increment = 0
+    if sign and sign.eighth_block_increment:
+        block_increment = sign.eighth_block_increment
+
+    default_page = "clock"
+    now = datetime.datetime.now()
+    if check_show_eighth(now):
+        default_page = "eighth"
+
+    context = schedule_context(request)
+    context["signage"] = True
+    context["eighth_url"] = "/signage/eighth?no_reload&block_increment={}".format(block_increment)
+    context["calendar_url"] = "https://postman.tjhsst.edu/"
+    context["default_page"] = default_page
+    context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__lt=timezone.now())
+    return render(request, "signage/touch.html", context)
+
+
+@xframe_options_exempt
 def schedule_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -89,6 +135,7 @@ def schedule_signage(request):
     return render(request, "schedule/embed.html", context)
 
 
+@xframe_options_exempt
 def status_signage(request):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -99,7 +146,8 @@ def status_signage(request):
     return render(request, "signage/status.html", context)
 
 
-def iframe_signage(request, url):
+@xframe_options_exempt
+def iframe_signage(request, url, use_header=True):
     internal_ip = check_internal_ip(request)
     if internal_ip:
         return internal_ip
@@ -107,9 +155,31 @@ def iframe_signage(request, url):
     context = schedule_context(request)
     context["signage"] = True
     context["url"] = url
+    context["use_header"] = use_header
     return render(request, "signage/iframe.html", context)
 
 
+@xframe_options_exempt
+def frameset_signage(request, url):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+
+    context = schedule_context(request)
+    context["signage"] = True
+    context["url"] = url
+    return render(request, "signage/frameset.html", context)
+
+
+@xframe_options_exempt
+def frameset_signage_header(request):
+    internal_ip = check_internal_ip(request)
+    if internal_ip:
+        return internal_ip
+    return render(request, "signage/frameset-header.html", {})
+
+
+@xframe_options_exempt
 def eighth_signage(request, block_id=None, block_increment=0):
     internal_ip = check_internal_ip(request)
     if internal_ip:
@@ -140,9 +210,7 @@ def eighth_signage(request, block_id=None, block_increment=0):
 
     if not block:
         try:
-            block = (EighthBlock.objects
-                                .prefetch_related("eighthscheduledactivity_set")
-                                .get(id=block_id))
+            block = (EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id))
         except EighthBlock.DoesNotExist:
             if EighthBlock.objects.count() == 0:
                 # No blocks have been added yet
@@ -151,12 +219,10 @@ def eighth_signage(request, block_id=None, block_increment=0):
                 # The provided block_id is invalid
                 raise http.Http404
 
+    # FIXME: don't hard-code
     user = User.objects.get(username="awilliam")
 
-    serializer_context = {
-        "request": request,
-        "user": user
-    }
+    serializer_context = {"request": request, "user": user}
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
     try:
         reload_mins = float(request.GET.get("reload_mins") or 5)

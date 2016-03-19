@@ -1,0 +1,83 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Announcement Request Status
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h2>
+        Announcement Request Status
+    </h2>
+
+    {% if awaiting_approval %}
+        <h3>
+            <i class="fa fa-exclamation-circle" style="color: red"></i> {{ awaiting_approval|length }} waiting for admin approval
+        </h3>
+        <ul>
+        {% for req in awaiting_approval %}
+            <li>{{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, approved by {% for u in req.teachers_approved.all %}{{ u.full_name }}, {% empty %}None, {% endfor %}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h3><i class="fa fa-info-circle"></i> 0 waiting for admin approval</h3>
+    {% endif %}
+
+    <br />
+    <br />
+
+    {% if awaiting_teacher %}
+        <h3>
+        <i class="fa fa-info-circle"></i> {{ awaiting_teacher|length }} pending teacher approval</h3>
+        <ul>
+        {% for req in awaiting_teacher %}
+            <li>{{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, awaiting teacher approval</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h3><i class="fa fa-info-circle"></i> 0 pending teacher approval</h3>
+        <p>There are no announcement requests waiting for teacher approval at this time.</p>
+    {% endif %}
+
+    <br />
+    <br />
+
+    {% if approved %}
+        <h3><i class="fa fa-info-circle"></i> {{ approved|length }} already approved</h3>
+        {% for req in approved %}
+            <li>
+                {{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">
+                {{ req }}</a> -- requested by {{ req.user.full_name }}, approved by {% for u in req.teachers_approved.all %}{{ u.full_name }}, {% empty %}None, {% endfor %}posted by {{ req.posted_by }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <h3><i class="fa fa-info-circle"></i> 0 announcements approved</h3>
+        <p>No announcements have been approved!</p>
+    {% endif %}
+
+    <br />
+    <br />
+    
+    {% if rejected %}
+        <h3><i class="fa fa-info-circle"></i> {{ rejected|length }} already rejected</h3>
+        {% for req in rejected %}
+            <li>
+                {{ req.added }} - <a href="{% url 'admin_approve_announcement' req.id %}">
+                {{ req }}</a> -- requested by {{ req.user.full_name }}, approved by {% for u in req.teachers_approved.all %}{{ u.full_name }}, {% empty %}None, {% endfor %}rejected by {{ req.rejected_by }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <h3><i class="fa fa-info-circle"></i> 0 announcements rejected</h3>
+    {% endif %}
+{% endblock %}

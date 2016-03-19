@@ -14,18 +14,18 @@ from formtools.wizard.views import SessionWizardView
 from ...forms.admin.activities import ActivitySelectionForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import (EighthActivity, EighthBlock, EighthRoom,
-                       EighthScheduledActivity, EighthSponsor)
+from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from .....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
+ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
+
 
 @eighth_admin_required
 def schedule_activity_view(request):
-    ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)  # noqa
 
     if request.method == "POST":
         formset = ScheduledActivityFormset(request.POST)
@@ -36,25 +36,16 @@ def schedule_activity_view(request):
                 activity = form.cleaned_data["activity"]
 
                 # Save changes to cancelled activities and scheduled activities
-                cancelled = (EighthScheduledActivity.objects
-                                                    .filter(block=block,
-                                                            activity=activity,
-                                                            cancelled=True)
-                                                    .exists())
+                cancelled = (EighthScheduledActivity.objects.filter(block=block, activity=activity, cancelled=True).exists())
 
                 instance = None
                 if form["scheduled"].value() or cancelled:
-                    instance, created = (EighthScheduledActivity.objects
-                                                                .get_or_create(block=block,
-                                                                               activity=activity))
+                    instance, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
                     invalidate_obj(instance)
                     invalidate_obj(block)
                     invalidate_obj(activity)
                 else:
-                    schact = EighthScheduledActivity.objects.filter(
-                        block=block,
-                        activity=activity
-                    )
+                    schact = EighthScheduledActivity.objects.filter(block=block, activity=activity)
                     logger.debug(block)
                     logger.debug(activity)
                     logger.debug(schact)
@@ -83,15 +74,7 @@ def schedule_activity_view(request):
                         cancelled = True
 
                 if instance:
-                    fields = [
-                        "rooms",
-                        "capacity",
-                        "sponsors",
-                        "title",
-                        "special",
-                        "comments",
-                        "admin_comments"
-                    ]
+                    fields = ["rooms", "capacity", "sponsors", "title", "special", "comments", "admin_comments"]
                     if "rooms" in form.cleaned_data:
                         for o in form.cleaned_data["rooms"]:
                             invalidate_obj(o)
@@ -198,19 +181,12 @@ def schedule_activity_view(request):
         # , date__lte=end_date)
         initial_formset_data = []
 
-        sched_act_queryset = (EighthScheduledActivity.objects
-                                                     .filter(activity=activity)
-                                                     .select_related("block")
-                                                     .prefetch_related("rooms",
-                                                                       "sponsors",
-                                                                       "members"))
+        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related("rooms", "sponsors",
+                                                                                                                                 "members"))
         all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
 
         for block in blocks:
-            initial_form_data = {
-                "block": block,
-                "activity": activity
-            }
+            initial_form_data = {"block": block, "activity": activity}
             try:
                 sched_act = all_sched_acts[block.id]
 
@@ -260,17 +236,12 @@ def show_activity_schedule_view(request):
         except (EighthActivity.DoesNotExist, ValueError):
             pass
 
-    context = {
-        "activities": activities,
-        "activity": activity
-    }
+    context = {"activities": activities, "activity": activity}
 
     if activity is not None:
         start_date = get_start_date(request)
-        scheduled_activities = (activity.eighthscheduledactivity_set
-                                        .filter(block__date__gte=start_date)
-                                        .order_by("block__date",
-                                                  "block__block_letter"))
+        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by("block__date",
+                                                                                                                  "block__block_letter"))
         context["scheduled_activities"] = scheduled_activities
 
     context["admin_page_title"] = "View Activity Schedule"
@@ -284,12 +255,8 @@ def distribute_students_view(request):
 
 
 class EighthAdminTransferStudentsWizard(SessionWizardView):
-    FORMS = [
-        ("block_1", BlockSelectionForm),
-        ("activity_1", ActivitySelectionForm),
-        ("block_2", BlockSelectionForm),
-        ("activity_2", ActivitySelectionForm)
-    ]
+    FORMS = [("block_1", BlockSelectionForm), ("activity_1", ActivitySelectionForm), ("block_2", BlockSelectionForm),
+             ("activity_2", ActivitySelectionForm)]
 
     TEMPLATES = {
         "block_1": "eighth/admin/transfer_students.html",
@@ -304,9 +271,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
     def get_form_kwargs(self, step):
         kwargs = {}
         if step in ("block_1", "block_2"):
-            kwargs.update({
-                "exclude_before_date": get_start_date(self.request)
-            })
+            kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity_1":
             block = self.get_cleaned_data_for_step("block_1")["block"]
             kwargs.update({"block": block})
@@ -326,8 +291,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminTransferStudentsWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminTransferStudentsWizard, self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Transfer Students"})
         return context
 
@@ -335,39 +299,24 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=source_block,
-            activity=source_activity
-        )
+        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
 
         dest_block = form_list[2].cleaned_data["block"]
         dest_activity = form_list[3].cleaned_data["activity"]
-        dest_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=dest_block,
-            activity=dest_activity
-        )
+        dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
 
         req = "source_act={}&dest_act={}".format(source_scheduled_activity.id, dest_scheduled_activity.id)
 
         return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
 
-transfer_students_view = eighth_admin_required(
-    EighthAdminTransferStudentsWizard.as_view(
-        EighthAdminTransferStudentsWizard.FORMS
-    )
-)
+
+transfer_students_view = eighth_admin_required(EighthAdminTransferStudentsWizard.as_view(EighthAdminTransferStudentsWizard.FORMS))
 
 
 class EighthAdminUnsignupStudentsWizard(SessionWizardView):
-    FORMS = [
-        ("block_1", BlockSelectionForm),
-        ("activity_1", ActivitySelectionForm)
-    ]
+    FORMS = [("block_1", BlockSelectionForm), ("activity_1", ActivitySelectionForm)]
 
-    TEMPLATES = {
-        "block_1": "eighth/admin/transfer_students.html",
-        "activity_1": "eighth/admin/transfer_students.html"
-    }
+    TEMPLATES = {"block_1": "eighth/admin/transfer_students.html", "activity_1": "eighth/admin/transfer_students.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -375,25 +324,19 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
     def get_form_kwargs(self, step):
         kwargs = {}
         if step == "block_1":
-            kwargs.update({
-                "exclude_before_date": get_start_date(self.request)
-            })
+            kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity_1":
             block = self.get_cleaned_data_for_step("block_1")["block"]
             kwargs.update({"block": block})
 
-        labels = {
-            "block_1": "Select a block to move students from",
-            "activity_1": "Select an activity to unsignup students from"
-        }
+        labels = {"block_1": "Select a block to move students from", "activity_1": "Select an activity to unsignup students from"}
 
         kwargs.update({"label": labels[step]})
 
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminUnsignupStudentsWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminUnsignupStudentsWizard, self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Clear Student Signups for Activity"})
         return context
 
@@ -401,25 +344,19 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         form_list = [f for f in form_list]
         source_block = form_list[0].cleaned_data["block"]
         source_activity = form_list[1].cleaned_data["activity"]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(
-            block=source_block,
-            activity=source_activity
-        )
+        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
 
         req = "source_act={}&dest_unsignup=1".format(source_scheduled_activity.id)
 
         return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
 
-unsignup_students_view = eighth_admin_required(
-    EighthAdminUnsignupStudentsWizard.as_view(
-        EighthAdminUnsignupStudentsWizard.FORMS
-    )
-)
+
+unsignup_students_view = eighth_admin_required(EighthAdminUnsignupStudentsWizard.as_view(EighthAdminUnsignupStudentsWizard.FORMS))
 
 
 @eighth_admin_required
 def transfer_students_action(request):
-    """ Do the actual process of transferring students."""
+    """Do the actual process of transferring students."""
     if "source_act" in request.GET:
         source_act = EighthScheduledActivity.objects.get(id=request.GET.get("source_act"))
     elif "source_act" in request.POST:
@@ -441,13 +378,7 @@ def transfer_students_action(request):
 
     num = source_act.members.count()
 
-    context = {
-        "admin_page_title": "Transfer Students",
-        "source_act": source_act,
-        "dest_act": dest_act,
-        "dest_unsignup": dest_unsignup,
-        "num": num
-    }
+    context = {"admin_page_title": "Transfer Students", "source_act": source_act, "dest_act": dest_act, "dest_unsignup": dest_unsignup, "num": num}
 
     if request.method == "POST":
         if dest_unsignup and not dest_act:
@@ -455,9 +386,7 @@ def transfer_students_action(request):
             invalidate_obj(source_act)
             messages.success(request, "Successfully removed signups for {} students.".format(num))
         else:
-            source_act.eighthsignup_set.update(
-                scheduled_activity=dest_act
-            )
+            source_act.eighthsignup_set.update(scheduled_activity=dest_act)
 
             invalidate_obj(source_act)
             invalidate_obj(dest_act)

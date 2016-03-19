@@ -21,9 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_fcps_emerg(request):
-    """
-    Return FCPS emergency information
-    """
+    """Return FCPS emergency information."""
     try:
         emerg = get_emerg()
     except Exception:
@@ -38,8 +36,7 @@ def get_fcps_emerg(request):
 
 
 def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
-    """Generate a list of information about a block and a student's
-    current activity signup.
+    """Generate a list of information about a block and a student's current activity signup.
 
     Returns:
         schedule
@@ -56,12 +53,8 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
         return None, False
 
     # Use select_related to reduce query count
-    signups = (EighthSignup.objects.filter(user=user,
-                                           scheduled_activity__block__in=surrounding_blocks)
-               .select_related("scheduled_activity",
-                               "scheduled_activity__block",
-                               "scheduled_activity__activity")
-               .nocache())
+    signups = (EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related(
+        "scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity").nocache())
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:
@@ -130,10 +123,8 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
     if surrounding_blocks is None:
         surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks).nocache()
 
-    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                                            .select_related("block")
-                                                            .filter(block__in=surrounding_blocks)
-                                                            .nocache())
+    activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(
+        block__in=surrounding_blocks).nocache())
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
@@ -158,11 +149,7 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
 
         if num_added == 0:
             # fake an entry for a block where there is no sponsorship
-            acts.append({
-                "block": b,
-                "id": None,
-                "fake": True
-            })
+            acts.append({"block": b, "id": None, "fake": True})
         else:
             num_acts += 1
 
@@ -201,7 +188,6 @@ def find_birthdays(request):
             mon = int(request.GET["birthday_month"])
             day = int(request.GET["birthday_day"])
             yr = today.year
-
             """ If searching a date that already happened this year, skip to the next year. """
             if mon < today.month or (mon == today.month and day < today.day):
                 yr += 1
@@ -221,8 +207,7 @@ def find_birthdays(request):
     cached = cache.get(key)
 
     if cached:
-        logger.debug("Birthdays on {} loaded "
-                     "from cache.".format(today))
+        logger.debug("Birthdays on {} loaded " "from cache.".format(today))
         logger.debug(cached)
         return cached
     else:
@@ -232,7 +217,7 @@ def find_birthdays(request):
             data = {
                 "custom": custom,
                 "today": {
-                    "date": str(today),
+                    "date": today,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -244,7 +229,7 @@ def find_birthdays(request):
                     "inc": 0
                 },
                 "tomorrow": {
-                    "date": str(tomorrow),
+                    "date": tomorrow,
                     "users": [{
                         "id": u.id,
                         "full_name": u.full_name,
@@ -293,12 +278,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     else:
         # Only show announcements for groups that the user is enrolled in.
         if show_expired:
-            announcements = (Announcement.objects
-                             .visible_to_user(user))
+            announcements = (Announcement.objects.visible_to_user(user))
         else:
-            announcements = (Announcement.objects
-                                         .visible_to_user(user)
-                                         .filter(expiration_date__gt=timezone.now()))
+            announcements = (Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now()))
 
     # pagination
     if "start" in request.GET:
@@ -321,12 +303,13 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     announcements = announcements.select_related("user").prefetch_related("groups", "event")
 
-    user_hidden_announcements = (Announcement.objects.hidden_announcements(user)
-                                                     .values_list("id", flat=True)).nocache()
+    user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True)).nocache()
 
     is_student = user.is_student
     is_teacher = user.is_teacher
     is_senior = user.is_senior
+    is_global_admin = user.member_of("admin_all")
+    show_admin_widget = is_global_admin or announcements_admin or user.is_eighth_admin
     eighth_sponsor = user.get_eighth_sponsor()
 
     # the URL path for forward/back buttons
@@ -371,6 +354,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "is_student": is_student,
         "is_teacher": is_teacher,
         "is_senior": is_senior,
+        "is_global_admin": is_global_admin,
+        "show_admin_widget": show_admin_widget,
         "num_senior_destinations": num_senior_destinations
     }
 
@@ -381,12 +366,10 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
         if is_student:
             schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
-            context.update({
-                "schedule": schedule,
-                "no_signup_today": no_signup_today,
-                "senior_graduation": settings.SENIOR_GRADUATION,
-                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR,
-            })
+            context.update({"schedule": schedule,
+                            "no_signup_today": no_signup_today,
+                            "senior_graduation": settings.SENIOR_GRADUATION,
+                            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR})
 
         if eighth_sponsor:
             sponsor_date = request.GET.get("sponsor_date", None)
@@ -404,20 +387,13 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
             # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
-        context.update({
-            "eighth_sponsor": eighth_sponsor,
-            "birthdays": find_birthdays(request),
-            "sched_ctx": schedule_context(request)["sched_ctx"]
-        })
+        context.update({"eighth_sponsor": eighth_sponsor, "birthdays": find_birthdays(request), "sched_ctx": schedule_context(request)["sched_ctx"]})
 
     if announcements_admin:
         all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
 
-        context.update({
-            "awaiting_teacher": awaiting_teacher,
-            "awaiting_approval": awaiting_approval,
-        })
+        context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval})
 
     return render(request, "dashboard/dashboard.html", context)

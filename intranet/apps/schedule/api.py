@@ -2,7 +2,9 @@
 
 import logging
 
-from rest_framework import generics
+from django.core import exceptions
+
+from rest_framework import generics, serializers
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 
@@ -37,3 +39,5 @@ class DayDetail(generics.RetrieveAPIView):
             return day
         except Day.DoesNotExist:
             return None
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(e)

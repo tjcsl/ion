@@ -10,15 +10,9 @@ from rest_framework import generics, status, views
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
-                      EighthSignup)
-from ..serializers import (EighthActivityDetailSerializer,
-                           EighthActivityListSerializer,
-                           EighthAddSignupSerializer,
-                           EighthBlockDetailSerializer,
-                           EighthBlockListSerializer,
-                           EighthScheduledActivitySerializer,
-                           EighthSignupSerializer)
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup)
+from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
+                           EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +23,7 @@ class EighthActivityList(generics.ListAPIView):
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
-
-    """API endpoint that shows details of an eighth activity.
-    """
+    """API endpoint that shows details of an eighth activity."""
     queryset = EighthActivity.undeleted_objects.all()
     serializer_class = EighthActivityDetailSerializer
 
@@ -43,9 +35,7 @@ class BlockPagination(PageNumberPagination):
 
 
 class EighthBlockList(generics.ListAPIView):
-
-    """API endpoint that lists all eighth blocks
-    """
+    """API endpoint that lists all eighth blocks."""
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
 
@@ -65,9 +55,7 @@ class EighthBlockList(generics.ListAPIView):
 
 
 class EighthBlockDetail(views.APIView):
-
-    """API endpoint that shows details for an eighth block
-    """
+    """API endpoint that shows details for an eighth block."""
 
     def get(self, request, pk):
         try:
@@ -87,8 +75,9 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         if not user_id:
             user_id = request.user.id
 
-        signups = EighthSignup.objects.filter(user_id=user_id).prefetch_related("scheduled_activity__block").select_related(
-            "scheduled_activity__activity").order_by("scheduled_activity__block__date", "scheduled_activity__block__block_letter")
+        signups = EighthSignup.objects.filter(
+            user_id=user_id).prefetch_related("scheduled_activity__block").select_related("scheduled_activity__activity").order_by(
+                "scheduled_activity__block__date", "scheduled_activity__block__block_letter")
 
         serialized = EighthSignupSerializer(signups, context={"request": request}, many=True)
 
@@ -104,10 +93,12 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if "activity" not in serializer.validated_data or "block" not in serializer.validated_data or serializer.validated_data.get("use_scheduled_activity", False):
+        if "activity" not in serializer.validated_data or "block" not in serializer.validated_data or serializer.validated_data.get(
+                "use_scheduled_activity", False):
             schactivity = serializer.validated_data["scheduled_activity"]
         else:
-            schactivity = EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"]).filter(block=serializer.validated_data["block"]).get()
+            schactivity = EighthScheduledActivity.objects.filter(activity=serializer.validated_data["activity"]).filter(
+                block=serializer.validated_data["block"]).get()
         if 'force' in serializer.validated_data:
             force = serializer.validated_data['force']
         else:
@@ -122,9 +113,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 
 
 class EighthScheduledActivitySignupList(views.APIView):
-
-    """API endpoint that lists all signups for a certain scheduled activity
-    """
+    """API endpoint that lists all signups for a certain scheduled activity."""
 
     def get(self, request, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -134,8 +123,6 @@ class EighthScheduledActivitySignupList(views.APIView):
 
 
 class EighthSignupDetail(generics.RetrieveAPIView):
-
-    """API endpoint that shows details of an eighth signup
-    """
+    """API endpoint that shows details of an eighth signup."""
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer

@@ -5,8 +5,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView, TemplateView
 
-from intranet.apps.error.views import (handle_404_view, handle_500_view,
-                                       handle_503_view)
+from intranet.apps.error.views import (handle_404_view, handle_500_view, handle_503_view)
 
 admin.autodiscover()
 
@@ -16,9 +15,7 @@ urlpatterns = [
     url(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
     url(r"^serviceworker\.js$", TemplateView.as_view(template_name="serviceworker.js", content_type="text/javascript"), name="chrome_serviceworker"),
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
-
     url(r"^", include("intranet.apps.auth.urls")),
-
     url(r"^announcements", include("intranet.apps.announcements.urls")),
     url(r"^eighth", include("intranet.apps.eighth.urls")),
     url(r"^events", include("intranet.apps.events.urls")),
@@ -35,18 +32,17 @@ urlpatterns = [
     url(r"^notifications", include("intranet.apps.notifications.urls")),
     url(r"^signage", include("intranet.apps.signage.urls")),
     url(r"^printing", include("intranet.apps.printing.urls")),
-
+    url(r"^ionldap", include("intranet.apps.ionldap.urls")),
+    url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
     url(r"^djangoadmin/", include(admin.site.urls)),
+    url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
+    url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
 ]
-
 
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
-    urlpatterns += [
-        url(r"^__debug__/", include(debug_toolbar.urls)),
-    ]
-
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
 
 handler404 = handle_404_view
 handler500 = handle_500_view

@@ -1,0 +1,73 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang='en'>
+<head>
+    <title>Intranet - OAuth Authentication</title>
+    {% include "meta.html" %}
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    {% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/about.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
+        <style type="text/css">
+           
+            h3 {
+                height: 27px;
+                line-height: 27px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .center {
+                padding: 0;
+                text-align: left;
+            }
+
+            p {
+                text-indent: 0;
+            }
+
+            @media (max-width: 500px) {
+                .center-wrapper {
+                    left: 0;
+                    margin-left: 0;
+                    width: 100%;
+                }
+
+                h3 {
+                    line-height: 30px;
+                    height: auto;
+                }
+            }
+        </style>
+    {% endblock %}
+</head>
+<body class="notransition">
+    {% block back %}
+    <ul class="nav dashboard-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fa fa-arrow-left fa-2x" style="padding-bottom: 6px"></i>
+                    Dashboard
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
+    {% if global_warning %}<div class="global-warning">{{ global_warning }}</div>{% endif %}
+    <div class="center-wrapper">
+        <div class="center">
+        <div class="logo"></div>
+        {% block content %}
+
+        {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

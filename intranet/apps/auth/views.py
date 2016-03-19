@@ -32,22 +32,17 @@ def log_auth(request, success):
 
     username = request.POST.get("username", "unknown")
 
-    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(
-        ip,
-        username,
-        success,
-        datetime.now(),
-        request.get_full_path(),
-        request.META.get("HTTP_USER_AGENT", "")
-    )
+    log_line = "{} - {} - auth {} - [{}] \"{}\" \"{}\"".format(ip, username, success, datetime.now(), request.get_full_path(),
+                                                               request.META.get("HTTP_USER_AGENT", ""))
 
     auth_logger.info(log_line)
 
 
 def get_bg_pattern():
-    """
-    Choose a background pattern image.
+    """Choose a background pattern image.
+
     One will be selected at random.
+
     """
     files = [
         "brushed.png",
@@ -72,16 +67,15 @@ def get_bg_pattern():
 
 
 def get_login_theme():
-    """
-    Load a custom login theme (e.x. snow)
-    """
+    """Load a custom login theme (e.g. snow)"""
     today = datetime.now().date()
     if today.month == 12 or today.month == 1:
         # Snow
-        return {
-            "js": "themes/snow/snow.js",
-            "css": "themes/snow/snow.css"
-        }
+        return {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"}
+
+    if today.month == 3 and (14 <= today.day <= 16):
+        return {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"}
+
     return {}
 
 
@@ -104,14 +98,12 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
 
-        data = {
-            "auth_form": auth_form,
-            "request": request,
-            "git_info": settings.GIT,
-            "bg_pattern": get_bg_pattern(),
-            "theme": get_login_theme(),
-            "login_warning": login_warning
-        }
+        data = {"auth_form": auth_form,
+                "request": request,
+                "git_info": settings.GIT,
+                "bg_pattern": get_bg_pattern(),
+                "theme": get_login_theme(),
+                "login_warning": login_warning}
         schedule = schedule_context(request)
         data.update(schedule)
         if added_context is not None:
@@ -120,19 +112,14 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
 
 
 class LoginView(View):
-
     """Log in and redirect a user."""
 
     @method_decorator(sensitive_post_parameters("password"))
     def post(self, request):
         """Validate and process the login POST request."""
-
         """Before September 1st, do not allow Class of [year+4] to log in."""
-        if (request.POST.get("username", "").startswith(str(date.today().year + 4)) and
-                date.today().month < 9):
-            return index_view(request, added_context={
-                "auth_message": "Your account is not yet active for use with this application."
-            })
+        if (request.POST.get("username", "").startswith(str(date.today().year + 4)) and date.today().month < 9):
+            return index_view(request, added_context={"auth_message": "Your account is not yet active for use with this application."})
 
         form = AuthenticateForm(data=request.POST)
 
@@ -156,9 +143,7 @@ class LoginView(View):
             dn = request.user.dn
             if dn is None or not dn:
                 do_logout(request)
-                return index_view(request, added_context={
-                    "auth_message": "Your account is disabled."
-                })
+                return index_view(request, added_context={"auth_message": "Your account is disabled."})
 
             if request.user.startpage == "eighth":
                 """Default to eighth admin view (for eighthoffice)."""
@@ -179,7 +164,7 @@ class LoginView(View):
                 else:
                     pass  # exclude eighth office/special accounts
 
-            next_page = request.GET.get("next", default_next_page)
+            next_page = request.POST.get("next", request.GET.get("next", default_next_page))
             return redirect(next_page)
         else:
             log_auth(request, "failed")
@@ -212,4 +197,10 @@ def do_logout(request):
 def logout_view(request):
     """Clear the Kerberos cache and logout."""
     do_logout(request)
+
+    app_redirects = {"collegerecs": "https://apps.tjhsst.edu/collegerecs/logout?ion_logout=1"}
+    app = request.GET.get("app", "")
+    if app and app in app_redirects:
+        return redirect(app_redirects[app])
+
     return redirect("/")

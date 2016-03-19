@@ -1,4 +1,5 @@
 dn: dc=tjhsst,dc=edu
+changetype: add
 objectClass: dcObject
 objectClass: organization
 dc: tjhsst
@@ -6,27 +7,32 @@ o: TJHSST
 description: Thomas Jefferson High School for Science and Technology
 
 dn: ou=people,dc=tjhsst,dc=edu
+changetype: add
 objectClass: organizationalUnit
 ou: people
 description: Human beings
 
 dn: ou=schedule,dc=tjhsst,dc=edu
+changetype: add
 objectClass: organizationalUnit
 ou: schedule
 description: Class schedule information
 
 dn: ou=rooms,dc=tjhsst,dc=edu
+changetype: add
 objectClass: organizationalUnit
 ou: rooms
 description: Rooms in the building
 
 dn: cn=admins,dc=tjhsst,dc=edu
+changetype: add
 objectClass: groupOfURLs
 cn: admins
 memberURL: ldap:///ou=people,dc=tjhsst,dc=edu??one?is-admin=TRUE
 description: Superhuman beings
 
 dn: cn=teachers,dc=tjhsst,dc=edu
+changetype: add
 objectClass: top
 objectClass: groupOfURLs
 cn: teachers
@@ -34,6 +40,7 @@ memberURL: ldap:///ou=people,dc=tjhsst,dc=edu??one?objectclass=tjhsstTeacher
 description: Teachers
 
 dn: iodineUid=admin,ou=people,dc=tjhsst,dc=edu
+changetype: add
 objectClass: simpleUser
 iodineUid: admin
 givenName: Admin
@@ -48,6 +55,7 @@ chrome: FALSE
 #This DN is used for generic binds for things like generating the birthdays
 #intrabox cache
 dn: cn=authuser,dc=tjhsst,dc=edu
+changetype: add
 cn: authuser
 objectClass: inetOrgPerson
 givenName: Authenticated
@@ -58,6 +66,7 @@ userPassword: youshouldpickabetterpassword
 #otherwise-valid kerberos principals do not provide access to data that should
 #be restricted to iodine account holders only
 dn: cn=iodineusers,dc=tjhsst,dc=edu
+changetype: add
 cn: iodineusers
 memberURL: ldap:///ou=people,dc=tjhsst,dc=edu??one?objectClass=tjhsstTeacher
 memberURL: ldap:///ou=people,dc=tjhsst,dc=edu??one?objectClass=tjhsstStudent
@@ -69,6 +78,7 @@ objectClass: top
 #The ACLs use this group to determine who is a 'student' since not all iodine users
 #should have student level access to directory information
 dn: cn=students,dc=tjhsst,dc=edu
+changetype: add
 cn: students
 memberURL: ldap:///ou=people,dc=tjhsst,dc=edu??one?objectClass=tjhsstStudent
 objectClass: groupOfURLs

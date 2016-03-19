@@ -15,6 +15,7 @@ class Command(BaseCommand):
     help = 'Adds schedule entries from iCal to the database.'
 
     def handle(self, *args, **options):
+
         def get_ical():
             resp = request.urlopen('http://www.calendarwiz.com/CalendarWiz_iCal.php?crd=tjhsstcalendar')
             ical = resp.read()
@@ -35,7 +36,7 @@ class Command(BaseCommand):
         # FIXME I'M BROKEN
         def add(ical_map):
             for date, type in ical_map.items():
-                # type: codename
+                # type = codename
                 cns = CodeName.objects.filter(name=type)
                 if len(cns) < 1:
                     cn = CodeName.objects.create(name=type)
@@ -57,6 +58,7 @@ class Command(BaseCommand):
                     print(daydate)
                 else:
                     print("{} already exists".format(str(daydate)))
+
         map = parse(get_ical())
         print(map)
         # add(map)

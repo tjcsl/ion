@@ -108,7 +108,13 @@ $(function() {
         var blockTypeFilter = blockTypeRowFilter(blockType);
         $("tr.form-row").each(function() {
             var $blocksOfType = $(this).filter(blockTypeFilter);
-            $blocksOfType.find("input[type='checkbox']").prop("checked", true);
+            var $checkboxes = $blocksOfType.find("input[type='checkbox']");
+            // Ignore special and unschedule checkbox
+            $checkboxes.each(function() {
+                if(!$(this).hasClass("special") && !$(this).hasClass("unschedule")) {
+                    $(this).prop("checked", true);
+                }
+            });
             $blocksOfType.removeClass("hidden");
         })
 
@@ -119,20 +125,25 @@ $(function() {
     var updateRestrictedFormFields = function() {
         var restricted = $("#id_restricted").prop("checked");
         $("#id_restricted").parents("tr").nextAll().slice(0, -1).each(function(index, tr) {
-            $(tr).find("input").attr("disabled", !restricted);
+            $(tr).find("input").attr("readonly", !restricted);
             $(tr).find("select").each(function(index, select) {
                 if (restricted) {
                     select.selectize.enable();
                 } else {
                     select.selectize.disable();
                 }
-            });
+            }).attr('disabled',false);
         });
 
+        // Blacklist should be always enabled
+        $("#id_users_blacklisted").parent("td").find("input").attr("readonly", false);
+        var select = $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
     }
 
     $("#id_restricted").click(updateRestrictedFormFields);
-    updateRestrictedFormFields()
+    if($("#id_restricted").length > 0) {
+        updateRestrictedFormFields();
+    }
 
     $("#only-show-overbooked").click(function() {
         $("tr.underbooked").toggle();

@@ -41,6 +41,7 @@ To actually execute tests, run ``./manage.py test``
 Note that this deletes and re-creates the db from scratch each time,
 so you most likely want to pass the ``-k`` option when developing tests as it significantly reduces run-time.
 
+Is your test working locally but not on Travis CI? Try running ``./setup.py test`` instead to execute tests.
 
 References
 ==========

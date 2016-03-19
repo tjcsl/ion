@@ -14,8 +14,7 @@ from django.shortcuts import redirect, render
 from intranet.db.ldap_db import LDAPConnection, LDAPFilter
 
 from .models import Class, Grade, User
-from ..eighth.models import (EighthBlock, EighthScheduledActivity,
-                             EighthSignup, EighthSponsor)
+from ..eighth.models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..eighth.utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -29,6 +28,7 @@ def profile_view(request, user_id=None):
         user_id
             The ID of the user whose profile is being viewed. If not
             specified, show the user's own profile.
+
     """
     if request.user.is_eighthoffice and "full" not in request.GET and user_id is not None:
         return redirect("eighth_profile", user_id=user_id)
@@ -59,9 +59,7 @@ def profile_view(request, user_id=None):
         blocks = [start_block] + list(start_block.next_blocks(num_blocks - 1))
 
     for block in blocks:
-        sch = {
-            "block": block
-        }
+        sch = {"block": block}
         try:
             sch["signup"] = EighthSignup.objects.get(scheduled_activity__block=block, user=profile_user)
         except EighthSignup.DoesNotExist:
@@ -71,10 +69,8 @@ def profile_view(request, user_id=None):
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
-        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                   .filter(block__date__gte=start_date)
-                                   .order_by("block__date",
-                                             "block__block_letter"))
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by(
+            "block__date", "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
     else:
         eighth_sponsor_schedule = None
@@ -86,14 +82,28 @@ def profile_view(request, user_id=None):
     if not can_view_eighth and not request.user.is_eighth_admin and not request.user.is_teacher:
         eighth_schedule = []
 
+    ionldap_courses = get_ionldap_courses(profile_user, current_user=request.user)
+
     context = {
         "profile_user": profile_user,
         "eighth_schedule": eighth_schedule,
         "can_view_eighth": can_view_eighth,
         "eighth_restricted_msg": eighth_restricted_msg,
-        "eighth_sponsor_schedule": eighth_sponsor_schedule
+        "eighth_sponsor_schedule": eighth_sponsor_schedule,
+        "ionldap_courses": ionldap_courses
     }
     return render(request, "users/profile.html", context)
+
+
+def get_ionldap_courses(profile_user, current_user=None):
+    can_view = (not current_user or (current_user and (current_user == profile_user or current_user.is_teacher or current_user.is_eighth_admin)))
+    if not can_view:
+        return None
+
+    if profile_user.is_student or profile_user.is_teacher:
+        return profile_user.ionldap_courses
+
+    return None
 
 
 @login_required
@@ -106,6 +116,7 @@ def picture_view(request, user_id, year=None):
         year
             The user's picture from this year is fetched. If not
             specified, use the preferred picture.
+
     """
     try:
         user = User.get_user(id=user_id)
@@ -161,6 +172,9 @@ def picture_view(request, user_id, year=None):
 
 @login_required
 def class_section_view(request, section_id):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_class_section", section_id=section_id)
+
     c = Class(id=section_id)
     try:
         c.name
@@ -188,35 +202,26 @@ def class_section_view(request, section_id):
 
         writer = csv.writer(response)
 
-        writer.writerow(["Name",
-                         "Student ID",
-                         "Grade",
-                         "TJ Email"])
+        writer.writerow(["Name", "Student ID", "Grade", "TJ Email"])
 
         for s in students:
-            writer.writerow([s.last_first,
-                             s.student_id if s.student_id else "",
-                             s.grade.number,
-                             s.tj_email if s.tj_email else ""])
+            writer.writerow([s.last_first, s.student_id if s.student_id else "", s.grade.number, s.tj_email if s.tj_email else ""])
         return response
 
-    context = {
-        "class": attrs,
-        "show_emails": (request.user.is_teacher or request.user.is_eighth_admin)
-    }
+    context = {"class": attrs, "show_emails": (request.user.is_teacher or request.user.is_eighth_admin)}
 
     return render(request, "users/class.html", context)
 
 
 @login_required
 def class_room_view(request, room_id):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_class_room", room_id=room_id)
+
     c = LDAPConnection()
     room_id = LDAPFilter.escape(room_id)
 
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
-                       "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id),
-                       ["tjhsstSectionId", "dn"]
-                       )
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "(&(objectClass=tjhsstClass)(roomNumber={}))".format(room_id), ["tjhsstSectionId", "dn"])
 
     if len(classes) > 0:
         schedule = []
@@ -232,22 +237,19 @@ def class_room_view(request, room_id):
         classes_objs = []
         raise Http404
 
-    context = {
-        "room": room_id,
-        "classes": classes_objs
-    }
+    context = {"room": room_id, "classes": classes_objs}
 
     return render(request, "users/class_room.html", context)
 
 
 @login_required
 def all_classes_view(request):
+    if request.user.is_eighthoffice or not request.user.is_eighth_admin:
+        return redirect("ionldap_all_classes")
+
     c = LDAPConnection()
 
-    classes = c.search("ou=schedule,dc=tjhsst,dc=edu",
-                       "objectClass=tjhsstClass",
-                       ["tjhsstSectionId", "dn"]
-                       )
+    classes = c.search("ou=schedule,dc=tjhsst,dc=edu", "objectClass=tjhsstClass", ["tjhsstSectionId", "dn"])
 
     logger.debug("{} classes found.".format(len(classes)))
 
@@ -265,8 +267,6 @@ def all_classes_view(request):
         classes_objs = []
         raise Http404
 
-    context = {
-        "classes": classes_objs
-    }
+    context = {"classes": classes_objs}
 
     return render(request, "users/all_classes.html", context)

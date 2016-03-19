@@ -17,6 +17,4 @@ def handle_503_view(request):
 
 def handle_csrf_view(request, reason):
     # CSRF failure view
-    return render(request, "error/csrf.html", {
-        "reason": reason
-    }, status=403)
+    return render(request, "error/csrf.html", {"reason": reason}, status=403)

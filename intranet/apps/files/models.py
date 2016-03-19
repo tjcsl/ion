@@ -3,8 +3,6 @@
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
-
-
 """
     Sample TJ configuration:
 
@@ -47,11 +45,11 @@ class HostManager(Manager):
     def visible_to_user(self, user):
         """Get a list of hosts available to a given user.
 
-           Same logic as Announcements and Events.
+        Same logic as Announcements and Events.
+
         """
 
-        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) |
-                                   Q(groups_visible__isnull=True))
+        return Host.objects.filter(Q(groups_visible__in=user.groups.all()) | Q(groups_visible__isnull=True))
 
 
 class Host(models.Model):

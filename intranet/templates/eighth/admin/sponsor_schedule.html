@@ -70,7 +70,7 @@ Click on column titles to sort.
                 <td>{{ scheduled_activity.activity.aid }}</td>
                 <td>{{ scheduled_activity.title_with_flags }}</td>
                 <td>{{ scheduled_activity.comments }}</td>
-                <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                <td>{% for rm in scheduled_activity.get_true_rooms %}{{ rm.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
                 <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
                 <td>{{ scheduled_activity.get_true_capacity }}</td>
             </tr>

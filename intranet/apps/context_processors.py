@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import logging
 import re
 
@@ -14,8 +15,7 @@ def ion_base_url(request):
 
 
 def global_warning(request):
-    """Display a global warning on all pages throughout the application.
-    """
+    """Display a global warning on all pages throughout the application."""
     global_warning = settings.GLOBAL_WARNING if hasattr(settings, 'GLOBAL_WARNING') else None
 
     return {"global_warning": global_warning}
@@ -27,14 +27,8 @@ def nav_categorizer(request):
     """
 
     categories = [
-        (r"^/$", "dashboard"),
-        (r"^/announcements", "dashboard"),
-        (r"^/eighth/admin", "eighth_admin"),
-        (r"^/eighth", "eighth"),
-        (r"^/events", "events"),
-        (r"^/files", "files"),
-        (r"^/groups", "groups"),
-        (r"^/polls", "polls")
+        (r"^/$", "dashboard"), (r"^/announcements", "dashboard"), (r"^/eighth/admin", "eighth_admin"), (r"^/eighth", "eighth"),
+        (r"^/events", "events"), (r"^/files", "files"), (r"^/groups", "groups"), (r"^/polls", "polls")
     ]
 
     for pattern, category in categories:
@@ -46,9 +40,7 @@ def nav_categorizer(request):
 
 
 def mobile_app(request):
-    """Determine if the site is being displayed in a WebView from
-    a native application
-    """
+    """Determine if the site is being displayed in a WebView from a native application."""
 
     ctx = {}
     try:
@@ -62,7 +54,7 @@ def mobile_app(request):
             ctx["android_client_registered"] = registered
 
             if request.user and request.user.is_authenticated():
-                """Add/update NotificationConfig object"""
+                """Add/update NotificationConfig object."""
                 import binascii
                 import os
                 from intranet.apps.notifications.models import NotificationConfig
@@ -88,3 +80,14 @@ def mobile_app(request):
         ctx["android_client_register"] = False
 
     return ctx
+
+
+def global_custom_theme(request):
+    """Add custom theme javascript and css."""
+    today = datetime.datetime.now().date()
+    theme = {}
+
+    if today.month == 3 and (14 <= today.day <= 16):
+        theme = {"css": "themes/piday/piday.css"}
+
+    return {"theme": theme}

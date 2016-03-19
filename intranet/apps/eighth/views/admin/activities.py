@@ -11,8 +11,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 
 from ...forms.admin.activities import ActivityForm, QuickActivityForm
-from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity,
-                       EighthSponsor)
+from ...models import (EighthActivity, EighthRoom, EighthScheduledActivity, EighthSponsor)
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -29,22 +28,16 @@ def add_activity_view(request):
             if new_id == "default":
                 activity = form.save()
             else:
-                activity = (EighthActivity.objects.create(name=form.cleaned_data["name"],
-                                                          id=int(new_id)))
+                activity = (EighthActivity.objects.create(name=form.cleaned_data["name"], id=int(new_id)))
             invalidate_obj(activity)
             messages.success(request, "Successfully added activity.")
-            return redirect("eighth_admin_edit_activity",
-                            activity_id=activity.id)
+            return redirect("eighth_admin_edit_activity", activity_id=activity.id)
         else:
             messages.error(request, "Error adding activity.")
             request.session["add_activity_form"] = pickle.dumps(form)
             return redirect("eighth_admin_dashboard")
     else:
-        context = {
-            "admin_page_title": "Add Activity",
-            "form": QuickActivityForm(),
-            "available_ids": EighthActivity.available_ids()
-        }
+        context = {"admin_page_title": "Add Activity", "form": QuickActivityForm(), "available_ids": EighthActivity.available_ids()}
         return render(request, "eighth/admin/add_activity.html", context)
 
 
@@ -87,7 +80,8 @@ def edit_activity_view(request, activity_id):
                                     for sponsor in old_sponsors:
                                         sa.sponsors.add(sponsor)
                                     sa.save()
-                                messages.success(request, "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count()))
+                                messages.success(request,
+                                                 "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count()))
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default sponsors globally")
@@ -192,8 +186,7 @@ def edit_activity_view(request, activity_id):
     context = {
         "form": form,
         "admin_page_title": "Edit Activity",
-        "delete_url": reverse("eighth_admin_delete_activity",
-                              args=[activity_id]),
+        "delete_url": reverse("eighth_admin_delete_activity", args=[activity_id]),
         "activity": activity,
         "activity_groups": activity_groups,
         "activities": activities,
@@ -264,8 +257,7 @@ def delete_activity_view(request, activity_id=None):
             "item_name": activity.name,
             "help_text": ("Deleting will not destroy past attendance data for this "
                           "activity. The activity will just be marked as deleted "
-                          "and hidden from non-attendance views." if not perm_delete
-                          else "This will destroy past attendance data.")
+                          "and hidden from non-attendance views." if not perm_delete else "This will destroy past attendance data.")
         }
 
         return render(request, "eighth/admin/delete_form.html", context)

@@ -91,13 +91,9 @@ def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
     detected = detected.decode()
-    no_conversion = [
-        "application/pdf"
-    ]
-    soffice_convert = [
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/msword"
-    ]
+    no_conversion = ["application/pdf"]
+    soffice_convert = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
+                       "application/vnd.oasis.opendocument.text"]
     if detected in no_conversion:
         return tmpfile_name
 
@@ -145,7 +141,8 @@ def print_job(obj, do_print=True):
     obj.num_pages = num_pages
     obj.save()
     if num_pages > settings.PRINTING_PAGES_LIMIT:
-        return Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT))
+        return Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages,
+                                                                                                                  settings.PRINTING_PAGES_LIMIT))
 
     obj.printed = True
     obj.save()
@@ -171,7 +168,5 @@ def print_view(request):
                 messages.success(request, "Your file was printed!")
     else:
         form = PrintJobForm(printers=printers)
-    context = {
-        "form": form
-    }
+    context = {"form": form}
     return render(request, "printing/print.html", context)

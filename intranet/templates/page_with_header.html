@@ -20,7 +20,8 @@
     {% if messages %}
         <script type="text/javascript">
         window.addEventListener("load", function() {
-        {% for message in messages %}
+        // JS comment needed here to prevent syntax highlighting from breaking
+        // {% for message in messages %}
             {% if message.level >= 30 %}
                 Messenger().error("{{ message|escapejs }}");
             {% elif message.level == 25 %}
@@ -51,7 +52,7 @@
             </a>
 
             <form class="search" action="/search" method="get" autocomplete="off">
-                <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" />
+                <input type="text" name="q" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search directory and more" aria-label="Search directory and more" />
                 <button type="submit" class="search-button" aria-label="Search">
                     <i class="fa fa-search"></i>
                 </button>
@@ -91,7 +92,7 @@
                     <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> Preferences</a></li>
                     <li><a href="{% url 'about' %}"><i class="fa fa-info-circle"></i> About/Credits</a></li>
                     <li><a href="{% url 'send_feedback' %}" style="color:green"><i class="fa fa-smile-o"></i> Send Feedback</a></li>
-                    <li><a href="{% url 'logout'%}"><i class="fa fa-power-off"></i> Logout</a></li>
+                    <li><a href="{% url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>

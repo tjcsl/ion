@@ -19,9 +19,6 @@
         }
         </style>
     {% endif %}
-    {% if theme.css %}
-        <link rel="stylesheet" type="text/css" href="{% static theme.css %}" />
-    {% endif %}
 {% endblock %}
 
 {% block js %}
@@ -30,9 +27,6 @@
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
-    {% if theme.js %}
-        <script type="text/javascript" src="{% static theme.js %}"></script>
-    {% endif %}
 {% endblock %}
 
 {% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
@@ -62,7 +56,12 @@
                     {{ auth_message }}
                     </div>
                 {% endif %}
-                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" method="post" name="auth_form">
+                <form {% if auth_form.errors %}autocomplete="off"{% endif %} action="/login" method="post" name="auth_form">
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}" />
+                {% elif request.POST.next %}
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}" />
+                {% endif %}
                     {% csrf_token %}
                     {% for field in auth_form %}
                         {{ field }}<br />

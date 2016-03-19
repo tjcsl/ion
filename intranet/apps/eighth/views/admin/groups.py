@@ -15,12 +15,10 @@ from django.shortcuts import redirect, render
 
 from formtools.wizard.views import SessionWizardView
 
-from ...forms.admin.activities import (ActivitySelectionForm,
-                                       ScheduledActivityMultiSelectForm)
+from ...forms.admin.activities import (ActivitySelectionForm, ScheduledActivityMultiSelectForm)
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
-from ...models import (EighthActivity, EighthBlock, EighthScheduledActivity,
-                       EighthSignup)
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ...utils import get_start_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -37,14 +35,13 @@ def add_group_view(request):
         if form.is_valid():
             group = form.save()
             messages.success(request, "Successfully added group.")
-            return redirect("eighth_admin_edit_group",
-                            group_id=group.id)
+            return redirect("eighth_admin_edit_group", group_id=group.id)
         else:
             messages.error(request, "Error adding group.")
             try:
                 request.session["add_group_form"] = pickle.dumps(form)
             except TypeError:
-                """ Prevent pickle errors """
+                """Prevent pickle errors."""
                 pass
             return redirect("eighth_admin_dashboard")
     else:
@@ -109,8 +106,7 @@ def edit_group_view(request, group_id):
         "added_ids": request.GET.getlist("added"),
         "linked_activities": linked_activities,
         "admin_page_title": "Edit Group",
-        "delete_url": reverse("eighth_admin_delete_group",
-                              args=[group_id])
+        "delete_url": reverse("eighth_admin_delete_group", args=[group_id])
     }
 
     if "possible_student" in request.GET:
@@ -277,14 +273,12 @@ def upload_group_members_view(request, group_id):
     else:
         form = UploadGroupForm()
     all_groups = Group.objects.order_by("name")
-    context = {
-        "admin_page_title": "Upload/Import Group Members: {}".format(group),
-        "form": form,
-        "stage": stage,
-        "data": data,
-        "group": group,
-        "all_groups": all_groups
-    }
+    context = {"admin_page_title": "Upload/Import Group Members: {}".format(group),
+               "form": form,
+               "stage": stage,
+               "data": data,
+               "group": group,
+               "all_groups": all_groups}
 
     if filetext:
         context["stage"] = "parse"
@@ -306,12 +300,10 @@ def delete_group_view(request, group_id):
         messages.success(request, "Successfully deleted group.")
         return redirect("eighth_admin_dashboard")
     else:
-        context = {
-            "admin_page_title": "Delete Group",
-            "item_name": str(group),
-            "help_text": "Deleting this group will remove all records "
-                         "of it related to eighth period."
-        }
+        context = {"admin_page_title": "Delete Group",
+                   "item_name": str(group),
+                   "help_text": "Deleting this group will remove all records "
+                                "of it related to eighth period."}
 
         return render(request, "eighth/admin/delete_form.html", context)
 
@@ -345,15 +337,9 @@ def download_group_csv_view(request, group_id):
 
 
 class EighthAdminSignUpGroupWizard(SessionWizardView):
-    FORMS = [
-        ("block", BlockSelectionForm),
-        ("activity", ActivitySelectionForm),
-    ]
+    FORMS = [("block", BlockSelectionForm), ("activity", ActivitySelectionForm)]
 
-    TEMPLATES = {
-        "block": "eighth/admin/sign_up_group.html",
-        "activity": "eighth/admin/sign_up_group.html",
-    }
+    TEMPLATES = {"block": "eighth/admin/sign_up_group.html", "activity": "eighth/admin/sign_up_group.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -361,25 +347,19 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
     def get_form_kwargs(self, step):
         kwargs = {}
         if step == "block":
-            kwargs.update({
-                "exclude_before_date": get_start_date(self.request)
-            })
+            kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity":
             block = self.get_cleaned_data_for_step("block")["block"]
             kwargs.update({"block": block})
 
-        labels = {
-            "block": "Select a block",
-            "activity": "Select an activity",
-        }
+        labels = {"block": "Select a block", "activity": "Select an activity"}
 
         kwargs.update({"label": labels[step]})
 
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminSignUpGroupWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminSignUpGroupWizard, self).get_context_data(form=form, **kwargs)
 
         block = self.get_cleaned_data_for_step("block")
         if block:
@@ -392,10 +372,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         form_list = [f for f in form_list]
         block = form_list[0].cleaned_data["block"]
         activity = form_list[1].cleaned_data["activity"]
-        scheduled_activity = EighthScheduledActivity.objects.get(
-            block=block,
-            activity=activity
-        )
+        scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
 
         try:
             group = Group.objects.get(id=kwargs["group_id"])
@@ -405,11 +382,8 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         query = "?schact={}".format(scheduled_activity.id)
         return redirect(reverse("eighth_admin_signup_group_action", args=[group.id]) + query)
 
-eighth_admin_signup_group = eighth_admin_required(
-    EighthAdminSignUpGroupWizard.as_view(
-        EighthAdminSignUpGroupWizard.FORMS
-    )
-)
+
+eighth_admin_signup_group = eighth_admin_required(EighthAdminSignUpGroupWizard.as_view(EighthAdminSignUpGroupWizard.FORMS))
 
 
 def eighth_admin_signup_group_action(request, group_id):
@@ -417,8 +391,6 @@ def eighth_admin_signup_group_action(request, group_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
-        block = scheduled_activity.block
-        activity = scheduled_activity.activity
         group = Group.objects.get(id=group_id)
     except (EighthScheduledActivity.DoesNotExist, Group.DoesNotExist):
         raise http.Http404
@@ -426,58 +398,23 @@ def eighth_admin_signup_group_action(request, group_id):
     users = group.user_set.all()
 
     if "confirm" in request.POST:
-        signup_bulk = []
-        if not activity.both_blocks:
-            EighthSignup.objects.filter(
-                user__in=users,
-                scheduled_activity__block=block
-            ).delete()
-            for user in users:
-                signup_bulk.append(EighthSignup(
-                    user=user,
-                    scheduled_activity=scheduled_activity
-                ))
-        else:
-            all_instances = [scheduled_activity]
-            sibling = scheduled_activity.get_both_blocks_sibling()
-            if sibling:
-                all_instances.append(sibling)
-
-            EighthSignup.objects.filter(
-                user__in=users,
-                scheduled_activity__in=all_instances
-            ).delete()
-            for user in users:
-                for sched_act in all_instances:
-                    signup_bulk.append(EighthSignup(
-                        user=user,
-                        scheduled_activity=sched_act
-                    ))
-
-        EighthSignup.objects.bulk_create(signup_bulk)
-
+        for user in users:
+            scheduled_activity.add_user(user, request, force=True, no_after_deadline=True)
         messages.success(request, "Successfully signed up group for activity.")
         return redirect("eighth_admin_dashboard")
 
-    return render(request, "eighth/admin/sign_up_group.html", {
-        "admin_page_title": "Confirm Group Signup",
-        "scheduled_activity": scheduled_activity,
-        "group": group,
-        "users_num": users.count()
-    })
+    return render(request, "eighth/admin/sign_up_group.html", {"admin_page_title": "Confirm Group Signup",
+                                                               "scheduled_activity": scheduled_activity,
+                                                               "group": group,
+                                                               "users_num": users.count()})
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):
-    FORMS = [
-        ("block", BlockSelectionForm),
-        ("activity", ScheduledActivityMultiSelectForm),
-    ]
+    FORMS = [("block", BlockSelectionForm), ("activity", ScheduledActivityMultiSelectForm)]
 
-    TEMPLATES = {
-        "block": "eighth/admin/distribute_group.html",
-        "activity": "eighth/admin/distribute_group.html",
-        "choose": "eighth/admin/distribute_group.html",
-    }
+    TEMPLATES = {"block": "eighth/admin/distribute_group.html",
+                 "activity": "eighth/admin/distribute_group.html",
+                 "choose": "eighth/admin/distribute_group.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -492,16 +429,13 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
             else:
                 raise http.Http404
 
-        return super(EighthAdminDistributeGroupWizard,
-                     self).dispatch(request, *args, **kwargs)
+        return super(EighthAdminDistributeGroupWizard, self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self, step):
         kwargs = {}
 
         if step == "block":
-            kwargs.update({
-                "exclude_before_date": get_start_date(self.request)
-            })
+            kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity":
             logger.debug("cleaned block: {}".format(self.get_cleaned_data_for_step("block")["block"]))
             block = self.get_cleaned_data_for_step("block")
@@ -509,18 +443,14 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
                 block = block["block"]
             kwargs.update({"block": block})
 
-        labels = {
-            "block": "Select a block",
-            "activity": "Select multiple activities",
-        }
+        labels = {"block": "Select a block", "activity": "Select multiple activities"}
 
         kwargs.update({"label": labels[step]})
 
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminDistributeGroupWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAdminDistributeGroupWizard, self).get_context_data(form=form, **kwargs)
 
         block = self.get_cleaned_data_for_step("block")
 
@@ -528,10 +458,7 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
             context.update({"group": self.group})
         elif block:
             unsigned = block["block"].get_unsigned_students()
-            context.update({
-                "users": unsigned,
-                "eighthblock": block["block"]
-            })
+            context.update({"users": unsigned, "eighthblock": block["block"]})
 
         if "block" in self.request.GET:
             block_id = self.request.GET["block"]
@@ -573,17 +500,10 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
 
         return redirect("/eighth/admin/groups/distribute_action?{}".format(args))
 
-eighth_admin_distribute_group = eighth_admin_required(
-    EighthAdminDistributeGroupWizard.as_view(
-        EighthAdminDistributeGroupWizard.FORMS
-    )
-)
 
-eighth_admin_distribute_unsigned = eighth_admin_required(
-    EighthAdminDistributeGroupWizard.as_view(
-        EighthAdminDistributeGroupWizard.FORMS
-    )
-)
+eighth_admin_distribute_group = eighth_admin_required(EighthAdminDistributeGroupWizard.as_view(EighthAdminDistributeGroupWizard.FORMS))
+
+eighth_admin_distribute_unsigned = eighth_admin_required(EighthAdminDistributeGroupWizard.as_view(EighthAdminDistributeGroupWizard.FORMS))
 
 
 @eighth_admin_required
@@ -605,16 +525,9 @@ def eighth_admin_distribute_action(request):
         changes = 0
         logger.debug(activity_user_map)
         for schact, userids in activity_user_map.items():
-            EighthSignup.objects.filter(
-                user__id__in=userids,
-                scheduled_activity__block=schact.block
-            ).delete()
             for uid in userids:
                 changes += 1
-                EighthSignup.objects.create(
-                    user=User.objects.get(id=int(uid)),
-                    scheduled_activity=schact
-                )
+                schact.add_user(User.objects.get(id=int(uid)), request=None, force=True, no_after_deadline=True)
 
         messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
@@ -724,12 +637,7 @@ def add_member_to_group_view(request, group_id):
     else:
         users = results
         results = sorted(results, key=lambda x: (x.last_name, x.first_name))
-        context = {
-            "query": query,
-            "users": users,
-            "group": group,
-            "admin_page_title": "Add Members to Group"
-        }
+        context = {"query": query, "users": users, "group": group, "admin_page_title": "Add Members to Group"}
         return render(request, "eighth/admin/possible_students_add_group.html", context)
 
 

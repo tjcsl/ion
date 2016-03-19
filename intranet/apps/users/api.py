@@ -13,15 +13,15 @@ from rest_framework.response import Response
 
 from .models import Class, Grade, User
 from .renderers import JPEGRenderer
-from .serializers import (ClassSerializer, CounselorTeacherSerializer,
-                          StudentSerializer, UserSerializer)
+from .serializers import (ClassSerializer, CounselorTeacherSerializer, StudentSerializer, UserSerializer)
 
 
 class ProfileDetail(generics.RetrieveAPIView):
-    """API endpoint that retrieves an Ion profile
+    """API endpoint that retrieves an Ion profile.
 
     /api/profile: retrieve your profile
     /api/profile/<pk>: retrieve the profile of the user with id <pk>
+
     """
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
@@ -38,10 +38,11 @@ class ProfileDetail(generics.RetrieveAPIView):
 
 
 class ProfilePictureDetail(generics.RetrieveAPIView):
-    """API endpoint that retrieves an Ion profile picture
+    """API endpoint that retrieves an Ion profile picture.
 
     /api/profile/<pk>/picture: retrieve default profile picture
     /api/profile/<pk>/picture/<photo_year>: retrieve profile picture for year <photo_year>
+
     """
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
@@ -69,8 +70,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
 
 
 class ClassDetail(generics.RetrieveAPIView):
-    """API endpoint that retrieves details of a TJHSST class
-    """
+    """API endpoint that retrieves details of a TJHSST class."""
     serializer_class = ClassSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -82,9 +82,10 @@ class ClassDetail(generics.RetrieveAPIView):
 
 
 class Search(generics.RetrieveAPIView):
-    """API endpoint that retrieves the results of a search for Ion users
+    """API endpoint that retrieves the results of a search for Ion users.
 
     Paginated using ?page=<page>
+
     """
 
     permission_classes = (IsAuthenticated,)

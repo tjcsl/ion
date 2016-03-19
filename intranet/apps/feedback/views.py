@@ -20,9 +20,7 @@ def send_feedback_email(request, data):
     data["email"] = email
     data["remote_ip"] = (request.META["HTTP_X_FORWARDED_FOR"] if "HTTP_X_FORWARDED_FOR" in request.META else request.META.get("REMOTE_ADDR", ""))
     data["user_agent"] = request.META.get("HTTP_USER_AGENT")
-    headers = {
-        "Reply-To": "{}; {}".format(email, settings.FEEDBACK_EMAIL)
-    }
+    headers = {"Reply-To": "{}; {}".format(email, settings.FEEDBACK_EMAIL)}
     email_send("feedback/email.txt", "feedback/email.html", data, "Feedback from {}".format(request.user), [settings.FEEDBACK_EMAIL], headers)
 
 
@@ -39,7 +37,5 @@ def send_feedback_view(request):
             send_feedback_email(request, data)
             messages.success(request, "Your feedback was sent. Thanks!")
     form = FeedbackForm()
-    context = {
-        "form": form
-    }
+    context = {"form": form}
     return render(request, "feedback/form.html", context)

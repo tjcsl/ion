@@ -24,7 +24,6 @@ To create and add yourself to the global administrator group, run the following 
     >>> user = User.get_user(username="YOURUSERNAME")
     >>> group = Group.objects.get_or_create(name="admin_all")[0]
     >>> user.groups.add(group)
-    >>> user.is_superuser = True
     >>> user.save()
 
 
@@ -44,9 +43,21 @@ Currently, the fixtures containing test data include Iodine data from the 2014-2
     Python 2.7.6 (default, Jun 22 2015, 17:58:13)
     (InteractiveConsole)
     >>> from dateutil.relativedelta import relativedelta
-    >>> for blk in blks:
+    >>> for blk in EighthBlock.objects.all():
     ...     blk.date += relativedelta(months=+6)
     ...     blk.save()
+
+Setting up Files
+================
+
+You can find a list of file systems at ``intranet/apps/files/models.py``. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:
+
+.. code-block:: bash
+
+    $ ./manage.py shell_plus
+    Python 3.4.3 (default, Oct 14 2015, 20:28:29) 
+    (InteractiveConsole)
+    >>> Host.objects.create(name="Computer Systems Lab", code="csl", address="remote.tjhsst.edu", linux=True)
 
 Increasing RAM
 ==============

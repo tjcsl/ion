@@ -38,22 +38,26 @@ class AddressSerializer(serializers.Serializer):
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_user_profile_detail")
     first_name = serializers.CharField(max_length=200)
+    last_name = serializers.CharField(max_length=200)
     user_type = serializers.CharField(max_length=100)
+    username = serializers.CharField(max_length=100)
     grade = GradeSerializer()
 
     class Meta:
         model = User
-        fields = ('id', 'url', 'user_type', 'full_name', 'first_name', 'grade')
+        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name', 'grade')
 
 
 class CounselorTeacherSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api_user_profile_detail")
+    first_name = serializers.CharField(max_length=200)
     last_name = serializers.CharField(max_length=200)
     user_type = serializers.CharField(max_length=100)
+    username = serializers.CharField(max_length=100)
 
     class Meta:
         model = User
-        fields = ('id', 'url', 'user_type', 'full_name', 'last_name')
+        fields = ('id', 'url', 'user_type', 'username', 'full_name', 'first_name', 'last_name')
 
 
 class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
@@ -81,52 +85,19 @@ class UserSerializer(serializers.ModelSerializer):
     sex = serializers.CharField(max_length=10)
     user_type = serializers.CharField(max_length=100)
     graduation_year = serializers.IntegerField()
-    emails = serializers.ListField(
-        child=serializers.CharField(max_length=500)
-    )
+    emails = serializers.ListField(child=serializers.CharField(max_length=500))
     home_phone = serializers.CharField(max_length=50)
     mobile_phone = serializers.CharField(max_length=50)
-    other_phones = serializers.ListField(
-        child=serializers.CharField(max_length=50)
-    )
-    webpages = serializers.ListField(
-        child=serializers.CharField(max_length=300)
-    )
+    other_phones = serializers.ListField(child=serializers.CharField(max_length=50))
+    webpages = serializers.ListField(child=serializers.CharField(max_length=300))
     picture = HyperlinkedImageField(view_name="api_user_profile_picture_default", format="jpg")
 
     class Meta:
         model = User
-        fields = (
-            'id',
-            'ion_username',
-            'sex',
-            'title',
-            'display_name',
-            'full_name',
-            'short_name',
-            'first_name',
-            'middle_name',
-            'last_name',
-            'common_name',
-            'nickname',
-            'tj_email',
-            'emails',
-            'grade',
-            'graduation_year',
-            'birthday',
-            'user_type',
-            'home_phone',
-            'mobile_phone',
-            'other_phones',
-            'webpages',
-            'counselor',
-            'address',
-            'picture',
-            'is_eighth_admin',
-            'is_announcements_admin',
-            'is_teacher',
-            'is_student',
-            'classes')
+        fields = ('id', 'ion_username', 'sex', 'title', 'display_name', 'full_name', 'short_name', 'first_name', 'middle_name', 'last_name',
+                  'common_name', 'nickname', 'tj_email', 'emails', 'grade', 'graduation_year', 'birthday', 'user_type', 'home_phone', 'mobile_phone',
+                  'other_phones', 'webpages', 'counselor', 'address', 'picture', 'is_eighth_admin', 'is_announcements_admin', 'is_teacher',
+                  'is_student', 'classes')
 
 
 class ClassSerializer(serializers.Serializer):
@@ -134,11 +105,7 @@ class ClassSerializer(serializers.Serializer):
     class_id = serializers.CharField(max_length=20)
     room_number = serializers.CharField(max_length=100)
     course_length = serializers.IntegerField()
-    periods = serializers.ListField(
-        child=serializers.IntegerField()
-    )
-    quarters = serializers.ListField(
-        child=serializers.IntegerField()
-    )
+    periods = serializers.ListField(child=serializers.IntegerField())
+    quarters = serializers.ListField(child=serializers.IntegerField())
     teacher = CounselorTeacherSerializer()
     students = StudentSerializer(many=True)

@@ -26,6 +26,9 @@
         {% endif %}
     {% endblock %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
+        {% if theme.css %}
+            <link rel="stylesheet" type="text/css" href="{% static theme.css %}" />
+        {% endif %}
 
     {% block js %}
         <script type="text/javascript">
@@ -66,6 +69,9 @@
                 $("body").removeClass("notransition");
             });
         </script>
+        {% if theme.js %}
+            <script type="text/javascript" src="{% static theme.js %}"></script>
+        {% endif %}
     {% endblock %}
 
     {% block head %}

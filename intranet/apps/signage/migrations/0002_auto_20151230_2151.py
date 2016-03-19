@@ -6,15 +6,11 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('signage', '0001_initial'),
-    ]
+    dependencies = [('signage', '0001_initial')]
 
     operations = [
-        migrations.AlterField(
-            model_name='sign',
-            name='status',
-            field=models.CharField(choices=[('auto', 'Auto'), ('eighth', 'Eighth Period'), ('schedule', 'Bell Schedule'),
-                                            ('status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),
-        ),
+        migrations.AlterField(model_name='sign',
+                              name='status',
+                              field=models.CharField(choices=[('auto', 'Auto'), ('eighth', 'Eighth Period'), ('schedule', 'Bell Schedule'), (
+                                  'status', 'Schedule/Clock'), ('url', 'Custom URL')], default='auto', max_length=10),),
     ]

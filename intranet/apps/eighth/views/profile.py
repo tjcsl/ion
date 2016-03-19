@@ -10,8 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup,
-                      EighthSponsor)
+from ..models import (EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..serializers import EighthBlockDetailSerializer
 from ..utils import get_start_date
 from ...auth.decorators import eighth_admin_required
@@ -51,26 +50,25 @@ def edit_profile_view(request, user_id=None):
         new_data = {}
         for field in items:
             new = items[field]
-            old = defaults[field]
-            if str(new) != str(old):
-                new_data[field] = new
+            # old = defaults[field]
+            # if str(new) != str(old):
+            #    new_data[field] = new
+            new_data[field] = new
         logger.debug(new_data)
 
         raw_ldap_attributes = ["birthday", "street", "city", "state", "postal_code", "counselor"]
-        raw_ldap_override = {
-            "city": "l",
-            "state": "st",
-            "postal_code": "postalCode",
-            "counselor_id": "counselor"
-        }
+        raw_ldap_override = {"city": "l", "state": "st", "postal_code": "postalCode", "counselor_id": "counselor"}
         override_set = ["graduation_year"]
 
         for key in new_data:
             if key in raw_ldap_attributes:
                 if key in raw_ldap_override:
                     key = raw_ldap_override[key]
-                logger.debug("Setting raw {}={}".format(key, new_data[key]))
-                user.set_raw_ldap_attribute(key, new_data[key])
+                if key in new_data:
+                    if new_data[key] == " ":
+                        new_data[key] = None
+                    logger.debug("Setting raw {}={}".format(key, new_data[key]))
+                    user.set_raw_ldap_attribute(key, new_data[key])
             else:
                 logger.debug("Setting regular {}={}".format(key, new_data[key]))
                 try:
@@ -86,10 +84,7 @@ def edit_profile_view(request, user_id=None):
     else:
         form = ProfileEditForm(initial=defaults)
 
-    context = {
-        "profile_user": user,
-        "form": form
-    }
+    context = {"profile_user": user, "form": form}
     return render(request, "eighth/edit_profile.html", context)
 
 
@@ -165,10 +160,8 @@ def get_profile_context(request, user_id=None, date=None):
     if profile_user.is_eighth_sponsor:
         sponsor = EighthSponsor.objects.get(user=profile_user)
         start_date = get_start_date(request)
-        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor)
-                                   .filter(block__date__gte=start_date)
-                                   .order_by("block__date",
-                                             "block__block_letter"))
+        eighth_sponsor_schedule = (EighthScheduledActivity.objects.for_sponsor(sponsor).filter(block__date__gte=start_date).order_by(
+            "block__date", "block__block_letter"))
         eighth_sponsor_schedule = eighth_sponsor_schedule[:10]
 
         logger.debug("Eighth sponsor {}".format(sponsor))
@@ -181,6 +174,7 @@ def get_profile_context(request, user_id=None, date=None):
 @login_required
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
+    context["show_profile_header"] = request.user.is_eighth_admin
     if context:
         return render(request, "eighth/profile.html", context)
     else:
@@ -200,7 +194,7 @@ def profile_history_view(request, user_id=None):
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
 
-    if profile_user.is_eighth_sponsor and request.user.is_eighth_admin:
+    if profile_user.is_eighth_sponsor and not profile_user.is_student and request.user.is_eighth_admin:
         return redirect("eighth_admin_sponsor_schedule", profile_user.get_eighth_sponsor().id)
 
     blocks = EighthBlock.objects.get_blocks_this_year()
@@ -223,7 +217,8 @@ def profile_history_view(request, user_id=None):
 
     context = {
         "profile_user": profile_user,
-        "eighth_schedule": eighth_schedule
+        "eighth_schedule": eighth_schedule,
+        "show_profile_header": request.user.is_eighth_admin
     }
 
     return render(request, "eighth/profile_history.html", context)
@@ -253,10 +248,7 @@ def profile_often_view(request, user_id=None):
     oftens = []
     unique_activities = set(activities)
     for act in unique_activities:
-        oftens.append({
-            "count": activities.count(act),
-            "activity": act
-        })
+        oftens.append({"count": activities.count(act), "activity": act})
 
     oftens = sorted(oftens, key=lambda x: (-1 * x["count"]))
 
@@ -264,7 +256,8 @@ def profile_often_view(request, user_id=None):
 
     context = {
         "profile_user": profile_user,
-        "oftens": oftens
+        "oftens": oftens,
+        "show_profile_header": request.user.is_eighth_admin
     }
 
     return render(request, "eighth/profile_often.html", context)
@@ -287,9 +280,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
         return redirect(request, "eighth_profile", user_id)
 
     try:
-        block = (EighthBlock.objects
-                            .prefetch_related("eighthscheduledactivity_set")
-                            .get(id=block_id))
+        block = (EighthBlock.objects.prefetch_related("eighthscheduledactivity_set").get(id=block_id))
     except EighthBlock.DoesNotExist:
         if EighthBlock.objects.count() == 0:
             # No blocks have been added yet
@@ -298,10 +289,7 @@ def profile_signup_view(request, user_id=None, block_id=None):
             # The provided block_id is invalid
             raise http.Http404
 
-    serializer_context = {
-        "request": request,
-        "user": user
-    }
+    serializer_context = {"request": request, "user": user}
     block_info = EighthBlockDetailSerializer(block, context=serializer_context).data
     activities_list = safe_json(block_info["activities"])
 
@@ -317,7 +305,8 @@ def profile_signup_view(request, user_id=None, block_id=None):
         "activities_list": activities_list,
         "active_block": block,
         "active_block_current_signup": active_block_current_signup,
-        "show_eighth_profile_link": True
+        "show_eighth_profile_link": True,
+        "block_info": block_info
     }
     profile_ctx = get_profile_context(request, user_id, block.date)
     if profile_ctx:

@@ -1,10 +1,15 @@
 {% load dates %}
+{% load staticfiles %}
 
 {% if event.scheduled_activity and announcement %}
     {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
         {% include "events/scheduled_activity.html" %}
     {% endwith %}
 {% endif %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
 
 <div class="event" data-id="{{ event.id }}">
     <h3>
@@ -29,7 +34,7 @@
     </h3>
 
     <div class="event-metadata">
-        by {{ event.user.full_name|escape }} {% if event.show_fuzzy_date %}&bull; {{ event.time|fuzzy_date|capfirst }}{% endif %} &bull; {{ event.time|date:"l, F j, Y"}}{% if event.time|date:"P" != "midnight" %} {{ event.time|date:"P" }}{% endif %} &bull; for
+        by {{ event.user.full_name|escape }} {% if event.show_fuzzy_date %}&bull; <span class="timeago" title="{{ event.time|date:'c' }}">{{ event.time|fuzzy_date|capfirst }}</span>{% endif %} &bull; {{ event.time|date:"l, F j, Y"}}{% if event.time|date:"P" != "midnight" %} {{ event.time|date:"P" }}{% endif %} &bull; for
         {% for group in event.groups.all %}
             {{ group }}
             {% if not forloop.last %},{% endif %}

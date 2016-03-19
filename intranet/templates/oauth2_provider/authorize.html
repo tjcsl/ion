@@ -1,0 +1,69 @@
+{% extends "oauth2_provider/base.html" %}
+
+{% load i18n %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+        .block-center {
+            text-align: center;
+        }
+        
+        h3.block-center-heading {
+            height: auto;
+        }
+
+        .center-wrapper {
+            font-size: 16px;
+        }
+
+        .center-wrapper ul {
+            padding-left: 50%;
+            margin-left: -41px;
+            width: 120px;
+        }
+
+        .center-wrapper li {
+            text-align: left;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="block-center">
+        {% if not error %}
+            <form id="authorizationForm" method="post">
+                <h3 class="block-center-heading">A third-party application wants access to your Intranet account.</h3>
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% endif %}
+                {% endfor %}
+
+                <p>{{ application.name }} requires the following permissions:</p>
+                <ul>
+                    {% for scope in scopes_descriptions %}
+                        <li>{{ scope }}</li>
+                    {% endfor %}
+                </ul>
+
+                {{ form.errors }}
+                {{ form.non_field_errors }}
+
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="submit" class="btn btn-large" value="Cancel"/>
+                        <input type="submit" class="btn btn-large btn-primary" name="allow" value="Authorize"/>
+                    </div>
+                </div>
+            </form>
+
+        {% else %}
+            <h2>Error: {{ error.error }}</h2>
+            <p>{{ error.description }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

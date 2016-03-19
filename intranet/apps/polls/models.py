@@ -14,21 +14,19 @@ from ..users.models import User
 class PollManager(Manager):
 
     def visible_to_user(self, user):
-        """Get a list of visible polls for a given user (usually
-        request.user).
+        """Get a list of visible polls for a given user (usually request.user).
 
         These visible polls will be those that either have no groups
-        assigned to them (and are therefore public) or those in which the
-        user is a member.
+        assigned to them (and are therefore public) or those in which
+        the user is a member.
 
         """
 
-        return Poll.objects.filter(Q(groups__in=user.groups.all()) |
-                                   Q(groups__isnull=True))
+        return Poll.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
 
 
 class Poll(models.Model):
-    """ A Poll, for the TJ community.
+    """A Poll, for the TJ community.
 
     Attributes:
         title
@@ -46,6 +44,7 @@ class Poll(models.Model):
             if there are none set, then it is public to all.
 
     Access questions for the poll through poll.question_set.all()
+
     """
     objects = PollManager()
 
@@ -55,20 +54,21 @@ class Poll(models.Model):
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
+
     # Access questions through .question_set
 
     def before_end_time(self):
-        """ Has the poll not ended yet? """
+        """Has the poll not ended yet?"""
         now = timezone.now()
         return now < self.end_time
 
     def before_start_time(self):
-        """ Has the poll not started yet? """
+        """Has the poll not started yet?"""
         now = timezone.now()
         return now < self.start_time
 
     def in_time_range(self):
-        """ Is it within the poll time range? """
+        """Is it within the poll time range?"""
         return not self.before_start_time() and self.before_end_time()
 
     def get_users_voted(self):
@@ -107,7 +107,7 @@ class Poll(models.Model):
 
 
 class Question(models.Model):
-    """ A question for a Poll.
+    """A question for a Poll.
 
     Attributes:
         poll
@@ -129,6 +129,7 @@ class Question(models.Model):
             The maximum number of choices that can be selected. Only applies for approval questions.
 
         Access possible choices for this question through question.choice_set.all()
+
     """
     poll = models.ForeignKey(Poll)
     question = models.CharField(max_length=500)
@@ -140,15 +141,13 @@ class Question(models.Model):
     FREE_RESP = 'FRE'
     SHORT_RESP = 'SRE'
     STD_OTHER = 'STO'
-    TYPE = (
-        (STD, 'Standard'),
-        (ELECTION, 'Election'),
-        (APP, 'Approval'),
-        (SPLIT_APP, 'Split approval'),
-        (FREE_RESP, 'Free response'),
-        (SHORT_RESP, 'Short response'),
-        (STD_OTHER, 'Standard other'),
-    )
+    TYPE = ((STD, 'Standard'),
+            (ELECTION, 'Election'),
+            (APP, 'Approval'),
+            (SPLIT_APP, 'Split approval'),
+            (FREE_RESP, 'Free response'),
+            (SHORT_RESP, 'Short response'),
+            (STD_OTHER, 'Standard other'),)
     type = models.CharField(max_length=3, choices=TYPE, default=STD)
     max_choices = models.IntegerField(default=1)
 
@@ -194,7 +193,7 @@ class Question(models.Model):
 
 
 class Choice(models.Model):  # individual answer choices
-    """ A choice for a Question.
+    """A choice for a Question.
 
     Attributes:
         question
@@ -215,6 +214,7 @@ class Choice(models.Model):  # individual answer choices
             Textual field, if the question is Question.STD_OTHER.
         is_writing
             Boolean, if the Question is_writing().
+
     """
 
     question = models.ForeignKey(Question)

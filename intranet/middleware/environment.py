@@ -7,9 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 class KerberosCacheMiddleware(object):
-
-    """Reloads the KRB5CCNAME environmental variable from the session
-    for potential use in future LDAP requests.
+    """Reloads the KRB5CCNAME environmental variable from the session for potential use in future
+    LDAP requests.
 
     For a login request, the KRB5CCNAME environmental variable has
     already been set in the authentication backend, but for all other
@@ -27,21 +26,17 @@ class KerberosCacheMiddleware(object):
     """
 
     def process_request(self, request):
-        """Propogate KRB5CCNAME session variable to the environmental
-        variable
-        """
+        """Propogate KRB5CCNAME session variable to the environmental variable."""
         if "KRB5CCNAME" in request.session:
             # It is important to check that the environmental variable
             # matches the session variable because environmentals stay
             # on the worker after requests.
             if "KRB5CCNAME" in os.environ:
                 if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
-                    logger.debug("Reloading KRB5CCNAME environmental "
-                                 "variable from session.")
+                    logger.debug("Reloading KRB5CCNAME environmental " "variable from session.")
                     os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
             else:
-                logger.debug("KRB5CCNAME environmental variable not set - "
-                             "setting it to KRB5CCNAME from session vars.")
+                logger.debug("KRB5CCNAME environmental variable not set - " "setting it to KRB5CCNAME from session vars.")
                 os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
 
             # if request.user.is_authenticated():

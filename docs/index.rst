@@ -25,7 +25,7 @@ Setup
 -----
 
 - :doc:`Setting up the server<setup/server>`
-- :doc:`Setting up a the Vagrant development environment<setup/vagrant>`
+- :doc:`Setting up a Vagrant development environment<setup/vagrant>`
 - :doc:`Setting up fixtures from Iodine<setup/fixtures>`
 
 
@@ -48,6 +48,8 @@ Using Intranet as a Developer
 -----------------------------
 - `API Root <https://ion.tjhsst.edu/api/>`_
 - `API Demo <https://www.tjhsst.edu/~2016jwoglom/ion-api-demo.html>`_
+- `OAuth Documentation <developing/oauth>`_
+- `OAuth Demo <https://www.tjhsst.edu/~2016jwoglom/ionoauth/>`_
 
 Source Code Documentation
 -------------------------

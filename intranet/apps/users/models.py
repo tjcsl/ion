@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager(DjangoUserManager):
-
     """User model Manager for table-level User queries.
 
     Provides table-level LDAP abstraction for the User model. If a call
@@ -38,9 +37,7 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by student ID."""
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN,
-                           "tjhsstStudentId={}".format(student_id),
-                           ["dn"])
+        results = c.search(settings.USER_DN, "tjhsstStudentId={}".format(student_id), ["dn"])
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
@@ -50,21 +47,17 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by Ion ID."""
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN,
-                           "iodineUidNumber={}".format(student_id),
-                           ["dn"])
+        results = c.search(settings.USER_DN, "iodineUidNumber={}".format(student_id), ["dn"])
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
         return None
 
     def users_in_year(self, year):
-        """ Get a list of users in a specific graduation year. """
+        """Get a list of users in a specific graduation year."""
         c = LDAPConnection()
 
-        results = c.search(settings.USER_DN,
-                           "graduationYear={}".format(year),
-                           ["dn"])
+        results = c.search(settings.USER_DN, "graduationYear={}".format(year), ["dn"])
 
         users = []
         for user in results:
@@ -73,10 +66,11 @@ class UserManager(DjangoUserManager):
         return users
 
     def _ldap_and_string(self, opts):
-        """Combine LDAP queries with AND
+        """Combine LDAP queries with AND.
 
         e.x.: ["a=b"]        => "a=b"
               ["a=b", "c=d"] => "(&(a=b)(c=d))"
+
         """
         if len(opts) == 1:
             return opts[0]
@@ -90,23 +84,17 @@ class UserManager(DjangoUserManager):
         results = []
 
         if sn and not given_name:
-            results = c.search(settings.USER_DN,
-                               "sn={}".format(sn),
-                               ["dn"])
+            results = c.search(settings.USER_DN, "sn={}".format(sn), ["dn"])
         elif given_name:
             query = ["givenName={}".format(given_name)]
             if sn:
                 query.append("sn={}".format(sn))
-            results = c.search(settings.USER_DN,
-                               self._ldap_and_string(query),
-                               ["dn"])
+            results = c.search(settings.USER_DN, self._ldap_and_string(query), ["dn"])
 
             if len(results) == 0:
                 # Try their first name as a nickname
                 query[0] = "nickname={}".format(given_name)
-                results = c.search(settings.USER_DN,
-                                   self._ldap_and_string(query),
-                                   ["dn"])
+                results = c.search(settings.USER_DN, self._ldap_and_string(query), ["dn"])
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
@@ -126,9 +114,7 @@ class UserManager(DjangoUserManager):
             day = "0" + str(day)
 
         search_query = "birthday=*{}{}".format(month, day)
-        results = c.search(settings.USER_DN,
-                           search_query,
-                           ["dn"])
+        results = c.search(settings.USER_DN, search_query, ["dn"])
 
         users = []
         for res in results:
@@ -141,6 +127,8 @@ class UserManager(DjangoUserManager):
     # Simple way to filter out teachers and students without hitting LDAP.
     # This shouldn't be a problem unless the username scheme changes and
     # the consequences of error are not significant.
+
+    # FIXME: save userClass in db.
 
     def get_students(self):
         """Get user objects that are students (quickly)."""
@@ -175,7 +163,11 @@ class UserManager(DjangoUserManager):
             return users
 
     def get_teachers_sorted(self):
-        """Get teachers sorted by last name. This is used for the announcement request page."""
+        """Get teachers sorted by last name.
+
+        This is used for the announcement request page.
+
+        """
         teachers = self.get_teachers()
         teachers = [(u.last_name, u.first_name, u.id) for u in teachers]
         for t in teachers:
@@ -189,15 +181,12 @@ class UserManager(DjangoUserManager):
         id_list = [t[2] for t in teachers]
         clauses = ' '.join(['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(id_list)])
         ordering = 'CASE %s END' % clauses
-        queryset = User.objects.filter(id__in=id_list).extra(
-            select={'ordering': ordering}, order_by=('ordering',))
+        queryset = User.objects.filter(id__in=id_list).extra(select={'ordering': ordering}, order_by=('ordering',))
         return queryset
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
-    """Django User model subclass with properties that fetch data from
-    LDAP
+    """Django User model subclass with properties that fetch data from LDAP.
 
     Represents a user object in LDAP.Extends AbstractBaseUser so the
     model will work with Django's built-in authorization functionality.
@@ -225,20 +214,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_news_emails = models.BooleanField(default=False)
     receive_eighth_emails = models.BooleanField(default=False)
 
+    receive_schedule_notifications = models.BooleanField(default=False)
+
     # Private dn cache
-    _dn = None
+    _dn = None  # type: str
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
-
     """Override default Model Manager (objects) with
     custom UserManager to add table-level functionality."""
     objects = UserManager()
 
     @classmethod
     def get_user(cls, dn=None, id=None, username=None):
-        """Retrieve a user object from LDAP and save it to the SQL
-        database if necessary.
+        """Retrieve a user object from LDAP and save it to the SQL database if necessary.
 
         Creates a User object from a dn, user id, or a username based on
         data in the LDAP database. If the user also exists in the SQL
@@ -256,6 +245,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns:
             The User object if the user could be found in LDAP,
             otherwise User.DoesNotExist is raised.
+
         """
 
         if id is not None:
@@ -266,9 +256,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 if user_dn is not None:
                     user = User.get_user(dn=user_dn)
                 else:
-                    raise User.DoesNotExist(
-                        "`User` with ID {} does not exist.".format(id)
-                    )
+                    raise User.DoesNotExist("`User` with ID {} does not exist.".format(id))
 
         elif username is not None:
             try:
@@ -292,13 +280,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
                         user.save()
                     else:
-                        raise User.DoesNotExist(
-                            "`User` with DN '{}' does not have a username.".format(dn)
-                        )
+                        raise User.DoesNotExist("`User` with DN '{}' does not have a username.".format(dn))
             except (ldap3.LDAPInvalidDNSyntaxResult, ldap3.LDAPNoSuchObjectResult):
-                raise User.DoesNotExist(
-                    "`User` with DN '{}' does not exist.".format(dn)
-                )
+                raise User.DoesNotExist("`User` with DN '{}' does not exist.".format(dn))
         else:
             raise TypeError("get_user() requires at least one argument.")
 
@@ -321,14 +305,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("DN of User with ID {} loaded "
-                         "from cache.".format(id))
+            logger.debug("DN of User with ID {} loaded " "from cache.".format(id))
             return cached
         else:
             c = LDAPConnection()
-            result = c.search(settings.USER_DN,
-                              "iodineUidNumber={}".format(id),
-                              ['dn'])
+            result = c.search(settings.USER_DN, "iodineUidNumber={}".format(id), ['dn'])
             if len(result) == 1:
                 dn = result[0]['dn']
             else:
@@ -403,8 +384,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return group in self._groups_cache
 
     def has_admin_permission(self, perm):
-        """Returns whether a user has an admin permission (explicitly,
-        or implied by being in the "admin_all" group)
+        """Returns whether a user has an admin permission (explicitly, or implied by being in the
+        "admin_all" group)
 
         Returns:
             Boolean
@@ -419,8 +400,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def full_name(self):
-        """Return full name, e.g. Angela William. This is required
-        for subclasses of User."""
+        """Return full name, e.g. Angela William.
+
+        This is required for subclasses of User.
+
+        """
         return self.common_name
 
     @property
@@ -435,16 +419,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)]
         """
-        return ("{}, {} ".format(self.last_name, self.first_name) +
-                ("({})".format(self.nickname) if self.nickname else ""))
+        return ("{}, {} ".format(self.last_name, self.first_name) + ("({})".format(self.nickname) if self.nickname else ""))
 
     @property
     def last_first_id(self):
         """Return a name in the format of:
             Lastname, Firstname [(Nickname)] (Student ID/ID/Username)
         """
-        return ("{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "") +
-                ("({}) ".format(self.nickname) if self.nickname else "") +
+        return ("{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "") + ("({}) ".format(self.nickname)
+                                                                                                     if self.nickname else "") +
                 ("({})".format(self.student_id if self.is_student and self.student_id else self.username)))
 
     @property
@@ -452,13 +435,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
             Lastname, F [(Nickname)]
         """
-        return ("{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") +
-                ("({}) ".format(self.nickname) if self.nickname else ""))
+        return ("{}{} ".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + ("({}) ".format(self.nickname)
+                                                                                                               if self.nickname else ""))
 
     @property
     def short_name(self):
-        """Return short name (first name) of a user. This is required
-        for subclasses of User.
+        """Return short name (first name) of a user.
+
+        This is required for subclasses of User.
+
         """
         return self.first_name
 
@@ -477,20 +462,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @dn.setter
     def dn(self, dn):
-        """Set DN for a user.
-        """
+        """Set DN for a user."""
         if not self._dn:
             self._dn = dn
         # if not self.username:
-            # self.username = ldap.dn.str2dn(dn)[0][0][1]
+        # self.username = ldap.dn.str2dn(dn)[0][0][1]
 
     @property
     def tj_email(self):
-        """
-        Get (or guess) a user's TJ email. If a fcps.edu or
-        tjhsst.edu email is specified in their email list, use
-        that. Otherwise, append the user's username to the proper
-        email suffix, depending on whether they are a student or teacher.
+        """Get (or guess) a user's TJ email.
+
+        If a fcps.edu or tjhsst.edu email is specified in their email
+        list, use that. Otherwise, append the user's username to the
+        proper email suffix, depending on whether they are a student or
+        teacher.
+
         """
 
         if self.emails:
@@ -511,36 +497,28 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Grade object
+
         """
         key = ":".join([self.dn, 'grade'])
 
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Grade of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Grade of user {} loaded from cache.".format(self.id))
             return cached
         else:
-            grad_year = self.graduation_year
-            if not grad_year:
-                grade = None
-            else:
-                grade = Grade(grad_year)
+            grade = Grade(self.graduation_year)
 
-            cache.set(key, grade,
-                      timeout=settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, grade, timeout=settings.CACHE_AGE['ldap_permissions'])
             return grade
 
     def _current_user_override(self):
-        """ Return whether the currently logged in user is a teacher,
-            and can view all of a student's information regardless of
-            their privacy settings.
-        """
+        """Return whether the currently logged in user is a teacher, and can view all of a student's
+        information regardless of their privacy settings."""
         try:
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
-            can_view_anyway = (requesting_user.is_teacher or
-                               requesting_user.is_eighthoffice)
+            can_view_anyway = (requesting_user.is_teacher or requesting_user.is_eighthoffice)
         except (AttributeError, KeyError):
             can_view_anyway = False
 
@@ -548,8 +526,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def classes(self):
-        """Returns a list of Class objects for a user ordered by
-        period number.
+        """Returns a list of Class objects for a user ordered by period number.
 
         Returns:
             List of Class objects
@@ -571,8 +548,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = True
 
         if cached and visible:
-            logger.debug("Attribute 'classes' of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Attribute 'classes' of user {} loaded from cache.".format(self.id))
             schedule = []
             for dn in cached:
                 class_object = Class(dn=dn)
@@ -586,10 +562,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     results = c.user_attributes(self.dn, ['enrolledclass'])
                     classes = results.first_result()["enrolledclass"]
                 else:
-                    query = LDAPFilter.and_filter(
-                        "objectClass=tjhsstClass",
-                        "sponsorDn=" + self.dn
-                    )
+                    query = LDAPFilter.and_filter("objectClass=tjhsstClass", "sponsorDn=" + self.dn)
                     results = c.search(settings.CLASS_DN, query, ["dn"])
                     classes = [r["dn"] for r in results]
 
@@ -616,11 +589,23 @@ class User(AbstractBaseUser, PermissionsMixin):
                 # recursively and quickly reaches the maximum
                 # recursion depth)
                 dn_list = list(zip(*ordered_schedule))[2]
-                cache.set(key, dn_list,
-                          timeout=settings.CACHE_AGE['user_classes'])
+                cache.set(key, dn_list, timeout=settings.CACHE_AGE['user_classes'])
                 return list(zip(*ordered_schedule))[1]  # Unpacked class list
         else:
             return None
+
+    @property
+    def ionldap_courses(self):
+        if self.is_student:
+            courses = self.ldapcourse_set.all()
+        elif self.is_teacher:
+            # FIXME: refactor to remove recursive dep
+            from ..ionldap.models import LDAPCourse
+            courses = LDAPCourse.objects.filter(teacher_name="{}, {}".format(self.last_name, self.first_name))
+        else:
+            return None
+
+        return courses.order_by("period", "end_period")
 
     @property
     def counselor(self):
@@ -635,8 +620,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute 'counselor' of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Attribute 'counselor' of user {} loaded " "from cache.".format(self.id))
             user_object = User.get_user(id=cached)
             return user_object
         else:
@@ -647,8 +631,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             except KeyError:
                 return None
             else:
-                cache.set(key, counselor,
-                          timeout=settings.CACHE_AGE['user_attribute'])
+                cache.set(key, counselor, timeout=settings.CACHE_AGE['user_attribute'])
                 user_object = User.get_user(id=counselor)
                 return user_object
 
@@ -669,14 +652,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         visible = self._current_user_override() or visible
 
         if cached and visible:
-            logger.debug("Attribute 'address' of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Attribute 'address' of user {} loaded " "from cache.".format(self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
             try:
-                results = c.user_attributes(self.dn,
-                                            ['street', 'l', 'st', 'postalCode'])
+                results = c.user_attributes(self.dn, ['street', 'l', 'st', 'postalCode'])
                 result = results.first_result()
                 street = result['street'][0]
                 city = result['l'][0]
@@ -686,8 +667,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return None
             else:
                 address_object = Address(street, city, state, postal_code)
-                cache.set(key, address_object,
-                          timeout=settings.CACHE_AGE['user_attribute'])
+                cache.set(key, address_object, timeout=settings.CACHE_AGE['user_attribute'])
                 return address_object
 
         else:
@@ -708,8 +688,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         visible = self.attribute_is_visible("showbirthday")
 
         if cached and visible:
-            logger.debug("Attribute 'birthday' of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Attribute 'birthday' of user {} loaded " "from cache.".format(self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -720,8 +699,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return None
             else:
                 date_object = datetime.strptime(birthday, '%Y%m%d')
-                cache.set(key, date_object,
-                          timeout=settings.CACHE_AGE['user_attribute'])
+                cache.set(key, date_object, timeout=settings.CACHE_AGE['user_attribute'])
                 return date_object
 
         else:
@@ -736,16 +714,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.sex.lower()[:1] == "f" if self.sex else False
 
     @property
-    def age(self, date=None):
+    def age(self):
         """Returns a user's age, based on their birthday.
-           Optional date argument to find their age on a given day.
 
         Returns:
             integer
 
         """
-        if not date:
-            date = datetime.now()
+        date = datetime.now()
 
         b = self.birthday
         if b:
@@ -781,17 +757,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = visible_self and visible_parent
 
         if cached and visible:
-            logger.debug("{} photo of user {} loaded "
-                         "from cache.".format(photo_year.title(),
-                                              self.id))
+            logger.debug("{} photo of user {} loaded " "from cache.".format(photo_year.title(), self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
             dn = "cn={}Photo,{}".format(photo_year, self.dn)
             try:
-                results = c.search(dn,
-                                   "(objectClass=iodinePhoto)",
-                                   ['jpegPhoto'])
+                results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
                 if len(results) == 1:
                     data = results[0][1]['jpegPhoto'][0]
                 else:
@@ -799,8 +771,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             except (ldap3.LDAPNoSuchObjectResult, KeyError):
                 data = None
 
-            cache.set(key, data,
-                      timeout=settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, data, timeout=settings.CACHE_AGE['ldap_permissions'])
             return data
         else:
             return None
@@ -852,46 +823,29 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Dictionary
+
         """
         key = ":".join([self.dn, 'photo_permissions'])
 
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Photo permissions of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Photo permissions of user {} loaded " "from cache.".format(self.id))
             return cached
         else:
             c = LDAPConnection()
 
-            perms = {
-                "parent": False,
-                "self": {
-                    "default": False,
-                    "freshman": None,
-                    "sophomore": None,
-                    "junior": None,
-                    "senior": None
-                }
-            }
+            perms = {"parent": False, "self": {"default": False, "freshman": None, "sophomore": None, "junior": None, "senior": None}}
 
-            default_result = c.user_attributes(self.dn,
-                                               ["perm-showpictures-self",
-                                                "perm-showpictures"])
+            default_result = c.user_attributes(self.dn, ["perm-showpictures-self", "perm-showpictures"])
             default = default_result.first_result()
             if "perm-showpictures" in default:
                 perms["parent"] = (default["perm-showpictures"][0] == "TRUE")
 
             if "perm-showpictures-self" in default:
-                perms["self"]["default"] = (
-                    default["perm-showpictures-self"][0] == "TRUE"
-                )
+                perms["self"]["default"] = (default["perm-showpictures-self"][0] == "TRUE")
 
-            photos_result = c.search(self.dn,
-                                     "(objectclass=iodinePhoto)",
-                                     ["cn",
-                                      "perm-showpictures",
-                                      "perm-showpictures-self"])
+            photos_result = c.search(self.dn, "(objectclass=iodinePhoto)", ["cn", "perm-showpictures", "perm-showpictures-self"])
 
             photos = photos_result
 
@@ -908,8 +862,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     except KeyError:
                         perms["self"][grade] = False
 
-            cache.set(key, perms,
-                      timeout=settings.CACHE_AGE["ldap_permissions"])
+            cache.set(key, perms, timeout=settings.CACHE_AGE["ldap_permissions"])
             return perms
 
     @property
@@ -919,33 +872,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns:
             Dictionary with keys "parent" and "self", each mapping to a
             list of permissions.
+
         """
         if self.dn is None:
-            return False
+            return None
 
         key = "{}:{}".format(self.dn, "user_info_permissions")
 
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Permissions of user {} loaded "
-                         "from cache.".format(self.id))
+            logger.debug("Permissions of user {} loaded " "from cache.".format(self.id))
             return cached
         else:
             c = LDAPConnection()
-            results = c.user_attributes(self.dn, ["perm-showaddress",
-                                                  "perm-showtelephone",
-                                                  "perm-showbirthday",
-                                                  "perm-showschedule",
-                                                  "perm-showeighth",
-                                                  "perm-showpictures",
-                                                  "perm-showaddress-self",
-                                                  "perm-showtelephone-self",
-                                                  "perm-showbirthday-self",
-                                                  "perm-showschedule-self",
-                                                  "perm-showeighth-self",
-                                                  "perm-showpictures-self"
-                                                  ])
+            results = c.user_attributes(self.dn,
+                                        ["perm-showaddress", "perm-showtelephone", "perm-showbirthday", "perm-showschedule", "perm-showeighth",
+                                         "perm-showpictures", "perm-showaddress-self", "perm-showtelephone-self", "perm-showbirthday-self",
+                                         "perm-showschedule-self", "perm-showeighth-self", "perm-showpictures-self"])
             result = results.first_result()
             perms = {"parent": {}, "self": {}}
             for perm, value in result.items():
@@ -957,8 +901,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     perm_name = perm[5:]
                     perms["parent"][perm_name] = bool_value
 
-            cache.set(key, perms,
-                      timeout=settings.CACHE_AGE['ldap_permissions'])
+            cache.set(key, perms, timeout=settings.CACHE_AGE['ldap_permissions'])
             return perms
 
     @property
@@ -1006,6 +949,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("announcements")
 
     @property
+    def is_schedule_admin(self):
+        """Checks if user is a schedule admin.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission("schedule")
+
+    @property
     def is_teacher(self):
         """Checks if user is a teacher.
 
@@ -1046,21 +1000,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         Returns:
             Boolean
+
         """
         return self.id == 9999
 
     @property
     def is_active(self):
         """Checks if the user is active.
+
         This is currently used to catch invalid logins.
+
         """
 
         return not self.username.startswith("INVALID_USER")
 
     @property
     def is_staff(self):
-        """Checks if a user should have access to the Django Admin
-        interface. This has nothing to do with staff at TJ - `is_staff`
+        """Checks if a user should have access to the Django Admin interface.
+
+        This has nothing to do with staff at TJ - `is_staff`
         has to be overridden to make this a valid user model.
 
         Returns:
@@ -1068,7 +1026,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.is_superuser
+        return self.is_superuser or self.member_of("admin_all")
 
     @property
     def is_attendance_user(self):
@@ -1100,9 +1058,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.is_eighth_admin or
-                self.is_teacher or
-                self.is_attendance_user)
+        return (self.is_eighth_admin or self.is_teacher or self.is_attendance_user)
 
     def is_http_request_sender(self):
         """Checks if a user the HTTP request sender (accessing own info)
@@ -1122,8 +1078,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             auth_backend = request.session["_auth_user_backend"]
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
-            return (str(requesting_user_id) == str(self.id) and
-                    not auth_backend.endswith(master_pwd_backend))
+            return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
         except (AttributeError, KeyError):
             return False
 
@@ -1143,18 +1098,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 # threadlocals is a module, not an actual thread locals object
                 requesting_user = threadlocals.request().user
-                return (requesting_user.is_teacher or
-                        requesting_user.is_simple_user)
+                return (requesting_user.is_teacher or requesting_user.is_simple_user)
             except (AttributeError, KeyError):
                 return False
             return False
 
         perms = self.permissions
 
-        if self.is_http_request_sender():
+        if self.is_http_request_sender() or perms is None:
             return True
         else:
-
             public = True
             if ldap_perm_name in perms["parent"]:
                 public = perms["parent"][ldap_perm_name]
@@ -1315,7 +1268,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     }
 
     def __getattr__(self, name):
-        """Return simple attributes of User
+        """Return simple attributes of User.
 
         This is used to retrieve ldap fields that don't require special
         processing, e.g. email or graduation year. Fields names are
@@ -1335,6 +1288,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
 
         if name not in User.ldap_user_attributes:
+            # If the property raises an AttributeError, __getattribute__ falls back to __getattr__, hence this special case.
+            if isinstance(User.__dict__.get(name), property):
+                return User.__dict__.get(name).fget(self)
             raise AttributeError("'User' has no attribute '{}'".format(name))
 
         if self.dn is None:
@@ -1362,8 +1318,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = self._current_user_override() or visible
 
         if cached and visible:
-            logger.debug("Attribute '{}' of user {} loaded "
-                         "from cache.".format(name, self.id or self.dn))
+            logger.debug("Attribute '{}' of user {} loaded " "from cache.".format(name, self.id or self.dn))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -1384,8 +1339,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     should_cache = False
 
                 if should_cache:
-                    cache.set(key, value,
-                              timeout=settings.CACHE_AGE["user_attribute"])
+                    cache.set(key, value, timeout=settings.CACHE_AGE["user_attribute"])
                 return value
             except KeyError:
                 return None
@@ -1393,8 +1347,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
 
     def set_ldap_attribute(self, name, value, override_set=False):
-        """Set a user attribute in LDAP.
-        """
+        """Set a user attribute in LDAP."""
 
         if name not in User.ldap_user_attributes:
             raise Exception("Can not set User attribute '{}' -- not in user attribute list.".format(name))
@@ -1477,8 +1430,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         c.set_attribute(photo_dn, photo_field, value)
 
     def set_raw_ldap_attribute(self, field_name, value):
-        """Set a raw user attribute in LDAP.
-        """
+        """Set a raw user attribute in LDAP."""
         if self.dn is None:
             raise Exception("Could not determine DN of User")
 
@@ -1494,12 +1446,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_eighth_sponsor(self):
-        """Determine whether the given user is associated with an
+        """Determine whether the given user is associated with an.
+
         :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity
         sponsoring information.
 
         """
-
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSponsor
 
         return EighthSponsor.objects.filter(user=self).exists()
@@ -1509,6 +1462,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         associated with.
         """
 
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSponsor
 
         try:
@@ -1519,17 +1473,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         return sp
 
     def absence_count(self):
-        """Return the user's absence count. If the user has no absences
+        """Return the user's absence count.
+
+        If the user has no absences
         or is not a signup user, returns 0.
 
         """
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True).count()
 
     def absence_info(self):
-        """Return information about the user's absences.
-        """
+        """Return information about the user's absences."""
+        # FIXME: remove recursive dep
         from ..eighth.models import EighthSignup
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
@@ -1569,14 +1526,16 @@ class Class(object):
         """
         self.dn = dn or 'tjhsstSectionId={},ou=schedule,dc=tjhsst,dc=edu'.format(id)
 
-    section_id = property(lambda c: ldap3.utils.dn.parse_dn(c.dn)[0][1])
+    @property
+    def section_id(self):
+        return ldap3.utils.dn.parse_dn(self.dn)[0][1]
+
     pk = section_id
 
     @property
     def students(self):
-        """Returns a list of students in the class.
-        This may not always return all of the actual students if you do
-        not have permission to view that information.
+        """Returns a list of students in the class. This may not always return all of the actual
+        students if you do not have permission to view that information.
 
         Returns:
             List of user objects
@@ -1598,7 +1557,7 @@ class Class(object):
 
     @property
     def teacher(self):
-        """Returns the teacher/sponsor of the class
+        """Returns the teacher/sponsor of the class.
 
         Returns:
             User object
@@ -1609,13 +1568,13 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute 'teacher' of class {} loaded "
-                         "from cache.".format(self.section_id))
+            logger.debug("Attribute 'teacher' of class {} loaded " "from cache.".format(self.section_id))
             return User.get_user(dn=cached)
         else:
             c = LDAPConnection()
-            results = c.class_attributes(self.dn, ['sponsorDn'])
-            result = results.first_result()
+            result = c.class_attributes(self.dn, ['sponsorDn']).first_result()
+            if not result:
+                return None
             dn = result['sponsorDn'][0]
 
             # Only cache the dn, since pickling would recursively fetch
@@ -1637,21 +1596,21 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute 'quarters' of class {} loaded "
-                         "from cache.".format(self.section_id))
+            logger.debug("Attribute 'quarters' of class {} loaded from cache.".format(self.section_id))
             return cached
         else:
             c = LDAPConnection()
-            results = c.class_attributes(self.dn, ["quarterNumber"])
-            result = [int(i) for i in results.first_result()["quarterNumber"]]
+            result = c.class_attributes(self.dn, ["quarterNumber"]).first_result()
+            if not result:
+                return None
+            result = [int(i) for i in result["quarterNumber"]]
 
-            cache.set(key, result,
-                      timeout=settings.CACHE_AGE["class_attribute"])
+            cache.set(key, result, timeout=settings.CACHE_AGE["class_attribute"])
             return result
 
     @property
     def sortvalue(self):
-        """Returns the sort value of this class
+        """Returns the sort value of this class.
 
         This can be derived from the following formula:
             Minimum Period + Sum of values of quarters / 11
@@ -1667,11 +1626,11 @@ class Class(object):
 
     @property
     def sections(self):
-        """Returns a list of other Class objects which are of
-           the same class type.
+        """Returns a list of other Class objects which are of the same class type.
 
-           Returns:
-               A list of class objects.
+        Returns:
+            A list of class objects.
+
         """
         class_sections = ClassSections(id=self.class_id)
 
@@ -1686,7 +1645,7 @@ class Class(object):
         return list(zip(*ordered_schedule))[1]  # The class objects
 
     def __getattr__(self, name):
-        """Return simple attributes of Class
+        """Return simple attributes of Class.
 
         This is used to retrieve ldap fields that don't require special
         processing, e.g. roomNumber or period. Fields names are
@@ -1708,7 +1667,6 @@ class Class(object):
 
         Returns:
             Either a list of strings or a string, depending on the attribute fetched.
-
 
         """
 
@@ -1743,19 +1701,20 @@ class Class(object):
         cached = cache.get(key)
 
         if cached:
-            logger.debug("Attribute '{}' of class {} loaded "
-                         "from cache.".format(name, self.section_id))
+            logger.debug("Attribute '{}' of class {} loaded " "from cache.".format(name, self.section_id))
             return cached
         else:
             c = LDAPConnection()
             attr = class_attributes[name]
             field_name = attr["ldap_name"]
             try:
-                results = c.class_attributes(self.dn, [field_name])
-                result = results.first_result()[field_name]
+                result = c.class_attributes(self.dn, [field_name]).first_result()
+                if result:
+                    result = result[field_name]
+                else:
+                    return None
             except KeyError:
-                logger.warning("KeyError fetching " + name +
-                               " for class " + self.dn)
+                logger.warning("KeyError fetching " + name + " for class " + self.dn)
                 return None
             else:
                 if attr["is_list"]:
@@ -1765,8 +1724,7 @@ class Class(object):
                 else:
                     value = result[0]
 
-                cache.set(key, value,
-                          timeout=settings.CACHE_AGE['class_attribute'])
+                cache.set(key, value, timeout=settings.CACHE_AGE['class_attribute'])
                 return value
 
     def __str__(self):
@@ -1824,7 +1782,6 @@ class ClassSections(object):
 
 
 class Address(object):
-
     """Represents a user's address.
 
     Attributes:
@@ -1848,12 +1805,10 @@ class Address(object):
 
     def __str__(self):
         """Returns full address string."""
-        return "{}\n{}, {} {}".format(self.street, self.city,
-                                      self.state, self.postal_code)
+        return "{}\n{}, {} {}".format(self.street, self.city, self.state, self.postal_code)
 
 
 class Grade(object):
-
     """Represents a user's grade."""
     names = ["freshman", "sophomore", "junior", "senior"]
 
@@ -1863,23 +1818,17 @@ class Grade(object):
         Args:
             graduation_year
                 The numerical graduation year of the user
-        """
-        self._year = int(graduation_year)
-        today = datetime.now()
-        if today.month >= 7:
-            current_senior_year = today.year + 1
-        else:
-            current_senior_year = today.year
 
-        self._number = current_senior_year - self._year + 12
+        """
+        if graduation_year is None:
+            self._number = 13
+        else:
+            self._number = settings.SENIOR_GRADUATION_YEAR - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
             self._name = Grade.names[self._number - 9]
         else:
             self._name = "graduate"
-
-        if self._number is None:
-            self._number = 13
 
     @property
     def number(self):

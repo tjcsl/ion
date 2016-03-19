@@ -1,0 +1,19 @@
+{% extends "oauth2_provider/base.html" %}
+
+{% load i18n %}
+{% load url from compat %}
+{% block content %}
+    <div class="block-center">
+        <h3 class="block-center-heading">{% trans "Are you sure you want to delete the application" %} {{ application.name }}?</h3>
+        <form method="post" action="{% url 'oauth2_provider:delete' application.pk %}">
+            {% csrf_token %}
+
+            <div class="control-group" style="text-align: center">
+                <div class="controls">
+                    <a class="button btn-large" href="{% url "oauth2_provider:list" %}">{% trans "Cancel" %}</a>
+                    <input type="submit" style="color: red" name="allow" value="{% trans "Delete" %}"/>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

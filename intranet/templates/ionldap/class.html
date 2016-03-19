@@ -1,0 +1,252 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} - Class: {{ class.name }}
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.6.0/css/sortable-theme-minimal.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <style type="text/css">
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    section {
+        float: left;
+        padding: 0 100px 25px 0;
+    }
+
+    section:last-child {
+        padding-right: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <section class="class-info">
+            <h2>{{ course.course_title }}</h2>
+            <h3>
+                {% if course.period_end and course.end_period != course.period %}
+                    Periods {{ course.period }} - {{ course.end_period }}
+                {% else %}
+                    Period {{ course.period }}
+                {% endif %}
+            </h3>
+            <h3>
+                {% if teacher_user %}
+                    Teacher: <a href="{% url 'user_profile' teacher_user.id %}">
+                        {{ course.teacher_name }}
+                    </a>
+                {% else %}
+                    Teacher: {{ course.teacher_name }}
+                {% endif %}
+            </a></h3>
+            <h3>Room: <a href="{% url 'ionldap_class_room' class.room_name %}">
+                {{ class.room_name }}
+            </a></h3>
+            <h3>
+                {% if course.term_code %}
+                    {% if course.term_code == "YR" %}
+                        <b>Full Year</b>
+                    {% elif course.term_code == "S1" %}
+                        First Semester
+                    {% elif course.term_code == "S2" %}
+                        <b>Second Semester</b>
+                    {% else %}
+                    {{ course.term_code }}
+                    {% endif %}
+                {% endif %}
+            </h3>
+            {% if show_emails %}
+                <br />
+                <a href="{% url 'ionldap_class_section_csv' course.section_id %}" class="button">Export CSV</a>
+            {% endif %}
+        </section>
+
+        <section class="students-info">
+            <b>Students in this class:</b>
+            <table class="fancy-table zebra" data-sortable>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Grade</th>
+                        {% if show_emails %}<th class="email-col">TJ Email</th>{% endif %}
+                    </tr>
+                </thead>
+                {% if can_view_students %}
+                    {% for student in course_users %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' student.id %}">
+                                {{ student.last_first }}
+                            </a>
+                        </td>
+                        <td>{{ student.grade.number }}</td>
+                        {% if show_emails %}<td class="email-col">{{ student.tj_email }}</td>{% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    {% if in_class %}
+                        <tr>
+                            <td>
+                            {% with student=request.user %}
+                                <a href="{% url 'user_profile' student.id %}">
+                                    {{ student.last_first }}
+                                </a>
+                            </td>
+                            <td>{{ student.grade.number }}</td>
+                            {% if show_emails %}<td class="email-col">{{ student.tj_email }}</td>{% endif %}
+                            {% endwith %}
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td colspan="3">
+                            <b>You don't have permissions to view the list of {% if in_class %}other {% endif %}students in this class.</b>
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+        </section>
+
+        <section class="teacher-info">
+            <b>Other classes taught by {{ course.teacher_name }}:</b>
+            <table class="fancy-table zebra" data-sortable>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Name</th>
+                        <th>Room</th>
+                        <th>Quarters</th>
+                    </tr>
+                </thead>
+                {% for tcourse in teacher_classes %}
+                <tr>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        {% if tcourse.period_end and tcourse.end_period != tcourse.period %}
+                            {{ tcourse.period }}, {{ tcourse.end_period }}
+                        {% else %}
+                            {{ tcourse.period }}
+                        {% endif %}
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        <a href="{% url 'ionldap_class_section' tcourse.section_id %}">
+                            {{ tcourse.course_title }}
+                        </a>
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        <a href="{% url 'ionldap_class_room' tcourse.room_name %}">
+                            {{ tcourse.room_name }}
+                        </a>
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        {% if tcourse.term_code %}
+                            {% if tcourse.term_code == "YR" %}
+                                <b>Full Year</b>
+                            {% elif tcourse.term_code == "S1" %}
+                                First Semester
+                            {% elif tcourse.term_code == "S2" %}
+                                <b>Second Semester</b>
+                            {% else %}
+                                {{ tcourse.term_code }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="section-info">
+            <b>Other sections of {{ course.course_title }}:</b>
+            <table class="fancy-table zebra" data-sortable>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th>Quarters</th>
+                    </tr>
+                </thead>
+                {% for tcourse in section_classes %}
+                <tr>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        {% if tcourse.period_end and tcourse.end_period != tcourse.period %}
+                            {{ tcourse.period }}, {{ tcourse.end_period }}
+                        {% else %}
+                            {{ tcourse.period }}
+                        {% endif %}
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        {% with teacher_user=tcourse.teacher_user %}
+                            {% if teacher_user %}
+                                <a href="{% url 'user_profile' teacher_user.id %}">
+                                    {{ tcourse.teacher_name }}
+                                </a>
+                            {% else %}
+                                {{ tcourse.teacher_name }}
+                            {% endif %}
+                        {% endwith %}
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        <a href="{% url 'ionldap_class_room' tcourse.room_name %}">
+                            {{ tcourse.room_name }}
+                        </a>
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                    <td>{% if course.section_id == tcourse.section_id %}<b>{% endif %}
+
+                        {% if tcourse.term_code %}
+                            {% if tcourse.term_code == "YR" %}
+                                <b>Full Year</b>
+                            {% elif tcourse.term_code == "S1" %}
+                                First Semester
+                            {% elif tcourse.term_code == "S2" %}
+                                <b>Second Semester</b>
+                            {% else %}
+                                {{ tcourse.term_code }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if course.section_id == tcourse.section_id %}</b>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <br />
+            <b><a href="{% url 'ionldap_all_classes' %}">View all classes</a></b>
+        </section>
+    </div>
+{% endblock %}

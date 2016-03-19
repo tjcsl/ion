@@ -32,14 +32,28 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% with show_eighth_profile_link=1 show_view_often_link=1 %}
-        {% include "eighth/profile_header.html" %}
-    {% endwith %}
+    {% if show_profile_header %}
+        {% with show_eighth_profile_link=1 show_view_often_link=1 %}
+            {% include "eighth/profile_header.html" %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'eighth_signup' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Eighth Home
+        </a>
+        &nbsp; <a href="{% url 'eighth_profile' profile_user.id %}" class="button"><i class="fa fa-table"></i> Classic Signup</a>
+        &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
+        <br />
+        <h2>
+            Attendance History{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
+        </h2>
+    {% endif %}
 
     <section class="user-history">
-        <h3>
-            Attendance History{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
-        </h3>
+        {% if show_profile_header %}
+            <h3>
+                Attendance History{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
+            </h3>
+        {% endif %}
 
         <table class="fancy-table user-signups-table">
         <thead>

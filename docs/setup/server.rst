@@ -41,7 +41,7 @@ You then need to import the base ldif.
 
 .. code-block:: bash
 
-  $ ./config/setup_ldap.sh
+  $ ./scripts/setup_ldap.sh
 
 
 ----------
@@ -271,7 +271,7 @@ Install all of the dependencies.
 
 .. code-block:: bash
 
-    $ pip install -U -r ion/requirements/production.txt
+    $ pip install -U -r requirements.txt
 
 Initialize the ldap db.
 .. code-block:: bash

@@ -76,25 +76,17 @@ def add_block_view(request):
         onday = EighthBlock.objects.filter(date=fmtdate)
         for l in visible_blocks:
             exists = onday.filter(block_letter=l)
-            letters.append({
-                "name": l,
-                "exists": exists
-            })
+            letters.append({"name": l, "exists": exists})
         for blk in onday:
             if blk.block_letter not in visible_blocks:
                 visible_blocks.append(blk.block_letter)
-                letters.append({
-                    "name": blk.block_letter,
-                    "exists": True
-                })
+                letters.append({"name": blk.block_letter, "exists": True})
 
-    context = {
-        "admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
-        "date": date,
-        "letters": letters,
-        "show_letters": show_letters,
-        "add_block_form": QuickBlockForm
-    }
+    context = {"admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
+               "date": date,
+               "letters": letters,
+               "show_letters": show_letters,
+               "add_block_form": QuickBlockForm}
 
     return render(request, "eighth/admin/add_block.html", context)
 
@@ -118,12 +110,7 @@ def edit_block_view(request, block_id):
     else:
         form = BlockForm(instance=block)
 
-    context = {
-        "form": form,
-        "delete_url": reverse("eighth_admin_delete_block",
-                              args=[block_id]),
-        "admin_page_title": "Edit Block"
-    }
+    context = {"form": form, "delete_url": reverse("eighth_admin_delete_block", args=[block_id]), "admin_page_title": "Edit Block"}
     return render(request, "eighth/admin/edit_form.html", context)
 
 
@@ -140,12 +127,10 @@ def delete_block_view(request, block_id):
         messages.success(request, "Successfully deleted block.")
         return redirect("eighth_admin_dashboard")
     else:
-        context = {
-            "admin_page_title": "Delete Block",
-            "item_name": str(block),
-            "help_text": "Deleting this block will remove all records "
-                         "of it related to eighth period."
-        }
+        context = {"admin_page_title": "Delete Block",
+                   "item_name": str(block),
+                   "help_text": "Deleting this block will remove all records "
+                                "of it related to eighth period."}
 
         return render(request, "eighth/admin/delete_form.html", context)
 
@@ -168,9 +153,5 @@ def print_block_rosters_view(request, block_id):
             schacts = sorted(schacts, key=lambda x: "{}".format(x.get_true_sponsors()))
         except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist):
             raise http.Http404
-        context = {
-            "eighthblock": block,
-            "admin_page_title": "Choose activities to print",
-            "schacts": schacts
-        }
+        context = {"eighthblock": block, "admin_page_title": "Choose activities to print", "schacts": schacts}
         return render(request, "eighth/admin/choose_roster_activities.html", context)

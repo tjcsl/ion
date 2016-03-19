@@ -24,73 +24,46 @@ class ProfileEditForm(forms.Form):
     counselor_id = forms.IntegerField(label="Counselor ID")
     # locker = forms.CharField(label="Locker")
 
-    FIELDS = ["admin_comments",
-              "student_id",
-              "first_name",
-              "middle_name",
-              "last_name",
-              "title",
-              "nickname",
-              "graduation_year",
-              "sex",
-              "birthday",
+    FIELDS = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "sex", "birthday",
               "home_phone"]
-    ADDRESS_FIELDS = ["street",
-                      "city",
-                      "state",
-                      "postal_code"]
+    ADDRESS_FIELDS = ["street", "city", "state", "postal_code"]
 
 
 class UserChoiceField(forms.ModelChoiceField):
-    """
-    A ModelChoiceField that returns a user's full name instead
-    of their TJ username (which is the default string representation).
-
-    """
+    """A ModelChoiceField that returns a user's full name instead of their TJ username (which is the
+    default string representation)."""
 
     def label_from_instance(self, obj):
         return obj.full_name
 
 
 class SortedUserChoiceField(forms.ModelChoiceField):
-    """
-    A ModelChoiceField that returns a user's Last, First name instead
-    of their TJ username (which is the default string representation).
-
-    """
+    """A ModelChoiceField that returns a user's Last, First name instead of their TJ username (which
+    is the default string representation)."""
 
     def label_from_instance(self, obj):
         return obj.last_first_id
 
 
 class UserMultipleChoiceField(forms.ModelMultipleChoiceField):
-    """
-    A ModelMultipleChoiceField that returns a user's full name instead
-    of their TJ username (which is the default string representation).
-
-    """
+    """A ModelMultipleChoiceField that returns a user's full name instead of their TJ username
+    (which is the default string representation)."""
 
     def label_from_instance(self, obj):
         return obj.full_name
 
 
 class SortedUserMultipleChoiceField(forms.ModelMultipleChoiceField):
-    """
-    A ModelMultipleChoiceField that returns a user's Last, First name instead
-    of their TJ username (which is the default string representation).
-
-    """
+    """A ModelMultipleChoiceField that returns a user's Last, First name instead of their TJ
+    username (which is the default string representation)."""
 
     def label_from_instance(self, obj):
         return obj.last_first_id
 
 
 class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
-    """
-    A ModelMultipleChoiceField that returns a user's Last, First initial instead
-    of their TJ username (which is the default string representation).
-
-    """
+    """A ModelMultipleChoiceField that returns a user's Last, First initial instead of their TJ
+    username (which is the default string representation)."""
 
     def __init__(self, *args, **kwargs):
         self.show_username = False

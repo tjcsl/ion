@@ -26,17 +26,30 @@
             {% include "eighth/admin/start_date.html" %}
         </div>
     {% endif %}
-    {% with show_view_history_link=1 show_view_often_link=1 %}
-        {% include "eighth/profile_header.html" %}
-    {% endwith %}
+    {% if show_profile_header %}
+        {% with show_view_history_link=1 show_view_often_link=1 %}
+            {% include "eighth/profile_header.html" %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'eighth_signup' %}" class="button">
+            <i class="fa fa-arrow-left"></i> Eighth Home
+        </a>
+        &nbsp; <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a>
+        &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
+        <br />
+        <h2>Eighth Period - {{ date_now }}{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}</h2>
+    {% endif %}
 
     <section class="user-info-eighth">
     <form action="{% url 'eighth_signup' %}" method="GET">
 
         <input type="hidden" name="user" value="{{ profile_user.id }}" />
-        <h3>
-            Eighth Period - {{ date_now }}
-        </h3>
+        {% if show_profile_header %}
+            <h3>
+                Eighth Period - {{ date_now }}
+            </h3>
+        {% endif %}
+
         {% if skipped_ahead %}
             There were no blocks the week of {{ date_now }}.{% if eighth_schedule %} Skipped to the next block in the future.{% endif %}
         {% endif %}
@@ -51,9 +64,11 @@
                         </a>
                     </span>
                     <span class="button-center">
+                    {% if eighth_schedule %}
                         {% if request.user.is_eighth_admin or request.user == profile_user %}
                             <input type="submit" value="Change Selected" />
                         {% endif %}
+                    {% endif %}
 
                         {% if custom_date_set %}
                             <a href="?" class="button">Reset Date</a>

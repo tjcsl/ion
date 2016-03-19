@@ -17,20 +17,12 @@ class AutoCreateUserField(forms.ChoiceField):
         try:
             id_value = int(value)
         except (ValueError, TypeError):
-            raise ValidationError(
-                self.error_messages["invalid_choice"],
-                code="invalid_choice",
-                params={"value": value}
-            )
+            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 
         try:
             user = User.get_user(id=id_value)
         except User.DoesNotExist:
-            raise ValidationError(
-                self.error_messages["invalid_choice"],
-                code="invalid_choice",
-                params={"value": value}
-            )
+            raise ValidationError(self.error_messages["invalid_choice"], code="invalid_choice", params={"value": value})
 
         return user
 
@@ -40,10 +32,4 @@ class SponsorForm(forms.ModelForm):
 
     class Meta:
         model = EighthSponsor
-        fields = [
-            "first_name",
-            "last_name",
-            "user",
-            "online_attendance",
-            "show_full_name"
-        ]
+        fields = ["first_name", "last_name", "user", "online_attendance", "show_full_name"]

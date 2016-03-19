@@ -42,25 +42,21 @@ class LDAPFilter(object):
 
     @staticmethod
     def attribute_in_list(attribute, values):
-        """Returns a filter for selecting all entries for which a
-        specified attribute is contained in a specified list of values.
-        """
+        """Returns a filter for selecting all entries for which a specified attribute is contained
+        in a specified list of values."""
         conditions = (attribute + "=" + v for v in values)
         return LDAPFilter.or_filter(*conditions)
 
     @staticmethod
     def all_users():
-        """Returns a filter for selecting all user objects in LDAP
-        """
+        """Returns a filter for selecting all user objects in LDAP."""
 
         user_object_classes = sorted(list(settings.LDAP_OBJECT_CLASSES.values()))
         return LDAPFilter.attribute_in_list("objectclass", user_object_classes)
 
 
 class LDAPConnection(object):
-
-    """Represents an LDAP connection with wrappers for the raw ldap
-    queries.
+    """Represents an LDAP connection with wrappers for the raw ldap queries.
 
     Attributes:
         conn
@@ -68,45 +64,45 @@ class LDAPConnection(object):
 
     """
 
+    def simple_bind(self, server):
+        _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
+        _thread_locals.ldap_conn.bind()
+        _thread_locals.simple_bind = True
+
     @property
     def conn(self):
         """Lazily load and return the raw connection from threadlocals.
 
-        Connect to the LDAP server specified in settings and bind
-        using the GSSAPI protocol. The requisite KRB5CCNAME
-        environmental variable should have already been set by the
-        SetKerberosCache middleware.
+        Connect to the LDAP server specified in settings and bind using
+        the GSSAPI protocol. The requisite KRB5CCNAME environmental
+        variable should have already been set by the SetKerberosCache
+        middleware.
 
         """
         ldap_exceptions = (ldap3.LDAPExceptionError,)
         if 'gssapi' in sys.modules:
             ldap_exceptions += (gssapi.exceptions.GSSError,)
 
-        if (not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None):
+        if not hasattr(_thread_locals, "ldap_conn") or _thread_locals.ldap_conn is None:
             logger.info("Connecting to LDAP...")
             server = ldap3.Server(settings.LDAP_SERVER)
-            _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
-
-            try:
-                _thread_locals.ldap_conn.bind()
-                _thread_locals.simple_bind = False
-                logger.info("Successfully connected to LDAP.")
-            except ldap_exceptions as e:
-                logger.warning("SASL bind failed - using simple bind")
-                logger.warning(e)
-                _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-                _thread_locals.ldap_conn.bind()
-                _thread_locals.simple_bind = True
-
-            # logger.debug(_thread_locals.ldap_conn.whoami_s())
+            if settings.USE_SASL:
+                try:
+                    _thread_locals.ldap_conn = ldap3.Connection(server, authentication=ldap3.SASL, sasl_mechanism='GSSAPI')
+                    _thread_locals.ldap_conn.bind()
+                    _thread_locals.simple_bind = False
+                    logger.info("Successfully connected to LDAP.")
+                except ldap_exceptions as e:
+                    logger.warning("SASL bind failed - using simple bind")
+                    logger.warning(e)
+                    self.simple_bind(server)
+            else:
+                self.simple_bind(server)
 
         return _thread_locals.ldap_conn
 
     def did_use_simple_bind(self):
-        """Returns whether a simple bind was used, or ``False`` for an
-        uninitialized connection.
-
-        """
+        """Returns whether a simple bind was used, or ``False`` for an uninitialized connection."""
 
         return getattr(_thread_locals, "simple_bind", False)
 
@@ -133,8 +129,7 @@ class LDAPConnection(object):
             Should raise stuff but it doesn't yet
 
         """
-        logger.debug("Searching ldap - dn: {}, filter: {}, "
-                     "attributes: {}".format(dn, filter, attributes))
+        logger.debug("Searching ldap - dn: {}, filter: {}, " "attributes: {}".format(dn, filter, attributes))
 
         # ldap3 requires the filter to be in parenthesis
         if not filter.endswith(')'):
@@ -160,8 +155,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '{}' of user "
-                     "{}".format(str(attributes), dn))
+        logger.debug("Fetching attributes '{}' of user " "{}".format(str(attributes), dn))
 
         filter = LDAPFilter.all_users()
 
@@ -188,8 +182,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '{}' of photo "
-                     "{}".format(str(attributes), dn))
+        logger.debug("Fetching attributes '{}' of photo " "{}".format(str(attributes), dn))
 
         filter = "(objectClass=iodinePhoto)"
 
@@ -217,8 +210,7 @@ class LDAPConnection(object):
             :class:`LDAPResult` object (empty if no results)
 
         """
-        logger.debug("Fetching attributes '" + str(attributes) +
-                     "' of class " + dn)
+        logger.debug("Fetching attributes '" + str(attributes) + "' of class " + dn)
         filter = '(objectclass=tjhsstClass)'
 
         try:
@@ -237,7 +229,6 @@ class LDAPConnection(object):
 
 
 class LDAPResult(object):
-
     """Represents the result of an LDAP query.
 
     LDAPResult stores the raw result of an LDAP query and can process
@@ -264,9 +255,7 @@ class LDAPResult(object):
         return self.result
 
 
-@receiver(request_finished,
-          dispatch_uid="close_ldap_connection",
-          sender=WSGIHandler)
+@receiver(request_finished, dispatch_uid="close_ldap_connection", sender=WSGIHandler)
 def close_ldap_connection(sender, **kwargs):
     """Closes the request's LDAP connection and clears up thread locals.
 

@@ -295,7 +295,7 @@
 
             <input type="hidden" name="user" value="{{ profile_user.id }}" />
             <h3>
-                Eighth Period - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>
+                Eighth Period{% if profile_user != real_user %} - <a href="{% url 'eighth_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
             </h3>
             {% if skipped_ahead %}
                 There were no blocks the week of {{ date_now }}. Skipped to the next block in the future.
@@ -307,6 +307,7 @@
             <thead>
                 <tr>
                     <td class="button-container" colspan="7" style="text-align: center">
+                    {% if request.user.is_eighth_admin %}
                         {% if show_eighth_profile_link %}
                             <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Eighth Profile</a> &nbsp;
                         {% endif %}
@@ -314,7 +315,15 @@
                         {% if request.user.is_eighth_admin %}
                             <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button">Edit Info</a> &nbsp;
                         {% endif %}
-                                </td>
+                    {% else %}
+                        <a href="{% url 'eighth_signup' %}" class="button">
+                            <i class="fa fa-arrow-left"></i> Eighth Home
+                        </a>
+                        &nbsp; <a href="{% url 'eighth_profile' profile_user.id %}" class="button"><i class="fa fa-table"></i> Classic Signup</a>
+                        &nbsp; <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a>
+                        &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
+                    {% endif %}
+                    </td>
                 </tr>
                 <tr class="desc">
                     <th class="center checkbox">
@@ -419,7 +428,7 @@
                     </h4>
                 </div>
                 {% if request.user.is_eighth_admin %}
-                <div class="unsignup">
+                <div class="middle-button-container unsignup">
                     <button id="unsignup-button" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}">Remove Signup</button>
                 </div>
                 {% endif %}
@@ -467,6 +476,7 @@
             </div>
             <div id="activity-detail" data-bid="{{ active_block.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}">
                 <div class="empty-state">
+                {% if profile_user != real_user %}
                     <center>
                         <div>
                             <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" />
@@ -526,6 +536,9 @@
 
                         </table>
                     </center>
+                {% else %}
+                    {% include "eighth/empty_state.html" %}
+                {% endif %}
                 </div>
             </div>
         </div>

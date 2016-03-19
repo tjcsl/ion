@@ -1,4 +1,10 @@
 {% load dates %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
+
 <div class="widget eighth-widget">
     <div class="widget-title">
         <h2>
@@ -66,7 +72,7 @@
             {% if block.is_today and block.signup_time %}
                 <div class="block-timeleft">
                     {% if block.signup_time_future %}
-                        Signups close <b>{{ block.signup_time|fuzzy_time }}</b> ({{ block.signup_time }})
+                        Signups close <b class="timeago" title="{{ block.signup_time|date:'c' }}">{{ block.signup_time|fuzzy_time }}</b> ({{ block.signup_time }})
                     {% else %}
                         {% if block.locked %}
                             Signups are <b>locked</b>. Questions? Visit 8th Pd. Office

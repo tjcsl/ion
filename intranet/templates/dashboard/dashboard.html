@@ -48,6 +48,11 @@
 
     <button class="widget extra-widgets-show">Show more widgets</button>
     {% include "dashboard/birthdays.html" %}
+
+    {% if show_admin_widget %}
+        {% include "dashboard/admin.html" %}
+    {% endif %}
+    
     {% include "dashboard/links.html" %}
     
     {% if is_student %}
@@ -92,8 +97,8 @@
             {% if awaiting_teacher or awaiting_approval %}
                 <div class="announcement announcement-meta">
                 {% if awaiting_approval %}
-                    <h3 style="color: orange">
-                    <i class="fa fa-exclamation-circle"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting</h3>
+                    <h3>
+                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
                     <ul>
                     {% for req in awaiting_approval %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
@@ -101,13 +106,7 @@
                     </ul>
                 {% endif %}
                 {% if awaiting_teacher %}
-                    <h3>
-                    <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending</h3>
-                    <ul>
-                    {% for req in awaiting_teacher %}
-                        <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}, awaiting teacher approval</li>
-                    {% endfor %}
-                    </ul>
+                    <h3> <i class="fa fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending teacher approval</h3>
                 {% endif %}
                 </div>
             {% endif %}

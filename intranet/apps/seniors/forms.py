@@ -16,7 +16,4 @@ class SeniorForm(forms.ModelForm):
 
     class Meta:
         model = Senior
-        fields = ["college",
-                  "college_sure",
-                  "major",
-                  "major_sure"]
+        fields = ["college", "college_sure", "major", "major_sure"]

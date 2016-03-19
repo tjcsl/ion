@@ -13,8 +13,7 @@ from ..users.models import User
 
 
 class Link(models.Model):
-    """A link about an item (Facebook event link, etc).
-    """
+    """A link about an item (Facebook event link, etc)."""
     url = models.URLField(max_length=2000)
     title = models.CharField(max_length=100)
 
@@ -22,59 +21,55 @@ class Link(models.Model):
 class EventManager(Manager):
 
     def visible_to_user(self, user):
-        """Get a list of visible events for a given user (usually
-        request.user).
+        """Get a list of visible events for a given user (usually request.user).
 
         These visible events will be those that either have no groups
-        assigned to them (and are therefore public) or those in which the
-        user is a member.
+        assigned to them (and are therefore public) or those in which
+        the user is a member.
 
         """
 
-        return (Event.objects.filter(approved=True)
-                             .filter(Q(groups__in=user.groups.all()) |
-                                     Q(groups__isnull=True) |
-                                     Q(user=user)))
+        return (Event.objects.filter(approved=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(user=user)))
 
 
 class Event(models.Model):
     """An event available to the TJ community.
 
-        title
-            The title for the event
-        description
-            A description about the event
-        links
-            Not currently used
-        created_time
-            Time created (automatically set)
-        last_modified_time
-            Time last modified (automatically set)
-        time
-            The date and time of the event
-        location
-            Where the event is located
-        user
-            The user who created the event.
-        scheduled_activity
-            An EighthScheduledActivity that should be linked with the event.
-        announcement
-            An Announcement that should be linked with the event.
-        groups
-            Groups that the event is visible to.
-        attending
-            A ManyToManyField of User objects that are attending the event.
-        show_attending
-            Boolean, whether users can mark if they are attending or not attending.
-        approved
-            Boolean, whether the event has been approved and will be displayed.
-        approved_by
-            ForeignKey to User object, the user who approved the event.
-        rejected
-            Boolean, whether the event was rejected and shouldn't be shown in the
-            list of events that need to be approved.
-        rejected_by
-            ForeignKey to User object, the user who rejected the event.
+    title:
+        The title for the event
+    description:
+        A description about the event
+    links:
+        Not currently used
+    created_time:
+        Time created (automatically set)
+    last_modified_time:
+        Time last modified (automatically set)
+    time:
+        The date and time of the event
+    location:
+        Where the event is located
+    user:
+        The user who created the event.
+    scheduled_activity:
+        An EighthScheduledActivity that should be linked with the event.
+    announcement:
+        An Announcement that should be linked with the event.
+    groups:
+        Groups that the event is visible to.
+    attending:
+        A ManyToManyField of User objects that are attending the event.
+    show_attending:
+        Boolean, whether users can mark if they are attending or not attending.
+    approved:
+        Boolean, whether the event has been approved and will be displayed.
+    approved_by:
+        ForeignKey to User object, the user who approved the event.
+    rejected:
+        Boolean, whether the event was rejected and shouldn't be shown in the
+        list of events that need to be approved.
+    rejected_by:
+        ForeignKey to User object, the user who rejected the event.
 
     """
     objects = EventManager()
@@ -103,8 +98,8 @@ class Event(models.Model):
     rejected_by = models.ForeignKey(User, null=True, related_name="rejected_event")
 
     def show_fuzzy_date(self):
-        """
-        Return whether the event is in the next or previous 2 weeks.
+        """Return whether the event is in the next or previous 2 weeks.
+
         Determines whether to display the fuzzy date.
 
         """
@@ -121,21 +116,18 @@ class Event(models.Model):
         return True
 
     def created_hook(self, request):
-        """Run when an event is created.
-        """
+        """Run when an event is created."""
         if not request.user.has_admin_permission('events'):
             # Send approval email
             event_approval_request(request, self)
 
     @property
     def is_this_year(self):
-        """Return whether the event was created after September 1st
-           of this school year."""
+        """Return whether the event was created after September 1st of this school year."""
         now = datetime.now().date()
         ann = self.created_time.date()
         if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or
-                    (ann.year == now.year - 1 and ann.month >= 9))
+            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
         else:
             return (ann.year == now.year and ann.month >= 9)
 

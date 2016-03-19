@@ -22,11 +22,7 @@ def groups_view(request):
         user = User.objects.get(id=request.GET.get("user"))
     else:
         user = request.user
-    return render(request, "groups/groups.html", {
-        "user": user,
-        "all_groups": Group.objects.all(),
-        "group_admin": group_admin
-    })
+    return render(request, "groups/groups.html", {"user": user, "all_groups": Group.objects.all(), "group_admin": group_admin})
 
 
 # Create individual views for each form action
@@ -41,9 +37,5 @@ def add_group_view(request):
     else:
         form = GroupForm()
 
-    context = {
-        "form": form,
-        "action": "add",
-        "success": success
-    }
+    context = {"form": form, "action": "add", "success": success}
     return render(request, "groups/addmodify.html", context)

@@ -21,13 +21,11 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate,
-                                Spacer, Table, TableStyle)
+from reportlab.platypus import (PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle)
 
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
-from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity,
-                      EighthSignup, EighthSponsor)
+from ..models import (EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor)
 from ..utils import get_start_date
 from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
@@ -64,15 +62,9 @@ def should_show_activity_list(wizard):
 
 
 class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
-    FORMS = [
-        ("block", BlockSelectionForm),
-        ("activity", ActivitySelectionForm)
-    ]
+    FORMS = [("block", BlockSelectionForm), ("activity", ActivitySelectionForm)]
 
-    TEMPLATES = {
-        "block": "eighth/take_attendance.html",
-        "activity": "eighth/take_attendance.html",
-    }
+    TEMPLATES = {"block": "eighth/take_attendance.html", "activity": "eighth/take_attendance.html"}
 
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
@@ -114,18 +106,14 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             # if not (self.request.user.is_eighth_admin or (sponsor is None)):
             #    kwargs.update({"sponsor": sponsor})
 
-        labels = {
-            "block": "Select a block",
-            "activity": "Select an activity" if not block else block_title,
-        }
+        labels = {"block": "Select a block", "activity": "Select an activity" if not block else block_title}
 
         kwargs.update({"label": labels[step]})
 
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EighthAttendanceSelectScheduledActivityWizard,
-                        self).get_context_data(form=form, **kwargs)
+        context = super(EighthAttendanceSelectScheduledActivityWizard, self).get_context_data(form=form, **kwargs)
         context.update({"admin_page_title": "Take Attendance"})
 
         block = self.get_cleaned_data_for_step("block")
@@ -143,13 +131,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
                 context.update({"sponsor_block": block})
                 logger.debug("sponsor block: {}".format(block))
 
-                sponsoring_filter = (Q(sponsors=sponsor) |
-                                     (Q(sponsors=None) &
-                                      Q(activity__sponsors=sponsor)))
-                sponsored_activities = (EighthScheduledActivity.objects
-                                                               .filter(block=block)
-                                                               .filter(sponsoring_filter)
-                                                               .order_by("activity__name"))
+                sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
+                sponsored_activities = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).order_by("activity__name"))
 
                 context.update({"sponsored_activities": sponsored_activities})
                 logger.debug(sponsored_activities)
@@ -176,10 +159,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         block = form_list[0].cleaned_data["block"]
         logger.debug(block)
         try:
-            scheduled_activity = EighthScheduledActivity.objects.get(
-                block=block,
-                activity=activity
-            )
+            scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
         except EighthScheduledActivity.DoesNotExist:
             raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity))
 
@@ -190,18 +170,11 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
 
         return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
-_unsafe_choose_scheduled_activity_view = (
-    EighthAttendanceSelectScheduledActivityWizard.as_view(
-        EighthAttendanceSelectScheduledActivityWizard.FORMS,
-        condition_dict={"activity": should_show_activity_list}
-    )
-)
-teacher_choose_scheduled_activity_view = (
-    attendance_taker_required(_unsafe_choose_scheduled_activity_view)
-)
-admin_choose_scheduled_activity_view = (
-    eighth_admin_required(_unsafe_choose_scheduled_activity_view)
-)
+
+_unsafe_choose_scheduled_activity_view = (EighthAttendanceSelectScheduledActivityWizard.as_view(
+    EighthAttendanceSelectScheduledActivityWizard.FORMS, condition_dict={"activity": should_show_activity_list}))
+teacher_choose_scheduled_activity_view = (attendance_taker_required(_unsafe_choose_scheduled_activity_view))
+admin_choose_scheduled_activity_view = (eighth_admin_required(_unsafe_choose_scheduled_activity_view))
 
 
 @login_required
@@ -217,13 +190,11 @@ def roster_view(request, scheduled_activity_id):
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
     is_sponsor = scheduled_activity.user_is_sponsor(request.user)
     logger.debug(viewable_members)
-    context = {
-        "scheduled_activity": scheduled_activity,
-        "viewable_members": viewable_members,
-        "num_hidden_members": num_hidden_members,
-        "signups": signups,
-        "is_sponsor": is_sponsor
-    }
+    context = {"scheduled_activity": scheduled_activity,
+               "viewable_members": viewable_members,
+               "num_hidden_members": num_hidden_members,
+               "signups": signups,
+               "is_sponsor": is_sponsor}
 
     return render(request, "eighth/roster.html", context)
 
@@ -240,12 +211,10 @@ def raw_roster_view(request, scheduled_activity_id):
     viewable_members = scheduled_activity.get_viewable_members(request.user)
     num_hidden_members = len(scheduled_activity.get_hidden_members(request.user))
 
-    context = {
-        "scheduled_activity": scheduled_activity,
-        "viewable_members": viewable_members,
-        "num_hidden_members": num_hidden_members,
-        "signups": signups
-    }
+    context = {"scheduled_activity": scheduled_activity,
+               "viewable_members": viewable_members,
+               "num_hidden_members": num_hidden_members,
+               "signups": signups}
 
     return render(request, "eighth/roster-list.html", context)
 
@@ -253,11 +222,8 @@ def raw_roster_view(request, scheduled_activity_id):
 @attendance_taker_required
 def take_attendance_view(request, scheduled_activity_id):
     try:
-        scheduled_activity = (EighthScheduledActivity.objects
-                                                     .select_related("activity",
-                                                                     "block")
-                                                     .get(activity__deleted=False,
-                                                          id=scheduled_activity_id))
+        scheduled_activity = (EighthScheduledActivity.objects.select_related("activity", "block").get(activity__deleted=False,
+                                                                                                      id=scheduled_activity_id))
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
@@ -279,13 +245,11 @@ def take_attendance_view(request, scheduled_activity_id):
 
         if not edit_perm:
             if edit_perm_cancelled:
-                return render(request, "error/403.html", {
-                    "reason": "You do not have permission to take attendance for this activity. The activity was cancelled."
-                }, status=403)
+                return render(request, "error/403.html",
+                              {"reason": "You do not have permission to take attendance for this activity. The activity was cancelled."}, status=403)
             else:
-                return render(request, "error/403.html", {
-                    "reason": "You do not have permission to take attendance for this activity. You are not a sponsor."
-                }, status=403)
+                return render(request, "error/403.html",
+                              {"reason": "You do not have permission to take attendance for this activity. You are not a sponsor."}, status=403)
 
         if "admin" in request.path:
             url_name = "eighth_admin_take_attendance"
@@ -307,9 +271,9 @@ def take_attendance_view(request, scheduled_activity_id):
             return redirect(redirect_url)
 
         if not scheduled_activity.block.locked and not request.user.is_eighth_admin:
-            return render(request, "error/403.html", {
-                "reason": "You do not have permission to take attendance for this activity. The block has not been locked yet."
-            }, status=403)
+            return render(request, "error/403.html",
+                          {"reason":
+                           "You do not have permission to take attendance for this activity. The block has not been locked yet."}, status=403)
 
         if not scheduled_activity.block.locked and request.user.is_eighth_admin:
             messages.success(request, "Note: Taking attendance on an unlocked block.")
@@ -320,25 +284,19 @@ def take_attendance_view(request, scheduled_activity_id):
         if csrf in present_user_ids:
             present_user_ids.remove(csrf)
 
-        absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity)
-                                      .exclude(user__in=present_user_ids)).nocache()
+        absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity).exclude(user__in=present_user_ids)).nocache()
         absent_signups.update(was_absent=True)
 
         for s in absent_signups:
             invalidate_obj(s)
 
-        present_signups = (EighthSignup.objects
-                                       .filter(scheduled_activity=scheduled_activity,
-                                               user__in=present_user_ids)).nocache()
+        present_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, user__in=present_user_ids)).nocache()
         present_signups.update(was_absent=False)
 
         for s in present_signups:
             invalidate_obj(s)
 
-        passes = (EighthSignup.objects
-                              .filter(scheduled_activity=scheduled_activity,
-                                      after_deadline=True,
-                                      pass_accepted=False)).nocache()
+        passes = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, after_deadline=True, pass_accepted=False)).nocache()
         passes.update(was_absent=True)
 
         for s in passes:
@@ -357,39 +315,26 @@ def take_attendance_view(request, scheduled_activity_id):
 
         return redirect(redirect_url)
     else:
-        passes = (EighthSignup.objects
-                              .select_related("user")
-                              .filter(scheduled_activity=scheduled_activity,
-                                      after_deadline=True,
-                                      pass_accepted=False)).nocache()
+        passes = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True,
+                                                                     pass_accepted=False)).nocache()
 
         users = scheduled_activity.members.exclude(eighthsignup__in=passes)
         members = []
 
-        absent_user_ids = (EighthSignup.objects
-                                       .select_related("user")
-                                       .filter(scheduled_activity=scheduled_activity,
-                                               was_absent=True)
-                                       .values_list("user__id", flat=True)).nocache()
+        absent_user_ids = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, was_absent=True).values_list(
+            "user__id", flat=True)).nocache()
 
-        pass_users = (EighthSignup.objects
-                                  .select_related("user")
-                                  .filter(scheduled_activity=scheduled_activity,
-                                          after_deadline=True,
-                                          pass_accepted=True)
-                                  .values_list("user__id", flat=True)).nocache()
+        pass_users = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True,
+                                                                         pass_accepted=True).values_list("user__id", flat=True)).nocache()
 
         for user in users:
             members.append({
                 "id": user.id,
                 "name": user.last_first,  # includes nickname
                 "grade": user.grade.number if user.grade else None,
-                "present": (scheduled_activity.attendance_taken and
-                            (user.id not in absent_user_ids)),
+                "present": (scheduled_activity.attendance_taken and (user.id not in absent_user_ids)),
                 "had_pass": user.id in pass_users,
-                "pass_present": (not scheduled_activity.attendance_taken and
-                                 user.id in pass_users and
-                                 user.id not in absent_user_ids),
+                "pass_present": (not scheduled_activity.attendance_taken and user.id in pass_users and user.id not in absent_user_ids),
                 "email": user.tj_email
             })
             invalidate_obj(user)
@@ -408,8 +353,7 @@ def take_attendance_view(request, scheduled_activity_id):
         }
 
         if request.user.is_eighth_admin:
-            context["scheduled_activities"] = (EighthScheduledActivity.objects
-                                                                      .filter(block__id=scheduled_activity.block.id))
+            context["scheduled_activities"] = (EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id))
             logger.debug(context["scheduled_activities"])
             context["blocks"] = (EighthBlock.objects
                                  # .filter(date__gte=get_start_date(request))
@@ -420,18 +364,8 @@ def take_attendance_view(request, scheduled_activity_id):
             response["Content-Disposition"] = "attachment; filename=\"attendance.csv\""
 
             writer = csv.writer(response)
-            writer.writerow(["Block",
-                             "Activity",
-                             "Name",
-                             "Student ID",
-                             "Grade",
-                             "Email",
-                             "Locked",
-                             "Rooms",
-                             "Sponsors",
-                             "Attendance Taken",
-                             "Present",
-                             "Had Pass"])
+            writer.writerow(["Block", "Activity", "Name", "Student ID", "Grade", "Email", "Locked", "Rooms", "Sponsors", "Attendance Taken",
+                             "Present", "Had Pass"])
             for member in members:
                 row = []
                 logger.debug(member)
@@ -468,16 +402,11 @@ def accept_pass_view(request, signup_id):
         raise http.Http404
 
     sponsor = request.user.get_eighth_sponsor()
-    can_accept = (
-        signup.scheduled_activity.block.locked and
-        (sponsor and (sponsor in signup.scheduled_activity.get_true_sponsors()) or
-            request.user.is_eighth_admin)
-    )
+    can_accept = (signup.scheduled_activity.block.locked and
+                  (sponsor and (sponsor in signup.scheduled_activity.get_true_sponsors()) or request.user.is_eighth_admin))
 
     if not can_accept:
-        return render(request, "error/403.html", {
-            "reason": "You do not have permission to take accept this pass."
-        }, status=403)
+        return render(request, "error/403.html", {"reason": "You do not have permission to accept this pass."}, status=403)
 
     status = request.POST.get("status")
 
@@ -497,8 +426,7 @@ def accept_pass_view(request, signup_id):
     else:
         url_name = "eighth_take_attendance"
 
-    return redirect(url_name,
-                    scheduled_activity_id=signup.scheduled_activity.id)
+    return redirect(url_name, scheduled_activity_id=signup.scheduled_activity.id)
 
 
 @attendance_taker_required
@@ -507,31 +435,18 @@ def accept_all_passes_view(request, scheduled_activity_id):
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
     try:
-        scheduled_activity = EighthScheduledActivity.objects.get(
-            id=scheduled_activity_id
-        )
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
     except EighthScheduledActivity.DoesNotExist:
         raise http.Http404
 
     sponsor = request.user.get_eighth_sponsor()
-    can_accept = (
-        scheduled_activity.block.locked and
-        (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or
-            request.user.is_eighth_admin)
-    )
+    can_accept = (scheduled_activity.block.locked and (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or
+                                                       request.user.is_eighth_admin))
 
     if not can_accept:
-        return render(request, "error/403.html", {
-            "reason": "You do not have permission to take accept these passes."
-        }, status=403)
+        return render(request, "error/403.html", {"reason": "You do not have permission to take accept these passes."}, status=403)
 
-    EighthSignup.objects.filter(
-        after_deadline=True,
-        scheduled_activity=scheduled_activity
-    ).update(
-        pass_accepted=True,
-        was_absent=False
-    )
+    EighthSignup.objects.filter(after_deadline=True, scheduled_activity=scheduled_activity).update(pass_accepted=True, was_absent=False)
     invalidate_obj(scheduled_activity)
 
     if "admin" in request.path:
@@ -539,12 +454,12 @@ def accept_all_passes_view(request, scheduled_activity_id):
     else:
         url_name = "eighth_take_attendance"
 
-    return redirect(url_name,
-                    scheduled_activity_id=scheduled_activity.id)
+    return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
 
 
 def generate_roster_pdf(sched_act_ids, include_instructions):
-    """Generates a PDF roster for one or more
+    """Generates a PDF roster for one or more.
+
     :class:`EighthScheduledActivity`\s.
 
     Args
@@ -561,9 +476,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
     pdf_buffer = BytesIO()
     h_margin = 1 * inch
     v_margin = 0.5 * inch
-    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter,
-                            rightMargin=h_margin, leftMargin=h_margin,
-                            topMargin=v_margin, bottomMargin=v_margin)
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter, rightMargin=h_margin, leftMargin=h_margin, topMargin=v_margin, bottomMargin=v_margin)
 
     elements = []
 
@@ -577,8 +490,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
     for i, said in enumerate(sched_act_ids):
         sact = EighthScheduledActivity.objects.get(id=said)
 
-        sponsor_names = sact.get_true_sponsors().values_list("first_name",
-                                                             "last_name")
+        sponsor_names = sact.get_true_sponsors().values_list("first_name", "last_name")
         sponsors_str = "; ".join(l + ", " + f for f, l in sponsor_names)
 
         room_names = sact.get_true_rooms().values_list("name", flat=True)
@@ -604,18 +516,13 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
 
         header_data = [[
             Paragraph("<b>Activity ID: {}<br />Scheduled ID: {}</b>".format(sact.activity.id, sact.id), styles["Normal"]),
-            Paragraph("{}<br/>{}<br/>{}".format(sponsors_str,
-                                                rooms_str,
-                                                sact.block.date.strftime("%A, %B %-d, %Y")),
-                      styles["ActivityAttribute"]),
-            Paragraph(block_letter, styles[block_letter_style])
+            Paragraph("{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")),
+                      styles["ActivityAttribute"]), Paragraph(block_letter, styles[block_letter_style])
         ]]
-        header_style = TableStyle([
-            ("VALIGN", (0, 0), (0, 0), "TOP"),
-            ("VALIGN", (1, 0), (2, 0), "MIDDLE"),
-            ("TOPPADDING", (0, 0), (0, 0), 15),
-            ("RIGHTPADDING", (1, 0), (1, 0), 0),
-        ])
+        header_style = TableStyle([("VALIGN", (0, 0), (0, 0), "TOP"),
+                                   ("VALIGN", (1, 0), (2, 0), "MIDDLE"),
+                                   ("TOPPADDING", (0, 0), (0, 0), 15),
+                                   ("RIGHTPADDING", (1, 0), (1, 0), 0)])
 
         elements.append(Table(header_data, style=header_style, colWidths=[2 * inch, None, block_letter_width]))
         elements.append(Spacer(0, 10))
@@ -626,19 +533,13 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         elements.append(Paragraph(num_members_label, styles["Center"]))
         elements.append(Spacer(0, 5))
 
-        attendance_data = [[
-            Paragraph("Present", styles["Heading5"]),
-            Paragraph("Student Name (ID)", styles["Heading5"]),
-            Paragraph("Grade", styles["Heading5"])
-        ]]
+        attendance_data = [[Paragraph("Present", styles["Heading5"]), Paragraph("Student Name (ID)", styles["Heading5"]),
+                            Paragraph("Grade", styles["Heading5"])]]
 
         members = []
         for member in sact.members.all():
-            members.append((
-                member.last_name + ", " + member.first_name,
-                (member.student_id if member.student_id else "User {}".format(member.id)),
-                int(member.grade) if member.grade else "?"
-            ))
+            members.append((member.last_name + ", " + member.first_name, (member.student_id if member.student_id else "User {}".format(member.id)),
+                            int(member.grade) if member.grade else "?"))
         members = sorted(members)
 
         for member_name, member_id, member_grade in members:
@@ -663,6 +564,7 @@ def generate_roster_pdf(sched_act_ids, include_instructions):
         If a student leaves your activity early, please make a note. <b>Do not make any additions to the roster.</b><br />
         Before leaving for the day, return the roster and any passes to 8th Period coordinator, Joan Burch's mailbox in the <b>main office</b>.
         For questions, please call extension 5046 or 5078. Thank you!<br />"""
+
         elements.append(Paragraph(instructions, styles["Normal"]))
 
         if i != len(sched_act_ids) - 1:
@@ -684,16 +586,11 @@ def eighth_absences_view(request, user_id=None):
         else:
             return redirect("eighth_admin_dashboard")
 
-    absences = (EighthSignup.objects
-                            .filter(user=user,
-                                    was_absent=True,
-                                    scheduled_activity__attendance_taken=True)
-                            .select_related("scheduled_activity__block", "scheduled_activity__activity")
-                            .order_by("scheduled_activity__block"))
-    context = {
-        "absences": absences,
-        "user": user
-    }
+    absences = (EighthSignup.objects.filter(
+        user=user, was_absent=True,
+        scheduled_activity__attendance_taken=True).select_related("scheduled_activity__block", "scheduled_activity__activity")
+        .order_by("scheduled_activity__block"))
+    context = {"absences": absences, "user": user}
     return render(request, "eighth/absences.html", context)
 
 
@@ -725,8 +622,6 @@ def sponsor_schedule_widget_view(request):
         # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
         # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
-    context.update({
-        "eighth_sponsor": eighth_sponsor
-    })
+    context.update({"eighth_sponsor": eighth_sponsor})
 
     return render(request, "eighth/sponsor_widget.html", context)
