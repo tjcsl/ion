@@ -17,7 +17,6 @@ urlpatterns = [
     url(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     url(r"^", include("intranet.apps.auth.urls")),
     url(r"^announcements", include("intranet.apps.announcements.urls")),
-    # url(r"^board", include("intranet.apps.board.urls")),
     url(r"^eighth", include("intranet.apps.eighth.urls")),
     url(r"^events", include("intranet.apps.events.urls")),
     url(r"^files", include("intranet.apps.files.urls")),
@@ -39,6 +38,10 @@ urlpatterns = [
     url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
 ]
+
+# FIXME: move to main urlconf once board goes live.
+if settings.TESTING:
+    urlpatterns += [url(r"^board", include("intranet.apps.board.urls"))]
 
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar

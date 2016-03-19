@@ -28,6 +28,14 @@ intranet.apps.board.models module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.board.tests module
+--------------------------------
+
+.. automodule:: intranet.apps.board.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.board.urls module
 -------------------------------
 
