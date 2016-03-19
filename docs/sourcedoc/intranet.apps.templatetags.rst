@@ -44,6 +44,14 @@ intranet.apps.templatetags.strings module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.templatetags.tests module
+---------------------------------------
+
+.. automodule:: intranet.apps.templatetags.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
