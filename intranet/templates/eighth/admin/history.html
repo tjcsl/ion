@@ -1,0 +1,38 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load dates %}
+{% load staticfiles %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'vendor/sortable-0.6.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+<table class="fancy-table" data-sortable>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Date/Time</th>
+            <th>Contents</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for historytype, items in history.items %}
+        {% for item in items %}
+        <tr>
+            <th>{{ historytype }}</th>
+            <td>{{ item.history_date }}</td>
+            <td>
+            {% if historytype == "EighthSignup" %}
+                {{ item.user }} {% if item.own_signup %}signed themselves up for{% else %}was signed up for{% endif %} {{ item.scheduled_activity }}
+            {% elif historytype == "EighthActivity" %}
+                {{ item }} was modified
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

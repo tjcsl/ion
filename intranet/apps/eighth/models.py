@@ -7,6 +7,7 @@ from itertools import chain
 from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from simple_history.models import HistoricalRecords
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import formats
@@ -54,6 +55,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     online_attendance = models.BooleanField(default=True)
     show_full_name = models.BooleanField(default=False)
 
+    history = HistoricalRecords()
+
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance"),)
         ordering = ("last_name", "first_name",)
@@ -85,6 +88,8 @@ class EighthRoom(AbstractBaseEighthModel):
     """
     name = models.CharField(max_length=100)
     capacity = models.SmallIntegerField(default=28)
+
+    history = HistoricalRecords()
 
     unique_together = (("name", "capacity"),)
 
@@ -206,6 +211,8 @@ class EighthActivity(AbstractBaseEighthModel):
     favorites = models.ManyToManyField(User, related_name="favorited_activity_set", blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
+
+    history = HistoricalRecords()
 
     def capacity(self):
         # Note that this is the default capacity if the
@@ -435,6 +442,8 @@ class EighthBlock(AbstractBaseEighthModel):
 
     override_blocks = models.ManyToManyField("EighthBlock", blank=True)
 
+    history = HistoricalRecords()
+
     def save(self, *args, **kwargs):
         """Capitalize the first letter of the block name."""
         letter = getattr(self, "block_letter", None)
@@ -638,6 +647,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
+
+    history = HistoricalRecords()
 
     @property
     def full_title(self):
@@ -1010,7 +1021,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     # switching out of a both-blocks activity
                     EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks).delete()
                     EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline,
-                                                       previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
+                                                       previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
             except EighthSignup.DoesNotExist:
                 EighthSignup.objects.create_signup(user=user, scheduled_activity=self, after_deadline=after_deadline)
         else:
@@ -1033,7 +1044,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     previous_activity_sponsors = None
 
                 EighthSignup.objects.create_signup(user=user, scheduled_activity=sched_act, after_deadline=after_deadline,
-                                                   previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors)
+                                                   previous_activity_name=previous_activity_name, previous_activity_sponsors=previous_activity_sponsors, own_signup=(user == request.user))
 
                 # signup.previous_activity_name = signup.activity.name_with_flags
                 # signup.previous_activity_sponsors = ", ".join(map(str, signup.get_true_sponsors()))
@@ -1175,6 +1186,10 @@ class EighthSignup(AbstractBaseEighthModel):
         if self.has_conflict():
             raise ValidationError("EighthSignup already exists for this user on this block.")
         super(EighthSignup, self).save(*args, **kwargs)
+
+    own_signup = models.BooleanField(default=False)
+
+    history = HistoricalRecords()
 
     def validate_unique(self, *args, **kwargs):
         """Checked whether more than one EighthSignup exists for a User on a given EighthBlock."""

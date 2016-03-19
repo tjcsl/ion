@@ -265,6 +265,7 @@ MIDDLEWARE_CLASSES = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
+    "simple_history.middleware.HistoryRequestMiddleware"
 ]
 
 # URLconf at urls.py
@@ -440,7 +441,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "oauth2_provider",
     "corsheaders",
-    "cacheops"
+    "cacheops",
+    "simple_history"
 ]
 
 # Eighth period default block date format
