@@ -108,6 +108,9 @@ class Board(models.Model):
         current user is a member.
 
         """
+        # admin_all can access everything
+        if user.member_of("admin_all"):
+            return True
         if self.type == "activity":
             if self.activity.restricted:
                 return self.activity.id in EighthActivity.restricted_activities_available_to_user(user)
@@ -126,11 +129,10 @@ class Board(models.Model):
 
         return False
 
-    def __unicode__(self):
+    def __str__(self):
         if self.type:
             return "{}: {}".format(self.type.capitalize(), self.type_obj)
-
-        return None
+        return "Unknown Board"
 
 
 class BoardPost(models.Model):

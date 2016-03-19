@@ -4,6 +4,14 @@ intranet.apps.board package
 Submodules
 ----------
 
+intranet.apps.board.admin module
+--------------------------------
+
+.. automodule:: intranet.apps.board.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.board.forms module
 --------------------------------
 

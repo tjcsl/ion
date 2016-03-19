@@ -2,7 +2,6 @@
 
 import logging
 from django import http
-from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 def home(request):
     """The homepage, showing all board posts available to you."""
 
-    classes = request.user.classes
+    classes = request.user.classes or []
     section_ids = [c.section_id for c in classes]
     posts = BoardPost.objects.filter(board__class_id__in=section_ids)
 
@@ -32,9 +31,7 @@ def home(request):
 def class_feed(request, class_id):
     """The feed of a class."""
     class_obj = Class(id=class_id)
-    try:
-        class_obj.name
-    except Exception:
+    if class_obj.name is None:
         # The class doesn't actually exist
         raise http.Http404
 
@@ -45,7 +42,7 @@ def class_feed(request, class_id):
         board = Board.objects.create(class_id=class_id)
 
     if not board.has_member(request.user):
-        raise http.Http403
+        return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
     posts = BoardPost.objects.filter(board__class_id=class_id)
 
@@ -83,7 +80,7 @@ def section_feed(request, section_id):
         board = Board.objects.create(section_id=section_id)
 
     if not board.has_member(request.user):
-        raise http.Http403
+        return render(request, "error/403.html", {"reason": "You are not a member of this section."}, status=403)
 
     context = {
         "board": board,
@@ -102,9 +99,7 @@ def class_feed_post(request, class_id):
 
     # Check permissions
     class_obj = Class(id=class_id)
-    try:
-        class_obj.name
-    except Exception:
+    if class_obj.name is None:
         # The class doesn't actually exist
         raise http.Http404
 
@@ -115,7 +110,7 @@ def class_feed_post(request, class_id):
         board = Board.objects.create(class_id=class_id)
 
     if not board.has_member(request.user):
-        raise http.Http403
+        return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
     if request.method == "POST":
         form = BoardPostForm(request.POST)
@@ -164,7 +159,7 @@ def section_feed_post(request, section_id):
         board = Board.objects.create(section_id=section_id)
 
     if not board.has_member(request.user):
-        raise http.Http403
+        return render(request, "error/403.html", {"reason": "You are not a member of this section."}, status=403)
 
     if request.method == "POST":
         form = BoardPostForm(request.POST)
@@ -205,7 +200,7 @@ def modify_post_view(request, id=None):
     post = get_object_or_404(BoardPost, id=id)
 
     if not request.user.has_admin_permission('board') and post.user != request.user:
-        raise exceptions.PermissionDenied
+        return render(request, "error/403.html", {"reason": "You are neither this event's creater or an administrator."}, status=403)
 
     if request.method == "POST":
         form = BoardPostForm(request.POST, instance=post)
@@ -231,7 +226,7 @@ def comment_view(request, post_id):
     board = post.board
 
     if not board.has_member(request.user):
-        raise http.Http403
+        return render(request, "error/403.html", {"reason": "You are not alloed to view this board."}, status=403)
 
     if request.method == "POST":
         form = BoardPostCommentForm(request.POST)

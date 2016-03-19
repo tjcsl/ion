@@ -1642,7 +1642,10 @@ class Class(object):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        return list(zip(*ordered_schedule))[1]  # The class objects
+        if ordered_schedule:
+            return list(zip(*ordered_schedule))[1]  # The class objects
+        else:
+            return []
 
     def __getattr__(self, name):
         """Return simple attributes of Class.
