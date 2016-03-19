@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.general &mdash; TJ Intranet v3 (Build #1638) documentation</title>
+    <title>intranet.apps.eighth.views.admin.general &mdash; TJ Intranet v3 (Build #1640) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1638)',
+        VERSION:     'v3 (Build #1640)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,8 +32,8 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1638) documentation" href="../../../../../../index.html" />
-    <link rel="up" title="Module code" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1640) documentation" href="../../../../../../index.html" />
+    <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -146,9 +146,9 @@
       
   <h1>Source code for intranet.apps.eighth.views.admin.general</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
 <span class="kn">import</span> <span class="nn">pickle</span>
 
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">unquote</span>
 
 <span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_all</span>
@@ -160,7 +160,7 @@
 <span class="kn">from</span> <span class="nn">...forms.admin</span> <span class="kn">import</span> <span class="n">general</span> <span class="k">as</span> <span class="n">general_forms</span>
 <span class="kn">from</span> <span class="nn">...forms.admin</span> <span class="kn">import</span> <span class="n">groups</span> <span class="k">as</span> <span class="n">group_forms</span>
 <span class="kn">from</span> <span class="nn">...forms.admin</span> <span class="kn">import</span> <span class="n">rooms</span> <span class="k">as</span> <span class="n">room_forms</span>
-<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthSponsor</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">get_start_date</span><span class="p">,</span> <span class="n">set_start_date</span>
 <span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">....groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
@@ -276,6 +276,22 @@
 <span class="nd">@eighth_admin_required</span>
 <div class="viewcode-block" id="not_implemented_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.not_implemented_view">[docs]</a><span class="k">def</span> <span class="nf">not_implemented_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This view has not been implemented yet.&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@eighth_admin_required</span>
+<div class="viewcode-block" id="history_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.history_view">[docs]</a><span class="k">def</span> <span class="nf">history_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">history_timeframe</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;EighthSignup&quot;</span><span class="p">:</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>
+        <span class="s2">&quot;EighthScheduledActivity&quot;</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>
+        <span class="s2">&quot;EighthActivity&quot;</span><span class="p">:</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">),</span>
+        <span class="s2">&quot;EighthBlock&quot;</span><span class="p">:</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">history_date__gt</span><span class="o">=</span><span class="n">history_timeframe</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">,</span>
+        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Event History&quot;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/history.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

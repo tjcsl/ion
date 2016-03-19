@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.environment &mdash; TJ Intranet v3 (Build #1640) documentation</title>
+    <title>intranet.apps.eighth &mdash; TJ Intranet v3 (Build #1640) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -144,48 +144,8 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.middleware.environment</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="KerberosCacheMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.environment.KerberosCacheMiddleware">[docs]</a><span class="k">class</span> <span class="nc">KerberosCacheMiddleware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reloads the KRB5CCNAME environmental variable from the session for potential use in future</span>
-<span class="sd">    LDAP requests.</span>
-
-<span class="sd">    For a login request, the KRB5CCNAME environmental variable has</span>
-<span class="sd">    already been set in the authentication backend, but for all other</span>
-<span class="sd">    requests, it must be reset from the Kerberos cache stored in a</span>
-<span class="sd">    user&#39;s session. Otherwise all requests to a a particular Gunicorn</span>
-<span class="sd">    worker would use the Kerberos cache of the user who most recently</span>
-<span class="sd">    logged in through that worker.</span>
-
-<span class="sd">    The environmental variable must be set by middleware so it is</span>
-<span class="sd">    available for requests to any view and so each view does not have</span>
-<span class="sd">    to load the environmental variable. The LDAP wrapper</span>
-<span class="sd">    (intranet.db.ldap_db) cannot set the environmental variable because</span>
-<span class="sd">    it does not have access to the current session (request.session).</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="KerberosCacheMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.environment.KerberosCacheMiddleware.process_request">[docs]</a>    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Propogate KRB5CCNAME session variable to the environmental variable.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
-            <span class="c1"># It is important to check that the environmental variable</span>
-            <span class="c1"># matches the session variable because environmentals stay</span>
-            <span class="c1"># on the worker after requests.</span>
-            <span class="k">if</span> <span class="s2">&quot;KRB5CCNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Reloading KRB5CCNAME environmental variable from session.&quot;</span><span class="p">)</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;KRB5CCNAME environmental variable not set - setting it to KRB5CCNAME from session vars.&quot;</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;KRB5CCNAME&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">None</span></div></div>
+  <h1>Source code for intranet.apps.eighth</h1><div class="highlight"><pre>
+<span></span>
 </pre></div>
 
     </div>
