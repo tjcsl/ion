@@ -21,6 +21,20 @@ class KerberosAuthenticationBackend(object):
     This is the default authentication backend.
 
     """
+    @staticmethod
+    def kinit_timeout_handle(username, realm):
+        """Check if the user exists before we throw an error.
+
+        If the user does not exist in LDAP, only throw a warning.
+
+        """
+        try:
+            User.get_user(username=username)
+        except User.DoesNotExist:
+            logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
+            return
+
+        logger.critical("kinit timed out for {}@{}".format(username, realm))
 
     @staticmethod
     def get_kerberos_ticket(username, password):
@@ -37,21 +51,7 @@ class KerberosAuthenticationBackend(object):
 
         """
 
-        def kinit_timeout_handle(username, realm):
-            """Check if the user exists before we throw an error.
-
-            If the user does not exist in LDAP, only throw a warning.
-
-            """
-            try:
-                User.get_user(username=username)
-            except User.DoesNotExist:
-                logger.warning("kinit timed out for {}@{} (invalid user)".format(username, realm))
-                return
-
-            logger.critical("kinit timed out for {}@{}".format(username, realm))
-
-        cache = "/tmp/ion-" + str(uuid.uuid4())
+        cache = "/tmp/ion-%s" % uuid.uuid4()
 
         logger.debug("Setting KRB5CCNAME to 'FILE:{}'".format(cache))
         os.environ["KRB5CCNAME"] = "FILE:" + cache
@@ -65,7 +65,7 @@ class KerberosAuthenticationBackend(object):
             kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
-            kinit_timeout_handle(username, realm)
+            KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
             exitstatus = 1
 
         if exitstatus != 0:
@@ -78,7 +78,7 @@ class KerberosAuthenticationBackend(object):
                 kinit.close()
                 exitstatus = kinit.exitstatus
             except pexpect.TIMEOUT:
-                kinit_timeout_handle(username, realm)
+                KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
                 exitstatus = 1
 
         if exitstatus == 0:
