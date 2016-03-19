@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.api &mdash; TJ Intranet v3 (Build #1637) documentation</title>
+    <title>intranet.apps.templatetags.tests &mdash; TJ Intranet v3 (Build #1637) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -144,50 +144,26 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.schedule.api</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.templatetags.tests</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
-<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">call_command</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">serializers</span>
-<span class="kn">from</span> <span class="nn">rest_framework.pagination</span> <span class="kn">import</span> <span class="n">PageNumberPagination</span>
-<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">AllowAny</span>
-
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Day</span>
-<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">DaySerializer</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 
 
-<div class="viewcode-block" id="OnePagePagination"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.OnePagePagination">[docs]</a><span class="k">class</span> <span class="nc">OnePagePagination</span><span class="p">(</span><span class="n">PageNumberPagination</span><span class="p">):</span>
-    <span class="n">page_size</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">page_size_query_param</span> <span class="o">=</span> <span class="s1">&#39;page_size&#39;</span>
-    <span class="n">max_page_size</span> <span class="o">=</span> <span class="mi">7</span></div>
+<div class="viewcode-block" id="TemplateTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.tests.TemplateTest">[docs]</a><span class="k">class</span> <span class="nc">TemplateTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests for the templates.&quot;&quot;&quot;</span>
 
-
-<div class="viewcode-block" id="DayList"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayList">[docs]</a><span class="k">class</span> <span class="nc">DayList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_future_days</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">DaySerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowAny</span><span class="p">,)</span>
-    <span class="n">pagination_class</span> <span class="o">=</span> <span class="n">OnePagePagination</span></div>
-
-
-<div class="viewcode-block" id="DayDetail"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayDetail">[docs]</a><span class="k">class</span> <span class="nc">DayDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">DaySerializer</span>
-    <span class="n">lookup_field</span> <span class="o">=</span> <span class="s2">&quot;date&quot;</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowAny</span><span class="p">,)</span>
-
-<div class="viewcode-block" id="DayDetail.get_object"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.api.DayDetail.get_object">[docs]</a>    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">day</span>
-        <span class="k">except</span> <span class="n">Day</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
-        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="TemplateTest.test_validate_templates"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.tests.TemplateTest.test_validate_templates">[docs]</a>    <span class="k">def</span> <span class="nf">test_validate_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validates all the templates.&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+            <span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;validate_templates&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s1">&#39;0 errors found&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
