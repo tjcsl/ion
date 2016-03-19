@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import logging
 from django import http
+from django.core import exceptions
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from ..auth.decorators import board_admin_required
-from ..groups.models import Group
-from ..users.models import User, Class, ClassSections
-from .models import Board, BoardPost, BoardPostComment
+from ..users.models import Class, ClassSections
+from .models import Board, BoardPost
 from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def home(request):
-    """ The homepage, showing all board posts available to you.
-    """
+    """The homepage, showing all board posts available to you."""
 
     classes = request.user.classes
     section_ids = [c.section_id for c in classes]
@@ -30,14 +27,13 @@ def home(request):
 
     return render(request, "board/home.html", context)
 
+
 @login_required
 def class_feed(request, class_id):
-    """ The feed of a class.
-
-    """
+    """The feed of a class."""
     class_obj = Class(id=class_id)
     try:
-        name = class_obj.name
+        class_obj.name
     except Exception:
         # The class doesn't actually exist
         raise http.Http404
@@ -50,7 +46,6 @@ def class_feed(request, class_id):
 
     if not board.has_member(request.user):
         raise http.Http403
-
 
     posts = BoardPost.objects.filter(board__class_id=class_id)
 
@@ -66,11 +61,10 @@ def class_feed(request, class_id):
 
     return render(request, "board/feed.html", context)
 
+
 @login_required
 def section_feed(request, section_id):
-    """ The feed of a section.
-
-    """
+    """The feed of a section."""
 
     # Check permissions
     try:
@@ -102,18 +96,14 @@ def section_feed(request, section_id):
     return render(request, "board/feed.html", context)
 
 
-
-
 @login_required
 def class_feed_post(request, class_id):
-    """
-        Post to class feed.
-    """
+    """Post to class feed."""
 
     # Check permissions
     class_obj = Class(id=class_id)
     try:
-        name = class_obj.name
+        class_obj.name
     except Exception:
         # The class doesn't actually exist
         raise http.Http404
@@ -155,9 +145,7 @@ def class_feed_post(request, class_id):
 
 @login_required
 def section_feed_post(request, section_id):
-    """
-        Post to section feed.
-    """
+    """Post to section feed."""
 
     # Check permissions
     try:
@@ -206,14 +194,12 @@ def section_feed_post(request, section_id):
     return render(request, "board/add_modify.html", context)
 
 
-
 @login_required
 def modify_post_view(request, id=None):
-    """
-        Modify post page. You may only modify an event if you were the creator or you are an
-        administrator.
+    """Modify post page. You may only modify an event if you were the creator or you are an
+    administrator.
 
-        id: post id
+    id: post id
 
     """
     post = get_object_or_404(BoardPost, id=id)
@@ -229,22 +215,20 @@ def modify_post_view(request, id=None):
             obj.user = request.user
             obj.save()
             messages.success(request, "Successfully modified post.")
-            #return redirect("events")
+            # return redirect("events")
         else:
             messages.error(request, "Error adding post.")
     else:
         form = BoardPostForm(instance=post)
     return render(request, "board/add_modify.html", {"form": form, "action": "modify", "id": id})
 
+
 @login_required
 def comment_view(request, post_id):
-    """
-        Add a comment form page.
-    """
+    """Add a comment form page."""
 
     post = get_object_or_404(BoardPost, id=post_id)
     board = post.board
-
 
     if not board.has_member(request.user):
         raise http.Http403
@@ -274,4 +258,3 @@ def comment_view(request, post_id):
         "board": board
     }
     return render(request, "board/comment.html", context)
-

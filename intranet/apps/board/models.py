@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-from datetime import datetime
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
-from django.db.models import Manager, Q
 from ..eighth.models import EighthActivity
-from ..groups.models import Group
 from ..users.models import User, Class, ClassSections
 
-class Board(models.Model):
-    """A Board is a collection of BoardPosts for a specific
-       eighth period activity, class, class section, or group.
 
-    """
+class Board(models.Model):
+    """A Board is a collection of BoardPosts for a specific eighth period activity, class, class
+    section, or group."""
 
     # Identifiers
     activity = models.OneToOneField(EighthActivity, null=True)
@@ -62,24 +57,22 @@ class Board(models.Model):
         elif self.group:
             return self.group.title
         return None
-    
 
     @property
     def class_obj(self):
-        """ Get the Class object if that is the type. """
+        """Get the Class object if that is the type."""
         if self.type == "class":
             return Class(id=self.class_id)
 
     @property
     def section_obj(self):
-        """ Get the ClassSections object if that is the type. """
+        """Get the ClassSections object if that is the type."""
         if self.type == "section":
             return ClassSections(id=self.section_id)
-    
+
     @property
     def add_button_route(self):
-        """ Get the route name for the 'Post' button.
-        """
+        """Get the route name for the 'Post' button."""
         if self.type == "activity":
             return "board_activity_post"
         elif self.type == "class":
@@ -92,8 +85,10 @@ class Board(models.Model):
 
     @property
     def add_button_arg(self):
-        """ Get the argument for the route for the 'Post' button.
-            This is the ID of whatever type the board is for.
+        """Get the argument for the route for the 'Post' button.
+
+        This is the ID of whatever type the board is for.
+
         """
         if self.type == "activity":
             return self.activity.id
@@ -104,14 +99,14 @@ class Board(models.Model):
         elif self.type == "group":
             return self.group.id
         return None
-    
-    
 
     def has_member(self, user):
-        """ Determine whether a given user is a member of the board.
-            Because you can't always see all of the people in a class or section
-            due to permissions, you should only check whether the current user is
-            a member.
+        """Determine whether a given user is a member of the board.
+
+        Because you can't always see all of the people in a class or
+        section due to permissions, you should only check whether the
+        current user is a member.
+
         """
         if self.type == "activity":
             if self.activity.restricted:
@@ -134,13 +129,16 @@ class Board(models.Model):
     def __unicode__(self):
         if self.type:
             return "{}: {}".format(self.type.capitalize(), self.type_obj)
-        
+
         return None
 
+
 class BoardPost(models.Model):
-    """ A BoardPost is a post by a user in a specific Board.
-        They must be in the activity/class/class section/group
-        to post to the board.
+    """A BoardPost is a post by a user in a specific Board.
+
+    They must be in the activity/class/class section/group to post to
+    the board.
+
     """
 
     title = models.CharField(max_length=250)
@@ -164,10 +162,9 @@ class BoardPost(models.Model):
     def __unicode__(self):
         return "{} by {}".format(self.title[:30], self.user)
 
+
 class BoardPostComment(models.Model):
-    """ A BoardPostComment is a comment on a BoardPost by a user in
-        a specific Board.
-    """
+    """A BoardPostComment is a comment on a BoardPost by a user in a specific Board."""
 
     content = models.TextField(max_length=1000)
     user = models.ForeignKey(User)

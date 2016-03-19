@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django import forms
-from .models import Board, BoardPost, BoardPostComment
-from ..groups.models import Group
-from ..users.models import User
+from .models import BoardPost, BoardPostComment
 
 
 class BoardPostForm(forms.ModelForm):
@@ -18,6 +15,7 @@ class BoardPostForm(forms.ModelForm):
                    "updated",
                    "user",
                    "comments"]
+
 
 class BoardPostCommentForm(forms.ModelForm):
     content = forms.TextInput()

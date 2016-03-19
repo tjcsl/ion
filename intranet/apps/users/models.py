@@ -1730,8 +1730,9 @@ class Class(object):
     def __str__(self):
         if self.name and self.teacher.last_name:
             pd_list = ", ".join([str(i) for i in self.periods])
-            return "{}, Period {} ({})".format(self.name, pd_list self.teacher.last_name)
+            return "{}, Period {} ({})".format(self.name, pd_list, self.teacher.last_name)
         return "{}".format(self.dn)
+
 
 class ClassSections(object):
     """Represents a list of tjhsstClass LDAP objects.
@@ -1782,6 +1783,7 @@ class ClassSections(object):
             return "{}".format(self.classes[0].name)
 
         return "{}".format(self.id)
+
 
 class Address(object):
     """Represents a user's address.
