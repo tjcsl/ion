@@ -33,16 +33,9 @@ class KerberosCacheMiddleware(object):
             # on the worker after requests.
             if "KRB5CCNAME" in os.environ:
                 if os.environ["KRB5CCNAME"] != request.session["KRB5CCNAME"]:
-                    logger.debug("Reloading KRB5CCNAME environmental " "variable from session.")
+                    logger.debug("Reloading KRB5CCNAME environmental variable from session.")
                     os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
             else:
-                logger.debug("KRB5CCNAME environmental variable not set - " "setting it to KRB5CCNAME from session vars.")
+                logger.debug("KRB5CCNAME environmental variable not set - setting it to KRB5CCNAME from session vars.")
                 os.environ["KRB5CCNAME"] = request.session["KRB5CCNAME"]
-
-            # if request.user.is_authenticated():
-            #     proc = pexpect.spawn("klist -t")
-            #     proc.close()
-            #     if proc.exitstatus != 0:
-            #         logout(request)
-
         return None

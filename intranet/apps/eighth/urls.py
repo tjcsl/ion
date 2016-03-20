@@ -44,10 +44,11 @@ urlpatterns = [
 ]
 
 eighth_admin_patterns = [
-    # admin_activities
+    # Admin Activities
     url(r"^activities/add$", admin_activities.add_activity_view, name="eighth_admin_add_activity"),
     url(r"^activities/edit/(?P<activity_id>\d+)$", admin_activities.edit_activity_view, name="eighth_admin_edit_activity"),
     url(r"^activities/delete/(?P<activity_id>\d+)$", admin_activities.delete_activity_view, name="eighth_admin_delete_activity"),
+    url(r"^history$", general.history_view, name="eighth_admin_history"),
 
     # Blocks
     url(r"^blocks/add$", blocks.add_block_view, name="eighth_admin_add_block"),

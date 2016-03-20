@@ -304,8 +304,8 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 
-if os.environ.get('READTHEDOCS') == 'True':
-    sys.modules['ldap_test'] = mock.MagicMock()
+# Don't spin up a ldap server when building docs.
+sys.modules['ldap_test'] = mock.MagicMock()
 
 # Django docs
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext")))
@@ -313,7 +313,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "_ext"))
 
 def skip(app, what, name, obj, skip, options):
     """Methods to skip when generating documentation from docstrings."""
-    if name in ("__weakref__", "__dict__", "base_fields", "media"):
+    if name in ("__weakref__", "__dict__", "base_fields", "media", "history_object"):
         return True
     return skip
 

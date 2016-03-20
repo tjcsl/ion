@@ -14,3 +14,10 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.get(reverse('api_user_profile_detail', args=[9001]))
         self.assertEqual(response.status_code, 404)
+
+    def test_get_announcements(self):
+        self.login()
+        response = self.client.get(reverse('api_announcements_list_create'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('api_announcements_detail', args=[9001]))
+        self.assertEqual(response.status_code, 404)

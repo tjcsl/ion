@@ -265,6 +265,7 @@ MIDDLEWARE_CLASSES = [
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
+    "simple_history.middleware.HistoryRequestMiddleware"
 ]
 
 # URLconf at urls.py
@@ -385,7 +386,7 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "intranet.apps.api.utils.custom_exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
-    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.KerberosBasicAuthentication",
+    "DEFAULT_AUTHENTICATION_CLASSES": ("intranet.apps.api.authentication.ApiBasicAuthentication",
                                        "rest_framework.authentication.SessionAuthentication",
                                        "oauth2_provider.ext.rest_framework.OAuth2Authentication"),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",)
@@ -440,7 +441,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "oauth2_provider",
     "corsheaders",
-    "cacheops"
+    "cacheops",
+    "simple_history"
 ]
 
 # Eighth period default block date format
