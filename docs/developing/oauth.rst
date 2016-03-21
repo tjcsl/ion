@@ -73,6 +73,10 @@ After 36,000 seconds (1 hour), the token will expire; you need to renew it. This
      args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
      token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
 
+
+If you want to use python-social-auth, a plugin is available in the ion_oauth package.
+See `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_
+
 PHP
 ---
 
