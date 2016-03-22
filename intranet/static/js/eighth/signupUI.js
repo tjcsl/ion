@@ -214,4 +214,40 @@ $(function() {
             listening = false;
         }
     });
+    $("#activity-picker").on("touchstart", function(e) {
+        if ($("#activity-picker > .backbtn").hasClass("visible")) {
+            e.stopPropagation();
+            initX = e.originalEvent.touches[0].clientX;
+            initY = e.originalEvent.touches[0].clientY;
+            listening = true;
+        }
+    });
+    $("#activity-picker").on("touchend", function(e) {
+        if ($("#activity-picker > .backbtn").hasClass("visible")) {
+            e.stopPropagation();
+            listening = false;
+        }
+    });
+    $("#activity-picker").on("touchmove", function(e) {
+        var back = $("#activity-picker > .backbtn");
+        if (back.hasClass("visible")) {
+            e.stopPropagation();
+            if (!listening) {
+                return;
+            }
+            var nowX = e.originalEvent.touches[0].clientX;
+            var nowY = e.originalEvent.touches[0].clientY;
+            if (Math.abs(nowY - initY) > 30) {
+                listening = false;
+                return;
+            }
+            var diffX = nowX - initX;
+            if (Math.abs(diffX) > 30) {
+                if (diffX > 0) {
+                    back.click();
+                }
+                listening = false;
+            }
+        }
+    });
 });
