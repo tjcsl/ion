@@ -731,7 +731,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     return self.activity.restricted
 
     def get_sticky(self):
-            """Get whether this scheduled activity is administrative."""
+            """Get whether this scheduled activity is sticky."""
             if self.sticky:
                     return self.sticky
             else:
