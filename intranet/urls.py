@@ -33,6 +33,7 @@ urlpatterns = [
     url(r"^signage", include("intranet.apps.signage.urls")),
     url(r"^printing", include("intranet.apps.printing.urls")),
     url(r"^ionldap", include("intranet.apps.ionldap.urls")),
+    url(r"^board", include("intranet.apps.board.urls")),
     url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
     url(r"^djangoadmin/", include(admin.site.urls)),
     url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),

@@ -11,9 +11,14 @@ from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
+def can_view_boards(request):
+    return request.user.has_admin_permission("board")
 
 @login_required
 def home(request):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """The homepage, showing all board posts available to you."""
 
     classes = request.user.classes or []
@@ -29,6 +34,9 @@ def home(request):
 
 @login_required
 def class_feed(request, class_id):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """The feed of a class."""
     class_obj = Class(id=class_id)
     if class_obj.name is None:
@@ -61,6 +69,9 @@ def class_feed(request, class_id):
 
 @login_required
 def section_feed(request, section_id):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """The feed of a section."""
 
     # Check permissions
@@ -95,6 +106,9 @@ def section_feed(request, section_id):
 
 @login_required
 def class_feed_post(request, class_id):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """Post to class feed."""
 
     # Check permissions
@@ -140,6 +154,9 @@ def class_feed_post(request, class_id):
 
 @login_required
 def section_feed_post(request, section_id):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """Post to section feed."""
 
     # Check permissions
@@ -191,6 +208,9 @@ def section_feed_post(request, section_id):
 
 @login_required
 def modify_post_view(request, id=None):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """Modify post page. You may only modify an event if you were the creator or you are an
     administrator.
 
@@ -220,6 +240,9 @@ def modify_post_view(request, id=None):
 
 @login_required
 def comment_view(request, post_id):
+    if not can_view_boards(request):
+        return redirect("/")
+
     """Add a comment form page."""
 
     post = get_object_or_404(BoardPost, id=post_id)
