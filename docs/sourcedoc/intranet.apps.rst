@@ -9,6 +9,7 @@ Subpackages
     intranet.apps.announcements
     intranet.apps.api
     intranet.apps.auth
+    intranet.apps.board
     intranet.apps.dashboard
     intranet.apps.eighth
     intranet.apps.emerg

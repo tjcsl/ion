@@ -39,6 +39,10 @@ urlpatterns = [
     url(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect")
 ]
 
+# FIXME: move to main urlconf once board goes live.
+if settings.TESTING:
+    urlpatterns += [url(r"^board", include("intranet.apps.board.urls"))]
+
 if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 

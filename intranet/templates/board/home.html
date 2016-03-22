@@ -1,0 +1,45 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Board
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/board.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="board primary-content">
+    <h2>
+        Boards
+    </h2>
+
+    <div class="your-classes">
+        <b>Your classes:</b><br />
+        {% for c in request.user.classes %}
+            <span style="white-space: nowrap">
+                 &nbsp; &bull; &nbsp;
+                 <a href="{% url 'board_class' c.section_id %}">{{ c }}</a>
+            </span>
+        {% endfor %}
+        <br />
+        <br />
+    </div>
+
+    {% for post in posts %}
+        {% with show_type=1 %}
+            {% include "board/post.html" %}
+        {% endwith %}
+    {% empty %}
+        <p>There are no board posts available to you at this time.</p>
+    {% endfor %}
+    
+</div>
+{% endblock %}

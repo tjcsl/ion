@@ -1642,7 +1642,10 @@ class Class(object):
             schedule.append((sortvalue, class_object))
 
         ordered_schedule = sorted(schedule, key=lambda e: e[0])
-        return list(zip(*ordered_schedule))[1]  # The class objects
+        if ordered_schedule:
+            return list(zip(*ordered_schedule))[1]  # The class objects
+        else:
+            return []
 
     def __getattr__(self, name):
         """Return simple attributes of Class.
@@ -1729,7 +1732,8 @@ class Class(object):
 
     def __str__(self):
         if self.name and self.teacher.last_name:
-            return "{} ({})".format(self.name, self.teacher.last_name)
+            pd_list = ", ".join([str(i) for i in self.periods])
+            return "{}, Period {} ({})".format(self.name, pd_list, self.teacher.last_name)
         return "{}".format(self.dn)
 
 
@@ -1778,7 +1782,10 @@ class ClassSections(object):
         return classes
 
     def __str__(self):
-        return self.id
+        if self.classes:
+            return "{}".format(self.classes[0].name)
+
+        return "{}".format(self.id)
 
 
 class Address(object):

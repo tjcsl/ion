@@ -1,0 +1,52 @@
+{% load dates %}
+<div class="boardpost" data-id="{{ post.id }}">
+    <h3>
+        {{ post.title }}
+
+        {% if is_board_admin or post.user == request.user %}
+            <div class="boardpost-icon-wrapper">
+                <a href="">
+                    <i class="boardpost-icon fa fa-pencil"></i>
+                </a>
+                <a href="" class="boardpost-delete">
+                    <i class="boardpost-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="boardpost-metadata">
+        {% if post.board.activity %}
+            Activity: {{ post.board.activity }} &bull; 
+        {% elif post.board.class_id %}
+            Class: <a href="{% url 'board_class' post.board.class_id %}">
+                {{ post.board.class_obj }}
+            </a> &bull; 
+        {% elif post.board.section_id %}
+            Class: <a href="{% url 'board_section' post.board.section_id %}">
+                {{ post.board.section_obj }}
+            </a> &bull;
+        {% elif post.board.group %}
+            Group: {{ post.board.group }} &bull;
+        {% else %}
+            Public &bull; 
+        {% endif %}
+        by {{ post.user.full_name|escape }} &bull; {{ post.added|fuzzy_date|capfirst }}
+    </div>
+
+    <div class="event-content">
+        {{ post.content|safe }}
+    </div>
+
+    <a class="button small-button" href="{% url 'board_comment' post.id %}">
+        <i class="fa fa-comment-o"></i> Comment
+    </a> &nbsp; &nbsp; {{ post.comments.count }} comment{{ post.comments.count|pluralize }}<br />
+
+    <div class="boardpost-comments">
+    {% for c in post.comments.all %}
+        <div class="boardpost-comment">
+            <b>{{ c.user.full_name }}</b>: {{ c.content }}
+        </div>
+    {% endfor %}
+    </div>
+</div>
