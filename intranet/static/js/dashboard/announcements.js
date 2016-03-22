@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
 
     $("div[data-placeholder]").on("keydown keypress input", function() {

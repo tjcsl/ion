@@ -1,3 +1,4 @@
+/* global $ */
 window.switchRun = false;
 window.eighthSwitchEvent = false;
 $(document).ready(function() {

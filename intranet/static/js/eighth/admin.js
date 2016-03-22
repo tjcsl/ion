@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     // Utility functions for manipulating GET parameters
     var getParams = function(url) {

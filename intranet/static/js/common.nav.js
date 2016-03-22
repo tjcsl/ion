@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     var initX = null, initY = null, listening = false;
     $(window).on("touchstart", function(e) {

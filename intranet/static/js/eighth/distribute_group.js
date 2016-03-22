@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     $(".select-all").change(function() {
         var chk = $(this).prop("checked");

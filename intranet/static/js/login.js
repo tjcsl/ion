@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
     /* Input */
     var $username = $("input[name=username]");

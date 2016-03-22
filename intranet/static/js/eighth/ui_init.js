@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
 
     selectizeIDScore = function(search) {

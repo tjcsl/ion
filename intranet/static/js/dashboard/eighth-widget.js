@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
     $(".eighth-widget .block-header").click(function() {
         var link = $("a", $(this));

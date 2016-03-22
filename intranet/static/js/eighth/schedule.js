@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     toggleRow = function(tr) {
         var i = 0;

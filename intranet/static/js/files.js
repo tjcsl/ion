@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
     // check for drop support, file support, and file upload support
     if (Modernizr.draganddrop && window.File && window.FormData) {

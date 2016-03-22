@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     window.userImgs = [];
     window.userHide = {};

@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     $("select#id_groups").selectize({
         plugins: ["remove_button"],

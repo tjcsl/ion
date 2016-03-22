@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
     /* left menu nav icon */
     $(".left > .dropdown-taparea").click(function() {

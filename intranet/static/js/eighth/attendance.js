@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
     //$("select").selectize({});
     $("input.datepicker, input[name=date]").datepicker();

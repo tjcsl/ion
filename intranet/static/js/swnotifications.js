@@ -1,3 +1,4 @@
+/* global $ */
 if(window.ion.authenticated && !window.ion.gcm_optout) {
     window.addEventListener('load', function() {
         if('serviceWorker' in navigator) {

@@ -1,4 +1,5 @@
 // Scripts for initial layout, sticky headers, etc.
+/* global $ */
 
 function calcMaxScrollLeft() {
     return $(".days-container")[0].scrollWidth - $(".days-container").width();

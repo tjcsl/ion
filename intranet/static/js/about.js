@@ -1,3 +1,4 @@
+/* global $ */
 $(function() {
 
     $(".logo").click(function() {
