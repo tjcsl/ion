@@ -179,4 +179,38 @@ $(function() {
     $("#activity-list").on("scroll", function() {
         sh.scroll();
     });
+
+    var initX = null, initY = null, listening = false;
+    $(".day-picker").on("touchstart", function(e) {
+        e.stopPropagation();
+        initX = e.originalEvent.touches[0].clientX;
+        initY = e.originalEvent.touches[0].clientY;
+        listening = true;
+    });
+    $(".day-picker").on("touchend", function(e) {
+        e.stopPropagation();
+        listening = false;
+    });
+    $(".day-picker").on("touchmove", function(e) {
+        e.stopPropagation();
+        if (!listening) {
+            return;
+        }
+        var nowX = e.originalEvent.touches[0].clientX;
+        var nowY = e.originalEvent.touches[0].clientY;
+        if (Math.abs(nowY - initY) > 30) {
+            listening = false;
+            return;
+        }
+        var diffX = nowX - initX;
+        if (Math.abs(diffX) > 30) {
+            if (diffX > 0) {
+                $(".earlier-days").click();
+            }
+            else {
+                $(".later-days").click();
+            }
+            listening = false;
+        }
+    });
 });
