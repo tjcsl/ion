@@ -147,6 +147,12 @@
                     <th class="administrative">
                         <span>Administrative</span>
                     </th><th></th>
+                    <th class="restricted">
+                        <span>Restricted</span>
+                    </th><th></th>
+                    <th class="sticky">
+                        <span>Sticky</span>
+                    </th><th></th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
                 </tr>
@@ -204,6 +210,14 @@
                                     <center>
                                         {% render_field field class='administrative' %}
                                     </center>
+                                {% elif field.name == "restricted" %}
+                                    <center>
+                                        {% render_field field class='restricted' %}
+                                    </center>
+                                {% elif field.name == "sticky" %}
+                                    <center>
+                                        {% render_field field class='sticky' %}
+                                    </center>
                                 {% elif field.name == "scheduled" %}
                                     {% render_field field class='scheduled' %}
                                 {% else %}
@@ -211,7 +225,7 @@
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title special administrative comments admin_comments" %}
+                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky comments admin_comments" %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fa fa-arrows-v"></i>
@@ -238,13 +252,13 @@
 
                     {% if not forloop.last %}
                         <tr class="spacer">
-                            <td colspan="17"></td>
+                            <td colspan="30"></td>
                         </tr>
                         <tr class="divider">
-                            <td colspan="17"></td>
+                            <td colspan="30"></td>
                         </tr>
                         <tr class="spacer">
-                            <td colspan="17"></td>
+                            <td colspan="30"></td>
                         </tr>
                     {% endif %}
                 {% endfor %}

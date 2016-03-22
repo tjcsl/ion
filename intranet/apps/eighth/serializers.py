@@ -71,7 +71,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
     def process_scheduled_activity(self, scheduled_activity, request=None, user=None, favorited_activities=None, available_restricted_acts=None):
         activity = scheduled_activity.activity
-        restricted_for_user = (activity.restricted and not (user.is_eighth_admin and not user.is_student) and
+        restricted_for_user = (scheduled_activity.get_restricted() and not (user.is_eighth_admin and not user.is_student) and
                                (activity.id not in available_restricted_acts))
         prefix = "Special: " if activity.special else ""
         prefix += activity.name
@@ -107,14 +107,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             },
             "rooms": [],
             "sponsors": [],
-            "restricted": activity.restricted,
+            "restricted": scheduled_activity.get_restricted(),
             "restricted_for_user": restricted_for_user,
             "both_blocks": activity.both_blocks,
             "one_a_day": activity.one_a_day,
             "special": scheduled_activity.get_special(),
-            "administrative": scheduled_activity.activity.get_administrative(),
+            "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
-            "sticky": activity.sticky,
+            "sticky": scheduled_activity.get_sticky(),
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,
             "display_text": ""

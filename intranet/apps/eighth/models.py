@@ -645,6 +645,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     capacity = models.SmallIntegerField(null=True, blank=True)
     special = models.BooleanField(default=False)
     administrative = models.BooleanField(default=False)
+    restricted = models.BooleanField(default=False)
+    sticky = models.BooleanField(default=False)
 
     attendance_taken = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
@@ -720,6 +722,20 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
+
+    def get_restricted(self):
+            """Get whether this scheduled activity is restricted."""
+            if self.restricted:
+                    return self.restricted
+            else:
+                    return self.activity.restricted
+
+    def get_sticky(self):
+            """Get whether this scheduled activity is administrative."""
+            if self.sticky:
+                    return self.sticky
+            else:
+                    return self.activity.sticky
 
     def get_administrative(self):
         """Get whether this scheduled activity is administrative."""
@@ -917,7 +933,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 exception.ActivityDeleted = True
 
             # Check if the user is already stickied into an activity
-            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
+            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__get_sticky=True,
                                                       scheduled_activity__block__in=all_blocks).exists())
             if in_stickie:
                 exception.Sticky = True
@@ -948,7 +964,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.OneADay = True
 
             # Check if user is allowed in the activity if it's restricted
-            if self.activity.restricted:
+            if self.get_restricted():
                 acts = EighthActivity.restricted_activities_available_to_user(user)
                 if self.activity.id not in acts:
                     exception.Restricted = True
