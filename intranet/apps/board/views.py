@@ -11,8 +11,10 @@ from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
+
 def can_view_boards(request):
     return request.user.has_admin_permission("board")
+
 
 @login_required
 def home(request):
