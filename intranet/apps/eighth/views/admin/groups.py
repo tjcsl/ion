@@ -99,11 +99,18 @@ def edit_group_view(request, group_id):
         })
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
     linked_activities = EighthActivity.objects.filter(groups_allowed=group)
+
+    def intTryParse(value):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+
     context = {
         "group": group,
         "members": members,
         "edit_form": form,
-        "added_ids": request.GET.getlist("added"),
+        "added_ids": [intTryParse(x) for x in request.GET.getlist("added")],
         "linked_activities": linked_activities,
         "admin_page_title": "Edit Group",
         "delete_url": reverse("eighth_admin_delete_group", args=[group_id])
