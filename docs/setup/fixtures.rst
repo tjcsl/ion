@@ -27,6 +27,7 @@ Load the users fixtures.
     $ ./manage.py loaddata fixtures/users/users.json
 
 Load the sponsors fixtures.
+
 NOTE: manually fixed UID 503, which wasn't present (Ms. Gravitte, AP) by removing "user_id" from EighthSponsor entry
 
 .. code-block:: bash

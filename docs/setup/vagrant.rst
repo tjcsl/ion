@@ -25,4 +25,9 @@ The Git repository on the host computer is synced with ``~/intranet`` on the vir
 
 If you would like to populate the database with test data, run ``fab load_fixtures`` in the ``~/intranet`` directory. This process may take a lot of RAM and can unexpectedly quit. If this happens, run ``./manage.py flush`` to flush the database, exit the SSH session, run ``vagrant halt``, increase the VM's allotted memory in VirtualBox, and run ``vagrant up`` again.
 
+Troubleshooting
+===============
+
+If you get a ``SIOCADDRT: Network is unreachable`` error when running ``vagrant up``, you need to start the openvpn client.
+
 :doc:`Continue with these post-install steps.<postinstall>`
