@@ -933,7 +933,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 exception.ActivityDeleted = True
 
             # Check if the user is already stickied into an activity
-            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__get_sticky=True,
+            in_stickie = (EighthSignup.objects.filter(user=user, scheduled_activity__activity__sticky=True,
                                                       scheduled_activity__block__in=all_blocks).exists())
             if in_stickie:
                 exception.Sticky = True
