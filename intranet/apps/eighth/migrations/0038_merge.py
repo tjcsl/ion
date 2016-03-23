@@ -11,6 +11,3 @@ class Migration(migrations.Migration):
         ('eighth', '0036_eighthscheduledactivity_administrative'),
         ('eighth', '0037_auto_20160307_2342'),
     ]
-
-    operations = [
-    ]
