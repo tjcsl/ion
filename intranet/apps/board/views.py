@@ -140,7 +140,7 @@ def class_feed_post(request, class_id):
             board.save()
 
             messages.success(request, "Successfully added post.")
-            return redirect("board_class", args=(class_id,))
+            return redirect("board_class", class_id=class_id)
         else:
             messages.error(request, "Error adding post")
     else:
