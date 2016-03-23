@@ -765,7 +765,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             try:
                 results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
                 if len(results) == 1:
-                    data = results[0][1]['jpegPhoto'][0]
+                    data = results[0]['attributes']['jpegPhoto'][0]
                 else:
                     data = None
             except (ldap3.LDAPNoSuchObjectResult, KeyError):

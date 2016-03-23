@@ -138,14 +138,14 @@ def picture_view(request, user_id, year=None):
                 if data is None:
                     image_buffer = io.open(default_image_path, mode="rb")
                 else:
-                    image_buffer = io.StringIO(data)
+                    image_buffer = io.BytesIO(data)
 
             # Exclude 'graduate' from names array
             elif preferred in Grade.names:
                 data = user.photo_binary(preferred)
 
                 if data:
-                    image_buffer = io.StringIO(data)
+                    image_buffer = io.BytesIO(data)
                 else:
                     image_buffer = io.open(default_image_path, mode="rb")
             else:
@@ -153,7 +153,7 @@ def picture_view(request, user_id, year=None):
         else:
             data = user.photo_binary(year)
             if data:
-                image_buffer = io.StringIO(data)
+                image_buffer = io.BytesIO(data)
             else:
                 image_buffer = io.open(default_image_path, mode="rb")
 
