@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.board.tests &mdash; TJ Intranet v3 (Build #1669) documentation</title>
+    <title>intranet.apps.board.tests &mdash; TJ Intranet v3 (Build #1675) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1669)',
+        VERSION:     'v3 (Build #1675)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1669) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1675) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,6 +148,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">User</span>
 
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 
@@ -155,8 +156,16 @@
 <div class="viewcode-block" id="BoardTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.tests.BoardTest">[docs]</a><span class="k">class</span> <span class="nc">BoardTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Tests for the board module.&quot;&quot;&quot;</span>
 
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BoardTest.setUpClass"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.tests.BoardTest.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span>
+        <span class="c1"># board is currently restricted to admins only.</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;admin_board&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;awilliam&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="BoardTest.test_get_board"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.tests.BoardTest.test_get_board">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_board</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;board&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;board_class&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">9001</span><span class="p">]))</span>
@@ -172,6 +181,7 @@
 
 <div class="viewcode-block" id="BoardTest.test_modify_board"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.tests.BoardTest.test_modify_board">[docs]</a>    <span class="k">def</span> <span class="nf">test_modify_board</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;modify_boardpost&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">9001</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div></div>
 </pre></div>

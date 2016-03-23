@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.board.views &mdash; TJ Intranet v3 (Build #1669) documentation</title>
+    <title>intranet.apps.board.views &mdash; TJ Intranet v3 (Build #1675) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1669)',
+        VERSION:     'v3 (Build #1675)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1669) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1675) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -159,8 +159,15 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="can_view_boards"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.can_view_boards">[docs]</a><span class="k">def</span> <span class="nf">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span></div>
+
+
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="home"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.home">[docs]</a><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;The homepage, showing all board posts available to you.&quot;&quot;&quot;</span>
 
     <span class="n">classes</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">classes</span> <span class="ow">or</span> <span class="p">[]</span>
@@ -176,6 +183,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="class_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.class_feed">[docs]</a><span class="k">def</span> <span class="nf">class_feed</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">class_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;The feed of a class.&quot;&quot;&quot;</span>
     <span class="n">class_obj</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">class_obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -208,6 +218,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="section_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.section_feed">[docs]</a><span class="k">def</span> <span class="nf">section_feed</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;The feed of a section.&quot;&quot;&quot;</span>
 
     <span class="c1"># Check permissions</span>
@@ -242,6 +255,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="class_feed_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.class_feed_post">[docs]</a><span class="k">def</span> <span class="nf">class_feed_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">class_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;Post to class feed.&quot;&quot;&quot;</span>
 
     <span class="c1"># Check permissions</span>
@@ -287,6 +303,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="section_feed_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.section_feed_post">[docs]</a><span class="k">def</span> <span class="nf">section_feed_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;Post to section feed.&quot;&quot;&quot;</span>
 
     <span class="c1"># Check permissions</span>
@@ -338,6 +357,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="modify_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.modify_post_view">[docs]</a><span class="k">def</span> <span class="nf">modify_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;Modify post page. You may only modify an event if you were the creator or you are an</span>
 <span class="sd">    administrator.</span>
 
@@ -367,6 +389,9 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="comment_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.comment_view">[docs]</a><span class="k">def</span> <span class="nf">comment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
     <span class="sd">&quot;&quot;&quot;Add a comment form page.&quot;&quot;&quot;</span>
 
     <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span>
