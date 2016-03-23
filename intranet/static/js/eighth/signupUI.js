@@ -250,4 +250,22 @@ $(function() {
             }
         }
     });
+    $(window).keydown(function(e) {
+        var selected = $("#activity-list li.selected");
+        if (selected.length > 0) {
+            if (e.which == 38) {
+                // up arrow key
+                selected.prevAll("li").first().click();
+                e.preventDefault();
+            }
+            if (e.which == 40) {
+                // down arrow key
+                selected.nextAll("li").first().click();
+                e.preventDefault();
+            }
+            var scrollParent = $("#activity-list");
+            selected = $("#activity-list li.selected");
+            scrollParent.scrollTop(scrollParent.scrollTop() + selected.position().top - scrollParent.height()/2 + selected.height()/2);
+        }
+    });
 });
