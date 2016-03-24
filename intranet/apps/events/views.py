@@ -80,7 +80,7 @@ def events_view(request):
 
     context = {
         "events": events_categories,
-        "is_events_admin": is_events_admin, 
+        "is_events_admin": is_events_admin,
         "events_admin": is_events_admin,
         "show_attend": True
     }
@@ -169,7 +169,6 @@ def add_event_view(request):
             # SAFE HTML
             obj.description = bleach.linkify(obj.description)
 
-           
             # auto-approve if admin
             obj.approved = True
             obj.approved_by = request.user
@@ -217,6 +216,7 @@ def request_event_view(request):
         form = EventForm(all_groups=request.user.has_admin_permission('groups'))
     context = {"form": form, "action": "add", "action_title": "Submit", "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
+
 
 @login_required
 def modify_event_view(request, id=None):
@@ -279,6 +279,7 @@ def delete_event_view(request, id):
         return redirect("events")
     else:
         return render(request, "events/delete.html", {"event": event})
+
 
 @login_required
 def show_event_view(request):

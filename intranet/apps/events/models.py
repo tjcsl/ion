@@ -41,6 +41,7 @@ class EventManager(Manager):
         ids = user.events_hidden.all().values_list("event__id")
         return Event.objects.filter(id__in=ids)
 
+
 class EventUserMap(models.Model):
     """Represents mapping fields between events and users.
 
@@ -64,6 +65,7 @@ class EventUserMap(models.Model):
 
     def __str__(self):
         return "UserMap: {}".format(self.event.title)
+
 
 class Event(models.Model):
     """An event available to the TJ community.
@@ -172,7 +174,7 @@ class Event(models.Model):
     def pinned(self):
         """ TODO: implement event pinning """
         return False
-    
+
     @property
     def user_map(self):
         try:

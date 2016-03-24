@@ -124,7 +124,6 @@ class Announcement(models.Model):
     @property
     def dashboard_type(self):
         return "announcement"
-    
 
     class Meta:
         ordering = ["-pinned", "-added"]
