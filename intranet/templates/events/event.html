@@ -25,16 +25,27 @@
         {% else %}    
             {{ event.title }}
         {% endif %}
-        {% if is_events_admin %}
+
             <div class="event-icon-wrapper">
-                <a href="{% url 'modify_event' event.id %}">
-                    <i class="event-icon fa fa-pencil"></i>
-                </a>
-                <a href="{% url 'delete_event' event.id %}" class="event-delete">
-                    <i class="event-icon fa fa-trash-o"></i>
-                </a>
+                {% if hide_events %}
+                    <a href="#" class="event-toggle">
+                    {% if event.id in user_hidden_events %}
+                        <i class="announcement-icon fa fa-toggle-off" title="You have hidden this event. Click to show." data-visible-title="This event is visible. Click to hide." hidden-title="You have hidden this event. Click to show."></i>
+                    {% else %}
+                        <i class="announcement-icon fa fa-toggle-on" title="This event is visible. Click to hide." data-visible-title="This event is visible. Click to hide." data-hidden-title="You have hidden this event. Click to show."></i>
+                    {% endif %}
+                    </a>
+                {% endif %}
+
+                {% if is_events_admin %}
+                    <a href="{% url 'modify_event' event.id %}">
+                        <i class="event-icon fa fa-pencil"></i>
+                    </a>
+                    <a href="{% url 'delete_event' event.id %}" class="event-delete">
+                        <i class="event-icon fa fa-trash-o"></i>
+                    </a>
+                {% endif %}
             </div>
-        {% endif %}
     </h3>
 
     <div class="event-metadata">
@@ -58,85 +69,85 @@
             {% include "announcements/announcement.html" %}
         {% endwith %}
     {% endif %}
+    <div class="announcement-toggle-content"{% if hide_events and event.id in user_hidden_events %} style="display: none"{% endif %}>
+        <div class="event-content">
+            {{ event.description|safe }}
+        </div>
+        {% if show_attend %}
+            <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="false" />
+            </form>
 
-    <div class="event-content">
-        {{ event.description|safe }}
-    </div>
-    {% if show_attend %}
-        <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
-            {% csrf_token %}
-            <input type="hidden" name="attending" value="false" />
-        </form>
+            <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="true" />
+            </form>
+        {% endif %}
 
-        <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
-            {% csrf_token %}
-            <input type="hidden" name="attending" value="true" />
-        </form>
-    {% endif %}
+        {% if is_events_admin %}
+            <table class="event-approve-table">
+                <tr>
+                    <td>
+                    {% if not event.approved %}
+                        <form action="{% url 'events' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="approve" value="{{ event.id }}" />
+                            <input type="submit" value="Approve" class="small-button" />
+                        </form>
+                    {% else %}
+                        Approved by {{ event.approved_by.full_name }}.
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if not event.approved %}
+                        <form action="{% url 'events' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="reject" value="{{ event.id }}" />
+                            <input type="submit" value="Reject" class="small-button" />
+                        </form>
+                    {% elif event.rejected %}
+                        Rejected by {{ event.rejected_by.full_name }}.
+                    {% endif %}
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
 
-    {% if is_events_admin %}
-        <table class="event-approve-table">
-            <tr>
-                <td>
-                {% if not event.approved %}
-                    <form action="{% url 'events' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="approve" value="{{ event.id }}" />
-                        <input type="submit" value="Approve" class="small-button" />
-                    </form>
-                {% else %}
-                    Approved by {{ event.approved_by.full_name }}.
+        {% if event.show_attending %}
+        <div class="bottom-row{% if show_attend %} show-attend{% endif %}">
+            <span class="signup-status">
+                People attending: {{ event.attending.count }}
+                {% if show_attend %}
+                <a href="{% url 'event_roster' event.id %}" class="button small-button view-roster-button">
+                    View Roster
+                </a>
                 {% endif %}
-                </td>
-                <td>
-                {% if not event.approved %}
-                    <form action="{% url 'events' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="reject" value="{{ event.id }}" />
-                        <input type="submit" value="Reject" class="small-button" />
-                    </form>
-                {% elif event.rejected %}
-                    Rejected by {{ event.rejected_by.full_name }}.
-                {% endif %}
-                </td>
-            </tr>
-        </table>
-    {% endif %}
+            </span>
 
-    {% if event.show_attending %}
-    <div class="bottom-row{% if show_attend %} show-attend{% endif %}">
-        <span class="signup-status">
-            People attending: {{ event.attending.count }}
-            {% if show_attend %}
-            <a href="{% url 'event_roster' event.id %}" class="button small-button view-roster-button">
-                View Roster
-            </a>
+            {% if request.user in event.attending.all %}
+                <span class="attend-status">
+                    You are <b style="color: green">attending</b> this event. 
+                    {% if show_attend %}
+                        <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
+                            <i class="fa fa-times"></i>
+                            Don't Attend
+                        </a>
+                    {% endif %}
+                </span>
+            {% else %}
+                <span class="attend-status">
+                    You are <b style="color: red">not attending</b> this event. 
+                    {% if show_attend %}
+                        <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
+                            <i class="fa fa-check"></i>
+                            Attend
+                        </a>
+                    {% endif %}
+                </span>
             {% endif %}
-        </span>
-
-        {% if request.user in event.attending.all %}
-            <span class="attend-status">
-                You are <b style="color: green">attending</b> this event. 
-                {% if show_attend %}
-                    <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button small-button no-attend-button">
-                        <i class="fa fa-times"></i>
-                        Don't Attend
-                    </a>
-                {% endif %}
-            </span>
-        {% else %}
-            <span class="attend-status">
-                You are <b style="color: red">not attending</b> this event. 
-                {% if show_attend %}
-                    <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button small-button attend-button">
-                        <i class="fa fa-check"></i>
-                        Attend
-                    </a>
-                {% endif %}
-            </span>
+        </div>
         {% endif %}
     </div>
-    {% endif %}
-
 
 </div>

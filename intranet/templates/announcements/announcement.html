@@ -54,7 +54,7 @@
         {% endfor %}
     </div>
 
-    <div class="announcement-toggle-content">
+    <div class="announcement-toggle-content"{% if hide_announcements and announcement.id in user_hidden_announcements %} style="display: none"{% endif %}>
         {% if not event and announcement.event_set.count > 0 %}
             {% for event in announcement.event_set.all %}
                 {% with link_to_event=1 %}
