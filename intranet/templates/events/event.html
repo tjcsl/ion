@@ -37,7 +37,7 @@
                     </a>
                 {% endif %}
 
-                {% if is_events_admin %}
+                {% if events_admin %}
                     <a href="{% url 'modify_event' event.id %}">
                         <i class="event-icon fa fa-pencil"></i>
                     </a>
@@ -69,7 +69,7 @@
             {% include "announcements/announcement.html" %}
         {% endwith %}
     {% endif %}
-    <div class="announcement-toggle-content"{% if hide_events and event.id in user_hidden_events %} style="display: none"{% endif %}>
+    <div class="event-toggle-content">
         <div class="event-content">
             {{ event.description|safe }}
         </div>

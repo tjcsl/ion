@@ -5,6 +5,7 @@ import logging
 
 import bleach
 
+from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import exceptions
@@ -273,3 +274,40 @@ def delete_event_view(request, id):
         return redirect("events")
     else:
         return render(request, "events/delete.html", {"event": event})
+
+@login_required
+def show_event_view(request):
+    """ Unhide an event that was hidden by the logged-in user.
+
+        events_hidden in the user model is the related_name for
+        "users_hidden" in the EventUserMap model.
+    """
+    if request.method == "POST":
+        event_id = request.POST.get("event_id")
+        if event_id:
+            event = Event.objects.get(id=event_id)
+            event.user_map.users_hidden.remove(request.user)
+            event.user_map.save()
+            return http.HttpResponse("Unhidden")
+        return http.Http404()
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+
+@login_required
+def hide_event_view(request):
+    """ Hide an event for the logged-in user.
+
+        events_hidden in the user model is the related_name for
+        "users_hidden" in the EventUserMap model.
+    """
+    if request.method == "POST":
+        event_id = request.POST.get("event_id")
+        if event_id:
+            event = Event.objects.get(id=event_id)
+            event.user_map.users_hidden.add(request.user)
+            event.user_map.save()
+            return http.HttpResponse("Hidden")
+        return http.Http404()
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
