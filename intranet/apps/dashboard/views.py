@@ -328,6 +328,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         items = items_sorted
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True)).nocache()
+    user_hidden_events = (Event.objects.hidden_events(user).values_list("id", flat=True)).nocache()
 
     if ignore_dashboard_types is None:
         ignore_dashboard_types = []
@@ -339,7 +340,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "prev_page": start_num - display_num,
         "more_items": more_items,
         "hide_announcements": True,
+        "hide_events": True,
         "user_hidden_announcements": user_hidden_announcements,
+        "user_hidden_events": user_hidden_events,
         "ignore_dashboard_types": ignore_dashboard_types
     })
 

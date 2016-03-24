@@ -31,6 +31,39 @@ class EventManager(Manager):
 
         return (Event.objects.filter(approved=True).filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True) | Q(user=user)))
 
+    def hidden_events(self, user):
+        """Get a list of events marked as hidden for a given user (usually request.user).
+
+        These are all events visible to the user -- they have just decided to
+        hide them.
+
+        """
+        ids = user.events_hidden.all().values_list("event__id")
+        return Event.objects.filter(id__in=ids)
+
+class EventUserMap(models.Model):
+    """Represents mapping fields between events and users.
+
+    These attributes would be a part of the Event model, but if they are,
+    the last updated date is changed whenever a student sees or hides an event.
+
+    Access these through event.user_map
+
+    If you are checking to see whether a user has hidden an event, use:
+        Event.objects.hidden_events(user)
+
+    Attributes:
+        event
+            The one-to-one mapping between this object and the Event it is for
+        users_hidden
+            A many-to-many field of Users who have hidden this event
+
+    """
+    event = models.OneToOneField("Event", related_name="_user_map")
+    users_hidden = models.ManyToManyField(User, blank=True, related_name="events_hidden")
+
+    def __str__(self):
+        return "UserMap: {}".format(self.event.title)
 
 class Event(models.Model):
     """An event available to the TJ community.
@@ -140,6 +173,12 @@ class Event(models.Model):
         """ TODO: implement event pinning """
         return False
     
+    @property
+    def user_map(self):
+        try:
+            return self._user_map
+        except EventUserMap.DoesNotExist:
+            return EventUserMap.objects.create(event=self)
 
     def __str__(self):
         if not self.approved:

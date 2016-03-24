@@ -11,7 +11,7 @@
     <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
 {% endblock %}
 
-<div class="event" data-id="{{ event.id }}">
+<div class="event{% if hide_events and event.id in user_hidden_events %} hidden{% endif %}" data-id="{{ event.id }}">
     <h3>
         {% if show_icon %}
             <i class="fa fa-calendar dashboard-item-icon" title="Event"></i>
