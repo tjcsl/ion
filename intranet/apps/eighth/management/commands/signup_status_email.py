@@ -31,8 +31,8 @@ class Command(BaseCommand):
         if options["everyone"]:
             users = User.objects.get_students()
         else:
-            users = User.objects.filter(receive_eighth_emails=True).nocache()
-        next_blocks = EighthBlock.objects.get_next_upcoming_blocks().nocache()
+            users = User.objects.filter(receive_eighth_emails=True)
+        next_blocks = EighthBlock.objects.get_next_upcoming_blocks()
 
         if next_blocks.count() < 1:
             if log:
@@ -61,7 +61,7 @@ class Command(BaseCommand):
             self.stdout.write("{}".format(users))
 
         for user in users:
-            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks).nocache()
+            user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks)
             if user_signups.count() < next_blocks.count():
                 """User hasn't signed up for a block."""
                 if log:

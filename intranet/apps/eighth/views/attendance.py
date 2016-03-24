@@ -284,19 +284,19 @@ def take_attendance_view(request, scheduled_activity_id):
         if csrf in present_user_ids:
             present_user_ids.remove(csrf)
 
-        absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity).exclude(user__in=present_user_ids)).nocache()
+        absent_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity).exclude(user__in=present_user_ids))
         absent_signups.update(was_absent=True)
 
         for s in absent_signups:
             invalidate_obj(s)
 
-        present_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, user__in=present_user_ids)).nocache()
+        present_signups = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, user__in=present_user_ids))
         present_signups.update(was_absent=False)
 
         for s in present_signups:
             invalidate_obj(s)
 
-        passes = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, after_deadline=True, pass_accepted=False)).nocache()
+        passes = (EighthSignup.objects.filter(scheduled_activity=scheduled_activity, after_deadline=True, pass_accepted=False))
         passes.update(was_absent=True)
 
         for s in passes:
@@ -316,16 +316,16 @@ def take_attendance_view(request, scheduled_activity_id):
         return redirect(redirect_url)
     else:
         passes = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True,
-                                                                     pass_accepted=False)).nocache()
+                                                                     pass_accepted=False))
 
         users = scheduled_activity.members.exclude(eighthsignup__in=passes)
         members = []
 
         absent_user_ids = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, was_absent=True).values_list(
-            "user__id", flat=True)).nocache()
+            "user__id", flat=True))
 
         pass_users = (EighthSignup.objects.select_related("user").filter(scheduled_activity=scheduled_activity, after_deadline=True,
-                                                                         pass_accepted=True).values_list("user__id", flat=True)).nocache()
+                                                                         pass_accepted=True).values_list("user__id", flat=True))
 
         for user in users:
             members.append({

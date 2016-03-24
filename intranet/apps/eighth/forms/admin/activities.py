@@ -32,19 +32,19 @@ class ActivitySelectionForm(forms.Form):
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
                 activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id",
-                                                                                                                          flat=True).nocache())
+                                                                                                                          flat=True))
             else:
                 activity_ids = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list("activity__id",
-                                                                                                                                flat=True).nocache())
+                                                                                                                                flat=True))
                 if not include_cancelled:
                     activity_ids = activity_ids.exclude(cancelled=True)
 
             queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
         else:
             if sponsor is not None:
-                queryset = (EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name")).nocache()
+                queryset = (EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name"))
             else:
-                queryset = (EighthActivity.undeleted_objects.all().order_by("name")).nocache()
+                queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
 
         self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
 
@@ -75,11 +75,10 @@ class ScheduledActivityMultiSelectForm(forms.Form):
                                                    .exclude(activity__deleted=True)
                             # .exclude(cancelled=True)
                                                    .filter(block=block)
-                                                   .values_list("activity__id", flat=True)
-                                                   .nocache())
+                                                   .values_list("activity__id", flat=True))
             queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
         else:
-            queryset = (EighthActivity.undeleted_objects.all().order_by("name").nocache())
+            queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
 
         logger.debug(queryset)
         self.fields["activities"].queryset = queryset

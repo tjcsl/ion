@@ -172,7 +172,7 @@ class Question(models.Model):
 
     def get_users_voted(self):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
-        return User.objects.filter(id__in=users).nocache()
+        return User.objects.filter(id__in=users)
 
     def __str__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())

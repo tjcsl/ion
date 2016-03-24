@@ -56,7 +56,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
 
     # Use select_related to reduce query count
     signups = (EighthSignup.objects.filter(user=user, scheduled_activity__block__in=surrounding_blocks).select_related(
-        "scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity").nocache())
+        "scheduled_activity", "scheduled_activity__block", "scheduled_activity__activity"))
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
 
     for b in surrounding_blocks:
@@ -123,10 +123,10 @@ def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=No
         sponsor = user.get_eighth_sponsor()
 
     if surrounding_blocks is None:
-        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks).nocache()
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
 
     activities_sponsoring = (EighthScheduledActivity.objects.for_sponsor(sponsor).select_related("block").filter(
-        block__in=surrounding_blocks).nocache())
+        block__in=surrounding_blocks))
     sponsoring_block_map = {}
     for sa in activities_sponsoring:
         bid = sa.block.id
@@ -327,8 +327,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     else:
         items = items_sorted
 
-    user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True)).nocache()
-    user_hidden_events = (Event.objects.hidden_events(user).values_list("id", flat=True)).nocache()
+    user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True))
+    user_hidden_events = (Event.objects.hidden_events(user).values_list("id", flat=True))
 
     if ignore_dashboard_types is None:
         ignore_dashboard_types = []

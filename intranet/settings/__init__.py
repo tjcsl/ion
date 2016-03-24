@@ -310,16 +310,7 @@ CACHEOPS_DEGRADE_ON_FAILURE = True
 
 CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
-CACHEOPS = {
-    "eighth.*": {
-        "timeout": 1  # int(datetime.timedelta(hours=1).total_seconds())
-    },
-    "announcements.*": {},
-    "events.*": {},
-    "groups.*": {},
-    "users.*": {},
-    "auth.*": {}
-}
+CACHEOPS = {}
 
 if not TESTING:
     # Settings for django-redis-sessions

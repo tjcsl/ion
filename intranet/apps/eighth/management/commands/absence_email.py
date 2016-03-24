@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
         log = not options["silent"]
 
-        absences = EighthSignup.objects.get_absences().filter(absence_emailed=False).nocache()
+        absences = EighthSignup.objects.get_absences().filter(absence_emailed=False)
 
         for signup in absences:
             if log:
