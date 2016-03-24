@@ -172,9 +172,13 @@
                             </th>
                             <td>
                                 {% for email in profile_user.emails %}
+                                {% if request.user.is_teacher or request.user.is_eighth_admin and email == profile_user.tj_email %}
+                                    <!-- Don't duplicate TJ email -->
+                                {% else %}
                                     <a href="mailto:{{ email }}">
                                         {{ email }}
                                     </a>
+                                {% endif %}
                                     {% if not forloop.last %}<br />{% endif %}
                                 {% endfor %}
                             </td>
