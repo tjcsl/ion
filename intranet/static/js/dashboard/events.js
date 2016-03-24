@@ -22,6 +22,7 @@ $(function() {
             setTimeout(function() {
                 event.removeClass("hidden");
             }, 450);
+            eventContent.css("display", "");
             eventContent.slideDown(350);
         } else {
             icon.removeClass("fa-toggle-on")
@@ -30,6 +31,7 @@ $(function() {
             setTimeout(function() {
                 event.addClass("hidden");
             }, 450);
+            eventContent.css("display", "");
             eventContent.slideUp(350);
         }
     };

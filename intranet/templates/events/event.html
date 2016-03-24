@@ -59,19 +59,19 @@
             everyone
         {% endfor %}
     </div>
+    <div class="event-toggle-content"{% if hide_events and event.id in user_hidden_events %} style="display:none"{% endif %}>
+        {% if event.scheduled_activity and not announcement %}
+            {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
+                {% include "events/scheduled_activity.html" %}
+            {% endwith %}
+        {% endif %}
 
-    {% if event.scheduled_activity and not announcement %}
-        {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
-            {% include "events/scheduled_activity.html" %}
-        {% endwith %}
-    {% endif %}
-
-    {% if event.announcement and not announcement %}
-        {% with announcement=event.announcement link_to_announcement=1 %}
-            {% include "announcements/announcement.html" %}
-        {% endwith %}
-    {% endif %}
-    <div class="event-toggle-content">
+        {% if event.announcement and not announcement %}
+            {% with announcement=event.announcement link_to_announcement=1 %}
+                {% include "announcements/announcement.html" %}
+            {% endwith %}
+        {% endif %}
+        
         <div class="event-content">
             {{ event.description|safe }}
         </div>

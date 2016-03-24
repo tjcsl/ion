@@ -32,6 +32,7 @@ $(document).ready(function() {
             setTimeout(function() {
                 announcement.removeClass("hidden");
             }, 450);
+            announcementContent.css("display", "");
             announcementContent.slideDown(350);
         } else {
             icon.removeClass("fa-toggle-on")
@@ -40,6 +41,7 @@ $(document).ready(function() {
             setTimeout(function() {
                 announcement.addClass("hidden");
             }, 450);
+            announcementContent.css("display", "");
             announcementContent.slideUp(350);
         }
     };
