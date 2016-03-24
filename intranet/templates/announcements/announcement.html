@@ -7,13 +7,14 @@
 
 <div class="announcement{% if hide_announcements and announcement.id in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
     <h3>
-        {% if show_icon %}
+        {% if show_icon and not announcement.pinned %}
             <i class="fa fa-file-text-o dashboard-item-icon" title="Announcement"></i>
         {% endif %}
 
         {% if announcement.pinned %}
-            <i class="fa fa-thumb-tack" title="This announcement is pinned to the top."></i>
+            <i class="fa fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
         {% endif %}
+
         {% if link_to_announcement %}
         <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
             {{ announcement.title }}
