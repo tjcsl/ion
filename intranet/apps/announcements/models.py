@@ -121,6 +121,11 @@ class Announcement(models.Model):
         else:
             return ann.year == now.year and ann.month >= 9
 
+    @property
+    def dashboard_type(self):
+        return "announcement"
+    
+
     class Meta:
         ordering = ["-pinned", "-added"]
 

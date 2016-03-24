@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import date, datetime, timedelta
+from datetime import date, time, datetime, timedelta
+from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -13,6 +14,7 @@ from django.utils import timezone
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..emerg.views import get_emerg
+from ..events.models import Event
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 from ..users.models import User
@@ -267,9 +269,17 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     user = request.user
 
     announcements_admin = user.has_admin_permission("announcements")
+    events_admin = user.has_admin_permission("events")
 
     if not show_expired:
         show_expired = ("show_expired" in request.GET)
+
+    context = {
+        "prerender_url": get_prerender_url(request),
+        "user": user,
+        "announcements_admin": announcements_admin,
+        "events_admin": events_admin
+    }
 
     if announcements_admin and "show_all" in request.GET:
         # Show all announcements if user has admin permissions and the
@@ -282,6 +292,22 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         else:
             announcements = (Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now()))
 
+    if events_admin and "show_all" in request.GET:
+        events = (Event.objects.all())
+    else:
+        if show_expired:
+            events = (Event.objects.visible_to_user(user))
+        else:
+            # Unlike announcements, show events for the rest of the day after they occur.
+            midnight = timezone.make_aware(timezone.datetime.combine(timezone.now().date(), time(0, 0)), timezone.get_current_timezone())
+            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight))
+
+    logger.debug(events)
+
+    items = sorted(chain(announcements, events), key=lambda item: item.added)
+    items.reverse()
+    logger.debug(items)
+
     # pagination
     if "start" in request.GET:
         try:
@@ -293,17 +319,25 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     display_num = 10
     end_num = start_num + display_num
-    more_announcements = ((announcements.count() - start_num) > display_num)
+    more_items = ((len(items) - start_num) > display_num)
     try:
-        announcements_sorted = announcements[start_num:end_num]
+        items_sorted = items[start_num:end_num]
     except (ValueError, AssertionError):
-        announcements_sorted = announcements[:display_num]
+        items_sorted = items[:display_num]
     else:
-        announcements = announcements_sorted
-
-    announcements = announcements.select_related("user").prefetch_related("groups", "event")
+        items = items_sorted
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True)).nocache()
+
+    context.update({
+        "items": items,
+        "start_num": start_num,
+        "end_num": end_num,
+        "prev_page": start_num - display_num,
+        "more_items": more_items,
+        "hide_announcements": True,
+        "user_hidden_announcements": user_hidden_announcements
+    })
 
     is_student = user.is_student
     is_teacher = user.is_teacher
@@ -335,17 +369,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     if fcps_emerg:
         dash_warning = fcps_emerg
 
-    context = {
-        "prerender_url": get_prerender_url(request),
+    context.update({
         "dash_warning": dash_warning,
-        "announcements": announcements,
-        "announcements_admin": announcements_admin,
-        "start_num": start_num,
-        "end_num": end_num,
-        "prev_page": start_num - display_num,
-        "more_announcements": more_announcements,
-        "hide_announcements": True,
-        "user_hidden_announcements": user_hidden_announcements,
         "show_widgets": show_widgets,
         "show_expired": show_expired,
         "view_announcements_url": view_announcements_url,
@@ -357,7 +382,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "is_global_admin": is_global_admin,
         "show_admin_widget": show_admin_widget,
         "num_senior_destinations": num_senior_destinations
-    }
+    })
 
     if show_widgets:
         if is_student or eighth_sponsor:
@@ -387,13 +412,20 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
             # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
             # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
 
-        context.update({"eighth_sponsor": eighth_sponsor, "birthdays": find_birthdays(request), "sched_ctx": schedule_context(request)["sched_ctx"]})
+        context.update({
+            "eighth_sponsor": eighth_sponsor,
+            "birthdays": find_birthdays(request),
+            "sched_ctx": schedule_context(request)["sched_ctx"]}
+        )
 
     if announcements_admin:
         all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
         awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
         awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
 
-        context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval})
+        context.update({
+            "awaiting_teacher": awaiting_teacher,
+            "awaiting_approval": awaiting_approval}
+        )
 
     return render(request, "dashboard/dashboard.html", context)

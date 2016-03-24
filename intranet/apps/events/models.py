@@ -131,6 +131,10 @@ class Event(models.Model):
         else:
             return (ann.year == now.year and ann.month >= 9)
 
+    @property
+    def dashboard_type():
+        return "event"
+
     def __str__(self):
         if not self.approved:
             return "UNAPPROVED - {} - {}".format(self.title, self.time)

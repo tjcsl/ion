@@ -112,13 +112,13 @@
             {% endif %}
         {% endif %}
         
-        {% for item in dashboard_items %}
-            {% if item.type == "announcement" %}
-                {% with announcement=item.announcement %}
+        {% for item in items %}
+            {% if item.dashboard_type == "announcement" %}
+                {% with announcement=item %}
                     {% include "announcements/announcement.html" %}
                 {% endwith %}
-            {% elif item.type == "event" %}
-                {% with event=item.event %}
+            {% elif item.dashboard_type == "event" %}
+                {% with event=item %}
                     {% include "events/event.html" %}
                 {% endwith %}
             {% endif %}
@@ -135,7 +135,7 @@
         {% if start_num > 0 %}
             <a href="{% url view_announcements_url %}?start={{ prev_page }}" class="button" style="float:left">&larr; Newer Posts</a>
         {% endif %}
-        {% if more_announcements %}
+        {% if more_items %}
             <a href="{% url view_announcements_url %}?start={{ end_num }}" class="button" style="float:right">Older Posts &rarr;</a>
         {% endif %}
     </div>
