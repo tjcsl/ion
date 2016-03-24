@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.dashboard.views &mdash; TJ Intranet v3 (Build #1679) documentation</title>
+    <title>intranet.apps.dashboard.views &mdash; TJ Intranet v3 (Build #1695) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1679)',
+        VERSION:     'v3 (Build #1695)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1679) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1695) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,7 +148,8 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
@@ -160,6 +161,7 @@
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span> <span class="nn">..emerg.views</span> <span class="kn">import</span> <span class="n">get_emerg</span>
+<span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="kn">import</span> <span class="n">decode_date</span><span class="p">,</span> <span class="n">schedule_context</span>
 <span class="kn">from</span> <span class="nn">..seniors.models</span> <span class="kn">import</span> <span class="n">Senior</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
@@ -201,7 +203,7 @@
 
     <span class="c1"># Use select_related to reduce query count</span>
     <span class="n">signups</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
-        <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
+        <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">))</span>
     <span class="n">block_signup_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">surrounding_blocks</span><span class="p">:</span>
@@ -268,10 +270,10 @@
         <span class="n">sponsor</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">surrounding_blocks</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+        <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">)</span>
 
     <span class="n">activities_sponsoring</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-        <span class="n">block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">nocache</span><span class="p">())</span>
+        <span class="n">block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">))</span>
     <span class="n">sponsoring_block_map</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">activities_sponsoring</span><span class="p">:</span>
         <span class="n">bid</span> <span class="o">=</span> <span class="n">sa</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
@@ -408,15 +410,23 @@
 
 
 <span class="nd">@login_required</span>
-<div class="viewcode-block" id="dashboard_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.dashboard_view">[docs]</a><span class="k">def</span> <span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="dashboard_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.dashboard_view">[docs]</a><span class="k">def</span> <span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Process and show the dashboard.&quot;&quot;&quot;</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
     <span class="n">announcements_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">)</span>
+    <span class="n">events_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_expired</span><span class="p">:</span>
         <span class="n">show_expired</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;show_expired&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;prerender_url&quot;</span><span class="p">:</span> <span class="n">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
+        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s2">&quot;announcements_admin&quot;</span><span class="p">:</span> <span class="n">announcements_admin</span><span class="p">,</span>
+        <span class="s2">&quot;events_admin&quot;</span><span class="p">:</span> <span class="n">events_admin</span>
+    <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">announcements_admin</span> <span class="ow">and</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="c1"># Show all announcements if user has admin permissions and the</span>
@@ -429,6 +439,22 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">announcements</span> <span class="o">=</span> <span class="p">(</span><span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
 
+    <span class="k">if</span> <span class="n">events_admin</span> <span class="ow">and</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">show_expired</span><span class="p">:</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Unlike announcements, show events for the rest of the day after they occur.</span>
+            <span class="n">midnight</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">timezone</span><span class="o">.</span><span class="n">get_current_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span> <span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">midnight</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">announcements</span><span class="p">,</span> <span class="n">events</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">pinned</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span><span class="p">))</span>
+    <span class="n">items</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
     <span class="c1"># pagination</span>
     <span class="k">if</span> <span class="s2">&quot;start&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -440,17 +466,32 @@
 
     <span class="n">display_num</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">end_num</span> <span class="o">=</span> <span class="n">start_num</span> <span class="o">+</span> <span class="n">display_num</span>
-    <span class="n">more_announcements</span> <span class="o">=</span> <span class="p">((</span><span class="n">announcements</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_num</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">display_num</span><span class="p">)</span>
+    <span class="n">more_items</span> <span class="o">=</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_num</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">display_num</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">announcements_sorted</span> <span class="o">=</span> <span class="n">announcements</span><span class="p">[</span><span class="n">start_num</span><span class="p">:</span><span class="n">end_num</span><span class="p">]</span>
+        <span class="n">items_sorted</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">start_num</span><span class="p">:</span><span class="n">end_num</span><span class="p">]</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-        <span class="n">announcements_sorted</span> <span class="o">=</span> <span class="n">announcements</span><span class="p">[:</span><span class="n">display_num</span><span class="p">]</span>
+        <span class="n">items_sorted</span> <span class="o">=</span> <span class="n">items</span><span class="p">[:</span><span class="n">display_num</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements_sorted</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items_sorted</span>
 
-    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">)</span>
+    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="p">(</span><span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    <span class="n">user_hidden_events</span> <span class="o">=</span> <span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_events</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 
-    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="p">(</span><span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span><span class="o">.</span><span class="n">nocache</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ignore_dashboard_types</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ignore_dashboard_types</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+        <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
+        <span class="s2">&quot;start_num&quot;</span><span class="p">:</span> <span class="n">start_num</span><span class="p">,</span>
+        <span class="s2">&quot;end_num&quot;</span><span class="p">:</span> <span class="n">end_num</span><span class="p">,</span>
+        <span class="s2">&quot;prev_page&quot;</span><span class="p">:</span> <span class="n">start_num</span> <span class="o">-</span> <span class="n">display_num</span><span class="p">,</span>
+        <span class="s2">&quot;more_items&quot;</span><span class="p">:</span> <span class="n">more_items</span><span class="p">,</span>
+        <span class="s2">&quot;hide_announcements&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s2">&quot;hide_events&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s2">&quot;user_hidden_announcements&quot;</span><span class="p">:</span> <span class="n">user_hidden_announcements</span><span class="p">,</span>
+        <span class="s2">&quot;user_hidden_events&quot;</span><span class="p">:</span> <span class="n">user_hidden_events</span><span class="p">,</span>
+        <span class="s2">&quot;ignore_dashboard_types&quot;</span><span class="p">:</span> <span class="n">ignore_dashboard_types</span>
+    <span class="p">})</span>
 
     <span class="n">is_student</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span>
     <span class="n">is_teacher</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span>
@@ -460,11 +501,11 @@
     <span class="n">eighth_sponsor</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
 
     <span class="c1"># the URL path for forward/back buttons</span>
-    <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;view_announcements&quot;</span>
+    <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
 
     <span class="k">if</span> <span class="n">show_widgets</span><span class="p">:</span>
         <span class="n">dashboard_title</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
-        <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Announcements&quot;</span>
+        <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
     <span class="k">elif</span> <span class="n">show_expired</span><span class="p">:</span>
         <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Announcement Archive&quot;</span>
         <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;announcements_archive&quot;</span>
@@ -482,17 +523,8 @@
     <span class="k">if</span> <span class="n">fcps_emerg</span><span class="p">:</span>
         <span class="n">dash_warning</span> <span class="o">=</span> <span class="n">fcps_emerg</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;prerender_url&quot;</span><span class="p">:</span> <span class="n">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="s2">&quot;dash_warning&quot;</span><span class="p">:</span> <span class="n">dash_warning</span><span class="p">,</span>
-        <span class="s2">&quot;announcements&quot;</span><span class="p">:</span> <span class="n">announcements</span><span class="p">,</span>
-        <span class="s2">&quot;announcements_admin&quot;</span><span class="p">:</span> <span class="n">announcements_admin</span><span class="p">,</span>
-        <span class="s2">&quot;start_num&quot;</span><span class="p">:</span> <span class="n">start_num</span><span class="p">,</span>
-        <span class="s2">&quot;end_num&quot;</span><span class="p">:</span> <span class="n">end_num</span><span class="p">,</span>
-        <span class="s2">&quot;prev_page&quot;</span><span class="p">:</span> <span class="n">start_num</span> <span class="o">-</span> <span class="n">display_num</span><span class="p">,</span>
-        <span class="s2">&quot;more_announcements&quot;</span><span class="p">:</span> <span class="n">more_announcements</span><span class="p">,</span>
-        <span class="s2">&quot;hide_announcements&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-        <span class="s2">&quot;user_hidden_announcements&quot;</span><span class="p">:</span> <span class="n">user_hidden_announcements</span><span class="p">,</span>
         <span class="s2">&quot;show_widgets&quot;</span><span class="p">:</span> <span class="n">show_widgets</span><span class="p">,</span>
         <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
         <span class="s2">&quot;view_announcements_url&quot;</span><span class="p">:</span> <span class="n">view_announcements_url</span><span class="p">,</span>
@@ -504,7 +536,7 @@
         <span class="s2">&quot;is_global_admin&quot;</span><span class="p">:</span> <span class="n">is_global_admin</span><span class="p">,</span>
         <span class="s2">&quot;show_admin_widget&quot;</span><span class="p">:</span> <span class="n">show_admin_widget</span><span class="p">,</span>
         <span class="s2">&quot;num_senior_destinations&quot;</span><span class="p">:</span> <span class="n">num_senior_destinations</span>
-    <span class="p">}</span>
+    <span class="p">})</span>
 
     <span class="k">if</span> <span class="n">show_widgets</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">is_student</span> <span class="ow">or</span> <span class="n">eighth_sponsor</span><span class="p">:</span>
@@ -534,14 +566,21 @@
             <span class="c1"># &quot;sponsor_schedule&quot;, &quot;no_attendance_today&quot;, &quot;num_attendance_acts&quot;,</span>
             <span class="c1"># &quot;sponsor_schedule_cur_date&quot;, &quot;sponsor_schedule_prev_date&quot;, &quot;sponsor_schedule_next_date&quot;</span>
 
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor</span><span class="p">,</span> <span class="s2">&quot;birthdays&quot;</span><span class="p">:</span> <span class="n">find_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">),</span> <span class="s2">&quot;sched_ctx&quot;</span><span class="p">:</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">]})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor</span><span class="p">,</span>
+            <span class="s2">&quot;birthdays&quot;</span><span class="p">:</span> <span class="n">find_birthdays</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
+            <span class="s2">&quot;sched_ctx&quot;</span><span class="p">:</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">]}</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">announcements_admin</span><span class="p">:</span>
         <span class="n">all_waiting</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">posted</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rejected</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         <span class="n">awaiting_teacher</span> <span class="o">=</span> <span class="n">all_waiting</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teachers_approved__isnull</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">awaiting_approval</span> <span class="o">=</span> <span class="n">all_waiting</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teachers_approved__isnull</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;awaiting_teacher&quot;</span><span class="p">:</span> <span class="n">awaiting_teacher</span><span class="p">,</span> <span class="s2">&quot;awaiting_approval&quot;</span><span class="p">:</span> <span class="n">awaiting_approval</span><span class="p">})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;awaiting_teacher&quot;</span><span class="p">:</span> <span class="n">awaiting_teacher</span><span class="p">,</span>
+            <span class="s2">&quot;awaiting_approval&quot;</span><span class="p">:</span> <span class="n">awaiting_approval</span><span class="p">}</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;dashboard/dashboard.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>

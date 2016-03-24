@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.events.views &mdash; TJ Intranet v3 (Build #1679) documentation</title>
+    <title>intranet.apps.events.views &mdash; TJ Intranet v3 (Build #1695) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1679)',
+        VERSION:     'v3 (Build #1695)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1679) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1695) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -152,6 +152,7 @@
 
 <span class="kn">import</span> <span class="nn">bleach</span>
 
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">exceptions</span>
@@ -171,9 +172,6 @@
 <span class="sd">    future.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
-    <span class="c1">#    # In production, go to not ready page.</span>
-    <span class="c1">#    return render(request, &quot;events/not_ready.html&quot;)</span>
 
     <span class="n">is_events_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">)</span>
 
@@ -227,7 +225,14 @@
     <span class="k">if</span> <span class="n">is_events_admin</span> <span class="ow">and</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">events_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Past&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__lt</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">])})</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events_categories</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">,</span> <span class="s2">&quot;show_attend&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events_categories</span><span class="p">,</span>
+        <span class="s2">&quot;num_events&quot;</span><span class="p">:</span> <span class="n">viewable_events</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+        <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">,</span>
+        <span class="s2">&quot;events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">,</span>
+        <span class="s2">&quot;show_attend&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s2">&quot;show_icon&quot;</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
@@ -239,8 +244,6 @@
 <span class="sd">    id: event id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
-    <span class="c1">#    return render(request, &quot;events/not_ready.html&quot;)</span>
 
     <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
@@ -272,9 +275,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
-    <span class="c1">#    return render(request, &quot;events/not_ready.html&quot;)</span>
-
     <span class="n">event</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
     <span class="n">full_roster</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
@@ -305,10 +305,9 @@
 <span class="sd">    their event is added in the system but must be approved.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># if settings.PRODUCTION and not request.user.has_admin_permission(&#39;events&#39;):</span>
-    <span class="c1">#    return render(request, &quot;events/not_ready.html&quot;)</span>
-
     <span class="n">is_events_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_events_admin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;request_event&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">))</span>
@@ -319,14 +318,10 @@
             <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;events&#39;</span><span class="p">):</span>
-                <span class="c1"># auto-approve if admin</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="bp">True</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">approved_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Because you are an administrator, this event was auto-approved.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Your event needs to be approved by an administrator. If approved, it should &quot;</span>
-                                 <span class="s2">&quot;appear on Intranet within 24 hours.&quot;</span><span class="p">)</span>
+            <span class="c1"># auto-approve if admin</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">approved</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">approved_by</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Because you are an administrator, this event was auto-approved.&quot;</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">created_hook</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -336,6 +331,39 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">))</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add&quot;</span> <span class="k">if</span> <span class="n">is_events_admin</span> <span class="k">else</span> <span class="s2">&quot;Submit&quot;</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="request_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.request_event_view">[docs]</a><span class="k">def</span> <span class="nf">request_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Request event page.</span>
+
+<span class="sd">    Currently, there is an approval process for events. If a user is an</span>
+<span class="sd">    events administrator, they can create events directly. Otherwise,</span>
+<span class="sd">    their event is added in the system but must be approved.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_events_admin</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="c1"># SAFE HTML</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.&quot;</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">created_hook</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding event&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">all_groups</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Submit&quot;</span><span class="p">,</span> <span class="s2">&quot;is_events_admin&quot;</span><span class="p">:</span> <span class="n">is_events_admin</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
@@ -400,6 +428,44 @@
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;events/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">})</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="show_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.show_event_view">[docs]</a><span class="k">def</span> <span class="nf">show_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Unhide an event that was hidden by the logged-in user.</span>
+
+<span class="sd">        events_hidden in the user model is the related_name for</span>
+<span class="sd">        &quot;users_hidden&quot; in the EventUserMap model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">event_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event_id&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Unhidden&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="hide_event_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.views.hide_event_view">[docs]</a><span class="k">def</span> <span class="nf">hide_event_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Hide an event for the logged-in user.</span>
+
+<span class="sd">        events_hidden in the user model is the related_name for</span>
+<span class="sd">        &quot;users_hidden&quot; in the EventUserMap model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">event_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;event_id&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event_id</span><span class="p">:</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">users_hidden</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">user_map</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Hidden&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

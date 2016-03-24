@@ -9,7 +9,7 @@ Note that the `flake8` tool can be very useful in this regard.
 Main points:
 
 - Indent using 4 spaces.
-- Use underscores in favor of camel case for all names except the naems of classes.
+- Use underscores in favor of camel case for all names except the names of classes.
 - Limit all lines to a maximum of 79 characters.
 - Limit the line length of docstrings or comments to 72 characters.
 - Separate top-level functions and class definitions with two blank lines.

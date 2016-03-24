@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1679) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1695) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1679)',
+        VERSION:     'v3 (Build #1695)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,8 +32,8 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1679) documentation" href="../../../../../../index.html" />
-    <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1695) documentation" href="../../../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -221,7 +221,7 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
                         cancelled = True
 
                 if instance:
-                    fields = [&quot;rooms&quot;, &quot;capacity&quot;, &quot;sponsors&quot;, &quot;title&quot;, &quot;special&quot;, &quot;comments&quot;, &quot;admin_comments&quot;]
+                    fields = [&quot;rooms&quot;, &quot;capacity&quot;, &quot;sponsors&quot;, &quot;title&quot;, &quot;special&quot;, &quot;administrative&quot;, &quot;restricted&quot;, &quot;sticky&quot;, &quot;comments&quot;, &quot;admin_comments&quot;]
                     if &quot;rooms&quot; in form.cleaned_data:
                         for o in form.cleaned_data[&quot;rooms&quot;]:
                             invalidate_obj(o)
@@ -346,6 +346,9 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
                     &quot;sponsors&quot;: sched_act.sponsors.all(),
                     &quot;title&quot;: sched_act.title,
                     &quot;special&quot;: sched_act.special,
+                    &quot;administrative&quot;: sched_act.administrative,
+                    &quot;restricted&quot;: sched_act.restricted,
+                    &quot;sticky&quot;: sched_act.sticky,
                     &quot;comments&quot;: sched_act.comments,
                     &quot;admin_comments&quot;: sched_act.admin_comments,
                     &quot;scheduled&quot;: not sched_act.cancelled,
