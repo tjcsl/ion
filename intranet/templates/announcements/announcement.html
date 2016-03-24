@@ -33,11 +33,14 @@
                 {% endif %}
                 </a>
             {% endif %}
+                <a href="{% url 'view_announcement' announcement.id %}" title="Announcement permalink">
+                    <i class="fa fa-share-square-o"></i>
+                </a>
             {% if request.user.is_announcements_admin %}
-                <a href="{% url 'modify_announcement' announcement.id %}">
+                <a href="{% url 'modify_announcement' announcement.id %}" title="Modify announcement">
                     <i class="announcement-icon fa fa-pencil"></i>
                 </a>
-                <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete">
+                <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete" title="Delete announcement">
                     <i class="announcement-icon fa fa-trash-o"></i>
                 </a>
             {% endif %}
