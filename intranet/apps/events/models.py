@@ -135,6 +135,12 @@ class Event(models.Model):
     def dashboard_type(self):
         return "event"
 
+    @property
+    def pinned(self):
+        """ TODO: implement event pinning """
+        return False
+    
+
     def __str__(self):
         if not self.approved:
             return "UNAPPROVED - {} - {}".format(self.title, self.time)

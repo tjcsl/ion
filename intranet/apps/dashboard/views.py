@@ -304,7 +304,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
 
     logger.debug(events)
 
-    items = sorted(chain(announcements, events), key=lambda item: item.added)
+    items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
     items.reverse()
     logger.debug(items)
 
