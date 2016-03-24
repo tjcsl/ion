@@ -151,6 +151,8 @@ def add_event_view(request):
 
     """
     is_events_admin = request.user.has_admin_permission('events')
+    if not is_events_admin:
+        return redirect("request_event")
 
     if request.method == "POST":
         form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission('groups'))
@@ -161,14 +163,11 @@ def add_event_view(request):
             # SAFE HTML
             obj.description = bleach.linkify(obj.description)
 
-            if request.user.has_admin_permission('events'):
-                # auto-approve if admin
-                obj.approved = True
-                obj.approved_by = request.user
-                messages.success(request, "Because you are an administrator, this event was auto-approved.")
-            else:
-                messages.success(request, "Your event needs to be approved by an administrator. If approved, it should "
-                                 "appear on Intranet within 24 hours.")
+           
+            # auto-approve if admin
+            obj.approved = True
+            obj.approved_by = request.user
+            messages.success(request, "Because you are an administrator, this event was auto-approved.")
             obj.created_hook(request)
 
             obj.save()
@@ -180,6 +179,38 @@ def add_event_view(request):
     context = {"form": form, "action": "add", "action_title": "Add" if is_events_admin else "Submit", "is_events_admin": is_events_admin}
     return render(request, "events/add_modify.html", context)
 
+
+@login_required
+def request_event_view(request):
+    """Request event page.
+
+    Currently, there is an approval process for events. If a user is an
+    events administrator, they can create events directly. Otherwise,
+    their event is added in the system but must be approved.
+
+    """
+    is_events_admin = False
+
+    if request.method == "POST":
+        form = EventForm(data=request.POST, all_groups=request.user.has_admin_permission('groups'))
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            # SAFE HTML
+            obj.description = bleach.linkify(obj.description)
+
+            messages.success(request, "Your event needs to be approved by an administrator. If approved, it should appear on Intranet within 24 hours.")
+            obj.created_hook(request)
+
+            obj.save()
+            return redirect("events")
+        else:
+            messages.error(request, "Error adding event")
+    else:
+        form = EventForm(all_groups=request.user.has_admin_permission('groups'))
+    context = {"form": form, "action": "add", "action_title": "Submit", "is_events_admin": is_events_admin}
+    return render(request, "events/add_modify.html", context)
 
 @login_required
 def modify_event_view(request, id=None):

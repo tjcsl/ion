@@ -33,14 +33,17 @@
                 </a>
             {% endif %}
 
-            <a href="{% url 'add_event' %}" class="button">
-                <i class="fa fa-bullhorn"></i>
-                {% if is_events_admin %}
+            {% if is_events_admin %}
+                <a href="{% url 'add_event' %}" class="button">
+                    <i class="fa fa-bullhorn"></i>
                     Add
-                {% else %}
+                </a>
+            {% else %}
+                <a href="{% url 'request_event' %}" class="button">
+                    <i class="fa fa-bullhorn"></i>
                     Submit
-                {% endif %}
-            </a>
+                </a>
+            {% endif %}
         </div>
 
         <div class="events-container">
