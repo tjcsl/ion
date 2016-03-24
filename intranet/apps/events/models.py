@@ -41,9 +41,9 @@ class Event(models.Model):
         A description about the event
     links:
         Not currently used
-    created_time:
+    added:
         Time created (automatically set)
-    last_modified_time:
+    updated:
         Time last modified (automatically set)
     time:
         The date and time of the event
@@ -77,8 +77,8 @@ class Event(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=10000)
     links = models.ManyToManyField("Link", blank=True)
-    created_time = models.DateTimeField(auto_now=True)
-    last_modified_time = models.DateTimeField(auto_now_add=True)
+    added = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now_add=True)
 
     time = models.DateTimeField()
     location = models.CharField(max_length=100)

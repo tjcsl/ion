@@ -111,10 +111,17 @@
                 </div>
             {% endif %}
         {% endif %}
-
         
-        {% for announcement in announcements %}
-            {% include "announcements/announcement.html" %}
+        {% for item in dashboard_items %}
+            {% if item.type == "announcement" %}
+                {% with announcement=item.announcement %}
+                    {% include "announcements/announcement.html" %}
+                {% endwith %}
+            {% elif item.type == "event" %}
+                {% with event=item.event %}
+                    {% include "events/event.html" %}
+                {% endwith %}
+            {% endif %}
         {% empty %}
             <div class="announcement">
                 There are no announcements to display at this time.

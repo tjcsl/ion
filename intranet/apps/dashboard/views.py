@@ -317,7 +317,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     if show_widgets:
         dashboard_title = "Dashboard"
-        dashboard_header = "Announcements"
+        dashboard_header = "Dashboard"
     elif show_expired:
         dashboard_title = dashboard_header = "Announcement Archive"
         view_announcements_url = "announcements_archive"
