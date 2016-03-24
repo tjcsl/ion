@@ -93,6 +93,31 @@
                 <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
                 <input type="submit" value="Save" />
 
+                {% if activity.special %}
+                    <span class="badge green" title="This is a special activity.">Special</span>
+                {% endif %}
+                {% if activity.restricted %}
+                    <span class="badge purple" title="This activity is restricted to those on the authorized list.">Restricted</span>
+                {% endif %}
+                {% if activity.sticky %}
+                    <span class="badge orange" title="This activity is sticky: if placed in it, you cannot change your selection.">Sticky</span>
+                {% endif %}
+                {% if activity.both_blocks %}
+                    <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
+                {% endif %}
+                {% if activity.one_a_day %}
+                    <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
+                {% endif %}
+                {% if activity.administrative %}
+                    <span class="badge" title="This activity is administrative.">Administrative</span>
+                {% endif %}
+                {% if activity.presign %}
+                    <span class="badge yellow" title="You may only sign up for this activity 48 hours in advance.">48-hr Presign</span>
+                {% endif %}
+
+                {% if not activity.is_active %}
+                    <span class="badge" title="This activity isn't scheduled in the next two months.">Inactive</span>
+                {% endif %}
                 {% if activity.default_capacity %}
                     &nbsp; <b>Activity default capacity: {{ activity.default_capacity }}</b>
                 {% endif %}
