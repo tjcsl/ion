@@ -80,9 +80,11 @@ def events_view(request):
 
     context = {
         "events": events_categories,
+        "num_events": viewable_events.count(),
         "is_events_admin": is_events_admin,
         "events_admin": is_events_admin,
-        "show_attend": True
+        "show_attend": True,
+        "show_icon": True
     }
     return render(request, "events/home.html", context)
 
