@@ -263,7 +263,7 @@ def get_prerender_url(request):
 
 
 @login_required
-def dashboard_view(request, show_widgets=True, show_expired=False):
+def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None):
     """Process and show the dashboard."""
 
     user = request.user
@@ -329,6 +329,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True)).nocache()
 
+    if ignore_dashboard_types is None:
+        ignore_dashboard_types = []
+
     context.update({
         "items": items,
         "start_num": start_num,
@@ -336,7 +339,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
         "prev_page": start_num - display_num,
         "more_items": more_items,
         "hide_announcements": True,
-        "user_hidden_announcements": user_hidden_announcements
+        "user_hidden_announcements": user_hidden_announcements,
+        "ignore_dashboard_types": ignore_dashboard_types
     })
 
     is_student = user.is_student
@@ -347,7 +351,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False):
     eighth_sponsor = user.get_eighth_sponsor()
 
     # the URL path for forward/back buttons
-    view_announcements_url = "view_announcements"
+    view_announcements_url = "index"
 
     if show_widgets:
         dashboard_title = "Dashboard"

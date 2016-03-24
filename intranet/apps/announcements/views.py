@@ -25,13 +25,13 @@ logger = logging.getLogger(__name__)
 @login_required
 def view_announcements(request):
     """Show the dashboard with only announcements."""
-    return dashboard_view(request, show_widgets=False)
+    return dashboard_view(request, show_widgets=False, ignore_dashboard_types=["event"])
 
 
 @login_required
 def view_announcements_archive(request):
     """Show the dashboard with only announcements, showing expired posts."""
-    return dashboard_view(request, show_widgets=False, show_expired=True)
+    return dashboard_view(request, show_widgets=False, show_expired=True, ignore_dashboard_types=["event"])
 
 
 def announcement_posted_hook(request, obj):

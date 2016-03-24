@@ -75,7 +75,7 @@
             {% endif %}
             {% if announcements_admin %}
                 {% if "show_all" not in request.GET %}
-                    <a class="button" href="{% url 'view_announcements' %}?show_all=1">
+                    <a class="button" href="{% url view_announcements_url %}?show_all=1">
                         Show All
                     </a>
                 {% endif %}
@@ -113,7 +113,9 @@
         {% endif %}
         
         {% for item in items %}
-            {% if item.dashboard_type == "announcement" %}
+            {% if item.dashboard_type in ignore_dashboard_types %}
+                <!-- {{ item.dashboard_type }} hidden -->
+            {% elif item.dashboard_type == "announcement" %}
                 {% with announcement=item show_icon=True %}
                     {% include "announcements/announcement.html" %}
                 {% endwith %}
