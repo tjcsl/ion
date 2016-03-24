@@ -24,9 +24,6 @@ def events_view(request):
     future.
 
     """
-    # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-    #    # In production, go to not ready page.
-    #    return render(request, "events/not_ready.html")
 
     is_events_admin = request.user.has_admin_permission('events')
 
@@ -92,8 +89,6 @@ def join_event_view(request, id):
     id: event id
 
     """
-    # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-    #    return render(request, "events/not_ready.html")
 
     event = get_object_or_404(Event, id=id)
 
@@ -125,9 +120,6 @@ def event_roster_view(request, id):
 
     """
 
-    # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-    #    return render(request, "events/not_ready.html")
-
     event = get_object_or_404(Event, id=id)
 
     full_roster = list(event.attending.all())
@@ -158,9 +150,6 @@ def add_event_view(request):
     their event is added in the system but must be approved.
 
     """
-    # if settings.PRODUCTION and not request.user.has_admin_permission('events'):
-    #    return render(request, "events/not_ready.html")
-
     is_events_admin = request.user.has_admin_permission('events')
 
     if request.method == "POST":
