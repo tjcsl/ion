@@ -44,4 +44,10 @@ $(function() {
         e.preventDefault();
         eventToggle.call($(this));
     });
+
+    $(".event[data-id] h3 .dashboard-item-icon").click(function(e) {
+        e.preventDefault();
+        var btn = $(".event-toggle", $(this).parent());
+        eventToggle.call(btn);
+    });
 });

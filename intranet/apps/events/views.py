@@ -78,7 +78,12 @@ def events_view(request):
     if is_events_admin and "show_all" in request.GET:
         events_categories.append({"title": "Past", "events": viewable_events.filter(time__lt=this_week[0])})
 
-    context = {"events": events_categories, "is_events_admin": is_events_admin, "show_attend": True}
+    context = {
+        "events": events_categories,
+        "is_events_admin": is_events_admin, 
+        "events_admin": is_events_admin,
+        "show_attend": True
+    }
     return render(request, "events/home.html", context)
 
 

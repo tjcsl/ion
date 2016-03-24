@@ -54,4 +54,10 @@ $(document).ready(function() {
         e.preventDefault();
         announcementToggle.call($(this));
     });
+
+    $(".announcement[data-id] h3 .dashboard-item-icon").click(function(e) {
+        e.preventDefault();
+        var btn = $(".announcement-toggle", $(this).parent());
+        announcementToggle.call(btn);
+    });
 });
