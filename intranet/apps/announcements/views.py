@@ -211,7 +211,7 @@ def admin_approve_announcement_view(request, req_id):
                 messages.success(request, "Successfully approved announcement request. It has been posted.")
             else:
                 req.rejected = True
-                req.posted_by = request.user
+                req.rejected_by = request.user
                 req.save()
                 messages.success(request, "You did not approve this request. It will be hidden.")
             return redirect("index")
