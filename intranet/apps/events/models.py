@@ -132,7 +132,7 @@ class Event(models.Model):
             return (ann.year == now.year and ann.month >= 9)
 
     @property
-    def dashboard_type():
+    def dashboard_type(self):
         return "event"
 
     def __str__(self):
@@ -140,3 +140,6 @@ class Event(models.Model):
             return "UNAPPROVED - {} - {}".format(self.title, self.time)
         else:
             return "{} - {}".format(self.title, self.time)
+
+    class Meta:
+        ordering = ["time"]
