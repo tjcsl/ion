@@ -7,15 +7,36 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.1/dist/css/selectize.default.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/files.css' %}" />
     <style type="text/css">
+    .primary-content .selectize-control {
+        height: 42px;
+    }
 
+    .primary-content tr th,
+    .primary-content tr td {
+        padding: 5px;
+    }
     </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.1/dist/js/standalone/selectize.min.js' %}"></script>
+    {% if is_tj_ip %}
+        <script type="text/javascript">
+        $(function() {
+            $("#id_printer").selectize();
+        });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
     <div class="primary-content">
         <h2>Files</h2>
+
         <h3>Connect to a filesystem:</h3>
         {% for host in hosts %}
             <div class="filesystem">
@@ -35,6 +56,20 @@
         {% empty %}
             <p>There are no hosts available.</p>
         {% endfor %}
+
+
+        <div class="right-content">
+            <h2>Printing</h2>
+            {% if is_tj_ip %}
+                Printing functionality is only available when connected to the TJ network.
+                <br /><br />
+                {% include "printing/print_form.html" %}
+            {% else %}
+                <b>Printing functionality is only available when connected to the TJ network.</b> Connect to the "Fairfax" Wi-Fi network on campus.
+                <br /><br />
+            {% endif %}
+
+        </div>
 
     </div>
 {% endblock %}

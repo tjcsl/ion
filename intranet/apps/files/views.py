@@ -23,6 +23,8 @@ from django.views.decorators.debug import (sensitive_post_parameters, sensitive_
 
 import pysftp
 
+from ..printing.views import get_printers
+from ..printing.forms import PrintJobForm
 from .forms import UploadFileForm
 from .models import Host
 
@@ -39,7 +41,13 @@ def files_view(request):
 
     hosts = Host.objects.visible_to_user(request.user)
 
-    context = {"hosts": hosts}
+    printers = get_printers()
+    print_form = PrintJobForm(printers=printers)
+    
+    context = {
+        "hosts": hosts,
+        "form": print_form
+    }
     return render(request, "files/home.html", context)
 
 
