@@ -43,7 +43,7 @@ def files_view(request):
 
     printers = get_printers()
     print_form = PrintJobForm(printers=printers)
-    
+
     context = {
         "hosts": hosts,
         "form": print_form

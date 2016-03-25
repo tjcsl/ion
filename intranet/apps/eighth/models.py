@@ -724,18 +724,18 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             return EighthRoom.total_capacity_of_rooms(rooms)
 
     def get_restricted(self):
-            """Get whether this scheduled activity is restricted."""
-            if self.restricted:
-                    return self.restricted
-            else:
-                    return self.activity.restricted
+        """Get whether this scheduled activity is restricted."""
+        if self.restricted:
+            return self.restricted
+        else:
+            return self.activity.restricted
 
     def get_sticky(self):
-            """Get whether this scheduled activity is sticky."""
-            if self.sticky:
-                    return self.sticky
-            else:
-                    return self.activity.sticky
+        """Get whether this scheduled activity is sticky."""
+        if self.sticky:
+            return self.sticky
+        else:
+            return self.activity.sticky
 
     def get_administrative(self):
         """Get whether this scheduled activity is administrative."""

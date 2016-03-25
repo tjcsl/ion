@@ -158,7 +158,6 @@ def print_view(request):
         messages.error(request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
 
-
     printers = get_printers()
     if request.method == "POST":
         form = PrintJobForm(request.POST, request.FILES, printers=printers)
