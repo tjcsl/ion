@@ -314,15 +314,15 @@ CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 
 
 CACHEOPS_DEGRADE_ON_FAILURE = True
 
-#CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
+# CACHEOPS_DEFAULTS = {"ops": "all", "cache_on_save": True, "timeout": int(datetime.timedelta(hours=24).total_seconds())}
 
 CACHEOPS = {
     "eighth.*": {
         "timeout": int(datetime.timedelta(hours=24).total_seconds())
-    }, # Only used for caching activity, block lists
+    },  # Only used for caching activity, block lists
     "groups.*": {
         "timeout": int(datetime.timedelta(hours=24).total_seconds())
-    } # Only used for caching group list
+    }  # Only used for caching group list
 }
 
 if not TESTING:
