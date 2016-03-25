@@ -300,7 +300,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         else:
             # Unlike announcements, show events for the rest of the day after they occur.
             midnight = timezone.datetime.combine(timezone.make_aware(datetime.now(), timezone.get_current_timezone()).date(), time(0, 0))
-            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight))
+            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True))
 
     logger.debug(events)
 

@@ -127,6 +127,8 @@ class Event(models.Model):
     attending = models.ManyToManyField(User, blank=True, related_name="attending")
     show_attending = models.BooleanField(default=True)
 
+    show_on_dashboard = models.BooleanField(default=True)
+
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
     approved_by = models.ForeignKey(User, null=True, related_name="approved_event")
