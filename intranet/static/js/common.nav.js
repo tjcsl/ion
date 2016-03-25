@@ -1,5 +1,22 @@
 /* global $ */
 $(function() {
+    $.extend($.expr[":"], {
+        horizontallyscrollable: function(element) {
+            var e = $(element);
+            if (e.css("overflow") == "scroll" || e.css("overflowX") == "scroll" || e.css("overflow") == "auto" || e.css("overflowX") == "auto") {
+                return true;
+            }
+            return false;
+        }
+    });
+
+    $(".main *:horizontallyscrollable").on("touchstart", function(e) {
+        var scrollPos = $(this).scrollLeft();
+        if (scrollPos != 0 && scrollPos != $(this).get(0).scrollWidth) {
+            e.stopPropagation();
+        }
+    });
+
     var initX = null, initY = null, listening = false;
     $(window).on("touchstart", function(e) {
         initX = e.originalEvent.touches[0].clientX;
