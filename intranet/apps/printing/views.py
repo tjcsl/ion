@@ -8,11 +8,12 @@ import tempfile
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 import magic
 
 from .forms import PrintJobForm
+from ..context_processors import _get_current_ip
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +154,11 @@ def print_job(obj, do_print=True):
 
 @login_required
 def print_view(request):
+    if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
+        messages.error(request, "You don't have printer access outside of the TJ network.")
+        return redirect("index")
+
+
     printers = get_printers()
     if request.method == "POST":
         form = PrintJobForm(request.POST, request.FILES, printers=printers)
