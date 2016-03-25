@@ -57,6 +57,11 @@ if not PRODUCTION:
 
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
+# Used for Filecenter access
+_tj_ip_list = _internal_ip_list + ["151.188.0.0/18", "10.0.0.0/8"]
+
+TJ_IPS = helpers.GlobList(_tj_ip_list)
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_URL = "/login"
@@ -223,6 +228,7 @@ TEMPLATES = [
              "intranet.apps.eighth.context_processors.start_date",  # For determining the eighth pd start date
              "intranet.apps.eighth.context_processors.absence_count",  # For showing the absence count in the navbar
              "intranet.apps.context_processors.mobile_app",  # For the custom android app functionality (tbd?)
+             "intranet.apps.context_processors.is_tj_ip",  # Whether on the internal TJ or FCPS network
              "intranet.apps.context_processors.global_custom_theme"  # Sitewide custom themes (special events, etc)
              ),
             "debug": True,  # Only enabled if DEBUG is true as well

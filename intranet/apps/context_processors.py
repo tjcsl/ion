@@ -91,3 +91,14 @@ def global_custom_theme(request):
         theme = {"css": "themes/piday/piday.css"}
 
     return {"theme": theme}
+
+def is_tj_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    return {
+        "is_tj_ip": (ip in settings.TJ_IPS)
+    }

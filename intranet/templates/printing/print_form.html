@@ -1,0 +1,29 @@
+<form action="{% url 'printing' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    <tr>
+        <td colspan="2">
+            <input type="submit" value="Print" />
+        </td>
+    </tr>
+    </table>
+    <br />
+    <b>The following file formats are supported:</b>
+    <ul>
+        <li>.docx: Microsoft Word XML Document</li>
+        <li>.doc: Microsoft Word Document</li>
+        <li>.pdf: Adobe PDF</li>
+        <li>.ps: Adobe PostScript</li>
+        <li>.odt: OpenDocument Text Document</li>
+    </ul>
+    <br />
+    <b>The following restrictions apply:</b>
+    <ul>
+        <li>Print jobs can have a maximum of 15 pages.</li>
+        <li>You should check with a teacher before printing to a non-public location.</li>
+        <li>If the printer doesn't appear to be working, don't keep attempting to print.</li>
+        <li>Abuse of this feature will result in loss of printing privileges.</li>
+    </ul>
+    <br />
+</form>
