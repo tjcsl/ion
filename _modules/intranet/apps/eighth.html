@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.middleware.ajax &mdash; TJ Intranet v3 (Build #1713) documentation</title>
+    <title>intranet.apps.eighth &mdash; TJ Intranet v3 (Build #1713) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -144,31 +144,8 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.middleware.ajax</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
-
-
-<div class="viewcode-block" id="AjaxNotAuthenticatedMiddleWare"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare">[docs]</a><span class="k">class</span> <span class="nc">AjaxNotAuthenticatedMiddleWare</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Django doesn&#39;t handle login redirects with AJAX very nicely, so we have to work around the</span>
-<span class="sd">    default behavior a little.</span>
-
-<span class="sd">    If a user&#39;s</span>
-<span class="sd">    session has expired, but they still have a window open, they client</span>
-<span class="sd">    may send AJAX requests to a view wrapped in @login_required or</span>
-<span class="sd">    something similar. When this happens, Django ``302`` redirects to</span>
-<span class="sd">    something like ``/login?next=/eighth/signup``, which will show up to</span>
-<span class="sd">    the client as a ``200 OK`` ``GET`` request and proceed as if</span>
-<span class="sd">    everything worked. To avoid this, we need to detect these types of</span>
-<span class="sd">    requests and change their status code to ``401`` to let the client</span>
-<span class="sd">    know that the request actually failed.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="AjaxNotAuthenticatedMiddleWare.process_response"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare.process_response">[docs]</a>    <span class="k">def</span> <span class="nf">process_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">is_ajax</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">HttpResponseRedirect</span><span class="p">)):</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">401</span>
-        <span class="k">return</span> <span class="n">response</span></div></div>
+  <h1>Source code for intranet.apps.eighth</h1><div class="highlight"><pre>
+<span></span>
 </pre></div>
 
     </div>
