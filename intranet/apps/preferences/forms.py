@@ -91,6 +91,7 @@ class PrivacyOptionsForm(forms.Form):
                 if not name.endswith("-self"):
                     self.fields[name].widget.attrs['class'] = 'disabled'
 
+
 class NotificationOptionsForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
