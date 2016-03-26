@@ -16,9 +16,7 @@ function toggleNavbar() {
 
 $(document).ready(function() {
     /* left menu nav icon */
-    $(".left > .dropdown-taparea").click(function() {
-        toggleNavbar();
-    });
+    $(".left > .dropdown-taparea").click(toggleNavbar);
 
     $(".nav-g").click(function() {
         $(this).fadeOut(200);
