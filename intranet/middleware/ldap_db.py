@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class CheckLDAPBindMiddleware:
 
     def process_response(self, request, response):
-        if not hasattr(request, "user") or not "_auth_user_backend" in request.session or not request.user.is_authenticated():
+        if not hasattr(request, "user") or "_auth_user_backend" not in request.session or not request.user.is_authenticated():
             # Nothing to check if user isn't already logged in
             return response
 
