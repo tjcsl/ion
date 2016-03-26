@@ -1,18 +1,23 @@
 /* global $ */
+
+function toggleNavbar() {
+    $n = $(".main > .nav").eq(0);
+    $g = $(".nav-g");
+    if($n.css('left').split(/[^\-\d]+/)[0] == 0) { // hide
+        $n.animate({ left: "-202px" }, 200);
+        $g.removeClass("close-l").fadeOut(200);
+        $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
+    } else { // show
+        $n.animate({ left: "0px" }, 200);
+        $g.addClass("close-l").fadeIn(200);
+        $("body").addClass("disable-scroll").addClass("mobile-nav-show");
+    }
+}
+
 $(document).ready(function() {
     /* left menu nav icon */
     $(".left > .dropdown-taparea").click(function() {
-        $n = $(".main > .nav").eq(0);
-        $g = $(".nav-g");
-        if($n.css('left').split(/[^\-\d]+/)[0] == 0) { // hide
-            $n.animate({ left: "-202px" }, 200);
-            $g.removeClass("close-l").fadeOut(200);
-            $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
-        } else { // show
-            $n.animate({ left: "0px" }, 200);
-            $g.addClass("close-l").fadeIn(200);
-            $("body").addClass("disable-scroll").addClass("mobile-nav-show");
-        }
+        toggleNavbar();
     });
 
     $(".nav-g").click(function() {
