@@ -12,7 +12,7 @@ $(function() {
 
     $(".main *:horizontallyscrollable").on("touchstart", function(e) {
         var scrollPos = $(this).scrollLeft();
-        if (scrollPos != 0 && scrollPos != $(this).get(0).scrollWidth) {
+        if (scrollPos != 0) {
             e.stopPropagation();
         }
     });
