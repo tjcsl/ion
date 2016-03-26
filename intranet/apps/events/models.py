@@ -162,7 +162,7 @@ class Event(models.Model):
     def is_this_year(self):
         """Return whether the event was created after September 1st of this school year."""
         now = datetime.now().date()
-        ann = self.created_time.date()
+        ann = self.added.date()
         if now.month < 9:
             return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
         else:
