@@ -90,8 +90,6 @@ class PrivacyOptionsForm(forms.Form):
             for name in self.fields:
                 if not name.endswith("-self"):
                     self.fields[name].widget.attrs['class'] = 'disabled'
-                    self.fields[name].widget.attrs['disabled'] = True
-
 
 class NotificationOptionsForm(forms.Form):
 
