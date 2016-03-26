@@ -757,7 +757,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = visible_self and visible_parent
 
         if cached and visible:
-            logger.debug("{} photo of user {} loaded " "from cache.".format(photo_year.title(), self.id))
+            logger.debug("{} photo of user {} loaded from cache.".format(photo_year.title(), self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -766,6 +766,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
                 if len(results) == 1:
                     data = results[0]['attributes']['jpegPhoto'][0]
+                    logger.debug("{} photo of user {} loaded from LDAP.".format(photo_year.title(), self.id))
                 else:
                     data = None
             except (ldap3.LDAPNoSuchObjectResult, KeyError):
@@ -1086,7 +1087,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
             requesting_user_id = request.user.id
-            auth_backend = request.user.backend
+            auth_backend = request.session["_auth_user_backend"]
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
             return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
