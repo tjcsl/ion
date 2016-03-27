@@ -113,14 +113,14 @@ def cache_view(request):
         opts = default = None
 
     cache = {}
-
-    for ctype in opts:
-        c = ctype.split(".")[0]
-        if "timeout" in opts[ctype]:
-            to = opts[ctype]["timeout"]
-        else:
-            to = default["timeout"]
-        cache[c] = int(to / (60 * 60))
+    if opts:
+        for ctype in opts:
+            c = ctype.split(".")[0]
+            if "timeout" in opts[ctype]:
+                to = opts[ctype]["timeout"]
+            else:
+                to = default["timeout"]
+            cache[c] = int(to / (60 * 60))
 
     context = {"admin_page_title": "Cache Configuration", "cache_length": cache}
     return render(request, "eighth/admin/cache.html", context)
