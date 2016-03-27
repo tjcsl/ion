@@ -48,7 +48,7 @@ Using Intranet as a Developer
 -----------------------------
 - `API Root <https://ion.tjhsst.edu/api/>`_
 - `API Demo <https://www.tjhsst.edu/~2016jwoglom/ion-api-demo.html>`_
-- `OAuth Documentation <developing/oauth>`
+- `OAuth Documentation<developing/oauth>`
 - `OAuth Demo <https://www.tjhsst.edu/~2016jwoglom/ionoauth/>`_
 
 Source Code Documentation
