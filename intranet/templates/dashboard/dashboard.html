@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load dates %}
 {% load cacheops %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - {{ dashboard_title }}
@@ -15,11 +16,11 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.widgets.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.widget.css' %}" />
+    {% stylesheet 'events' %}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'dashboard.widgets' %}
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'schedule.widgets' %}
 {% endblock %}
 
 {% block js %}
