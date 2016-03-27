@@ -37,7 +37,7 @@ $(function() {
             return;
         }
         var diffX = nowX - initX;
-        if (Math.abs(diffX) > 30) {
+        if (diffX > 30) {
             var nav = $(".main > .nav").eq(0);
             var g = $(".nav-g");
             var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
@@ -45,13 +45,18 @@ $(function() {
                 nav.animate({ left: "0px" }, 200);
                 g.addClass("close-l").fadeIn(200);
                 $("body").addClass("disable-scroll").addClass("mobile-nav-show");
+                listening = false;
             }
-            else if (shown) {
+        } else if (diffX < -30) {
+            var nav = $(".main > .nav").eq(0);
+            var g = $(".nav-g");
+            var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
+            if (shown) {
                 nav.animate({ left: "-202px" }, 200);
                 g.removeClass("close-l").fadeOut(200);
                 $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
+                listening = false;
             }
-            listening = false;
         }
     });
 });
