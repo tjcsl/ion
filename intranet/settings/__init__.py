@@ -531,7 +531,7 @@ LOGGING = {
     "loggers": {
         # Django errors get sent to the error log
         "django": {
-            "handlers": ["console"] + get_log("error_log"),
+            "handlers": ["console", "mail_admins"] + get_log("error_log"),
             "level": "ERROR",
             "propagate": True,
         },
