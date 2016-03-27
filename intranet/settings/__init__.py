@@ -200,10 +200,41 @@ STATICFILES_DIRS = [
 
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",
+STATICFILES_FINDERS = ["django.contrib.staticfiles.finders.FileSystemFinder",
                        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-                       # "django.contrib.staticfiles.finders.DefaultStorageFinder",
-                       )
+                       'pipeline.finders.PipelineFinder',
+                       ]
+
+STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
+
+PIPELINE = {
+    'CSS_COMPRESSOR': None,
+    'COMPILERS': [
+        'pipeline.compilers.sass.SASSCompiler',
+    ],
+    'STYLESHEETS': {
+        'base': {
+            'source_filenames': [
+                'css/base.scss',
+                'css/themes.scss',
+                'css/responsive.scss'
+            ],
+            'output_filename': 'css/base.css'
+        },
+        'eighth_admin': {
+            'source_filenames': [
+                'css/eighth.common.scss',
+                'css/eighth.admin.scss'
+            ],
+            'output_filename': 'css/eighth_admin.css'
+        },
+    }
+}  # type: Dict[str,Any]
+
+LIST_OF_INDEPENDENT_CSS = ['login', 'emerg', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'dashboard', 'events', 'schedule.widgets', 'dashboard.widgets']
+
+for name in LIST_OF_INDEPENDENT_CSS:
+    PIPELINE['STYLESHEETS'].update(helpers.SingleCss(name))
 
 AUTHENTICATION_BACKENDS = ("intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
                            "intranet.apps.auth.backends.KerberosAuthenticationBackend",
@@ -418,6 +449,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "rest_framework",
     "maintenancemode",
+    "pipeline",
     # Intranet apps
     "intranet.apps",
     "intranet.apps.announcements",

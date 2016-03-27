@@ -99,3 +99,10 @@ class GlobList(list):
         except ValueError:
             pass
         return False
+
+
+def SingleCss(name):
+    return {name: {
+        'source_filenames': ['css/%s.scss' % name],
+        'output_filename': 'css/%s.css' % name
+    }}
