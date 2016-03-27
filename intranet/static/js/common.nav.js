@@ -40,8 +40,9 @@ $(function() {
         if (diffX > 30) {
             var nav = $(".main > .nav").eq(0);
             var g = $(".nav-g");
+            // get css left, remove px ending if it exists, and check if 0 (-202px if hidden)
             var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
-            if (diffX > 0 && !shown) {
+            if (!shown) {
                 nav.animate({ left: "0px" }, 200);
                 g.addClass("close-l").fadeIn(200);
                 $("body").addClass("disable-scroll").addClass("mobile-nav-show");
@@ -50,6 +51,7 @@ $(function() {
         } else if (diffX < -30) {
             var nav = $(".main > .nav").eq(0);
             var g = $(".nav-g");
+            // get css left, remove px ending if it exists, and check if 0 (-202px if hidden)
             var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
             if (shown) {
                 nav.animate({ left: "-202px" }, 200);
