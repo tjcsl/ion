@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1755) documentation</title>
+    <title>intranet.apps.eighth.views.admin.scheduling &mdash; TJ Intranet v3 (Build #1766) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #1755)',
+        VERSION:     'v3 (Build #1766)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1755) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1766) documentation" href="../../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -145,405 +145,405 @@
     <div class="col-md-12 content">
       
   <h1>Source code for intranet.apps.eighth.views.admin.scheduling</h1><div class="highlight"><pre>
-<span></span># -*- coding: utf-8 -*-
-
-import logging
-
-from cacheops import invalidate_obj
-
-from django.contrib import messages
-from django.forms.formsets import formset_factory
-from django.http import Http404
-from django.shortcuts import redirect, render
-
-from formtools.wizard.views import SessionWizardView
-
-from ...forms.admin.activities import ActivitySelectionForm
-from ...forms.admin.blocks import BlockSelectionForm
-from ...forms.admin.scheduling import ScheduledActivityForm
-from ...models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSponsor)
-from ...utils import get_start_date
-from ....auth.decorators import eighth_admin_required
-from .....utils.serialization import safe_json
-
-logger = logging.getLogger(__name__)
-
-ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
-
-
-@eighth_admin_required
-<div class="viewcode-block" id="schedule_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">[docs]</a>def schedule_activity_view(request):
-
-    if request.method == &quot;POST&quot;:
-        formset = ScheduledActivityFormset(request.POST)
-
-        if formset.is_valid():
-            for form in formset:
-                block = form.cleaned_data[&quot;block&quot;]
-                activity = form.cleaned_data[&quot;activity&quot;]
-
-                # Save changes to cancelled activities and scheduled activities
-                cancelled = (EighthScheduledActivity.objects.filter(block=block, activity=activity, cancelled=True).exists())
-
-                instance = None
-                if form[&quot;scheduled&quot;].value() or cancelled:
-                    instance, created = (EighthScheduledActivity.objects.get_or_create(block=block, activity=activity))
-                    invalidate_obj(instance)
-                    invalidate_obj(block)
-                    invalidate_obj(activity)
-                else:
-                    schact = EighthScheduledActivity.objects.filter(block=block, activity=activity)
-                    logger.debug(block)
-                    logger.debug(activity)
-                    logger.debug(schact)
-
-                    # Instead of deleting and messing up attendance,
-                    # cancel the scheduled activity if it is unscheduled.
-                    # If the scheduled activity needs to be completely deleted,
-                    # the &quot;Unschedule&quot; box can be checked after it has been cancelled.
-
-                    # If a both blocks activity, unschedule the other
-                    # scheduled activities of it on the same day.
-                    if schact:
-                        if activity.both_blocks:
-                            other_act = schact[0].get_both_blocks_sibling()
-                            logger.debug(&quot;other_act: {}&quot;.format(other_act))
-                            if other_act:
-                                other_act.cancelled = True
-                                other_act.save()
-                                invalidate_obj(other_act)
-                        else:
-                            schact.update(cancelled=True)
-                            for s in schact:
-                                invalidate_obj(s)
-                        instance = schact[0]
-
-                        cancelled = True
-
-                if instance:
-                    fields = [&quot;rooms&quot;, &quot;capacity&quot;, &quot;sponsors&quot;, &quot;title&quot;, &quot;special&quot;, &quot;administrative&quot;, &quot;restricted&quot;, &quot;sticky&quot;, &quot;comments&quot;, &quot;admin_comments&quot;]
-                    if &quot;rooms&quot; in form.cleaned_data:
-                        for o in form.cleaned_data[&quot;rooms&quot;]:
-                            invalidate_obj(o)
-
-                    if &quot;sponsors&quot; in form.cleaned_data:
-                        for o in form.cleaned_data[&quot;sponsors&quot;]:
-                            invalidate_obj(o)
-
-                    for field_name in fields:
-                        obj = form.cleaned_data[field_name]
-                        logger.debug(&quot;{} {}&quot;.format(field_name, obj))
-                        setattr(instance, field_name, obj)
-
-                        if field_name in [&quot;rooms&quot;, &quot;sponsors&quot;]:
-                            for o in obj:
-                                invalidate_obj(o)
-
-                if form[&quot;scheduled&quot;].value() or cancelled:
-                    # Uncancel if this activity/block pairing was already
-                    # created and cancelled
-                    if not form[&quot;scheduled&quot;].value():
-                        instance.cancelled = True
-                    else:
-                        instance.cancelled = False
-
-                    # If an activity has already been cancelled and the
-                    # unschedule checkbox has been checked, delete the
-                    # EighthScheduledActivity instance. If there are students
-                    # in the activity then error out.
-                    if form[&quot;unschedule&quot;].value() and instance.cancelled:
-                        name = &quot;{}&quot;.format(instance)
-                        count = instance.eighthsignup_set.count()
-                        logger.debug(&quot;Unschedule {} - signups {}&quot;.format(name, count))
-                        bb_ok = True
-                        sibling = False
-                        if activity.both_blocks:
-                            sibling = instance.get_both_blocks_sibling()
-                            if sibling:
-                                if not sibling.eighthsignup_set.count() == 0:
-                                    bb_ok = False
-
-                        if count == 0 and bb_ok:
-                            instance.delete()
-                            if sibling:
-                                sibling.delete()
-                            messages.success(request, &quot;Unscheduled {}&quot;.format(name))
-
-                            continue  # don&#39;t run instance.save()
-                        elif count == 1:
-                            messages.error(request, &quot;Did not unschedule {} because there is {} student signed up.&quot;.format(name, count))
-                        else:
-                            messages.error(request, &quot;Did not unschedule {} because there are {} students signed up.&quot;.format(name, count))
-                    instance.save()
-                    logger.debug(instance)
-
-            messages.success(request, &quot;Successfully updated schedule.&quot;)
-
-            # Force reload everything from the database to reset
-            # forms that weren&#39;t saved
-            return redirect(request.get_full_path())
-        else:
-            messages.error(request, &quot;Error updating schedule.&quot;)
-
-    activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)
-    activity_id = request.GET.get(&quot;activity&quot;, None)
-    activity = None
-
-    if activity_id is not None and len(activity_id) &gt; 0:
-        try:
-            activity = EighthActivity.undeleted_objects.get(id=activity_id)
-        except (EighthActivity.DoesNotExist, ValueError):
-            pass
-
-    all_sponsors = {s[&quot;id&quot;]: s for s in EighthSponsor.objects.values()}
-    all_rooms = {r[&quot;id&quot;]: r for r in EighthRoom.objects.values()}
-
-    for sid, sponsor in all_sponsors.items():
-        if sponsor[&quot;show_full_name&quot;]:
-            all_sponsors[sid][&quot;full_name&quot;] = sponsor[&quot;last_name&quot;] + &quot;, &quot; + sponsor[&quot;first_name&quot;]
-        else:
-            all_sponsors[sid][&quot;full_name&quot;] = sponsor[&quot;last_name&quot;]
-
-    for rid, room in all_rooms.items():
-        all_rooms[rid][&quot;description&quot;] = room[&quot;name&quot;] + &quot; (&quot; + str(room[&quot;capacity&quot;]) + &quot;)&quot;
-
-    all_signups = {}
-    all_default_capacities = {}
-
-    context = {
-        &quot;activities&quot;: activities,
-        &quot;activity&quot;: activity,
-        &quot;sponsors&quot;: all_sponsors,
-        &quot;all_signups&quot;: all_signups,
-        &quot;rooms&quot;: all_rooms,
-        &quot;sponsors_json&quot;: safe_json(all_sponsors),
-        &quot;rooms_json&quot;: safe_json(all_rooms)
-    }
-
-    if activity is not None:
-        start_date = get_start_date(request)
-        # end_date = start_date + timedelta(days=60)
-
-        blocks = EighthBlock.objects.filter(date__gte=start_date)
-        # , date__lte=end_date)
-        initial_formset_data = []
-
-        sched_act_queryset = (EighthScheduledActivity.objects.filter(activity=activity).select_related(&quot;block&quot;).prefetch_related(&quot;rooms&quot;, &quot;sponsors&quot;,
-                                                                                                                                 &quot;members&quot;))
-        all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
-
-        for block in blocks:
-            initial_form_data = {&quot;block&quot;: block, &quot;activity&quot;: activity}
-            try:
-                sched_act = all_sched_acts[block.id]
-
-                all_signups[block.id] = sched_act.members.count()
-                all_default_capacities[block.id] = sched_act.get_true_capacity()
-                logger.debug(sched_act)
-                initial_form_data.update({
-                    &quot;rooms&quot;: sched_act.rooms.all(),
-                    &quot;capacity&quot;: sched_act.capacity,
-                    &quot;sponsors&quot;: sched_act.sponsors.all(),
-                    &quot;title&quot;: sched_act.title,
-                    &quot;special&quot;: sched_act.special,
-                    &quot;administrative&quot;: sched_act.administrative,
-                    &quot;restricted&quot;: sched_act.restricted,
-                    &quot;sticky&quot;: sched_act.sticky,
-                    &quot;comments&quot;: sched_act.comments,
-                    &quot;admin_comments&quot;: sched_act.admin_comments,
-                    &quot;scheduled&quot;: not sched_act.cancelled,
-                    &quot;cancelled&quot;: sched_act.cancelled
-                })
-            except KeyError:
-                all_signups[block.id] = 0
-                all_default_capacities[block.id] = activity.capacity()
-                pass
-            initial_formset_data.append(initial_form_data)
-
-        if request.method != &quot;POST&quot;:
-            # There must be an error in the form if this is reached
-            formset = ScheduledActivityFormset(initial=initial_formset_data)
-        context[&quot;formset&quot;] = formset
-        context[&quot;rows&quot;] = list(zip(blocks, formset))
-
-        context[&quot;default_rooms&quot;] = activity.rooms.all()
-        context[&quot;default_sponsors&quot;] = activity.sponsors.all()
-        context[&quot;default_capacities&quot;] = all_default_capacities
-
-    context[&quot;admin_page_title&quot;] = &quot;Schedule an Activity&quot;
-    return render(request, &quot;eighth/admin/schedule_activity.html&quot;, context)</div>
-
-
-@eighth_admin_required
-<div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a>def show_activity_schedule_view(request):
-    activities = EighthActivity.undeleted_objects.order_by(&quot;name&quot;)
-    activity_id = request.GET.get(&quot;activity&quot;, None)
-    activity = None
-
-    if activity_id is not None:
-        try:
-            activity = EighthActivity.undeleted_objects.get(id=activity_id)
-        except (EighthActivity.DoesNotExist, ValueError):
-            pass
-
-    context = {&quot;activities&quot;: activities, &quot;activity&quot;: activity}
-
-    if activity is not None:
-        start_date = get_start_date(request)
-        scheduled_activities = (activity.eighthscheduledactivity_set.filter(block__date__gte=start_date).order_by(&quot;block__date&quot;,
-                                                                                                                  &quot;block__block_letter&quot;))
-        context[&quot;scheduled_activities&quot;] = scheduled_activities
-
-    context[&quot;admin_page_title&quot;] = &quot;View Activity Schedule&quot;
-    return render(request, &quot;eighth/admin/view_activity_schedule.html&quot;, context)</div>
-
-
-@eighth_admin_required
-<div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a>def distribute_students_view(request):
-    context = {}
-    return render(request, &quot;eighth/admin/distribute_students.html&quot;, context)</div>
-
-
-<div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a>class EighthAdminTransferStudentsWizard(SessionWizardView):
-    FORMS = [(&quot;block_1&quot;, BlockSelectionForm), (&quot;activity_1&quot;, ActivitySelectionForm), (&quot;block_2&quot;, BlockSelectionForm),
-             (&quot;activity_2&quot;, ActivitySelectionForm)]
-
-    TEMPLATES = {
-        &quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
-        &quot;activity_1&quot;: &quot;eighth/admin/transfer_students.html&quot;,
-        &quot;block_2&quot;: &quot;eighth/admin/transfer_students.html&quot;,
-        &quot;activity_2&quot;: &quot;eighth/admin/transfer_students.html&quot;
-    }
-
-<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
-        return [self.TEMPLATES[self.steps.current]]</div>
-
-<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
-        kwargs = {}
-        if step in (&quot;block_1&quot;, &quot;block_2&quot;):
-            kwargs.update({&quot;exclude_before_date&quot;: get_start_date(self.request)})
-        if step == &quot;activity_1&quot;:
-            block = self.get_cleaned_data_for_step(&quot;block_1&quot;)[&quot;block&quot;]
-            kwargs.update({&quot;block&quot;: block})
-        if step == &quot;activity_2&quot;:
-            block = self.get_cleaned_data_for_step(&quot;block_2&quot;)[&quot;block&quot;]
-            kwargs.update({&quot;block&quot;: block})
-
-        labels = {
-            &quot;block_1&quot;: &quot;Select a block to move students from&quot;,
-            &quot;activity_1&quot;: &quot;Select an activity to move students from&quot;,
-            &quot;block_2&quot;: &quot;Select a block to move students to&quot;,
-            &quot;activity_2&quot;: &quot;Select an activity to move students to&quot;,
-        }
-
-        kwargs.update({&quot;label&quot;: labels[step]})
-
-        return kwargs</div>
-
-<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminTransferStudentsWizard, self).get_context_data(form=form, **kwargs)
-        context.update({&quot;admin_page_title&quot;: &quot;Transfer Students&quot;})
-        return context</div>
-
-<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done">[docs]</a>    def done(self, form_list, **kwargs):
-        form_list = [f for f in form_list]
-        source_block = form_list[0].cleaned_data[&quot;block&quot;]
-        source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
-
-        dest_block = form_list[2].cleaned_data[&quot;block&quot;]
-        dest_activity = form_list[3].cleaned_data[&quot;activity&quot;]
-        dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
-
-        req = &quot;source_act={}&amp;dest_act={}&quot;.format(source_scheduled_activity.id, dest_scheduled_activity.id)
-
-        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
-
-
-transfer_students_view = eighth_admin_required(EighthAdminTransferStudentsWizard.as_view(EighthAdminTransferStudentsWizard.FORMS))
-
-
-<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard">[docs]</a>class EighthAdminUnsignupStudentsWizard(SessionWizardView):
-    FORMS = [(&quot;block_1&quot;, BlockSelectionForm), (&quot;activity_1&quot;, ActivitySelectionForm)]
-
-    TEMPLATES = {&quot;block_1&quot;: &quot;eighth/admin/transfer_students.html&quot;, &quot;activity_1&quot;: &quot;eighth/admin/transfer_students.html&quot;}
-
-<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_template_names">[docs]</a>    def get_template_names(self):
-        return [self.TEMPLATES[self.steps.current]]</div>
-
-<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_form_kwargs">[docs]</a>    def get_form_kwargs(self, step):
-        kwargs = {}
-        if step == &quot;block_1&quot;:
-            kwargs.update({&quot;exclude_before_date&quot;: get_start_date(self.request)})
-        if step == &quot;activity_1&quot;:
-            block = self.get_cleaned_data_for_step(&quot;block_1&quot;)[&quot;block&quot;]
-            kwargs.update({&quot;block&quot;: block})
-
-        labels = {&quot;block_1&quot;: &quot;Select a block to move students from&quot;, &quot;activity_1&quot;: &quot;Select an activity to unsignup students from&quot;}
-
-        kwargs.update({&quot;label&quot;: labels[step]})
-
-        return kwargs</div>
-
-<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_context_data">[docs]</a>    def get_context_data(self, form, **kwargs):
-        context = super(EighthAdminUnsignupStudentsWizard, self).get_context_data(form=form, **kwargs)
-        context.update({&quot;admin_page_title&quot;: &quot;Clear Student Signups for Activity&quot;})
-        return context</div>
-
-<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.done">[docs]</a>    def done(self, form_list, **kwargs):
-        form_list = [f for f in form_list]
-        source_block = form_list[0].cleaned_data[&quot;block&quot;]
-        source_activity = form_list[1].cleaned_data[&quot;activity&quot;]
-        source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
-
-        req = &quot;source_act={}&amp;dest_unsignup=1&quot;.format(source_scheduled_activity.id)
-
-        return redirect(&quot;/eighth/admin/scheduling/transfer_students_action?&quot; + req)</div></div>
-
-
-unsignup_students_view = eighth_admin_required(EighthAdminUnsignupStudentsWizard.as_view(EighthAdminUnsignupStudentsWizard.FORMS))
-
-
-@eighth_admin_required
-<div class="viewcode-block" id="transfer_students_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action">[docs]</a>def transfer_students_action(request):
-    &quot;&quot;&quot;Do the actual process of transferring students.&quot;&quot;&quot;
-    if &quot;source_act&quot; in request.GET:
-        source_act = EighthScheduledActivity.objects.get(id=request.GET.get(&quot;source_act&quot;))
-    elif &quot;source_act&quot; in request.POST:
-        source_act = EighthScheduledActivity.objects.get(id=request.POST.get(&quot;source_act&quot;))
-    else:
-        raise Http404
-
-    dest_act = None
-    dest_unsignup = False
-
-    if &quot;dest_act&quot; in request.GET:
-        dest_act = EighthScheduledActivity.objects.get(id=request.GET.get(&quot;dest_act&quot;))
-    elif &quot;dest_act&quot; in request.POST:
-        dest_act = EighthScheduledActivity.objects.get(id=request.POST.get(&quot;dest_act&quot;))
-    elif &quot;dest_unsignup&quot; in request.POST or &quot;dest_unsignup&quot; in request.GET:
-        dest_unsignup = True
-    else:
-        raise Http404
-
-    num = source_act.members.count()
-
-    context = {&quot;admin_page_title&quot;: &quot;Transfer Students&quot;, &quot;source_act&quot;: source_act, &quot;dest_act&quot;: dest_act, &quot;dest_unsignup&quot;: dest_unsignup, &quot;num&quot;: num}
-
-    if request.method == &quot;POST&quot;:
-        if dest_unsignup and not dest_act:
-            source_act.eighthsignup_set.all().delete()
-            invalidate_obj(source_act)
-            messages.success(request, &quot;Successfully removed signups for {} students.&quot;.format(num))
-        else:
-            source_act.eighthsignup_set.update(scheduled_activity=dest_act)
-
-            invalidate_obj(source_act)
-            invalidate_obj(dest_act)
-            messages.success(request, &quot;Successfully transfered {} students.&quot;.format(num))
-        return redirect(&quot;eighth_admin_dashboard&quot;)
-    else:
-        return render(request, &quot;eighth/admin/transfer_students.html&quot;, context)</div>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_obj</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.forms.formsets</span> <span class="kn">import</span> <span class="n">formset_factory</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+
+<span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
+
+<span class="kn">from</span> <span class="nn">...forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
+<span class="kn">from</span> <span class="nn">...forms.admin.scheduling</span> <span class="kn">import</span> <span class="n">ScheduledActivityForm</span>
+<span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span> <span class="nn">....auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
+<span class="kn">from</span> <span class="nn">.....utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">ScheduledActivityFormset</span> <span class="o">=</span> <span class="n">formset_factory</span><span class="p">(</span><span class="n">ScheduledActivityForm</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="nd">@eighth_admin_required</span>
+<div class="viewcode-block" id="schedule_activity_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view">[docs]</a><span class="k">def</span> <span class="nf">schedule_activity_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">formset</span> <span class="o">=</span> <span class="n">ScheduledActivityFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">formset</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">form</span> <span class="ow">in</span> <span class="n">formset</span><span class="p">:</span>
+                <span class="n">block</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+                <span class="n">activity</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
+
+                <span class="c1"># Save changes to cancelled activities and scheduled activities</span>
+                <span class="n">cancelled</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">,</span> <span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
+
+                <span class="n">instance</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cancelled</span><span class="p">:</span>
+                    <span class="n">instance</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">))</span>
+                    <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+                    <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+                    <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">schact</span><span class="p">)</span>
+
+                    <span class="c1"># Instead of deleting and messing up attendance,</span>
+                    <span class="c1"># cancel the scheduled activity if it is unscheduled.</span>
+                    <span class="c1"># If the scheduled activity needs to be completely deleted,</span>
+                    <span class="c1"># the &quot;Unschedule&quot; box can be checked after it has been cancelled.</span>
+
+                    <span class="c1"># If a both blocks activity, unschedule the other</span>
+                    <span class="c1"># scheduled activities of it on the same day.</span>
+                    <span class="k">if</span> <span class="n">schact</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
+                            <span class="n">other_act</span> <span class="o">=</span> <span class="n">schact</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;other_act: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">other_act</span><span class="p">))</span>
+                            <span class="k">if</span> <span class="n">other_act</span><span class="p">:</span>
+                                <span class="n">other_act</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">True</span>
+                                <span class="n">other_act</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                                <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">other_act</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">schact</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">schact</span><span class="p">:</span>
+                                <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                        <span class="n">instance</span> <span class="o">=</span> <span class="n">schact</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                        <span class="n">cancelled</span> <span class="o">=</span> <span class="bp">True</span>
+
+                <span class="k">if</span> <span class="n">instance</span><span class="p">:</span>
+                    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;special&quot;</span><span class="p">,</span> <span class="s2">&quot;administrative&quot;</span><span class="p">,</span> <span class="s2">&quot;restricted&quot;</span><span class="p">,</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="p">,</span> <span class="s2">&quot;admin_comments&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">&quot;rooms&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;rooms&quot;</span><span class="p">]:</span>
+                            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="s2">&quot;sponsors&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;sponsors&quot;</span><span class="p">]:</span>
+                            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;{} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">))</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">]:</span>
+                            <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+                                <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cancelled</span><span class="p">:</span>
+                    <span class="c1"># Uncancel if this activity/block pairing was already</span>
+                    <span class="c1"># created and cancelled</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;scheduled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">():</span>
+                        <span class="n">instance</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">instance</span><span class="o">.</span><span class="n">cancelled</span> <span class="o">=</span> <span class="bp">False</span>
+
+                    <span class="c1"># If an activity has already been cancelled and the</span>
+                    <span class="c1"># unschedule checkbox has been checked, delete the</span>
+                    <span class="c1"># EighthScheduledActivity instance. If there are students</span>
+                    <span class="c1"># in the activity then error out.</span>
+                    <span class="k">if</span> <span class="n">form</span><span class="p">[</span><span class="s2">&quot;unschedule&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="ow">and</span> <span class="n">instance</span><span class="o">.</span><span class="n">cancelled</span><span class="p">:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+                        <span class="n">count</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unschedule {} - signups {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+                        <span class="n">bb_ok</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="n">sibling</span> <span class="o">=</span> <span class="bp">False</span>
+                        <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span><span class="p">:</span>
+                            <span class="n">sibling</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">get_both_blocks_sibling</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">sibling</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">bb_ok</span> <span class="o">=</span> <span class="bp">False</span>
+
+                        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">bb_ok</span><span class="p">:</span>
+                            <span class="n">instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">sibling</span><span class="p">:</span>
+                                <span class="n">sibling</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Unscheduled {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+                            <span class="k">continue</span>  <span class="c1"># don&#39;t run instance.save()</span>
+                        <span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Did not unschedule {} because there is {} student signed up.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Did not unschedule {} because there are {} students signed up.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+                    <span class="n">instance</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully updated schedule.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Force reload everything from the database to reset</span>
+            <span class="c1"># forms that weren&#39;t saved</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error updating schedule.&quot;</span><span class="p">)</span>
+
+    <span class="n">activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">activity_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">activity</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">if</span> <span class="n">activity_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">activity_id</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="n">all_sponsors</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+    <span class="n">all_rooms</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+
+    <span class="k">for</span> <span class="n">sid</span><span class="p">,</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">all_sponsors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;show_full_name&quot;</span><span class="p">]:</span>
+            <span class="n">all_sponsors</span><span class="p">[</span><span class="n">sid</span><span class="p">][</span><span class="s2">&quot;full_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;last_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_sponsors</span><span class="p">[</span><span class="n">sid</span><span class="p">][</span><span class="s2">&quot;full_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sponsor</span><span class="p">[</span><span class="s2">&quot;last_name&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">rid</span><span class="p">,</span> <span class="n">room</span> <span class="ow">in</span> <span class="n">all_rooms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">all_rooms</span><span class="p">[</span><span class="n">rid</span><span class="p">][</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">room</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">room</span><span class="p">[</span><span class="s2">&quot;capacity&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+
+    <span class="n">all_signups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">all_default_capacities</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
+        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+        <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="n">all_sponsors</span><span class="p">,</span>
+        <span class="s2">&quot;all_signups&quot;</span><span class="p">:</span> <span class="n">all_signups</span><span class="p">,</span>
+        <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">all_rooms</span><span class="p">,</span>
+        <span class="s2">&quot;sponsors_json&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">all_sponsors</span><span class="p">),</span>
+        <span class="s2">&quot;rooms_json&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">all_rooms</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">activity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="c1"># end_date = start_date + timedelta(days=60)</span>
+
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="c1"># , date__lte=end_date)</span>
+        <span class="n">initial_formset_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">sched_act_queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span>
+                                                                                                                                 <span class="s2">&quot;members&quot;</span><span class="p">))</span>
+        <span class="n">all_sched_acts</span> <span class="o">=</span> <span class="p">{</span><span class="n">sa</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">sa</span> <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">sched_act_queryset</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+            <span class="n">initial_form_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">}</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sched_act</span> <span class="o">=</span> <span class="n">all_sched_acts</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+
+                <span class="n">all_signups</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                <span class="n">all_default_capacities</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">()</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sched_act</span><span class="p">)</span>
+                <span class="n">initial_form_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                    <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                    <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span>
+                    <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                    <span class="s2">&quot;special&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">special</span><span class="p">,</span>
+                    <span class="s2">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">administrative</span><span class="p">,</span>
+                    <span class="s2">&quot;restricted&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">restricted</span><span class="p">,</span>
+                    <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">sticky</span><span class="p">,</span>
+                    <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+                    <span class="s2">&quot;admin_comments&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">admin_comments</span><span class="p">,</span>
+                    <span class="s2">&quot;scheduled&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span><span class="p">,</span>
+                    <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="n">sched_act</span><span class="o">.</span><span class="n">cancelled</span>
+                <span class="p">})</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">all_signups</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">all_default_capacities</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span>
+                <span class="k">pass</span>
+            <span class="n">initial_formset_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">initial_form_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="c1"># There must be an error in the form if this is reached</span>
+            <span class="n">formset</span> <span class="o">=</span> <span class="n">ScheduledActivityFormset</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">initial_formset_data</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;formset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formset</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">formset</span><span class="p">))</span>
+
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;default_rooms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;default_sponsors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">sponsors</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;default_capacities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_default_capacities</span>
+
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Schedule an Activity&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/schedule_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@eighth_admin_required</span>
+<div class="viewcode-block" id="show_activity_schedule_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view">[docs]</a><span class="k">def</span> <span class="nf">show_activity_schedule_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">activity_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">activity</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">if</span> <span class="n">activity_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">activity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">scheduled_activities</span> <span class="o">=</span> <span class="p">(</span><span class="n">activity</span><span class="o">.</span><span class="n">eighthscheduledactivity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span>
+                                                                                                                  <span class="s2">&quot;block__block_letter&quot;</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scheduled_activities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheduled_activities</span>
+
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;View Activity Schedule&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/view_activity_schedule.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@eighth_admin_required</span>
+<div class="viewcode-block" id="distribute_students_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view">[docs]</a><span class="k">def</span> <span class="nf">distribute_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/distribute_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminTransferStudentsWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span>
+             <span class="p">(</span><span class="s2">&quot;activity_2&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
+
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;block_2&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;activity_2&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="s2">&quot;block_2&quot;</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block_1&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity_2&quot;</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block_2&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block to move students from&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity to move students from&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;block_2&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block to move students to&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;activity_2&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity to move students to&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span></div>
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminTransferStudentsWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Transfer Students&quot;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">context</span></div>
+
+<div class="viewcode-block" id="EighthAdminTransferStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">form_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">form_list</span><span class="p">]</span>
+        <span class="n">source_block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+        <span class="n">source_activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
+        <span class="n">source_scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">source_block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">source_activity</span><span class="p">)</span>
+
+        <span class="n">dest_block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+        <span class="n">dest_activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
+        <span class="n">dest_scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">dest_block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">dest_activity</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="s2">&quot;source_act={}&amp;dest_act={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">dest_scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/admin/scheduling/transfer_students_action?&quot;</span> <span class="o">+</span> <span class="n">req</span><span class="p">)</span></div></div>
+
+
+<span class="n">transfer_students_view</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminTransferStudentsWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminTransferStudentsWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminUnsignupStudentsWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
+
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_template_names"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block_1&quot;</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block_1&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block_1&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block to move students from&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_1&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity to unsignup students from&quot;</span><span class="p">}</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span></div>
+
+<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.get_context_data"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EighthAdminUnsignupStudentsWizard</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Clear Student Signups for Activity&quot;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">context</span></div>
+
+<div class="viewcode-block" id="EighthAdminUnsignupStudentsWizard.done"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">form_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">form_list</span><span class="p">]</span>
+        <span class="n">source_block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
+        <span class="n">source_activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
+        <span class="n">source_scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">source_block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">source_activity</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="s2">&quot;source_act={}&amp;dest_unsignup=1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/eighth/admin/scheduling/transfer_students_action?&quot;</span> <span class="o">+</span> <span class="n">req</span><span class="p">)</span></div></div>
+
+
+<span class="n">unsignup_students_view</span> <span class="o">=</span> <span class="n">eighth_admin_required</span><span class="p">(</span><span class="n">EighthAdminUnsignupStudentsWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">EighthAdminUnsignupStudentsWizard</span><span class="o">.</span><span class="n">FORMS</span><span class="p">))</span>
+
+
+<span class="nd">@eighth_admin_required</span>
+<div class="viewcode-block" id="transfer_students_action"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action">[docs]</a><span class="k">def</span> <span class="nf">transfer_students_action</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Do the actual process of transferring students.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;source_act&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">source_act</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_act&quot;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="s2">&quot;source_act&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">source_act</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_act&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+
+    <span class="n">dest_act</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">dest_unsignup</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="s2">&quot;dest_act&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">dest_act</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dest_act&quot;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="s2">&quot;dest_act&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">dest_act</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dest_act&quot;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="s2">&quot;dest_unsignup&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="s2">&quot;dest_unsignup&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">dest_unsignup</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="n">source_act</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Transfer Students&quot;</span><span class="p">,</span> <span class="s2">&quot;source_act&quot;</span><span class="p">:</span> <span class="n">source_act</span><span class="p">,</span> <span class="s2">&quot;dest_act&quot;</span><span class="p">:</span> <span class="n">dest_act</span><span class="p">,</span> <span class="s2">&quot;dest_unsignup&quot;</span><span class="p">:</span> <span class="n">dest_unsignup</span><span class="p">,</span> <span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="n">num</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dest_unsignup</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dest_act</span><span class="p">:</span>
+            <span class="n">source_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">source_act</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully removed signups for {} students.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">source_act</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">dest_act</span><span class="p">)</span>
+
+            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">source_act</span><span class="p">)</span>
+            <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">dest_act</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully transfered {} students.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/transfer_students.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

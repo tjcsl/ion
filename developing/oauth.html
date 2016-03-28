@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using OAuth &mdash; TJ Intranet v3 (Build #1755) documentation</title>
+    <title>Using OAuth &mdash; TJ Intranet v3 (Build #1766) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1755)',
+        VERSION:     'v3 (Build #1766)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1755) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1766) documentation" href="../index.html" />
     <link rel="up" title="Developing for Intranet" href="index.html" />
     <link rel="next" title="Coding Style Guide" href="styleguide.html" />
     <link rel="prev" title="How to perform common tasks" href="howto.html" />
@@ -87,7 +87,7 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developing for Intranet</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="howto.html">How to perform common tasks</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Using OAuth</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using OAuth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="styleguide.html">Coding Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">Test Writing Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="updates.html">Keeping things up-to-date</a></li>
@@ -194,12 +194,12 @@
 <h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p>For a Python client, use requests with requests-oauthlib.</p>
 <p>If running locally (without HTTPS), override the SSL requirement for OAuth2.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OAUTHLIB_INSECURE_TRANSPORT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
 </pre></div>
 </div>
 <p>Create an OAuth2Session, with the CLIENT_ID and REDIRECT_URI you entered in the application form. Redirect the user to authorization_url.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth2Session</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="k">import</span> <span class="n">OAuth2Session</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">oauth</span> <span class="o">=</span> <span class="n">OAuth2Session</span><span class="p">(</span><span class="n">CLIENT_ID</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                      <span class="n">redirect_uri</span><span class="o">=</span><span class="n">REDIRECT_URI</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                      <span class="n">scope</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="s2">&quot;write&quot;</span><span class="p">])</span>
@@ -208,10 +208,10 @@
 </pre></div>
 </div>
 <p>The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a &#8220;code&#8221; GET parameter.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">code</span><span class="o">=</span><span class="n">CODE</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">client_secret</span><span class="o">=</span><span class="n">CLIENT_SECRET</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 <span class="go">{&#39;refresh_token&#39;: &#39;XXX&#39;, &#39;access_token&#39;: &#39;XXX&#39;, &#39;expires_in&#39;: 36000, &#39;expires_at&#39;: 1455370143.573362, &#39;scope&#39;: [&#39;read&#39;, &#39;write&#39;], &#39;token_type&#39;: &#39;Bearer&#39;}</span>
 </pre></div>
 </div>
