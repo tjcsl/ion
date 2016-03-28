@@ -221,18 +221,19 @@ PIPELINE = {
             ],
             'output_filename': 'css/base.css'
         },
-        'eighth_admin': {
+        'eighth.admin': {
             'source_filenames': [
                 'css/eighth.common.scss',
                 'css/eighth.admin.scss'
             ],
-            'output_filename': 'css/eighth_admin.css'
+            'output_filename': 'css/eighth.admin.css'
         },
     }
 }  # type: Dict[str,Any]
 
-LIST_OF_INDEPENDENT_CSS = ['login', 'emerg', 'schedule', 'theme.blue', 'page_base', 'responsive.core',
-        'dashboard', 'events', 'schedule.widgets', 'dashboard.widgets']
+LIST_OF_INDEPENDENT_CSS = ['about', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search',
+                           'dashboard', 'events', 'schedule.widgets', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board',
+                           'announcements.form']
 
 for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.SingleCss(name))
