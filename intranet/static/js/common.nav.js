@@ -46,6 +46,7 @@ $(function() {
                 nav.animate({ left: "0px" }, 200);
                 g.addClass("close-l").fadeIn(200);
                 $("body").addClass("disable-scroll").addClass("mobile-nav-show");
+                $(".c-hamburger").addClass("is-active");
                 listening = false;
             }
         } else if (diffX < -30) {
@@ -57,6 +58,7 @@ $(function() {
                 nav.animate({ left: "-202px" }, 200);
                 g.removeClass("close-l").fadeOut(200);
                 $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
+                $(".c-hamburger").removeClass("is-active");
                 listening = false;
             }
         }
