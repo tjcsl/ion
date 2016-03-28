@@ -752,3 +752,93 @@ body.fire * {
     text-align: center;
     margin-bottom: 10px;
 }
+
+.c-hamburger {
+    color: white;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    margin: 5px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+    text-indent: -9999px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: none;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.c-hamburger:focus {
+    outline: none;
+}
+
+.c-hamburger span {
+    display: block;
+    position: absolute;
+    top: 9px;
+    left: 3px;
+    right: 2px;
+    height: 2px;
+    background-color: white;
+}
+
+.c-hamburger span::before,
+.c-hamburger span::after {
+    position: absolute;
+    display: block;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    content: "";
+}
+
+.c-hamburger span::before {
+    top: -5px;
+}
+
+.c-hamburger span::after {
+    bottom: -5px;
+}
+
+.c-hamburger--htla {
+    background-color: transparent;
+}
+
+.c-hamburger--htla span {
+    transition: transform 0.3s;
+}
+
+.c-hamburger--htla span::before {
+    transform-origin: top right;
+    transition: transform 0.3s, width 0.3s, top 0.3s;
+}
+
+.c-hamburger--htla span::after {
+    transform-origin: bottom right;
+    transition: transform 0.3s, width 0.3s, bottom 0.3s;
+}
+
+/* active state, i.e. menu open */
+.c-hamburger--htla.is-active span {
+    transform: rotate(180deg);
+}
+
+.c-hamburger--htla.is-active span::before,
+.c-hamburger--htla.is-active span::after {
+    width: 50%;
+}
+
+.c-hamburger--htla.is-active span::before {
+    top: 0;
+    transform: translateX(8px) rotate(-45deg);
+}
+
+.c-hamburger--htla.is-active span::after {
+    bottom: 0;
+    transform: translateX(8px) rotate(45deg);
+}
