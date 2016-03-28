@@ -231,7 +231,8 @@ PIPELINE = {
     }
 }  # type: Dict[str,Any]
 
-LIST_OF_INDEPENDENT_CSS = ['login', 'emerg', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'dashboard', 'events', 'schedule.widgets', 'dashboard.widgets']
+LIST_OF_INDEPENDENT_CSS = ['login', 'emerg', 'schedule', 'theme.blue', 'page_base', 'responsive.core',
+        'dashboard', 'events', 'schedule.widgets', 'dashboard.widgets']
 
 for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.SingleCss(name))
