@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 def check_emerg():
     status = True
     message = None
+    if not settings.FCPS_EMERGENCY_PAGE:
+        return None, None
 
     r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time())))
     res = r.text
