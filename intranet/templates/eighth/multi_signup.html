@@ -9,8 +9,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
+    {% stylesheet 'eighth.signup' %}
     {% if not real_user.is_eighth_admin %}
     <style type="text/css">
     #activity-list li[data-administrative=true] {
@@ -24,7 +23,7 @@
 
     {% stylesheet 'eighth.admin' %}
     {% stylesheet 'profile' %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    {% stylesheet 'eighth.profile' %}
 {% endblock %}
 
 {% block js %}
