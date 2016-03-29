@@ -58,7 +58,7 @@ if not PRODUCTION:
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
 # Used for Filecenter access
-_tj_ip_list = _internal_ip_list + ["151.188.0.0/18", "10.0.0.0/8"]
+_tj_ip_list = _internal_ip_list + ["151.188.0.0/18", "151.188.192.0/18", "10.0.0.0/8"]
 
 TJ_IPS = helpers.GlobList(_tj_ip_list)
 
