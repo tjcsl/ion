@@ -19,16 +19,18 @@
 <div class="board primary-content">
     <h2>
         {{ board.type|title }} Feed{% if board.type == "class" %}:
-            <a href="{% url 'class_section' class_obj.section_id %}">
-                {{ class_obj.name }}, Period {{ class_obj.periods|join:", " }}
+            <a href="{% url 'class_section' class_obj.class_id %}">
+                {{ class_obj.name }}, Period {{ class_obj.periods }}
             </a>
-        {% elif board.type == "section" %}:
-            {{ section.classes.0.name }}
+        {% elif board.type == "course" %}:
+            {{ course_title }}
         {% endif %}
     </h2>
     <div class="button-container">
-        {% if class_obj %}
-            <a class="button" href="{% url 'board_section' class_obj.class_id %}">View All Class Periods</a> &nbsp; 
+        {% if board.type == "class" %}
+            <a class="button" href="{% url 'board_course' class_obj.class_id %}">View All Class Periods</a> &nbsp; 
+        {% elif board.type == "course" %}
+            <a class="button" href="{% url 'board_class_section' my_course.class_id %}">View Only Period {{ my_course.periods }} with {{ my_course.teacher }}</a> &nbsp; 
         {% endif %}
         <a href="{% url board.add_button_route board.add_button_arg %}" class="button">
             <i class="fa fa-plus"></i>
@@ -36,8 +38,8 @@
         </a>
     </div>
 
-    {% if section %}
-        <p>There {% if section.classes|length == 1 %}is 1 period{% else %}are {{ section.classes|length }} periods{% endif %} of this class.</p>
+    {% if ldap_courses %}
+        <p>There {% if ldap_courses|length == 1 %}is 1 period{% else %}are {{ ldap_courses|length }} periods{% endif %} of this class.</p>
     {% endif %}
 
     {% for post in posts %}

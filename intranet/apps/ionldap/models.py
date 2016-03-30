@@ -24,6 +24,15 @@ class LDAPCourse(models.Model):
     period = models.IntegerField()
     end_period = models.IntegerField()
 
+    @property
+    def teacher(self):
+        return self.teacher_name
+
+    @property
+    def periods(self):
+        return "{}".format(self.period) + ("-{}".format(self.end_period) if self.end_period else "")
+    
+
     def teacher_user(self):
         query = self.teacher_name.replace(",", "")  # Remove comma between last and first
         query = " ".join(query.split(" ")[:2])  # Remove middle initial

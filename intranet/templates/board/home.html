@@ -23,12 +23,12 @@
 
     <div class="left-pane board-classes">
         <span class="left-pane-header">Your classes:</span><br />
-        {% for c in request.user.classes %}
+        {% for c in classes %}
             <div class="board-class">
-                <b><a href="{% url 'board_class' c.section_id %}">{{ c.name }}</a></b>
+                <b><a href="{% url 'board_class' c.section_id %}">{{ c.course_title }}</a></b>
                 <br />
                 <span class="class-specifics">
-                    {{ c.teacher.last_name }} - Period {{ c.period }}
+                    {{ c.teacher }} - Period {{ c.periods }}
                 </span>
             </div>
         {% endfor %}

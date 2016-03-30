@@ -5,14 +5,14 @@ from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from ..users.models import Class, ClassSections
+from ..ionldap.models import LDAPCourse
 from .models import Board, BoardPost
 from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
 
-def can_view_boards(request):
+def can_view_boards(request, course_id=None):
     return request.user.has_admin_permission("board")
 
 
@@ -23,27 +23,78 @@ def home(request):
 
     """The homepage, showing all board posts available to you."""
 
-    classes = request.user.classes or []
-    section_ids = [c.section_id for c in classes]
-    posts = BoardPost.objects.filter(board__class_id__in=section_ids)
+    classes = request.user.ionldap_courses or []
+    class_ids = [c.class_id for c in classes]
+    posts = BoardPost.objects.filter(board__class_id__in=class_ids)
 
     context = {
+        "classes": classes,
         "posts": posts
     }
 
     return render(request, "board/home.html", context)
 
+def get_user_section(user, course_id):
+    classes = request.user.ionldap_courses
+    if classes:
+        sect = classes.filter(course_id=course_id)
+        if sect:
+            return sect.first()
+
 
 @login_required
-def class_feed(request, class_id):
+def course_feed(request, course_id):
+    if not can_view_board(request, course_id=course_id):
+        return redirect("/")
+
+    """The feed of a course (which contains multiple classes)."""
+    ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
+    
+    if ldap_courses.count() == 0:
+        # The course doesn't actually exist
+        return render(request, "board/error.html", {"reason": "This course doesn't exist."}, status=404)
+
+    course_title = ldap_courses[0].course_title
+
+    try:
+        board = Board.objects.get(class_id=course_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(class_id=course_id)
+
+    if not board.has_member(request.user):
+        return render(request, "board/error.html", {"reason": "You are not a member of this course."}, status=403)
+    else:
+        my_class = get_user_section(request.user, course_id)
+
+    posts = BoardPost.objects.filter(board__class_id=course_id)
+
+    posts |= BoardPost.objects.filter(board__class_id=my_course.class_id)
+
+    context = {
+        "board": board,
+        "type": "course",
+        "course_id": course_id,
+        "course_title": course_title,
+        "ldap_courses": ldap_courses,
+        "my_class": my_class,
+        "posts": posts
+    }
+
+    return render(request, "board/feed.html", context)
+
+
+@login_required
+def section_feed(request, class_id):
     if not can_view_boards(request):
         return redirect("/")
 
-    """The feed of a class."""
-    class_obj = Class(id=class_id)
-    if class_obj.name is None:
-        # The class doesn't actually exist
-        raise http.Http404
+    """The feed of a section."""
+
+    try:
+        class_obj = LDAPCourse.objects.get(class_id=class_id)
+    except LDAPCourse.DoesNotExist:
+        return render(request, "board/error.html", {"reason": "This class doesn't exist."}, status=404)
 
     try:
         board = Board.objects.get(class_id=class_id)
@@ -54,76 +105,33 @@ def class_feed(request, class_id):
     if not board.has_member(request.user):
         return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
-    posts = BoardPost.objects.filter(board__class_id=class_id)
-
-    posts |= BoardPost.objects.filter(board__section_id=class_obj.class_id)
-
     context = {
         "board": board,
         "type": "class",
         "class_id": class_id,
         "class_obj": class_obj,
-        "posts": posts
+        "posts": BoardPost.objects.filter(board__class_id=class_id)
     }
 
     return render(request, "board/feed.html", context)
 
 
 @login_required
-def section_feed(request, section_id):
-    if not can_view_boards(request):
+def course_feed_post(request, class_id):
+    if not can_view_boards(request, course_id=course_id):
         return redirect("/")
 
-    """The feed of a section."""
+    """Post to course feed."""
 
-    # Check permissions
-    try:
-        section = ClassSections(id=section_id)
-        classes = section.classes
-        if len(classes) < 1:
-            raise http.Http404
+    ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
 
-    except Exception:
-        raise http.Http404
+    course_title = ldap_courses[0].course_title
 
     try:
-        board = Board.objects.get(section_id=section_id)
+        board = Board.objects.get(class_id=course_id)
     except Board.DoesNotExist:
         # Create a board for this class
-        board = Board.objects.create(section_id=section_id)
-
-    if not board.has_member(request.user):
-        return render(request, "error/403.html", {"reason": "You are not a member of this section."}, status=403)
-
-    context = {
-        "board": board,
-        "type": "section",
-        "section_id": section_id,
-        "section": section,
-        "posts": BoardPost.objects.filter(board__section_id=section_id)
-    }
-
-    return render(request, "board/feed.html", context)
-
-
-@login_required
-def class_feed_post(request, class_id):
-    if not can_view_boards(request):
-        return redirect("/")
-
-    """Post to class feed."""
-
-    # Check permissions
-    class_obj = Class(id=class_id)
-    if class_obj.name is None:
-        # The class doesn't actually exist
-        raise http.Http404
-
-    try:
-        board = Board.objects.get(class_id=class_id)
-    except Board.DoesNotExist:
-        # Create a board for this class
-        board = Board.objects.create(class_id=class_id)
+        board = Board.objects.create(class_id=course_id)
 
     if not board.has_member(request.user):
         return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
@@ -145,40 +153,37 @@ def class_feed_post(request, class_id):
             messages.error(request, "Error adding post")
     else:
         form = BoardPostForm()
+
     context = {
         "form": form,
         "action": "add",
-        "class": class_obj,
+        "ldap_courses": ldap_courses,
+        "course_title": course_title,
         "board": board
     }
     return render(request, "board/add_modify.html", context)
 
 
 @login_required
-def section_feed_post(request, section_id):
+def section_feed_post(request, class_id):
     if not can_view_boards(request):
         return redirect("/")
 
-    """Post to section feed."""
-
-    # Check permissions
-    try:
-        section = ClassSections(id=section_id)
-        classes = section.classes
-        if len(classes) < 1:
-            raise http.Http404
-
-    except Exception:
-        raise http.Http404
+    """Post to class feed."""
 
     try:
-        board = Board.objects.get(section_id=section_id)
+        class_obj = LDAPCourse.objects.get(class_id=class_id)
+    except LDAPCourse.DoesNotExist:
+        return render(request, "board/error.html", {"reason": "This class doesn't exist."}, status=404)
+
+    try:
+        board = Board.objects.get(class_id=class_id)
     except Board.DoesNotExist:
         # Create a board for this class
-        board = Board.objects.create(section_id=section_id)
+        board = Board.objects.create(class_id=class_id)
 
     if not board.has_member(request.user):
-        return render(request, "error/403.html", {"reason": "You are not a member of this section."}, status=403)
+        return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
     if request.method == "POST":
         form = BoardPostForm(request.POST)
@@ -192,7 +197,7 @@ def section_feed_post(request, section_id):
             board.save()
 
             messages.success(request, "Successfully added post.")
-            return redirect("board_section", args=(section_id,))
+            return redirect("board_section", args=(class_id,))
         else:
             messages.error(request, "Error adding post")
     else:
@@ -201,8 +206,7 @@ def section_feed_post(request, section_id):
     context = {
         "form": form,
         "action": "add",
-        "section": section,
-        "classes": classes,
+        "class_obj": class_obj,
         "board": board
     }
     return render(request, "board/add_modify.html", context)
