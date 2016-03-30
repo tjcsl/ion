@@ -364,6 +364,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         hash = hashlib.sha1(signed.encode())
         return hash.hexdigest()
 
+    @staticmethod
+    def get_signage_user():
+        return User(id=99999)
+
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
@@ -499,6 +503,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             Grade object
 
         """
+        if not self.dn:
+            return None
         key = ":".join([self.dn, 'grade'])
 
         cached = cache.get(key)
