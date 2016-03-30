@@ -1730,10 +1730,13 @@ class Class(object):
                 cache.set(key, value, timeout=settings.CACHE_AGE['class_attribute'])
                 return value
 
+    @property
+    def period(self):
+        return ", ".join([str(i) for i in self.periods])
+
     def __str__(self):
         if self.name and self.teacher.last_name:
-            pd_list = ", ".join([str(i) for i in self.periods])
-            return "{}, Period {} ({})".format(self.name, pd_list, self.teacher.last_name)
+            return "{}, Period {} ({})".format(self.name, self.period, self.teacher.last_name)
         return "{}".format(self.dn)
 
 

@@ -21,18 +21,22 @@
         Boards
     </h2>
 
-    <div class="your-classes">
-        <b>Your classes:</b><br />
+    <div class="left-pane board-classes">
+        <span class="left-pane-header">Your classes:</span><br />
         {% for c in request.user.classes %}
-            <span style="white-space: nowrap">
-                 &nbsp; &bull; &nbsp;
-                 <a href="{% url 'board_class' c.section_id %}">{{ c }}</a>
-            </span>
+            <div class="board-class">
+                <b><a href="{% url 'board_class' c.section_id %}">{{ c.name }}</a></b>
+                <br />
+                <span class="class-specifics">
+                    {{ c.teacher.last_name }} - Period {{ c.period }}
+                </span>
+            </div>
         {% endfor %}
         <br />
         <br />
     </div>
 
+    <div class="posts-content">
     {% for post in posts %}
         {% with show_type=1 %}
             {% include "board/post.html" %}
@@ -40,6 +44,7 @@
     {% empty %}
         <p>There are no board posts available to you at this time.</p>
     {% endfor %}
+    </div>
     
 </div>
 {% endblock %}
