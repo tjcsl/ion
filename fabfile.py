@@ -152,7 +152,7 @@ def load_fixtures():
     if local("pwd", capture=True) == PRODUCTION_DOCUMENT_ROOT:
         abort("Refusing to automatically load " "fixtures into production database")
 
-    if not confirm("Are you sure you want to load all fixtures? This could " "have unintended consequences if the database " "is not empty."):
+    if not confirm("Are you sure you want to load all fixtures? This could have unintended consequences if the database is not empty."):
         abort("Aborted.")
 
     files = ["fixtures/users/users.json", "fixtures/eighth/sponsors.json", "fixtures/eighth/rooms.json", "fixtures/eighth/blocks.json",
@@ -180,7 +180,7 @@ def deploy():
                 try:
                     pkg_resources.require(requirements)
                 except:
-                    local("pip install -r requirements.txt")
+                    local("pip install -U -r requirements.txt")
                 else:
                     puts("Python requirements already satisfied.")
             with prefix("source /usr/local/virtualenvs/ion/bin/activate"):
