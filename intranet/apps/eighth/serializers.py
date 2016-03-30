@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import collections
+import functools
 import logging
-from collections import OrderedDict
 
 from django.db.models import Count
 
@@ -26,7 +26,7 @@ class EighthActivityDetailSerializer(serializers.HyperlinkedModelSerializer):
     scheduled_on = serializers.SerializerMethodField("fetch_scheduled_on")
 
     def fetch_scheduled_on(self, act):
-        scheduled_on = OrderedDict()
+        scheduled_on = collections.OrderedDict()
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=act).select_related("block").order_by("block__date")
 
         # user = self.context.get("user", self.context["request"].user)
@@ -121,21 +121,33 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         }
         return activity_info
 
+    def get_activity(self, user, favorited_activities, available_restricted_acts, activity_id, scheduled_activity=None):
+        if scheduled_activity is None:
+            scheduled_activity = EighthScheduledActivity.objects.get(activity_id)
+        return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities,
+                                               available_restricted_acts)
+
+    def get_scheduled_activity(self, scheduled_activity_id):
+        scheduled_activity = EighthScheduledActivity.objects.get(scheduled_activity_id)
+        return scheduled_activity.activity.id
+
     def fetch_activity_list_with_metadata(self, block):
-        activity_list = {}
-        scheduled_activity_to_activity_map = {}
+        user = self.context.get("user", self.context["request"].user)
+
+        favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
+
+        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
+
+        activity_list = collections.defaultdict(functools.partial(self.get_activity, user, favorited_activities, available_restricted_acts))
+        scheduled_activity_to_activity_map = collections.defaultdict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to
         # deleted activities
         scheduled_activities = (block.eighthscheduledactivity_set.exclude(activity__deleted=True).select_related("activity"))
 
-        user = self.context.get("user", self.context["request"].user)
-        favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
-        available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
-
         for scheduled_activity in scheduled_activities:
-            activity_info = self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities,
-                                                            available_restricted_acts)
+            # Avoid re-fetching scheduled_activity.
+            activity_info = self.get_activity(user, favorited_activities, available_restricted_acts, None, scheduled_activity)
             activity = scheduled_activity.activity
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
             activity_list[activity.id] = activity_info
@@ -186,10 +198,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_sponsors_overidden = []
         for sponsorship in overidden_sponsorships:
             scheduled_activity_id = sponsorship["eighthscheduledactivity"]
-            if scheduled_activity_id not in scheduled_activity_to_activity_map:
-                # FIXME: query the db instead?
-                activity_list[activity_id]["sponsors"].append("Unknown")
-                continue
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             sponsor_id = sponsorship["eighthsponsor"]
             sponsor = all_sponsors[sponsor_id]
@@ -227,10 +235,6 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         activities_rooms_overidden = []
         for rooming in overidden_roomings:
             scheduled_activity_id = rooming.eighthscheduledactivity.id
-            if scheduled_activity_id not in scheduled_activity_to_activity_map:
-                # FIXME: query the db instead?
-                activity_list[activity_id]["rooms"].append("Unknown")
-                continue
 
             activity_id = scheduled_activity_to_activity_map[scheduled_activity_id]
             if activity_id not in activities_rooms_overidden:
