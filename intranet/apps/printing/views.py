@@ -92,7 +92,7 @@ def convert_file(tmpfile_name):
     mime = magic.Magic(mime=True)
     detected = mime.from_file(tmpfile_name)
     detected = detected.decode()
-    no_conversion = ["application/pdf"]
+    no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
                        "application/vnd.oasis.opendocument.text"]
     if detected in no_conversion:
