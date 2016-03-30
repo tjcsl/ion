@@ -4,6 +4,7 @@ import logging
 
 from django import http
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ..exceptions import SignupException
@@ -404,9 +405,10 @@ def toggle_favorite_view(request):
 
     aid = request.POST["aid"]
     activity = get_object_or_404(EighthActivity, id=aid)
-    if activity.favorites.filter(id=request.user.id).exists():
-        activity.favorites.remove(request.user)
-        return http.HttpResponse("Unfavorited activity.")
-    else:
-        activity.favorites.add(request.user)
-        return http.HttpResponse("Favorited activity.")
+    with transaction.atomic:
+        if activity.favorites.filter(id=request.user.id).exists():
+            activity.favorites.remove(request.user)
+            return http.HttpResponse("Unfavorited activity.")
+        else:
+            activity.favorites.add(request.user)
+            return http.HttpResponse("Favorited activity.")
