@@ -168,7 +168,7 @@ USE_TZ = True
 # Example: "/home/media/media.lawrence.com/media/"
 #
 # Not used.
-MEDIA_ROOT = ""
+MEDIA_ROOT = os.path.join(os.path.dirname(PROJECT_ROOT), 'uploads')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -192,11 +192,11 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, "collected_static")
 STATIC_URL = "/static/"
 
 # Additional locations of static files
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don"t forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, "static"),)
+    os.path.join(PROJECT_ROOT, "static")]
 
 # List of finder classes that know how to find static files in
 # various locations.
