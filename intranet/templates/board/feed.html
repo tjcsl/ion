@@ -20,7 +20,7 @@
     <h2>
         {{ board.type|title }} Feed{% if board.type == "section" %}:
             <a href="{% url 'class_section' section.class_id %}">
-                {{ section.name }}, Period {{ section.periods }}
+                {{ section.course_title }}, Period {{ section.periods }}
             </a>
         {% elif board.type == "course" %}:
             {{ course_title }}
@@ -28,9 +28,9 @@
     </h2>
     <div class="button-container">
         {% if board.type == "section" %}
-            <a class="button" href="{% url 'board_course' section.class_id %}">View All Class Periods</a> &nbsp; 
-        {% elif board.type == "course" %}
-            <a class="button" href="{% url 'board_section' my_course.class_id %}">View Only Period {{ my_course.periods }} with {{ my_course.teacher }}</a> &nbsp; 
+            <a class="button" href="{% url 'board_course' section.course_id %}">View All Class Periods</a> &nbsp; 
+        {% elif board.type == "course" and my_course %}
+            <a class="button" href="{% url 'board_section' my_course.section_id %}">View Only Period {{ my_course.periods }} with {{ my_course.teacher }}</a> &nbsp; 
         {% endif %}
         <a href="{% url board.add_button_route board.add_button_arg %}" class="button">
             <i class="fa fa-plus"></i>

@@ -30,7 +30,7 @@ class LDAPCourse(models.Model):
 
     @property
     def periods(self):
-        return "{}".format(self.period) + ("-{}".format(self.end_period) if self.end_period else "")
+        return "{}".format(self.period) + ("-{}".format(self.end_period) if self.end_period and self.end_period != self.period else "")
     
 
     def teacher_user(self):

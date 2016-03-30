@@ -12,7 +12,7 @@ class Board(models.Model):
 
     # Identifiers
     activity = models.OneToOneField(EighthActivity, null=True)
-    class_id = models.CharField(max_length=100, blank=True)
+    course_id = models.CharField(max_length=100, blank=True)
     section_id = models.CharField(max_length=100, blank=True)
     group = models.OneToOneField(DjangoGroup, null=True)
 
@@ -22,8 +22,8 @@ class Board(models.Model):
     def type(self):
         if self.activity:
             return "activity"
-        elif self.class_id:
-            return "class"
+        elif self.course_id:
+            return "course"
         elif self.section_id:
             return "section"
         elif self.group:
@@ -34,8 +34,8 @@ class Board(models.Model):
     def type_obj(self):
         if self.activity:
             return self.activity
-        elif self.class_id:
-            return self.class_id
+        elif self.course_id:
+            return self.course_id
         elif self.section_id:
             return self.section_id
         elif self.group:
@@ -46,37 +46,45 @@ class Board(models.Model):
     def type_title(self):
         if self.activity:
             return self.activity.title
-        elif self.class_id:
-            return "{}, Period {}".format(self.class_obj.name, ", ".join(self.class_obj.periods))
+        elif self.course_id:
+            return self.course_title
         elif self.section_id:
-            c = self.section_obj.classes
-            if len(c) > 0:
-                return c[0].name
-            return self.section_id
-
+            return "{}, Period {}".format(self.section_obj.course_title, self.section_obj.periods)
         elif self.group:
             return self.group.title
         return None
 
     @property
-    def class_obj(self):
-        """Get the Class object if that is the type."""
-        if self.type == "class":
-            return Class(id=self.class_id)
+    def courses_list(self):
+        """Get a list of IonLDAP Section objects if that is the type."""
+        if self.type == "course":
+            return LDAPCourse.objects.filter(course_id=self.course_id)
+
+    @property
+    def course_title(self):
+        """Get the course title from an IonLDAP Course object if that is the type."""
+        if self.type == "course":
+            l = self.courses_list
+            if l and l.count() > 0:
+                return l[0].course_title
+    
 
     @property
     def section_obj(self):
-        """Get the ClassSections object if that is the type."""
+        """Get the IonLDAP Course object if that is the type."""
         if self.type == "section":
-            return ClassSections(id=self.section_id)
+            try:
+                return LDAPCourse.objects.get(section_id=self.section_id)
+            except LDAPCourse.DoesNotExist:
+                return None
 
     @property
     def add_button_route(self):
         """Get the route name for the 'Post' button."""
         if self.type == "activity":
             return "board_activity_post"
-        elif self.type == "class":
-            return "board_class_post"
+        elif self.type == "course":
+            return "board_course_post"
         elif self.type == "section":
             return "board_section_post"
         elif self.type == "group":
@@ -92,8 +100,8 @@ class Board(models.Model):
         """
         if self.type == "activity":
             return self.activity.id
-        elif self.type == "class":
-            return self.class_id
+        elif self.type == "course":
+            return self.course_id
         elif self.type == "section":
             return self.section_id
         elif self.type == "group":
@@ -109,21 +117,18 @@ class Board(models.Model):
 
         """
         # admin_all can access everything
-        if user.member_of("admin_all"):
-            return True
+        #if user.member_of("admin_all"):
+        #    return True
+
         if self.type == "activity":
             if self.activity.restricted:
                 return self.activity.id in EighthActivity.restricted_activities_available_to_user(user)
             else:
                 return True
-        elif self.type == "class":
-            return user in self.class_obj.students
+        elif self.type == "course":
+            return (user.ionldap_courses.filter(course_id=self.course_id).count() > 0)
         elif self.type == "section":
-            classes = self.section_obj.classes
-            for c in classes:
-                if user in c.students:
-                    return True
-            return False
+            return (user.ionldap_courses.filter(section_id=self.section_id).count() > 0)
         elif self.type == "group":
             return self.group.user_set.filter(id=user.id).count() > 0
 
