@@ -46,7 +46,7 @@ def get_current_commit_long_hash(workdir):
 
 
 def get_current_commit_info():
-    cmd = ["git", "show", "-s", "--format='Commit %h\n%ad", "HEAD"]
+    cmd = ["git", "show", "-s", "--format=Commit %h\n%ad", "HEAD"]
     return subprocess.check_output(cmd, universal_newlines=True).strip()
 
 

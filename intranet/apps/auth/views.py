@@ -99,13 +99,11 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
 
-        commit_info = settings.GIT['commit_info'][1:]   # Remove intial ' in commit info
         data = {"auth_form": auth_form,
                 "request": request,
                 "git_info": settings.GIT,
                 "bg_pattern": get_bg_pattern(),
                 "theme": get_login_theme(),
-                "commit_info": commit_info,
                 "login_warning": login_warning}
         schedule = schedule_context(request)
         data.update(schedule)
