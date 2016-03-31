@@ -35,14 +35,13 @@
     <tr><td colspan="2">
         {% if action == "add" %}
             <p>
-                It has been the decision of the Intranet administrators to allow for open board posting. You currently have the ability to create posts and share them with the school community. Please use this responsibly; <b>if you abuse this feature, your permissions will be revoked, and you risk having this functionality disabled entirely.</b>
+                Students have the ability to create posts and share them with members of their classes. Please be responsible.
             </p>
             <p>
-                Please stay on topic.
-                {% if class %}
-                    <b>You are posting to the {{ class.name }}, Period {{ class.periods|join:"," }} class board.</b>
+                {% if course_title %}
+                    <b>You are posting to the {{ course_title }} course board.</b> The teacher(s) of this course will have permission to view this posting.
                 {% elif section %}
-                    <b>You are posting to the {{ section.classes.0.name }} section board.</b>
+                    <b>You are posting to the {{ section.course_title }}, Period {{ section.periods }} class board.</b> The teacher(s) of this class will have permission to view this posting.
                 {% endif %}
             </p>
             <br />

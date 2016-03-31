@@ -17,13 +17,16 @@
 
 {% block main %}
 <div class="board primary-content">
+    <a href="{% url 'board' %}" class="button">
+        <i class="fa fa-arrow-left"></i> Your Boards
+    </a>
     <h2>
-        {{ board.type|title }} Feed{% if board.type == "section" %}:
+        {% if board.type == "section" %}
             <a href="{% url 'ionldap_class_section' section.section_id %}">
                 {{ section.course_title }}, Period {{ section.periods }}
-            </a>
-        {% elif board.type == "course" %}:
-            {{ course_title }}
+            </a> Class Board
+        {% elif board.type == "course" %}
+            {{ course_title }} Course Board
         {% endif %}
     </h2>
     <div class="button-container">
@@ -39,7 +42,9 @@
     </div>
 
     {% if ldap_courses %}
-        <p>You can collaborate with {% if ldap_courses|length == 1 %}1 period{% else %}{{ ldap_courses|length }} periods{% endif %} of <b>{{ course_title }}</b>.</p>
+        <p>This board is available to <b>{% if ldap_courses|length == 1 %}1 period{% else %}{{ ldap_courses|length }} periods{% endif %}</b> of {{ course_title }}.</p>
+    {% elif section %}
+        <p>This board is available to <b>Period {{ section.periods }}</b> of {{ section.course_title }} with {{ section.teacher }}.</p>
     {% endif %}
 
     {% for post in posts %}

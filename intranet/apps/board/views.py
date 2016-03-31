@@ -28,8 +28,8 @@ def home(request):
     """The homepage, showing all board posts available to you."""
 
     classes = request.user.ionldap_courses or []
-    class_ids = [c.class_id for c in classes]
-    posts = BoardPost.objects.filter(board__class_id__in=class_ids)
+    section_ids = [c.section_id for c in classes]
+    posts = BoardPost.objects.filter(board__section_id__in=section_ids)
 
     context = {
         "classes": classes,
@@ -118,7 +118,7 @@ def section_feed(request, section_id):
 
 
 @login_required
-def course_feed_post(request, class_id):
+def course_feed_post(request, course_id):
     """Post to course feed."""
 
     ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
