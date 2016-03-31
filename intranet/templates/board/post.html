@@ -43,7 +43,9 @@
     <a class="button small-button" href="{% url 'board_comment' post.id %}">
         <i class="fa fa-comment-o"></i> Add Comment
     </a> &nbsp; &nbsp; {{ post.comments.count }} comment{{ post.comments.count|pluralize }}<br />
-    <hr />
+    {% if post.comments.count > 0 %}
+        <hr />
+    {% endif %}
     <div class="boardpost-comments">
     {% for comment in post.comments.all %}
         <div class="boardpost-comment">
