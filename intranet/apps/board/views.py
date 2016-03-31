@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from ..ionldap.models import LDAPCourse
-from .models import Board, BoardPost
+from .models import Board, BoardPost, BoardPostComment
 from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
@@ -237,6 +237,29 @@ def modify_post_view(request, id=None):
     return render(request, "board/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
+
+@login_required
+def delete_post_view(request, id=None):
+
+    """Delete post page. You may only delete a post if you were the creator or you are an
+    administrator.
+
+    id: post id
+
+    """
+    post = get_object_or_404(BoardPost, id=id)
+
+    if not request.user.has_admin_permission('board') and post.user != request.user:
+        return render(request, "board/error.html", {"reason": "You are neither this event's creator or an administrator."}, status=403)
+
+    if request.method == "POST" and "confirm" in request.POST:
+        post.delete()
+        messages.success(request, "Deleted post.")
+        return redirect("board")
+    else:
+        return render(request, "board/delete.html", {"post": post})
+
+
 @login_required
 def comment_view(request, post_id):
     """Add a comment form page."""
@@ -245,7 +268,7 @@ def comment_view(request, post_id):
     board = post.board
 
     if not board.has_member(request.user):
-        return render(request, "error/403.html", {"reason": "You are not alloed to view this board."}, status=403)
+        return render(request, "board/error.html", {"reason": "You are not allowed to view the board in which this post resides."}, status=403)
 
     if request.method == "POST":
         form = BoardPostCommentForm(request.POST)
@@ -272,3 +295,46 @@ def comment_view(request, post_id):
         "board": board
     }
     return render(request, "board/comment.html", context)
+
+@login_required
+def delete_comment_view(request, id=None):
+
+    """Delete comment page. You may only delete a comment if you were the creator or you are an
+    administrator.
+
+    id: comment id
+
+    """
+    comment = get_object_or_404(BoardPostComment, id=id)
+    post = comment.post
+
+    if not request.user.has_admin_permission('board') and comment.user != request.user:
+        return render(request, "board/error.html", {"reason": "You are neither this event's creator or an administrator."}, status=403)
+
+    if request.method == "POST" and "confirm" in request.POST:
+        comment.delete()
+        messages.success(request, "Deleted comment.")
+        return http.HttpResponse("Deleted comment.")
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+@login_required
+def view_post(request, post_id):
+    post = get_object_or_404(BoardPost, id=post_id)
+    board = post.board
+
+    if not board.has_member(request.user):
+        return render(request, "error/403.html", {"reason": "You are not allowed to view the board in which this post resides."}, status=403)
+
+    context = {
+        "post": post,
+        "board": board
+    }
+
+    if board.type == "section":
+        context["section"] = board.section_obj
+    elif board.type == "course":
+        context["course_id"] = board.course_id
+
+    return render(request, "board/view.html", context)
+

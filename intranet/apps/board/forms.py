@@ -22,6 +22,7 @@ class BoardPostCommentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
+        self.fields["content"].label = "Comment"
 
     class Meta:
         model = BoardPostComment

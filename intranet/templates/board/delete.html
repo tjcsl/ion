@@ -1,0 +1,38 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Board Post
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/board.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/announcements.form.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/board.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="board announcements primary-content">
+    <a class="button" href="javascript:history.go(-1)">
+        <i class="fa fa-arrow-left"></i> Back
+    </a>
+    <h2>
+        Delete Board Post
+    </h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="confirm" value="true" />
+        <p><b>Are you sure you want to delete this post?</b></p>
+
+        {% include "board/post.html" %}
+
+        <input type="submit" style="width: 150px" value="Delete" />
+    </form>
+</div>
+{% endblock %}

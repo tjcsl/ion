@@ -3,12 +3,12 @@
     <h3>
         {{ post.title }}
 
-        {% if is_board_admin or post.user == request.user %}
+        {% if request.user.is_board_admin or post.user == request.user %}
             <div class="boardpost-icon-wrapper">
-                <a href="">
+                <a href="{% url 'board_modify_post' post.id %}">
                     <i class="boardpost-icon fa fa-pencil"></i>
                 </a>
-                <a href="" class="boardpost-delete">
+                <a href="{% url 'board_delete_post' post.id %}" class="boardpost-delete">
                     <i class="boardpost-icon fa fa-trash-o"></i>
                 </a>
             </div>
@@ -16,6 +16,7 @@
     </h3>
 
     <div class="boardpost-metadata">
+    {% if show_type %}
         {% if post.board.activity %}
             Activity: {{ post.board.activity }} &bull; 
         {% elif post.board.class_id %}
@@ -31,6 +32,7 @@
         {% else %}
             Public &bull; 
         {% endif %}
+    {% endif %}
         by {{ post.user.full_name|escape }} &bull; {{ post.added|fuzzy_date|capfirst }}
     </div>
 
@@ -39,13 +41,20 @@
     </div>
 
     <a class="button small-button" href="{% url 'board_comment' post.id %}">
-        <i class="fa fa-comment-o"></i> Comment
+        <i class="fa fa-comment-o"></i> Add Comment
     </a> &nbsp; &nbsp; {{ post.comments.count }} comment{{ post.comments.count|pluralize }}<br />
-
+    <hr />
     <div class="boardpost-comments">
-    {% for c in post.comments.all %}
+    {% for comment in post.comments.all %}
         <div class="boardpost-comment">
-            <b>{{ c.user.full_name }}</b>: {{ c.content }}
+            <b>{{ comment.user.full_name }}</b>: {{ comment.content }}
+            {% if comment.user == request.user %}
+                <span class="boardpost-comment-icons">
+                    <a href="#" data-endpoint="{% url 'board_delete_comment' comment.id %}" data-view="{% url 'board_post' post.id %}" class="boardpost-delete-comment">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </span>
+            {% endif %}
         </div>
     {% endfor %}
     </div>

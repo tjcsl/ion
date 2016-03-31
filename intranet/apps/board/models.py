@@ -178,5 +178,10 @@ class BoardPostComment(models.Model):
     user = models.ForeignKey(User)
     added = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def post(self):
+        return self.boardpost_set.first()
+    
+
     def __unicode__(self):
         return "Comment: {} by {}".format(self.content[:30], self.user)

@@ -58,6 +58,7 @@ class LDAPCourse(models.Model):
 
             if users and len(users) == 1:
                 return users[0]
+
     def __str__(self):
         return "{} - {} Period {}".format(self.course_title, self.teacher, self.periods)
 

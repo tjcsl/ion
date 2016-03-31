@@ -1,0 +1,50 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Board
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/board.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/board.css' %}" />
+{% endblock %}
+
+{% block main %}
+<div class="board primary-content">
+
+    <h2>
+        Board Post: {% if board.type == "section" %}
+            <a href="{% url 'ionldap_class_section' section.section_id %}">
+                {{ section.course_title }}, Period {{ section.periods }}
+            </a>
+        {% elif board.type == "course" %}
+            {{ course_title }}
+        {% endif %}
+    </h2>
+    <div class="button-container">
+        {% if board.type == "section" %}
+            <a href="{% url 'board_section' section.section_id %}" class="button">
+                <i class="fa fa-comments"></i>
+                View Board
+            </a>
+        {% elif board.type == "course" %}
+            <a href="{% url 'board_course' course_id %}" class="button">
+                <i class="fa fa-comments"></i>
+                View Board
+            </a>
+        {% endif %}
+    </div>
+
+    {% with show_type=1 %}
+        {% include "board/post.html" %}
+    {% endwith %}
+    
+</div>
+{% endblock %}
