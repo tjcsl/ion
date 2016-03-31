@@ -216,6 +216,9 @@ def modify_post_view(request, id=None):
     id: post id
 
     """
+    if ONLY_REACTIONS:
+        return redirect("board")
+
     post = get_object_or_404(BoardPost, id=id)
 
     if not request.user.has_admin_permission('board') and post.user != request.user:
@@ -263,6 +266,8 @@ def delete_post_view(request, id=None):
 @login_required
 def comment_view(request, post_id):
     """Add a comment form page."""
+    if ONLY_REACTIONS:
+        return redirect("board")
 
     post = get_object_or_404(BoardPost, id=post_id)
     board = post.board

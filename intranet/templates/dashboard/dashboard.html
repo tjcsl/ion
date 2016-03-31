@@ -38,6 +38,7 @@
 {% block main %}
 
 {% if show_widgets %}
+
 <div class="widgets{% if eighth_sponsor and request.user.is_student %} student-sponsor{% endif %}">
     {% if is_student %}
         {% include "eighth/signup_widget.html" %}
@@ -63,6 +64,9 @@
 {% endif %}
 
 <div class="announcements primary-content{% if not show_widgets %} no-widgets{% endif %}">
+
+    {% include "board/dashboard_text.html" %}
+
     {% if dash_warning %}
         <div class="dash-warning">{{ dash_warning|safe }}</div>
     {% endif %}
