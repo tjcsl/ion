@@ -366,10 +366,15 @@ def react_post_view(request, id=None):
 
     if request.method == "POST" and reaction:
         allowed_reactions = [str(i) for i in range(1,7)]
+        allowed_reactions += ["stallman"]
+
         if reaction not in allowed_reactions:
             reaction = "1"
 
-        content = '<div class="reaction-icon {}"></div>'.format(reaction)
+        content = '<div class="reaction-icon comment-reaction reaction-{}"></div>'.format(reaction)
+        if reaction == "stallman":
+            content += "I'd just like to interject for moment. What you're refering to as Linux, is in fact, GNU/Linux, or as I've recently taken to calling it, GNU plus Linux."
+
         obj = BoardPostComment.objects.create(content=content, safe_html=True, user=request.user)
         post.comments.add(obj)
         post.save()
