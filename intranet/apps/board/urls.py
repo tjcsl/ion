@@ -20,4 +20,6 @@ urlpatterns = [
     url(r"^/post/(?P<id>\d+)/delete$", views.delete_post_view, name="board_delete_post"),
     url(r"^/comment/(?P<id>\d+)/delete$", views.delete_comment_view, name="board_delete_comment"),
 
+    url(r"^/post/(?P<id>\d+)/react$", views.react_post_view, name="board_react_post"),
+
 ]

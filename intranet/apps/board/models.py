@@ -151,6 +151,7 @@ class BoardPost(models.Model):
 
     title = models.CharField(max_length=250)
     content = models.TextField(max_length=10000)
+    safe_html = models.BooleanField(default=False)
 
     user = models.ForeignKey(User)
     added = models.DateTimeField(auto_now_add=True)
@@ -177,6 +178,7 @@ class BoardPostComment(models.Model):
     content = models.TextField(max_length=1000)
     user = models.ForeignKey(User)
     added = models.DateTimeField(auto_now_add=True)
+    safe_html = models.BooleanField(default=False)
 
     @property
     def post(self):

@@ -14,7 +14,8 @@ class BoardPostForm(forms.ModelForm):
         exclude = ["added",
                    "updated",
                    "user",
-                   "comments"]
+                   "comments",
+                   "safe_html"]
 
 
 class BoardPostCommentForm(forms.ModelForm):
@@ -27,4 +28,5 @@ class BoardPostCommentForm(forms.ModelForm):
     class Meta:
         model = BoardPostComment
         exclude = ["added",
-                   "user"]
+                   "user",
+                   "safe_html"]

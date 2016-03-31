@@ -338,3 +338,38 @@ def view_post(request, post_id):
 
     return render(request, "board/view.html", context)
 
+@login_required
+def react_post_view(request, id=None):
+
+    """
+
+    id: post id
+
+    """
+    post = get_object_or_404(BoardPost, id=id)
+    board = post.board
+
+
+    if not board.has_member(request.user):
+        return http.HttpResponseNotAllowed(["POST"], "Invalid permissions.")
+
+    reactions = post.comments.filter(user=request.user)
+    if reactions.count() > 0:
+        reactions.delete()
+    
+    reaction = request.POST.get("reaction", None)
+
+    if request.method == "POST" and reaction:
+        allowed_reactions = [str(i) for i in range(1,7)]
+        if reaction not in allowed_reactions:
+            reaction = "1"
+
+        content = '<div class="reaction-icon {}"></div>'.format(reaction)
+        obj = BoardPostComment.objects.create(content=content, safe_html=True, user=request.user)
+        post.comments.add(obj)
+        post.save()
+        messages.success(request, "Reaction added")
+        return http.HttpResponse("Reaction added")
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+    
