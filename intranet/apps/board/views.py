@@ -39,7 +39,7 @@ def home(request):
     return render(request, "board/home.html", context)
 
 def get_user_section(user, course_id):
-    classes = request.user.ionldap_courses
+    classes = user.ionldap_courses
     if classes:
         sect = classes.filter(course_id=course_id)
         if sect:
@@ -69,11 +69,11 @@ def course_feed(request, course_id):
     if not board.has_member(request.user):
         return render(request, "board/error.html", {"reason": "You are not a member of this course."}, status=403)
     else:
-        my_class = get_user_section(request.user, course_id)
+        my_section = get_user_section(request.user, course_id)
 
     posts = BoardPost.objects.filter(board__course_id=course_id)
 
-    posts |= BoardPost.objects.filter(board__class_id=my_course.class_id)
+    posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)
 
     context = {
         "board": board,
@@ -81,7 +81,7 @@ def course_feed(request, course_id):
         "course_id": course_id,
         "course_title": course_title,
         "ldap_courses": ldap_courses,
-        "my_class": my_class,
+        "my_section": my_section,
         "posts": posts
     }
 
