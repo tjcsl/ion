@@ -146,7 +146,7 @@ def course_feed_post(request, course_id):
             board.save()
 
             messages.success(request, "Successfully added post.")
-            return redirect("board_class", course_id=class_id)
+            return redirect("board_class", course_id)
         else:
             messages.error(request, "Error adding post")
     else:
@@ -167,7 +167,7 @@ def section_feed_post(request, section_id):
     """Post to class feed."""
 
     try:
-        class_obj = LDAPCourse.objects.get(section_id=section_id)
+        section = LDAPCourse.objects.get(section_id=section_id)
     except LDAPCourse.DoesNotExist:
         return render(request, "board/error.html", {"reason": "This class doesn't exist."}, status=404)
 
@@ -192,7 +192,7 @@ def section_feed_post(request, section_id):
             board.save()
 
             messages.success(request, "Successfully added post.")
-            return redirect("board_section", args=(section_id,))
+            return redirect("board_section", section_id)
         else:
             messages.error(request, "Error adding post")
     else:

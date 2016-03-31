@@ -3,6 +3,7 @@
 from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from ..eighth.models import EighthActivity
+from ..ionldap.models import LDAPCourse
 from ..users.models import User, Class, ClassSections
 
 
