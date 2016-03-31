@@ -109,6 +109,14 @@ class Board(models.Model):
             return self.group.id
         return None
 
+    @property
+    def post_meme_route(self):
+        if self.type == "course":
+            return "board_course_post_meme"
+        elif self.type == "section":
+            return "board_section_post_meme"
+    
+
     def has_member(self, user):
         """Determine whether a given user is a member of the board.
 
@@ -159,6 +167,10 @@ class BoardPost(models.Model):
 
     comments = models.ManyToManyField("BoardPostComment", blank=True)
 
+    @property
+    def show_stallman(self):
+        return "stallman" in self.content
+    
     @property
     def board(self):
         """ A BoardPost *should* only be on one Board, so find the first

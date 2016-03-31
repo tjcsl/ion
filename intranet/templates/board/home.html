@@ -27,9 +27,20 @@
 
     <div class="left-pane board-classes">
         <span class="left-pane-header">Your classes:</span><br />
+        {% comment %}
         {% for c in classes %}
             <div class="board-class">
                 <b><a href="{% url 'board_section' c.section_id %}">{{ c.course_title }}</a></b>
+                <br />
+                <span class="class-specifics">
+                    {{ c.teacher }} - Period {{ c.periods }}
+                </span>
+            </div>
+        {% endfor %}
+        {% endcomment %}
+        {% for c in classes %}
+            <div class="board-class">
+                <b><a href="{% url 'board_course' c.course_id %}">{{ c.course_title }}</a></b>
                 <br />
                 <span class="class-specifics">
                     {{ c.teacher }} - Period {{ c.periods }}

@@ -7,9 +7,12 @@ urlpatterns = [
     url(r"^$", views.home, name="board"),
     url(r"^/course/(?P<course_id>.*)?$", views.course_feed, name="board_course"),
     url(r"^/submit/course/(?P<course_id>.*)?$", views.course_feed_post, name="board_course_post"),
+    url(r"^/meme/submit/course/(?P<course_id>.*)?$", views.course_feed_post_meme, name="board_course_post_meme"),
 
     url(r"^/section/(?P<section_id>.*)?$", views.section_feed, name="board_section"),
     url(r"^/submit/section/(?P<section_id>.*)?$", views.section_feed_post, name="board_section_post"),
+
+    url(r"^/meme/submit/section/(?P<section_id>.*)?$", views.section_feed_post_meme, name="board_section_post_meme"),
 
     url(r"^/post/(?P<post_id>\d+)?$", views.view_post, name="board_post"),
 

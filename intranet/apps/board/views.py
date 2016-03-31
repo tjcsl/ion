@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import random
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -45,6 +46,23 @@ def get_user_section(user, course_id):
         if sect:
             return sect.first()
 
+def get_all_memes():
+    memes = [
+        {"id": 1, "url": "https://i.imgur.com/MYCsJyA.jpg"},
+        {"id": 2, "url": "https://i.imgur.com/TrMuyvT.jpg"},
+        {"id": 3, "url": "https://i.imgur.com/Z7W8qNU.jpg"},
+        {"id": 4, "url": "https://i.imgur.com/yOiIjcr.jpg"},
+        {"id": 5, "url": "https://i.imgur.com/1UKqRPa.jpg"},
+        {"id": 6, "url": "https://i.imgur.com/2k7EPdX.jpg"},
+        {"id": 7, "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?stallman"}
+    ]
+    return memes
+
+def get_meme(id=None):
+    return next((item for item in get_all_memes() if item["id"] == id), None)
+
+def get_memes():
+    return random.sample(get_all_memes(), 5)
 
 @login_required
 def course_feed(request, course_id):
@@ -75,6 +93,8 @@ def course_feed(request, course_id):
 
     posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)
 
+    meme_options = get_memes()
+
     context = {
         "board": board,
         "type": "course",
@@ -82,7 +102,8 @@ def course_feed(request, course_id):
         "course_title": course_title,
         "ldap_courses": ldap_courses,
         "my_section": my_section,
-        "posts": posts
+        "posts": posts,
+        "meme_options": meme_options
     }
 
     return render(request, "board/feed.html", context)
@@ -106,12 +127,15 @@ def section_feed(request, section_id):
     if not board.has_member(request.user):
         return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
+    meme_options = get_memes()
+
     context = {
         "board": board,
         "type": "section",
         "section_id": section_id,
         "section": section,
-        "posts": BoardPost.objects.filter(board__section_id=section_id)
+        "posts": BoardPost.objects.filter(board__section_id=section_id),
+        "meme_options": meme_options
     }
 
     return render(request, "board/feed.html", context)
@@ -382,4 +406,80 @@ def react_post_view(request, id=None):
         return http.HttpResponse("Reaction added")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
-    
+
+@login_required
+def course_feed_post_meme(request, course_id):
+    """Post to course feed."""
+
+    ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
+
+    course_title = ldap_courses[0].course_title
+
+    try:
+        board = Board.objects.get(course_id=course_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(course_id=course_id)
+
+    if not board.has_member(request.user):
+        return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
+
+    if request.method == "POST":
+        try:
+            meme_id = int(request.POST.get("meme"))
+        except Exception:
+            meme_id = 1
+        memes = get_all_memes()
+        meme = get_meme(meme_id)
+        if not meme:
+            meme = memes[0]
+
+        content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme["url"])
+        post = BoardPost.objects.create(title="",
+                                        content=content,
+                                        safe_html=True,
+                                        user=request.user)
+        board.posts.add(post)
+        board.save()
+        messages.success(request, "Successfully added post.")
+        return redirect("board_course", course_id)
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+@login_required
+def section_feed_post_meme(request, section_id):
+    """Post to class feed."""
+
+    try:
+        section = LDAPCourse.objects.get(section_id=section_id)
+    except LDAPCourse.DoesNotExist:
+        return render(request, "board/error.html", {"reason": "This class doesn't exist."}, status=404)
+
+    try:
+        board = Board.objects.get(section_id=section_id)
+    except Board.DoesNotExist:
+        # Create a board for this class
+        board = Board.objects.create(section_id=section_id)
+
+    if not board.has_member(request.user):
+        return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
+
+    if request.method == "POST":
+        meme_id = request.POST.get("meme")
+        memes = get_all_memes()
+
+        content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme_url)
+        post = BoardPost.objects.create(title="",
+                                        content=content,
+                                        safe_html=True,
+                                        user=request.user)
+        board.posts.add(post)
+        board.save()
+
+        messages.success(request, "Successfully added post.")
+        return redirect("board_section", section_id)
+        
+    else:
+        return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
+
