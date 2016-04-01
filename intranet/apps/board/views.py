@@ -418,7 +418,8 @@ def view_post(request, post_id):
 
     context = {
         "post": post,
-        "board": board
+        "board": board,
+        "show_all_comments": True
     }
 
     if board.type == "section":

@@ -191,7 +191,10 @@ class BoardPost(models.Model):
         if len(boards) > 0:
             return boards[0]
 
-    def __unicode__(self):
+    class Meta:
+        ordering = ["-added"]
+
+    def __str__(self):
         return "{} by {}".format(self.title[:30], self.user)
 
 
@@ -206,7 +209,9 @@ class BoardPostComment(models.Model):
     @property
     def post(self):
         return self.boardpost_set.first()
-    
 
-    def __unicode__(self):
+    class Meta:
+        ordering = ["-added"]
+
+    def __str__(self):
         return "Comment: {} by {}".format(self.content[:30], self.user)

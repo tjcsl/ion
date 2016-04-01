@@ -66,6 +66,11 @@
     {% endif %}
     <div class="boardpost-comments">
     {% for comment in post.comments.all %}
+        {% if forloop.counter > 5 and not show_all_comments %}
+            {% if forloop.counter == 6 %}
+                <a href="{% url 'board_post' post.id %}">View all comments</a>
+            {% endif %}
+        {% else %}
         <div class="boardpost-comment">
             <span style="display: inline-block; width: 120px"><b>{{ comment.user.full_name }}</b>: </span>{% if comment.safe_html %}{{ comment.content|safe }}{% else %}{{ comment.content }}{% endif %}
             {% if comment.user == request.user %}
@@ -76,6 +81,7 @@
                 </span>
             {% endif %}
         </div>
+        {% endif %}
     {% endfor %}
     </div>
 </div>
