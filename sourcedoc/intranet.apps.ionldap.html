@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.ionldap package &mdash; TJ Intranet v3 (Build #1787) documentation</title>
+    <title>intranet.apps.ionldap package &mdash; TJ Intranet v3 (Build #1808) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #1787)',
+        VERSION:     'v3 (Build #1808)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1787) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1808) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.ionldap.management package" href="intranet.apps.ionldap.management.html" />
     <link rel="prev" title="intranet.apps.groups package" href="intranet.apps.groups.html" />
@@ -169,6 +169,7 @@
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.ionldap.management.commands.html">intranet.apps.ionldap.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.ionldap.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.ionldap.management.commands.html#module-intranet.apps.ionldap.management.commands.ionldap_schedule_csv">intranet.apps.ionldap.management.commands.ionldap_schedule_csv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.ionldap.management.commands.html#module-intranet.apps.ionldap.management.commands.ionldap_teacher_user_map">intranet.apps.ionldap.management.commands.ionldap_teacher_user_map module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.ionldap.management.commands.html#module-intranet.apps.ionldap.management.commands">Module contents</a></li>
 </ul>
 </li>
@@ -201,7 +202,7 @@
 <span id="intranet-apps-ionldap-models-module"></span><h2>intranet.apps.ionldap.models module<a class="headerlink" href="#module-intranet.apps.ionldap.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="intranet.apps.ionldap.models.LDAPCourse">
-<em class="property">class </em><code class="descclassname">intranet.apps.ionldap.models.</code><code class="descname">LDAPCourse</code><span class="sig-paren">(</span><em>id</em>, <em>course_id</em>, <em>section_id</em>, <em>course_title</em>, <em>course_short_title</em>, <em>teacher_name</em>, <em>room_name</em>, <em>term_code</em>, <em>period</em>, <em>end_period</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/ionldap/models.html#LDAPCourse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">intranet.apps.ionldap.models.</code><code class="descname">LDAPCourse</code><span class="sig-paren">(</span><em>id</em>, <em>course_id</em>, <em>section_id</em>, <em>course_title</em>, <em>course_short_title</em>, <em>teacher_name</em>, <em>teacher_user</em>, <em>room_name</em>, <em>term_code</em>, <em>period</em>, <em>end_period</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/ionldap/models.html#LDAPCourse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <dl class="exception">
 <dt id="intranet.apps.ionldap.models.LDAPCourse.DoesNotExist">
@@ -220,9 +221,32 @@
 <code class="descclassname">LDAPCourse.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="attribute">
+<dt id="intranet.apps.ionldap.models.LDAPCourse.periods">
+<code class="descclassname">LDAPCourse.</code><code class="descname">periods</code><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.periods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="intranet.apps.ionldap.models.LDAPCourse.teacher">
+<code class="descclassname">LDAPCourse.</code><code class="descname">teacher</code><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.teacher" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="intranet.apps.ionldap.models.LDAPCourse.teacher_user">
-<code class="descclassname">LDAPCourse.</code><code class="descname">teacher_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/ionldap/models.html#LDAPCourse.teacher_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.teacher_user" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">LDAPCourse.</code><code class="descname">teacher_user</code><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.teacher_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="intranet.apps.ionldap.models.LDAPCourse.teacher_user_find">
+<code class="descclassname">LDAPCourse.</code><code class="descname">teacher_user_find</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/ionldap/models.html#LDAPCourse.teacher_user_find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.ionldap.models.LDAPCourse.teacher_user_find" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

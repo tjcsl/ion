@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.management.commands.schedule_notify &mdash; TJ Intranet v3 (Build #1808) documentation</title>
+    <title>intranet.apps.ionldap.management.commands.ionldap_teacher_user_map &mdash; TJ Intranet v3 (Build #1808) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -144,37 +144,24 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.schedule.management.commands.schedule_notify</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.ionldap.management.commands.ionldap_teacher_user_map</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.notifications.views</span> <span class="kn">import</span> <span class="n">gcm_post</span><span class="p">,</span> <span class="n">get_gcm_schedule_uids</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.schedule.notifications</span> <span class="kn">import</span> <span class="n">period_start_end_data</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">intranet.apps.ionldap.models</span> <span class="kn">import</span> <span class="n">LDAPCourse</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Send Google Cloud Messaging notifications at needed times at the beginning and end of a class period.&quot;</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.ionldap.management.commands.html#intranet.apps.ionldap.management.commands.ionldap_teacher_user_map.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Add teacher user field to ionldap&quot;</span>
 
-<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--notify&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;notify&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;notify&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.do_notify"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command.do_notify">[docs]</a>    <span class="k">def</span> <span class="nf">do_notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pd_data</span><span class="p">):</span>
-        <span class="n">users</span> <span class="o">=</span> <span class="n">get_gcm_schedule_uids</span><span class="p">()</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">9999</span><span class="p">)</span>
-        <span class="n">post</span><span class="p">,</span> <span class="n">reqtext</span> <span class="o">=</span> <span class="n">gcm_post</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">pd_data</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.schedule.management.commands.html#intranet.apps.schedule.management.commands.schedule_notify.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-
-        <span class="n">notify</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;notify&quot;</span><span class="p">]</span>
-        <span class="n">pd_data</span> <span class="o">=</span> <span class="n">period_start_end_data</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">pd_data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pd_data</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">pd_data</span> <span class="ow">and</span> <span class="n">notify</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">do_notify</span><span class="p">(</span><span class="n">pd_data</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.ionldap.management.commands.html#intranet.apps.ionldap.management.commands.ionldap_teacher_user_map.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">course</span> <span class="ow">in</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">teacher</span> <span class="o">=</span> <span class="n">course</span><span class="o">.</span><span class="n">teacher_user_find</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">course</span><span class="p">,</span> <span class="n">teacher</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">teacher</span><span class="p">:</span>
+                <span class="n">course</span><span class="o">.</span><span class="n">teacher_user</span> <span class="o">=</span> <span class="n">teacher</span>
+                <span class="n">course</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div></div>
 </pre></div>
 
     </div>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.board.views &mdash; TJ Intranet v3 (Build #1787) documentation</title>
+    <title>intranet.apps.board.views &mdash; TJ Intranet v3 (Build #1808) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #1787)',
+        VERSION:     'v3 (Build #1808)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #1787) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #1808) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -148,69 +148,193 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Class</span><span class="p">,</span> <span class="n">ClassSections</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Board</span><span class="p">,</span> <span class="n">BoardPost</span>
+<span class="kn">from</span> <span class="nn">..ionldap.models</span> <span class="kn">import</span> <span class="n">LDAPCourse</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Board</span><span class="p">,</span> <span class="n">BoardPost</span><span class="p">,</span> <span class="n">BoardPostComment</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">BoardPostForm</span><span class="p">,</span> <span class="n">BoardPostCommentForm</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="n">ONLY_MEMES</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">ONLY_REACTIONS</span> <span class="o">=</span> <span class="bp">True</span>
 
-<div class="viewcode-block" id="can_view_boards"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.can_view_boards">[docs]</a><span class="k">def</span> <span class="nf">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="can_view_board"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.can_view_board">[docs]</a><span class="k">def</span> <span class="nf">can_view_board</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course_id</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">section_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">course_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">ionldap_courses</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">section_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">ionldap_courses</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="home"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.home">[docs]</a><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-
     <span class="sd">&quot;&quot;&quot;The homepage, showing all board posts available to you.&quot;&quot;&quot;</span>
 
-    <span class="n">classes</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">classes</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">section_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">section_id</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span>
-    <span class="n">posts</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__class_id__in</span><span class="o">=</span><span class="n">section_ids</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">ionldap_courses</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">course_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">course_id</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__course_id__in</span><span class="o">=</span><span class="n">course_ids</span><span class="p">)</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">posts</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">)</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">teacher_classes</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">ionldap_course_teacher</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">teacher_courses</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">teacher_classes</span><span class="p">:</span>
+        <span class="n">course_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">teacher_classes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">course_id</span> <span class="ow">in</span> <span class="n">course_count</span><span class="p">:</span>
+                <span class="n">course_count</span><span class="p">[</span><span class="n">cl</span><span class="o">.</span><span class="n">course_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">course_count</span><span class="p">[</span><span class="n">cl</span><span class="o">.</span><span class="n">course_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">teacher_courses</span><span class="p">[</span><span class="n">cl</span><span class="o">.</span><span class="n">course_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">course_title</span>
+        <span class="n">teacher_courses</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;course_id&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;course_title&quot;</span><span class="p">:</span> <span class="n">teacher_courses</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">course_count</span><span class="p">[</span><span class="n">i</span><span class="p">]}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">teacher_courses</span><span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span>
+        <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">classes</span><span class="p">,</span>
+        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span><span class="p">,</span>
+        <span class="s2">&quot;teacher_classes&quot;</span><span class="p">:</span> <span class="n">teacher_classes</span><span class="p">,</span>
+        <span class="s2">&quot;teacher_courses&quot;</span><span class="p">:</span> <span class="n">teacher_courses</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="get_user_section"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.get_user_section">[docs]</a><span class="k">def</span> <span class="nf">get_user_section</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">course_id</span><span class="p">):</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">ionldap_courses</span>
+    <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">sect</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sect</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sect</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_all_memes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.get_all_memes">[docs]</a><span class="k">def</span> <span class="nf">get_all_memes</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;{&quot;id&quot;: 1, &quot;url&quot;: &quot;https://i.imgur.com/MYCsJyA.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 2, &quot;url&quot;: &quot;https://i.imgur.com/TrMuyvT.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 3, &quot;url&quot;: &quot;https://i.imgur.com/Z7W8qNU.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 4, &quot;url&quot;: &quot;https://i.imgur.com/yOiIjcr.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 5, &quot;url&quot;: &quot;https://i.imgur.com/1UKqRPa.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 6, &quot;url&quot;: &quot;https://i.imgur.com/2k7EPdX.jpg&quot;},</span>
+<span class="sd">    {&quot;id&quot;: 7, &quot;url&quot;: &quot;https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?stallman&quot;}&quot;&quot;&quot;</span>
+    <span class="n">memes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;aa1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa1.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;aa2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa2.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;aa3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa3.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;aa4&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa4.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;aa5&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa5.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;android1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/android1.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;band1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/band1.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;band2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/band2.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;band3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/band3.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;cat1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat1.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;cat2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat2.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;cat3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat3.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;cat4&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat4.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux1.jpg?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux2.jpg?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux3.jpg?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux4&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux4.gif?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux5&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux5.png?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux6&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux6.jpg?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;linux7&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux7.jpg?stallman&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch1.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch10&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch10.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch2.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch3.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch4&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch4.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch5&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch5.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch6&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch6.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch7&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch7.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch8&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch8.jpg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;sch9&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch9.jpeg&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;tj1&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj1.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;tj2&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj2.png&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;tj3&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">memes</span></div>
+
+
+<div class="viewcode-block" id="get_meme"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.get_meme">[docs]</a><span class="k">def</span> <span class="nf">get_meme</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">get_all_memes</span><span class="p">()</span> <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_memes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.get_memes">[docs]</a><span class="k">def</span> <span class="nf">get_memes</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">get_all_memes</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_memes_json"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.get_memes_json">[docs]</a><span class="k">def</span> <span class="nf">get_memes_json</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">get_memes</span><span class="p">()))</span>
+    <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;text/json&quot;</span>
+    <span class="k">return</span> <span class="n">resp</span></div>
+
+
 <span class="nd">@login_required</span>
-<div class="viewcode-block" id="class_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.class_feed">[docs]</a><span class="k">def</span> <span class="nf">class_feed</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">class_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="all_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.all_feed">[docs]</a><span class="k">def</span> <span class="nf">all_feed</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_board_admin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
+
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;course&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;course_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;course_title&quot;</span><span class="p">:</span> <span class="s2">&quot;All&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span><span class="p">,</span>
+        <span class="s2">&quot;is_admin&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s2">&quot;show_type&quot;</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/feed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="course_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.course_feed">[docs]</a><span class="k">def</span> <span class="nf">course_feed</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_board</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot;The feed of a class.&quot;&quot;&quot;</span>
-    <span class="n">class_obj</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">class_obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="c1"># The class doesn&#39;t actually exist</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="sd">&quot;&quot;&quot;The feed of a course (which contains multiple classes).&quot;&quot;&quot;</span>
+    <span class="n">ldap_courses</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ldap_courses</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># The course doesn&#39;t actually exist</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;This course doesn&#39;t exist.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
+
+    <span class="n">course_title</span> <span class="o">=</span> <span class="n">ldap_courses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">course_title</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">Board</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="c1"># Create a board for this class</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this course.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">my_section</span> <span class="o">=</span> <span class="n">get_user_section</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">course_id</span><span class="p">)</span>
 
-    <span class="n">posts</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
 
-    <span class="n">posts</span> <span class="o">|=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__section_id</span><span class="o">=</span><span class="n">class_obj</span><span class="o">.</span><span class="n">class_id</span><span class="p">)</span>
+    <span class="c1"># if my_section:</span>
+    <span class="c1">#    posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)</span>
+
+    <span class="n">meme_options</span> <span class="o">=</span> <span class="n">get_memes</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;class&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;class_id&quot;</span><span class="p">:</span> <span class="n">class_id</span><span class="p">,</span>
-        <span class="s2">&quot;class_obj&quot;</span><span class="p">:</span> <span class="n">class_obj</span><span class="p">,</span>
-        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;course&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;course_id&quot;</span><span class="p">:</span> <span class="n">course_id</span><span class="p">,</span>
+        <span class="s2">&quot;course_title&quot;</span><span class="p">:</span> <span class="n">course_title</span><span class="p">,</span>
+        <span class="s2">&quot;ldap_courses&quot;</span><span class="p">:</span> <span class="n">ldap_courses</span><span class="p">,</span>
+        <span class="s2">&quot;my_section&quot;</span><span class="p">:</span> <span class="n">my_section</span><span class="p">,</span>
+        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">posts</span><span class="p">,</span>
+        <span class="s2">&quot;meme_options&quot;</span><span class="p">:</span> <span class="n">meme_options</span><span class="p">,</span>
+        <span class="s2">&quot;is_admin&quot;</span><span class="p">:</span> <span class="n">board</span><span class="o">.</span><span class="n">is_admin</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/feed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -218,20 +342,12 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="section_feed"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.section_feed">[docs]</a><span class="k">def</span> <span class="nf">section_feed</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-
     <span class="sd">&quot;&quot;&quot;The feed of a section.&quot;&quot;&quot;</span>
 
-    <span class="c1"># Check permissions</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">ClassSections</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
-        <span class="n">classes</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">classes</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;This class doesn&#39;t exist.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
@@ -240,37 +356,38 @@
         <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this section.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">meme_options</span> <span class="o">=</span> <span class="n">get_memes</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span><span class="p">,</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
         <span class="s2">&quot;section_id&quot;</span><span class="p">:</span> <span class="n">section_id</span><span class="p">,</span>
         <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="n">section</span><span class="p">,</span>
-        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+        <span class="s2">&quot;posts&quot;</span><span class="p">:</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">board__section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">),</span>
+        <span class="s2">&quot;meme_options&quot;</span><span class="p">:</span> <span class="n">meme_options</span><span class="p">,</span>
+        <span class="s2">&quot;is_admin&quot;</span><span class="p">:</span> <span class="n">board</span><span class="o">.</span><span class="n">is_admin</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/feed.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 <span class="nd">@login_required</span>
-<div class="viewcode-block" id="class_feed_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.class_feed_post">[docs]</a><span class="k">def</span> <span class="nf">class_feed_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">class_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="course_feed_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.course_feed_post">[docs]</a><span class="k">def</span> <span class="nf">course_feed_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Post to course feed.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ONLY_MEMES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot;Post to class feed.&quot;&quot;&quot;</span>
+    <span class="n">ldap_courses</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
 
-    <span class="c1"># Check permissions</span>
-    <span class="n">class_obj</span> <span class="o">=</span> <span class="n">Class</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">class_obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="c1"># The class doesn&#39;t actually exist</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+    <span class="n">course_title</span> <span class="o">=</span> <span class="n">ldap_courses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">course_title</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">Board</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="c1"># Create a board for this class</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
@@ -287,15 +404,17 @@
             <span class="n">board</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added post.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_class&quot;</span><span class="p">,</span> <span class="n">class_id</span><span class="o">=</span><span class="n">class_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_class&quot;</span><span class="p">,</span> <span class="n">course_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding post&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">BoardPostForm</span><span class="p">()</span>
+
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
         <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">class_obj</span><span class="p">,</span>
+        <span class="s2">&quot;ldap_courses&quot;</span><span class="p">:</span> <span class="n">ldap_courses</span><span class="p">,</span>
+        <span class="s2">&quot;course_title&quot;</span><span class="p">:</span> <span class="n">course_title</span><span class="p">,</span>
         <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -303,20 +422,14 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="section_feed_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.section_feed_post">[docs]</a><span class="k">def</span> <span class="nf">section_feed_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Post to class feed.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ONLY_MEMES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot;Post to section feed.&quot;&quot;&quot;</span>
-
-    <span class="c1"># Check permissions</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">ClassSections</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
-        <span class="n">classes</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">classes</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;This class doesn&#39;t exist.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
@@ -325,7 +438,7 @@
         <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this section.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">BoardPostForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -339,7 +452,7 @@
             <span class="n">board</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added post.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_section&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">section_id</span><span class="p">,))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_section&quot;</span><span class="p">,</span> <span class="n">section_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding post&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -349,7 +462,6 @@
         <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
         <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
         <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="n">section</span><span class="p">,</span>
-        <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="n">classes</span><span class="p">,</span>
         <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -357,19 +469,20 @@
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="modify_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.modify_post_view">[docs]</a><span class="k">def</span> <span class="nf">modify_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-
     <span class="sd">&quot;&quot;&quot;Modify post page. You may only modify an event if you were the creator or you are an</span>
 <span class="sd">    administrator.</span>
 
 <span class="sd">    id: post id</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ONLY_REACTIONS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;board&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">post</span><span class="o">.</span><span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are neither this event&#39;s creater or an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;board&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">post</span><span class="o">.</span><span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are neither this event&#39;s creator or an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">BoardPostForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">post</span><span class="p">)</span>
@@ -388,17 +501,38 @@
 
 
 <span class="nd">@login_required</span>
-<div class="viewcode-block" id="comment_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.comment_view">[docs]</a><span class="k">def</span> <span class="nf">comment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">can_view_boards</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="delete_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.delete_post_view">[docs]</a><span class="k">def</span> <span class="nf">delete_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete post page. You may only delete a post if you were the creator or you are an</span>
+<span class="sd">    administrator.</span>
 
+<span class="sd">    id: post id</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;board&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">post</span><span class="o">.</span><span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are neither this event&#39;s creator or an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">post</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Deleted post.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;post&quot;</span><span class="p">:</span> <span class="n">post</span><span class="p">})</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="comment_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.comment_view">[docs]</a><span class="k">def</span> <span class="nf">comment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a comment form page.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ONLY_REACTIONS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
     <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span>
     <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not alloed to view this board.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not allowed to view the board in which this post resides.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">BoardPostCommentForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
@@ -425,6 +559,162 @@
         <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/comment.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="delete_comment_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.delete_comment_view">[docs]</a><span class="k">def</span> <span class="nf">delete_comment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete comment page. You may only delete a comment if you were the creator or you are an</span>
+<span class="sd">    administrator.</span>
+
+<span class="sd">    id: comment id</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPostComment</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">comment</span><span class="o">.</span><span class="n">post</span>
+    <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s1">&#39;board&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">comment</span><span class="o">.</span><span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are neither this event&#39;s creator or an administrator.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">comment</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Deleted comment.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Deleted comment.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="view_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.view_post">[docs]</a><span class="k">def</span> <span class="nf">view_post</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span>
+    <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not allowed to view the board in which this post resides.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;post&quot;</span><span class="p">:</span> <span class="n">post</span><span class="p">,</span>
+        <span class="s2">&quot;board&quot;</span><span class="p">:</span> <span class="n">board</span><span class="p">,</span>
+        <span class="s2">&quot;show_all_comments&quot;</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;section&quot;</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;section&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">section_obj</span>
+    <span class="k">elif</span> <span class="n">board</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;course&quot;</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;course_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">course_id</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/view.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="react_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.react_post_view">[docs]</a><span class="k">def</span> <span class="nf">react_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    id: post id</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">BoardPost</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">board</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">board</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;Invalid permissions.&quot;</span><span class="p">)</span>
+
+    <span class="n">reactions</span> <span class="o">=</span> <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reactions</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reactions</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+    <span class="n">reaction</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reaction&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">reaction</span><span class="p">:</span>
+        <span class="n">allowed_reactions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]</span>
+        <span class="n">allowed_reactions</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;stallman&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">reaction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_reactions</span><span class="p">:</span>
+            <span class="n">reaction</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;&lt;div class=&quot;reaction-icon comment-reaction reaction-{}&quot;&gt;&lt;/div&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reaction</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reaction</span> <span class="o">==</span> <span class="s2">&quot;stallman&quot;</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">+=</span> <span class="s2">&quot;I&#39;d just like to interject for moment. What you&#39;re refering to as Linux, is in fact, GNU/Linux, or as I&#39;ve recently taken to calling it, GNU plus Linux.&quot;</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">BoardPostComment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">safe_html</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">post</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Reaction added&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Reaction added&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="course_feed_post_meme"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.course_feed_post_meme">[docs]</a><span class="k">def</span> <span class="nf">course_feed_post_meme</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Post to course feed.&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Board</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="c1"># Create a board for this class</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="n">course_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">meme_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;meme&quot;</span><span class="p">)</span>
+        <span class="n">memes</span> <span class="o">=</span> <span class="n">get_all_memes</span><span class="p">()</span>
+        <span class="n">meme</span> <span class="o">=</span> <span class="n">get_meme</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">meme</span><span class="p">:</span>
+            <span class="n">meme</span> <span class="o">=</span> <span class="n">memes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;&lt;div class=&quot;meme-option&quot; style=&quot;background-image: url({})&quot;&gt;&lt;/div&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meme</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">])</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                        <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
+                                        <span class="n">safe_html</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                        <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added post.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_course&quot;</span><span class="p">,</span> <span class="n">course_id</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@login_required</span>
+<div class="viewcode-block" id="section_feed_post_meme"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.board.html#intranet.apps.board.views.section_feed_post_meme">[docs]</a><span class="k">def</span> <span class="nf">section_feed_post_meme</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">section_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Post to class feed.&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">LDAPCourse</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;board/error.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;This class doesn&#39;t exist.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Board</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="c1"># Create a board for this class</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">section_id</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">has_member</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not a member of this class.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">meme_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;meme&quot;</span><span class="p">)</span>
+        <span class="n">meme</span> <span class="o">=</span> <span class="n">get_meme</span><span class="p">(</span><span class="n">meme_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">meme</span><span class="p">:</span>
+            <span class="n">meme</span> <span class="o">=</span> <span class="n">get_all_memes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="s1">&#39;&lt;div class=&quot;meme-option&quot; style=&quot;background-image: url({})&quot;&gt;&lt;/div&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meme</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">])</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="n">BoardPost</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                        <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
+                                        <span class="n">safe_html</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                        <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added post.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;board_section&quot;</span><span class="p">,</span> <span class="n">section_id</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
 </pre></div>
 
     </div>
