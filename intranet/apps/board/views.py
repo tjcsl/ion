@@ -107,7 +107,18 @@ def get_all_memes():
         {"id": "sch9", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch9.jpeg"},
         {"id": "tj1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj1.png"},
         {"id": "tj2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj2.png"},
-        {"id": "tj3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png"}
+        {"id": "tj3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png"},
+        {"id": "futurama1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama1.jpg"},
+        {"id": "futurama2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama2.jpg"},
+        {"id": "futurama3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama3.jpg"},
+        {"id": "futurama4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama4.jpg"},
+        {"id": "futurama5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama5.png"},
+        {"id": "futurama6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/futurama6.jpg"},
+        {"id": "simpsons1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons1.jpg"},
+        {"id": "simpsons2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons2.jpg"},
+        {"id": "simpsons3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons3.jpg"},
+        {"id": "simpsons4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons4.jpg"},
+           
     ]
     return memes
 
