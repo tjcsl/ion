@@ -65,14 +65,48 @@ def get_user_section(user, course_id):
             return sect.first()
 
 def get_all_memes():
+
+    """{"id": 1, "url": "https://i.imgur.com/MYCsJyA.jpg"},
+    {"id": 2, "url": "https://i.imgur.com/TrMuyvT.jpg"},
+    {"id": 3, "url": "https://i.imgur.com/Z7W8qNU.jpg"},
+    {"id": 4, "url": "https://i.imgur.com/yOiIjcr.jpg"},
+    {"id": 5, "url": "https://i.imgur.com/1UKqRPa.jpg"},
+    {"id": 6, "url": "https://i.imgur.com/2k7EPdX.jpg"},
+    {"id": 7, "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?stallman"}"""
     memes = [
-        {"id": 1, "url": "https://i.imgur.com/MYCsJyA.jpg"},
-        {"id": 2, "url": "https://i.imgur.com/TrMuyvT.jpg"},
-        {"id": 3, "url": "https://i.imgur.com/Z7W8qNU.jpg"},
-        {"id": 4, "url": "https://i.imgur.com/yOiIjcr.jpg"},
-        {"id": 5, "url": "https://i.imgur.com/1UKqRPa.jpg"},
-        {"id": 6, "url": "https://i.imgur.com/2k7EPdX.jpg"},
-        {"id": 7, "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png?stallman"}
+        {"id": "aa1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa1.jpg"},
+        {"id": "aa2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa2.png"},
+        {"id": "aa3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa3.jpg"},
+        {"id": "aa4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa4.jpg"},
+        {"id": "android1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/android1.jpg"},
+        {"id": "band1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band1.png"},
+        {"id": "band2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band2.jpg"},
+        {"id": "band3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band3.jpg"},
+        {"id": "cat1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat1.png"},
+        {"id": "cat2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat2.jpg"},
+        {"id": "cat3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat3.jpg"},
+        {"id": "cat4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat4.png"},
+        {"id": "index", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/index.php"},
+        {"id": "linux1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux1.jpg?stallman"},
+        {"id": "linux2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux2.jpg?stallman"},
+        {"id": "linux3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux3.jpg?stallman"},
+        {"id": "linux4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux4.gif?stallman"},
+        {"id": "linux5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux5.png?stallman"},
+        {"id": "linux6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux6.jpg?stallman"},
+        {"id": "linux7", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux7.jpg?stallman"},
+        {"id": "sch1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch1.jpg"},
+        {"id": "sch10", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch10.jpg"},
+        {"id": "sch2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch2.jpg"},
+        {"id": "sch3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch3.jpg"},
+        {"id": "sch4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch4.jpg"},
+        {"id": "sch5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch5.jpg"},
+        {"id": "sch6", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch6.png"},
+        {"id": "sch7", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch7.png"},
+        {"id": "sch8", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch8.jpg"},
+        {"id": "sch9", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/sch9.jpeg"},
+        {"id": "tj1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj1.png"},
+        {"id": "tj2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj2.png"},
+        {"id": "tj3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/tj3.png"}
     ]
     return memes
 
@@ -452,10 +486,7 @@ def course_feed_post_meme(request, course_id):
         return render(request, "error/403.html", {"reason": "You are not a member of this class."}, status=403)
 
     if request.method == "POST":
-        try:
-            meme_id = int(request.POST.get("meme"))
-        except Exception:
-            meme_id = 1
+        meme_id = request.POST.get("meme")
         memes = get_all_memes()
         meme = get_meme(meme_id)
         if not meme:
