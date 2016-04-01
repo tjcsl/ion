@@ -12,6 +12,14 @@ intranet.apps.ionldap.management.commands.ionldap_schedule_csv module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.ionldap.management.commands.ionldap_teacher_user_map module
+-------------------------------------------------------------------------
+
+.. automodule:: intranet.apps.ionldap.management.commands.ionldap_teacher_user_map
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
