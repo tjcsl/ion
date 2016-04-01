@@ -30,7 +30,9 @@ def home(request):
 
     classes = request.user.ionldap_courses or []
     section_ids = [c.section_id for c in classes]
-    posts = BoardPost.objects.filter(board__section_id__in=section_ids)
+    course_ids = [c.course_id for c in classes]
+    posts = BoardPost.objects.filter(board__course_id__in=course_ids)
+    posts = posts.order_by("-added")
 
     user = request.user
     teacher_classes = user.ionldap_course_teacher.all()

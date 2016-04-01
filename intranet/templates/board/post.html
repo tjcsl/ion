@@ -3,11 +3,13 @@
     <h3>
         {{ post.title }}
 
-        {% if request.user.is_board_admin or post.user == request.user %}
+        {% if post.user == request.user or is_admin %}
             <div class="boardpost-icon-wrapper">
+            {% comment %}
                 <a href="{% url 'board_modify_post' post.id %}">
                     <i class="boardpost-icon fa fa-pencil"></i>
                 </a>
+            {% endcomment %}
                 <a href="{% url 'board_delete_post' post.id %}" class="boardpost-delete">
                     <i class="boardpost-icon fa fa-trash-o"></i>
                 </a>
@@ -19,14 +21,12 @@
     {% if show_type %}
         {% if post.board.activity %}
             Activity: {{ post.board.activity }} &bull; 
-        {% elif post.board.class_id %}
-            Class: <a href="{% url 'board_class' post.board.class_id %}">
-                {{ post.board.class_obj }}
-            </a> &bull; 
+        {% elif post.board.course_id %}
+            Course: <a href="{% url 'board_course' post.board.course_id %}">
+                {{ post.board.course_title }}</a> &bull; 
         {% elif post.board.section_id %}
             Class: <a href="{% url 'board_section' post.board.section_id %}">
-                {{ post.board.section_obj }}
-            </a> &bull;
+                {{ post.board.section_obj }}</a> &bull;
         {% elif post.board.group %}
             Group: {{ post.board.group }} &bull;
         {% else %}
@@ -67,7 +67,7 @@
     <div class="boardpost-comments">
     {% for comment in post.comments.all %}
         <div class="boardpost-comment">
-            <b>{{ comment.user.full_name }}</b>: {% if comment.safe_html %}{{ comment.content|safe }}{% else %}{{ comment.content }}{% endif %}
+            <span style="display: inline-block; width: 120px"><b>{{ comment.user.full_name }}</b>: </span>{% if comment.safe_html %}{{ comment.content|safe }}{% else %}{{ comment.content }}{% endif %}
             {% if comment.user == request.user %}
                 <span class="boardpost-comment-icons">
                     <a href="#" data-endpoint="{% url 'board_delete_comment' comment.id %}" data-view="{% url 'board_post' post.id %}" class="boardpost-delete-comment">

@@ -37,8 +37,8 @@ $(function() {
     $(".reactions-box .reaction-icon").click(function() {
         var t = $(this);
         t.addClass("click");
+        giveReaction(t);
         setTimeout(function() {
-            giveReaction(t);
             t.removeClass("click");
             t.addClass("click-out");
             setTimeout(function() {
