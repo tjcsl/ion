@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from ..ionldap.models import LDAPCourse
-from ..users.models import User
 from .models import Board, BoardPost, BoardPostComment
 from .forms import BoardPostForm, BoardPostCommentForm
 
@@ -32,7 +31,6 @@ def home(request):
     """The homepage, showing all board posts available to you."""
 
     classes = request.user.ionldap_courses or []
-    section_ids = [c.section_id for c in classes]
     course_ids = [c.course_id for c in classes]
     posts = BoardPost.objects.filter(board__course_id__in=course_ids)
     posts = posts.order_by("-added")
@@ -504,10 +502,6 @@ def react_post_view(request, id=None):
 def course_feed_post_meme(request, course_id):
     """Post to course feed."""
 
-    ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
-
-    course_title = ldap_courses[0].course_title
-
     try:
         board = Board.objects.get(course_id=course_id)
     except Board.DoesNotExist:
@@ -542,7 +536,7 @@ def section_feed_post_meme(request, section_id):
     """Post to class feed."""
 
     try:
-        section = LDAPCourse.objects.get(section_id=section_id)
+        LDAPCourse.objects.get(section_id=section_id)
     except LDAPCourse.DoesNotExist:
         return render(request, "board/error.html", {"reason": "This class doesn't exist."}, status=404)
 
@@ -557,9 +551,11 @@ def section_feed_post_meme(request, section_id):
 
     if request.method == "POST":
         meme_id = request.POST.get("meme")
-        memes = get_all_memes()
+        meme = get_meme(meme_id)
+        if not meme:
+            meme = get_all_memes()[0]
 
-        content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme_url)
+        content = '<div class="meme-option" style="background-image: url({})"></div>'.format(meme["url"])
         post = BoardPost.objects.create(title="",
                                         content=content,
                                         safe_html=True,

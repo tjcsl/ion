@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import csv
-
 from django.core.management.base import BaseCommand
 
 from intranet.apps.ionldap.models import LDAPCourse
-from intranet.apps.users.models import User
 
 
 class Command(BaseCommand):
