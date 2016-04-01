@@ -68,7 +68,6 @@ class Board(models.Model):
             l = self.courses_list
             if l and l.count() > 0:
                 return l[0].course_title
-    
 
     @property
     def section_obj(self):
@@ -115,7 +114,6 @@ class Board(models.Model):
             return "board_course_post_meme"
         elif self.type == "section":
             return "board_section_post_meme"
-    
 
     def has_member(self, user):
         """Determine whether a given user is a member of the board.
@@ -181,7 +179,7 @@ class BoardPost(models.Model):
     @property
     def show_stallman(self):
         return "stallman" in self.content
-    
+
     @property
     def board(self):
         """ A BoardPost *should* only be on one Board, so find the first

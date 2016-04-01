@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 ONLY_MEMES = True
 ONLY_REACTIONS = True
 
+
 def can_view_board(request, course_id=None, section_id=None):
     if request.user.has_admin_permission("board"):
         return True
@@ -24,6 +25,7 @@ def can_view_board(request, course_id=None, section_id=None):
         return request.user.ionldap_courses.filter(course_id=course_id).count() > 0
     elif section_id:
         return request.user.ionldap_courses.filter(section_id=section_id).count() > 0
+
 
 @login_required
 def home(request):
@@ -48,7 +50,6 @@ def home(request):
             teacher_courses[cl.course_id] = cl.course_title
         teacher_courses = [{"course_id": i, "course_title": teacher_courses[i], "count": course_count[i]} for i in teacher_courses]
 
-
     context = {
         "classes": classes,
         "posts": posts,
@@ -58,6 +59,7 @@ def home(request):
 
     return render(request, "board/home.html", context)
 
+
 def get_user_section(user, course_id):
     classes = user.ionldap_courses
     if classes:
@@ -65,8 +67,8 @@ def get_user_section(user, course_id):
         if sect:
             return sect.first()
 
-def get_all_memes():
 
+def get_all_memes():
     """{"id": 1, "url": "https://i.imgur.com/MYCsJyA.jpg"},
     {"id": 2, "url": "https://i.imgur.com/TrMuyvT.jpg"},
     {"id": 3, "url": "https://i.imgur.com/Z7W8qNU.jpg"},
@@ -111,16 +113,20 @@ def get_all_memes():
     ]
     return memes
 
+
 def get_meme(id=None):
     return next((item for item in get_all_memes() if item["id"] == id), None)
 
+
 def get_memes():
     return random.sample(get_all_memes(), 5)
+
 
 def get_memes_json(request):
     resp = http.HttpResponse(json.dumps(get_memes()))
     resp["Content-Type"] = "text/json"
     return resp
+
 
 @login_required
 def all_feed(request):
@@ -128,7 +134,6 @@ def all_feed(request):
         return redirect("board")
 
     posts = BoardPost.objects.all()
-
 
     context = {
         "board": Board.objects.first(),
@@ -142,6 +147,7 @@ def all_feed(request):
 
     return render(request, "board/feed.html", context)
 
+
 @login_required
 def course_feed(request, course_id):
     if not can_view_board(request, course_id=course_id):
@@ -149,7 +155,7 @@ def course_feed(request, course_id):
 
     """The feed of a course (which contains multiple classes)."""
     ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
-    
+
     if ldap_courses.count() == 0:
         # The course doesn't actually exist
         return render(request, "board/error.html", {"reason": "This course doesn't exist."}, status=404)
@@ -169,7 +175,7 @@ def course_feed(request, course_id):
 
     posts = BoardPost.objects.filter(board__course_id=course_id)
 
-    #if my_section:
+    # if my_section:
     #    posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)
 
     meme_options = get_memes()
@@ -318,7 +324,6 @@ def section_feed_post(request, section_id):
 
 @login_required
 def modify_post_view(request, id=None):
-
     """Modify post page. You may only modify an event if you were the creator or you are an
     administrator.
 
@@ -350,10 +355,8 @@ def modify_post_view(request, id=None):
     return render(request, "board/add_modify.html", {"form": form, "action": "modify", "id": id})
 
 
-
 @login_required
 def delete_post_view(request, id=None):
-
     """Delete post page. You may only delete a post if you were the creator or you are an
     administrator.
 
@@ -412,9 +415,9 @@ def comment_view(request, post_id):
     }
     return render(request, "board/comment.html", context)
 
+
 @login_required
 def delete_comment_view(request, id=None):
-
     """Delete comment page. You may only delete a comment if you were the creator or you are an
     administrator.
 
@@ -434,6 +437,7 @@ def delete_comment_view(request, id=None):
         return http.HttpResponse("Deleted comment.")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
 
 @login_required
 def view_post(request, post_id):
@@ -456,9 +460,9 @@ def view_post(request, post_id):
 
     return render(request, "board/view.html", context)
 
+
 @login_required
 def react_post_view(request, id=None):
-
     """
 
     id: post id
@@ -467,18 +471,17 @@ def react_post_view(request, id=None):
     post = get_object_or_404(BoardPost, id=id)
     board = post.board
 
-
     if not board.has_member(request.user):
         return http.HttpResponseNotAllowed(["POST"], "Invalid permissions.")
 
     reactions = post.comments.filter(user=request.user)
     if reactions.count() > 0:
         reactions.delete()
-    
+
     reaction = request.POST.get("reaction", None)
 
     if request.method == "POST" and reaction:
-        allowed_reactions = [str(i) for i in range(1,7)]
+        allowed_reactions = [str(i) for i in range(1, 7)]
         allowed_reactions += ["stallman"]
 
         if reaction not in allowed_reactions:
@@ -495,6 +498,7 @@ def react_post_view(request, id=None):
         return http.HttpResponse("Reaction added")
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
+
 
 @login_required
 def course_feed_post_meme(request, course_id):
@@ -532,6 +536,7 @@ def course_feed_post_meme(request, course_id):
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
+
 @login_required
 def section_feed_post_meme(request, section_id):
     """Post to class feed."""
@@ -564,8 +569,6 @@ def section_feed_post_meme(request, section_id):
 
         messages.success(request, "Successfully added post.")
         return redirect("board_section", section_id)
-        
+
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
-
-
