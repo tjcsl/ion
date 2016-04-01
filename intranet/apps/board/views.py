@@ -17,8 +17,8 @@ ONLY_MEMES = True
 ONLY_REACTIONS = True
 
 def can_view_board(request, course_id=None, section_id=None):
-    #if request.user.has_admin_permission("board"):
-    #    return True
+    if request.user.has_admin_permission("board"):
+        return True
     if course_id:
         return request.user.ionldap_courses.filter(course_id=course_id).count() > 0
     elif section_id:
