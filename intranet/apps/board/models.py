@@ -126,8 +126,8 @@ class Board(models.Model):
 
         """
         # admin_all can access everything
-        #if user.member_of("admin_all"):
-        #    return True
+        if user.member_of("admin_all"):
+            return True
 
         if self.type == "activity":
             if self.activity.restricted:
