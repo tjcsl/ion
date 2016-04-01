@@ -118,7 +118,7 @@ def get_all_memes():
         {"id": "simpsons2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons2.jpg"},
         {"id": "simpsons3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons3.jpg"},
         {"id": "simpsons4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/simpsons4.jpg"},
-           
+
     ]
     return memes
 
