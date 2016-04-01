@@ -130,7 +130,8 @@ def all_feed(request):
         "course_id": 0,
         "course_title": "All",
         "posts": posts,
-        "is_admin": True
+        "is_admin": True,
+        "show_type": True
     }
 
     return render(request, "board/feed.html", context)
