@@ -19,7 +19,17 @@
 
 {% block main %}
 <div class="board primary-content">
-
+    {% if board.type == "section" %}
+        <a href="{% url 'board_section' section.section_id %}" class="button">
+            <i class="fa fa-arrow-left"></i>
+            Back to {{ board.section_obj.course_title }}
+        </a>
+    {% elif board.type == "course" %}
+        <a href="{% url 'board_course' course_id %}" class="button">
+            <i class="fa fa-arrow-left"></i>
+            Back to {{ board.course_title }}
+        </a>
+    {% endif %}
     <h2>
         Board Post: {% if board.type == "section" %}
             <a href="{% url 'ionldap_class_section' section.section_id %}">

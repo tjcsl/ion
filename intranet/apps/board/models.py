@@ -135,13 +135,24 @@ class Board(models.Model):
             else:
                 return True
         elif self.type == "course":
-            return (user.ionldap_courses.filter(course_id=self.course_id).count() > 0)
+            is_teacher = (user.ionldap_course_teacher.filter(course_id=self.course_id).count() > 0)
+            return (user.ionldap_courses.filter(course_id=self.course_id).count() > 0) or is_teacher
         elif self.type == "section":
-            return (user.ionldap_courses.filter(section_id=self.section_id).count() > 0)
+            is_teacher = (user.ionldap_course_teacher.filter(section_id=self.section_id).count() > 0)
+            return (user.ionldap_courses.filter(section_id=self.section_id).count() > 0) or is_teacher
         elif self.type == "group":
             return self.group.user_set.filter(id=user.id).count() > 0
 
         return False
+
+    def is_teacher(self, user):
+        if self.type == "course":
+            return (user.ionldap_course_teacher.filter(course_id=self.course_id).count() > 0)
+        elif self.type == "section":
+            return (user.ionldap_course_teacher.filter(section_id=self.section_id).count() > 0)
+
+    def is_admin(self, user):
+        return user.is_board_admin or self.is_teacher(user)
 
     def __str__(self):
         if self.type:

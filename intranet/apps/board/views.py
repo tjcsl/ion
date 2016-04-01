@@ -7,11 +7,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from ..ionldap.models import LDAPCourse
+from ..users.models import User
 from .models import Board, BoardPost, BoardPostComment
 from .forms import BoardPostForm, BoardPostCommentForm
 
 logger = logging.getLogger(__name__)
 
+ONLY_MEMES = True
+ONLY_REACTIONS = True
 
 def can_view_board(request, course_id=None, section_id=None):
     #if request.user.has_admin_permission("board"):
@@ -21,9 +24,6 @@ def can_view_board(request, course_id=None, section_id=None):
     elif section_id:
         return request.user.ionldap_courses.filter(section_id=section_id).count() > 0
 
-
-
-
 @login_required
 def home(request):
     """The homepage, showing all board posts available to you."""
@@ -32,9 +32,25 @@ def home(request):
     section_ids = [c.section_id for c in classes]
     posts = BoardPost.objects.filter(board__section_id__in=section_ids)
 
+    user = request.user
+    teacher_classes = user.ionldap_course_teacher.all()
+    teacher_courses = {}
+    if teacher_classes:
+        course_count = {}
+        for cl in teacher_classes:
+            if cl.course_id in course_count:
+                course_count[cl.course_id] += 1
+            else:
+                course_count[cl.course_id] = 1
+            teacher_courses[cl.course_id] = cl.course_title
+        teacher_courses = [{"course_id": i, "course_title": teacher_courses[i], "count": course_count[i]} for i in teacher_courses]
+
+
     context = {
         "classes": classes,
-        "posts": posts
+        "posts": posts,
+        "teacher_classes": teacher_classes,
+        "teacher_courses": teacher_courses
     }
 
     return render(request, "board/home.html", context)
@@ -103,7 +119,8 @@ def course_feed(request, course_id):
         "ldap_courses": ldap_courses,
         "my_section": my_section,
         "posts": posts,
-        "meme_options": meme_options
+        "meme_options": meme_options,
+        "is_admin": board.is_admin(request.user)
     }
 
     return render(request, "board/feed.html", context)
@@ -135,7 +152,8 @@ def section_feed(request, section_id):
         "section_id": section_id,
         "section": section,
         "posts": BoardPost.objects.filter(board__section_id=section_id),
-        "meme_options": meme_options
+        "meme_options": meme_options,
+        "is_admin": board.is_admin(request.user)
     }
 
     return render(request, "board/feed.html", context)
@@ -144,6 +162,8 @@ def section_feed(request, section_id):
 @login_required
 def course_feed_post(request, course_id):
     """Post to course feed."""
+    if ONLY_MEMES:
+        return redirect("board")
 
     ldap_courses = LDAPCourse.objects.filter(course_id=course_id)
 
@@ -189,6 +209,8 @@ def course_feed_post(request, course_id):
 @login_required
 def section_feed_post(request, section_id):
     """Post to class feed."""
+    if ONLY_MEMES:
+        return redirect("board")
 
     try:
         section = LDAPCourse.objects.get(section_id=section_id)
@@ -244,8 +266,9 @@ def modify_post_view(request, id=None):
         return redirect("board")
 
     post = get_object_or_404(BoardPost, id=id)
+    board = post.board
 
-    if not request.user.has_admin_permission('board') and post.user != request.user:
+    if not request.user.has_admin_permission('board') and post.user != request.user and not board.is_teacher(request.user):
         return render(request, "board/error.html", {"reason": "You are neither this event's creator or an administrator."}, status=403)
 
     if request.method == "POST":
@@ -275,8 +298,9 @@ def delete_post_view(request, id=None):
 
     """
     post = get_object_or_404(BoardPost, id=id)
+    board = post.board
 
-    if not request.user.has_admin_permission('board') and post.user != request.user:
+    if not request.user.has_admin_permission('board') and post.user != request.user and not board.is_teacher(request.user):
         return render(request, "board/error.html", {"reason": "You are neither this event's creator or an administrator."}, status=403)
 
     if request.method == "POST" and "confirm" in request.POST:
@@ -336,8 +360,9 @@ def delete_comment_view(request, id=None):
     """
     comment = get_object_or_404(BoardPostComment, id=id)
     post = comment.post
+    board = post.board
 
-    if not request.user.has_admin_permission('board') and comment.user != request.user:
+    if not request.user.has_admin_permission('board') and comment.user != request.user and not board.is_teacher(request.user):
         return render(request, "board/error.html", {"reason": "You are neither this event's creator or an administrator."}, status=403)
 
     if request.method == "POST" and "confirm" in request.POST:

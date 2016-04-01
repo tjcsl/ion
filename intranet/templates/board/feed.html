@@ -53,6 +53,10 @@
         <p>This board is available to <b>Period {{ section.periods }}</b> of {{ section.course_title }} with {{ section.teacher }}.</p>
     {% endif %}
 
+    {% if is_admin %}
+        <p>You are an administrator of this board. You can delete posts and comments by any user.</p>
+    {% endif %}
+
     <div class="boardpost boardpost-meta">
         <form action="{% url board.post_meme_route board.add_button_arg %}" method="post">
             {% csrf_token %}
