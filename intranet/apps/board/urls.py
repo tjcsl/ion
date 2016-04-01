@@ -16,6 +16,7 @@ urlpatterns = [
     url(r"^/submit/section/(?P<section_id>.*)?$", views.section_feed_post, name="board_section_post"),
 
     url(r"^/meme/submit/section/(?P<section_id>.*)?$", views.section_feed_post_meme, name="board_section_post_meme"),
+    url(r"^/meme/get$", views.get_memes_json, name="board_get_memes_json"),
 
     url(r"^/post/(?P<post_id>\d+)?$", views.view_post, name="board_post"),
 

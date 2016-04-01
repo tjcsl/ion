@@ -2,6 +2,7 @@
 
 import logging
 import random
+import json
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -78,6 +79,7 @@ def get_all_memes():
         {"id": "aa2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa2.png"},
         {"id": "aa3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa3.jpg"},
         {"id": "aa4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa4.jpg"},
+        {"id": "aa5", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/aa5.jpg"},
         {"id": "android1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/android1.jpg"},
         {"id": "band1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band1.png"},
         {"id": "band2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/band2.jpg"},
@@ -114,6 +116,11 @@ def get_meme(id=None):
 
 def get_memes():
     return random.sample(get_all_memes(), 5)
+
+def get_memes_json(request):
+    resp = http.HttpResponse(json.dumps(get_memes()))
+    resp["Content-Type"] = "text/json"
+    return resp
 
 @login_required
 def all_feed(request):

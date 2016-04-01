@@ -58,10 +58,11 @@
     {% endif %}
 
     <div class="boardpost boardpost-meta">
-        <form action="{% url board.post_meme_route board.add_button_arg %}" method="post">
+        <form action="{% url board.post_meme_route board.add_button_arg %}" method="post" data-get-memes="{% url 'board_get_memes_json' %}">
             {% csrf_token %}
             <h2>Make your voice heard:
-            <a href="#" onclick="location.reload()" class="button small-button" style="float: right;margin-top: 8px">Discover more memes</a></h2>
+                <button class="get-memes" style="float: right"><i class="fa fa-refresh"></i> Get more memes
+            </h2>
             <div class="meme-options">
                 {% for meme in meme_options %}
                     <div class="meme-option" style="background-image: url({{ meme.url }});" data-meme="{{ meme.id }}"></div>
