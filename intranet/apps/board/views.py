@@ -163,7 +163,8 @@ def course_feed(request, course_id):
 
     posts = BoardPost.objects.filter(board__course_id=course_id)
 
-    posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)
+    #if my_section:
+    #    posts |= BoardPost.objects.filter(board__section_id=my_section.section_id)
 
     meme_options = get_memes()
 
