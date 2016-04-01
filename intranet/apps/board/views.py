@@ -117,6 +117,25 @@ def get_memes():
     return random.sample(get_all_memes(), 5)
 
 @login_required
+def all_feed(request):
+    if not request.user.is_board_admin:
+        return redirect("board")
+
+    posts = BoardPost.objects.all()
+
+
+    context = {
+        "board": Board.objects.first(),
+        "type": "course",
+        "course_id": 0,
+        "course_title": "All",
+        "posts": posts,
+        "is_admin": True
+    }
+
+    return render(request, "board/feed.html", context)
+
+@login_required
 def course_feed(request, course_id):
     if not can_view_board(request, course_id=course_id):
         return redirect("/")

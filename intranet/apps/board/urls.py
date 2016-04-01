@@ -5,6 +5,9 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.home, name="board"),
+
+    url(r"^/all$", views.all_feed, name="board_all"),
+
     url(r"^/course/(?P<course_id>.*)?$", views.course_feed, name="board_course"),
     url(r"^/submit/course/(?P<course_id>.*)?$", views.course_feed_post, name="board_course_post"),
     url(r"^/meme/submit/course/(?P<course_id>.*)?$", views.course_feed_post_meme, name="board_course_post_meme"),
