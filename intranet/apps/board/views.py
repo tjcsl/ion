@@ -86,7 +86,6 @@ def get_all_memes():
         {"id": "cat2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat2.jpg"},
         {"id": "cat3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat3.jpg"},
         {"id": "cat4", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/cat4.png"},
-        {"id": "index", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/index.php"},
         {"id": "linux1", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux1.jpg?stallman"},
         {"id": "linux2", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux2.jpg?stallman"},
         {"id": "linux3", "url": "https://www.tjhsst.edu/~2016jwoglom/ion-memes/linux3.jpg?stallman"},
