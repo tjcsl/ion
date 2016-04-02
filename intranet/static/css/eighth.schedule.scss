@@ -1,7 +1,6 @@
 /* Let form.schedule-activity-grid scroll with the browser;
  * give all other UI elements a fixed position. -JW, 05/15 */
 
-
 b.cancelled {
     color: rgb(255,72,72);;
 }
@@ -22,15 +21,15 @@ tr.scheduled .block-name {
 
 table.schedule-activity-grid thead th {
     padding-left: 0;
-}
 
-table.schedule-activity-grid thead th.special {
-    padding-right: 0;
-}
+    &.special {
+        padding-right: 0;
 
-table.schedule-activity-grid thead th.special > span {
-    width: 25px;
-    display: block;
+        > span {
+            width: 25px;
+            display: block;
+        }
+    }
 }
 
 @media (min-width: 500px) {
@@ -39,47 +38,49 @@ table.schedule-activity-grid thead th.special > span {
         z-index: 4;
     }
 
-    .schedule-activity-page.floating .primary-content {
-        overflow: hidden;
-        margin-bottom: 20px;
-    }
+    .schedule-activity-page.floating {
+        .primary-content {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
 
-    .schedule-activity-page.floating .eighth-header {
-        position: fixed;
-        /* keep solid */
-        height: 160px;
-        width: 100%;
-        /* keep Start Date aligned properly */
-        width: calc(100% - 152px);
-        /* remove gap between top header and primary-content */
-        margin-top: -16px;
-        padding-top: 16px;
-        padding-right:152px;
-        background-color: #F2F2F4;
-        z-index: 2;
-        border-bottom: 1px rgb(194, 194, 194) solid;
-    }
+        .eighth-header {
+            position: fixed;
+            /* keep solid */
+            height: 160px;
+            width: 100%;
+            /* keep Start Date aligned properly */
+            width: calc(100% - 152px);
+            /* remove gap between top header and primary-content */
+            margin-top: -16px;
+            padding-top: 16px;
+            padding-right:152px;
+            background-color: #F2F2F4;
+            z-index: 2;
+            border-bottom: 1px rgb(194, 194, 194) solid;
+        }
 
-    .schedule-activity-page.floating .schedule-activity-head {
-        position: fixed;
-        margin-top: 42px;
-        width: 100%;
-        z-index: 2;
-    }
+        .schedule-activity-head {
+            position: fixed;
+            margin-top: 42px;
+            width: 100%;
+            z-index: 2;
+        }
 
-    .schedule-activity-page.floating .schedule-activity-grid {
-        position: static;
-        margin-top: 161px;
-        z-index: -1;
+        .schedule-activity-grid {
+            position: static;
+            margin-top: 161px;
+            z-index: -1;
+        }
     }
-
 }
 
-
-tr.form-row.hidden input,
-tr.form-row.hidden textarea,
-tr.form-row.hidden .selectize-input {
-    opacity: 0.7;
+tr.form-row.hidden {
+    input,
+    textarea,
+    .selectize-input {
+        opacity: 0.7;
+    }
 }
 
 /* keep selectize and non-selectize inputs the same height */
@@ -87,22 +88,24 @@ tr.form-row.hidden .selectize-input {
     height: 23px;
 }
 
-.form-row > td {
-    position: relative;
-}
+.form-row {
+    > td {
+        position: relative;
+    }
 
-.form-row a.propagate {
-    height: 22px;
-    width: 5px;
-    line-height: 22px;
-    opacity: 1;
-    cursor: pointer;
-    z-index: 3;
-    margin-left: -7px;
-}
+    a.propagate {
+        height: 22px;
+        width: 5px;
+        line-height: 22px;
+        opacity: 1;
+        cursor: pointer;
+        z-index: 3;
+        margin-left: -7px;
+    }
 
-.form-row td[data-base-field='capacity'] a.propagate {
-    margin-left: -12px;
+    td[data-base-field='capacity'] a.propagate {
+        margin-left: -12px;
+    }
 }
 
 .propagate-direction {
@@ -113,18 +116,18 @@ tr.form-row.hidden .selectize-input {
     width: 220px;
     line-height: 40px;
     z-index: 998;
-}
 
-.propagate-direction > b {
-    float: left;
-    margin-right: 5px;
-}
+    > b {
+        float: left;
+        margin-right: 5px;
+    }
 
-.propagate-direction select,
-.propagate-direction .selectize-control {
-    width: 80px;
-    display: inline-block;
-    float: right;
+    select,
+    .selectize-control {
+        width: 80px;
+        display: inline-block;
+        float: right;
+    }
 }
 
 .propagate-method {
@@ -135,23 +138,25 @@ tr.form-row.hidden .selectize-input {
     width: 220px;
     line-height: 40px;
     z-index: 998;
+
+    > b {
+        float: left;
+        margin-right: 5px;
+    }
+
+    select,
+    .selectize-control {
+        width: 80px;
+        display: inline-block;
+        float: right;
+    }
 }
 
-.propagate-method > b {
-    float: left;
-    margin-right: 5px;
-}
-
-.propagate-method select,
-.propagate-method .selectize-control {
-    width: 80px;
-    display: inline-block;
-    float: right;
-}
-
-.propagate-direction .selectize-control .loading,
-.propagate-method .selectize-control .loading {
-    display: none;
+.selectize-control .loading {
+    .propagate-direction &,
+    .propagate-method & {
+        display: none;
+    }
 }
 
 @media (max-width: 1000px) {
@@ -161,12 +166,12 @@ tr.form-row.hidden .selectize-input {
 }
 
 @media (max-width: 858px) {
-    .propagate-method b, .propagate-direction b {
-        display: none;
-    }
-
     .propagate-method, .propagate-direction {
         width: 85px;
+
+        b {
+            display: none;
+        }
     }
 }
 
@@ -184,63 +189,69 @@ td[data-field="capacity"] {
     white-space: nowrap;
 }
 
-tr.form-row.scheduled .selectize-input,
-tr.form-row.scheduled input,
-tr.form-row.scheduled textarea {
-    /*border-color: green;
-    background-color: rgba(0, 128, 0, 0.25);*/
-    background-color: white;
-}
+tr.form-row {
+    &.scheduled {
+        .selectize-input,
+        input,
+        textarea {
+            //border-color: green;
+            //background-color: rgba(0, 128, 0, .25);
+            background-color: white;
+        }
+    }
 
-tr.form-row.hidden .selectize-input,
-tr.form-row.hidden input,
-tr.form-row.hidden textarea {
-    background-color: rgba(181, 181, 181, 0.25);
-}
+    &.hidden {
+        .selectize-input,
+        input,
+        textarea {
+            background-color: rgba(181, 181, 181, .25);
+        }
+    }
 
-tr.form-row ::-webkit-input-placeholder {
-   color: black;
-   font-weight: bold;
-}
+    ::-webkit-input-placeholder {
+       color: black;
+       font-weight: bold;
+    }
 
-tr.form-row :-moz-placeholder {
-   color: black;
-   font-weight: bold;
-}
+    :-moz-placeholder {
+       color: black;
+       font-weight: bold;
+    }
 
-tr.form-row ::-moz-placeholder {
-   color: black;
-   font-weight: bold;
-}
+    ::-moz-placeholder {
+       color: black;
+       font-weight: bold;
+    }
 
-tr.form-row :-ms-input-placeholder {  
-   color: black;
-   font-weight: bold;
-}
+    :-ms-input-placeholder {
+       color: black;
+       font-weight: bold;
+    }
 
-tr.form-row .capacity {
-   font-size: 15px;
-   font-style: italic;
-}
+    .capacity {
+       font-size: 15px;
+       font-style: italic;
 
-tr.form-row .capacity::-webkit-input-placeholder {
-   font-size: 12px;
-   font-style: normal;
-}
+       &::-webkit-input-placeholder {
+          font-size: 12px;
+          font-style: normal;
+       }
 
-tr.form-row .capacity:-moz-placeholder {
-   font-size: 12px;
-   font-style: normal;
-}
+       &:-moz-placeholder {
+          font-size: 12px;
+          font-style: normal;
+       }
 
-tr.form-row .capacity::-moz-placeholder {
-   font-size: 12px;
-   font-style: normal;
-}
+       &::-moz-placeholder {
+          font-size: 12px;
+          font-style: normal;
+       }
 
-tr.form-row .capacity:-ms-input-placeholder {  
-   font-size: 12px;
-   font-style: normal;
+       &:-ms-input-placeholder {
+          font-size: 12px;
+          font-style: normal;
+       }
+    }
 }
 
 .unschedule-link {

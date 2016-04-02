@@ -8,11 +8,6 @@ h3 {
     margin-bottom: 2px;
 }
 
-.admin-dashboard h3 {
-    width: 100%;
-    border-bottom: 1px solid rgb(1, 94, 222);
-}
-
 h4 {
     font-weight: bold;
     margin-top: 6px;
@@ -22,36 +17,41 @@ h4 {
 
 .admin-dashboard {
     width: 100%;
+
+    h3 {
+        width: 100%;
+        border-bottom: 1px solid rgb(1, 94, 222);
+    }
+
+    .admin-section {
+        height: 200px;
+        width: 50%;
+
+        &.attendance {
+            height: 220px;
+        }
+    }
+
+    li {
+        line-height: 25px;
+
+        .fa {
+            font-size: 18px;
+        }
+    }
+
+    .fa-ul {
+        margin-left: 35px;
+        margin-top: 6px;
+
+        a {
+            color: inherit;
+        }
+    }
 }
 
 .primary-content {
     margin-left: 100px;
-}
-
-.admin-dashboard .admin-section {
-    height: 200px;
-    width: 50%;
-}
-
-.admin-dashboard .admin-section.attendance {
-    height: 220px;
-}
-
-.admin-dashboard li {
-    line-height: 25px;
-}
-
-.admin-dashboard li .fa {
-    font-size: 18px;
-}
-
-.admin-dashboard .fa-ul {
-    margin-left: 35px;
-    margin-top: 6px;
-}
-
-.admin-dashboard .fa-ul a {
-    color: inherit;
 }
 
 .admin-section .selectize-control {
@@ -66,23 +66,25 @@ tr .admin-section:last-of-type:not(:first-of-type) {
     padding-left: 20px
 }
 
-.schedule-activity-grid .selectize-control {
-    width: auto;
-    min-width: 150px;
-}
-
 .schedule-activity-grid {
     margin-top: 10px;
-}
 
-.schedule-activity-grid tr.spacer {
-    height: 5px;
-}
+    .selectize-control {
+        width: auto;
+        min-width: 150px;
+    }
 
-.schedule-activity-grid tr.divider {
-    background-color: #CCC;
-    height: 1px;
-    width: 100%;
+    tr {
+        &.spacer {
+            height: 5px;
+        }
+
+        &.divider {
+            background-color: #CCC;
+            height: 1px;
+            width: 100%;
+        }
+    }
 }
 
 .select-blocks-popover {
@@ -95,13 +97,13 @@ tr .admin-section:last-of-type:not(:first-of-type) {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    /* border: 1px solid rgb(129, 129, 129); */
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    //border: 1px solid rgb(129, 129, 129);
     z-index: 3;
-}
 
-.select-blocks-popover.closed {
-    display: none;
+    &.closed {
+        display: none;
+    }
 }
 
 a.select-blocks-popover-toggle, a.block-type {
@@ -116,7 +118,7 @@ input.capacity {
     width: 50px;
 }
 
-td[data-field="title"] input, 
+td[data-field="title"] input,
 td[data-field="comments"] input,
 td[data-field="admin_comments"] {
     width: 150px;
@@ -128,10 +130,10 @@ td[data-field="admin_comments"] {
 
 select {
     display: none;
-}
 
-select[multiple="multiple"] + .selectize-loading .selectize-input {
-  overflow: inherit;
+    &[multiple="multiple"] + .selectize-loading .selectize-input {
+      overflow: inherit;
+    }
 }
 
 @media print {
@@ -145,7 +147,7 @@ table.fancy-table td, table.fancy-table, th {
 }
 
 table.fancy-table tbody tr:nth-child(odd) {
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(0, 0, 0, .05);
 }
 
 /* SELECTIZE */
@@ -159,35 +161,39 @@ table.choose-fields td {
     text-align: center;
 }
 
-
 @media (max-width: 835px) {
-    .primary-content .admin-dashboard #add-room-form #id_name {
-        width: 60px;
-    }
-    .primary-content .admin-dashboard #add-room-form th, #add-room-form td {
-        padding: 0 3px 0 0;
+    .primary-content .admin-dashboard #add-room-form {
+        #id_name {
+            width: 60px;
+        }
+
+        th, td {
+            padding: 0 3px 0 0;
+        }
     }
 }
 
 @media (max-width: 750px) {
-    tr .admin-section:last-of-type:not(:first-of-type) {
-        padding-left: 5px;
-    }
+    tr .admin-section {
+        &:last-of-type:not(:first-of-type) {
+            padding-left: 5px;
+        }
 
-    tr .admin-section:first-of-type {
-        padding-right: 5px;
+        &:first-of-type {
+            padding-right: 5px;
+        }
     }
 }
 
 .admin-section .selectize-control.single .selectize-input {
     background: white;
-}
 
-.admin-section .selectize-control.single .selectize-input.dropdown-active {
-    outline: none;
-    border-color: rgb(0, 72, 171);
+    &.dropdown-active {
+        outline: none;
+        border-color: rgb(0, 72, 171);
+    }
 }
 
 button, a.button, input[type="button"], input[type="submit"], input[type="reset"] {
-    border: 1px solid rgba(0,72,171,.3);
+    border: 1px solid rgba(0, 72, 171, .3);
 }
