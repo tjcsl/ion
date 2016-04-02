@@ -24,22 +24,25 @@
     font-weight: bold;
 }
 
-.attendance-taken, .no-attendance, .passes-notice {
+.attendance-taken,
+.no-attendance,
+.passes-notice {
     font-size: 20px;
 }
 
-.take-attendance-roster td {
-    padding-right: 20px;
-}
+.take-attendance-roster {
+    td {
+        padding-right: 20px;
+    }
 
-.take-attendance-roster tr {
-    line-height: 25px;
+    tr {
+        line-height: 25px;
+    }
 }
 
 .save-button {
     float: right;
 }
-
 
 h3 {
     font-weight: bold;
@@ -66,13 +69,14 @@ form .accept-all-passes {
     text-align: center;
 }
 
+.take-passes {
+    tr {
+        line-height: 25px;
+    }
 
-.take-passes tr {
-    line-height: 25px;
-}
-
-.take-passes td.form {
-    text-align: center;
+    td.form {
+        text-align: center;
+    }
 }
 
 .pass-container {
@@ -83,14 +87,14 @@ form .accept-all-passes {
     .pass-container {
         position: absolute;
         left: 650px;
-    }
 
-    .pass-container.eighth-admin {
-        top: 266px;
-    }
+        &.eighth-admin {
+            top: 266px;
+        }
 
-    .pass-container.has-passes {
-        position: static;
+        &.has-passes {
+            position: static;
+        }
     }
 }
 
@@ -100,10 +104,10 @@ form .accept-all-passes {
         left: 650px;
         background: #f0f0f0;
         padding: 0 30px;
-    }
 
-    .pass-container.has-passes.eighth-admin {
-        top: 266px;
+        &.eighth-admin {
+            top: 266px;
+        }
     }
 }
 
@@ -115,7 +119,8 @@ form .accept-all-passes {
     }
 }
 
-table.take-passes, table.take-attendance-roster {
+table.take-attendance-roster,
+table.take-passes {
     vertical-align: middle;
     max-width: 600px;
 }
@@ -131,30 +136,37 @@ a.pass-form-submit-link.button {
     text-align: center;
 }
 
-.choose-block select#block-select,
-.choose-block .selectize-control {
-    width: 400px;
-}
-
-.choose-activity select#activity-select,
-.choose-activity .selectize-control {
-    width: 400px;
-}
-
-
-@media (max-width: 430px) {
-    .choose-block select#block-select, .choose-block .selectize-control,
-    .choose-activity select#activity-select, .choose-activity .selectize-control  {
-        width: 100%;
+.choose-block {
+    select#block-select,
+    .selectize-control {
+        width: 400px;
     }
 }
 
-.user-link a {
-    color: rgb(72, 72, 72);
+.choose-activity {
+    select#activity-select,
+    .selectize-control {
+        width: 400px;
+    }
 }
 
-.user-link[data-user-id]:hover {
-    font-weight: bold;
+@media (max-width: 430px) {
+    .choose-block, .choose-activity {
+        select#block-select,
+        .selectize-control {
+            width: 100%;
+        }
+    }
+}
+
+.user-link {
+    a {
+        color: rgb(72, 72, 72);
+    }
+
+    &[data-user-id]:hover {
+        font-weight: bold;
+    }
 }
 
 .selectize-dropdown-content {
@@ -163,10 +175,10 @@ a.pass-form-submit-link.button {
 
 .sponsoring-wizard-table {
     min-width: 500px;
-}
 
-.sponsoring-wizard-table a.button {
-    float: right;
+    a.button {
+        float: right;
+    }
 }
 
 td.email-col {
@@ -189,7 +201,11 @@ td.email-col {
 }
 
 @media print {
-    .selectize, .selectize *, .selectize-control, .selectize-control *, .selectize-control * * {
+    .selectize,
+    .selectize *,
+    .selectize-control,
+    .selectize-control *,
+    .selectize-control * * {
         display: inline;
         padding: 0;
         margin: 0;
@@ -217,93 +233,97 @@ td.email-col {
         width: 250px;
     }
 
-    .take-attendance-roster tbody tr,
-    .take-attendance-roster tbody tr td {
-        border-bottom: 1px solid black;
-        padding-bottom: 5px;
+    .take-attendance-roster {
+        tbody tr {
+            border-left: 1px solid black;
+            border-right: 1px solid black;
 
-        height: 25px; /* for 32px height */
-        max-height: 25px;
-        vertical-align: middle;
+            &, td {
+                border-bottom: 1px solid black;
+                padding-bottom: 5px;
 
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+                height: 25px; /* for 32px height */
+                max-height: 25px;
+                vertical-align: middle;
 
-    .take-attendance-roster tbody tr td {
-        border-right: 1px solid black;
-    }
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-    .take-attendance-roster tbody tr td.user-col,
-    .take-attendance-roster tbody tr td.sid-col,
-    .take-attendance-roster tbody tr td.email-col {
-        padding-left: 5px;
-    }
+            td {
+                border-right: 1px solid black;
 
-    .take-attendance-roster tbody tr td.email-col {
-        border-right: none;
-    }
+                &.user-col,
+                &.sid-col,
+                &.email-col {
+                    padding-left: 5px;
+                }
 
-    .take-attendance-roster tbody tr td:last-child {
-        border-right: none;
-    }
+                &.email-col {
+                    border-right: none;
+                }
 
-    .take-attendance-roster thead tr.members-header,
-    .take-attendance-roster thead tr.members-header td {
-        border: 1px solid black;
-        padding-bottom: 5px;
-    }
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
 
-    .take-attendance-roster thead tr.members-header th {
-        border-right: 1px solid black;
-    }
+        thead tr.members-header {
+            &, td {
+                border: 1px solid black;
+                padding-bottom: 5px;
+            }
 
-    .take-attendance-roster thead tr.members-header th.user-col,
-    .take-attendance-roster thead tr.members-header th.sid-col,
-    .take-attendance-roster thead tr.members-header th.email-col {
-        padding-left: 5px;
-    }
+            th {
+                border-right: 1px solid black;
 
-    .take-attendance-roster thead tr.members-header th.email-col {
-        border-right: none;
-    }
+                &.user-col,
+                &.sid-col,
+                &.email-col {
+                    padding-left: 5px;
+                }
 
-    .take-attendance-roster thead tr.members-header th.grade-col {
-        text-align: center;
-        padding: 0 8px;
-    }
+                &.email-col {
+                    border-right: none;
+                }
 
-    .take-attendance-roster thead tr.members-header th:last-child {
-        border-right: none;
-    }
+                &.grade-col {
+                    text-align: center;
+                    padding: 0 8px;
+                }
 
-    .take-attendance-roster tbody tr {
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-    }
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
 
-    .take-attendance-roster .email-col {
-        display: block;
-        border-bottom: 0;
-    }
+        .email-col {
+            display: block;
+            border-bottom: 0;
+        }
 
-    .take-attendance-roster .sid-col {
-        display: none;
-    }
+        .sid-col {
+            display: none;
+        }
 
-    .take-attendance-roster.no-members,
-    .take-attendance-roster.no-members tbody,
-    .take-attendance-roster.no-members tbody tr,
-    .take-attendance-roster.no-members tbody tr td {
-        border: none;
+        &.no-members {
+            &,
+            tbody,
+            tbody tr,
+            tbody tr td {
+                border: none;
+            }
+        }
     }
 
     .pass-container {
         display: none;
-    }
 
-    .pass-container.has-passes {
-        display: block;
+        &.has-passes {
+            display: block;
+        }
     }
 }

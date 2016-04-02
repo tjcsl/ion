@@ -2,24 +2,23 @@
     min-width: 290px; /* for 320x480 screens */
     max-width: 1000px;
     margin-bottom: 100px;
+
+    h2 {
+        padding-left: 10px;
+        line-height: 38px;
+
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            padding-left: 10px;
+            height: 33px;
+        }
+    }
 }
 
 .button-container {
     float: right;
     margin-top: -38px;
-}
-
-.events h2 {
-    padding-left: 10px;
-    line-height: 38px;
-}
-
-
-.events h2.category {
-    font-size: 18px;
-    font-weight: normal;
-    padding-left: 10px;
-    height: 33px;
 }
 
 .event {
@@ -32,15 +31,15 @@
     margin-bottom: 6px;
     overflow-x: auto;
     behavior: url("/static/js/PIE/PIE.htc");
-}
 
-.event h3 {
-    cursor: pointer;
-}
+    h3 {
+        cursor: pointer;
 
-.event h3 > a.event-link {
-    cursor: pointer;
-    color: rgb(72,72,72) !important;
+        > a.event-link {
+            cursor: pointer;
+            color: rgb(72, 72, 72) !important;
+        }
+    }
 }
 
 .events-icon-wrapper {
@@ -48,39 +47,41 @@
 }
 
 .event-metadata {
-    color: rgb(144,144,144);
+    color: rgb(144, 144, 144);
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 5px;
 }
 
-.event:hover .event-icon-wrapper {
-    display: block;
-}
-
 .event-icon-wrapper {
     float: right;
     display: none;
-}
 
-.event-icon-wrapper > a {
-    color: rgb(72, 72, 72);
-    text-decoration: none !important;
-    padding-left: 2px;
-}
+    .event:hover & {
+        display: block;
+    }
 
-.event-icon-wrapper > a:hover {
-    color: rgb(32, 66, 224);
-}
+    > a {
+        color: rgb(72, 72, 72);
+        text-decoration: none !important;
+        padding-left: 2px;
 
-.event h3:hover .event-icon-wrapper .event-toggle,
-.event h3 .event-icon-wrapper .event-toggle:hover,
-.event h3 .event-icon-wrapper:hover .event-toggle:hover {
-    color: rgb(32, 66, 224);
-}
+        &:hover {
+            color: rgb(32, 66, 224);
+        }
+    }
 
-.event h3 .event-icon-wrapper:hover .event-toggle {
-    color: rgb(72, 72, 72);
+    h3 {
+        &:hover .event-icon-wrapper .event-toggle,
+        .event-icon-wrapper .event-toggle:hover,
+        .event-icon-wrapper:hover .event-toggle:hover {
+            color: rgb(32, 66, 224);
+        }
+
+        .event-icon-wrapper:hover .event-toggle {
+            color: rgb(72, 72, 72);
+        }
+    }
 }
 
 .event-icon {
@@ -97,20 +98,20 @@
     left: 270px;
     max-width: 280px;
     white-space: nowrap;
-}
 
-.bottom-row.show-attend .attend-status {
-    width: 280px;
+    .bottom-row.show-attend & {
+        width: 280px;
+    }
 }
 
 .signup-status {
     color: gray;
-}
 
-.signup-status > a.button {
-    margin-top: -2px;
-    position: absolute;
-    left: 140px;
+    > a.button {
+        margin-top: -2px;
+        position: absolute;
+        left: 140px;
+    }
 }
 
 .attend-status {
@@ -118,26 +119,28 @@
     left: 270px;
 }
 
-a.button.attend-button {
-    color: green;
-    margin-top: -3px;
-    float: right;
-}
+a.button {
+    &.attend-button {
+        color: green;
+        margin-top: -3px;
+        float: right;
+    }
 
-a.button.no-attend-button {
-    color: red;
-    margin-top: -3px;
-    float: right;
+    &.no-attend-button {
+        color: red;
+        margin-top: -3px;
+        float: right;
+    }
 }
 
 @media (max-width: 710px) {
     .event .bottom-row {
         margin-bottom: 23px;
-    }
 
-    .event .bottom-row .attend-status {
-        left: 0;
-        bottom: -27px;
+        .attend-status {
+            left: 0;
+            bottom: -27px;
+        }
     }
 }
 
@@ -147,12 +150,12 @@ a.button.no-attend-button {
 @media (max-width: 1060px) {
     .announcements.primary-content .announcement .event .bottom-row {
         margin-bottom: 23px;
-    }
 
-    .announcements.primary-content .announcement .event .bottom-row .attend-status {
-        left: 0;
-        bottom: -23px;
-    } 
+        .attend-status {
+            left: 0;
+            bottom: -23px;
+        }
+    }
 }
 
 .event-approve-table {

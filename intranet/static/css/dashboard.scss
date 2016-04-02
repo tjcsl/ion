@@ -3,21 +3,21 @@
     min-width: 290px; /* for 320x480 screens */
     max-width: 1000px;
     margin-bottom: 100px;
-}
 
-.announcements.no-widgets {
-    padding-right: 0;
+	&.no-widgets {
+	    padding-right: 0;
+	}
+
+	h2 {
+	    padding-left: 10px;
+	    line-height: 38px;
+	    float: left;
+	}
 }
 
 .announcements-header {
     height: 38px;
     margin-bottom: 4px;
-}
-
-.announcements h2 {
-    padding-left: 10px;
-    line-height: 38px;
-    float: left;
 }
 
 .announcement {
@@ -30,23 +30,23 @@
     margin-bottom: 6px;
     overflow-x: auto;
     behavior: url("/static/js/PIE/PIE.htc");
-}
 
-.announcement h3 {
-    cursor: pointer;
-}
+	h3 {
+	    cursor: pointer;
 
-.announcement.announcement-meta h3 {
-    cursor: initial;
-}
+		> a.announcement-link {
+		    cursor: pointer;
+		    color: rgb(72, 72, 72) !important;
+		}
+	}
 
-.announcement h3 > a.announcement-link {
-    cursor: pointer;
-    color: rgb(72,72,72) !important;
-}
+	&.announcement-meta h3 {
+	    cursor: initial;
+	}
 
-.announcement.pinned h3 {
-    color: rgb(181, 0, 0);
+	&.pinned h3 {
+	    color: rgb(181, 0, 0);
+	}
 }
 
 .announcements-icon-wrapper {
@@ -54,29 +54,29 @@
 }
 
 .announcement-metadata {
-    color: rgb(144,144,144);
+    color: rgb(144, 144, 144);
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 5px;
 }
 
-.announcement:hover .announcement-icon-wrapper {
-    display: block;
-}
-
 .announcement-icon-wrapper {
     float: right;
     display: none;
-}
 
-.announcement-icon-wrapper > a {
-    color: rgb(72, 72, 72);
-    text-decoration: none !important;
-    padding-left: 2px;
-}
+	.announcement:hover & {
+	    display: block;
+	}
 
-.announcement-icon-wrapper > a:hover {
-    color: rgb(32, 66, 224);
+	> a {
+	    color: rgb(72, 72, 72);
+	    text-decoration: none !important;
+	    padding-left: 2px;
+
+		&:hover {
+		    color: rgb(32, 66, 224);
+		}
+	}
 }
 
 .announcement h3:hover .announcement-icon-wrapper .announcement-toggle,
@@ -106,7 +106,6 @@
     text-align: center;
 }
 
-
 @media (max-width: 800px) {
     /*
      * widgets that fall underneath nav shouldn't float
@@ -123,25 +122,26 @@
  * between 800px and 662px, show a two column widget view
  * nonfunctional
 @media (max-width: 800px) {
-@media (min-width: 662px) {
-    .main div.widgets {
-        height: 500px;
-    }
-    .main div.widgets .widget {
-        width: calc(50% - 50px);
-    }
+	@media (min-width: 662px) {
+	    .main div.widgets {
+	        height: 500px;
 
-    // odd on left, regular
-    .main div.widgets .widget:nth-child(1),
-    .main div.widgets .widget:nth-child(3) {
-    }
+			.widget {
+		        width: calc(50% - 50px);
 
-    // even on right
-    .main div.widgets .widget:nth-child(2) {
-        position: absolute;
-        left: calc(50% + 54px);
-    }
-}
+				// odd on left, regular
+				&:nth-child(1),
+				&:nth-child(3) {
+				}
+
+				// even on right
+				&:nth-child(2) {
+					position: absolute;
+					left: calc(50% + 54px);
+				}
+		    }
+	    }
+	}
 }
 */
 
@@ -175,8 +175,6 @@
     }
 }
 
-
-
 div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     content: attr(data-placeholder);
     float: left;
@@ -203,17 +201,16 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     width: 27px;
     text-align: center;
     cursor: pointer;
-}
 
-.dashboard-item-icon:hover {
-    opacity: 1;
-}
+	&:hover {
+	    opacity: 1;
+	}
 
-.announcement h3:hover .dashboard-item-icon {
-    opacity: 1;
-}
+	.announcement h3:hover & {
+	    opacity: 1;
+	}
 
-
-.event h3:hover .dashboard-item-icon {
-    opacity: 1;
+	.event h3:hover & {
+	    opacity: 1;
+	}
 }

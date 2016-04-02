@@ -1,11 +1,11 @@
 .header {
     background-color: rgb(0, 72, 171);
-    /*background: -webkit-linear-gradient(rgb(0, 72, 171), rgb(1, 94, 222));*/
-}
+    //background: -webkit-linear-gradient(rgb(0, 72, 171), rgb(1, 94, 222));
 
-.header .search input[type="text"] {
-    background-color: rgb(242, 242, 244);
-    color: rgb(0, 72, 171);   
+    .search input[type="text"] {
+        background-color: rgb(242, 242, 244);
+        color: rgb(0, 72, 171);
+    }
 }
 
 .widget {
@@ -15,15 +15,16 @@
 .widget-title {
     border-bottom-color: rgb(0, 72, 171);
     font-weight: bold;
+
+    a.ui-link {
+        color: rgb(0, 72, 171);
+        text-decoration: underline;
+        font-weight: normal;
+    }
 }
 
-.widget-title a.ui-link {
-    color: rgb(0, 72, 171);
-    text-decoration: underline;
-    font-weight: normal;
-}
-
-.widget, .widget-content {
+.widget,
+.widget-content {
     background-color: white;
 }
 
@@ -31,15 +32,27 @@ ul.nav {
     background-color: white;
     border: 1px solid rgb(0, 72, 171);
     border-color: rgb(136, 148, 160);
+
+    li.selected {
+        background-color: rgb(60, 105, 182);
+
+        a {
+            color: white;
+        }
+    }
+
+    li:not(.selected) a:hover i {
+        color: rgb(0, 85, 164);
+    }
+
+    a:hover {
+        color: rgb(1, 94, 222);
+    }
 }
 
 .main ul.nav > li {
-    /*border-color: rgb(0, 72, 171);*/
+    //border-color: rgb(0, 72, 171);
     border-color: rgb(136, 148, 160);
-}
-
-ul.nav li.selected {
-    background-color: rgb(60, 105, 182);
 }
 
 .nav a, .nav a:active, .nav a:visited {
@@ -47,30 +60,18 @@ ul.nav li.selected {
     color: rgb(72, 72, 72);
 }
 
-ul.nav a:hover {
-    color: rgb(1, 94, 222);
-}
-
-ul.nav li:not(.selected) a:hover i {
-    color: rgb(0, 85, 164);
-}
-
-ul.nav li.selected a {
-    color: white;
-}
-
-body.login-page input[type=submit] {
-    border: 1px solid rgba(0, 72, 171, 0.3);
-    color: #0048ab;
-}
-
-body.login-page input[type=submit].load-spinner {
-    border-color: transparent;
-    background: transparent;
-    text-shadow: none;
-    box-shadow: none;
-}
-
 body.login-page input {
-    border: 1px solid rgba(0, 72, 171, 0.3);
+    border: 1px solid rgba(0, 72, 171, .3);
+
+    &[type=submit] {
+        border: 1px solid rgba(0, 72, 171, .3);
+        color: #0048ab;
+
+        &.load-spinner {
+            border-color: transparent;
+            background: transparent;
+            text-shadow: none;
+            box-shadow: none;
+        }
+    }
 }
