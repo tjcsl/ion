@@ -1,54 +1,58 @@
 table.directory-list {
     width: 100%;
-}
 
-table.directory-list a,
-table.directory-list a:link,
-table.directory-list a:visited,
-table.directory-list a:hover,
-table.directory-list a:active {
-    color: rgb(72, 72, 72);
-}
+    a {
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:active {
+            color: rgb(72, 72, 72);
+        }
 
-table.directory-list tr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-}
+        &.delete:hover {
+            color: rgb(220, 0, 0);
+            text-decoration: none;
+        }
 
-table.directory-list tr:last-child {
-    border-bottom: 0;
-}
+        &.zip {
+            padding-right: 5px;
 
-table.directory-list td.item {
-    padding: 3px 5px;
-    width: 50%;
-}
+            &:hover {
+                color: rgb(168, 168, 0);
+                text-decoration: none;
+            }
+        }
+    }
 
-table.directory-list td.item i.fa {
-    width: 13px;
-}
+    tr {
+        border-bottom: 1px solid rgba(0, 0, 0, .2);
 
-table.directory-list tr:hover {
-    background-color: rgb(220, 220, 220);
-}
+        &:hover {
+            background-color: rgb(220, 220, 220);
+        }
 
-table.directory-list td.file-options {
-    text-align:right;
-    padding-right:10px;
-    min-width:30px;
-}
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
 
-table.directory-list a.delete:hover {
-    color: rgb(220, 0, 0);
-    text-decoration:none;
-}
+    td {
+        &.item {
+            padding: 3px 5px;
+            width: 50%;
 
-table.directory-list a.zip {
-    padding-right:5px;
-}
+            i.fa {
+                width: 13px;
+            }
+        }
 
-table.directory-list a.zip:hover {
-    color: rgb(168, 168, 0);
-    text-decoration:none;
+        &.file-options {
+            text-align: right;
+            padding-right: 10px;
+            min-width: 30px;
+        }
+    }
 }
 
 .filesystem {
@@ -63,39 +67,40 @@ table.directory-list a.zip:hover {
     overflow-x: auto;
 
     width: 250px;
-}
 
-.filesystem a {
-    display: block;
-    font-size: 22px;
-    color: rgb(72, 72, 72);
-    text-align: center;
-    text-decoration: none
-}
+    a {
+        display: block;
+        font-size: 22px;
+        color: rgb(72, 72, 72);
+        text-align: center;
+        text-decoration: none
+    }
 
-.filesystem i.fa {
-    display: block;
-    font-size: 46px;
-    clear: both;
-    text-align: center;
-}
+    i.fa {
+        display: block;
+        font-size: 46px;
+        clear: both;
+        text-align: center;
+    }
 
-.filesystem span {
-    text-align: center;
-}
+    span {
+        text-align: center;
+    }
 
-.filesystem a:hover span {
-    text-decoration: underline;
+    a:hover span {
+        text-decoration: underline;
+    }
 }
 
 #additional-upload-option {
     padding-left: 5px;
     display: none;
+
+    &.visible {
+        display:inline;
+    }
 }
 
-#additional-upload-option.visible {
-    display:inline;
-}
 
 @media (max-width: 480px) {
     .hidden-sm, #additional-upload-option.hidden-sm {

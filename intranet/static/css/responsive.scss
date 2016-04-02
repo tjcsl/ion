@@ -2,57 +2,61 @@
 
 
 @media (max-width: 960px) {
-/* make the right widgets smaller */
-    .main div.widgets {
-        width: 300px;
-    }
+    /* make the right widgets smaller */
+    .main {
+        div.widgets {
+            width: 300px;
+        }
 
-    .main div.announcements {
-        padding-right: 316px; /* 116px less */
-    }
+        div.announcements {
+            padding-right: 316px; /* 116px less */
 
-    .main div.announcements.no-widgets {
-        padding-right: 0;
-    }
+            &.no-widgets {
+                padding-right: 0;
+            }
+        }
 
-    .main .widgets,
-    .main .announcements {
-        transition: all 0.4s ease;
-        -webkit-transition: all 0.4s ease;
-        -moz-transition: all 0.4s ease;
-        -ms-transition: all 0.4s ease;
-        -o-transition: all 0.4s ease;
+        .widgets,
+        .announcements {
+            transition: all 0.4s ease;
+            -webkit-transition: all 0.4s ease;
+            -moz-transition: all 0.4s ease;
+            -ms-transition: all 0.4s ease;
+            -o-transition: all 0.4s ease;
+        }
     }
 }
 
 @media (max-width: 800px) {
-/* move widgets above/below */
-    .main div.widgets {
-        float: none;
-        position: static;
-        height: auto;
-        width: 100%;
-        width: calc(100% - 16px);
-        margin-bottom: 10px;
-    }
+    /* move widgets above/below */
+    .main {
+        div.widgets {
+            float: none;
+            position: static;
+            height: auto;
+            width: 100%;
+            width: calc(100% - 16px);
+            margin-bottom: 10px;
 
-    .main div.widgets .widget {
-        position: relative;
-        left: 16px;
-    }
+            .widget {
+                position: relative;
+                left: 16px;
+            }
+        }
 
-    .main div.announcements {
-        padding-right: 0;
+        div.announcements {
+            padding-right: 0;
+        }
     }
 }
 
 @media (max-width: 550px) {
-    .main div.widgets .widget {
-        position: static;
-    }
-
     .main div.widgets {
         width: 100%;
+
+        .widget {
+            position: static;
+        }
     }
 
     .announcement {
@@ -68,53 +72,57 @@
     right: 120px;
     color: gray;
     z-index: -1;
-}
 
-.eighth-signup .middle .desktop-info .arrow-left {
-    position: absolute;
-    top: 20px;
-    left: -40px;
-    font-size: 30px;
-    color: gray;
-}
+    .arrow-left {
+        position: absolute;
+        top: 20px;
+        left: -40px;
+        font-size: 30px;
+        color: gray;
+    }
 
-.eighth-signup .middle .desktop-info .arrow-right {
-    position: absolute;
-    top: -20px;
-    right: 10px;
-    font-size: 30px;
-    color: gray;
+    .arrow-right {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        font-size: 30px;
+        color: gray;
+    }
 }
 
 /* EIGHTH */
 @media (max-width: 950px) {
     /* make description 250px from 430px */
-    #activity-picker div#activity-detail {
-        width: 250px;
+    #activity-picker {
+        div#activity-detail {
+            width: 250px;
+        }
+
+        .search-wrapper {
+            margin-right: 271px;
+        }
+
+        div#activity-list {
+            right: 270px;
+
+            li span.activity-sponsors {
+                margin-right: 0;
+            }
+        }
+
+        h5.stuck {
+            margin-right: 270px;
+        }
     }
 
-    #activity-picker .search-wrapper {
-        margin-right: 271px;
-    }
+    .eighth-signup {
+        .middle .desktop-info {
+            display: none;
+        }
 
-    #activity-picker div#activity-list {
-        right: 270px;
-    }
-
-    #activity-picker h5.stuck {
-        margin-right: 270px;
-    }
-
-    #activity-picker div#activity-list li span.activity-sponsors {
-        margin-right: 0px;
-    }
-
-    .eighth-signup .middle .desktop-info {
-        display: none;
-    }
-
-    .eighth-signup h5.all-header .clear-button {
-        margin-right: 20px;
+        h5.all-header .clear-button {
+            margin-right: 20px;
+        }
     }
 }
 
@@ -127,7 +135,7 @@
     width: 15%;
     height: 100%;
     z-index: 1001;
-    background-color: rgba(169, 169, 169, 0.3);
+    background-color: rgba(169, 169, 169, .3);
     cursor: pointer;
 }
 
@@ -176,12 +184,12 @@
 
     .eighth-signup .middle {
         height: 20px;
-    }
 
-    .eighth-signup .middle h2,
-    .eighth-signup .middle h4 {
-        display: inline;
-        padding-right: 5px;
+        h2,
+        h4 {
+            display: inline;
+            padding-right: 5px;
+        }
     }
 
     #activity-picker div#activity-list li span.activity-sponsors {
@@ -192,12 +200,11 @@
     .block-title .block-comments {
         display: inline-block;
         clear: left;
-    }
 
-    .block-title .block-comments > span {
-        display: none;
+        > span {
+            display: none;
+        }
     }
-
 
     .eighth-signup #activity-list h5 .clear-button {
         margin-right: 0;
@@ -205,67 +212,72 @@
 }
 
 @media (max-width: 500px) {
-   .eighth-signup .middle {
-        display: table-row;
-    }
+   .eighth-signup {
+       .middle {
+            display: table-row;
 
+            /* shrink text size */
+            .block-title {
+                display: table-cell;
+                margin: 10px 6px;
 
-    /* shrink text size */
-    .eighth-signup .middle .block-title {
-        display: table-cell;
-        margin: 10px 6px;
-    }
+                h2 {
+                    font-size: 16px;
+                }
+            }
 
-    .eighth-signup .middle .block-title h2 {
-        font-size: 16px;
-    }
+            .switch {
+                display: table-cell;
+                vertical-align: middle;
+                cursor: pointer;
 
-    .eighth-signup .middle .switch {
-        display: table-cell;
-        vertical-align: middle;
-        cursor: pointer;
-    }
+                i {
+                    font-size: 25px;
+                    padding-right: 2px;
 
-    .eighth-signup .middle .switch i {
-        font-size: 25px;
-        padding-right: 2px;
-    }
+                    &.down {
+                        opacity: 1;
+                        display: inline;
+                    }
 
-    .eighth-signup.viewing .middle .switch i.down {
-        opacity: 0;
-        display: none;
-    }
+                    &.up {
+                        opacity: 0;
+                        display: none;
+                    }
+                }
+            }
+        }
 
-    .eighth-signup.viewing .middle .switch i.up {
-        opacity: 1;
-        display: inline;
-    }
+        &.viewing {
+            margin-top: -120px;
 
-    .eighth-signup .middle .switch i.down {
-        opacity: 1;
-        display: inline;
-    }
+            .middle .switch {
+                i.down {
+                    opacity: 0;
+                    display: none;
+                }
 
-    .eighth-signup .middle .switch i.up {
-        opacity: 0;
-        display: none;
-    }
+                i.up {
+                    opacity: 1;
+                    display: inline;
+                }
+            }
+        }
 
-    .eighth-signup.viewing {
-        margin-top: -120px;
-    }
+        #activity-list {
+            /* increase padding on activity list */
+            li {
+                padding: 3px;
 
-    /* increase padding on activity list */
-    .eighth-signup #activity-list li {
-        padding: 3px;
-    }
+                &.search-hide {
+                    padding: 0;
+                }
+            }
 
-    .eighth-signup #activity-list li.search-hide {
-        padding: 0;
-    }
-
-    .eighth-signup #activity-list .activity-ids {
-        display: none;
+            .activity-ids {
+                display: none;
+            }
+        }
     }
 
     /* padding goes away */
@@ -275,11 +287,11 @@
 }
 
 @media (max-width: 430px) {
-
     .eighth-signup .middle .switch {
-/*        position: absolute;
-        right: 26px;*/
-
+        /*
+        position: absolute;
+        right: 26px;
+        */
     }
 }
 
@@ -289,6 +301,7 @@
         font-size: 25px;
     }
 }
+
 @media (max-width: 359px) {
     #activity-picker .backbtn > i {
         left: 5px;
@@ -307,10 +320,7 @@
     -o-transition: all 0.2s ease;
 }
 
-
-
 /* EIGHTH ADMIN UI */
-
 @media (max-width: 695px) {
     /* flatten table */
     .admin-dashboard td.admin-section {

@@ -1,7 +1,7 @@
 body {
     margin-top: 40px;
     padding: 16px 26px 10px 26px;
-    /* min-width: 1000px; */
+    //min-width: 1000px;
 }
 
 .header {
@@ -13,20 +13,20 @@ body {
     height: 40px;
     line-height: 40px;
     color: white;
-    /* min-width: 1052px; */
+    //min-width: 1052px;
 
-    /*background: rgb(25,73,139);*/
+    //background: rgb(25, 73, 139);
     background: rgb(72, 72, 72);
 }
 
-.badge-link, .badge-link:active, .badge-link:visited, .badge-link:hover {
-    color: white;
-    text-decoration: none;
-}
-
-.header .right {
-    -webkit-user-select: none;
-    user-select: none;
+.badge-link {
+    &,
+    &:active,
+    &:visited,
+    &:hover {
+        color: white;
+        text-decoration: none;
+    }
 }
 
 h1 {
@@ -35,108 +35,115 @@ h1 {
     margin: 6px 30px 9px 0;
 }
 
-.header .logo {
-    background-image: url("/static/img/logos/Header-Logo.svg");
-    background-size: auto 25px;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 40px;
-    height: 40px;
-    margin-left: 7px;
-    float: left;
-    z-index: 1043;
-}
+.header {
+    .right {
+        -webkit-user-select: none;
+        user-select: none;
+    }
 
-.no-svg .header .logo {
-  background-image: url("/static/img/logos/Header-Logo@2x.png");
-  background-size: 30px 30px;
-}
+    .logo {
+        background-image: url("/static/img/logos/Header-Logo.svg");
+        background-size: auto 25px;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 40px;
+        height: 40px;
+        margin-left: 7px;
+        float: left;
+        z-index: 1043;
 
+        .no-svg & {
+            background-image: url("/static/img/logos/Header-Logo@2x.png");
+            background-size: 30px 30px;
+        }
+    }
 
-.header .search {
-    position: absolute;
-    display: inline-block;
-    overflow: hidden;
-    height: 24px;
-    top: 8px;
-    background-color: rgba(255, 255, 255, 0.08);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    line-height: 20px;
-    behavior: url(/static/js/PIE/PIE.htc);
-    z-index: 1042;
-}
+    .search {
+        position: absolute;
+        display: inline-block;
+        overflow: hidden;
+        height: 24px;
+        top: 8px;
+        background-color: rgba(255, 255, 255, .08);
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        line-height: 20px;
+        behavior: url(/static/js/PIE/PIE.htc);
+        z-index: 1042;
 
-.header .search-button {
-    font-family: "FontAwesome";
-    font-size: 13px;
-    padding: 0 8px;
-    float: right;
-    border: none;
-    box-shadow: none;
-    -webkit-border-radius: 0;
-    border-radius: 0;
-    text-shadow: none;
-    margin: 0;
-    height: 24px;
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-}
+        input[type="text"] {
+            -moz-appearance: none;
+            background-color: transparent;
+            border: none;
+            height: 100%;
+            width: 300px;
+            line-height: 24px;
+            margin: 0 0 0 3px;
+            padding: 0 0 0 5px;
+            vertical-align: middle;
+            font-family: "Open Sans", sans-serif;
+            font-size: 13px;
+            color: white;
+            box-shadow: none;
+            float: left;
+            z-index: 1042;
 
-.header .search-button:hover, .search-button:active, .search-button:focus {
-    color: white;
-    background: rgba(255, 255, 255, 0.3);
-}
+            &:focus {
+                outline: none;
+            }
+        }
+    }
 
-.header .search input[type="text"]{
-    -moz-appearance: none;
-    background-color: transparent;
-    border: none;
-    height: 100%;
-    width: 300px;
-    line-height: 24px;
-    margin: 0 0 0 3px;
-    padding: 0 0 0 5px;
-    vertical-align: middle;
-    font-family: "Open Sans", sans-serif;
-    font-size: 13px;
-    color: white;
-    box-shadow: none;
-    float: left;
-    z-index: 1042;
-}
+    .search-button {
+        font-family: "FontAwesome";
+        font-size: 13px;
+        padding: 0 8px;
+        float: right;
+        border: none;
+        box-shadow: none;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        text-shadow: none;
+        margin: 0;
+        height: 24px;
+        color: white;
+        background: rgba(255, 255, 255, .1);
 
-.header .search input[type="text"]:focus {
-    outline: none;
-}
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+            background: rgba(255, 255, 255, .3);
+        }
+    }
 
-.header .badged-item {
-    display: inline-block;
-    position: relative;
-    padding: 0 10px;
-    line-height: normal;
-}
+    .badged-item {
+        display: inline-block;
+        position: relative;
+        padding: 0 10px;
+        line-height: normal;
 
-.header .badged-item .absence-icon {
-    position: relative;
-    display: inline-block;
-    font-size: 17px;
-    top: 1px;
-    line-height: normal;
-    text-align: center;
-    width: 16px;
-}
+        .absence-icon {
+            position: relative;
+            display: inline-block;
+            font-size: 17px;
+            top: 1px;
+            line-height: normal;
+            text-align: center;
+            width: 16px;
+        }
 
+        .dropdown-menu .absence-notification-icon {
+            float: left;
+            margin: 5px 20px 50px 5px;
+        }
+    }
 
-.header .badge-wrapper {
-    display: inline-block;
-    line-height: normal;
-}
-
-.header .badged-item .dropdown-menu .absence-notification-icon {
-    float: left;
-    margin: 5px 20px 50px 5px;
+    .badge-wrapper {
+        display: inline-block;
+        line-height: normal;
+    }
 }
 
 .badge {
@@ -159,49 +166,49 @@ h1 {
     font-weight: bold;
 
     /* Non-flat UI */
-    /*text-shadow: 0 1px 0 rgb(173, 2, 11);*/
-    /*box-shadow: 0 1px 0 rgb(4,33,71);*/
+    //text-shadow: 0 1px 0 rgb(173, 2, 11);
+    //box-shadow: 0 1px 0 rgb(4, 33, 71);
 
     behavior: url("/static/js/PIE/PIE.htc");
-}
 
-.badge.red {
-    background-color: rgb(255, 72, 72);
-}
+    &.red {
+        background-color: rgb(255, 72, 72);
+    }
 
-.badge.darkred {
-    background-color: rgb(181, 0, 0);
-}
+    &.darkred {
+        background-color: rgb(181, 0, 0);
+    }
 
-.badge.purple {
-    background-color: rgb(175, 0, 175);
-}
+    &.purple {
+        background-color: rgb(175, 0, 175);
+    }
 
-.badge.green {
-    background-color: rgb(55, 179, 113);
-}
+    &.green {
+        background-color: rgb(55, 179, 113);
+    }
 
-.badge.yellow {
-    background-color: rgb(234, 234, 13);
-    color: black;
-}
+    &.yellow {
+        background-color: rgb(234, 234, 13);
+        color: black;
+    }
 
-.badge.orange {
-    background-color: rgb(255, 194, 81);
-    color: black;
-}
+    &.orange {
+        background-color: rgb(255, 194, 81);
+        color: black;
+    }
 
-.badge.blue {
-    background-color: rgb(66, 66, 206);
-}
+    &.blue {
+        background-color: rgb(66, 66, 206);
+    }
 
-.badge.lightblue {
-    background-color: rgb(0, 149, 255);
-}
+    &.lightblue {
+        background-color: rgb(0, 149, 255);
+    }
 
-.badge.cancelled-badge {
-    font-size: 15px;
-    padding: 4px;
+    &.cancelled-badge {
+        font-size: 15px;
+        padding: 4px;
+    }
 }
 
 @media print {
@@ -260,20 +267,20 @@ h1 {
     position: relative;
     padding: 0 10px 0 0;
     line-height: normal;
-}
 
-.header .username .fa-user {
-    margin-right: 1px;
+    .fa-user {
+        margin-right: 1px;
 
-    font-size: 17px;
-    top: 1px;
+        font-size: 17px;
+        top: 1px;
+    }
 }
 
 .header .dropdown-menu {
     display: none;
     opacity: 0;
     position: absolute;
-    color: rgb(72,72,72);
+    color: rgb(72, 72, 72);
     background-color: white;
     top: 10px;
     margin-top: 35px;
@@ -283,12 +290,40 @@ h1 {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    /*border: 1px solid rgb(129, 129, 129);*/
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    //border: 1px solid rgb(129, 129, 129);
     cursor: auto;
     list-style: none;
     z-index: 999;
     min-width: 140px;
+
+    li {
+        white-space: nowrap;
+    }
+
+    a {
+        color: rgb(72, 72, 72);
+        display: block;
+
+        &:hover {
+            text-decoration: none;
+            color: rgb(150, 150, 150);
+        }
+
+        &.feedback {
+            color: green;
+
+            &:hover {
+                color: rgb(0, 200, 0);
+            }
+        }
+    }
+
+    /*
+    i {
+        font-size: 16px;
+    }
+    */
 }
 
 .header .badged-item, .username {
@@ -307,7 +342,7 @@ h1 {
 .header .dropdown-open .dropdown-item-wrapper,
 .dropdown-item-wrapper:hover,
 .badged-item:not(.has-dropdown):hover {
-    /*background-color: rgb(14,60,120);*/
+    //background-color: rgb(14, 60, 120);
     background-color: rgba(0, 0, 0, .2);
 }
 
@@ -318,37 +353,11 @@ ul.dropdown-menu.absence-notification {
     width: 400px;
     height: 65px;
     margin-top: 20px;
-}
 
-ul.dropdown-menu.absence-notification .arrow {
-    right: 30px;
+    .arrow {
+        right: 30px;
+    }
 }
-
-.header .dropdown-menu li {
-    white-space: nowrap;
-}
-
-.header .dropdown-menu a {
-    color: rgb(72,72,72);
-    display: block;
-}
-
-.header .dropdown-menu a:hover {
-    text-decoration: none;
-    color: rgb(150, 150, 150);
-}
-
-.header .dropdown-menu a.feedback {
-    color:green;
-}
-
-.header .dropdown-menu a.feedback:hover {
-    color: rgb(0, 200, 0);
-}
-
-/*.header .dropdown-menu i {
-    font-size: 16px;
-}*/
 
 .header .dropdown-menu .arrow {
     display: block;
@@ -358,50 +367,53 @@ ul.dropdown-menu.absence-notification .arrow {
     border-color: transparent;
     border-width: 10px;
     border-style: solid;
-    border-bottom-color: white; /*rgb(129, 129, 129);*/
+    border-bottom-color: white;
+    //border-bottom-color: rgb(129, 129, 129);
     border-top-width: 0;
     margin-top: -20px;
     margin-left: -5px;
+
+    /*
+    &:after {
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+        border-width: 9px;
+        border-color: transparent;
+        content: " ";
+        top: 1px;
+        border-bottom-color: white;
+        border-top-width: 0;
+
+        border-style: solid;
+        margin-left: -9px;
+    }
+    */
 }
 
-/*.dropdown-menu .arrow:after {
-    position: absolute;
-    display: block;
-    width: 0;
-    height: 0;
-    border-width: 9px;
-    border-color: transparent;
-    content: " ";
-    top: 1px;
-    border-bottom-color: white;
-    border-top-width: 0;
-
-    border-style: solid;
-    margin-left: -9px;
-}*/
-
 .header .notifications .dropdown-menu .arrow {
-    /*width: 200px;*/
+    //width: 200px;
     right: 30px;
 
 }
 
 .header .username .dropdown-menu .arrow {
-    /*width: 150px;*/
+    //width: 150px;
     right: 40px;
 }
 
 .header .dropdown-menu a {
     line-height: 2em;
     padding: 0 10px;
+
+    > i.fa-user {
+        margin-right: 0;
+    }
 }
 
 .header .dropdown-menu i {
     width: 14px; /* line up */
-}
-
-.header .dropdown-menu a > i.fa-user {
-    margin-right: 0;
 }
 
 .user-name {
@@ -421,60 +433,60 @@ ul.dropdown-menu.absence-notification .arrow {
     margin-bottom: 16px;
 
     behavior: url("/static/js/PIE/PIE.htc");
+
+    a {
+        display: block;
+        padding: 9px 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        cursor: pointer;
+
+        &,
+        &:active,
+        &:visited {
+            text-decoration: none;
+            color: rgb(169, 169, 169);
+        }
+
+        &:hover {
+            text-decoration: none;
+            color: rgb(72, 72, 72);
+        }
+    }
+
+    li {
+        border: 1px solid rgb(220, 220, 220);
+        //border: rgb(216, 216, 216);
+        margin: -1px -1px -1px -1px;
+        position: relative;
+        height: 64px;
+        list-style: none;
+
+        &:first-child {
+            margin-top: -2px;
+        }
+
+        &:last-child {
+            margin-bottom: -2px;
+        }
+    }
+
+    .selected {
+        background-color: rgb(252, 252, 252);
+
+        a {
+            color: rgb(72, 72, 72);
+        }
+    }
 }
 
-.nav a {
-    display: block;
-    padding: 9px 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    cursor: pointer;
-}
-
-.nav a, .nav a:active, .nav a:visited {
-    text-decoration: none;
-    color: rgb(169,169,169);
-}
-
-.nav a:hover {
-    text-decoration: none;
-    color: rgb(72,72,72);
-
-}
-
-
-
-.nav li {
-    border: 1px solid rgb(220, 220, 220);/* rgb(216, 216, 216); */
-    margin: -1px -1px -1px -1px;
-    position: relative;
-    height: 64px;
-    list-style: none;
-}
-
-.nav .selected {
-    background-color: rgb(252,252,252);
-}
-
-.nav li:first-child {
-    margin-top: -2px;
-}
-
-.nav li:last-child {
-    margin-bottom: -2px;
-}
-
-
-
-/*a i {
+/*
+a i {
     margin-bottom: -1px;
-}*/
-
-.nav .selected a {
-    color: rgb(72,72,72);
 }
+*/
 
 .nav-icon {
     display: block;
@@ -491,14 +503,18 @@ ul.dropdown-menu.absence-notification .arrow {
     display: block;
     min-width: 28px;
     text-align: center;
+
+    ul.nav li a:hover & {
+        color: rgb(0, 85, 164);
+    }
 }
 
-ul.nav li a:hover .fa-nav-icon {
-    color: rgb(0, 85, 164);
-}
-
-.blank-icon, .nav .blank-icon, a:hover .blank-icon {
-    background: none;
+.blank-icon {
+    &,
+    .nav &,
+    a:hover & {
+        background: none;
+    }
 }
 
 .text-icon {
@@ -507,98 +523,99 @@ ul.nav li a:hover .fa-nav-icon {
 
 .dashboard-icon {
     background-position: 0 0;
-}
 
-.nav .selected .dashboard-icon {
-    background-position: 0 28px;
-}
+    .nav .selected & {
+        background-position: 0 28px;
+    }
 
-.nav li:not(.selected) a:hover .dashboard-icon {
-    background-position: 0 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: 0 56px;
+    }
 }
 
 .eighth-icon {
     background-position: -28px 0;
-}
 
-.nav .selected .eighth-icon {
-    background-position: -28px 28px;
-}
+    .nav .selected & {
+        background-position: -28px 28px;
+    }
 
-.nav li:not(.selected) a:hover .eighth-icon {
-    background-position: -28px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -28px 56px;
+    }
 }
 
 .events-icon {
     background-position: -56px 0;
-}
 
-.nav .selected .events-icon {
-    background-position: -56px 28px;
-}
+    .nav .selected & {
+        background-position: -56px 28px;
+    }
 
-.nav li:not(.selected) a:hover .events-icon {
-    background-position: -56px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -56px 56px;
+    }
 }
 
 .groups-icon {
     background-position: -84px 0;
-}
 
-.nav .selected .groups-icon {
-    background-position: -84px 28px;
-}
+    .nav .selected & {
+        background-position: -84px 28px;
+    }
 
-.nav li:not(.selected) a:hover .groups-icon {
-    background-position: -84px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -84px 56px;
+    }
 }
 
 .polls-icon {
     background-position: -112px 0;
-}
 
-.nav .selected .polls-icon {
-    background-position: -112px 28px;
-}
+    .nav .selected & {
+        background-position: -112px 28px;
+    }
 
-.nav li:not(.selected) a:hover .polls-icon {
-    background-position: -112px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -112px 56px;
+    }
 }
 
 .files-icon {
     background-position: -140px 0;
-}
 
-.nav .selected .files-icon {
-    background-position: -140px 28px;
-}
+    .nav .selected & {
+        background-position: -140px 28px;
+    }
 
-.nav li:not(.selected) a:hover .files-icon {
-    background-position: -140px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -140px 56px;
+    }
 }
 
 .help-icon {
     background-position: -168px 0;
-}
 
-.nav .selected .help-icon {
-    background-position: -168px 28px;
-}
+    .nav .selected & {
+        background-position: -168px 28px;
+    }
 
-.nav li:not(.selected) a:hover .help-icon {
-    background-position: -168px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -168px 56px;
+    }
 }
 
 .print-icon {
     background-position: -196px 0;
-}
 
-.nav .selected .print-icon {
-    background-position: -196px 28px;
-}
+    .nav .selected & {
+        background-position: -196px 28px;
+    }
 
-.nav li:not(.selected) a:hover .print-icon {
-    background-position: -196px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -196px 56px;
+    }
+
 }
 
 .info-icon {
@@ -645,7 +662,7 @@ ul.nav li a:hover .fa-nav-icon {
     line-height: 15px;
     text-align: center;
 
-    background-color: rgb(215,215,215);
+    background-color: rgb(215, 215, 215);
 
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -653,7 +670,6 @@ ul.nav li a:hover .fa-nav-icon {
 
     behavior: url("/static/js/PIE/PIE.htc");
 }
-
 
 .messenger button {
     text-shadow: none;
@@ -664,30 +680,33 @@ ul.messenger.messenger-fixed.messenger-on-top {
     top: 50px!important;
 }
 
-.selectize-control.single .selectize-input, .selectize-dropdown.single {
-    border: 1px solid rgb(221, 221, 221)!important;
-    border-bottom-color: rgb(197, 197, 197)!important;
+.selectize-control.single .selectize-input,
+.selectize-dropdown.single {
+    border: 1px solid rgb(221, 221, 221) !important;
+    border-bottom-color: rgb(197, 197, 197) !important;
 }
 
-.selectize-control.single .selectize-input {
-    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
-    box-shadow: 0 1px 0 rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+.selectize-control {
+    &.single .selectize-input {
+        -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .05), inset 0 1px 0 rgba(255, 255, 255, .8);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, .05), inset 0 1px 0 rgba(255, 255, 255, .8);
 
-    /* Generated by http://www.colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100;Button */
-    background: #f7f7f4; /* Old browsers */
-    background: -moz-linear-gradient(top,  rgb(247,247,244) 0%, rgb(234,234,234) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(247,247,244)), color-stop(100%,rgb(234,234,234))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgb(247,247,244) 0%,rgb(234,234,234) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgb(247,247,244) 0%,rgb(234,234,234) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgb(247,247,244) 0%,rgb(234,234,234) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgb(247,247,244) 0%,rgb(234,234,234) 100%); /* W3C */
-    /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea',GradientType=0 );*/ /* IE6-9 */ /* Conflicts with CSS3PIE */
+        /* Generated by http://www.colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100;Button */
+        background: #f7f7f4; /* Old browsers */
+        background: -moz-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(247, 247, 244)), color-stop(100%, rgb(234, 234, 234))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* IE10+ */
+        background: linear-gradient(to bottom,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* W3C */
+        /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea',GradientType=0 );*/ /* IE6-9 */ /* Conflicts with CSS3PIE */
 
-}
+    }
 
-.selectize-control.multi .selectize-input {
-    /* Fixes weird space at bottom*/
-    overflow: inherit;
+    &.multi .selectize-input {
+        /* Fixes weird space at bottom*/
+        overflow: inherit;
+    }
 }
 
 .please-wait {
