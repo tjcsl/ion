@@ -33,7 +33,7 @@ def nav_categorizer(request):
         (r"^/eighth", "eighth"),
         (r"^/events", "events"),
         (r"^/files", "files"),
-        (r"^/printing", "files"),
+        (r"^/printing", "printing"),
         (r"^/groups", "groups"),
         (r"^/polls", "polls"),
         (r"^/board", "board")
