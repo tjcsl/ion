@@ -934,6 +934,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('eighth')
 
     @property
+    def has_print_permission(self):
+        """Checks if user has the admin permission 'printing'
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission('printing')
+
+    @property
     def is_ldap_admin(self):
         """Checks if user is an LDAP admin.
 
