@@ -1,0 +1,135 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ block.super }} - Activity Statistics: {{ activity }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    <style>
+    #members-table tr td:last-child
+    {
+        text-align:right;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
+    <script type="text/javascript">
+        Chart.defaults.global.customTooltips = function(tooltip) {
+            var tooltipEl = $('#chartjs-tooltip');
+            if (!tooltip) {
+                tooltipEl.css({
+                    opacity: 0
+                });
+            return;
+            }
+            tooltipEl.removeClass('above below');
+            tooltipEl.addClass(tooltip.yAlign);
+            tooltipEl.html(tooltip.text);
+            var top;
+            if (tooltip.yAlign == 'above') {
+                top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
+            } else {
+                top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
+            }
+            tooltipEl.css({
+                opacity: 1,
+                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+                top: tooltip.chart.canvas.offsetTop + top + 'px',
+                fontFamily: tooltip.fontFamily,
+                fontSize: tooltip.fontSize,
+                fontStyle: tooltip.fontStyle,
+            });
+        };
+        $(document).ready(function() {
+            var items = $("#members-table tbody tr:lt(10)");
+            if (items.length > 2) {
+                $("#members-chart").show();
+                canvas = $("#members-chart")[0];
+                canvas.width = 400;
+                canvas.height = 300;
+                var data = {
+                    labels: $.map(items.find("td:first-child"), function(e) { return $(e).text(); }),
+                    datasets: [
+                        {
+                            label: "Signups",
+                            fillColor: "rgba(151,187,205,0.5)",
+                            strokeColor: "rgba(151,187,205,0.8)",
+                            highlightFill: "rgba(151,187,205,0.75)",
+                            highlightStroke: "rgba(151,187,205,1)",
+                            data: $.map(items.find("td:last-child"), function(e) { return $(e).text(); })
+                        }
+                    ]
+                };
+                chart = new Chart(canvas.getContext("2d")).Bar(data, {
+                    animation: false
+                });
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header" style="width: 200px">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+
+
+    <a href="{% url 'eighth_signup' %}" class="button">
+        <i class="fa fa-arrow-left"></i> Sign Up
+    </a>
+
+    {% if request.user.is_eighth_admin %}
+        <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">
+            Edit Activity
+        </a>
+    {% endif %}
+
+    <a class="button" href="{% url 'eighth_activity' activity.id %}">
+        View Activity
+    </a>
+
+    <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
+
+    <h3>Activity Information</h3>
+
+    <b>Total blocks:</b> {{ total_blocks }}<br />
+    <b>Total signups:</b> {{ total_signups }}<br />
+    <b>Average signups:</b> {{ average_signups }}<br />
+
+    <br />
+
+    <h3>Member Signups</h3>
+
+    <canvas id="members-chart" style="display:none"></canvas>
+    <div id="chartjs-tooltip"></div>
+
+    <table id="members-table" class="fancy-table">
+        <thead>
+            <tr><th>Student</th><th>Total Signups</th></tr>
+        </thead>
+        <tbody>
+            {% for user, signups in members %}
+                <tr><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
+                {% empty %}
+                <tr><td colspan="2">No one has signed up for this activity yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br />
+    The statistics shown on this page are not guaranteed to be accurate.
+    <br />
+</div>
+{% endblock %}

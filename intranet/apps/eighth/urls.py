@@ -37,6 +37,7 @@ urlpatterns = [
 
     # Activity Info (for students/teachers)
     url(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
+    url(r"^/activity/statistics/(?P<activity_id>\d+)$", activities.statistics_view, name="eighth_statistics"),
 
     # Admin
     url(r"^/admin$", general.eighth_admin_dashboard_view, name="eighth_admin_dashboard"),
