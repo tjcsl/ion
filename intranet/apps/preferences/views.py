@@ -94,7 +94,7 @@ def save_personal_info(request, user):
                 else:
                     logger.debug("{}: new: {} from: {}".format(field, fields[field], personal_info[field] if field in personal_info else None))
                     if field in single_fields:
-                        if len(fields[field]) < 1:
+                        if len(str(fields[field])) < 1:
                             logger.debug("Field {} with blank value becomes None".format(field))
                             fields[field] = None
 
@@ -105,7 +105,7 @@ def save_personal_info(request, user):
                             logger.debug("Field {} with value {}: {}".format(field, fields[field], e))
                         else:
                             try:
-                                if fields[field] is None or len(fields[field]) < 1:
+                                if fields[field] is None or len(str(fields[field])) < 1:
                                     pass
                                 else:
                                     messages.success(request, "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list)
