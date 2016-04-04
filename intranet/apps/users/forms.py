@@ -2,6 +2,7 @@
 from django import forms
 from ..preferences.fields import PhoneField
 
+
 class ProfileEditForm(forms.Form):
     """A form containing editable fields in the User model."""
     admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea)

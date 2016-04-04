@@ -104,5 +104,3 @@ class NotificationOptionsForm(forms.Form):
 
         self.fields["receive_news_emails"] = flag("Receive News Emails", False)
         self.fields["receive_eighth_emails"] = flag("Receive Eighth Period Emails", False)
-
-
