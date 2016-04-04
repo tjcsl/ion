@@ -20,7 +20,7 @@ class PersonalInformationForm(forms.Form):
         self.num_webpages = max(num_fields["webpages"], 1)
 
         for i in range(self.num_phones):
-            self.fields["other_phone_{}".format(i)] = PhoneField(max_length=10, required=False, label="Other phone(s)")
+            self.fields["other_phone_{}".format(i)] = PhoneField(required=False, label="Other phone(s)")
 
         for i in range(self.num_emails):
             self.fields["email_{}".format(i)] = forms.EmailField(required=False, label="Email(s)")
@@ -28,8 +28,8 @@ class PersonalInformationForm(forms.Form):
         for i in range(self.num_webpages):
             self.fields["webpage_{}".format(i)] = forms.URLField(required=False, label="Webpage(s)")
 
-    mobile_phone = PhoneField(max_length=10, required=False, label="Mobile phone")
-    home_phone = PhoneField(max_length=10, required=False, label="Home phone")
+    mobile_phone = PhoneField(required=False, label="Mobile phone")
+    home_phone = PhoneField(required=False, label="Home phone")
 
 
 class PreferredPictureForm(forms.Form):
