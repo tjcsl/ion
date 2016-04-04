@@ -21,9 +21,7 @@ class PhoneField(forms.Field):
         "Returns a Unicode object."
         if value in self.empty_values:
             return ''
-        value = force_text(value)
-        if self.strip:
-            value = value.strip()
+        value = force_text(value).strip()
         return value
 
     def widget_attrs(self, widget):
