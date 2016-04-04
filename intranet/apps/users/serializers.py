@@ -86,9 +86,9 @@ class UserSerializer(serializers.ModelSerializer):
     user_type = serializers.CharField(max_length=100)
     graduation_year = serializers.IntegerField()
     emails = serializers.ListField(child=serializers.CharField(max_length=500))
-    home_phone = serializers.CharField(max_length=10)
-    mobile_phone = serializers.CharField(max_length=10)
-    other_phones = serializers.ListField(child=serializers.CharField(max_length=10))
+    home_phone = serializers.CharField(max_length=17)
+    mobile_phone = serializers.CharField(max_length=17)
+    other_phones = serializers.ListField(child=serializers.CharField(max_length=17))
     webpages = serializers.ListField(child=serializers.CharField(max_length=300))
     picture = HyperlinkedImageField(view_name="api_user_profile_picture_default", format="jpg")
 
