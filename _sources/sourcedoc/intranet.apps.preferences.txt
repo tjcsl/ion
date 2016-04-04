@@ -4,6 +4,14 @@ intranet.apps.preferences package
 Submodules
 ----------
 
+intranet.apps.preferences.fields module
+---------------------------------------
+
+.. automodule:: intranet.apps.preferences.fields
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.preferences.forms module
 --------------------------------------
 
