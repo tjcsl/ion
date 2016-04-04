@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from ..preferences.fields import PhoneField
 
 
 class ProfileEditForm(forms.Form):
@@ -15,7 +16,7 @@ class ProfileEditForm(forms.Form):
     graduation_year = forms.IntegerField(label="Graduation Year")
     sex = forms.CharField(label="Sex (M or F)")
     birthday = forms.DateField(label="Birth Date")
-    home_phone = forms.CharField(label="Home Phone")
+    home_phone = PhoneField(label="Home Phone")
 
     street = forms.CharField(label="Street")
     city = forms.CharField(label="City")

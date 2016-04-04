@@ -12,7 +12,7 @@ $(function() {
 
     $(".main *:horizontallyscrollable").on("touchstart", function(e) {
         var scrollPos = $(this).scrollLeft();
-        if (scrollPos != 0 && scrollPos != $(this).get(0).scrollWidth) {
+        if (scrollPos != 0) {
             e.stopPropagation();
         }
     });
@@ -37,21 +37,30 @@ $(function() {
             return;
         }
         var diffX = nowX - initX;
-        if (Math.abs(diffX) > 30) {
+        if (diffX > 30) {
             var nav = $(".main > .nav").eq(0);
             var g = $(".nav-g");
+            // get css left, remove px ending if it exists, and check if 0 (-202px if hidden)
             var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
-            if (diffX > 0 && !shown) {
+            if (!shown) {
                 nav.animate({ left: "0px" }, 200);
                 g.addClass("close-l").fadeIn(200);
                 $("body").addClass("disable-scroll").addClass("mobile-nav-show");
+                $(".c-hamburger").addClass("is-active");
+                listening = false;
             }
-            else if (shown) {
+        } else if (diffX < -30) {
+            var nav = $(".main > .nav").eq(0);
+            var g = $(".nav-g");
+            // get css left, remove px ending if it exists, and check if 0 (-202px if hidden)
+            var shown = nav.css('left').split(/[^\-\d]+/)[0] == 0;
+            if (shown) {
                 nav.animate({ left: "-202px" }, 200);
                 g.removeClass("close-l").fadeOut(200);
                 $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
+                $(".c-hamburger").removeClass("is-active");
+                listening = false;
             }
-            listening = false;
         }
     });
 });

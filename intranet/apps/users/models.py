@@ -364,6 +364,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         hash = hashlib.sha1(signed.encode())
         return hash.hexdigest()
 
+    @staticmethod
+    def get_signage_user():
+        return User(id=99999)
+
     def member_of(self, group):
         """Returns whether a user is a member of a certain group.
 
@@ -499,6 +503,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             Grade object
 
         """
+        if not self.dn:
+            return None
         key = ":".join([self.dn, 'grade'])
 
         cached = cache.get(key)
@@ -757,7 +763,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             visible = visible_self and visible_parent
 
         if cached and visible:
-            logger.debug("{} photo of user {} loaded " "from cache.".format(photo_year.title(), self.id))
+            logger.debug("{} photo of user {} loaded from cache.".format(photo_year.title(), self.id))
             return cached
         elif not cached and visible:
             c = LDAPConnection()
@@ -766,6 +772,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 results = c.search(dn, "(objectClass=iodinePhoto)", ['jpegPhoto'])
                 if len(results) == 1:
                     data = results[0]['attributes']['jpegPhoto'][0]
+                    logger.debug("{} photo of user {} loaded from LDAP.".format(photo_year.title(), self.id))
                 else:
                     data = None
             except (ldap3.LDAPNoSuchObjectResult, KeyError):
@@ -927,6 +934,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('eighth')
 
     @property
+    def has_print_permission(self):
+        """Checks if user has the admin permission 'printing'
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission('printing')
+
+    @property
     def is_ldap_admin(self):
         """Checks if user is an LDAP admin.
 
@@ -1086,7 +1104,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
             requesting_user_id = request.user.id
-            auth_backend = request.user.backend
+            auth_backend = request.session["_auth_user_backend"]
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
             return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
