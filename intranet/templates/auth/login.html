@@ -9,7 +9,7 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-    {% if login_warning or True %}
+    {% if login_warning %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/emerg.css' %}" />
     {% endif %}
     {% if bg_pattern %}
@@ -29,16 +29,18 @@
     <script type="text/javascript" src="{% static 'js/vendor/spin.min.js' %}"></script>
 {% endblock %}
 
-{% block bodyclass %} login-page{% if login_warning or True %} has-login-warning{% endif %}{% endblock %}
+{% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
 
 {% block body %}
     <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}">
         {% if login_warning %}
             <div class="login-warning">{{ login_warning|safe }}</div>
         {% endif %}
+        {% comment %}
         <div class="login-warning">
             {% include "board/login_text.html" %}
         </div>
+        {% endcomment %}
         <div class="center">
             <div class="login">
                     <div class="title">

@@ -20,15 +20,17 @@ ONLY_REACTIONS = True
 def can_view_board(request, course_id=None, section_id=None):
     if request.user.has_admin_permission("board"):
         return True
-    if course_id:
-        return request.user.ionldap_courses.filter(course_id=course_id).count() > 0
-    elif section_id:
-        return request.user.ionldap_courses.filter(section_id=section_id).count() > 0
+    #if course_id:
+    #    return request.user.ionldap_courses.filter(course_id=course_id).count() > 0
+    #elif section_id:
+    #    return request.user.ionldap_courses.filter(section_id=section_id).count() > 0
 
 
 @login_required
 def home(request):
     """The homepage, showing all board posts available to you."""
+    if not request.user.has_admin_permission("board"):
+        return redirect("/")
 
     classes = request.user.ionldap_courses or []
     course_ids = [c.course_id for c in classes]
