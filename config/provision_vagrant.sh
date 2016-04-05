@@ -9,7 +9,7 @@ f.close()"
 }
 
 apt-get update
-
+apt-get -y dist-upgrade
 # Timezone
 timedatectl set-timezone America/New_York
 
