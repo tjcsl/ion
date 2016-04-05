@@ -20,12 +20,14 @@
     {% stylesheet 'dashboard' %}
     {% stylesheet 'dashboard.widgets' %}
     {% stylesheet 'schedule' %}
-    {% stylesheet 'schedule.widgets' %}
+    {% stylesheet 'schedule.widget' %}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
-    {% include "dashboard/gcm_setup.html" %}
+    {% if is_index_page %}
+        {% include "dashboard/gcm_notifications.html" %}
+    {% endif %}
 
     <script type="text/javascript" src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>

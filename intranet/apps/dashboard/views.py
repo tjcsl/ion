@@ -274,11 +274,14 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     if not show_expired:
         show_expired = ("show_expired" in request.GET)
 
+    is_index_page = (request.path_info in ["/", ""])
+
     context = {
         "prerender_url": get_prerender_url(request),
         "user": user,
         "announcements_admin": announcements_admin,
-        "events_admin": events_admin
+        "events_admin": events_admin,
+        "is_index_page": is_index_page
     }
 
     if announcements_admin and "show_all" in request.GET:
