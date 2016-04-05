@@ -48,7 +48,10 @@ def statistics_view(request, activity_id=None):
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
     total_signups = sum(n for _, n in signups)
-    average_signups = round(total_signups / total_blocks, 2)
+    if total_blocks != 0:
+        average_signups = round(total_signups / total_blocks, 2)
+    else:
+        average_signups = 0
 
     context = {"activity": activity, "members": signups, "total_blocks": total_blocks, "total_signups": total_signups, "average_signups": average_signups}
     return render(request, "eighth/statistics.html", context)
