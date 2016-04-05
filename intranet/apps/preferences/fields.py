@@ -12,7 +12,7 @@ class PhoneField(forms.Field):
 
     def __init__(self, *args, **kwargs):
         super(PhoneField, self).__init__(*args, **kwargs)
-        self.validators.append(validators.RegexValidator(r'^\+?1?\d{9,15}$', 'Please enter a valid phone number.'))
+        self.validators.append(validators.RegexValidator(r'^(\+?1?\d{9,15}|\bNone\b)$', 'Please enter a valid phone number.'))
 
     def to_python(self, value):
         "Returns a Unicode object."
