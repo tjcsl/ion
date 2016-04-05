@@ -1,40 +1,41 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import (EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity, EighthSignup, EighthSponsor)
 
 
-class EighthSponsorAdmin(admin.ModelAdmin):
+class EighthSponsorAdmin(SimpleHistoryAdmin):
     list_display = ('first_name', 'last_name', 'user', 'online_attendance', 'show_full_name',)
     list_filter = ('online_attendance', 'show_full_name')
     ordering = ('last_name', 'first_name')
 
 
-class EighthRoomAdmin(admin.ModelAdmin):
+class EighthRoomAdmin(SimpleHistoryAdmin):
     list_display = ('name', 'capacity',)
     ordering = ('name',)
 
 
-class EighthActivityAdmin(admin.ModelAdmin):
+class EighthActivityAdmin(SimpleHistoryAdmin):
     list_display = ('name', 'special', 'administrative', 'deleted',)
     list_filter = ('special', 'administrative', 'deleted',)
     ordering = ('name',)
 
 
-class EighthBlockAdmin(admin.ModelAdmin):
+class EighthBlockAdmin(SimpleHistoryAdmin):
     list_display = ('date', 'block_letter', 'comments', 'signup_time', 'locked')
     list_filter = ('locked',)
     ordering = ('date', 'block_letter')
 
 
-class EighthScheduledActivityAdmin(admin.ModelAdmin):
+class EighthScheduledActivityAdmin(SimpleHistoryAdmin):
     list_display = ('activity', 'block', 'comments', 'admin_comments', 'cancelled')
     list_filter = ('block', 'cancelled',)
     ordering = ('block', 'activity')
 
 
-class EighthSignupAdmin(admin.ModelAdmin):
+class EighthSignupAdmin(SimpleHistoryAdmin):
 
     def get_activity(self, obj):
         return obj.scheduled_activity.activity
