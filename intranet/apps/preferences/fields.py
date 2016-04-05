@@ -22,5 +22,6 @@ class PhoneField(forms.Field):
         return value
 
     def widget_attrs(self, widget):
+        # Max phone number is 15, and US numbers can start with +1, so max length is 17
         attrs = {"maxlength": "17"}
         return attrs
