@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
@@ -36,9 +36,20 @@ def statistics_view(request, activity_id=None):
 
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
+    now = datetime.now().date()
+    if now.month < 9:
+        date_start = date(now.year - 1, 9, 1)
+    else:
+        date_start = date(now.year, 9, 1)
+
     signups = {}
 
+    old_blocks = 0
+
     for a in activities:
+        if date_start > a.block.date:
+            old_blocks += 1
+            continue
         for user in a.members.all():
             if user in signups:
                 signups[user] += 1
@@ -48,10 +59,10 @@ def statistics_view(request, activity_id=None):
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
     total_signups = sum(n for _, n in signups)
-    if total_blocks != 0:
+    if total_blocks:
         average_signups = round(total_signups / total_blocks, 2)
     else:
         average_signups = 0
 
-    context = {"activity": activity, "members": signups, "total_blocks": total_blocks, "total_signups": total_signups, "average_signups": average_signups}
+    context = {"activity": activity, "members": signups, "total_blocks": total_blocks, "total_signups": total_signups, "average_signups": average_signups, "old_blocks": old_blocks}
     return render(request, "eighth/statistics.html", context)
