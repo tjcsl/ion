@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, get_date_range_this_year
 from ...auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
@@ -36,25 +36,21 @@ def statistics_view(request, activity_id=None):
 
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
-    now = datetime.now().date()
-    if now.month < 9:
-        date_start = date(now.year - 1, 9, 1)
-    else:
-        date_start = date(now.year, 9, 1)
+    date_start, date_end = get_date_range_this_year()
 
     signups = {}
 
     old_blocks = 0
 
     for a in activities:
-        if date_start > a.block.date:
+        if date_start < a.block.date < date_end:
+            for user in a.members.all():
+                if user in signups:
+                    signups[user] += 1
+                else:
+                    signups[user] = 1
+        else:
             old_blocks += 1
-            continue
-        for user in a.members.all():
-            if user in signups:
-                signups[user] += 1
-            else:
-                signups[user] = 1
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
