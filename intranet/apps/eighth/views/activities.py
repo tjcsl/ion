@@ -41,7 +41,7 @@ def statistics_view(request, activity_id=None):
     old_blocks = 0
 
     for a in activities:
-        if a.block.is_this_year():
+        if a.block.is_this_year:
             for user in a.members.all():
                 if user in signups:
                     signups[user] += 1
