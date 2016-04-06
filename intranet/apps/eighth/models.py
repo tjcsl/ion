@@ -389,15 +389,22 @@ class EighthBlockManager(models.Manager):
 
     def get_blocks_this_year(self):
         """Get a list of blocks that occur this school year."""
-        now = datetime.datetime.now().date()
-        if now.month < 9:
-            date_start = datetime.date(now.year - 1, 9, 1)
-            date_end = datetime.date(now.year, 7, 1)
-        else:
-            date_start = datetime.date(now.year, 9, 1)
-            date_end = datetime.date(now.year + 1, 7, 1)
+
+        date_start, date_end = get_date_range_this_year()
 
         return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
+
+
+def get_date_range_this_year():
+    """Return the starting and ending date of the current school year."""
+    now = datetime.datetime.now().date()
+    if now.month < 9:
+        date_start = datetime.date(now.year - 1, 9, 1)
+        date_end = datetime.date(now.year, 7, 1)
+    else:
+        date_start = datetime.date(now.year, 9, 1)
+        date_end = datetime.date(now.year + 1, 7, 1)
+    return date_start, date_end
 
 
 class EighthBlock(AbstractBaseEighthModel):
