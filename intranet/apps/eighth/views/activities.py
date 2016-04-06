@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, get_date_range_this_year
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
 from ...auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
@@ -36,14 +36,12 @@ def statistics_view(request, activity_id=None):
 
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
-    date_start, date_end = get_date_range_this_year()
-
     signups = {}
 
     old_blocks = 0
 
     for a in activities:
-        if date_start < a.block.date < date_end:
+        if a.block.is_this_year():
             for user in a.members.all():
                 if user in signups:
                     signups[user] += 1

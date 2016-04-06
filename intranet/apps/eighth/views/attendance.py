@@ -31,6 +31,7 @@ from ...auth.decorators import attendance_taker_required, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
 from ...schedule.views import decode_date
 from ...users.models import User
+from ....utils.date import get_date_range_this_year
 
 logger = logging.getLogger(__name__)
 
@@ -76,12 +77,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         if step == "block":
             show_all_blocks = ("show_all_blocks" in self.request.GET or "block" in self.request.GET)
             if show_all_blocks:
-                now = datetime.now().date()
                 """ Only show blocks after September 1st of the current school year """
-                if now.month < 9:
-                    now = datetime(now.year - 1, 9, 1).date()
-                else:
-                    now = datetime(now.year, 9, 1).date()
+                now, _ = get_date_range_this_year()
                 kwargs.update({"exclude_before_date": now})
             elif not self.request.user.is_eighth_admin:
                 now = datetime.now().date()
