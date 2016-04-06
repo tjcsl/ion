@@ -4,6 +4,14 @@ intranet.utils package
 Submodules
 ----------
 
+intranet.utils.date module
+--------------------------
+
+.. automodule:: intranet.utils.date
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.helpers module
 -----------------------------
 
