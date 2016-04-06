@@ -334,7 +334,7 @@ def admin_daytype_view(request, id=None):
 
         if id:
             daytype = DayType.objects.get(id=id)
-            logger.debug("instance:", daytype)
+            logger.debug("instance: %s", daytype)
             form = DayTypeForm(request.POST, instance=daytype)
         else:
             daytype = None
