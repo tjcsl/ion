@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import sys
 
 from pip.download import PipSession
@@ -17,7 +18,8 @@ def get_requirements():
         # FIXME: there should really be a better way to handle this...
         if dep.req.project_name not in ['gssapi', 'python-ldap-test']:
             print(dep.req, file=rtd_file)
-        if dep.markers == "python_version < '3.5'" and sys.version_info >= (3, 5):
+        # FIXME: this should be removed when we move to python 3.5
+        if dep.markers == "python_version < '3.5'" and (sys.version_info >= (3, 5) or 'TRAVIS_PYTHON_VERSION' in os.environ):
             continue
         yield dep.req
     rtd_file.close()
