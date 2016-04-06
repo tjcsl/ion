@@ -10,12 +10,9 @@ class PhoneField(forms.Field):
         'invalid': 'Please enter a valid phone number.'
     }
 
-    def __init__(self, max_length=None, *args, **kwargs):
-        self.max_length = max_length
+    def __init__(self, *args, **kwargs):
         super(PhoneField, self).__init__(*args, **kwargs)
-        self.validators.append(validators.RegexValidator(r'^[0-9]+$', 'Please enter a valid phone number.'))
-        if max_length is not None:
-            self.validators.append(validators.MaxLengthValidator(int(max_length)))
+        self.validators.append(validators.RegexValidator(r'^(\+?1?\d{9,15}|\bNone\b)$', 'Please enter a valid phone number.'))
 
     def to_python(self, value):
         "Returns a Unicode object."
@@ -25,7 +22,5 @@ class PhoneField(forms.Field):
         return value
 
     def widget_attrs(self, widget):
-        attrs = {}
-        if self.max_length is not None:
-            attrs.update({'maxlength': str(self.max_length)})
+        attrs = {"maxlength": "17"}
         return attrs
