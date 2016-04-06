@@ -4,7 +4,11 @@ window.eighthSwitchEvent = false;
 $(document).ready(function() {
     window.initEighthResponsive = function() {
         is_small = function() {
-            return $("#activity-detail").css("right").split(/[^\-\d]+/)[0] < 0;;
+            var cssRight = $("#activity-detail").css("right");
+            if (cssRight) {
+                return cssRight.split(/[^\-\d]+/)[0] < 0;
+            }
+            return false;
         }
 
         $("#activity-list li[data-activity-id]").click(function() {
