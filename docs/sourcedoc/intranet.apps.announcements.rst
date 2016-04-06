@@ -52,6 +52,14 @@ intranet.apps.announcements.serializers module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.announcements.tests module
+----------------------------------------
+
+.. automodule:: intranet.apps.announcements.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.announcements.urls module
 ---------------------------------------
 

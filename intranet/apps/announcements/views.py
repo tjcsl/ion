@@ -277,7 +277,7 @@ def modify_announcement_view(request, id=None):
 
     """
     if request.method == "POST":
-        announcement = Announcement.objects.get(id=id)
+        announcement = get_object_or_404(Announcement, id=id)
         form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
@@ -293,7 +293,7 @@ def modify_announcement_view(request, id=None):
         else:
             messages.error(request, "Error adding announcement")
     else:
-        announcement = Announcement.objects.get(id=id)
+        announcement = get_object_or_404(Announcement, id=id)
         form = AnnouncementForm(instance=announcement)
 
     context = {"form": form, "action": "modify", "id": id, "announcement": announcement}
@@ -345,7 +345,7 @@ def show_announcement_view(request):
             announcement.user_map.users_hidden.remove(request.user)
             announcement.user_map.save()
             return http.HttpResponse("Unhidden")
-        return http.Http404()
+        raise http.Http404
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
@@ -364,6 +364,6 @@ def hide_announcement_view(request):
             announcement.user_map.users_hidden.add(request.user)
             announcement.user_map.save()
             return http.HttpResponse("Hidden")
-        return http.Http404()
+        raise http.Http404
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
