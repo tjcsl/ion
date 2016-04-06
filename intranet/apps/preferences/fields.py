@@ -21,10 +21,9 @@ class PhoneField(forms.Field):
         value = force_text(value).strip()
         return value
 
-    def prepare_value(self, value):
-        if value == "None":
-            return ""
-        return value
+    @staticmethod
+    def prepare_value(value):
+        return "" if value == "None" else value
 
     def widget_attrs(self, widget):
         # Max phone number is 15, and US numbers can start with +1, so max length is 17
