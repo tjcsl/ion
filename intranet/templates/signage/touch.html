@@ -64,9 +64,10 @@
         $("a[data-link]").click(function() {
             var link = $(this).attr("data-link");
             var section = $("section#" + link);
+            //$("section").fadeOut(400);
             $("section").hide();
-            section.show();
-            
+            //section.fadeIn(400);
+            section.show();            
         });
 
         var default_page = "{{ default_page }}";
@@ -111,8 +112,9 @@
                     {% include "schedule/view.html" %}
                 </div>
             </div>
-
-            <iframe class="iframe" src="{{ eighth_url }}"></iframe>
+            <div class="iframe-wrapper"></div>
+                <iframe class="iframe" src="{{ eighth_url }}"></iframe>
+            </div>
         </section>
 
         <section id="calendar">
@@ -125,7 +127,9 @@
             </div>
 
             <div class="iframe-hide"></div>
-            <iframe class="iframe" src="{{ calendar_url }}"></iframe>
+            <div class="iframe-wrapper">    
+                <iframe class="iframe calendar" src="{{ calendar_url }}"></iframe>
+            </div>
         </section>
 
         <section id="info">
