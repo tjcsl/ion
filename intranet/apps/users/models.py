@@ -525,7 +525,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
             can_view_anyway = (requesting_user.is_teacher or requesting_user.is_eighthoffice)
-        except (AttributeError, KeyError):
+        except (AttributeError, KeyError) as e:
+            logger.error("Could not check teacher/eighth override: {}".format(e))
             can_view_anyway = False
 
         return can_view_anyway
@@ -1108,7 +1109,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
             return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
-        except (AttributeError, KeyError):
+        except (AttributeError, KeyError) as e:
+            logger.error("Could not check request sender: {}".format(e))
             return False
 
     def attribute_is_visible(self, ldap_perm_name):
