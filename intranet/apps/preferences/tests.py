@@ -15,7 +15,6 @@ class PreferencesTest(IonTestCase):
                      'showbirthday-self': ['on'],
                      'preferred_photo': ['AUTO'],
                      'other_phone_0': ['5555555555'],
-                     'showschedule-self': None,
                      'showschedule': None,
                      'showeighth-self': None,
                      'showeighth': None,
