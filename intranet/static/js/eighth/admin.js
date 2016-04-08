@@ -112,7 +112,11 @@ $(function() {
             var $checkboxes = $blocksOfType.find("input[type='checkbox']");
             // Ignore special and unschedule checkbox
             $checkboxes.each(function() {
-                if(!$(this).hasClass("special") && !$(this).hasClass("unschedule")) {
+                if(!$(this).hasClass("special") &&
+                   !$(this).hasClass("administrative") &&
+                   !$(this).hasClass("restricted") &&
+                   !$(this).hasClass("sticky") &&
+                   !$(this).hasClass("unschedule")) {
                     $(this).prop("checked", true);
                 }
             });
