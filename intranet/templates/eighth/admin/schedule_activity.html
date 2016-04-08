@@ -197,7 +197,7 @@
 
                         {% for field in form.visible_fields %}
                             {% if field.name != "cancelled" %}
-                                <td data-field="{{ field.name }}">
+                                <td data-field="{{ field.name }}"{% if field.name == 'scheduled' %} class="block-checkbox"{% endif %}>
                                 {{ field.errors }}
                                 {% if field.name == "rooms" %}
                                     <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{% if not default_rooms %}No default{% else %}{{ default_rooms|join:", " }}{% endif %}">
