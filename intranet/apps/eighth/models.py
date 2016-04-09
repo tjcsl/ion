@@ -298,20 +298,17 @@ class EighthActivity(AbstractBaseEighthModel):
         pass
 
     def get_active_schedulings(self):
-        """Return EighthScheduledActivity's of this activity within the next two months."""
-        first_block = EighthBlock.objects.get_first_upcoming_block()
-        if not first_block:
-            return None
-        two_months = datetime.datetime.now().date() + datetime.timedelta(days=62)
+        """Return EighthScheduledActivity's of this activity since the beginning of the year."""
+        blocks = EighthBlock.objects.get_blocks_this_year()
         scheduled_activities = EighthScheduledActivity.objects.filter(activity=self)
-        scheduled_activities = scheduled_activities.filter(block__date__gte=first_block.date, block__date__lte=two_months)
+        scheduled_activities = scheduled_activities.filter(block__in=blocks)
 
         return scheduled_activities
 
     @property
     def is_active(self):
-        """Return whether an activity is "active." An activity is considered to be active if it is
-        scheduled within the next two months."""
+        """Return whether an activity is "active." An activity is considered to be active if it
+           has been scheduled at all this year."""
         scheduled_activities = self.get_active_schedulings()
         return scheduled_activities and scheduled_activities.count() > 0
 
