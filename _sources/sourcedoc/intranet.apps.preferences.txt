@@ -20,6 +20,14 @@ intranet.apps.preferences.forms module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.preferences.tests module
+--------------------------------------
+
+.. automodule:: intranet.apps.preferences.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.apps.preferences.urls module
 -------------------------------------
 

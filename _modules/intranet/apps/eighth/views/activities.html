@@ -6,19 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.views.activities &mdash; TJ Intranet v3 (Build #2033) documentation</title>
+    <title>intranet.apps.eighth.views.activities &mdash; TJ Intranet v3 (Build #2042) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../',
-        VERSION:     'v3 (Build #2033)',
+        VERSION:     'v3 (Build #2042)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,10 +29,10 @@
     <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2033) documentation" href="../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2042) documentation" href="../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -185,19 +185,27 @@
 
     <span class="n">signups</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">old_blocks</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">activities</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
-                <span class="n">signups</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">signups</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">is_this_year</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">:</span>
+                    <span class="n">signups</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">signups</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">old_blocks</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">signups</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
     <span class="n">total_blocks</span> <span class="o">=</span> <span class="n">activities</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">total_signups</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">)</span>
-    <span class="n">average_signups</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_signups</span> <span class="o">/</span> <span class="n">total_blocks</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total_blocks</span><span class="p">:</span>
+        <span class="n">average_signups</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_signups</span> <span class="o">/</span> <span class="n">total_blocks</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">average_signups</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="p">,</span> <span class="s2">&quot;total_blocks&quot;</span><span class="p">:</span> <span class="n">total_blocks</span><span class="p">,</span> <span class="s2">&quot;total_signups&quot;</span><span class="p">:</span> <span class="n">total_signups</span><span class="p">,</span> <span class="s2">&quot;average_signups&quot;</span><span class="p">:</span> <span class="n">average_signups</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="n">signups</span><span class="p">,</span> <span class="s2">&quot;total_blocks&quot;</span><span class="p">:</span> <span class="n">total_blocks</span><span class="p">,</span> <span class="s2">&quot;total_signups&quot;</span><span class="p">:</span> <span class="n">total_signups</span><span class="p">,</span> <span class="s2">&quot;average_signups&quot;</span><span class="p">:</span> <span class="n">average_signups</span><span class="p">,</span> <span class="s2">&quot;old_blocks&quot;</span><span class="p">:</span> <span class="n">old_blocks</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/statistics.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 </pre></div>
 

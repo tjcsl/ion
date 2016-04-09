@@ -6,19 +6,19 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2033) documentation</title>
+    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2042) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #2033)',
+        VERSION:     'v3 (Build #2042)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,10 +29,10 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2033) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2042) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -347,10 +347,50 @@
 
 <span class="c1"># List of finder classes that know how to find static files in</span>
 <span class="c1"># various locations.</span>
-<span class="n">STATICFILES_FINDERS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;django.contrib.staticfiles.finders.FileSystemFinder&quot;</span><span class="p">,</span>
+<span class="n">STATICFILES_FINDERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;django.contrib.staticfiles.finders.FileSystemFinder&quot;</span><span class="p">,</span>
                        <span class="s2">&quot;django.contrib.staticfiles.finders.AppDirectoriesFinder&quot;</span><span class="p">,</span>
-                       <span class="c1"># &quot;django.contrib.staticfiles.finders.DefaultStorageFinder&quot;,</span>
-                       <span class="p">)</span>
+                       <span class="s1">&#39;pipeline.finders.PipelineFinder&#39;</span><span class="p">,</span>
+                       <span class="p">]</span>
+
+<span class="n">STATICFILES_STORAGE</span> <span class="o">=</span> <span class="s2">&quot;pipeline.storage.PipelineStorage&quot;</span>
+
+<span class="n">PIPELINE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;CSS_COMPRESSOR&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="s1">&#39;COMPILERS&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;pipeline.compilers.sass.SASSCompiler&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;STYLESHEETS&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;base&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;source_filenames&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;css/base.scss&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;css/themes.scss&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;css/responsive.scss&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;output_filename&#39;</span><span class="p">:</span> <span class="s1">&#39;css/base.css&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;eighth.admin&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;source_filenames&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;css/eighth.common.scss&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;css/eighth.admin.scss&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;output_filename&#39;</span><span class="p">:</span> <span class="s1">&#39;css/eighth.admin.css&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;eighth.signup&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;source_filenames&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;css/eighth.common.scss&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;css/eighth.signup.scss&#39;</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;output_filename&#39;</span><span class="p">:</span> <span class="s1">&#39;css/eighth.signup.css&#39;</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>  <span class="c1"># type: Dict[str,Any]</span>
+
+<span class="n">LIST_OF_INDEPENDENT_CSS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="s1">&#39;login&#39;</span><span class="p">,</span> <span class="s1">&#39;emerg&#39;</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="s1">&#39;schedule&#39;</span><span class="p">,</span> <span class="s1">&#39;theme.blue&#39;</span><span class="p">,</span> <span class="s1">&#39;page_base&#39;</span><span class="p">,</span> <span class="s1">&#39;responsive.core&#39;</span><span class="p">,</span> <span class="s1">&#39;search&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;dashboard&#39;</span><span class="p">,</span> <span class="s1">&#39;events&#39;</span><span class="p">,</span> <span class="s1">&#39;schedule.widget&#39;</span><span class="p">,</span> <span class="s1">&#39;dashboard.widgets&#39;</span><span class="p">,</span> <span class="s1">&#39;profile&#39;</span><span class="p">,</span> <span class="s1">&#39;polls&#39;</span><span class="p">,</span> <span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="s1">&#39;board&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;announcements.form&#39;</span><span class="p">,</span> <span class="s1">&#39;preferences&#39;</span><span class="p">,</span> <span class="s1">&#39;signage.base&#39;</span><span class="p">,</span> <span class="s1">&#39;signage.touch&#39;</span><span class="p">,</span> <span class="s1">&#39;eighth.attendance&#39;</span><span class="p">,</span> <span class="s1">&#39;eighth.profile&#39;</span><span class="p">,</span> <span class="s1">&#39;eighth.schedule&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">LIST_OF_INDEPENDENT_CSS</span><span class="p">:</span>
+    <span class="n">PIPELINE</span><span class="p">[</span><span class="s1">&#39;STYLESHEETS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">SingleCss</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
 <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;intranet.apps.auth.backends.MasterPasswordAuthenticationBackend&quot;</span><span class="p">,</span>
                            <span class="s2">&quot;intranet.apps.auth.backends.KerberosAuthenticationBackend&quot;</span><span class="p">,</span>
@@ -565,6 +605,7 @@
     <span class="s2">&quot;django_extensions&quot;</span><span class="p">,</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
     <span class="s2">&quot;maintenancemode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pipeline&quot;</span><span class="p">,</span>
     <span class="c1"># Intranet apps</span>
     <span class="s2">&quot;intranet.apps&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.announcements&quot;</span><span class="p">,</span>
