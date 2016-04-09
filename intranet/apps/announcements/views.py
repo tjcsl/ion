@@ -111,18 +111,25 @@ def request_announcement_view(request):
                     admin_request_announcement_email(request, form, ann)
                     ann.admin_email_sent = True
                     ann.save()
-
-                    messages.success(request, "Successfully added approved announcement request. An Intranet administrator "
-                                     "will review and post the announcement shortly. (Notification sent.)")
+                    return redirect("request_announcement_success_self")
+                    
                 else:
                     request_announcement_email(request, form, obj)
-                    messages.success(request, "Successfully added announcement request.")
+                    return redirect("request_announcement_success")
                 return redirect("index")
         else:
             messages.error(request, "Error adding announcement request")
     else:
         form = AnnouncementRequestForm()
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
+
+
+def request_announcement_success_view(request):
+    return render(request, "announcements/request_success.html", {})
+
+
+def request_announcement_success_self_view(request):
+    return render(request, "announcements/request_success.html", {"self_confirm": True})
 
 
 @login_required

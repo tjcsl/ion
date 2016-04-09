@@ -1,0 +1,31 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - Announcement Request
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h3>Your announcement request was submitted</h3>
+    {% if self_confirm %}
+        <p>Successfully added and self-approved your announcement request.</p>
+        <p>An Intranet administrator will review and post the announcement shortly. (An email has been sent to the administrators.)</p>
+    {% else %}
+        <p>Successfully added your announcement request.</p>
+        <p>After the teacher sponsor(s) that you entered approve the announcement posting, it will be reviewed and posted by an Intranet administrator shortly. (An email has been sent to the teacher(s).)</p>
+    {% endif %}
+    <br />
+    <a href="/" class="button"><i class="fa fa-arrow-left"></i> Dashboard</a>
+</div>
+{% endblock %}

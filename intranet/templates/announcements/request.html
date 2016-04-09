@@ -37,6 +37,11 @@
             author.attr("placeholder", "{{ user.full_name|escape }}");
             dateReset();
 
+            var notes = $("#id_notes");
+            if(notes.html().length < 1) {
+                notes.html("Enter something here!\n");
+            }
+
             $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
                                                "<a onclick='dateReset()' class='button small-button'>Reset to Default</a>" +
                                                "<a onclick='date3000()' class='button small-button'>Don't Expire</a>" +
