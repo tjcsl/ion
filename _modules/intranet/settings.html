@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2058) documentation</title>
+    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2061) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #2058)',
+        VERSION:     'v3 (Build #2061)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2058) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2061) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -455,6 +455,7 @@
     <span class="s2">&quot;intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># See note in ajax.py</span>
     <span class="s2">&quot;intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Selectize fixes</span>
     <span class="s2">&quot;intranet.middleware.access_log.AccessLogMiddleWare&quot;</span><span class="p">,</span>  <span class="c1"># Access log</span>
+    <span class="s2">&quot;django_requestlogging.middleware.LogSetupMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Request logging</span>
     <span class="s2">&quot;corsheaders.middleware.CorsMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># CORS headers, for ext. API use</span>
     <span class="c1"># &quot;intranet.middleware.profiler.ProfileMiddleware&quot;,         # Debugging only</span>
     <span class="s2">&quot;intranet.middleware.ldap_db.CheckLDAPBindMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Show ldap simple bind message</span>
@@ -603,6 +604,7 @@
     <span class="s2">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
     <span class="c1"># Django plugins</span>
     <span class="s2">&quot;django_extensions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django_requestlogging&quot;</span><span class="p">,</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
     <span class="s2">&quot;maintenancemode&quot;</span><span class="p">,</span>
     <span class="s2">&quot;pipeline&quot;</span><span class="p">,</span>
@@ -658,7 +660,7 @@
     <span class="s2">&quot;disable_existing_loggers&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
     <span class="s2">&quot;formatters&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;simple&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(remote_addr)s</span><span class="s2"> - </span><span class="si">%(username)s</span><span class="s2"> - </span><span class="si">%(path_info)s</span><span class="se">\n\t</span><span class="si">%(message)s</span><span class="s2">&quot;</span>
         <span class="p">},</span>
         <span class="s2">&quot;access&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span>
@@ -667,6 +669,9 @@
     <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;require_debug_false&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;django.utils.log.RequireDebugFalse&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;django_requestlogging.logging_filters.RequestFilter&quot;</span>
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -681,12 +686,14 @@
         <span class="s2">&quot;console&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span>
             <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;simple&quot;</span>
         <span class="p">},</span>
         <span class="c1"># Log access in console</span>
         <span class="s2">&quot;console_access&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
             <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">],</span>
             <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;access&quot;</span>
         <span class="p">},</span>
         <span class="c1"># Log access to file (DEBUG=FALSE)</span>
@@ -710,7 +717,7 @@
         <span class="c1"># Log error to file (DEBUG=FALSE)</span>
         <span class="s2">&quot;error_log&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;require_debug_false&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;require_debug_false&quot;</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">],</span>
             <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.FileHandler&quot;</span><span class="p">,</span>
             <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
             <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;/var/log/ion/app_error.log&quot;</span>
