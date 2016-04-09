@@ -112,7 +112,7 @@ def request_announcement_view(request):
                     ann.admin_email_sent = True
                     ann.save()
                     return redirect("request_announcement_success_self")
-                    
+
                 else:
                     request_announcement_email(request, form, obj)
                     return redirect("request_announcement_success")
@@ -125,11 +125,11 @@ def request_announcement_view(request):
 
 
 def request_announcement_success_view(request):
-    return render(request, "announcements/request_success.html", {})
+    return render(request, "announcements/success.html", {"type": "request"})
 
 
 def request_announcement_success_self_view(request):
-    return render(request, "announcements/request_success.html", {"self_confirm": True})
+    return render(request, "announcements/success.html", {"type": "request", "self": True})
 
 
 @login_required
@@ -162,19 +162,24 @@ def approve_announcement_view(request, req_id):
                     obj.admin_email_sent = True
                     obj.save()
 
-                    messages.success(request, "Successfully approved announcement request. An Intranet administrator "
-                                     "will review and post the announcement shortly. (Notification sent.)")
-                else:
-                    messages.success(request, "Successfully approved announcement request. An Intranet administrator "
-                                     "will review and post the announcement shortly.")
+                return redirect("approve_announcement_success")
             else:
                 obj.save()
-                messages.success(request, "You did not approve this request.")
-                return redirect("index")
+                return redirect("approve_announcement_reject")
 
     form = AnnouncementRequestForm(instance=req)
     context = {"form": form, "req": req, "admin_approve": False}
     return render(request, "announcements/approve.html", context)
+
+
+@login_required
+def approve_announcement_success_view(request):
+    return render(request, "announcements/success.html", {"type": "approve", "status": "accept"})
+
+
+@login_required
+def approve_announcement_reject_view(request):
+    return render(request, "announcements/success.html", {"type": "approve", "status": "reject"})
 
 
 @announcements_admin_required
