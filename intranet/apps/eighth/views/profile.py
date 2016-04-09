@@ -100,6 +100,8 @@ def get_profile_context(request, user_id=None, date=None):
     if profile_user != request.user and not (request.user.is_eighth_admin or request.user.is_teacher):
         return False
 
+    logger.debug("is request sender: {}".format(profile_user.is_http_request_sender()))
+
     try:
         custom_date_set = False
         if date:

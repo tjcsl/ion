@@ -7,6 +7,7 @@ from base64 import b64encode
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.auth import BACKEND_SESSION_KEY
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.core import exceptions
 from django.core.cache import cache
@@ -1106,13 +1107,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
-            if request.user and request.user.is_authenticated():
+            if request and request.user and request.user.is_authenticated():
                 requesting_user_id = request.user.id
-                if "_auth_user_backend" not in request.session:
-                    return False
-                auth_backend = request.session["_auth_user_backend"]
+                auth_backend = request.session[BACKEND_SESSION_KEY]
                 master_pwd_backend = "MasterPasswordAuthenticationBackend"
-
                 return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
         except (AttributeError, KeyError) as e:
             logger.error("Could not check request sender: {}".format(e))

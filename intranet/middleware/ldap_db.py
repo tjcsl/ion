@@ -3,6 +3,7 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth import BACKEND_SESSION_KEY
 
 from ..db.ldap_db import LDAPConnection
 
@@ -12,13 +13,26 @@ logger = logging.getLogger(__name__)
 class CheckLDAPBindMiddleware:
 
     def process_response(self, request, response):
-        if not hasattr(request, "user") or "_auth_user_backend" not in request.session or not request.user.is_authenticated():
+        bypass = False
+        if not hasattr(request, "user"):
+            logger.debug("check LDAP bind - No user object")
+            bypass = True
+
+        if BACKEND_SESSION_KEY not in request.session:
+            logger.debug("check LDAP bind - no backend session")
+            bypass = True
+
+        if not request.user.is_authenticated():
+            logger.debug("check LDAP bind - not authenticated")
+            bypass = True
+
+        if bypass:
             # Nothing to check if user isn't already logged in
             return response
 
-        auth_backend = request.session["_auth_user_backend"]
+        auth_backend = request.session[BACKEND_SESSION_KEY]
         kerberos_backend = "KerberosAuthenticationBackend"
-        if LDAPConnection().did_use_simple_bind() and auth_backend.startswith(kerberos_backend):
+        if LDAPConnection().did_use_simple_bind() and auth_backend.contains(kerberos_backend):
             # if request.user.is_eighth_admin:
             #    logger.info("Simple bind being used: staying logged in because eighth admin.")
             #    return response
