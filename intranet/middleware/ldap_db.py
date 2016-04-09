@@ -31,8 +31,8 @@ class CheckLDAPBindMiddleware:
             return response
 
         auth_backend = request.session[BACKEND_SESSION_KEY]
-        kerberos_backend = "KerberosAuthenticationBackend"
-        if LDAPConnection().did_use_simple_bind() and auth_backend.contains(kerberos_backend):
+        master_pwd_backend = "MasterPasswordAuthenticationBackend"
+        if LDAPConnection().did_use_simple_bind() and not auth_backend.endswith(master_pwd_backend):
             # if request.user.is_eighth_admin:
             #    logger.info("Simple bind being used: staying logged in because eighth admin.")
             #    return response
