@@ -1,2 +1,3 @@
 def login(*args): ... # FIXME: figure out args
 def logout(*args): ... # FIXME: figure out args
+BACKEND_SESSION_KEY = ...
