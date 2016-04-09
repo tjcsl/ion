@@ -308,6 +308,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
+    "django_requestlogging.middleware.LogSetupMiddleware", # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message
@@ -456,6 +457,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Django plugins
     "django_extensions",
+    "django_requestlogging",
     "rest_framework",
     "maintenancemode",
     "pipeline",
@@ -511,7 +513,7 @@ LOGGING = {
     "disable_existing_loggers": True,
     "formatters": {
         "simple": {
-            "format": "%(levelname)s: %(message)s"
+            "format": "%(levelname)s: %(asctime)s - %(remote_addr)s - %(username)s - %(path_info)s\n\t%(message)s"
         },
         "access": {
             "format": "%(message)s"
@@ -520,6 +522,9 @@ LOGGING = {
     "filters": {
         "require_debug_false": {
             "()": "django.utils.log.RequireDebugFalse"
+        },
+        "request": {
+            "()": "django_requestlogging.logging_filters.RequestFilter"
         }
     },
     "handlers": {
@@ -534,12 +539,14 @@ LOGGING = {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "filters": ["request"],
             "formatter": "simple"
         },
         # Log access in console
         "console_access": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "filters": ["request"],
             "formatter": "access"
         },
         # Log access to file (DEBUG=FALSE)
@@ -563,7 +570,7 @@ LOGGING = {
         # Log error to file (DEBUG=FALSE)
         "error_log": {
             "level": "ERROR",
-            "filters": ["require_debug_false"],
+            "filters": ["require_debug_false", "request"],
             "class": "logging.FileHandler",
             "delay": True,
             "filename": "/var/log/ion/app_error.log"
