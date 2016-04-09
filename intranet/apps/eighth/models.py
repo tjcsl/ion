@@ -307,8 +307,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     @property
     def is_active(self):
-        """Return whether an activity is "active." An activity is considered to be active if it
-           has been scheduled at all this year."""
+        """Return whether an activity is "active." An activity is considered to be active if it has
+        been scheduled at all this year."""
         scheduled_activities = self.get_active_schedulings()
         return scheduled_activities and scheduled_activities.count() > 0
 

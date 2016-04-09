@@ -77,7 +77,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         if step == "block":
             show_all_blocks = ("show_all_blocks" in self.request.GET or "block" in self.request.GET)
             if show_all_blocks:
-                """ Only show blocks after September 1st of the current school year """
+                """Only show blocks after September 1st of the current school year."""
                 now, _ = get_date_range_this_year()
                 kwargs.update({"exclude_before_date": now})
             elif not self.request.user.is_eighth_admin:

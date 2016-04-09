@@ -939,7 +939,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def has_print_permission(self):
-        """Checks if user has the admin permission 'printing'
+        """Checks if user has the admin permission 'printing'.
 
         Returns:
             Boolean

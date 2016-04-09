@@ -308,7 +308,7 @@ MIDDLEWARE_CLASSES = [
     "intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare",  # See note in ajax.py
     "intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware",  # Selectize fixes
     "intranet.middleware.access_log.AccessLogMiddleWare",  # Access log
-    "django_requestlogging.middleware.LogSetupMiddleware", # Request logging
+    "django_requestlogging.middleware.LogSetupMiddleware",  # Request logging
     "corsheaders.middleware.CorsMiddleware",  # CORS headers, for ext. API use
     # "intranet.middleware.profiler.ProfileMiddleware",         # Debugging only
     "intranet.middleware.ldap_db.CheckLDAPBindMiddleware",  # Show ldap simple bind message

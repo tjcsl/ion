@@ -15,7 +15,7 @@ class PhoneField(forms.Field):
         self.validators.append(validators.RegexValidator(r'^\+?1?\d{9,15}$', 'Please enter a valid phone number.'))
 
     def to_python(self, value):
-        "Returns a Unicode object."
+        """Returns a Unicode object."""
         if value in self.empty_values:
             return ""
         value = force_text(value).strip()
