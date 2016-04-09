@@ -1106,14 +1106,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             request = threadlocals.request()
-            requesting_user_id = request.user.id
-            auth_backend = request.session["_auth_user_backend"]
-            master_pwd_backend = "MasterPasswordAuthenticationBackend"
+            if request.user and request.user.is_authenticated():
+                requesting_user_id = request.user.id
+                auth_backend = request.session["_auth_user_backend"]
+                master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
-            return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
+                return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
         except (AttributeError, KeyError) as e:
             logger.error("Could not check request sender: {}".format(e))
             return False
+
+        return False
 
     def attribute_is_visible(self, ldap_perm_name):
         """Checks if an attribute is visible to the public.
