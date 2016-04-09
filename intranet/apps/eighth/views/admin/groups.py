@@ -40,7 +40,7 @@ def add_group_view(request):
             messages.error(request, "Error adding group.")
             try:
                 request.session["add_group_form"] = pickle.dumps(form)
-            except TypeError:
+            except (pickle.PicklingError, TypeError):
                 """Prevent pickle errors."""
                 pass
             return redirect("eighth_admin_dashboard")
