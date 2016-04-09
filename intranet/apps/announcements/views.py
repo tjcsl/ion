@@ -124,10 +124,12 @@ def request_announcement_view(request):
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
 
 
+@login_required
 def request_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "request"})
 
 
+@login_required
 def request_announcement_success_self_view(request):
     return render(request, "announcements/success.html", {"type": "request", "self": True})
 
