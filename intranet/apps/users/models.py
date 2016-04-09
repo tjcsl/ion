@@ -1108,6 +1108,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             request = threadlocals.request()
             if request.user and request.user.is_authenticated():
                 requesting_user_id = request.user.id
+                if "_auth_user_backend" not in request.session:
+                    return False
                 auth_backend = request.session["_auth_user_backend"]
                 master_pwd_backend = "MasterPasswordAuthenticationBackend"
 
