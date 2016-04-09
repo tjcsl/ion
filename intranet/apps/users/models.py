@@ -524,9 +524,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
-            if isinstance(requesting_user, AnonymousUser):
+            if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated():
                 return False
-            can_view_anyway = (requesting_user.is_teacher or requesting_user.is_eighthoffice)
+            can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice)
         except (AttributeError, KeyError) as e:
             logger.error("Could not check teacher/eighth override: {}".format(e))
             can_view_anyway = False
