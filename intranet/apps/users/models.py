@@ -7,7 +7,7 @@ from base64 import b64encode
 from datetime import datetime
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager as DjangoUserManager
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin, UserManager as DjangoUserManager
 from django.core import exceptions
 from django.core.cache import cache
 from django.core.signing import Signer
@@ -524,6 +524,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         try:
             # threadlocals is a module, not an actual thread locals object
             requesting_user = threadlocals.request().user
+            if isinstance(requesting_user, AnonymousUser):
+                return False
             can_view_anyway = (requesting_user.is_teacher or requesting_user.is_eighthoffice)
         except (AttributeError, KeyError) as e:
             logger.error("Could not check teacher/eighth override: {}".format(e))
