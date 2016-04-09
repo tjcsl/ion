@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Manager, Q
 
 from ..users.models import User
+from ...utils.date import is_current_year
 
 
 class AnnouncementManager(Manager):
@@ -114,12 +115,7 @@ class Announcement(models.Model):
     @property
     def is_this_year(self):
         """Return whether the announcement was created after September 1st of this school year."""
-        now = datetime.now().date()
-        ann = self.added.date()
-        if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
-        else:
-            return ann.year == now.year and ann.month >= 9
+        return is_current_year(self.added.date())
 
     @property
     def dashboard_type(self):

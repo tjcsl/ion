@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
 {% load dictionaries %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Poll Results
@@ -8,8 +9,8 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/polls.css' %}" />
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'polls' %}
     <style>
 
     .results-table, .results-table tr, .results-table tr > td, .results-table tr > th {

@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load dates %}
 {% load cacheops %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - {{ dashboard_title }}
@@ -15,15 +16,18 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.widgets.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.widget.css' %}" />
+    {% stylesheet 'events' %}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'dashboard.widgets' %}
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'schedule.widget' %}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
+    {% if is_index_page %}
+        {% include "dashboard/gcm_notifications.html" %}
+    {% endif %}
 
     <script type="text/javascript" src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
@@ -117,7 +121,9 @@
             {% endif %}
         {% endif %}
 
-        {% include "dashboard/promo.html" %}
+        {% comment %}
+            {% include "dashboard/promo.html" %}
+        {% endcomment %}
         
         {% for item in items %}
             {% if item.dashboard_type in ignore_dashboard_types %}

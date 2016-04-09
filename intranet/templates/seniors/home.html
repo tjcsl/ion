@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Seniors
@@ -8,7 +9,7 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    {% stylesheet 'dashboard' %}
     <style type="text/css">
     td.unsure {
         font-style: italic;

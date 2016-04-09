@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load math %}
 {% load strings %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
@@ -9,15 +10,14 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.core.css' %}" />
+    {% stylesheet 'page_base' %}
+    {% stylesheet 'responsive.core' %}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/messenger/build/css/messenger.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/messenger/build/css/messenger-theme-flat.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/jquery-ui-1.11.0.custom/jquery-ui.min.css' %}" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/signage.touch.css' %}" />
+    {% stylesheet 'eighth.signup' %}
+    {% stylesheet 'signage.touch' %}
     <style type="text/css">
     #activity-list:not(.show-administrative) li[data-administrative=true] {
         display: none;

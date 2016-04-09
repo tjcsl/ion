@@ -1,5 +1,6 @@
 {% extends "page_base.html" %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - About
@@ -7,9 +8,9 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/about.css' %}" />
+    {% stylesheet 'page_base' %}
+    {% stylesheet 'login' %}
+    {% stylesheet 'about' %}
 {% endblock %}
 
 {% block js %}

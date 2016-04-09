@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load math %}
 {% load strings %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Eighth Period
@@ -9,8 +10,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
+    {% stylesheet 'eighth.signup' %}
     {% if not real_user.is_eighth_admin %}
     <style type="text/css">
     #activity-list li[data-administrative=true] {
@@ -22,9 +22,9 @@
     </style>
     {% endif %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
 {% endblock %}
 
 {% block js %}

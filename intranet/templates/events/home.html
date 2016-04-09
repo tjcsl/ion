@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Events
@@ -7,8 +8,8 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
 {% endblock %}
 
 {% block js %}

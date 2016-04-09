@@ -1,16 +1,16 @@
 {% extends "page_with_nav.html" %}
 {% load phone_numbers %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
 
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.admin.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
 {% endblock %}
 
 {% block js %}

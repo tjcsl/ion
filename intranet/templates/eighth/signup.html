@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load math %}
 {% load strings %}
+{% load pipeline %}
 
 {% comment %}
     NOTE: Specific UI and template changes made in this file will most likely
@@ -17,8 +18,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.signup.css' %}" />
+    {% stylesheet 'eighth.signup' %}
     {% if not real_user.is_eighth_admin %}
         <style type="text/css">
         #activity-list:not(.show-administrative) li[data-administrative=true] {

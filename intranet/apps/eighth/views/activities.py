@@ -38,17 +38,25 @@ def statistics_view(request, activity_id=None):
 
     signups = {}
 
+    old_blocks = 0
+
     for a in activities:
-        for user in a.members.all():
-            if user in signups:
-                signups[user] += 1
-            else:
-                signups[user] = 1
+        if a.block.is_this_year:
+            for user in a.members.all():
+                if user in signups:
+                    signups[user] += 1
+                else:
+                    signups[user] = 1
+        else:
+            old_blocks += 1
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
     total_signups = sum(n for _, n in signups)
-    average_signups = round(total_signups / total_blocks, 2)
+    if total_blocks:
+        average_signups = round(total_signups / total_blocks, 2)
+    else:
+        average_signups = 0
 
-    context = {"activity": activity, "members": signups, "total_blocks": total_blocks, "total_signups": total_signups, "average_signups": average_signups}
+    context = {"activity": activity, "members": signups, "total_blocks": total_blocks, "total_signups": total_signups, "average_signups": average_signups, "old_blocks": old_blocks}
     return render(request, "eighth/statistics.html", context)

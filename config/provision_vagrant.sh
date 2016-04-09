@@ -8,8 +8,10 @@ print(json.load(f)['$1'])
 f.close()"
 }
 
+# Needed for mock ldap server
+add-apt-repository -y ppa:webupd8team/java
 apt-get update
-
+apt-get -y dist-upgrade
 # Timezone
 timedatectl set-timezone America/New_York
 
@@ -47,6 +49,11 @@ apt-get -y install cups-bsd
 apt-get -y install cups-client
 echo "ServerName cups2.csl.tjhsst.edu" > /etc/cups/client.conf
 
+# Mock LDAP Server deps
+echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+apt-get -y install oracle-java7-installer
+
 # Shell
 cp intranet/config/bash_completion.d/fab /etc/bash_completion.d/fab
 if ! grep "ion_env_setup.sh" /etc/bash.bashrc > /dev/null; then
@@ -58,6 +65,9 @@ touch .bash_history
 # Utils
 apt-get -y install htop
 apt-get -y install glances
+
+# CSS
+apt-get -y install ruby-sass
 
 # PostsgreSQL
 apt-get -y install postgresql

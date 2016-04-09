@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load grades %}
 {% load users %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Search{% if search_query %} - {{ search_query }}{% endif %}
@@ -9,7 +10,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}">
+    {% stylesheet 'search' %}
 {% endblock %}
 
 

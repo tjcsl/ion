@@ -1,0 +1,12 @@
+{% load staticfiles %}
+<script type="text/javascript">
+window.ion = {
+    base_url: "{{ ion_base_url }}",
+    authenticated: {% if request.user.is_authenticated %}true{% else %}false{% endif %},
+    username: {% if request.user.is_authenticated %}"{{ request.user.username|escape }}"{% else %}null{% endif %},
+    gcm_token_sha: {% if request.user.is_authenticated and request.user.notificationconfig.gcm_token %}"{{ request.user.notificationconfig.gcm_token_sha256|escape }}"{% else %}null{% endif %},
+    gcm_optout: {% if request.user.is_authenticated and request.user.notificationconfig %}{% if request.user.notificationconfig.gcm_optout and not request.user.is_eighthoffice %}true{% else %}false{% endif %}{% else %}null{% endif %}
+};
+</script>
+<script type="text/javascript" src="{% static 'js/vendor/sha256.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/swnotifications.js' %}"></script>

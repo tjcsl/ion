@@ -36,6 +36,7 @@ class SignupException(Exception):
     }
 
     def __init__(self):
+        super().__init__()
         self.errors = set()
         self.desc_errors = {}
 

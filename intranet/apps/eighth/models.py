@@ -14,6 +14,7 @@ from django.utils import formats
 
 from . import exceptions as eighth_exceptions
 from ..users.models import User
+from ...utils.date import is_current_year, get_date_range_this_year
 
 logger = logging.getLogger(__name__)
 
@@ -389,13 +390,8 @@ class EighthBlockManager(models.Manager):
 
     def get_blocks_this_year(self):
         """Get a list of blocks that occur this school year."""
-        now = datetime.datetime.now().date()
-        if now.month < 9:
-            date_start = datetime.date(now.year - 1, 9, 1)
-            date_end = datetime.date(now.year, 7, 1)
-        else:
-            date_start = datetime.date(now.year, 9, 1)
-            date_end = datetime.date(now.year + 1, 7, 1)
+
+        date_start, date_end = get_date_range_this_year()
 
         return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
 
@@ -553,12 +549,7 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def is_this_year(self):
         """Return whether the block occurs after September 1st of this school year."""
-        now = datetime.now().date()
-        ann = self.date
-        if now.month < 9:
-            return ((ann.year == now.year and ann.month < 9) or (ann.year == now.year - 1 and ann.month >= 9))
-        else:
-            return (ann.year == now.year and ann.month >= 9)
+        return is_current_year(self.date)
 
     @property
     def formatted_date(self):

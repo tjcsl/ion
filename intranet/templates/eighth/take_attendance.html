@@ -1,6 +1,7 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
 {% load dates %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
@@ -9,8 +10,8 @@
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.1/dist/css/selectize.default.css' %}">
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.attendance.css' %}" />
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'eighth.attendance' %}
 {% endblock %}
 
 {% block js %}

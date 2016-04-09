@@ -1,5 +1,6 @@
 {% load staticfiles %}
-<!doctype html>
+{% load pipeline %}
+<!DOCTYPE html>
 <html lang='en'>
 <head>
     <title>Intranet - OAuth Authentication</title>
@@ -7,13 +8,11 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     {% block css %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/themes.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/page_base.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/about.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'css/theme.blue.css' %}" />
+        {% stylesheet 'base' %}
+        {% stylesheet 'page_base' %}
+        {% stylesheet 'login' %}
+        {% stylesheet 'about' %}
+        {% stylesheet 'theme.blue' %}
         <style type="text/css">
            
             h3 {

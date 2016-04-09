@@ -1,5 +1,6 @@
 {% extends "page_with_nav.html" %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block title %}
     {{ block.super }} - Seniors
@@ -8,7 +9,7 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.1/dist/css/selectize.default.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+    {% stylesheet 'dashboard' %}
     <style type="text/css">
     #id_college, #id_major {
         width: 500px;
