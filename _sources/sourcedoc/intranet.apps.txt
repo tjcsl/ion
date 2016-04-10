@@ -19,6 +19,7 @@ Subpackages
     intranet.apps.files
     intranet.apps.groups
     intranet.apps.ionldap
+    intranet.apps.itemreg
     intranet.apps.notifications
     intranet.apps.polls
     intranet.apps.preferences
