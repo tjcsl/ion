@@ -3,6 +3,7 @@ from .models import LostItem, FoundItem, CalculatorRegistration, ComputerRegistr
 
 
 class LostItemForm(forms.ModelForm):
+
     class Meta:
         model = LostItem
         fields = [
@@ -13,6 +14,7 @@ class LostItemForm(forms.ModelForm):
 
 
 class FoundItemForm(forms.ModelForm):
+
     class Meta:
         model = FoundItem
         fields = [
@@ -23,6 +25,7 @@ class FoundItemForm(forms.ModelForm):
 
 
 class CalculatorRegistrationForm(forms.ModelForm):
+
     class Meta:
         model = CalculatorRegistration
         fields = [
@@ -33,6 +36,7 @@ class CalculatorRegistrationForm(forms.ModelForm):
 
 
 class ComputerRegistrationForm(forms.ModelForm):
+
     class Meta:
         model = ComputerRegistration
         fields = [
@@ -44,6 +48,7 @@ class ComputerRegistrationForm(forms.ModelForm):
 
 
 class PhoneRegistrationForm(forms.ModelForm):
+
     class Meta:
         model = PhoneRegistration
         fields = [
@@ -52,4 +57,3 @@ class PhoneRegistrationForm(forms.ModelForm):
             "serial",
             "description"
         ]
-

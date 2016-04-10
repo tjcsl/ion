@@ -12,6 +12,7 @@ from .forms import LostItemForm, FoundItemForm, CalculatorRegistrationForm, Comp
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def home_view(request):
     lost_all = LostItem.objects.all()
@@ -112,6 +113,7 @@ def lostitem_delete_view(request, item_id):
 
 def founditem_add_view(request):
     pass
+
 
 def founditem_delete_view(request):
     pass

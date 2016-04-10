@@ -1,6 +1,7 @@
 from django.db import models
 from ..users.models import User
 
+
 class LostItem(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(max_length=100)
@@ -73,6 +74,7 @@ class ComputerRegistration(models.Model):
     def __str__(self):
         return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
 
+
 class PhoneRegistration(models.Model):
     user = models.ForeignKey(User)
     MANUF_CHOICES = (
@@ -94,4 +96,3 @@ class PhoneRegistration(models.Model):
 
     def __str__(self):
         return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
-
