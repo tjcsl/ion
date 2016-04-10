@@ -240,7 +240,8 @@ PIPELINE = {
 
 LIST_OF_INDEPENDENT_CSS = ['about', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search',
                            'dashboard', 'events', 'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board',
-                           'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'eighth.attendance', 'eighth.profile', 'eighth.schedule']
+                           'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'eighth.attendance', 'eighth.profile', 'eighth.schedule',
+                           'lostfound']
 
 for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE['STYLESHEETS'].update(helpers.SingleCss(name))
@@ -483,6 +484,7 @@ INSTALLED_APPS = [
     "intranet.apps.seniors",
     "intranet.apps.emerg",
     "intranet.apps.ionldap",
+    "intranet.apps.itemreg",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
