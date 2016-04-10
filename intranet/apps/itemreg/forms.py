@@ -2,7 +2,7 @@ from django import forms
 from .models import LostItem, FoundItem, CalculatorRegistration, ComputerRegistration, PhoneRegistration
 
 
-class LostItemForm(forms.Form):
+class LostItemForm(forms.ModelForm):
     class Meta:
         model = LostItem
         fields = [
@@ -12,7 +12,7 @@ class LostItemForm(forms.Form):
         ]
 
 
-class FoundItemForm(forms.Form):
+class FoundItemForm(forms.ModelForm):
     class Meta:
         model = FoundItem
         fields = [
@@ -22,7 +22,7 @@ class FoundItemForm(forms.Form):
         ]
 
 
-class CalculatorRegistrationForm(forms.Form):
+class CalculatorRegistrationForm(forms.ModelForm):
     class Meta:
         model = CalculatorRegistration
         fields = [
@@ -32,7 +32,7 @@ class CalculatorRegistrationForm(forms.Form):
         ]
 
 
-class ComputerRegistrationForm(forms.Form):
+class ComputerRegistrationForm(forms.ModelForm):
     class Meta:
         model = ComputerRegistration
         fields = [
@@ -43,7 +43,7 @@ class ComputerRegistrationForm(forms.Form):
         ]
 
 
-class PhoneRegistrationForm(forms.Form):
+class PhoneRegistrationForm(forms.ModelForm):
     class Meta:
         model = PhoneRegistration
         fields = [

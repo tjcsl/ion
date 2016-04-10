@@ -4,7 +4,7 @@ from ..users.models import User
 class LostItem(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
+    description = models.TextField(max_length=1000)
     last_seen = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
 
@@ -15,7 +15,7 @@ class LostItem(models.Model):
 class FoundItem(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
+    description = models.TextField(max_length=1000)
     found = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
 
@@ -66,7 +66,7 @@ class ComputerRegistration(models.Model):
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
     serial = models.CharField(max_length=20)
-    description = models.CharField(max_length=1000)
+    description = models.TextField(max_length=1000)
     screen_size = models.PositiveIntegerField()
     added = models.DateTimeField(auto_now_add=True)
 
@@ -89,7 +89,7 @@ class PhoneRegistration(models.Model):
     manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
     serial = models.CharField(max_length=20)
-    description = models.CharField(max_length=1000)
+    description = models.TextField(max_length=1000)
     added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
