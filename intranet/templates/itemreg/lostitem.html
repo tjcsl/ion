@@ -1,0 +1,27 @@
+{% load dates %}
+<div class="item" data-id="{{ item.id }}">
+    <h3>
+        {{ item.title }}
+
+        {% if item.user == request.user or is_admin %}
+            <div class="item-icon-wrapper" style="display: block">
+            {% comment %}
+                <a href="{% url 'lostitem_modify' item.id %}">
+                    <i class="item-icon fa fa-pencil"></i>
+                </a>
+            {% endcomment %}
+                <a href="{% url 'lostitem_delete' item.id %}" class="item-delete">
+                    <i class="item-icon fa fa-trash-o"></i>
+                </a>
+            </div>
+        {% endif %}
+    </h3>
+
+    <div class="item-metadata">
+        by {{ item.user.full_name|escape }} &bull; {{ item.added|fuzzy_date|capfirst }}
+    </div>
+
+    <div class="item-content">
+        {{ item.description|safe }}
+    </div>
+</div>

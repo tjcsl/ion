@@ -24,14 +24,34 @@
 
     <div class="items-container">
         <div class="lost-items">
-            {% for lostitem in lost %}
-                {% include "itemreg/lost.html" %}
+            <div class="item-header">
+                Lost Items:
+                <a href="{% url 'lostitem_add' %}" class="button">
+                    Add
+                </a>
+            </div>
+            {% for item in lost %}
+                {% include "itemreg/lostitem.html" %}
+            {% empty %}
+                <div class="item item-meta">
+                    <p>There are currently no lost items</p>
+                </div>
             {% endfor %}
         </div>
 
         <div class="found-items">
-            {% for founditem in found %}
-                {% include "itemreg/found.html" %}
+            <div class="item-header">
+                Found Items:
+                <a href="{% url 'founditem_add' %}" class="button">
+                    Add
+                </a>
+            </div>
+            {% for item in found %}
+                {% include "itemreg/founditem.html" %}
+            {% empty %}
+                <div class="item item-meta">
+                    <p>There are currently no found items</p>
+                </div>
             {% endfor %}
         </div>
     </div>
