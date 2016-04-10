@@ -2,13 +2,12 @@
 
 import bleach
 import logging
-from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import LostItem, FoundItem, CalculatorRegistration, ComputerRegistration, PhoneRegistration
-from .forms import LostItemForm, FoundItemForm, CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
+from .models import LostItem, FoundItem
+from .forms import LostItemForm
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +101,7 @@ def lostitem_delete_view(request, item_id):
                 a.found = True
                 a.save()
                 messages.success(request, "Successfully marked lost item as found!")
-        except Announcement.DoesNotExist:
+        except LostItem.DoesNotExist:
             pass
 
         return redirect("index")
