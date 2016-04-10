@@ -1,6 +1,7 @@
 from django.db import forms
 from .models import LostItem, FoundItem, CalculatorRegistration, ComputerRegistration, PhoneRegistration
 
+
 class LostItemForm(forms.Form):
     class Meta:
         model = LostItem
@@ -51,5 +52,4 @@ class PhoneRegistrationForm(forms.Form):
             "serial",
             "description"
         ]
-
 
