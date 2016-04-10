@@ -1109,9 +1109,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             request = threadlocals.request()
             if request and request.user and request.user.is_authenticated():
                 requesting_user_id = request.user.id
-                auth_backend = request.session[BACKEND_SESSION_KEY]
-                master_pwd_backend = "MasterPasswordAuthenticationBackend"
-                return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
+                if BACKEND_SESSION_KEY not in request.session:
+                    logger.warning("Backend session key not in session")
+                    return False
+                else:
+                    auth_backend = request.session[BACKEND_SESSION_KEY]
+                    master_pwd_backend = "MasterPasswordAuthenticationBackend"
+                    return (str(requesting_user_id) == str(self.id) and not auth_backend.endswith(master_pwd_backend))
         except (AttributeError, KeyError) as e:
             logger.error("Could not check request sender: {}".format(e))
             return False
