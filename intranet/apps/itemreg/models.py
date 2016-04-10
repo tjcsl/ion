@@ -21,7 +21,7 @@ class CalculatorRegistration(models.Model):
     user = models.ForeignKey(User)
     calc_serial = models.CharField(max_length=10)
     calc_id = models.CharField(max_length=14)
-    CALC_OPTIONS = (
+    CALC_CHOICES = (
         ("ti83", "TI-83"),
         ("ti83p", "TI-83+"),
         ("ti84p", "TI-84+"),
@@ -34,12 +34,13 @@ class CalculatorRegistration(models.Model):
         ("otherti", "Other TI"),
         ("other", "Other")
     )
-    calc_type = models.CharField(max_length=10, options=CALC_OPTIONS)
+    calc_type = models.CharField(max_length=10, choices=CALC_CHOICES)
+    added = models.DateTimeField(auto_now_add=True)
 
 
 class ComputerRegistration(models.Model):
     user = models.ForeignKey(User)
-    MANUF_OPTIONS = (
+    MANUF_CHOICES = (
         ("acer", "Acer"),
         ("apple", "Apple"),
         ("asus", "Asus"),
@@ -53,15 +54,16 @@ class ComputerRegistration(models.Model):
         ("vizio", "Vizio"),
         ("other", "Other")
     )
-    manufacturer = models.CharField(max_length=15, options=MANUF_OPTIONS)
+    manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
     serial = models.CharField(max_length=20)
     description = models.CharField(max_length=1000)
     screen_size = models.PositiveIntegerField()
+    added = models.DateTimeField(auto_now_add=True)
 
 class PhoneRegistration(models.Model):
     user = models.ForeignKey(User)
-    MANUF_OPTIONS = (
+    MANUF_CHOICES = (
         ("samsung", "Samsung"),
         ("apple", "Apple"),
         ("motorola", "Motorola"),
@@ -72,8 +74,9 @@ class PhoneRegistration(models.Model):
         ("nokia", "Nokia"),
         ("other", "Other")
     )
-    manufacturer = models.CharField(max_length=15, options=MANUF_OPTIONS)
+    manufacturer = models.CharField(max_length=15, choices=MANUF_CHOICES)
     model = models.CharField(max_length=100)
     serial = models.CharField(max_length=20)
     description = models.CharField(max_length=1000)
+    added = models.DateTimeField(auto_now_add=True)
 
