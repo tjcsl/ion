@@ -8,6 +8,9 @@ class LostItem(models.Model):
     last_seen = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return "{}".format(self.title)
+
 
 class FoundItem(models.Model):
     user = models.ForeignKey(User)
@@ -15,6 +18,9 @@ class FoundItem(models.Model):
     description = models.CharField(max_length=1000)
     found = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}".format(self.title)
 
 
 class CalculatorRegistration(models.Model):
@@ -36,6 +42,9 @@ class CalculatorRegistration(models.Model):
     )
     calc_type = models.CharField(max_length=10, choices=CALC_CHOICES)
     added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}'s {}".format(self.user, self.calc_type)
 
 
 class ComputerRegistration(models.Model):
@@ -61,6 +70,9 @@ class ComputerRegistration(models.Model):
     screen_size = models.PositiveIntegerField()
     added = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
+
 class PhoneRegistration(models.Model):
     user = models.ForeignKey(User)
     MANUF_CHOICES = (
@@ -79,4 +91,7 @@ class PhoneRegistration(models.Model):
     serial = models.CharField(max_length=20)
     description = models.CharField(max_length=1000)
     added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
 
