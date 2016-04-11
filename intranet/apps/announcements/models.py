@@ -124,7 +124,7 @@ class Announcement(models.Model):
     def is_visible(self, user):
         return (self in Announcement.objects.visible_to_user(user))
 
-    _announcementrequest = None
+    _announcementrequest = None  # type: AnnouncementRequest
 
     @property
     def announcementrequest(self):

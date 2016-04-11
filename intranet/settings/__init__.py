@@ -19,6 +19,7 @@ SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
 SECRET_DATABASE_URL = None  # type: str
+MAINTENANCE_MODE = None  # type: bool
 ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
 
@@ -659,9 +660,7 @@ if SHOW_DEBUG_TOOLBAR:
 # Maintenance mode
 # This should be adjusted in secrets.py or by running:
 # ./manage.py maintenance [on|off]
-try:
-    MAINTENANCE_MODE = MAINTENANCE_MODE
-except NameError:
+if MAINTENANCE_MODE is None:
     MAINTENANCE_MODE = False
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
