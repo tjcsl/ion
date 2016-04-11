@@ -30,8 +30,11 @@ def activity_view(request, activity_id=None):
     return render(request, "eighth/activity.html", context)
 
 
-@eighth_admin_required
+@login_required
 def statistics_view(request, activity_id=None):
+    if not (request.user.is_eighth_admin or request.user.is_teacher):
+        return render(request, "error/403.html", {"reason": "You do not have permission to view statistics for this activity."}, status=403)
+
     activity = get_object_or_404(EighthActivity, id=activity_id)
 
     activities = EighthScheduledActivity.objects.filter(activity=activity)

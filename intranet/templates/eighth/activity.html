@@ -49,6 +49,9 @@
         <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">
             Edit Activity
         </a>
+    {% endif %}
+
+    {% if request.user.is_eighth_admin or request.user.is_teacher %}
         <a class="button" href="{% url 'eighth_statistics' activity.id %}">
             View Statistics
         </a>
