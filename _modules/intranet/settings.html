@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2065) documentation</title>
+    <title>intranet.settings &mdash; TJ Intranet v3 (Build #2073) documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     'v3 (Build #2065)',
+        VERSION:     'v3 (Build #2073)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2065) documentation" href="../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2073) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -166,6 +166,7 @@
 <span class="sd">    postgres://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;/&lt;database&gt;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="n">SECRET_DATABASE_URL</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: str</span>
+<span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: bool</span>
 <span class="n">ADMINS</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># type: List[Tuple[str,str]]</span>
 <span class="n">USE_SASL</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -174,10 +175,10 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
-<span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
-<span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+<span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
+<span class="n">TRAVIS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="c1"># FIXME: figure out a less-hacky way to do this.</span>
-<span class="n">TESTING</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 <span class="n">LOGGING_VERBOSE</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
 
 <span class="c1"># DEBUG defaults to off in PRODUCTION, on otherwise.</span>
@@ -204,7 +205,7 @@
 
 <span class="n">INTERNAL_IPS</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">GlobList</span><span class="p">(</span><span class="n">_internal_ip_list</span><span class="p">)</span>
 
-<span class="c1"># Used for Filecenter access</span>
+<span class="c1"># Used for Filecenter access; FCPS external/internal IP ranges</span>
 <span class="n">_tj_ip_list</span> <span class="o">=</span> <span class="n">_internal_ip_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;151.188.0.0/18&quot;</span><span class="p">,</span> <span class="s2">&quot;151.188.192.0/18&quot;</span><span class="p">,</span> <span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">]</span>
 
 <span class="n">TJ_IPS</span> <span class="o">=</span> <span class="n">helpers</span><span class="o">.</span><span class="n">GlobList</span><span class="p">(</span><span class="n">_tj_ip_list</span><span class="p">)</span>
@@ -228,6 +229,7 @@
 <span class="n">EMAIL_FROM</span> <span class="o">=</span> <span class="s2">&quot;ion-noreply@tjhsst.edu&quot;</span>
 
 <span class="c1"># Address to send production error messages</span>
+<span class="c1"># define in secret.py</span>
 
 <span class="k">if</span> <span class="n">ADMINS</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
     <span class="n">ADMINS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Dummy User&quot;</span><span class="p">,</span> <span class="s2">&quot;root@localhost&quot;</span><span class="p">)]</span>
@@ -236,7 +238,7 @@
 
 <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span> <span class="s1">&#39;CONN_MAX_AGE&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}}</span>  <span class="c1"># type: Dict[str,Dict[str,Any]]</span>
 
-<span class="c1"># In-memory sqlite3 databases signifigantly speeds up the tests.</span>
+<span class="c1"># In-memory sqlite3 databases significantly speed up running tests.</span>
 <span class="k">if</span> <span class="n">TESTING</span><span class="p">:</span>
     <span class="n">DATABASES</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;ENGINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span>
     <span class="c1"># Horrible hack to suppress all migrations to speed up the tests.</span>
@@ -267,18 +269,28 @@
 <span class="n">FILES_MAX_UPLOAD_SIZE</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
 <span class="n">FILES_MAX_DOWNLOAD_SIZE</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
 
+<span class="c1"># Custom error view for CSRF errors; if unspecified, caught by nginx with a generic error</span>
 <span class="n">CSRF_FAILURE_VIEW</span> <span class="o">=</span> <span class="s2">&quot;intranet.apps.error.views.handle_csrf_view&quot;</span>
 
-<span class="c1"># Django 1.9 gives the warning that &quot;Your url pattern has a regex beginning with</span>
-<span class="c1"># a &#39;/&#39;. Remove this slash as it is unnecessary.&quot; In our use case, the slash actually</span>
-<span class="c1"># is important; in urls.py we include() a separate urls.py inside of each app, and the</span>
-<span class="c1"># pattern for each does not end in a slash. This allows us to match the index page of</span>
-<span class="c1"># the app without a slash, and then we add the slash manually in every other rule.</span>
-<span class="c1"># Without this, we&#39;d have urls like /announcements/?show_all=true which is just ugly.</span>
-<span class="c1"># Thus, we silence this system check. -- JW, 12/30/2015</span>
-<span class="c1"># W001 doesn&#39;t apply, as we use nginx to handle SecurityMiddleware&#39;s functions.</span>
-<span class="c1"># Suppress W019, as we use frames in the signage module.</span>
-<span class="n">SILENCED_SYSTEM_CHECKS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;urls.W002&quot;</span><span class="p">,</span> <span class="s2">&quot;security.W001&quot;</span><span class="p">,</span> <span class="s2">&quot;security.W019&quot;</span><span class="p">]</span>
+<span class="c1">############################################</span>
+<span class="c1">#    OPSEC: GIVE A REASON FOR SILENCING    #</span>
+<span class="c1">#    SYSTEM CHECKS IF YOU ADD ONE HERE!    #</span>
+<span class="c1">############################################</span>
+
+<span class="n">SILENCED_SYSTEM_CHECKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># Django 1.9 gives the warning that &quot;Your url pattern has a regex beginning with</span>
+    <span class="c1"># a &#39;/&#39;. Remove this slash as it is unnecessary.&quot; In our use case, the slash actually</span>
+    <span class="c1"># is important; in urls.py we include() a separate urls.py inside of each app, and the</span>
+    <span class="c1"># pattern for each does not end in a slash. This allows us to match the index page of</span>
+    <span class="c1"># the app without a slash, and then we add the slash manually in every other rule.</span>
+    <span class="c1"># Without this, we&#39;d have urls like /announcements/?show_all=true which is just ugly.</span>
+    <span class="c1"># Thus, we silence this system check. -- JW, 12/30/2015</span>
+    <span class="s2">&quot;urls.W002&quot;</span><span class="p">,</span>
+    <span class="c1"># W001 doesn&#39;t apply, as we use nginx to handle SecurityMiddleware&#39;s functions.</span>
+    <span class="s2">&quot;security.W001&quot;</span><span class="p">,</span>
+    <span class="c1"># Suppress W019, as we use frames in the signage module.</span>
+    <span class="s2">&quot;security.W019&quot;</span>
+<span class="p">]</span>
 
 <span class="c1"># Hosts/domain names that are valid for this site; required if DEBUG is False</span>
 <span class="c1"># See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts</span>
@@ -793,7 +805,10 @@
     <span class="n">DEBUG_TOOLBAR_CONFIG</span><span class="p">[</span><span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;intranet.utils.helpers.debug_toolbar_callback&quot;</span>
 
 <span class="c1"># Maintenance mode</span>
-<span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="c1"># This should be adjusted in secrets.py or by running:</span>
+<span class="c1"># ./manage.py maintenance [on|off]</span>
+<span class="k">if</span> <span class="n">MAINTENANCE_MODE</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">MAINTENANCE_MODE</span> <span class="o">=</span> <span class="bp">False</span>
 
 <span class="c1"># Allow *.tjhsst.edu sites to access API, signage, and other resources</span>
 <span class="n">CORS_ORIGIN_ALLOW_ALL</span> <span class="o">=</span> <span class="bp">False</span>
@@ -833,6 +848,8 @@
 
 <span class="c1"># The address for FCPS&#39; Emergency Announcement page</span>
 <span class="n">FCPS_EMERGENCY_PAGE</span> <span class="o">=</span> <span class="s2">&quot;http://www.fcps.edu/content/emergencyContent.html&quot;</span>
+<span class="c1"># The timeout for the request to FCPS&#39; emergency page (in seconds)</span>
+<span class="n">FCPS_EMERGENCY_TIMEOUT</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="c1"># Shows a warning message with yellow background on the login page</span>
 <span class="c1"># LOGIN_WARNING = &quot;This is a message to display on the login page.&quot;</span>

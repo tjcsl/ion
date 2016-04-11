@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.dashboard package &mdash; TJ Intranet v3 (Build #2065) documentation</title>
+    <title>intranet.apps.dashboard package &mdash; TJ Intranet v3 (Build #2073) documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     'v3 (Build #2065)',
+        VERSION:     'v3 (Build #2073)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2065) documentation" href="../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2073) documentation" href="../index.html" />
     <link rel="up" title="intranet.apps package" href="intranet.apps.html" />
     <link rel="next" title="intranet.apps.eighth package" href="intranet.apps.eighth.html" />
     <link rel="prev" title="intranet.apps.board package" href="intranet.apps.board.html" />
@@ -162,9 +162,22 @@
 <div class="section" id="module-intranet.apps.dashboard.views">
 <span id="intranet-apps-dashboard-views-module"></span><h2>intranet.apps.dashboard.views module<a class="headerlink" href="#module-intranet.apps.dashboard.views" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="intranet.apps.dashboard.views.add_widgets_context">
+<code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">add_widgets_context</code><span class="sig-paren">(</span><em>request</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#add_widgets_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.add_widgets_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>WIDGETS:
+* Eighth signup (STUDENT)
+* Eighth attendance (TEACHER or ADMIN)
+* Bell schedule (ALL)
+* Birthdays (ALL)
+* Administration (ADMIN)
+* Links (ALL)
+* Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="intranet.apps.dashboard.views.dashboard_view">
 <code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">dashboard_view</code><span class="sig-paren">(</span><em>request</em>, <em>show_widgets=True</em>, <em>show_expired=False</em>, <em>ignore_dashboard_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#dashboard_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.dashboard_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process and show the dashboard.</p>
+<dd><p>Process and show the dashboard, which includes activities, events, and widgets.</p>
 </dd></dl>
 
 <dl class="function">
@@ -202,6 +215,48 @@ num_acts</dd>
 </dd></dl>
 
 <dl class="function">
+<dt id="intranet.apps.dashboard.views.get_announcements_list">
+<code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">get_announcements_list</code><span class="sig-paren">(</span><em>request</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#get_announcements_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.get_announcements_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>An announcement will be shown if:
+* It is not expired</p>
+<blockquote>
+<div><ul class="simple">
+<li>unless ?show_expired=1</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>It is visible to the user<ul>
+<li>There are no groups on the announcement (so it is public)</li>
+<li>The user&#8217;s groups are in union with the groups on the
+announcement (at least one matches)</li>
+<li>The user submitted the announcement directly</li>
+<li>The user submitted the announcement through a request</li>
+<li>The user approved the announcement through a request</li>
+<li>...unless ?show_all=1</li>
+</ul>
+</li>
+</ul>
+<p>An event will be shown if:
+* It is not expired</p>
+<blockquote>
+<div><ul class="simple">
+<li>unless ?show_expired=1</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>It is approved<ul>
+<li>unless an events admin</li>
+</ul>
+</li>
+<li>It is visible to the user<ul>
+<li>There are no groups</li>
+<li>The groups are in union</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
 <dt id="intranet.apps.dashboard.views.get_fcps_emerg">
 <code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">get_fcps_emerg</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#get_fcps_emerg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.get_fcps_emerg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return FCPS emergency information.</p>
@@ -211,6 +266,12 @@ num_acts</dd>
 <dt id="intranet.apps.dashboard.views.get_prerender_url">
 <code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">get_prerender_url</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#get_prerender_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.get_prerender_url" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="intranet.apps.dashboard.views.paginate_announcements_list">
+<code class="descclassname">intranet.apps.dashboard.views.</code><code class="descname">paginate_announcements_list</code><span class="sig-paren">(</span><em>request</em>, <em>context</em>, <em>items</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/dashboard/views.html#paginate_announcements_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#intranet.apps.dashboard.views.paginate_announcements_list" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>*TODO*</strong> Migrate to django Paginator (see lostitems)</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-intranet.apps.dashboard">

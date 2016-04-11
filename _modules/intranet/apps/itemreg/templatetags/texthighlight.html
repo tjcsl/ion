@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.users.templatetags.users &mdash; TJ Intranet v3 (Build #2073) documentation</title>
+    <title>intranet.apps.itemreg.templatetags.texthighlight &mdash; TJ Intranet v3 (Build #2073) documentation</title>
     
     <link rel="stylesheet" href="../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
@@ -144,33 +144,21 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for intranet.apps.users.templatetags.users</h1><div class="highlight"><pre>
+  <h1>Source code for intranet.apps.itemreg.templatetags.texthighlight</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
-<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
 
-<span class="kn">from</span> <span class="nn">intranet.middleware</span> <span class="kn">import</span> <span class="n">threadlocals</span>
-<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">User</span>
-
 <span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
 <span class="nd">@register.filter</span>
-<div class="viewcode-block" id="user_attr"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.users.templatetags.html#intranet.apps.users.templatetags.users.user_attr">[docs]</a><span class="k">def</span> <span class="nf">user_attr</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Gets an attribute of the user with the given username.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">),</span> <span class="n">attribute</span><span class="p">)</span></div>
-
-
-<span class="nd">@register.filter</span>
-<div class="viewcode-block" id="argument_request_user"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.users.templatetags.html#intranet.apps.users.templatetags.users.argument_request_user">[docs]</a><span class="k">def</span> <span class="nf">argument_request_user</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">funcName</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Pass request.user as an argument to the given function call.&quot;&quot;&quot;</span>
-    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">funcName</span><span class="p">)</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">threadlocals</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">request</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></div>
+<div class="viewcode-block" id="highlight"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.itemreg.templatetags.html#intranet.apps.itemreg.templatetags.texthighlight.highlight">[docs]</a><span class="k">def</span> <span class="nf">highlight</span><span class="p">(</span><span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Highlight str1 with the contents of str2.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">str1</span> <span class="ow">and</span> <span class="n">str2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">str1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">str2</span><span class="p">,</span> <span class="s2">&quot;&lt;b&gt;{}&lt;/b&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">str2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">str1</span></div>
 </pre></div>
 
     </div>
