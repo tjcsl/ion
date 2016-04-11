@@ -126,8 +126,8 @@ FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 
 ############################################
-#### OPSEC: GIVE A REASON FOR SILENCING ####
-#### SYSTEM CHECKS IF YOU ADD ONE HERE! ####
+#    OPSEC: GIVE A REASON FOR SILENCING    #
+#    SYSTEM CHECKS IF YOU ADD ONE HERE!    #
 ############################################
 
 SILENCED_SYSTEM_CHECKS = [
