@@ -27,8 +27,8 @@ try:
 except ImportError:
     pass
 
-PRODUCTION = os.getenv("PRODUCTION").upper() == "TRUE"
-TRAVIS = os.getenv("TRAVIS").upper() == "TRUE"
+PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
+TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
 # FIXME: figure out a less-hacky way to do this.
 TESTING = ('test' in sys.argv)
 LOGGING_VERBOSE = PRODUCTION
