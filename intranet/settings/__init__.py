@@ -27,10 +27,10 @@ try:
 except ImportError:
     pass
 
-PRODUCTION = os.getenv("PRODUCTION") == "TRUE"
-TRAVIS = os.getenv("TRAVIS") == "true"
+PRODUCTION = os.getenv("PRODUCTION").upper() == "TRUE"
+TRAVIS = os.getenv("TRAVIS").upper() == "TRUE"
 # FIXME: figure out a less-hacky way to do this.
-TESTING = 'test' in sys.argv
+TESTING = ('test' in sys.argv)
 LOGGING_VERBOSE = PRODUCTION
 
 # DEBUG defaults to off in PRODUCTION, on otherwise.
@@ -57,7 +57,7 @@ if not PRODUCTION:
 
 INTERNAL_IPS = helpers.GlobList(_internal_ip_list)
 
-# Used for Filecenter access
+# Used for Filecenter access; FCPS external/internal IP ranges
 _tj_ip_list = _internal_ip_list + ["151.188.0.0/18", "151.188.192.0/18", "10.0.0.0/8"]
 
 TJ_IPS = helpers.GlobList(_tj_ip_list)
@@ -81,6 +81,7 @@ EMAIL_ANNOUNCEMENTS = True
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Address to send production error messages
+# define in secret.py
 
 if ADMINS is None:
     ADMINS = [("Dummy User", "root@localhost")]
@@ -89,7 +90,7 @@ if ADMINS is None:
 
 DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'CONN_MAX_AGE': 30}}  # type: Dict[str,Dict[str,Any]]
 
-# In-memory sqlite3 databases signifigantly speeds up the tests.
+# In-memory sqlite3 databases significantly speed up running tests.
 if TESTING:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     # Horrible hack to suppress all migrations to speed up the tests.
@@ -120,18 +121,28 @@ PRINTING_PAGES_LIMIT = 15
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
 FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
+# Custom error view for CSRF errors; if unspecified, caught by nginx with a generic error
 CSRF_FAILURE_VIEW = "intranet.apps.error.views.handle_csrf_view"
 
-# Django 1.9 gives the warning that "Your url pattern has a regex beginning with
-# a '/'. Remove this slash as it is unnecessary." In our use case, the slash actually
-# is important; in urls.py we include() a separate urls.py inside of each app, and the
-# pattern for each does not end in a slash. This allows us to match the index page of
-# the app without a slash, and then we add the slash manually in every other rule.
-# Without this, we'd have urls like /announcements/?show_all=true which is just ugly.
-# Thus, we silence this system check. -- JW, 12/30/2015
-# W001 doesn't apply, as we use nginx to handle SecurityMiddleware's functions.
-# Suppress W019, as we use frames in the signage module.
-SILENCED_SYSTEM_CHECKS = ["urls.W002", "security.W001", "security.W019"]
+############################################
+#### OPSEC: GIVE A REASON FOR SILENCING ####
+#### SYSTEM CHECKS IF YOU ADD ONE HERE! ####
+############################################
+
+SILENCED_SYSTEM_CHECKS = [
+    # Django 1.9 gives the warning that "Your url pattern has a regex beginning with
+    # a '/'. Remove this slash as it is unnecessary." In our use case, the slash actually
+    # is important; in urls.py we include() a separate urls.py inside of each app, and the
+    # pattern for each does not end in a slash. This allows us to match the index page of
+    # the app without a slash, and then we add the slash manually in every other rule.
+    # Without this, we'd have urls like /announcements/?show_all=true which is just ugly.
+    # Thus, we silence this system check. -- JW, 12/30/2015
+    "urls.W002",
+    # W001 doesn't apply, as we use nginx to handle SecurityMiddleware's functions.
+    "security.W001",
+    # Suppress W019, as we use frames in the signage module.
+    "security.W019"
+]
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
@@ -646,7 +657,12 @@ if SHOW_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG["SHOW_TOOLBAR_CALLBACK"] = "intranet.utils.helpers.debug_toolbar_callback"
 
 # Maintenance mode
-MAINTENANCE_MODE = False
+# This should be adjusted in secrets.py or by running:
+# ./manage.py maintenance [on|off]
+try:
+    MAINTENANCE_MODE = MAINTENANCE_MODE
+except NameError:
+    MAINTENANCE_MODE = False
 
 # Allow *.tjhsst.edu sites to access API, signage, and other resources
 CORS_ORIGIN_ALLOW_ALL = False
@@ -686,6 +702,8 @@ CLEAR_ABSENCE_DAYS = 14
 
 # The address for FCPS' Emergency Announcement page
 FCPS_EMERGENCY_PAGE = "http://www.fcps.edu/content/emergencyContent.html"
+# The timeout for the request to FCPS' emergency page (in seconds)
+FCPS_EMERGENCY_TIMEOUT = 2
 
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
