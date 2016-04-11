@@ -124,11 +124,17 @@ class Announcement(models.Model):
     def is_visible(self, user):
         return (self in Announcement.objects.visible_to_user(user))
 
+    _announcementrequest = None
     @property
     def announcementrequest(self):
+        if self._announcementrequest:
+            return self._announcementrequest
+
         a = self.announcementrequest_set
         if a.count() > 0:
-            return a.first()
+            ar = a.first()
+            self._announcementrequest = ar
+            return ar
 
     def is_visible_requester(self, user):
         return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())

@@ -262,6 +262,107 @@ def get_prerender_url(request):
     return request.build_absolute_uri(reverse(view))
 
 
+def get_announcements_list(request, context):
+    user = context["user"]
+
+    if context["announcements_admin"] and context["show_all"]:
+        # Show all announcements if user has admin permissions and the
+        # show_all GET argument is given.
+        announcements = (Announcement.objects.all())
+    else:
+        # Only show announcements for groups that the user is enrolled in.
+        if context["show_expired"]:
+            announcements = (Announcement.objects.visible_to_user(user))
+        else:
+            announcements = (Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now()))
+
+    if context["events_admin"] and context["show_all"]:
+        events = (Event.objects.all())
+    else:
+        if context["show_expired"]:
+            events = (Event.objects.visible_to_user(user))
+        else:
+            # Unlike announcements, show events for the rest of the day after they occur.
+            midnight = timezone.datetime.combine(timezone.make_aware(datetime.now(), timezone.get_current_timezone()).date(), time(0, 0))
+            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True))
+
+    items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
+    items.reverse()
+
+    return items
+
+
+def paginate_announcements_list(request, context, items):
+    # pagination
+    if "start" in request.GET:
+        try:
+            start_num = int(request.GET.get("start"))
+        except ValueError:
+            start_num = 0
+    else:
+        start_num = 0
+
+    display_num = 10
+    end_num = start_num + display_num
+    prev_page = start_num - display_num
+    more_items = ((len(items) - start_num) > display_num)
+    try:
+        items_sorted = items[start_num:end_num]
+    except (ValueError, AssertionError):
+        items_sorted = items[:display_num]
+    else:
+        items = items_sorted
+
+    context.update({
+        "items": items,
+        "start_num": start_num,
+        "end_num": end_num,
+        "prev_page": prev_page,
+        "more_items": more_items,
+    })
+
+    return context, items
+
+
+def add_widgets_context(request, context):
+    user = context["user"]
+    if context["is_student"] or context["eighth_sponsor"]:
+        num_blocks = 6
+        surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
+
+    if context["is_student"]:
+        schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
+        context.update({
+            "schedule": schedule,
+            "no_signup_today": no_signup_today,
+            "senior_graduation": settings.SENIOR_GRADUATION,
+            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
+        })
+
+    if context["eighth_sponsor"]:
+        sponsor_date = request.GET.get("sponsor_date", None)
+        if sponsor_date:
+            sponsor_date = decode_date(sponsor_date)
+            if sponsor_date:
+                block = EighthBlock.objects.filter(date__gte=sponsor_date).first()
+                if block:
+                    surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
+                else:
+                    surrounding_blocks = []
+
+        sponsor_sch = gen_sponsor_schedule(user, context["eighth_sponsor"], num_blocks, surrounding_blocks, sponsor_date)
+        context.update(sponsor_sch)
+        # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
+        # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
+
+    birthdays = find_birthdays(request)
+    context["birthdays"] = birthdays
+
+    sched_ctx = schedule_context(request)
+    context.update(sched_ctx)
+
+    return context
+
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None):
     """Process and show the dashboard."""
@@ -274,61 +375,25 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     if not show_expired:
         show_expired = ("show_expired" in request.GET)
 
+    show_all = ("show_all" in request.GET)
+    paginate_link_suffix = "&show_all=True" if show_all else ""
     is_index_page = (request.path_info in ["/", ""])
+
 
     context = {
         "prerender_url": get_prerender_url(request),
         "user": user,
         "announcements_admin": announcements_admin,
         "events_admin": events_admin,
-        "is_index_page": is_index_page
+        "is_index_page": is_index_page,
+        "show_all": show_all,
+        "paginate_link_suffix": paginate_link_suffix,
+        "show_expired": show_expired
     }
 
-    if announcements_admin and "show_all" in request.GET:
-        # Show all announcements if user has admin permissions and the
-        # show_all GET argument is given.
-        announcements = (Announcement.objects.all())
-    else:
-        # Only show announcements for groups that the user is enrolled in.
-        if show_expired:
-            announcements = (Announcement.objects.visible_to_user(user))
-        else:
-            announcements = (Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now()))
+    items = get_announcements_list(request, context)
 
-    if events_admin and "show_all" in request.GET:
-        events = (Event.objects.all())
-    else:
-        if show_expired:
-            events = (Event.objects.visible_to_user(user))
-        else:
-            # Unlike announcements, show events for the rest of the day after they occur.
-            midnight = timezone.datetime.combine(timezone.make_aware(datetime.now(), timezone.get_current_timezone()).date(), time(0, 0))
-            events = (Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True))
-
-    logger.debug(events)
-
-    items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
-    items.reverse()
-    logger.debug(items)
-
-    # pagination
-    if "start" in request.GET:
-        try:
-            start_num = int(request.GET.get("start"))
-        except ValueError:
-            start_num = 0
-    else:
-        start_num = 0
-
-    display_num = 10
-    end_num = start_num + display_num
-    more_items = ((len(items) - start_num) > display_num)
-    try:
-        items_sorted = items[start_num:end_num]
-    except (ValueError, AssertionError):
-        items_sorted = items[:display_num]
-    else:
-        items = items_sorted
+    context, items = paginate_announcements_list(request, context, items)
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True))
     user_hidden_events = (Event.objects.hidden_events(user).values_list("id", flat=True))
@@ -337,11 +402,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         ignore_dashboard_types = []
 
     context.update({
-        "items": items,
-        "start_num": start_num,
-        "end_num": end_num,
-        "prev_page": start_num - display_num,
-        "more_items": more_items,
         "hide_announcements": True,
         "hide_events": True,
         "user_hidden_announcements": user_hidden_announcements,
@@ -391,42 +451,12 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "is_senior": is_senior,
         "is_global_admin": is_global_admin,
         "show_admin_widget": show_admin_widget,
+        "eighth_sponsor": eighth_sponsor,
         "num_senior_destinations": num_senior_destinations
     })
 
     if show_widgets:
-        if is_student or eighth_sponsor:
-            num_blocks = 6
-            surrounding_blocks = EighthBlock.objects.get_upcoming_blocks(num_blocks)
-
-        if is_student:
-            schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
-            context.update({"schedule": schedule,
-                            "no_signup_today": no_signup_today,
-                            "senior_graduation": settings.SENIOR_GRADUATION,
-                            "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR})
-
-        if eighth_sponsor:
-            sponsor_date = request.GET.get("sponsor_date", None)
-            if sponsor_date:
-                sponsor_date = decode_date(sponsor_date)
-                if sponsor_date:
-                    block = EighthBlock.objects.filter(date__gte=sponsor_date).first()
-                    if block:
-                        surrounding_blocks = [block] + list(block.next_blocks(num_blocks - 1))
-                    else:
-                        surrounding_blocks = []
-
-            sponsor_sch = gen_sponsor_schedule(user, eighth_sponsor, num_blocks, surrounding_blocks, sponsor_date)
-            context.update(sponsor_sch)
-            # "sponsor_schedule", "no_attendance_today", "num_attendance_acts",
-            # "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"
-
-        context.update({
-            "eighth_sponsor": eighth_sponsor,
-            "birthdays": find_birthdays(request),
-            "sched_ctx": schedule_context(request)["sched_ctx"]}
-        )
+        context = add_widgets_context(request, context)
 
     if announcements_admin:
         all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False)
