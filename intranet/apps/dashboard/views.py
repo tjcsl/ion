@@ -263,6 +263,29 @@ def get_prerender_url(request):
 
 
 def get_announcements_list(request, context):
+    """
+    An announcement will be shown if:
+    * It is not expired
+      * unless ?show_expired=1
+    * It is visible to the user
+      * There are no groups on the announcement (so it is public)
+      * The user's groups are in union with the groups on the
+        announcement (at least one matches)
+      * The user submitted the announcement directly
+      * The user submitted the announcement through a request
+      * The user approved the announcement through a request
+      * ...unless ?show_all=1
+
+    An event will be shown if:
+    * It is not expired
+      * unless ?show_expired=1
+    * It is approved
+      * unless an events admin
+    * It is visible to the user
+      * There are no groups
+      * The groups are in union
+
+    """
     user = context["user"]
 
     if context["announcements_admin"] and context["show_all"]:
@@ -293,6 +316,11 @@ def get_announcements_list(request, context):
 
 
 def paginate_announcements_list(request, context, items):
+    """
+    ***TODO*** Migrate to django Paginator (see lostitems)
+
+    """
+
     # pagination
     if "start" in request.GET:
         try:
@@ -325,6 +353,17 @@ def paginate_announcements_list(request, context, items):
 
 
 def add_widgets_context(request, context):
+    """
+    WIDGETS:
+    * Eighth signup (STUDENT)
+    * Eighth attendance (TEACHER or ADMIN)
+    * Bell schedule (ALL)
+    * Birthdays (ALL)
+    * Administration (ADMIN)
+    * Links (ALL)
+    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)
+    """
+
     user = context["user"]
     if context["is_student"] or context["eighth_sponsor"]:
         num_blocks = 6
@@ -365,7 +404,7 @@ def add_widgets_context(request, context):
 
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None):
-    """Process and show the dashboard."""
+    """Process and show the dashboard, which includes activities, events, and widgets."""
 
     user = request.user
 
@@ -375,8 +414,13 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     if not show_expired:
         show_expired = ("show_expired" in request.GET)
 
-    show_all = ("show_all" in request.GET)
-    paginate_link_suffix = "&show_all=True" if show_all else ""
+    show_all = (request.GET.get("show_all", "0") != "0")
+    if "show_all" not in request.GET and request.user.is_eighthoffice:
+        # Show all by default to 8th period office
+        show_all = True
+
+    # Include show_all postfix on next/prev links
+    paginate_link_suffix = "&show_all=1" if show_all else ""
     is_index_page = (request.path_info in ["/", ""])
 
 
@@ -391,8 +435,10 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "show_expired": show_expired
     }
 
+    # Get list of announcements
     items = get_announcements_list(request, context)
 
+    # Paginate announcements list
     context, items = paginate_announcements_list(request, context, items)
 
     user_hidden_announcements = (Announcement.objects.hidden_announcements(user).values_list("id", flat=True))
