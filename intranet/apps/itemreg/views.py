@@ -120,9 +120,88 @@ def lostitem_view(request, item_id):
     lostitem = get_object_or_404(LostItem, id=item_id)
     return render(request, "itemreg/item_view.html", {"item": lostitem, "type": "lost"})
 
+
+@login_required
 def founditem_add_view(request):
-    pass
+    """Add a founditem."""
+    if request.method == "POST":
+        form = FoundItemForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            # SAFE HTML
+            obj.description = bleach.linkify(obj.description)
+            obj.save()
+            messages.success(request, "Successfully added found item.")
+            return redirect("founditem_view", obj.id)
+        else:
+            messages.error(request, "Error adding found item.")
+    else:
+        form = FoundItemForm()
+    return render(request, "itemreg/founditem_form.html", {"form": form, "action": "add"})
 
 
-def founditem_delete_view(request):
-    pass
+@login_required
+def founditem_modify_view(request, item_id=None):
+    """Modify a founditem.
+
+    id: founditem id
+
+    """
+    if request.method == "POST":
+        founditem = get_object_or_404(FoundItem, id=item_id)
+        form = FoundItemForm(request.POST, instance=founditem)
+        if form.is_valid():
+            obj = form.save()
+            logger.debug(form.cleaned_data)
+            # SAFE HTML
+            obj.description = bleach.linkify(obj.description)
+            obj.save()
+            messages.success(request, "Successfully modified found item.")
+            return redirect("founditem_view", obj.id)
+        else:
+            messages.error(request, "Error adding found item.")
+    else:
+        founditem = get_object_or_404(FoundItem, id=item_id)
+        form = FoundItemForm(instance=founditem)
+
+    context = {"form": form, "action": "modify", "id": item_id, "founditem": founditem}
+    return render(request, "itemreg/founditem_form.html", context)
+
+
+@login_required
+def founditem_delete_view(request, item_id):
+    """Delete a founditem.
+
+    id: founditem id
+
+    """
+    if request.method == "POST":
+        try:
+            a = FoundItem.objects.get(id=item_id)
+            if request.POST.get("full_delete", False):
+                a.delete()
+                messages.success(request, "Successfully deleted found item.")
+            else:
+                a.found = True
+                a.save()
+                messages.success(request, "Successfully marked found item as found!")
+        except Announcement.DoesNotExist:
+            pass
+
+        return redirect("index")
+    else:
+        founditem = get_object_or_404(FoundItem, id=item_id)
+        return render(request, "itemreg/founditem_delete.html", {"founditem": founditem})
+
+
+@login_required
+def founditem_view(request, item_id):
+    """View a founditem.
+
+    id: founditem id
+
+    """
+    founditem = get_object_or_404(FoundItem, id=item_id)
+    return render(request, "itemreg/item_view.html", {"item": founditem, "type": "found"})
