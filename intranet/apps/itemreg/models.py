@@ -52,8 +52,12 @@ class CalculatorRegistration(models.Model):
     calc_type = models.CharField(max_length=10, choices=CALC_CHOICES)
     added = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def calc_name(self):
+        return {i[0]: i[1] for i in self.CALC_CHOICES}[self.calc_type]
+
     def __str__(self):
-        return "{}'s {}".format(self.user, self.calc_type)
+        return "{}'s {}".format(self.user.full_name, self.calc_name)
 
 
 class ComputerRegistration(models.Model):
@@ -80,7 +84,7 @@ class ComputerRegistration(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
+        return "{}'s {} {}".format(self.user.full_name, self.manufacturer, self.model)
 
 
 class PhoneRegistration(models.Model):
@@ -103,4 +107,4 @@ class PhoneRegistration(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}'s {} {}".format(self.user, self.manufacturer, self.model)
+        return "{}'s {} {}".format(self.user.full_name, self.manufacturer, self.model)

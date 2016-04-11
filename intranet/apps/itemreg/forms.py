@@ -50,6 +50,7 @@ class ComputerRegistrationForm(forms.ModelForm):
         fields = [
             "manufacturer",
             "model",
+            "screen_size",
             "serial",
             "description"
         ]

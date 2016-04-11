@@ -24,6 +24,16 @@
 
     <p>Registering your calculator, computer, and phone through Intranet helps students and staff return your device if it is found.</p>
 
+    {% if registered_devices %}
+        <p>You've registered the following devices:</p>
+        {% for calc in calculators %}
+            <b>Calculator:</b> {{ calc.calc_name }} - Serial: {{ calc.calc_serial }} - ID: {{ calc.calc_id }} - Added: {{ calc.added }} <a href="{% url 'itemreg_delete' 'calculator' calc.id %}"><i class="fa fa-trash-o"></i></a>
+            <br />
+        {% endfor %}
+    {% else %}
+        <p>You haven't registered any devices! Register a device using the buttons below.</p>
+    {% endif %}
+    <br />
     <a href="{% url 'itemreg_calculator' %}" class="button">
         Register Calculator
     </a> &nbsp; &nbsp; 

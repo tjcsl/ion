@@ -28,7 +28,14 @@ def home_view(request):
         lost = lost_pg.page(1)
         found = found_pg.page(1)
 
+    calculators = CalculatorRegistration.objects.filter(user=request.user)
+    phones = PhoneRegistration.objects.filter(user=request.user)
+    computers = ComputerRegistration.objects.filter(user=request.user)
     context = {
+        "registered_devices": (calculators or phones or computers),
+        "calculators": calculators,
+        "computers": computers,
+        "phones": phones,
         "lost": lost,
         "found": found,
         "previous_page": lost.previous_page_number if lost.previous_page_number else found.previous_page_number,
@@ -89,6 +96,26 @@ def register_phone_view(request):
     else:
         form = PhoneRegistrationForm()
     return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "phone", "form_route": "itemreg_phone"})
+
+@login_required
+def register_delete_view(request, type, id):
+    if type == "calculator":
+        obj = CalculatorRegistration.objects.get(id=id)
+    elif type == "computer":
+        obj = ComputerRegistration.objects.get(id=id)
+    elif type == "phone":
+        obj = PhoneRegistration.objects.get(id=id)
+    else:
+        raise http.Http404
+
+    if request.method == "POST" and "confirm" in request.POST:
+        if obj.user == request.user:
+            obj.delete()
+            messages.success(request, "Deleted {}".format(type))
+            return redirect("itemreg")
+
+    return render(request, "itemreg/register_delete.html", {"type": type, "id": id, "obj": obj})
+
 
 @login_required
 def lostitem_add_view(request):
