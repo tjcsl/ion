@@ -55,6 +55,16 @@
             {% endfor %}
         </div>
     </div>
+    {% if lost.has_previous or found.has_previous %}
+        <a href="{% url 'itemreg' %}?page={{ previous_page }}" class="button">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    {% endif %}
 
+    {% if lost.has_next or found.has_next %}
+        <a href="{% url 'itemreg' %}?page={{ next_page }}" class="button" style="float: right">
+            Next <i class="fa fa-arrow-right"></i>
+        </a>
+    {% endif %}
 </div>
 {% endblock %}

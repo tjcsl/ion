@@ -13,6 +13,9 @@ class LostItem(models.Model):
     def __str__(self):
         return "{}".format(self.title)
 
+    class Meta:
+        ordering = ["-added"]
+
 
 class FoundItem(models.Model):
     user = models.ForeignKey(User, null=True)
@@ -24,6 +27,9 @@ class FoundItem(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+    class Meta:
+        ordering = ["-added"]
 
 
 class CalculatorRegistration(models.Model):

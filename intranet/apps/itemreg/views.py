@@ -30,7 +30,9 @@ def home_view(request):
 
     context = {
         "lost": lost,
-        "found": found
+        "found": found,
+        "previous_page": lost.previous_page_number if lost.previous_page_number else found.previous_page_number,
+        "next_page": lost.next_page_number if lost.next_page_number else found.next_page_number 
     }
     return render(request, "itemreg/home.html", context)
 
