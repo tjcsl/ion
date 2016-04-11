@@ -1,0 +1,83 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+{% load pipeline %}
+{% load texthighlight %}
+
+{% block title %}
+    {{ block.super }} - Lost and Found
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'lostfound' %}
+    <style type="text/css">
+    .errorlist {
+        display: none;
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="lostfound primary-content">
+    <a href="{% url 'itemreg' %}" class="button">
+        <i class="fa fa-arrow-left"></i> Item Registration
+    </a>
+    <h2>
+        Item Search
+    </h2>
+
+    <table style="width: 100%">
+        <tr>
+        <td>
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <div style="font-size: 16px">Find Calculator:</div>
+                <input type="hidden" name="type" value="calculator" />
+                <table>
+                {{ calc_form }}
+                <tr><td><input type="submit" value="Search" /></td></tr>
+                </table>
+            </form>
+        </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+
+    <div style="font-size: 16px">Results:</div>
+    {% if type == "calculator" %}
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Serial</th>
+                <th>ID</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.calc_name }}</td>
+            <td>{{ c.calc_serial|highlight:request.GET.calc_serial|safe }}</td>
+            <td>{{ c.calc_id|highlight:request.GET.calc_id|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% empty %}
+            <tr><td colspan=5>No results.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        No results. Enter search criteria above, or hit the button below each category to display all entires of that type.
+    {% endif %}
+
+</div>
+{% endblock %}

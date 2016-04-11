@@ -5,6 +5,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import LostItem, FoundItem
 from .forms import LostItemForm
@@ -39,9 +40,52 @@ def home_view(request):
         "lost": lost,
         "found": found,
         "previous_page": lost.previous_page_number if lost.previous_page_number else found.previous_page_number,
-        "next_page": lost.next_page_number if lost.next_page_number else found.next_page_number 
+        "next_page": lost.next_page_number if lost.next_page_number else found.next_page_number,
+        "is_itemreg_admin": request.user.has_admin_permission("itemreg")
     }
     return render(request, "itemreg/home.html", context)
+
+@login_required
+def search_view(request):
+    type = request.GET.get("type", "")
+    context = {
+        "calc_form": CalculatorRegistrationForm(request.GET) if type == "calculator" else CalculatorRegistrationForm()
+    }
+    if type == "calculator":
+        results = CalculatorRegistration.objects.all()
+        logger.debug(results)
+
+        calc_serial = request.GET.get("calc_serial")
+        if calc_serial:
+            results = results.filter(calc_serial__icontains=calc_serial)
+
+        logger.debug(results)
+
+        calc_id = request.GET.get("calc_id")
+        if calc_id:
+            results = results.filter(calc_id__icontains=calc_id)
+
+        logger.debug(results)
+
+        calc_type = request.GET.get("calc_type")
+        if calc_type:
+            results = results.filter(calc_type=calc_type)
+
+        logger.debug(results)
+
+    elif type == "computer":
+        pass
+    elif type == "phone":
+        pass
+    else:
+        results = None
+
+    context.update({
+        "type": type,
+        "results": results
+    })
+
+    return render(request, "itemreg/search.html", context)
 
 @login_required
 def register_calculator_view(request):

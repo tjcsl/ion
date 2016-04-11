@@ -60,11 +60,21 @@
     </a>
 
     <br />
+    {% if request.user.is_teacher or is_itemreg_admin %}
+        <br />
+        <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
+        <br />
+        <a href="{% url 'itemreg_search' %}" class="button">
+            Search Database
+        </a>
+    {% endif %}
     <br />
 
     <h2>
         Lost and Found
     </h2>
+
+    <p>Lost something? Found something that isn't yours? Use this public fourm to report lost and found items. (Please be respectful and curteous; the TJ Honor Code applies.)</p>
 
     <div class="items-container">
         <div class="lost-items">
