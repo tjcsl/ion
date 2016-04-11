@@ -9,7 +9,8 @@ class LostItemForm(forms.ModelForm):
         fields = [
             "title",
             "description",
-            "last_seen"
+            "last_seen",
+            "found"
         ]
 
 
@@ -20,7 +21,8 @@ class FoundItemForm(forms.ModelForm):
         fields = [
             "title",
             "description",
-            "found"
+            "found",
+            "retrieved"
         ]
 
 

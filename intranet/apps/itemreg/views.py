@@ -110,6 +110,16 @@ def lostitem_delete_view(request, item_id):
         return render(request, "itemreg/lostitem_delete.html", {"lostitem": lostitem})
 
 
+@login_required
+def lostitem_view(request, item_id):
+    """View a lostitem.
+
+    id: lostitem id
+
+    """
+    lostitem = get_object_or_404(LostItem, id=item_id)
+    return render(request, "itemreg/item_view.html", {"item": lostitem, "type": "lost"})
+
 def founditem_add_view(request):
     pass
 

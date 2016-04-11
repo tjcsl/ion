@@ -3,18 +3,20 @@
     <h3>
         {{ item.title }}
 
-        {% if item.user == request.user or is_admin %}
-            <div class="item-icon-wrapper" style="display: block">
-            {% comment %}
+
+        <div class="item-icon-wrapper" style="display: block">
+            <a href="{% url 'founditem_view' item.id %}" title="Permalink">
+                <i class="fa fa-share-square-o"></i>
+            </a>
+            {% if item.user == request.user or is_admin %}
                 <a href="{% url 'founditem_modify' item.id %}">
                     <i class="item-icon fa fa-pencil"></i>
                 </a>
-            {% endcomment %}
                 <a href="{% url 'founditem_delete' item.id %}" class="item-delete">
                     <i class="item-icon fa fa-trash-o"></i>
                 </a>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </h3>
 
     <div class="item-metadata">
