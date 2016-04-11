@@ -1,0 +1,70 @@
+{% extends "page_with_nav.html" %}
+{% load staticfiles %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} {{ type|title }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/selectize.js-0.12.1/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="text/javascript">
+    $(function() {
+        $("#id_calc_type").selectize();
+    })
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/selectize.js-0.12.1/dist/css/selectize.default.css' %}" />
+    {% stylesheet 'announcements.form' %}
+    <style type="text/css">
+    .xdsoft_timepicker {
+        display: none !important;
+    }
+
+    .lostitem form input,
+    .lostitem form textarea {
+        width: 300px;
+    }
+
+    .lostitem form input[type="submit"] {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+<div class="lostitem primary-content">
+    <a href="{% url 'itemreg' %}" class="button">
+        <i class="fa fa-arrow-left"></i> Item Registration
+    </a>
+    <h2>
+        {{ action|title }} {{ type|title }}
+    </h2>
+    <br />
+    <form action="{% url form_route %}" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td colspan="2"><br /><input type="submit" /></td></tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+    // name of <textarea> is content
+    /*
+    CKEDITOR.replace("description", {
+        width: "600px"
+    });
+    */
+</script>
+{% endblock %}

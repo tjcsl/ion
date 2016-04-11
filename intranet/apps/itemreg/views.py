@@ -36,6 +36,59 @@ def home_view(request):
     }
     return render(request, "itemreg/home.html", context)
 
+@login_required
+def register_calculator_view(request):
+    """Register a calculator."""
+    if request.method == "POST":
+        form = CalculatorRegistrationForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully added calculator.")
+            return redirect("itemreg")
+        else:
+            messages.error(request, "Error adding calculator.")
+    else:
+        form = CalculatorRegistrationForm()
+    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "calculator", "form_route": "itemreg_calculator"})
+
+@login_required
+def register_computer_view(request):
+    """Register a computer."""
+    if request.method == "POST":
+        form = ComputerRegistrationForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully added computer.")
+            return redirect("itemreg")
+        else:
+            messages.error(request, "Error adding computer.")
+    else:
+        form = ComputerRegistrationForm()
+    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "computer", "form_route": "itemreg_computer"})
+
+@login_required
+def register_phone_view(request):
+    """Register a phone."""
+    if request.method == "POST":
+        form = PhoneRegistrationForm(request.POST)
+        logger.debug(form)
+        if form.is_valid():
+            obj = form.save()
+            obj.user = request.user
+            obj.save()
+            messages.success(request, "Successfully added phone.")
+            return redirect("itemreg")
+        else:
+            messages.error(request, "Error adding phone.")
+    else:
+        form = PhoneRegistrationForm()
+    return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "phone", "form_route": "itemreg_phone"})
 
 @login_required
 def lostitem_add_view(request):

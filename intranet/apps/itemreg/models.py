@@ -33,7 +33,7 @@ class FoundItem(models.Model):
 
 
 class CalculatorRegistration(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     calc_serial = models.CharField(max_length=10)
     calc_id = models.CharField(max_length=14)
     CALC_CHOICES = (
@@ -57,7 +57,7 @@ class CalculatorRegistration(models.Model):
 
 
 class ComputerRegistration(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     MANUF_CHOICES = (
         ("acer", "Acer"),
         ("apple", "Apple"),
@@ -84,7 +84,7 @@ class ComputerRegistration(models.Model):
 
 
 class PhoneRegistration(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     MANUF_CHOICES = (
         ("samsung", "Samsung"),
         ("apple", "Apple"),

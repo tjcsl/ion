@@ -28,6 +28,12 @@ class FoundItemForm(forms.ModelForm):
 
 class CalculatorRegistrationForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(CalculatorRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields["calc_type"].label = "Calculator Type"
+        self.fields["calc_serial"].label = "Calculator Serial"
+        self.fields["calc_id"].label = "Calculator ID"
+
     class Meta:
         model = CalculatorRegistration
         fields = [
