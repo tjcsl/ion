@@ -10,10 +10,12 @@ from ..models import User
 register = template.Library()
 logger = logging.getLogger(__name__)
 
+
 @register.filter
 def user_attr(username, attribute):
     """Gets an attribute of the user with the given username."""
     return getattr(User.get_user(username=username), attribute)
+
 
 @register.filter
 def argument_request_user(obj, funcName):

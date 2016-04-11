@@ -16,7 +16,9 @@ def check_emerg():
     """Fetch from FCPS' emergency announcement page.
 
     URL defined in settings.FCPS_EMERGENCY_PAGE
+
     Request timeout defined in settings.FCPS_EMERGENCY_TIMEOUT
+
     """
     status = True
     message = None
@@ -59,6 +61,7 @@ def get_emerg():
     """Get the cached FCPS emergency page, or check it again.
 
     Timeout defined in settings.CACHE_AGE["emerg"]
+
     """
     key = "emerg:{}".format(datetime.datetime.now().date())
     cached = cache.get(key)

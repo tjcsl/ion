@@ -125,6 +125,7 @@ class Announcement(models.Model):
         return (self in Announcement.objects.visible_to_user(user))
 
     _announcementrequest = None
+
     @property
     def announcementrequest(self):
         if self._announcementrequest:

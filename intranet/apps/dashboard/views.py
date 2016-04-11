@@ -402,6 +402,7 @@ def add_widgets_context(request, context):
 
     return context
 
+
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None):
     """Process and show the dashboard, which includes activities, events, and widgets."""
@@ -422,7 +423,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     # Include show_all postfix on next/prev links
     paginate_link_suffix = "&show_all=1" if show_all else ""
     is_index_page = (request.path_info in ["/", ""])
-
 
     context = {
         "prerender_url": get_prerender_url(request),

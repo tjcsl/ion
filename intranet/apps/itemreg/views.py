@@ -46,6 +46,7 @@ def home_view(request):
     }
     return render(request, "itemreg/home.html", context)
 
+
 @login_required
 def search_view(request):
     if not request.user.has_admin_permission("itemreg") and not request.user.is_teacher:
@@ -136,6 +137,7 @@ def search_view(request):
 
     return render(request, "itemreg/search.html", context)
 
+
 @login_required
 def register_calculator_view(request):
     """Register a calculator."""
@@ -153,6 +155,7 @@ def register_calculator_view(request):
     else:
         form = CalculatorRegistrationForm()
     return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "calculator", "form_route": "itemreg_calculator"})
+
 
 @login_required
 def register_computer_view(request):
@@ -172,6 +175,7 @@ def register_computer_view(request):
         form = ComputerRegistrationForm()
     return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "computer", "form_route": "itemreg_computer"})
 
+
 @login_required
 def register_phone_view(request):
     """Register a phone."""
@@ -189,6 +193,7 @@ def register_phone_view(request):
     else:
         form = PhoneRegistrationForm()
     return render(request, "itemreg/register_form.html", {"form": form, "action": "add", "type": "phone", "form_route": "itemreg_phone"})
+
 
 @login_required
 def register_delete_view(request, type, id):
