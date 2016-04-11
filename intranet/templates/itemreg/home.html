@@ -26,10 +26,25 @@
 
     {% if registered_devices %}
         <p>You've registered the following devices:</p>
+        <ul>
         {% for calc in calculators %}
-            <b>Calculator:</b> {{ calc.calc_name }} - Serial: {{ calc.calc_serial }} - ID: {{ calc.calc_id }} - Added: {{ calc.added }} <a href="{% url 'itemreg_delete' 'calculator' calc.id %}"><i class="fa fa-trash-o"></i></a>
-            <br />
+            <li>
+                <b>Calculator:</b> {{ calc.calc_name }} - Serial: {{ calc.calc_serial }} - ID: {{ calc.calc_id }} - Added: {{ calc.added }} <a href="{% url 'itemreg_delete' 'calculator' calc.id %}"><i class="fa fa-trash-o"></i></a>
+            </li>
         {% endfor %}
+
+        {% for comp in computers %}
+            <li>
+                <b>Computer:</b> {{ comp.computer_name }} - Serial: {{ comp.serial }} - Added: {{ comp.added }} <a href="{% url 'itemreg_delete' 'computer' comp.id %}"><i class="fa fa-trash-o"></i></a>
+            </li>
+        {% endfor %}
+
+        {% for phone in phones %}
+            <li>
+                <b>Phone:</b> {{ phone.manufacturer_name }} {{ phone.model }} - Serial: {{ phone.serial }} - Added: {{ phone.added }} <a href="{% url 'itemreg_delete' 'phone' phone.id %}"><i class="fa fa-trash-o"></i></a>
+            </li>
+        {% endfor %}
+        </ul>
     {% else %}
         <p>You haven't registered any devices! Register a device using the buttons below.</p>
     {% endif %}

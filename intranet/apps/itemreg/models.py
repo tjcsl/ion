@@ -83,8 +83,16 @@ class ComputerRegistration(models.Model):
     screen_size = models.PositiveIntegerField()
     added = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def manuf_name(self):
+        return {i[0]: i[1] for i in self.MANUF_CHOICES}[self.manufacturer]
+
+    @property
+    def computer_name(self):
+        return "{}\" {} {}".format(self.screen_size, self.manuf_name, self.model)
+
     def __str__(self):
-        return "{}'s {} {}".format(self.user.full_name, self.manufacturer, self.model)
+        return "{}'s {}".format(self.user.full_name, self.computer_name)
 
 
 class PhoneRegistration(models.Model):
@@ -106,5 +114,13 @@ class PhoneRegistration(models.Model):
     description = models.TextField(max_length=1000)
     added = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def manuf_name(self):
+        return {i[0]: i[1] for i in self.MANUF_CHOICES}[self.manufacturer]
+
+    @property
+    def phone_name(self):
+        return "{} {}".format(self.manuf_name, self.model)
+
     def __str__(self):
-        return "{}'s {} {}".format(self.user.full_name, self.manufacturer, self.model)
+        return "{}'s {}".format(self.user.full_name, self.computer_name)
