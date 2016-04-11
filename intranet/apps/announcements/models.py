@@ -21,7 +21,11 @@ class AnnouncementManager(Manager):
 
         """
 
-        return Announcement.objects.filter(Q(groups__in=user.groups.all()) | Q(groups__isnull=True))
+        return Announcement.objects.filter(Q(groups__in=user.groups.all()) |
+                                           Q(groups__isnull=True) |
+                                           Q(announcementrequest__teachers_requested=user) |
+                                           Q(announcementrequest__user=user) |
+                                           Q(user=user))
 
     def hidden_announcements(self, user):
         """Get a list of announcements marked as hidden for a given user (usually request.user).
@@ -116,6 +120,21 @@ class Announcement(models.Model):
     def is_this_year(self):
         """Return whether the announcement was created after September 1st of this school year."""
         return is_current_year(self.added.date())
+
+    def is_visible(self, user):
+        return (self in Announcement.objects.visible_to_user(user))
+
+    @property
+    def announcementrequest(self):
+        a = self.announcementrequest_set
+        if a.count() > 0:
+            return a.first()
+
+    def is_visible_requester(self, user):
+        return self.announcementrequest and (user in self.announcementrequest.teachers_requested.all())
+
+    def is_visible_submitter(self, user):
+        return (self.announcementrequest and user == self.announcementrequest.user) or self.user == user
 
     @property
     def dashboard_type(self):

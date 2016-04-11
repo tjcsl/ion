@@ -1,5 +1,6 @@
 {% load dates %}
 {% load staticfiles %}
+{% load users %}
 
 {% block js %}
     <script type="text/javascript" src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
@@ -55,6 +56,14 @@
         {% empty %}
             everyone
         {% endfor %}
+
+        {% if announcement|argument_request_user:"is_visible_requester" %}
+            &bull; You approved this announcement.
+        {% endif %}
+
+        {% if announcement|argument_request_user:"is_visible_submitter" %}
+            &bull; You submitted this announcement.
+        {% endif %}
     </div>
 
     <div class="announcement-toggle-content"{% if hide_announcements and announcement.id in user_hidden_announcements %} style="display: none"{% endif %}>
