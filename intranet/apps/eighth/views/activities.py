@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
-from ...auth.decorators import eighth_admin_required
 
 logger = logging.getLogger(__name__)
 
