@@ -19,6 +19,20 @@
     .errorlist {
         display: none;
     }
+
+    label[for="id_description"],
+    #id_description {
+        display: none;
+    }
+
+    .item-search {
+        width: 100%;
+    }
+
+    .item-search > tr > td {
+        vertical-align: top;
+    }
+
     </style>
 {% endblock %}
 
@@ -31,7 +45,7 @@
         Item Search
     </h2>
 
-    <table style="width: 100%">
+    <table class="item-search">
         <tr>
         <td>
             <form action="{% url 'itemreg_search' %}" method="get">
@@ -39,6 +53,26 @@
                 <input type="hidden" name="type" value="calculator" />
                 <table>
                 {{ calc_form }}
+                <tr><td><input type="submit" value="Search" /></td></tr>
+                </table>
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <div style="font-size: 16px">Find Computer:</div>
+                <input type="hidden" name="type" value="computer" />
+                <table>
+                {{ comp_form }}
+                <tr><td><input type="submit" value="Search" /></td></tr>
+                </table>
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <div style="font-size: 16px">Find Phone:</div>
+                <input type="hidden" name="type" value="phone" />
+                <table>
+                {{ phone_form }}
                 <tr><td><input type="submit" value="Search" /></td></tr>
                 </table>
             </form>
@@ -68,6 +102,62 @@
             <td>{{ c.calc_name }}</td>
             <td>{{ c.calc_serial|highlight:request.GET.calc_serial|safe }}</td>
             <td>{{ c.calc_id|highlight:request.GET.calc_id|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% empty %}
+            <tr><td colspan=5>No results.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% elif type == "computer" %}
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Screen Size</th>
+                <th>Serial</th>
+                <th>Description</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.manuf_name|highlight:request.GET.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:request.GET.model|safe }}</td>
+            <td>{{ c.screen_size|highlight:request.GET.screen_size|safe }}</td>
+            <td>{{ c.serial|highlight:request.GET.serial|safe }}</td>
+            <td>{{ c.description|highlight:request.GET.description|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% empty %}
+            <tr><td colspan=5>No results.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% elif type == "phone" %}
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Serial</th>
+                <th>Description</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.manuf_name|highlight:request.GET.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:request.GET.model|safe }}</td>
+            <td>{{ c.serial|highlight:request.GET.serial|safe }}</td>
+            <td>{{ c.description|highlight:request.GET.description|safe }}</td>
             <td>{{ c.added }}</td>
         </tr>
         {% empty %}

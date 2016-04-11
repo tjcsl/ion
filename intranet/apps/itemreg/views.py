@@ -47,9 +47,14 @@ def home_view(request):
 
 @login_required
 def search_view(request):
+    if not request.user.has_admin_permission("itemreg") and not request.user.is_teacher:
+        return http.Http404
+
     type = request.GET.get("type", "")
     context = {
-        "calc_form": CalculatorRegistrationForm(request.GET) if type == "calculator" else CalculatorRegistrationForm()
+        "calc_form": CalculatorRegistrationForm(request.GET) if type == "calculator" else CalculatorRegistrationForm(),
+        "comp_form": ComputerRegistrationForm(request.GET) if type == "computer" else ComputerRegistrationForm(),
+        "phone_form": PhoneRegistrationForm(request.GET) if type == "phone" else PhoneRegistrationForm()
     }
     if type == "calculator":
         results = CalculatorRegistration.objects.all()
@@ -72,11 +77,54 @@ def search_view(request):
             results = results.filter(calc_type=calc_type)
 
         logger.debug(results)
-
     elif type == "computer":
-        pass
+        results = ComputerRegistration.objects.all()
+        logger.debug(results)
+
+        manufacturer = request.GET.get("manufacturer")
+        if manufacturer:
+            results = results.filter(manufacturer=manufacturer)
+
+        logger.debug(results)
+
+        model = request.GET.get("model")
+        if model:
+            results = results.filter(model__icontains=model)
+
+        logger.debug(results)
+
+        serial = request.GET.get("serial")
+        if serial:
+            results = results.filter(serial__icontains=serial)
+
+        logger.debug(results)
+
+        screen_size = request.GET.get("screen_size")
+        if screen_size:
+            results = results.filter(screen_size=screen_size)
+
+        logger.debug(results)
     elif type == "phone":
-        pass
+        results = PhoneRegistration.objects.all()
+        logger.debug(results)
+
+        manufacturer = request.GET.get("manufacturer")
+        if manufacturer:
+            results = results.filter(manufacturer=manufacturer)
+
+        logger.debug(results)
+
+        model = request.GET.get("model")
+        if model:
+            results = results.filter(model__icontains=model)
+
+        logger.debug(results)
+
+        serial = request.GET.get("serial")
+        if serial:
+            results = results.filter(serial__icontains=serial)
+
+        logger.debug(results)
     else:
         results = None
 
@@ -313,7 +361,7 @@ def founditem_delete_view(request, item_id):
                 a.found = True
                 a.save()
                 messages.success(request, "Successfully marked found item as found!")
-        except Announcement.DoesNotExist:
+        except FoundItem.DoesNotExist:
             pass
 
         return redirect("index")
