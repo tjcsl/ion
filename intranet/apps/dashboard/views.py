@@ -266,8 +266,11 @@ def get_announcements_list(request, context):
     """
     An announcement will be shown if:
     * It is not expired
+
       * unless ?show_expired=1
+
     * It is visible to the user
+
       * There are no groups on the announcement (so it is public)
       * The user's groups are in union with the groups on the
         announcement (at least one matches)
@@ -278,10 +281,15 @@ def get_announcements_list(request, context):
 
     An event will be shown if:
     * It is not expired
+
       * unless ?show_expired=1
+
     * It is approved
+
       * unless an events admin
+
     * It is visible to the user
+
       * There are no groups
       * The groups are in union
 

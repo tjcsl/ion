@@ -1,6 +1,13 @@
 intranet.apps.itemreg package
 =============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    intranet.apps.itemreg.templatetags
+
 Submodules
 ----------
 
