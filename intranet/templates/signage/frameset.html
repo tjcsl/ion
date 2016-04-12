@@ -21,8 +21,8 @@
 <frameset rows="50,*" border=0>
     <frame src="{% url 'frameset_signage_header' %}" />
     <frameset cols="25%,*" border=0>
-        <frame src="{% url 'status_signage' %}?zoom=1.5" />
-        <frame src="{{ url }}" />
+        <frame src="{% url 'status_signage' %}?zoom={% if request.GET.framezoom %}{{ request.GET.framezoom|escape }}{% else %}1.5{% endif %}" />
+        <frame src="{{ url }}?zoom={% if request.GET.framezoom %}{{ request.GET.framezoom|escape }}{% else %}1{% endif %}" />
     </frameset>
 </frameset>
 </html>
