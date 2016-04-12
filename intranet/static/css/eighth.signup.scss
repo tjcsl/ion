@@ -1,3 +1,15 @@
+@import "colors";
+
+$red: rgb(255, 72, 72);
+$color1: #d8d8d8;
+$color2: rgb(228, 228, 228);
+$color3: rgb(252, 252, 252);
+$color4: rgb(242, 242, 242);
+$color5: rgb(170, 170, 170);
+$color6: rgb(242, 242, 244);
+$color7: rgb(213, 213, 213);
+$color8: rgba(0, 0, 0, .05);
+
 .primary-content {
     /* after this point (where body is 353px),
        the UI is impossible to use and things
@@ -12,7 +24,7 @@
     left: 0;
     right: 0;
     height: 100px;
-    border: 1px solid rgb(216, 216, 216);
+    border: 1px solid $color1;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -43,7 +55,7 @@
             padding: 0;
             margin: 0;
 
-            border-color: rgb(216, 216, 216);
+            border-color: $color1;
             -webkit-border-radius: 0;
             -moz-border-radius: 0;
             border-radius: 0;
@@ -59,13 +71,13 @@
 
 .earlier-days {
     border: none;
-    border-right: 1px solid rgb(216, 216, 216);
+    border-right: 1px solid $color1;
 }
 
 .later-days {
     right: 0;
     border: none;
-    border-left: 1px solid rgb(216, 216, 216);
+    border-left: 1px solid $color1;
 }
 
 .day-picker .day {
@@ -75,14 +87,14 @@
     height: 100px;
     margin: 0;
     margin-right: 1px;
-    outline: 1px solid rgb(216, 216, 216);
+    outline: 1px solid $color1;
 }
 
 .active-block {
-    background-color: rgb(228, 228, 228);
+    background-color: $color2;
 
     &:not(:hover) .block-letter {
-        background-color: rgb(252, 252, 252);
+        background-color: $color3;
     }
 }
 
@@ -93,28 +105,28 @@
 
     &.cancelled {
         .selected-activity {
-            color: rgb(255, 72, 72);
+            color: $red;
         }
 
         .block-letter {
-            background-color: rgb(255, 72, 72); /* red */
-            color: rgb(242, 242, 242);
+            background-color: $red; // red
+            color: $color4;
         }
     }
 }
 
 .no-activity-selected {
-    color: rgb(170, 170, 170);
+    color: $color5;
 }
 
 .error-feedback {
-    color: rgb(255, 72, 72);
+    color: $red;
 }
 
 .days-container {
     padding: 0;
     margin-left: 30px;
-    margin-right: 29px; /* Account for 1px margin-right on .day */
+    margin-right: 29px; // Account for 1px margin-right on .day
     /* Replace overflow:hidden with this to enable mouse scrolling of blocks;
        overflow-y: hidden;
        overflow-x: scroll;
@@ -141,7 +153,7 @@
     padding: 3px;
 
     &:hover {
-        background-color: rgb(252, 252, 252);
+        background-color: $color3;
     }
 }
 
@@ -161,7 +173,7 @@
     a {
         &, &:hover {
             text-decoration: none;
-            color: rgb(72, 72, 72);
+            color: $grey;
         }
 
         div {
@@ -185,8 +197,8 @@
     > .block-title {
         float: left;
         margin-left: 5px;
-        /* FIXME: hardcoded background color */
-        background-color: rgb(242, 242, 242);
+        // FIXME: hardcoded background color
+        background-color: $color4;
 
         h2 {
             font-size: 20px;
@@ -204,22 +216,19 @@
     .middle-button-container {
         position: absolute;
         right: 26px;
-    }
-}
 
+        @media (max-width: 700px) {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            z-index: 9;
+        }
 
-@media (max-width: 700px) {
-    .middle .middle-button-container {
-        position: fixed;
-        bottom: 5px;
-        right: 5px;
-        z-index: 9;
-    }
-}
-
-@media (max-width: 500px) {
-    .middle .middle-button-container .history-button > a > span {
-        display: none;
+        .history-button > a > span {
+            @media (max-width: 500px) {
+                display: none;
+            }
+        }
     }
 }
 
@@ -227,8 +236,8 @@
     position: relative;
     margin-right: 451px;
     z-index: 999;
-    border-bottom: 1px solid rgb(216, 216, 216);
-    background: rgb(242, 242, 244); /* prevent overflow from sticky header */
+    border-bottom: 1px solid $color1;
+    background: $color6; // prevent overflow from sticky header
 
     span {
         display: block;
@@ -245,7 +254,7 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    border: 1px solid rgb(216, 216, 216);
+    border: 1px solid $color1;
     overflow: hidden;
 
     /* The transform stuff is to fix a dumb webkit bug
@@ -271,7 +280,7 @@
 
         height: 30px;
         margin: 0;
-        /*margin-top: -10px;*/
+        //margin-top: -10px;
         padding: 0 4px;
         width: 100%;
     }
@@ -290,16 +299,20 @@
     -webkit-overflow-scrolling: touch;
 }
 
-#activity-picker.has-search-header #activity-list {
-    margin-top: 31px;
-}
+#activity-picker {
+    &.has-search-header {
+        #activity-list {
+            margin-top: 31px;
+        }
 
-#activity-picker .search-header {
-    display: none;
-}
+        .search-header {
+            display: block;
+        }
+    }
 
-#activity-picker.has-search-header .search-header {
-    display: block;
+    .search-header {
+        display: none;
+    }
 }
 
 #activity-detail {
@@ -310,29 +323,34 @@
     bottom: 0;
     top: 0;
     right: 0;
-    border-left: 1px solid rgb(216, 216, 216);
+    border-left: 1px solid $color1;
     padding: 10px;
     //margin-right: -451px;
-    background-color: rgb(242, 242, 244);
+    background-color: $color6;
     z-index: 999;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
-h3, h3.activity-detail-header {
-    font-size: 20px;
-}
+h3 {
+    &,
+    &.activity-detail-header {
+        font-size: 20px;
+    }
 
-h3 > a,
-h3 > a:link,
-h3 > a:visited,
-h3 > a:hover,
-h3 > a:active {
-    color: rgb(72, 72, 72);
+    > a {
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:active {
+            color: $grey;
+        }
+    }
 }
 
 #activity-picker h3.empty-state {
-    color: rgb(170, 170, 170);
+    color: $color5;
     text-align: center;
 }
 
@@ -346,18 +364,19 @@ h3 > a:active {
     }
 }
 
-#activity-detail dt {
-    float: left;
-    padding-right: 5px;
-}
+#activity-detail {
+    dt {
+        float: left;
+        padding-right: 5px;
+    }
 
-#activity-detail dd,
-#activity-detail dt {
-    font-size: 15px;
-}
+    dd, dt {
+        font-size: 15px;
+    }
 
-#activity-detail h2.user-name {
-    padding-bottom: 0;
+    h2.user-name {
+        padding-bottom: 0;
+    }
 }
 
 #signup-section {
@@ -386,12 +405,12 @@ dd.description {
 }
 
 h5 {
-    background-color: rgb(252, 252, 252);
+    background-color: $color3;
     height: 30px;
     line-height: 30px;
     font-weight: bold;
     padding: 0 10px;
-    outline: 1px solid rgb(216, 216, 216);
+    outline: 1px solid $color1;
 
     &.stuck {
         position: absolute;
@@ -433,11 +452,11 @@ h5 {
     overflow: hidden;
 
     &:nth-child(odd) {
-        background-color: rgba(0, 0, 0, .05);
+        background-color: $color8;
     }
 
     &.selected {
-        background-color: rgb(213, 213, 213);
+        background-color: $color7;
         font-weight: bold;
     }
 
@@ -507,7 +526,7 @@ h5 {
 }
 
 .activity-icon {
-    background-image: url(/static/img/Eighth-Icons.svg);
+    background-image: url("/static/img/Eighth-Icons.svg");
     background-size: auto 20px;
     background-repeat: no-repeat;
     display: block;
@@ -517,51 +536,13 @@ h5 {
     margin-top: 3px;
 
     .no-svg & {
-        background-image: url(/static/img/Eighth-Icons@2x.png);
+        background-image: url("/static/img/Eighth-Icons@2x.png");
     }
 
-    &.pie-10 {
-        background-position: -200px 0;
-    }
-
-    &.pie-9 {
-        background-position: -180px 0;
-    }
-
-    &.pie-8 {
-        background-position: -160px 0;
-    }
-
-    &.pie-7 {
-        background-position: -140px 0;
-    }
-
-    &.pie-6 {
-        background-position: -120px 0;
-    }
-
-    &.pie-5 {
-        background-position: -100px 0;
-    }
-
-    &.pie-4 {
-        background-position: -80px 0;
-    }
-
-    &.pie-3 {
-        background-position: -60px 0;
-    }
-
-    &.pie-2 {
-        background-position: -40px 0;
-    }
-
-    &.pie-1 {
-        background-position: -20px 0;
-    }
-
-    &.pie-0 {
-        background-position: 0 0;
+    @for $i from 0 through 10 {
+        .pie-#{$i} {
+            background-position: -20px*$i 0;
+        }
     }
 
     &.cancelled {
@@ -608,6 +589,19 @@ h5 {
 
     div#activity-picker {
         height: auto;
+
+        div#activity-detail {
+            display: none;
+
+            position: static;
+            width: 100%;
+            width: calc(100% - 15px);
+            float: none;
+
+            &.selected {
+                display: block;
+            }
+        }
     }
 
     div#activity-list {
@@ -615,25 +609,14 @@ h5 {
         position: static;
     }
 
-    #activity-list li.selected {
-        font-weight: normal;
-        background: inherit;
-    }
-
-    #activity-list li:nth-child(odd) {
-        background-color: rgba(0, 0, 0, 0.05) !important;
-    }
-
-    div#activity-picker div#activity-detail {
-        display: none;
-
-        position: static;
-        width: 100%;
-        width: calc(100% - 15px);
-        float: none;
-
+    #activity-list li {
         &.selected {
-            display: block;
+            font-weight: normal;
+            background: inherit;
+        }
+
+        &:nth-child(odd) {
+            background-color: $color8 !important;
         }
     }
 }
@@ -670,7 +653,7 @@ h5 {
         z-index: 9999;
         width: 100%;
         background: #f0f0f0;
-        border-bottom: 1px solid #d8d8d8;
+        border-bottom: 1px solid $color1;
     }
 
     .sticky-header.all-header {

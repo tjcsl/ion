@@ -1,19 +1,21 @@
+@import 'colors';
+
 .board {
     min-width: 290px; /* for 320x480 screens */
     max-width: 1000px;
     margin-bottom: 100px;
 
-	h2 {
-	    padding-left: 10px;
-	    line-height: 38px;
+    h2 {
+        padding-left: 10px;
+        line-height: 38px;
 
-	    &.category {
-	        font-size: 18px;
-	        font-weight: normal;
-	        padding-left: 10px;
-	        height: 33px;
-	    }
-	}
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            padding-left: 10px;
+            height: 33px;
+        }
+    }
 }
 
 h4 {
@@ -36,10 +38,10 @@ h4 {
     overflow-x: auto;
     behavior: url("/static/js/PIE/PIE.htc");
 
-	h3 > a.boardpost-link {
-	    cursor: pointer;
-	    color: rgb(72, 72, 72) !important;
-	}
+    h3 > a.boardpost-link {
+        cursor: pointer;
+        color: $grey !important;
+    }
 }
 
 .boardposts-icon-wrapper {
@@ -47,7 +49,7 @@ h4 {
 }
 
 .boardpost-metadata {
-    color: rgb(144,144,144);
+    color: rgb(144, 144, 144);
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 5px;
@@ -57,19 +59,19 @@ h4 {
     float: right;
     display: none;
 
-	> a {
-	    color: rgb(72, 72, 72);
-	    text-decoration: none !important;
-	    padding-left: 2px;
+    > a {
+        color: $grey;
+        text-decoration: none !important;
+        padding-left: 2px;
 
-		&:hover {
-		    color: rgb(32, 66, 224);
-		}
-	}
+        &:hover {
+            color: rgb(32, 66, 224);
+        }
+    }
 
-	.boardpost:hover & {
-	    display: block;
-	}
+    .boardpost:hover & {
+        display: block;
+    }
 }
 
 .boardpost-icon {
@@ -94,6 +96,10 @@ h4 {
 .left-pane {
     float: left;
     width: 200px;
+
+    @media (max-width: 500px) {
+        width: 100%;
+    }
 }
 
 .left-pane-header {
@@ -114,7 +120,7 @@ h4 {
 
 @media (max-width: 800px) {
     .left-pane {
-        width: 460px
+        width: 460px;
     }
 
     .posts-content {
@@ -125,11 +131,5 @@ h4 {
         display: inline-block;
         width: 125px;
         font-size: 10px;
-    }
-}
-
-@media (max-width: 500px) {
-    .left-pane {
-        width: 100%;
     }
 }

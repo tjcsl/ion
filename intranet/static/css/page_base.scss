@@ -1,3 +1,5 @@
+@import "colors";
+
 body {
     margin-top: 40px;
     padding: 16px 26px 10px 26px;
@@ -16,7 +18,7 @@ body {
     //min-width: 1052px;
 
     //background: rgb(25, 73, 139);
-    background: rgb(72, 72, 72);
+    background: $grey;
 }
 
 .badge-link {
@@ -69,7 +71,7 @@ h1 {
         -moz-border-radius: 3px;
         border-radius: 3px;
         line-height: 20px;
-        behavior: url(/static/js/PIE/PIE.htc);
+        behavior: url("/static/js/PIE/PIE.htc");
         z-index: 1042;
 
         input[type="text"] {
@@ -171,93 +173,43 @@ h1 {
 
     behavior: url("/static/js/PIE/PIE.htc");
 
-    &.red {
-        background-color: rgb(255, 72, 72);
-    }
+    $colors: (
+        ('red', rgb(255, 72, 72)),
+        ('darkred', rgb(181, 0, 0)),
+        ('purple', rgb(175, 0, 175)),
+        ('green', rgb(55, 179, 113)),
+        ('yellow', rgb(234, 234, 13)),
+        ('orange', rgb(255, 194, 81)),
+        ('blue', rgb(66, 66, 206)),
+        ('lightblue', rgb(0, 149, 255))
+    );
 
-    &.darkred {
-        background-color: rgb(181, 0, 0);
-    }
+    @each $color in $colors {
+        $name: nth($color, 0);
+        &.#{$name} {
+            background: nth($color, 1);
 
-    &.purple {
-        background-color: rgb(175, 0, 175);
-    }
+            @if $name == 'yellow' or $name == 'orange' {
+                color: black;
+            }
 
-    &.green {
-        background-color: rgb(55, 179, 113);
-    }
+            @media print {
+                background: none;
 
-    &.yellow {
-        background-color: rgb(234, 234, 13);
-        color: black;
-    }
+                @if $name == 'yellow' {
+                    color: black;
+                } @else {
+                    color: nth($color, 1);
+                }
 
-    &.orange {
-        background-color: rgb(255, 194, 81);
-        color: black;
-    }
-
-    &.blue {
-        background-color: rgb(66, 66, 206);
-    }
-
-    &.lightblue {
-        background-color: rgb(0, 149, 255);
+                border: 1px solid nth($color, 1);
+            }
+        }
     }
 
     &.cancelled-badge {
         font-size: 15px;
         padding: 4px;
-    }
-}
-
-@media print {
-    .badge.red {
-        background: none;
-        color: rgb(255, 72, 72);
-        border: 1px solid rgb(255, 72, 72);
-    }
-
-    .badge.darkred {
-        background: none;
-        color: rgb(181, 0, 0);
-        border: 1px solid rgb(181, 0, 0);
-    }
-
-    .badge.purple {
-        background: none;
-        color: rgb(175, 0, 175);
-        border: 1px solid rgb(175, 0, 175);
-    }
-
-    .badge.green {
-        background: none;
-        color: rgb(55, 179, 113);
-        border: 1px solid rgb(55, 179, 113);
-    }
-
-    .badge.yellow {
-        background: none;
-        color: black;
-        border: 1px solid rgb(234, 234, 13);
-    }
-
-    .badge.orange {
-        background: none;
-        color: rgb(255, 184, 81);
-        border: 1px solid rgb(255, 184, 81);
-    }
-
-    .badge.blue {
-        background: none;
-        color: rgb(66, 66, 206);
-        border: 1px solid rgb(66, 66, 206);
-    }
-
-    .badge.lightblue {
-        background: none;
-        color: rgb(0, 149, 255);
-        border: 1px solid rgb(0, 149, 255);
     }
 }
 
@@ -280,7 +232,7 @@ h1 {
     display: none;
     opacity: 0;
     position: absolute;
-    color: rgb(72, 72, 72);
+    color: $grey;
     background-color: white;
     top: 10px;
     margin-top: 35px;
@@ -302,7 +254,7 @@ h1 {
     }
 
     a {
-        color: rgb(72, 72, 72);
+        color: $grey;
         display: block;
 
         &:hover {
@@ -326,7 +278,8 @@ h1 {
     */
 }
 
-.header .badged-item, .username {
+.header .badged-item,
+.username {
     cursor: pointer;
 }
 
@@ -395,7 +348,6 @@ ul.dropdown-menu.absence-notification {
 .header .notifications .dropdown-menu .arrow {
     //width: 200px;
     right: 30px;
-
 }
 
 .header .username .dropdown-menu .arrow {
@@ -413,7 +365,7 @@ ul.dropdown-menu.absence-notification {
 }
 
 .header .dropdown-menu i {
-    width: 14px; /* line up */
+    width: 14px; // line up
 }
 
 .user-name {
@@ -452,7 +404,7 @@ ul.dropdown-menu.absence-notification {
 
         &:hover {
             text-decoration: none;
-            color: rgb(72, 72, 72);
+            color: $grey;
         }
     }
 
@@ -477,7 +429,7 @@ ul.dropdown-menu.absence-notification {
         background-color: rgb(252, 252, 252);
 
         a {
-            color: rgb(72, 72, 72);
+            color: $grey;
         }
     }
 }
@@ -494,7 +446,7 @@ a i {
     height: 28px;
     background-image: url("/static/img/icons.png");
     background-image: url("/static/img/icons.svg");
-    background-size: 280px 84px; /*retinafy w/ this*/
+    background-size: 280px 84px; // retinafy w/ this
     margin-left: auto;
     margin-right: auto;
 }
@@ -620,26 +572,26 @@ a i {
 
 .info-icon {
     background-position: -224px 0;
-}
 
-.nav .selected .info-icon {
-    background-position: -224px 28px;
-}
+    .nav .selected & {
+        background-position: -224px 28px;
+    }
 
-.nav li:not(.selected) a:hover .info-icon {
-    background-position: -224px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -224px 56px;
+    }
 }
 
 .bell-icon {
     background-position: -252px 0;
-}
 
-.nav .selected .bell-icon {
-    background-position: -252px 28px;
-}
+    .nav .selected & {
+        background-position: -252px 28px;
+    }
 
-.nav li:not(.selected) a:hover .bell-icon {
-    background-position: -252px 56px;
+    .nav li:not(.selected) a:hover & {
+        background-position: -252px 56px;
+    }
 }
 
 .primary-content {
@@ -691,16 +643,12 @@ ul.messenger.messenger-fixed.messenger-on-top {
         -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .05), inset 0 1px 0 rgba(255, 255, 255, .8);
         box-shadow: 0 1px 0 rgba(0, 0, 0, .05), inset 0 1px 0 rgba(255, 255, 255, .8);
 
-        /* Generated by http://www.colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100;Button */
-        background: #f7f7f4; /* Old browsers */
-        background: -moz-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(247, 247, 244)), color-stop(100%, rgb(234, 234, 234))); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(top,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* IE10+ */
-        background: linear-gradient(to bottom,  rgb(247, 247, 244) 0%, rgb(234, 234, 234) 100%); /* W3C */
-        /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea',GradientType=0 );*/ /* IE6-9 */ /* Conflicts with CSS3PIE */
-
+        // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100;Button
+        background: #f7f7f4;
+        background: -moz-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+        background: -webkit-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+        background: linear-gradient(to bottom, #f7f7f4 0%, #eaeaea 100%);
+        //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea',GradientType=0 );
     }
 
     &.multi .selectize-input {

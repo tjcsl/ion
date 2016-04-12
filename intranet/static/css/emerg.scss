@@ -11,7 +11,7 @@ body.has-login-warning {
         display: block;
         position: absolute;
         top: 10px;
-        width: 578px; /* 600px total */
+        width: 578px; // 600px total
         max-height: 130px;
         left: -200px;
         background-color: yellow;
@@ -20,6 +20,11 @@ body.has-login-warning {
         border-radius: 4px;
         overflow-y: auto;
         z-index: 999999999999;
+
+        @media (max-width: 600px) {
+            width: calc(160% - 20px);
+            left: -30%;
+        }
     }
 
     .center {
@@ -28,11 +33,17 @@ body.has-login-warning {
 
     &.has-snow .center {
         margin-top: -229px;
-    }
-}
 
-@media (max-height: 784px) {
-    body.has-login-warning {
+        @media (max-width: 500px) and (max-height: 784px) {
+            margin-top: -229px;
+        }
+
+        @media (max-width: 500px) {
+            margin-top: -229px;
+        }
+    }
+
+    @media (max-height: 784px) {
         .center {
             margin-top: -220px;
             top: 392px
@@ -41,24 +52,5 @@ body.has-login-warning {
         &.has-snow .center {
             margin-top: -229px;
         }
-    }
-}
-
-@media (max-width: 600px) {
-    body.has-login-warning .login-warning {
-        width: calc(160% - 20px);
-        left: -30%;
-    }
-}
-
-@media (max-width: 500px) and (max-height: 784px) {
-    body.has-login-warning.has-snow .center {
-        margin-top: -229px;
-    }
-}
-
-@media (max-width: 500px) {
-    body.has-login-warning.has-snow .center {
-        margin-top: -229px;
     }
 }

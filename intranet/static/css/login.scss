@@ -1,14 +1,15 @@
+@import "colors";
+
 body {
     text-align: center;
     overflow-x: hidden;
-    /*background: -moz-radial-gradient(center, ellipse cover, rgb(242, 242, 244) 0%, rgb(210, 210, 210) 100%);*/ /* FF3.6+ */
-    /*background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgb(242, 242, 244)), color-stop(100%, rgb(210, 210, 210)));*/ /* Chrome,Safari4+ */
-    /*background: -webkit-radial-gradient(center, ellipse cover, rgb(242, 242, 244) 0%, rgb(210, 210, 210) 100%);*/ /* Chrome10+,Safari5.1+ */
-    /*background: -o-radial-gradient(center, ellipse cover, rgb(242, 242, 244) 0%, rgb(210, 210, 210) 100%);*/ /* Opera 12+ */
-    /*background: -ms-radial-gradient(center, ellipse cover, rgb(242, 242, 244) 0%, rgb(210, 210, 210) 100%);*/ /* IE10+ */
-    /*background: radial-gradient(ellipse at center, rgb(242, 242, 244) 0%, rgb(210, 210, 210) 100%);*/ /* W3C */
-    /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f2f2f4', endColorstr='#d2d2d2',GradientType=1 );*/ /* IE6-9 fallback on horizontal gradient */
-    /*background-size: cover;*/
+    // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f2f4+0,d2d2d2+100
+    //background: #f2f2f4;
+    //background: -moz-radial-gradient(center, ellipse cover, #f2f2f4 0%, #d2d2d2 100%);
+    //background: -webkit-radial-gradient(center, ellipse cover, #f2f2f4 0%,#d2d2d2 100%);
+    //background: radial-gradient(ellipse at center, #f2f2f4 0%,#d2d2d2 100%);
+    //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f4', endColorstr='#d2d2d2',GradientType=1 );
+    //background-size: cover;
 }
 
 .center {
@@ -38,15 +39,17 @@ body {
     cursor: pointer;
 }
 
-input[type=text],
-input[type=password] {
-    width: 192px;
-}
+input {
+    &[type=text],
+    &[type=password] {
+        width: 192px;
+    }
 
-input[type=submit] {
-    width: 200px;
-    margin-top: 6px;
-    height: 36px;
+    &[type=submit] {
+        width: 200px;
+        margin-top: 6px;
+        height: 36px;
+    }
 }
 
 h1 {
@@ -61,7 +64,7 @@ h1 {
 }
 
 .no-svg .logo {
-  background-image: url("/static/img/logos/Login-Logo@2x.png");
+    background-image: url("/static/img/logos/Login-Logo@2x.png");
 }
 
 h2 {
@@ -98,7 +101,7 @@ h2 {
         font-size: 13px;
         width: 30px;
         display: inline-block;
-        color: rgb(72, 72, 72);
+        color: $grey;
     }
 
     &:hover i {
@@ -157,10 +160,8 @@ h2 {
     left: 50%;
     margin-left: -154px;
     width: 308px;
-}
 
-@media (max-height: 696px) {
-    .schedule > iframe {
+    @media (max-height: 696px) {
         /* Fill avail height when iframe causes a scrollbar */
         height: 100%;
     }
@@ -176,7 +177,7 @@ a.schedule-right {
 
 .git-version {
     float: right;
-    color: rgba(72, 72, 72, .4);
+    color: fade_out($grey, 0.6);
     z-index: 100;
     margin-right: 10px;
     min-width: 160px;
@@ -243,7 +244,7 @@ a.schedule-right {
 }
 
 .logo {
-    background-image: url(/static/img/logos/Login-Logo.svg);
+    background-image: url("/static/img/logos/Login-Logo.svg");
     background-repeat: no-repeat;
     height: 74px;
     width: 90px;
@@ -251,6 +252,6 @@ a.schedule-right {
     cursor: pointer;
 
     .no-svg & {
-      background-image: url("/static/img/logos/Login-Logo@2x.png");
+        background-image: url("/static/img/logos/Login-Logo@2x.png");
     }
 }

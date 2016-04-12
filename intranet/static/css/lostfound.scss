@@ -1,7 +1,21 @@
+@import "colors";
+
 .items {
-    min-width: 290px; /* for 320x480 screens */
+    min-width: 290px; // for 320x480 screens
     max-width: 1000px;
     margin-bottom: 100px;
+
+    h2 {
+        padding-left: 10px;
+        line-height: 38px;
+
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            padding-left: 10px;
+            height: 33px;
+        }
+    }
 }
 
 h4 {
@@ -11,19 +25,6 @@ h4 {
 .button-container {
     float: right;
     margin-top: -38px;
-}
-
-.items h2 {
-    padding-left: 10px;
-    line-height: 38px;
-}
-
-
-.items h2.category {
-    font-size: 18px;
-    font-weight: normal;
-    padding-left: 10px;
-    height: 33px;
 }
 
 .item {
@@ -36,42 +37,41 @@ h4 {
     margin-bottom: 6px;
     overflow-x: auto;
     behavior: url("/static/js/PIE/PIE.htc");
-}
 
-
-.item h3 > a.item-link {
-    cursor: pointer;
-    color: rgb(72,72,72) !important;
+    h3 > a.item-link {
+        cursor: pointer;
+        color: $grey !important;
+    }
 }
 
 .items-icon-wrapper {
     float: right;
+
+    .item:hover & {
+        display: block;
+    }
 }
 
 .item-metadata {
-    color: rgb(144,144,144);
+    color: rgb(144, 144, 144);
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 5px;
 }
 
-.item:hover .item-icon-wrapper {
-    display: block;
-}
-
 .item-icon-wrapper {
     float: right;
     display: none;
-}
 
-.item-icon-wrapper > a {
-    color: rgb(72, 72, 72);
-    text-decoration: none !important;
-    padding-left: 2px;
-}
+    > a {
+        color: $grey;
+        text-decoration: none !important;
+        padding-left: 2px;
 
-.item-icon-wrapper > a:hover {
-    color: rgb(32,66,224);
+        &:hover {
+            color: rgb(32, 66, 224);
+        }
+    }
 }
 
 .item-icon {
@@ -97,36 +97,32 @@ h4 {
     height: 35px;
     line-height: 35px;
     padding: 5px 0 5px 3px;
-}
 
-.item-header .button {
-    float: right;
-    margin-top: -1px
-}
-
-.items-container .lost-items,
-.items-container .found-items {
-    display: inline-block;
-    width: 50%;
-    width: calc(50% - 20px);
-    vertical-align: top;
-}
-
-.items-container .lost-items {
-    padding-right: 20px;
-}
-
-@media (max-width: 800px) {
-    .items-container .lost-items,
-    .items-container .found-items {
-        width: 100%;
+    .button {
+        float: right;
+        margin-top: -1px
     }
 }
 
-@media (max-width: 400px) {
-    .items-container .lost-items,
-    .items-container .found-items {
-        padding-left: 0;
-        padding-right: 0;
+.items-container {
+    .lost-items,
+    .found-items {
+        display: inline-block;
+        width: 50%;
+        width: calc(50% - 20px);
+        vertical-align: top;
+
+        @media (max-width: 800px) {
+            width: 100%;
+        }
+
+        @media (max-width: 400px) {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
+    .lost-items {
+        padding-right: 20px;
     }
 }
