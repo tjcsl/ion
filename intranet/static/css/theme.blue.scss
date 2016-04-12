@@ -1,23 +1,31 @@
+@import 'colors';
+$color1: #0048ab;
+$color2: rgb(1, 94, 222);
+$color3: rgb(242, 242, 244);
+$color4: rgb(136, 148, 160);
+$color5: rgb(60, 105, 182);
+$color6: rgb(0, 85, 164);
+
 .header {
-    background-color: rgb(0, 72, 171);
-    //background: -webkit-linear-gradient(rgb(0, 72, 171), rgb(1, 94, 222));
+    background-color: $color1;
+    //background: -webkit-linear-gradient($color1, $color2);
 
     .search input[type="text"] {
-        background-color: rgb(242, 242, 244);
-        color: rgb(0, 72, 171);
+        background-color: $color3;
+        color: $color1;
     }
 }
 
 .widget {
-    border-color: rgb(0, 72, 171);
+    border-color: $color1;
 }
 
 .widget-title {
-    border-bottom-color: rgb(0, 72, 171);
+    border-bottom-color: $color1;
     font-weight: bold;
 
     a.ui-link {
-        color: rgb(0, 72, 171);
+        color: $color1;
         text-decoration: underline;
         font-weight: normal;
     }
@@ -30,11 +38,11 @@
 
 ul.nav {
     background-color: white;
-    border: 1px solid rgb(0, 72, 171);
-    border-color: rgb(136, 148, 160);
+    border: 1px solid $color1;
+    border-color: $color4;
 
     li.selected {
-        background-color: rgb(60, 105, 182);
+        background-color: $color5;
 
         a {
             color: white;
@@ -42,30 +50,32 @@ ul.nav {
     }
 
     li:not(.selected) a:hover i {
-        color: rgb(0, 85, 164);
+        color: $color6;
     }
 
     a:hover {
-        color: rgb(1, 94, 222);
+        color: $color2;
+    }
+
+    .main & > li {
+        //border-color: $color1;
+        border-color: $color4;
     }
 }
 
-.main ul.nav > li {
-    //border-color: rgb(0, 72, 171);
-    border-color: rgb(136, 148, 160);
-}
-
-.nav a, .nav a:active, .nav a:visited {
-    text-decoration: none;
-    color: rgb(72, 72, 72);
+.nav a {
+    &, &:active, &:visited {
+        text-decoration: none;
+        color: $grey;
+    }
 }
 
 body.login-page input {
-    border: 1px solid rgba(0, 72, 171, .3);
+    border: 1px solid fade_out($color1, 0.7);
 
     &[type=submit] {
-        border: 1px solid rgba(0, 72, 171, .3);
-        color: #0048ab;
+        border: 1px solid fade_out($color1, 0.7);
+        color: $color1;
 
         &.load-spinner {
             border-color: transparent;

@@ -1,3 +1,9 @@
+@import "colors";
+
+$red: rgb(255, 72, 72);
+$green: rgb(0, 180, 0);
+$orange: rgb(255, 135, 0);
+
 .attendance-container {
     display: inline-block;
     width: 100%;
@@ -5,22 +11,22 @@
 }
 
 .no-attendance {
-    color: rgb(255, 72, 72);
+    color: $red;
     font-weight: bold;
 }
 
 .attendance-taken {
-    color: rgb(0, 180, 0);
+    color: $green;
     font-weight: bold;
 }
 
 .no-passes {
-    color: rgb(0, 180, 0);
+    color: $green;
     font-weight: bold;
 }
 
 .passes-notice {
-    color: rgb(255, 135, 0);
+    color: $orange;
     font-weight: bold;
 }
 
@@ -81,10 +87,8 @@ form .accept-all-passes {
 
 .pass-container {
     margin-bottom: 25px;
-}
 
-@media (min-width: 900px) {
-    .pass-container {
+    @media (min-width: 900px) {
         position: absolute;
         left: 650px;
 
@@ -96,26 +100,18 @@ form .accept-all-passes {
             position: static;
         }
     }
-}
 
-@media (min-width: 1100px) {
-    .pass-container.has-passes {
-        position: absolute;
-        left: 650px;
-        background: #f0f0f0;
-        padding: 0 30px;
+    @media (min-width: 1100px) {
+        &.has-passes {
+            position: absolute;
+            left: 650px;
+            background: #f0f0f0;
+            padding: 0 30px;
 
-        &.eighth-admin {
-            top: 266px;
+            &.eighth-admin {
+                top: 266px;
+            }
         }
-    }
-}
-
-@media (max-width: 500px) {
-    table.take-attendance-roster,
-    table.take-passes {
-        width: 100%;
-        zoom: 0.8;
     }
 }
 
@@ -123,6 +119,11 @@ table.take-attendance-roster,
 table.take-passes {
     vertical-align: middle;
     max-width: 600px;
+
+    @media (max-width: 500px) {
+        width: 100%;
+        zoom: 0.8;
+    }
 }
 
 a.pass-form-submit-link.button {
@@ -161,7 +162,7 @@ a.pass-form-submit-link.button {
 
 .user-link {
     a {
-        color: rgb(72, 72, 72);
+        color: $grey;
     }
 
     &[data-user-id]:hover {
@@ -218,8 +219,8 @@ td.email-col {
         position: absolute;
         left: 25px;
         max-width: none;
-        /*width: 100%;
-        width: calc(100% - 25px);*/
+        //width: 100%;
+        //width: calc(100% - 25px);
         table-layout: fixed;
     }
 

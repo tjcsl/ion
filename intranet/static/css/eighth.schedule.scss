@@ -2,7 +2,7 @@
  * give all other UI elements a fixed position. -JW, 05/15 */
 
 b.cancelled {
-    color: rgb(255,72,72);;
+    color: rgb(255, 72, 72);
 }
 
 tr.scheduled .block-name {
@@ -10,9 +10,47 @@ tr.scheduled .block-name {
     white-space: nowrap;
 }
 
-.schedule-activity-page.floating form.schedule-form {
-    overflow-x: scroll;
-    position: absolute; /* quick fix to display scrollbar at bottom */
+.schedule-activity-page.floating {
+    form.schedule-form {
+        overflow-x: scroll;
+        position: absolute; // quick fix to display scrollbar at bottom
+    }
+
+    @media (min-width: 500px) {
+        .primary-content {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .eighth-header {
+            position: fixed;
+            // keep solid
+            height: 160px;
+            width: 100%;
+            // keep Start Date aligned properly
+            width: calc(100% - 152px);
+            // remove gap between top header and primary-content
+            margin-top: -16px;
+            padding-top: 16px;
+            padding-right:152px;
+            background-color: #f2f2f4;
+            z-index: 2;
+            border-bottom: 1px rgb(194, 194, 194) solid;
+        }
+
+        .schedule-activity-head {
+            position: fixed;
+            margin-top: 42px;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .schedule-activity-grid {
+            position: static;
+            margin-top: 161px;
+            z-index: -1;
+        }
+    }
 }
 
 .footer-buttons {
@@ -36,42 +74,6 @@ table.schedule-activity-grid thead th {
     .header, .nav {
         position: fixed;
         z-index: 4;
-    }
-
-    .schedule-activity-page.floating {
-        .primary-content {
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .eighth-header {
-            position: fixed;
-            /* keep solid */
-            height: 160px;
-            width: 100%;
-            /* keep Start Date aligned properly */
-            width: calc(100% - 152px);
-            /* remove gap between top header and primary-content */
-            margin-top: -16px;
-            padding-top: 16px;
-            padding-right:152px;
-            background-color: #F2F2F4;
-            z-index: 2;
-            border-bottom: 1px rgb(194, 194, 194) solid;
-        }
-
-        .schedule-activity-head {
-            position: fixed;
-            margin-top: 42px;
-            width: 100%;
-            z-index: 2;
-        }
-
-        .schedule-activity-grid {
-            position: static;
-            margin-top: 161px;
-            z-index: -1;
-        }
     }
 }
 
@@ -152,34 +154,35 @@ tr.form-row.hidden {
     }
 }
 
-.selectize-control .loading {
-    .propagate-direction &,
-    .propagate-method & {
-        display: none;
+.selectize-control {
+    .loading {
+        .propagate-direction &,
+        .propagate-method & {
+            display: none;
+        }
     }
-}
 
-@media (max-width: 1000px) {
-    .selectize-control {
+    @media (max-width: 1000px) {
         width: 350px;
     }
 }
 
-@media (max-width: 858px) {
-    .propagate-method, .propagate-direction {
+.propagate-method,
+.propagate-direction {
+    @media (max-width: 858px) {
         width: 85px;
 
         b {
             display: none;
         }
     }
+
+    @media (max-width: 720px) {
+        zoom: 0.6;
+    }
 }
 
 @media (max-width: 720px) {
-    .propagate-method, .propagate-direction {
-        zoom: 0.6;
-    }
-
     .start-date {
         display: none;
     }
@@ -208,21 +211,9 @@ tr.form-row {
         }
     }
 
-    ::-webkit-input-placeholder {
-       color: black;
-       font-weight: bold;
-    }
-
-    :-moz-placeholder {
-       color: black;
-       font-weight: bold;
-    }
-
-    ::-moz-placeholder {
-       color: black;
-       font-weight: bold;
-    }
-
+    ::-webkit-input-placeholder,
+    :-moz-placeholder,
+    ::-moz-placeholder,
     :-ms-input-placeholder {
        color: black;
        font-weight: bold;
@@ -232,21 +223,9 @@ tr.form-row {
        font-size: 15px;
        font-style: italic;
 
-       &::-webkit-input-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-
-       &:-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-
-       &::-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-
+       &::-webkit-input-placeholder,
+       &:-moz-placeholder,
+       &::-moz-placeholder,
        &:-ms-input-placeholder {
           font-size: 12px;
           font-style: normal;
