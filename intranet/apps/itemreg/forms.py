@@ -1,29 +1,5 @@
 from django import forms
-from .models import LostItem, FoundItem, CalculatorRegistration, ComputerRegistration, PhoneRegistration
-
-
-class LostItemForm(forms.ModelForm):
-
-    class Meta:
-        model = LostItem
-        fields = [
-            "title",
-            "description",
-            "last_seen",
-            "found"
-        ]
-
-
-class FoundItemForm(forms.ModelForm):
-
-    class Meta:
-        model = FoundItem
-        fields = [
-            "title",
-            "description",
-            "found",
-            "retrieved"
-        ]
+from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 
 
 class CalculatorRegistrationForm(forms.ModelForm):
