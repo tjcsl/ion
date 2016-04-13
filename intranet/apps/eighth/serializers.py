@@ -62,6 +62,18 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("id", "url", "date", "block_letter", "locked")
 
 
+class FallbackDict(dict):
+    def __init__(self, fallback):
+        super().__init__()
+        self.fallback = fallback
+
+    def __getitem__(self, key):
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            return self.fallback(key)
+
+
 class EighthBlockDetailSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     activities = serializers.SerializerMethodField("fetch_activity_list_with_metadata")
@@ -123,12 +135,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
     def get_activity(self, user, favorited_activities, available_restricted_acts, activity_id, scheduled_activity=None):
         if scheduled_activity is None:
-            scheduled_activity = EighthScheduledActivity.objects.get(activity_id)
+            scheduled_activity = EighthScheduledActivity.objects.get(id=activity_id)
         return self.process_scheduled_activity(scheduled_activity, self.context["request"], user, favorited_activities,
                                                available_restricted_acts)
 
     def get_scheduled_activity(self, scheduled_activity_id):
-        scheduled_activity = EighthScheduledActivity.objects.get(scheduled_activity_id)
+        scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
         return scheduled_activity.activity.id
 
     def fetch_activity_list_with_metadata(self, block):
@@ -138,8 +150,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
-        activity_list = collections.defaultdict(functools.partial(self.get_activity, user, favorited_activities, available_restricted_acts))
-        scheduled_activity_to_activity_map = collections.defaultdict(self.get_scheduled_activity)
+        activity_list = FallbackDict(functools.partial(self.get_activity, user, favorited_activities, available_restricted_acts))
+        scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to
         # deleted activities

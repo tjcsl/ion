@@ -51,6 +51,8 @@ class EighthTest(IonTestCase):
         # Signup for an activity
         response = self.client.post(reverse('eighth_signup'), {'uid': 1337, 'bid': block.id, 'aid': activity.id})
         self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('eighth_signup'))
+        self.assertEqual(response.status_code, 200)
         self.assertIn(user, EighthScheduledActivity.objects.all()[0].members.all())
 
     def verify_signup(self, user, schact):
