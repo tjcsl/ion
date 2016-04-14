@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.itemreg.views &mdash; TJ Intranet v3 (Build #2093) documentation</title>
+    <title>intranet.apps.itemreg.views &mdash; TJ Intranet v3 (Build #2105) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2093)',
+        VERSION:     'v3 (Build #2105)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2093) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2105) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -147,35 +147,20 @@
   <h1>Source code for intranet.apps.itemreg.views</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">bleach</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span><span class="p">,</span> <span class="n">EmptyPage</span><span class="p">,</span> <span class="n">PageNotAnInteger</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">LostItem</span><span class="p">,</span> <span class="n">FoundItem</span><span class="p">,</span> <span class="n">CalculatorRegistration</span><span class="p">,</span> <span class="n">ComputerRegistration</span><span class="p">,</span> <span class="n">PhoneRegistration</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">LostItemForm</span><span class="p">,</span> <span class="n">FoundItemForm</span><span class="p">,</span> <span class="n">CalculatorRegistrationForm</span><span class="p">,</span> <span class="n">ComputerRegistrationForm</span><span class="p">,</span> <span class="n">PhoneRegistrationForm</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">CalculatorRegistration</span><span class="p">,</span> <span class="n">ComputerRegistration</span><span class="p">,</span> <span class="n">PhoneRegistration</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">CalculatorRegistrationForm</span><span class="p">,</span> <span class="n">ComputerRegistrationForm</span><span class="p">,</span> <span class="n">PhoneRegistrationForm</span>
+<span class="kn">from</span> <span class="nn">..search.views</span> <span class="kn">import</span> <span class="n">get_search_results</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <div class="viewcode-block" id="home_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.home_view">[docs]</a><span class="k">def</span> <span class="nf">home_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">lost_all</span> <span class="o">=</span> <span class="n">LostItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">lost_pg</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">lost_all</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-
-    <span class="n">found_all</span> <span class="o">=</span> <span class="n">FoundItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">found_pg</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">found_all</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-
-    <span class="n">page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">lost</span> <span class="o">=</span> <span class="n">lost_pg</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
-        <span class="n">found</span> <span class="o">=</span> <span class="n">found_pg</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">EmptyPage</span><span class="p">):</span>
-        <span class="n">lost</span> <span class="o">=</span> <span class="n">lost_pg</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">found</span> <span class="o">=</span> <span class="n">found_pg</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
     <span class="n">calculators</span> <span class="o">=</span> <span class="n">CalculatorRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="n">phones</span> <span class="o">=</span> <span class="n">PhoneRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
     <span class="n">computers</span> <span class="o">=</span> <span class="n">ComputerRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -184,10 +169,6 @@
         <span class="s2">&quot;calculators&quot;</span><span class="p">:</span> <span class="n">calculators</span><span class="p">,</span>
         <span class="s2">&quot;computers&quot;</span><span class="p">:</span> <span class="n">computers</span><span class="p">,</span>
         <span class="s2">&quot;phones&quot;</span><span class="p">:</span> <span class="n">phones</span><span class="p">,</span>
-        <span class="s2">&quot;lost&quot;</span><span class="p">:</span> <span class="n">lost</span><span class="p">,</span>
-        <span class="s2">&quot;found&quot;</span><span class="p">:</span> <span class="n">found</span><span class="p">,</span>
-        <span class="s2">&quot;previous_page&quot;</span><span class="p">:</span> <span class="n">lost</span><span class="o">.</span><span class="n">previous_page_number</span> <span class="k">if</span> <span class="n">lost</span><span class="o">.</span><span class="n">previous_page_number</span> <span class="k">else</span> <span class="n">found</span><span class="o">.</span><span class="n">previous_page_number</span><span class="p">,</span>
-        <span class="s2">&quot;next_page&quot;</span><span class="p">:</span> <span class="n">lost</span><span class="o">.</span><span class="n">next_page_number</span> <span class="k">if</span> <span class="n">lost</span><span class="o">.</span><span class="n">next_page_number</span> <span class="k">else</span> <span class="n">found</span><span class="o">.</span><span class="n">next_page_number</span><span class="p">,</span>
         <span class="s2">&quot;is_itemreg_admin&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;itemreg&quot;</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -204,81 +185,109 @@
         <span class="s2">&quot;comp_form&quot;</span><span class="p">:</span> <span class="n">ComputerRegistrationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;computer&quot;</span> <span class="k">else</span> <span class="n">ComputerRegistrationForm</span><span class="p">(),</span>
         <span class="s2">&quot;phone_form&quot;</span><span class="p">:</span> <span class="n">PhoneRegistrationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;phone&quot;</span> <span class="k">else</span> <span class="n">PhoneRegistrationForm</span><span class="p">()</span>
     <span class="p">}</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;calculator&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s2">&quot;computer&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
     <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;calculator&quot;</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">CalculatorRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">cresults</span> <span class="o">=</span> <span class="n">CalculatorRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">calc_serial</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;calc_serial&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">calc_serial</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_serial__icontains</span><span class="o">=</span><span class="n">calc_serial</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_serial__icontains</span><span class="o">=</span><span class="n">calc_serial</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">calc_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;calc_id&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">calc_id</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_id__icontains</span><span class="o">=</span><span class="n">calc_id</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_id__icontains</span><span class="o">=</span><span class="n">calc_id</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">calc_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;calc_type&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">calc_type</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_type</span><span class="o">=</span><span class="n">calc_type</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">calc_type</span><span class="o">=</span><span class="n">calc_type</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;calculator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cresults</span>
     <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;computer&quot;</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">ComputerRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">cresults</span> <span class="o">=</span> <span class="n">ComputerRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">manufacturer</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manufacturer&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">manufacturer</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">manufacturer</span><span class="o">=</span><span class="n">manufacturer</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">manufacturer</span><span class="o">=</span><span class="n">manufacturer</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">model</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">model__icontains</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">model__icontains</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">serial</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;serial&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">serial</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">serial__icontains</span><span class="o">=</span><span class="n">serial</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">serial__icontains</span><span class="o">=</span><span class="n">serial</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">screen_size</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;screen_size&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">screen_size</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">screen_size</span><span class="o">=</span><span class="n">screen_size</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">screen_size</span><span class="o">=</span><span class="n">screen_size</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;computer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cresults</span>
     <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;phone&quot;</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">PhoneRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">cresults</span> <span class="o">=</span> <span class="n">PhoneRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">manufacturer</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manufacturer&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">manufacturer</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">manufacturer</span><span class="o">=</span><span class="n">manufacturer</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">manufacturer</span><span class="o">=</span><span class="n">manufacturer</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">model</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">model__icontains</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">model__icontains</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
 
         <span class="n">serial</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;serial&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">serial</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">serial__icontains</span><span class="o">=</span><span class="n">serial</span><span class="p">)</span>
+            <span class="n">cresults</span> <span class="o">=</span> <span class="n">cresults</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">serial__icontains</span><span class="o">=</span><span class="n">serial</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">cresults</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;phone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cresults</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;calculator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CalculatorRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;computer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ComputerRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;phone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PhoneRegistration</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">quser</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">quser</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_st</span><span class="p">,</span> <span class="n">search</span> <span class="o">=</span> <span class="n">get_search_results</span><span class="p">(</span><span class="n">quser</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">search</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__in</span><span class="o">=</span><span class="n">search</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">NoneDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="n">getargs</span> <span class="o">=</span> <span class="n">NoneDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">))</span>
 
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
-        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span>
+        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+        <span class="s2">&quot;no_results&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;getargs&quot;</span><span class="p">:</span> <span class="n">getargs</span>
     <span class="p">})</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/search.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -359,178 +368,6 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;itemreg&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/register_delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="lostitem_add_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.lostitem_add_view">[docs]</a><span class="k">def</span> <span class="nf">lostitem_add_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a lostitem.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">LostItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-            <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added lost item.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;lostitem_view&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding lost item.&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">LostItemForm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/lostitem_form.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="lostitem_modify_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.lostitem_modify_view">[docs]</a><span class="k">def</span> <span class="nf">lostitem_modify_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Modify a lostitem.</span>
-
-<span class="sd">    id: lostitem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">lostitem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">LostItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">LostItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">lostitem</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">)</span>
-            <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified lost item.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;lostitem_view&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding lost item.&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">lostitem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">LostItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">LostItemForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">lostitem</span><span class="p">)</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">item_id</span><span class="p">,</span> <span class="s2">&quot;lostitem&quot;</span><span class="p">:</span> <span class="n">lostitem</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/lostitem_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="lostitem_delete_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.lostitem_delete_view">[docs]</a><span class="k">def</span> <span class="nf">lostitem_delete_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Delete a lostitem.</span>
-
-<span class="sd">    id: lostitem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">LostItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_delete&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted lost item.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully marked lost item as found!&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">LostItem</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">pass</span>
-
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">lostitem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">LostItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/lostitem_delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;lostitem&quot;</span><span class="p">:</span> <span class="n">lostitem</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="lostitem_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.lostitem_view">[docs]</a><span class="k">def</span> <span class="nf">lostitem_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;View a lostitem.</span>
-
-<span class="sd">    id: lostitem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">lostitem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">LostItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/item_view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;item&quot;</span><span class="p">:</span> <span class="n">lostitem</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;lost&quot;</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="founditem_add_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.founditem_add_view">[docs]</a><span class="k">def</span> <span class="nf">founditem_add_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a founditem.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">FoundItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-            <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added found item.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;founditem_view&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding found item.&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">FoundItemForm</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/founditem_form.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="founditem_modify_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.founditem_modify_view">[docs]</a><span class="k">def</span> <span class="nf">founditem_modify_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Modify a founditem.</span>
-
-<span class="sd">    id: founditem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">founditem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">FoundItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">FoundItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">founditem</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">)</span>
-            <span class="c1"># SAFE HTML</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified found item.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;founditem_view&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding found item.&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">founditem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">FoundItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">FoundItemForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">founditem</span><span class="p">)</span>
-
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">item_id</span><span class="p">,</span> <span class="s2">&quot;founditem&quot;</span><span class="p">:</span> <span class="n">founditem</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/founditem_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="founditem_delete_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.founditem_delete_view">[docs]</a><span class="k">def</span> <span class="nf">founditem_delete_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Delete a founditem.</span>
-
-<span class="sd">    id: founditem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">FoundItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_delete&quot;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted found item.&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully marked found item as found!&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">FoundItem</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">pass</span>
-
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">founditem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">FoundItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/founditem_delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;founditem&quot;</span><span class="p">:</span> <span class="n">founditem</span><span class="p">})</span></div>
-
-
-<span class="nd">@login_required</span>
-<div class="viewcode-block" id="founditem_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.itemreg.html#intranet.apps.itemreg.views.founditem_view">[docs]</a><span class="k">def</span> <span class="nf">founditem_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;View a founditem.</span>
-
-<span class="sd">    id: founditem id</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">founditem</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">FoundItem</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">item_id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;itemreg/item_view.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;item&quot;</span><span class="p">:</span> <span class="n">founditem</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;found&quot;</span><span class="p">})</span></div>
 </pre></div>
 
     </div>

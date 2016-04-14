@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.announcements.models &mdash; TJ Intranet v3 (Build #2093) documentation</title>
+    <title>intranet.apps.announcements.models &mdash; TJ Intranet v3 (Build #2105) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2093)',
+        VERSION:     'v3 (Build #2105)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2093) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2105) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -166,13 +166,15 @@
 <span class="sd">        groups assigned to them (and are therefore public) or those in</span>
 <span class="sd">        which the user is a member.</span>
 
+<span class="sd">        Apparently this .filter() call occasionally returns duplicates, hence the .distinct()...</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">groups__in</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="o">|</span>
                                            <span class="n">Q</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="o">|</span>
                                            <span class="n">Q</span><span class="p">(</span><span class="n">announcementrequest__teachers_requested</span><span class="o">=</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span>
                                            <span class="n">Q</span><span class="p">(</span><span class="n">announcementrequest__user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span>
-                                           <span class="n">Q</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">))</span></div>
+                                           <span class="n">Q</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">))</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AnnouncementManager.hidden_announcements"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.AnnouncementManager.hidden_announcements">[docs]</a>    <span class="k">def</span> <span class="nf">hidden_announcements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a list of announcements marked as hidden for a given user (usually request.user).</span>

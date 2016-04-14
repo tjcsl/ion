@@ -20,6 +20,7 @@ Subpackages
     intranet.apps.groups
     intranet.apps.ionldap
     intranet.apps.itemreg
+    intranet.apps.lostfound
     intranet.apps.notifications
     intranet.apps.polls
     intranet.apps.preferences
