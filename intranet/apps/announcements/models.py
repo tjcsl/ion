@@ -19,13 +19,15 @@ class AnnouncementManager(Manager):
         groups assigned to them (and are therefore public) or those in
         which the user is a member.
 
+        Apparently this .filter() call occasionally returns duplicates, hence the .distinct()...
+
         """
 
         return Announcement.objects.filter(Q(groups__in=user.groups.all()) |
                                            Q(groups__isnull=True) |
                                            Q(announcementrequest__teachers_requested=user) |
                                            Q(announcementrequest__user=user) |
-                                           Q(user=user))
+                                           Q(user=user)).distinct()
 
     def hidden_announcements(self, user):
         """Get a list of announcements marked as hidden for a given user (usually request.user).
