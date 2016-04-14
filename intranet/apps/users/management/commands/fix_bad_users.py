@@ -16,6 +16,10 @@ class Command(BaseCommand):
             if u.dn is None and u.is_active:
                 bad_users.append(u.id)
 
+        if not bad_users:
+            self.stdout.write("No invalid users found.")
+            return
+
         self.stdout.write("The following {} User IDs have no corresponding DN:".format(len(bad_users)))
         self.stdout.write(", ".join([str(u) for u in bad_users]))
         self.stdout.write("Delete them?")
