@@ -251,21 +251,26 @@ $(function() {
         }
     });
     $(window).keydown(function(e) {
-        var selected = $("#activity-list li.selected");
+        var selected = $("#activity-list li.selected:not(.search-hide)");
         if (selected.length > 0) {
+            var flag = false;
             if (e.which == 38) {
                 // up arrow key
-                selected.prevAll("li").first().click();
+                selected.prevAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
+                flag = true;
             }
             if (e.which == 40) {
                 // down arrow key
-                selected.nextAll("li").first().click();
+                selected.nextAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
+                flag = true;
             }
-            var scrollParent = $("#activity-list");
-            selected = $("#activity-list li.selected");
-            scrollParent.scrollTop(scrollParent.scrollTop() + selected.position().top - scrollParent.height()/2 + selected.height()/2);
+            if (flag) {
+                var scrollParent = $("#activity-list");
+                selected = $("#activity-list li.selected");
+                scrollParent.scrollTop(scrollParent.scrollTop() + selected.position().top - scrollParent.height()/2 + selected.height()/2);
+            }
         }
     });
 });
