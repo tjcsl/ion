@@ -39,6 +39,13 @@
         margin-right: auto;
         display: block;
     }
+
+    {% if type == "calculator" %}
+    table.form td,
+    table.form th {
+        padding-bottom: 15px;
+    }
+    {% endif %}
     </style>
 {% endblock %}
 
@@ -47,16 +54,23 @@
     <a href="{% url 'itemreg' %}" class="button">
         <i class="fa fa-arrow-left"></i> Item Registration
     </a>
+
     <h2>
         {{ action|title }} {{ type|title }}
     </h2>
     <br />
+
     <form action="{% url form_route %}" method="post">
     <table>
     {% csrf_token %}
     {{ form.as_table }}
     <tr><td colspan="2"><br /><input type="submit" /></td></tr>
     </table>
+
+    {% if type == "calculator" %}
+        {% include "itemreg/calc_serial.html" %}
+    {% endif %}
+
     </form>
 </div>
 {% endblock %}
