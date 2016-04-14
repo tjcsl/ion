@@ -24,4 +24,3 @@ class FoundItemForm(forms.ModelForm):
             "found",
             "retrieved"
         ]
-

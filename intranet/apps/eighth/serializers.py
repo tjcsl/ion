@@ -63,6 +63,7 @@ class EighthBlockListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FallbackDict(dict):
+
     def __init__(self, fallback):
         super().__init__()
         self.fallback = fallback

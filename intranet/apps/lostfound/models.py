@@ -30,4 +30,3 @@ class FoundItem(models.Model):
 
     class Meta:
         ordering = ["-added"]
-
