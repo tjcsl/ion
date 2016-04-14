@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import bleach
 import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistration
 from .forms import CalculatorRegistrationForm, ComputerRegistrationForm, PhoneRegistrationForm
+from ..search.views import get_search_results
 
 logger = logging.getLogger(__name__)
 
@@ -39,81 +38,109 @@ def search_view(request):
         "comp_form": ComputerRegistrationForm(request.GET) if type == "computer" else ComputerRegistrationForm(),
         "phone_form": PhoneRegistrationForm(request.GET) if type == "phone" else PhoneRegistrationForm()
     }
+    results = {"calculator": None, "computer": None, "phone": None}
     if type == "calculator":
-        results = CalculatorRegistration.objects.all()
-        logger.debug(results)
+        cresults = CalculatorRegistration.objects.all()
+        logger.debug(cresults)
 
         calc_serial = request.GET.get("calc_serial")
         if calc_serial:
-            results = results.filter(calc_serial__icontains=calc_serial)
+            cresults = cresults.filter(calc_serial__icontains=calc_serial)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         calc_id = request.GET.get("calc_id")
         if calc_id:
-            results = results.filter(calc_id__icontains=calc_id)
+            cresults = cresults.filter(calc_id__icontains=calc_id)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         calc_type = request.GET.get("calc_type")
         if calc_type:
-            results = results.filter(calc_type=calc_type)
+            cresults = cresults.filter(calc_type=calc_type)
 
-        logger.debug(results)
+        logger.debug(cresults)
+        results["calculator"] = cresults
     elif type == "computer":
-        results = ComputerRegistration.objects.all()
-        logger.debug(results)
+        cresults = ComputerRegistration.objects.all()
+        logger.debug(cresults)
 
         manufacturer = request.GET.get("manufacturer")
         if manufacturer:
-            results = results.filter(manufacturer=manufacturer)
+            cresults = cresults.filter(manufacturer=manufacturer)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         model = request.GET.get("model")
         if model:
-            results = results.filter(model__icontains=model)
+            cresults = cresults.filter(model__icontains=model)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         serial = request.GET.get("serial")
         if serial:
-            results = results.filter(serial__icontains=serial)
+            cresults = cresults.filter(serial__icontains=serial)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         screen_size = request.GET.get("screen_size")
         if screen_size:
-            results = results.filter(screen_size=screen_size)
+            cresults = cresults.filter(screen_size=screen_size)
 
-        logger.debug(results)
+        logger.debug(cresults)
+        results["computer"] = cresults
     elif type == "phone":
-        results = PhoneRegistration.objects.all()
-        logger.debug(results)
+        cresults = PhoneRegistration.objects.all()
+        logger.debug(cresults)
 
         manufacturer = request.GET.get("manufacturer")
         if manufacturer:
-            results = results.filter(manufacturer=manufacturer)
+            cresults = cresults.filter(manufacturer=manufacturer)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         model = request.GET.get("model")
         if model:
-            results = results.filter(model__icontains=model)
+            cresults = cresults.filter(model__icontains=model)
 
-        logger.debug(results)
+        logger.debug(cresults)
 
         serial = request.GET.get("serial")
         if serial:
-            results = results.filter(serial__icontains=serial)
+            cresults = cresults.filter(serial__icontains=serial)
 
-        logger.debug(results)
-    else:
-        results = None
+        logger.debug(cresults)
+        results["phone"] = cresults
+    elif type == "all":
+        results["calculator"] = CalculatorRegistration.objects.all()
+        results["computer"] = ComputerRegistration.objects.all()
+        results["phone"] = PhoneRegistration.objects.all()
+
+    quser = request.GET.get("user", None)
+    if quser:
+        try:
+            _st, search = get_search_results(quser)
+        except Exception:
+            search = []
+
+        logger.debug(search)
+
+        for i in results:
+            if results[i]:
+                results[i] = results[i].filter(user__in=search)
+
+
+    class NoneDict(dict):
+        def __getitem__(self, key):
+            return dict.get(self, key)
+
+    getargs = NoneDict(dict(request.GET))
 
     context.update({
         "type": type,
-        "results": results
+        "results": results,
+        "no_results": sum([len(results[i]) for i in results]) < 1,
+        "getargs": getargs
     })
 
     return render(request, "itemreg/search.html", context)

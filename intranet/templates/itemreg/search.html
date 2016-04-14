@@ -44,6 +44,8 @@
     <h2>
         Item Search
     </h2>
+    
+    <br />
 
     <table class="item-search">
         <tr>
@@ -55,6 +57,13 @@
                 {{ calc_form }}
                 <tr><td><input type="submit" value="Search" /></td></tr>
                 </table>
+            </form>
+            <br />
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <div style="font-size: 16px">Find By User:</div>
+                <input type="hidden" name="type" value="all" />
+                <input type="text" name="user" value="" placeholder="Enter ID or name" />
+                &nbsp; <input type="submit" value="Search" />
             </form>
         </td>
         <td>
@@ -81,10 +90,10 @@
     </table>
 
     <br />
-    <br />
 
-    <div style="font-size: 16px">Results:</div>
-    {% if type == "calculator" %}
+    {% if results.calculator %}
+    <br />
+    <div style="font-size: 16px">Calculators Matched:</div>
     <table class="fancy-table" style="width: 100%">
         <thead>
             <tr>
@@ -96,20 +105,21 @@
             </tr>
         </thead>
         <tbody>
-        {% for c in results %}
+        {% for c in results.calculator %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
             <td>{{ c.calc_name }}</td>
-            <td>{{ c.calc_serial|highlight:request.GET.calc_serial|safe }}</td>
-            <td>{{ c.calc_id|highlight:request.GET.calc_id|safe }}</td>
+            <td>{{ c.calc_serial|highlight:getargs.calc_serial|safe }}</td>
+            <td>{{ c.calc_id|highlight:getargs.calc_id|safe }}</td>
             <td>{{ c.added }}</td>
         </tr>
-        {% empty %}
-            <tr><td colspan=5>No results.</td></tr>
         {% endfor %}
         </tbody>
     </table>
-    {% elif type == "computer" %}
+    {% endif %}
+    {% if results.computer %}
+    <br />
+    <div style="font-size: 16px">Computers Matched:</div>
     <table class="fancy-table" style="width: 100%">
         <thead>
             <tr>
@@ -123,22 +133,23 @@
             </tr>
         </thead>
         <tbody>
-        {% for c in results %}
+        {% for c in results.computer %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
-            <td>{{ c.manuf_name|highlight:request.GET.manufacturer|safe }}</td>
-            <td>{{ c.model|highlight:request.GET.model|safe }}</td>
-            <td>{{ c.screen_size|highlight:request.GET.screen_size|safe }}</td>
-            <td>{{ c.serial|highlight:request.GET.serial|safe }}</td>
-            <td>{{ c.description|highlight:request.GET.description|safe }}</td>
+            <td>{{ c.manuf_name|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:getargs.model|safe }}</td>
+            <td>{{ c.screen_size|highlight:getargs.screen_size|safe }}</td>
+            <td>{{ c.serial|highlight:getargs.serial|safe }}</td>
+            <td>{{ c.description|highlight:getargs.description|safe }}</td>
             <td>{{ c.added }}</td>
         </tr>
-        {% empty %}
-            <tr><td colspan=5>No results.</td></tr>
         {% endfor %}
         </tbody>
     </table>
-    {% elif type == "phone" %}
+    {% endif %}
+    {% if results.phone %}
+    <br />
+    <div style="font-size: 16px">Phones Matched:</div>
     <table class="fancy-table" style="width: 100%">
         <thead>
             <tr>
@@ -151,21 +162,20 @@
             </tr>
         </thead>
         <tbody>
-        {% for c in results %}
+        {% for c in results.phone %}
         <tr>
             <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
-            <td>{{ c.manuf_name|highlight:request.GET.manufacturer|safe }}</td>
-            <td>{{ c.model|highlight:request.GET.model|safe }}</td>
-            <td>{{ c.serial|highlight:request.GET.serial|safe }}</td>
-            <td>{{ c.description|highlight:request.GET.description|safe }}</td>
+            <td>{{ c.manuf_name|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:getargs.model|safe }}</td>
+            <td>{{ c.serial|highlight:getargs.serial|safe }}</td>
+            <td>{{ c.description|highlight:getargs.description|safe }}</td>
             <td>{{ c.added }}</td>
         </tr>
-        {% empty %}
-            <tr><td colspan=5>No results.</td></tr>
         {% endfor %}
         </tbody>
     </table>
-    {% else %}
+    {% endif %}
+    {% if no_results %}
         No results. Enter search criteria above, or hit the button below each category to display all entires of that type.
     {% endif %}
 
