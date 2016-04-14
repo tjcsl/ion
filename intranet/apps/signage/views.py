@@ -119,7 +119,7 @@ def touch_signage(request, sign=None):
     context["eighth_url"] = "/signage/eighth?no_reload&touch=1&detail=1&block_increment={}".format(block_increment)
     context["calendar_url"] = "https://postman.tjhsst.edu/"
     context["default_page"] = default_page
-    context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__lt=timezone.now())
+    context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())
     return render(request, "signage/touch.html", context)
 
 

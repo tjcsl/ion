@@ -31,7 +31,7 @@
 
     <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/vendor/jquery.overscroll.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/ftscroller-0.6.2.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
@@ -64,19 +64,33 @@
         $("a[data-link]").click(function() {
             var link = $(this).attr("data-link");
             var section = $("section#" + link);
-            //$("section").fadeOut(400);
             $("section").hide();
-            //section.fadeIn(400);
-            section.show();            
+            section.show();
+            if(link == "info") addScroll();
         });
 
         var default_page = "{{ default_page }}";
         $("section#" + default_page).show();
         $("ul.nav li[data-name='" + default_page + "']").addClass("selected");
 
-        $(".announcements-scroll").overscroll({
-            direction: 'vertical'
-        });
+        addScroll = function() {
+            if(!window.scroller) {
+                var scroller = new FTScroller(document.getElementById('announcements-scroll'), {
+                    scrollingX: false,
+                    bouncing: false,
+                    flinging: false,
+                    scrollbars: true,
+                    updateOnChanges: true
+                });
+                window.scroller = scroller;
+                $(".announcements-outer > h2").click(function() {
+                    window.scroller.scrollTo(0, 0);
+                });
+            } else {
+                window.scroller.scrollTo(0, 0);
+            }
+            
+        }
 
         $(".announcements a").attr("href", null).click(function(event) {
             event.preventDefault();
@@ -134,9 +148,9 @@
 
         <section id="info">
 
-            <div class="announcements-scroll">
+            <div class="announcements-outer">
             <h2>Announcements</h2>
-            <div class="announcements">
+            <div class="announcements" id="announcements-scroll">
             {% for announcement in public_announcements %}
             <div class="announcement">
                 <h3>{{ announcement.title }}</h3>
