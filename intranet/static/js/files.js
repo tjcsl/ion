@@ -39,17 +39,16 @@ $(document).ready(function() {
                             data: fd,
                             success: function(data) {
                                 count -= 1;
-                                // page reloads when all requests are done
-                                // this could be made better if a notification could
-                                // be displayed and the list of files could be refreshed
                                 if (count <= 0) {
                                     message.update({
                                         "message": "Upload succeeded.",
                                         "type": "info"
                                     });
 
-                                    var dirList = $("#directory-list", $(data)).html();
-                                    $("#directory-list").html(dirList);
+                                    if ($("#directory-list").length) {
+                                        var dirList = $("#directory-list", $(data)).html();
+                                        $("#directory-list").html(dirList);
+                                    }
                                 }
                             },
                             error: function(xhr, stat, err) {
