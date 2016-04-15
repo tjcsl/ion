@@ -139,7 +139,7 @@ def search_view(request):
     context.update({
         "type": type,
         "results": results,
-        "no_results": sum([len(results[i]) for i in results]) < 1,
+        "no_results": sum([len(results[i]) if results[i] else 0 for i in results]) < 1,
         "getargs": getargs
     })
 
