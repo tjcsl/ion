@@ -30,7 +30,7 @@ def home_view(request):
 @login_required
 def search_view(request):
     if not request.user.has_admin_permission("itemreg") and not request.user.is_teacher:
-        return http.Http404
+        raise http.Http404
 
     type = request.GET.get("type", "")
     context = {
