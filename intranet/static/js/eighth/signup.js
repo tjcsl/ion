@@ -131,6 +131,7 @@ $(function() {
 
 
             $("#activity-detail").data("aid", window.activityDetailView.model.id);
+            $("#activity-detail").parent().addClass("activity-detail-selected");
             $("#activity-detail").addClass("selected");
 
             window.activityDetailView.render();

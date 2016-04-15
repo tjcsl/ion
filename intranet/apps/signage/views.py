@@ -240,7 +240,7 @@ def eighth_signage(request, block_id=None, block_increment=0):
         "no_title": ("no_title" in request.GET),
         "no_detail": not ("detail" in request.GET),
         "no_rooms": ("no_rooms" in request.GET),
-        "use_scroll": ("no_scroll" not in request.GET),
+        "use_scroll": False if touch_signage else ("no_scroll" not in request.GET),
         "do_reload": ("no_reload" not in request.GET),
         "preload_background": True,
         "reload_mins": reload_mins,
