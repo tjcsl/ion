@@ -297,7 +297,7 @@ def show_event_view(request):
             event.user_map.users_hidden.remove(request.user)
             event.user_map.save()
             return http.HttpResponse("Unhidden")
-        return http.Http404()
+        raise http.Http404
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
 
@@ -316,6 +316,6 @@ def hide_event_view(request):
             event.user_map.users_hidden.add(request.user)
             event.user_map.save()
             return http.HttpResponse("Hidden")
-        return http.Http404()
+        raise http.Http404
     else:
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")
