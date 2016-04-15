@@ -167,6 +167,7 @@ def frameset_signage(request, url):
 
     context = schedule_context(request)
     context["signage"] = True
+    url = url + ("&" if "?" in url else "?") + "zoom={}".format(request.GET.get("framezoom", 1))
     context["url"] = url
     return render(request, "signage/frameset.html", context)
 
