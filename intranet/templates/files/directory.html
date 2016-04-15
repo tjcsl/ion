@@ -10,7 +10,27 @@
     {{ block.super }}
     {% stylesheet 'files' %}
     <style type="text/css">
-
+        #upload-overlay {
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            bottom:0;
+            right:0;
+            background-color:rgba(180, 180, 180, 0.7);
+            z-index:1043; /* search bar is 1042 */
+            text-align:center;
+            border:10px dashed #666;
+        }
+        #upload-overlay div {
+            margin-top:100px;
+        }
+        #upload-overlay h3 {
+            font-size:2em;
+        }
+        #upload-overlay * {
+            pointer-events:none;
+        }
     </style>
 {% endblock %}
 
@@ -42,6 +62,7 @@
         </a>
 
         <span id="additional-upload-option" class="hidden-sm"><b>New:</b> You can also drag files onto this page to upload them.</span>
+        <div id="upload-overlay"><div><i class="fa fa-upload fa-5x"></i><h3>Drop to Upload</h3></div></div>
 
         <h3>Current directory: {{ current_dir }}</h3>
         <table class="directory-list" id="directory-list" data-current-dir="{{ current_dir|escape }}" data-endpoint="{% url 'files_upload' host.code %}?dir={{ current_dir|escape }}">

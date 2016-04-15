@@ -9,7 +9,14 @@ $(document).ready(function() {
             e.originalEvent.dataTransfer.dropEffect = "copy";
             e.preventDefault();
         });
+        $(window).on("dragenter", function(e) {
+            $("#upload-overlay").show();
+        });
+        $("#upload-overlay").on("dragleave", function(e) {
+            $("#upload-overlay").hide();
+        });
         $(window).on("drop", function(e) {
+            $("#upload-overlay").hide();
             var dt = e.originalEvent.dataTransfer;
             if (dt) {
                 if (dt.files.length) {
@@ -40,7 +47,7 @@ $(document).ready(function() {
                                         "message": "Upload succeeded.",
                                         "type": "info"
                                     });
-                                    
+
                                     var dirList = $("#directory-list", $(data)).html();
                                     $("#directory-list").html(dirList);
                                 }
