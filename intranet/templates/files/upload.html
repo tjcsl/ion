@@ -14,6 +14,11 @@
     </style>
 {% endblock %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/files.js' %}"></script>
+{% endblock %}
+
 {% block main %}
     <div class="primary-content">
         <h2>
@@ -29,7 +34,10 @@
             <i class="fa fa-arrow-left"></i> {{ remote_dir }}
         </a>
 
+        <span id="additional-upload-option" class="hidden-sm"><b>New:</b> You can also drag files onto this page to upload them.</span>
+
         <h3>File Upload</h3>
+        <div id="upload-overlay"><div><i class="fa fa-upload fa-5x"></i><h3>Drop to Upload</h3></div></div>
         <p>The maximum file upload size is {{ max_upload_mb }}MB.</p>
 
         <form action="" method="post" enctype="multipart/form-data">
