@@ -80,7 +80,7 @@ def events_view(request):
 
     context = {
         "events": events_categories,
-        "num_events": viewable_events.count(),
+        "num_events": sum([x["events"].count() for x in events_categories]),
         "is_events_admin": is_events_admin,
         "events_admin": is_events_admin,
         "show_attend": True,
