@@ -1088,6 +1088,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "simpleUser"
 
     @property
+    def male(self):
+        """Return if the user is male."""
+        return self.sex and self.sex == "M"
+
+    @property
+    def female(self):
+        """Return if the user is female."""
+        return self.sex and self.sex == "F"
+
+    @property
     def is_attendance_taker(self):
         """Checks if user can take attendance for an eighth activity.
 
