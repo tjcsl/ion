@@ -522,4 +522,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
             "awaiting_approval": awaiting_approval}
         )
 
+    self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user)
+    context.update({
+        "self_awaiting_teacher": self_awaiting_teacher
+    })
+
     return render(request, "dashboard/dashboard.html", context)

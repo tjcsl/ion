@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from intranet import settings
+
 from .forms import AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
@@ -108,13 +110,15 @@ def request_announcement_view(request):
                 if approve_self:
                     ann.teachers_approved.add(teacher)
                     ann.save()
-                    admin_request_announcement_email(request, form, ann)
+                    if settings.SEND_ANNOUNCEMENT_APPROVAL:
+                        admin_request_announcement_email(request, form, ann)
                     ann.admin_email_sent = True
                     ann.save()
                     return redirect("request_announcement_success_self")
 
                 else:
-                    request_announcement_email(request, form, obj)
+                    if settings.SEND_ANNOUNCEMENT_APPROVAL:
+                        request_announcement_email(request, form, obj)
                     return redirect("request_announcement_success")
                 return redirect("index")
         else:
@@ -160,7 +164,8 @@ def approve_announcement_view(request, req_id):
                 obj.teachers_approved.add(request.user)
                 obj.save()
                 if not obj.admin_email_sent:
-                    admin_request_announcement_email(request, form, obj)
+                    if settings.SEND_ANNOUNCEMENT_APPROVAL:
+                        admin_request_announcement_email(request, form, obj)
                     obj.admin_email_sent = True
                     obj.save()
 

@@ -111,7 +111,7 @@
                 <div class="announcement announcement-meta">
                 {% if awaiting_approval %}
                     <h3>
-                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %} is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
+                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
                     <ul>
                     {% for req in awaiting_approval %}
                         <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
@@ -123,6 +123,20 @@
                 {% endif %}
                 </div>
             {% endif %}
+        {% endif %}
+        {% if self_awaiting_teacher %}
+            <div class="announcement announcement-meta">
+                <h3>
+                    <i class="fa fa-exclamation-circle" style="color: red"></i> There {% if self_awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ self_awaiting_teacher|length }} announcement requests waiting for your approval{% endif %}
+                </h3>
+                <ul>
+                {% for req in self_awaiting_teacher %}
+                    <li><a href="{% url 'approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
+                {% endfor %}
+                </ul>
+                <br />
+                Click on the link{{ self_awaiting_teacher|length|pluralize }} above to approve or reject these announcements.
+            </div>
         {% endif %}
 
         {% comment %}
