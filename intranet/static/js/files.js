@@ -10,7 +10,19 @@ $(document).ready(function() {
             e.preventDefault();
         });
         $(window).on("dragenter", function(e) {
-            $("#upload-overlay").show();
+            var flag = false;
+            var dt = e.originalEvent.dataTransfer;
+            if (dt.types) {
+                for (var i = 0; i < dt.types.length; i++) {
+                    if (dt.types[i] == "Files") {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if (flag) {
+                $("#upload-overlay").show();
+            }
         });
         $("#upload-overlay").on("dragleave", function(e) {
             $("#upload-overlay").hide();
@@ -38,13 +50,12 @@ $(document).ready(function() {
                             cache: false,
                             data: fd,
                             success: function(data) {
+                                message.update({
+                                    "message": "<b>" + safeName + "</b> uploaded",
+                                    "type": "success"
+                                });
                                 count -= 1;
                                 if (count <= 0) {
-                                    message.update({
-                                        "message": "Upload succeeded.",
-                                        "type": "info"
-                                    });
-
                                     if ($("#directory-list").length) {
                                         var dirList = $("#directory-list", $(data)).html();
                                         $("#directory-list").html(dirList);
