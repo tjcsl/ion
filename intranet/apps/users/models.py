@@ -1101,10 +1101,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_senior(self):
         try:
             self.senior
-        except Exception:
+        except AttributeError:
             return False
-        else:
-            return True
+        return True
 
     @property
     def is_attendance_taker(self):
