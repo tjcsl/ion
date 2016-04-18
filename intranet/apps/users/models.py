@@ -224,6 +224,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Private dn cache
     _dn = None  # type: str
 
+
+    _student_id = models.PositiveIntegerField(null=True)
+    @property
+    def student_id(self):
+        if self._student_id and (self._current_user_override() or self.is_http_request_sender()):
+            return self._student_id
+
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
     """Override default Model Manager (objects) with
@@ -531,7 +538,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             requesting_user = threadlocals.request().user
             if isinstance(requesting_user, AnonymousUser) or not requesting_user.is_authenticated():
                 return False
-            can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice)
+            can_view_anyway = requesting_user and (requesting_user.is_teacher or requesting_user.is_eighthoffice or requesting_user.is_eighth_admin)
         except (AttributeError, KeyError) as e:
             logger.error("Could not check teacher/eighth override: {}".format(e))
             can_view_anyway = False
@@ -607,6 +614,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return list(zip(*ordered_schedule))[1]  # Unpacked class list
         else:
             return None
+    
 
     @property
     def ionldap_courses(self):
@@ -1194,13 +1202,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             "can_set": False,
             "can_set": False
         },
-        "student_id": {
-            "ldap_name": "tjhsstStudentId",
-            "perm": "specialPerm_studentID",
-            "is_list": False,
-            "cache": True,
-            "can_set": True
-        },
+        #"student_id": {
+        #    "ldap_name": "tjhsstStudentId",
+        #    "perm": "specialPerm_studentID",
+        #    "is_list": False,
+        #    "cache": True,
+        #    "can_set": True
+        #},
         "common_name": {
             "ldap_name": "cn",
             "perm": None,
