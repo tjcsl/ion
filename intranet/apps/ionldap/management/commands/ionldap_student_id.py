@@ -4,7 +4,6 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from intranet.apps.ionldap.models import LDAPCourse
 from intranet.apps.users.models import User
 
 
@@ -24,13 +23,11 @@ class Command(BaseCommand):
         print("CSV file", csv_file)
 
         users_dict = {}
-        users_dict_base = "TJUsername"
-        class_dict_base = "SectionID"
 
         with open(csv_file, 'r') as csv_open:
             csv_reader = csv.reader(csv_open)
             next(csv_reader)  # skip first line
-            rows = ["StudentID", "Gender", "Grade", "FirstName", "LastName", "MiddleName", "StudentName", "TJUsername"]
+            # rows = ["StudentID", "Gender", "Grade", "FirstName", "LastName", "MiddleName", "StudentName", "TJUsername"]
             for row in csv_reader:
                 # TJUsername = StudentID
                 uname = row[7].lower()
@@ -38,7 +35,6 @@ class Command(BaseCommand):
                 if uname and uid and uname not in users_dict:
                     users_dict[uname] = uid
                     print(uname, uid)
-
 
         if not add_db:
             return

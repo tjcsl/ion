@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 USE_SID_LDAP = False
 
+
 def do_ldap_query(q, admin=False):
     c = LDAPConnection()
     result_dns = []
