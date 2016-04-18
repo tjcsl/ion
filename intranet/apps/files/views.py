@@ -21,6 +21,8 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
 
+from paramiko import SSHException
+
 import pysftp
 
 from ..printing.views import get_printers
@@ -169,12 +171,12 @@ def files_type(request, fstype=None):
             host_dir = windows_dir_format(host_dir, request.user)
             try:
                 sftp.chdir(host_dir)
-            except IOError as e:
+            except (IOError, SSHException) as e:
                 if "NoSuchFile" in "{}".format(e):
                     host_dir = "/"
                     try:
                         sftp.chdir(host_dir)
-                    except IOError as e2:
+                    except (IOError, SSHException) as e2:
                         messages.error(request, e)
                         messages.error(request, "Root directory: {}".format(e2))
                         return redirect("files")
@@ -186,7 +188,7 @@ def files_type(request, fstype=None):
         else:
             try:
                 sftp.chdir(host_dir)
-            except IOError as e:
+            except (IOError, SSHException) as e:
                 messages.error(request, e)
                 return redirect("files")
 
@@ -218,7 +220,7 @@ def files_type(request, fstype=None):
 
             try:
                 sftp.getfo(filepath, tmpfile)
-            except IOError as e:
+            except (IOError, SSHException) as e:
                 messages.error(request, e)
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
@@ -236,7 +238,7 @@ def files_type(request, fstype=None):
         if can_access_path(fsdir):
             try:
                 sftp.chdir(fsdir)
-            except IOError as e:
+            except (IOError, SSHException) as e:
                 messages.error(request, e)
                 return redirect("files")
         else:
@@ -277,7 +279,7 @@ def files_type(request, fstype=None):
                             os.makedirs(localpath)
                         fh = open(os.path.join(localpath, item), "wb")
                         sftp.getfo(itempath, fh)
-                    except IOError as e:
+                    except (IOError, SSHException) as e:
                         logger.debug("IOError on " + item)
                         continue
 
@@ -296,7 +298,7 @@ def files_type(request, fstype=None):
 
     try:
         listdir = sftp.listdir()
-    except IOError as e:
+    except (IOError, SSHException) as e:
         messages.error(request, e)
         listdir = []
     files = []
@@ -385,7 +387,7 @@ def files_delete(request, fstype=None):
             host_dir = windows_dir_format(host_dir, request.user)
         try:
             sftp.chdir(host_dir)
-        except IOError as e:
+        except (IOError, SSHException) as e:
             messages.error(request, e)
             return redirect("files")
 
@@ -475,7 +477,7 @@ def files_upload(request, fstype=None):
                     host_dir = windows_dir_format(host_dir, request.user)
                 try:
                     sftp.chdir(host_dir)
-                except IOError as e:
+                except (IOError, SSHException) as e:
                     messages.error(request, e)
                     return redirect("files")
 
@@ -500,14 +502,14 @@ def files_upload(request, fstype=None):
 def handle_file_upload(file, fstype, fsdir, sftp, request=None):
     try:
         sftp.chdir(fsdir)
-    except IOError as e:
+    except (IOError, SSHException) as e:
         messages.error(request, e)
         return
 
     remote_path = "{}/{}".format(fsdir, file.name)
     try:
         sftp.putfo(file, remote_path)
-    except IOError as e:
+    except (IOError, SSHException) as e:
         # Remote path does not exist
         messages.error(request, e)
         return
