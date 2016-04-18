@@ -3,6 +3,7 @@ import collections
 import functools
 import logging
 
+from django.db import transaction
 from django.db.models import Count
 
 from rest_framework import serializers
@@ -144,6 +145,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
         return scheduled_activity.activity.id
 
+    @transaction.atomic
     def fetch_activity_list_with_metadata(self, block):
         user = self.context.get("user", self.context["request"].user)
 
