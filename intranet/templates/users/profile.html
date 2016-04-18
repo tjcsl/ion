@@ -274,6 +274,27 @@
                                 </a></td>
                         </tr>
                         {% endif %}
+                        {% if profile_user.senior %}
+                        {% with senior=profile_user.senior %}
+                            {% if senior.college %}
+                            <tr>
+                                <th>Attending</th>
+                                <td class="senior-{% if not senior.college_sure %}un{% endif %}sure">
+                                    {{ senior.college }}{% if not senior.college_sure %} (unsure){% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if senior.major %}
+                            <tr>
+                                <th>Major</th>
+                                <td class="senior-{% if not senior.major_sure %}un{% endif %}sure">
+                                    {{ senior.major }}{% if not senior.major_sure %} (unsure){% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endwith %}
+                        {% endif %}
 
                     </table>
                 </div>
