@@ -19,6 +19,7 @@ from ..users.views import profile_view
 
 logger = logging.getLogger(__name__)
 
+USE_SID_LDAP = False
 
 def do_ldap_query(q, admin=False):
     c = LDAPConnection()
@@ -31,14 +32,24 @@ def do_ldap_query(q, admin=False):
     # If only a digit, search for student ID and user ID
     if q.isdigit():
         logger.debug("Digit search: {}".format(q))
-        query = ("(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
+        if USE_SID_LDAP:
+            query = ("(&(|(tjhsstStudentId={0})" "(iodineUidNumber={0})" ")(|(objectClass=tjhsstStudent)(objectClass=tjhsstTeacher)))").format(q)
 
-        logger.debug("Running LDAP query: {}".format(query))
+            logger.debug("Running LDAP query: {}".format(query))
 
-        res = c.search(settings.USER_DN, query, ["dn"])
-        for row in res:
-            dn = row["dn"]
-            result_dns.append(dn)
+            res = c.search(settings.USER_DN, query, ["dn"])
+            for row in res:
+                dn = row["dn"]
+                result_dns.append(dn)
+        else:
+            sid_users = User.objects.filter(_student_id=q)
+            uid_users = User.objects.filter(id=q)
+            for u in sid_users:
+                result_dns.append(u.dn)
+
+            for u in uid_users:
+                result_dns.append(u.dn)
+            logger.debug("Running local DB query for UID and SID")
     elif ":" in q:
         logger.debug("Advanced search")
         # A mapping between search keys and LDAP entires
