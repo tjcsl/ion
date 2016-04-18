@@ -13,9 +13,15 @@ logger = logging.getLogger(__name__)
 @register.filter(expects_localtime=True)
 def fuzzy_time(time):
     """Formats a `datetime.time` object relative to the current time."""
-    d = datetime_date.today()
-    dt = datetime.combine(d, time)
+    dt = time_to_date(time)
     return fuzzy_date(dt)
+
+
+@register.filter(expects_localtime=True)
+def time_to_date(time):
+    """Returns a `datetime.datetime` object from a `datetime.time` object using the current date."""
+    d = datetime_date.today()
+    return datetime.combine(d, time)
 
 
 @register.filter(expects_localtime=True)
