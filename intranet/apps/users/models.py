@@ -38,12 +38,16 @@ class UserManager(DjangoUserManager):
         """Get a unique user object by student ID."""
         if isinstance(student_id, str) and not student_id.isdigit():
             return None
-        c = LDAPConnection()
+        """c = LDAPConnection()
 
         results = c.search(settings.USER_DN, "tjhsstStudentId={}".format(student_id), ["dn"])
 
         if len(results) == 1:
             return User.get_user(dn=results[0]["dn"])
+        return None"""
+        u = User.objects.filter(_student_id=student_id)
+        if u:
+            return u.first()
         return None
 
     def user_with_ion_id(self, student_id):
