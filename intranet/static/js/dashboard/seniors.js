@@ -26,10 +26,10 @@ function initClock(id, evt, endtime){
     var mns = t.minutes;
     var scs = ('0' + t.seconds).slice(-2);
 
-    if(dys > 14) {
-        clock.innerHTML = "<b>"+dys+"</b> days until " + evt;
+    if(dys > 30) {
+        clock.innerHTML = "<span class='clock'><b>"+dys+"</b> days, <b>"+hrs+"</b> hours</span> until " + evt;
     } else {
-        clock.innerHTML = "<b>"+dys+"</b> days, <b>"+hrs+"</b> hours, <b>"+mns+"</b> minutes until " + evt;
+        clock.innerHTML = "<span class='clock'><b>"+dys+"</b> days, <b>"+hrs+"</b> hours, <b>"+mns+"</b> minutes</span> until " + evt;
     }
 
     if(t.total<=0){
