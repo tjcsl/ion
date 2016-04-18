@@ -66,7 +66,11 @@ class LDAPConnection(object):
 
     def simple_bind(self, server):
         _thread_locals.ldap_conn = ldap3.Connection(server, settings.AUTHUSER_DN, settings.AUTHUSER_PASSWORD)
-        _thread_locals.ldap_conn.bind()
+        try:
+            _thread_locals.ldap_conn.bind()
+        except ldap3.LDAPSocketOpenError as e:
+            logging.critical("Failed to connect to ldap server: %s", e)
+            _thread_locals.ldap_conn = None
         _thread_locals.simple_bind = True
 
     @property
@@ -79,7 +83,7 @@ class LDAPConnection(object):
         middleware.
 
         """
-        ldap_exceptions = (ldap3.LDAPExceptionError,)
+        ldap_exceptions = (ldap3.LDAPExceptionError, ldap3.LDAPSocketOpenError)
         if 'gssapi' in sys.modules:
             ldap_exceptions += (gssapi.exceptions.GSSError,)
 
