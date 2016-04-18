@@ -1098,6 +1098,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.sex and self.sex == "F"
 
     @property
+    def has_senior(self):
+        try:
+            a = self.senior
+        except Exception:
+            return False
+        else:
+            return True
+    
+
+    @property
     def is_attendance_taker(self):
         """Checks if user can take attendance for an eighth activity.
 
