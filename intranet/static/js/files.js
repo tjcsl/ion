@@ -21,14 +21,14 @@ $(document).ready(function() {
                 }
             }
             if (flag) {
-                $("#upload-overlay").show();
+                $("#upload-overlay").fadeIn(150);
             }
         });
         $("#upload-overlay").on("dragleave", function(e) {
-            $("#upload-overlay").hide();
+            $("#upload-overlay").fadeOut(150);
         });
         $(window).on("drop", function(e) {
-            $("#upload-overlay").hide();
+            $("#upload-overlay").fadeOut(150);
             var dt = e.originalEvent.dataTransfer;
             if (dt) {
                 if (dt.files.length) {
