@@ -25,10 +25,10 @@ $(document).ready(function() {
             }
         });
         $("#upload-overlay").on("dragleave", function(e) {
-            $("#upload-overlay").fadeOut(150);
+            $("#upload-overlay").stop().fadeOut(150);
         });
         $(window).on("drop", function(e) {
-            $("#upload-overlay").fadeOut(150);
+            $("#upload-overlay").stop().fadeOut(150);
             var dt = e.originalEvent.dataTransfer;
             if (dt) {
                 if (dt.files.length) {
