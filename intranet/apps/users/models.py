@@ -1499,7 +1499,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         photo_field = "perm-showpictures" + ("-self" if field_type == "self" else "")
 
         c = LDAPConnection()
-        logger.info("SET {}: {} = {}".format(photo_dn, photo_field, value))
+        logger.debug("SET {}: {} = {}".format(photo_dn, photo_field, value))
         c.set_attribute(photo_dn, photo_field, value)
 
     def set_raw_ldap_attribute(self, field_name, value):
@@ -1508,7 +1508,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise Exception("Could not determine DN of User")
 
         c = LDAPConnection()
-        logger.info("SET {}: {} = {}".format(self.dn, field_name, value))
+        logger.debug("SET {}: {} = {}".format(self.dn, field_name, value))
         c.set_attribute(self.dn, field_name, value)
 
     def clear_cache(self):
