@@ -21,6 +21,8 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
 
+from paramiko import SSHException
+
 import pysftp
 
 from ..printing.views import get_printers
@@ -30,7 +32,7 @@ from .models import Host
 
 logger = logging.getLogger(__name__)
 
-exceptions = (EOFError, OSError, pysftp.SSHException)
+exceptions = (EOFError, OSError, SSHException)
 
 
 def create_session(hostname, username, password):
