@@ -21,8 +21,6 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
 
-from paramiko import SSHException
-
 import pysftp
 
 from ..printing.views import get_printers
@@ -31,6 +29,8 @@ from .forms import UploadFileForm
 from .models import Host
 
 logger = logging.getLogger(__name__)
+
+exceptions = (EOFError, OSError, pysftp.SSHException)
 
 
 def create_session(hostname, username, password):
@@ -153,7 +153,7 @@ def files_type(request, fstype=None):
 
     try:
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
-    except pysftp.SSHException as e:
+    except exceptions as e:
         messages.error(request, e)
         error_msg = str(e).lower()
         if "authentication" in error_msg:
@@ -171,12 +171,12 @@ def files_type(request, fstype=None):
             host_dir = windows_dir_format(host_dir, request.user)
             try:
                 sftp.chdir(host_dir)
-            except (IOError, SSHException) as e:
+            except exceptions as e:
                 if "NoSuchFile" in "{}".format(e):
                     host_dir = "/"
                     try:
                         sftp.chdir(host_dir)
-                    except (IOError, SSHException) as e2:
+                    except exceptions as e2:
                         messages.error(request, e)
                         messages.error(request, "Root directory: {}".format(e2))
                         return redirect("files")
@@ -188,7 +188,7 @@ def files_type(request, fstype=None):
         else:
             try:
                 sftp.chdir(host_dir)
-            except (IOError, SSHException) as e:
+            except exceptions as e:
                 messages.error(request, e)
                 return redirect("files")
 
@@ -207,8 +207,8 @@ def files_type(request, fstype=None):
         if can_access_path(filepath):
             try:
                 fstat = sftp.stat(filepath)
-            except:
-                messages.error(request, "Unable to access {}".format(filebase))
+            except exceptions as e:
+                messages.error(request, "Unable to access {}: {}".format(filebase, e))
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
             if fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
@@ -220,7 +220,7 @@ def files_type(request, fstype=None):
 
             try:
                 sftp.getfo(filepath, tmpfile)
-            except (IOError, SSHException) as e:
+            except exceptions as e:
                 messages.error(request, e)
                 return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
@@ -238,7 +238,7 @@ def files_type(request, fstype=None):
         if can_access_path(fsdir):
             try:
                 sftp.chdir(fsdir)
-            except (IOError, SSHException) as e:
+            except exceptions as e:
                 messages.error(request, e)
                 return redirect("files")
         else:
@@ -260,8 +260,8 @@ def files_type(request, fstype=None):
                     itempath = os.path.join(rd, item)
                     try:
                         fstat = sftp.stat(itempath)
-                    except:
-                        logger.debug("Could not read " + item)
+                    except exceptions as e:
+                        logger.debug("Could not read %s: %s" % (item, e))
                         continue
 
                     if stat.S_ISDIR(fstat.st_mode):
@@ -279,8 +279,8 @@ def files_type(request, fstype=None):
                             os.makedirs(localpath)
                         fh = open(os.path.join(localpath, item), "wb")
                         sftp.getfo(itempath, fh)
-                    except (IOError, SSHException) as e:
-                        logger.debug("IOError on " + item)
+                    except exceptions as e:
+                        logger.debug("Exception %s on %s" % (e, item))
                         continue
 
             with zipfile.ZipFile(tmpfile, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -298,7 +298,7 @@ def files_type(request, fstype=None):
 
     try:
         listdir = sftp.listdir()
-    except (IOError, SSHException) as e:
+    except exceptions as e:
         messages.error(request, e)
         listdir = []
     files = []
@@ -306,7 +306,7 @@ def files_type(request, fstype=None):
         if not f.startswith("."):
             try:
                 fstat = sftp.stat(f)
-            except:
+            except exceptions:
                 # If we can't stat the file, don't show it
                 continue
             files.append({
@@ -369,7 +369,7 @@ def files_delete(request, fstype=None):
 
     try:
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
-    except pysftp.SSHException as e:
+    except exceptions as e:
         messages.error(request, e)
         error_msg = str(e).lower()
         if "authentication" in error_msg:
@@ -387,7 +387,7 @@ def files_delete(request, fstype=None):
             host_dir = windows_dir_format(host_dir, request.user)
         try:
             sftp.chdir(host_dir)
-        except (IOError, SSHException) as e:
+        except exceptions as e:
             messages.error(request, e)
             return redirect("files")
 
@@ -401,8 +401,8 @@ def files_delete(request, fstype=None):
         try:
             fstat = sftp.stat(filepath)
             is_directory = stat.S_ISDIR(fstat.st_mode)
-        except:
-            messages.error(request, "Unable to access {}".format(filepath))
+        except exceptions as e:
+            messages.error(request, "Unable to access {}: {}".format(filepath, e))
             return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
     def rmtree(sftp, path):
@@ -423,7 +423,7 @@ def files_delete(request, fstype=None):
             messages.success(request, ("Folder" if is_directory else "File") + " deleted!")
         except PermissionError:
             messages.error(request, "You are not allowed to delete this " + ("folder" if is_directory else "file") + "!")
-        except Exception as e:
+        except exceptions as e:
             messages.error(request, "{}".format(e))
         return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
 
@@ -462,7 +462,7 @@ def files_upload(request, fstype=None):
         if form.is_valid():
             try:
                 sftp = create_session(host.address, authinfo["username"], authinfo["password"])
-            except pysftp.SSHException as e:
+            except exceptions as e:
                 messages.error(request, e)
                 return redirect("files")
             else:
@@ -477,7 +477,7 @@ def files_upload(request, fstype=None):
                     host_dir = windows_dir_format(host_dir, request.user)
                 try:
                     sftp.chdir(host_dir)
-                except (IOError, SSHException) as e:
+                except exceptions as e:
                     messages.error(request, e)
                     return redirect("files")
 
@@ -502,18 +502,15 @@ def files_upload(request, fstype=None):
 def handle_file_upload(file, fstype, fsdir, sftp, request=None):
     try:
         sftp.chdir(fsdir)
-    except (IOError, SSHException) as e:
+    except exceptions as e:
         messages.error(request, e)
         return
 
     remote_path = "{}/{}".format(fsdir, file.name)
     try:
         sftp.putfo(file, remote_path)
-    except (IOError, SSHException) as e:
+    except exceptions as e:
         # Remote path does not exist
-        messages.error(request, e)
-        return
-    except OSError as e:
         messages.error(request, "Unable to upload: {}".format(e))
         return
 
