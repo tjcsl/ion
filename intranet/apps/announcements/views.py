@@ -8,6 +8,7 @@ import bleach
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -351,6 +352,7 @@ def delete_announcement_view(request, id):
 
 
 @login_required
+@transaction.atomic
 def show_announcement_view(request):
     """ Unhide an announcement that was hidden by the logged-in user.
 
@@ -370,6 +372,7 @@ def show_announcement_view(request):
 
 
 @login_required
+@transaction.atomic
 def hide_announcement_view(request):
     """ Hide an announcement for the logged-in user.
 
