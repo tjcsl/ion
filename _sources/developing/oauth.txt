@@ -57,7 +57,7 @@ At this point, a valid access token has been gained, and you can request API res
 .. code-block:: python
 
     try:
-        profile = oauth.get("http://127.0.0.1/api/profile")
+        profile = oauth.get("https://ion.tjhsst.edu/api/profile")
     except TokenExpiredError as e:
         args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
         token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
@@ -73,9 +73,13 @@ After 36,000 seconds (1 hour), the token will expire; you need to renew it. This
      args = { "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET }
      token = oauth.refresh_token("https://ion.tjhsst.edu/oauth/token/", **args)
 
+Python-social-auth
+------------------
 
 If you want to use python-social-auth, a plugin is available in the ion_oauth package.
 See `ion_oauth <https://pypi.python.org/pypi/ion_oauth>`_
+
+For a Django project, add AUTHENTICATION_BACKENDS = ['ion_oauth.oauth.IonOauth2'] and define SOCIAL_AUTH_ION_KEY and SOCIAL_AUTH_ION_SECRET in your settings.py file.
 
 PHP
 ---
