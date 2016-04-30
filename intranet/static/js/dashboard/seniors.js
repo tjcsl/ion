@@ -26,10 +26,10 @@ function initClock(id, evt, endtime){
     var mns = t.minutes;
     var scs = ('0' + t.seconds).slice(-2);
 
-    if(dys > 30) {
+    if(dys > 50) {
         clock.innerHTML = "<span class='clock'><b>"+dys+"</b> days, <b>"+hrs+"</b> hours</span> until " + evt;
     } else {
-        clock.innerHTML = "<span class='clock'><b>"+dys+"</b> days, <b>"+hrs+"</b> hours, <b>"+mns+"</b> minutes</span> until " + evt;
+        clock.innerHTML = "<span class='clock'><b>"+dys+"</b> days, <b>"+hrs+"</b> hours, <b>"+mns+"</b> minutes, <b>"+scs+"</b> seconds</span><br/>until " + evt;
     }
 
     if(t.total<=0){
@@ -39,7 +39,7 @@ function initClock(id, evt, endtime){
   }
 
   updateClock();
-  var timeinterval = setInterval(updateClock, 10000);
+  var timeinterval = setInterval(updateClock, 1000);
 }
 
 $(function() {
