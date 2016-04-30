@@ -34,12 +34,12 @@ function initClock(id, evt, endtime){
 
     if(t.total<=0){
       clearInterval(timeinterval);
-      clock.innerHTML = "<span style='color: red'>YOU HAVE GRADUATED!</span>";
+      clock.innerHTML = "<span class='clock'><b>YOU HAVE GRADUATED!</b></span>";
     }
   }
 
   updateClock();
-  var timeinterval = setInterval(updateClock, 1000);
+  var timeinterval = setInterval(updateClock, 500);
 }
 
 $(function() {
