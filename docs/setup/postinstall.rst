@@ -64,3 +64,5 @@ Increasing RAM
 
 With the default RAM size of 1024MB, you may run into performance constraints.
 If you encounter signifigant issues, it is recommended to bump the VM's amount of memory, through VirtualBox Manager, to at least 2GB.
+
+:doc:`Continue with these steps on installing fixtures.<fixtures>`
