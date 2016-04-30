@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import SeniorEmailForward
 from .forms import SeniorEmailForwardForm
-from ..users.models import User
 
 logger = logging.getLogger(__name__)
+
 
 @login_required
 def senior_email_forward_view(request):

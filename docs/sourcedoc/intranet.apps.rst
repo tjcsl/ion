@@ -12,6 +12,7 @@ Subpackages
     intranet.apps.board
     intranet.apps.dashboard
     intranet.apps.eighth
+    intranet.apps.emailfwd
     intranet.apps.emerg
     intranet.apps.error
     intranet.apps.events

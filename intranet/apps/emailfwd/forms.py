@@ -9,4 +9,3 @@ class SeniorEmailForwardForm(forms.ModelForm):
         fields = [
             "email",
         ]
-
