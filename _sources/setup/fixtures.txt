@@ -55,6 +55,8 @@ Load the activities fixtures.
 Load the scheduled activities fixtures.
 Note: this takes around 3 minutes to import, much longer than the previous fixtures.
 
+NOTE: For 20151014 fixtures, run the command ``sed -i -e 's/\[1285, 1042\]/[1042]/g' fixtures/eighth/scheduled_activities.json`` to remove missing ids.
+
 .. code-block:: bash
 
     $ ./manage.py loaddata fixtures/eighth/scheduled_activities.json
