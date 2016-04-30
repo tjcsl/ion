@@ -119,8 +119,8 @@ class EighthRoom(AbstractBaseEighthModel):
 
 class EighthActivityExcludeDeletedManager(models.Manager):
 
-    def get_query_set(self):
-        return (super(EighthActivityExcludeDeletedManager, self).get_query_set().exclude(deleted=True))
+    def get_queryset(self):
+        return (super(EighthActivityExcludeDeletedManager, self).get_queryset().exclude(deleted=True))
 
 
 class EighthActivity(AbstractBaseEighthModel):

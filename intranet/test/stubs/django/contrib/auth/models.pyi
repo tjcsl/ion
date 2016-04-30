@@ -1,4 +1,4 @@
-from django.db.models import Manager
+from django.db.models.manager import Manager
 class Group: ...
 class AbstractBaseUser:
   # FIXME: actually figure out args
