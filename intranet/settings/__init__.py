@@ -500,6 +500,7 @@ INSTALLED_APPS = [
     "intranet.apps.ionldap",
     "intranet.apps.itemreg",
     "intranet.apps.lostfound",
+    "intranet.apps.emailfwd",
     # Intranet middleware
     "intranet.middleware.environment",
     # Django plugins
