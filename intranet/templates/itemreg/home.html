@@ -47,7 +47,15 @@
         Item Registration
     </h2>
 
-    <p>Registering your calculator, computer, and phone through Intranet helps students and staff return your device if it is found.</p>
+    <p>Registering your calculator, computer, and phone through Intranet helps staff members return your device if it is found.</p>
+
+    {% if request.user.is_teacher or is_itemreg_admin %}
+        <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
+        <br />
+        <a href="{% url 'itemreg_search' %}" class="button">
+            Search Database
+        </a>
+    {% endif %}
 
     {% if registered_devices %}
         <p>You've registered the following devices:</p>
@@ -109,14 +117,4 @@
     <a href="{% url 'itemreg_phone' %}" class="button">
         Register Phone
     </a>
-
-    <br />
-    {% if request.user.is_teacher or is_itemreg_admin %}
-        <br />
-        <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
-        <br />
-        <a href="{% url 'itemreg_search' %}" class="button">
-            Search Database
-        </a>
-    {% endif %}
 {% endblock %}
