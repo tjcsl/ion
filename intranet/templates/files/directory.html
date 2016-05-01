@@ -67,7 +67,7 @@
                     </a>
                 </td>
                 <td class="file-information">
-                    <i title="Last Modified" class="fa fa-clock-o"></i> <span class="timeago" title="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</span>
+                    <i title="Last Modified" class="fa fa-clock-o"></i> <time class="timeago" datetime="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</time>
                 </td>
                 <td class="file-options">
                     <a class="zip" href="?dir={{ current_dir|escape }}/{{ file.name|escape }}&amp;zip=1" data-name="{{ file.name|escape }}" onclick="return zip_folder(this)">
@@ -89,7 +89,7 @@
                     {% endif %}
                 </td>
                 <td class="file-information">
-                    <i title="Last Modified" class="fa fa-clock-o"></i> <span class="timeago" title="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</span>
+                    <i title="Last Modified" class="fa fa-clock-o"></i> <time class="timeago" datetime="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</time>
                 </td>
                 <td class="file-options">
                     <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
