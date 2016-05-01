@@ -384,7 +384,7 @@ def add_widgets_context(request, context):
         schedule, no_signup_today = gen_schedule(user, num_blocks, surrounding_blocks)
         context.update({
             "schedule": schedule,
-            "last_displayed_block": schedule[-1],
+            "last_displayed_block": schedule[-1] if schedule else None,
             "no_signup_today": no_signup_today,
             "senior_graduation": settings.SENIOR_GRADUATION,
             "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR
