@@ -39,7 +39,7 @@
                             {{ block.current_signup }}
                         </span>
                         {% if block.rooms %}
-                            <span class="block-rooms">
+                            <span class="block-rooms" {% if block == last_displayed_block %}style="display:none"{% endif %}>
                                 {% for r in block.rooms %}
                                     {{ r.name }}{% if r != block.rooms.last %}, {% endif %}
                                 {% endfor %}
@@ -60,7 +60,7 @@
                         {{ block.current_signup }}
                     </span>
                     {% if block.rooms %}
-                        <span class="block-rooms">
+                        <span class="block-rooms" {% if block == last_displayed_block %}style="display:none"{% endif %}>
                             {% for r in block.rooms %}
                                 {{ r.name }}{% if r != block.rooms.last %}, {% endif %}
                             {% endfor %}
