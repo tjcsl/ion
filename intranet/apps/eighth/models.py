@@ -113,7 +113,7 @@ class EighthRoom(AbstractBaseEighthModel):
                 return True
             except ValueError:
                 return False
-        if isInt(self.name) and len(self.name) < 5:  # 5 is arbitrary
+        if isInt(self.name.split(' ')[0].split('-')[0]):
             return "Rm. {}".format(self.name)
         if self.name.startswith('Room'):  # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
