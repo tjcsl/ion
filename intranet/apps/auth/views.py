@@ -9,6 +9,7 @@ from datetime import date, datetime
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
+from django.template.loader import get_template
 from django.templatetags.static import static
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
@@ -79,6 +80,22 @@ def get_login_theme():
 
     return {}
 
+def get_ap_week_warning():
+    now = datetime.now()
+    today = now.date()
+    day = today.day
+    if now.hour > 16:
+        day += 1
+
+    if 7 <= day <= 8:
+        day = 9
+
+    data = {"day": day}
+    if today.month == 5 and 2 <= day <= 13:
+        return get_template("auth/ap_week_schedule.html").render(data)
+
+    return False
+
 
 @sensitive_post_parameters("password")
 def index_view(request, auth_form=None, force_login=False, added_context=None):
@@ -98,6 +115,11 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
 
         if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
+
+        ap_week = get_ap_week_warning()
+
+        if ap_week and not login_warning:
+            login_warning = ap_week
 
         data = {"auth_form": auth_form,
                 "request": request,
