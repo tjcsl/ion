@@ -31,11 +31,11 @@
         {% comment %}
         by {{ poll.user.full_name|escape }} {% if poll.show_fuzzy_date %}&bull; <span class="timeago" title="{{ poll.time|date:'c' }}">{{ poll.time|fuzzy_date|capfirst }}</span>{% endif %} &bull; {% endcomment %}
         {% if poll.before_start_time %}
-            Opens {{ poll.start_time|date:"l, F j, Y"}}{% if poll.start_time|date:"P" != "midnight" %} {{ poll.start_time|date:"P" }}{% endif %} &bull;
+            Opens <time class="timeago" datetime="{{ poll.start_time|date:"c" }}">{{ poll.start_time|date:"l, F j, Y"}}{% if poll.start_time|date:"P" != "midnight" %} {{ poll.start_time|date:"P" }}{% endif %}</time> &bull;
         {% elif poll.before_end_time %}
-            Closes {{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %} &bull;
+            Closes <time class="timeago" datetime="{{ poll.end_time|date:"c" }}">{{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %}</time> &bull;
         {% else %}
-            Closed {{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %} &bull;
+            Closed <time class="timeago" datetime="{{ poll.end_time|date:"c" }}">{{ poll.end_time|date:"l, F j, Y"}}{% if poll.end_time|date:"P" != "midnight" %} {{ poll.end_time|date:"P" }}{% endif %}</time> &bull;
         {% endif %}
         for
         {% for group in poll.groups.all %}
