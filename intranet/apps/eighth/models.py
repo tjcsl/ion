@@ -658,6 +658,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     history = HistoricalRecords()
 
     @property
+    def all_associated_rooms(self):
+        return list(self.rooms.all()) + list(self.activity.rooms.all())
+
+    @property
     def full_title(self):
         """Gets the full title for the activity, appending the title of the scheduled activity to
         the activity's name."""
