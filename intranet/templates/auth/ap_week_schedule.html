@@ -111,7 +111,6 @@ body.has-login-warning .login-warning {
 </style>
 <script type="text/javascript">
 $(function() {
-    {% if date %}
     apDate = function(date) {
         var d = parseInt(date.split("-")[2]);
         var e = $(".ap-schedule-day.day-"+d);
@@ -120,12 +119,13 @@ $(function() {
             e.show();
         }
     }
-    apDate("{{ date|escape }}");
     oscheduleBind = scheduleBind;
     scheduleBind = function() {
         apDate($(".schedule-outer .schedule").attr("data-date"));
         oscheduleBind();
     }
+    {% if date %} 
+    apDate("{{ date|escape }}");
     {% endif %}
     $(".ap-right-arrow").click(function() {
         var l = $(this).hasClass("left");
