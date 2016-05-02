@@ -65,12 +65,15 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             current_signup = current_sched_act.title_with_flags
             current_signup_cancelled = current_sched_act.cancelled
             current_signup_sticky = current_sched_act.activity.sticky
-            rooms = current_sched_act.rooms.all()
+            temp_rooms = current_sched_act.all_associated_rooms
+            nrooms = len(temp_rooms)-1  # Not the real number of rooms; 1 less
+            rooms = enumerate(temp_rooms)
         else:
             current_signup = None
             current_signup_cancelled = False
             current_signup_sticky = False
             rooms = None
+            nrooms = 0
 
         # warning flag (red block text and signup link) if no signup today
         # cancelled flag (red activity text) if cancelled
@@ -98,7 +101,8 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
             "is_today": blk_today,
             "signup_time": b.signup_time,
             "signup_time_future": b.signup_time_future,
-            "rooms": rooms
+            "rooms": rooms,
+            "num_rooms": nrooms
         }
         schedule.append(info)
 
