@@ -88,3 +88,37 @@ class EighthTest(IonTestCase):
 
         with self.assertRaisesMessage(SignupException, "Blacklist"):
             schact1.add_user(user1)
+
+    def test_all_associated_rooms(self):
+        """Make sure EighthScheduledActivities can return all associated rooms"""
+
+        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        room1 = EighthRoom.objects.create(name="room1")
+        room2 = EighthRoom.objects.create(name="room2")
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1.rooms.add(room1)
+        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1.rooms.add(room2)
+
+        self.assertIn(room1, schact1.all_associated_rooms)
+        self.assertIn(room2, schact1.all_associated_rooms)
+        self.assertEqual(2, len(schact1.all_associated_rooms))
+
+    def test_room_use(self):
+        """Make sure EighthScheduledActivities return the correct room"""
+
+        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        room1 = EighthRoom.objects.create(name="room1")
+        room2 = EighthRoom.objects.create(name="room2")
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1.rooms.add(room1)
+        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+
+        self.assertIn(room1, schact1.get_scheduled_rooms())
+        self.assertEqual(1, len(schact1.get_scheduled_rooms()))
+
+        schact1.rooms.add(room2)
+        self.assertIn(room2, schact1.get_scheduled_rooms())
+        self.assertEqual(1, len(schact1.get_scheduled_rooms()))
