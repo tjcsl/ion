@@ -113,7 +113,7 @@ class EighthRoom(AbstractBaseEighthModel):
                 return True
             except ValueError:
                 return False
-        if isInt(self.name.split(' ')[0].split('-')[0]):
+        if isInt(self.name[0]):  # All rooms starting with an integer will be prefixed
             return "Rm. {}".format(self.name)
         if self.name.startswith('Room'):  # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
@@ -656,6 +656,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     cancelled = models.BooleanField(default=False)
 
     history = HistoricalRecords()
+
+    def get_scheduled_rooms(self):
+        r = self.rooms.all()
+        if r:
+            return r
+        return self.activity.rooms.all()
+
+    @property
+    def all_associated_rooms(self):
+        return list(self.rooms.all()) + list(self.activity.rooms.all())
 
     @property
     def full_title(self):
