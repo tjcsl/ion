@@ -80,7 +80,8 @@ def get_login_theme():
 
     return {}
 
-def get_ap_week_warning():
+
+def get_ap_week_warning(request):
     now = datetime.now()
     today = now.date()
     day = today.day
@@ -90,7 +91,7 @@ def get_ap_week_warning():
     if 7 <= day <= 8:
         day = 9
 
-    data = {"day": day}
+    data = {"day": day, "date": request.GET.get("date", None)}
     if today.month == 5 and 2 <= day <= 13:
         return get_template("auth/ap_week_schedule.html").render(data)
 
@@ -116,7 +117,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
         if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
 
-        ap_week = get_ap_week_warning()
+        ap_week = get_ap_week_warning(request)
 
         if ap_week and not login_warning:
             login_warning = ap_week
