@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from os.path import abspath, dirname, join
 from django.conf import settings
 from django.test import TestCase, override_settings
 
@@ -6,12 +7,14 @@ from ldap_test import LdapServer
 
 from ..apps.users.models import User
 
+staticdir = join(dirname(abspath(__file__)), '..', 'static')
+
 mock_server = None
 # We don't want to actually call out to ldap for testing, so setup a fake server.
 # If we're not actually testing, then there's no point in the overhead.
 if settings.TESTING:
     mock_server = LdapServer({'base': {'objectclass': 'organization', 'dn': 'dc=tjhsst,dc=edu'},
-                              'ldifs': ['intranet/static/ldap/base.ldif', 'intranet/static/ldap/sample_student.ldif']})
+                              'ldifs': [join(staticdir, 'ldap', 'base.ldif'), join(staticdir, 'ldap', 'sample_student.ldif')]})
     mock_server.start()
 
 
