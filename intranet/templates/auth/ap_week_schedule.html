@@ -1,4 +1,4 @@
-<style>
+<style style="text/css">
 
 .ap-schedule-container {
     width: 1500px;
@@ -27,6 +27,52 @@
     font-style: normal;
 }
 
+.ap-schedule-day {
+    display: none;
+}
+
+.ap-schedule-day.day-{{ day }} {
+    display: block;
+}
+
+.ap-right-arrow.button {
+    display: none;
+    position: absolute;
+    right: -1px;
+    width: 10px;
+    height: 116px;
+    top: -3px;
+    z-index: 1000000000000;
+    border-radius: 0 3px 3px 0;    
+}
+
+.ap-right-arrow span {
+    vertical-align: middle;
+    top: 50%;
+    position: absolute;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -5px;
+}
+
+.ap-right-arrow .left {
+    display: none;
+}
+
+.ap-right-arrow.left {
+    left: 239px;
+
+}
+
+.ap-right-arrow.left .left {
+    display: block;
+    margin-left: 0;
+}
+
+.ap-right-arrow.left .right {
+    display: none;
+}
+
 @media (max-width: 600px) {
     .ap-schedule-day {
         margin: 0;
@@ -50,17 +96,26 @@
     td.spacer {
         width: 50px;
     }
-}
 
-.ap-schedule-day {
-    display: none;
+    .ap-right-arrow.button {
+        display: block;
+    }
 }
-
-.ap-schedule-day.day-{{ day }} {
-    display: block;
-}
-
 </style>
+<script type="text/javascript">
+$(function() {
+    $(".ap-right-arrow").click(function() {
+        var l = $(this).hasClass("left");
+        if(l) {
+            $(".login-warning").scrollTo({'top':0, 'left':0}, 500);
+            $(this).removeClass("left");
+        } else {
+            $(".login-warning").scrollTo({'top':0, 'left':300}, 500);
+            $(this).addClass("left");
+        }
+    })
+});
+</script>
 <div class="ap-schedule-container">
 <table class="ap-schedule-day day-2">
 <tr>
@@ -287,3 +342,12 @@
 </tr>
 </table>
 </div>
+
+<a class="ap-right-arrow button">
+    <span class='right'>
+        <i class="fa fa-arrow-right"></i>
+    </span>
+    <span class='left'>
+        <i class="fa fa-arrow-left"></i>
+    </span>
+</a>
