@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.test.ion_test &mdash; TJ Intranet v3 (Build #2248) documentation</title>
+    <title>intranet.test.ion_test &mdash; TJ Intranet v3 (Build #2253) documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     'v3 (Build #2248)',
+        VERSION:     'v3 (Build #2253)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2248) documentation" href="../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2253) documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -146,6 +146,7 @@
       
   <h1>Source code for intranet.test.ion_test</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">override_settings</span>
 
@@ -153,12 +154,14 @@
 
 <span class="kn">from</span> <span class="nn">..apps.users.models</span> <span class="kn">import</span> <span class="n">User</span>
 
+<span class="n">staticdir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;static&#39;</span><span class="p">)</span>
+
 <span class="n">mock_server</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="c1"># We don&#39;t want to actually call out to ldap for testing, so setup a fake server.</span>
 <span class="c1"># If we&#39;re not actually testing, then there&#39;s no point in the overhead.</span>
 <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">TESTING</span><span class="p">:</span>
     <span class="n">mock_server</span> <span class="o">=</span> <span class="n">LdapServer</span><span class="p">({</span><span class="s1">&#39;base&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;objectclass&#39;</span><span class="p">:</span> <span class="s1">&#39;organization&#39;</span><span class="p">,</span> <span class="s1">&#39;dn&#39;</span><span class="p">:</span> <span class="s1">&#39;dc=tjhsst,dc=edu&#39;</span><span class="p">},</span>
-                              <span class="s1">&#39;ldifs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;intranet/static/ldap/base.ldif&#39;</span><span class="p">,</span> <span class="s1">&#39;intranet/static/ldap/sample_student.ldif&#39;</span><span class="p">]})</span>
+                              <span class="s1">&#39;ldifs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">staticdir</span><span class="p">,</span> <span class="s1">&#39;ldap&#39;</span><span class="p">,</span> <span class="s1">&#39;base.ldif&#39;</span><span class="p">),</span> <span class="n">join</span><span class="p">(</span><span class="n">staticdir</span><span class="p">,</span> <span class="s1">&#39;ldap&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_student.ldif&#39;</span><span class="p">)]})</span>
     <span class="n">mock_server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
 
