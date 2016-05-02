@@ -104,6 +104,12 @@ body.has-login-warning .login-warning {
     }
 }
 
+@media (min-width: 600px) {
+    .ap-schedule-container {
+        margin-left: 0 !important;
+    }
+}
+
 .ap-schedule-day.day-{{ day }} {
     display: block;
 }
@@ -130,12 +136,12 @@ $(function() {
     $(".ap-right-arrow").click(function() {
         var l = $(this).hasClass("left");
         if(l) {
-            $(".login-warning").scrollTo({'top':0, 'left':0}, 500);
+            $(".ap-schedule-container").animate({'margin-left':0}, 500);
             $(this).animate({'left': '289px'}, 500);
             $(this).removeClass("left");
         } else {
-            $(".login-warning").scrollTo({'top':0, 'left':240}, 500);
-            $(this).animate({'left': '239px'}, 500);
+            $(".ap-schedule-container").animate({'margin-left':'-240px'}, 500);
+            $(this).animate({'left': '0'}, 500);
             $(this).addClass("left");
         }
     })
