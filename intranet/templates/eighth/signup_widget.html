@@ -59,7 +59,7 @@
                     <span class="block-signup{% if block.is_today %} today{% endif %}" title="{% if block.current_signup_cancelled %}The activity you signed up for was cancelled. Click to change.{% else %}You {% if block.current_signup_sticky %}are stuck to this activity. Questions? Ask 8th Pd. Office{% else %}have signed up for this activity. Click to change.{% endif %}{% endif %}">
                         {{ block.current_signup }}
                     </span>
-                    {% if block.rooms and block != last_displayed_block %}
+                    {% if block.rooms and block != last_displayed_block and not block.is_today and not block.current_signup_cancelled %}
                         <span class="block-rooms">
                             {% for r in block.rooms %}
                                 {{ r.formatted_name }}{% if r != block.rooms.last %}, {% endif %}
