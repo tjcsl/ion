@@ -33,7 +33,8 @@ $(function() {
 
         events: {
             "click button#signup-button": "signupClickHandler",
-            "click a#roster-button": "rosterClickHandler"
+            "click a#roster-button": "rosterClickHandler",
+            "click button#close-activity-detail": "closeActivityDetail"
         },
 
         render: function() {
@@ -77,6 +78,13 @@ $(function() {
                 container.empty();
                 $(target).text("View Roster");
             }
+        },
+
+        closeActivityDetail: function(e) {
+            e.preventDefault();
+            $(".primary-content.eighth-signup").removeClass("activity-detail-selected");
+            $("#activity-detail").removeClass("selected");
+            $("li.selected[data-activity-id]").removeClass("selected");
         }
     });
 

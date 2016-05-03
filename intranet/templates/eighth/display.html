@@ -49,6 +49,10 @@
         height: 20px;
     }
 
+    #close-activity-detail {
+        display: none;
+    }
+
     {% if no_detail %}
         #activity-list li.selected {
             background-color: inherit;
@@ -77,17 +81,22 @@
         padding: 5px;
     }
 
-    #signup-section {
+    #signup-section, #signup-button, #roster-button, #roster-section {
         display: none !important;
+    }
+
+    #activity-detail:not(.selected) {
+        visibility: hidden;
     }
 
     #activity-detail {
         margin-top: 71px;
         zoom: 1.5;
+        right: 20px;
     }
 
-    #activity-detail:not(.selected) {
-        visibility: hidden;
+    #close-activity-detail {
+        display: block;
     }
 
     @media (max-width: 1201px) {
@@ -102,6 +111,18 @@
 
         .eighth-signup.activity-detail-selected #activity-list > ul.all-activities {
             margin-bottom: 400px;
+        }
+    }
+
+    @media (min-width: 1201px) {
+        .activity-detail-selected #activity-detail {
+            margin-top: 0;
+            padding-top: 25px;
+            right: 20px;
+        }
+
+        .activity-detail-selected #activity-list {
+            width: calc(100% - 706px);
         }
     }
     {% endif %}
@@ -355,6 +376,9 @@
 
     <script type="text/template" id="activity-details-template">
         {% verbatim %}
+        <button id="close-activity-detail">
+            <i class="fa fa-arrow-left"></i> Close
+        </button>
         <h3>
             <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
                 <%= name %><% if (title) { %> - <%= title %><% } %>
