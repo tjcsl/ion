@@ -21,6 +21,7 @@ class Sign(models.Model):
     status = models.CharField(max_length=10, choices=STATUSES, default="auto")
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     url = models.CharField(max_length=2000, null=True, blank=True)
+    zoom = models.IntegerField(default=3)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.display)

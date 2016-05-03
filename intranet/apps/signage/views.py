@@ -109,6 +109,10 @@ def touch_signage(request, sign=None):
     if sign and sign.eighth_block_increment:
         block_increment = sign.eighth_block_increment
 
+    zoom = request.GET.get("zoom", 3)
+    if sign and sign.zoom:
+        zoom = sign.zoom
+
     default_page = "clock"
     now = datetime.datetime.now()
     if check_show_eighth(now):
@@ -116,6 +120,7 @@ def touch_signage(request, sign=None):
 
     context = schedule_context(request)
     context["signage"] = True
+    context["zoom"] = zoom
     context["eighth_url"] = "/signage/eighth?no_reload&touch=1&detail=1&block_increment={}".format(block_increment)
     context["calendar_url"] = "https://postman.tjhsst.edu/"
     context["default_page"] = default_page
