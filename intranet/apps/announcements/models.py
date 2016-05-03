@@ -106,7 +106,7 @@ class Announcement(models.Model):
     pinned = models.BooleanField(default=False)
 
     def get_author(self):
-        return self.author if self.author else self.user.full_name
+        return self.author if self.author else self.user.full_name if self.user else None
 
     def __str__(self):
         return self.title
