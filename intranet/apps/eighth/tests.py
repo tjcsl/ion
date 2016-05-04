@@ -90,7 +90,7 @@ class EighthTest(IonTestCase):
             schact1.add_user(user1)
 
     def test_all_associated_rooms(self):
-        """Make sure EighthScheduledActivities can return all associated rooms"""
+        """Make sure EighthScheduledActivities can return all associated rooms."""
 
         block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
         room1 = EighthRoom.objects.create(name="room1")
@@ -106,7 +106,7 @@ class EighthTest(IonTestCase):
         self.assertEqual(2, len(schact1.all_associated_rooms))
 
     def test_room_use(self):
-        """Make sure EighthScheduledActivities return the correct room"""
+        """Make sure EighthScheduledActivities return the correct room."""
 
         block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
         room1 = EighthRoom.objects.create(name="room1")
@@ -124,9 +124,9 @@ class EighthTest(IonTestCase):
         self.assertEqual(1, len(schact1.get_scheduled_rooms()))
 
     def test_room_formatting(self):
-        """Make sure a room name formatting is correct"""
+        """Make sure a room name formatting is correct."""
         room1 = EighthRoom.objects.create(name="999")
-        self.assertEqual('Rm. '+room1.name, room1.formatted_name)
+        self.assertEqual('Rm. ' + room1.name, room1.formatted_name)
         room2 = EighthRoom.objects.create(name="Lab 999")
         self.assertEqual(room2.name, room2.formatted_name)
         room3 = EighthRoom.objects.create(name="Weyanoke 999")
