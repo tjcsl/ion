@@ -131,3 +131,5 @@ class EighthTest(IonTestCase):
         self.assertEqual(room2.name, room2.formatted_name)
         room3 = EighthRoom.objects.create(name="Weyanoke 999")
         self.assertEqual('Wey. 999', room3.formatted_name)
+        room4 = EighthRoom.objects.create(name="Room 999")
+        self.assertEqual('Rm. 999', room4.formatted_name)
