@@ -122,3 +122,12 @@ class EighthTest(IonTestCase):
         schact1.rooms.add(room2)
         self.assertIn(room2, schact1.get_scheduled_rooms())
         self.assertEqual(1, len(schact1.get_scheduled_rooms()))
+
+    def test_room_formatting(self):
+        """Make sure a room name formatting is correct"""
+        room1 = EighthRoom.objects.create(name="999")
+        self.assertEqual('Rm. '+room1.name, room1.formatted_name)
+        room2 = EighthRoom.objects.create(name="Lab 999")
+        self.assertEqual(room2.name, room2.formatted_name)
+        room3 = EighthRoom.objects.create(name="Weyanoke 999")
+        self.assertEqual('Wey. 999', room3.formatted_name)
