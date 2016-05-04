@@ -118,13 +118,15 @@ def check_page_range(page_range, max_pages):
                 if not len(rr) == 2:  # make sure 2 values in range
                     return False
                 else:
-                    if not(0 < int(rr[0]) < max_pages) and not(0 < int(rr[1]) < max_pages):  # check in page range
+                    rl = int(rr[0])
+                    rh = int(rr[1])
+                    if not 0 < rl < max_pages and not 0 < rh < max_pages:  # check in page range
                         return False
-                    if (int(rr[0]) > int(rr[1])):   # check lower bound <= upper bound
+                    if rl > rh:   # check lower bound <= upper bound
                         return False
-                    pages += int(rr[1]) - int(rr[0]) + 1
+                    pages += rh - rl + 1
             else:
-                if not (0 < int(r) <= max_pages):  # check in page range
+                if not 0 < int(r) <= max_pages:  # check in page range
                     return False
                 pages += 1
     except ValueError:  # catch int parse fail
