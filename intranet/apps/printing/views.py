@@ -108,6 +108,30 @@ def convert_file(tmpfile_name):
     raise Exception("Not sure how to handle a file of type {}".format(detected))
 
 
+def check_page_range(page_range, max_pages):
+    """ Returns the number of pages in the range, or False if it is an invalid range. """
+    pages = 0
+    try:
+        for r in page_range.split(","):  # check all ranges separated by commas
+            if "-" in r:
+                rr = r.split("-")
+                if not len(rr) == 2:  # make sure 2 values in range
+                    return False
+                else:
+                    if not(0 < int(rr[0]) < max_pages) and not(0 < int(rr[1]) < max_pages):  # check in page range
+                        return False
+                    if (int(rr[0]) > int(rr[1])):   # check lower bound <= upper bound
+                        return False
+                    pages += int(rr[1]) - int(rr[0]) + 1
+            else:
+                if not (0 < int(r) <= max_pages):  # check in page range
+                    return False
+                pages += 1
+    except ValueError:  # catch int parse fail
+        return False
+    return pages
+
+
 def print_job(obj, do_print=True):
     logger.debug(obj)
 
@@ -136,19 +160,32 @@ def print_job(obj, do_print=True):
     logger.debug(tmpfile_name)
 
     if not tmpfile_name:
-        return Exception("Could not convert file.")
+        raise Exception("Could not convert file.")
 
     num_pages = get_numpages(tmpfile_name)
     obj.num_pages = num_pages
+    obj.page_range = "".join(obj.page_range.split())  # remove all spaces
     obj.save()
-    if num_pages > settings.PRINTING_PAGES_LIMIT:
-        return Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages,
-                                                                                                                  settings.PRINTING_PAGES_LIMIT))
+
+    range_count = check_page_range(obj.page_range, obj.num_pages)
+
+    if obj.page_range:
+        if not range_count:
+            raise Exception("You specified an invalid page range.")
+        elif range_count > settings.PRINTING_PAGES_LIMIT:
+            raise Exception("You specified a range of {} pages. You may only print up to {} pages using this tool.".format(range_count,
+                                                                                                                           settings.PRINTING_PAGES_LIMIT))
+    elif num_pages > settings.PRINTING_PAGES_LIMIT:
+        raise Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages,
+                                                                                                                 settings.PRINTING_PAGES_LIMIT))
 
     obj.printed = True
     obj.save()
     if do_print:
-        proc = subprocess.Popen(["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)], stdout=subprocess.PIPE)
+        args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
+        if obj.page_range:
+            args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+        proc = subprocess.Popen(args, stdout=subprocess.PIPE)
         (output, err) = proc.communicate()
 
 
