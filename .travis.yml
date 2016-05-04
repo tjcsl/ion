@@ -38,6 +38,7 @@ script:
   - flake8 --max-line-length 200 .
   - coverage run ./setup.py test
   - coverage run -a ./manage.py migrate
+  - ./manage.py collectstatic --noinput
   - ./scripts/build_docs.sh
   - ./scripts/mypy.sh
 
