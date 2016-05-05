@@ -139,10 +139,10 @@ def print_job(obj, do_print=True):
 
     printer = obj.printer
     if printer not in get_printers():
-        return Exception("Printer not authorized.")
+        raise Exception("Printer not authorized.")
 
     if not obj.file:
-        return Exception("No file.")
+        raise Exception("No file.")
 
     fileobj = obj.file
 
