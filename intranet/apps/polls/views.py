@@ -272,8 +272,8 @@ def handle_choice(q, do_gender=True):
             choice["votes"][yr] = {"all": len(yr_votes),
                                    "male": sum([u.is_male for u in yr_votes]) if do_gender else 0,
                                    "female": sum([u.is_female for u in yr_votes]) if do_gender else 0}
-    choices.append(choice)
-    
+        choices.append(choice)
+
     """ Clear vote """
     votes = question_votes.filter(clear_vote=True)
     choice = {
