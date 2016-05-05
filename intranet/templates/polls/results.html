@@ -49,7 +49,11 @@
     <div class="primary-content polls">
         <a href="{% url 'polls' %}" class="button">
             <i class="fa fa-arrow-left"></i> Polls
-        </a> &nbsp; <a href="#" class="button small-button" id="user-sels">Show User Selections</a><br />
+        </a> {% if show_answers %}
+            &nbsp; <a href="#" class="button small-button" id="user-sels">Show User Selections</a><br />
+        {% else %}
+            &nbsp; <a href="?show_answers=1" class="button small-button">Show answers</a><br />
+        {% endif %}
         <h2>Results: {{ poll }}</h2>
         
         <ol class="questions">
@@ -93,12 +97,12 @@
                                     {% endif %}
                                 {% endif %}
                                 <ul class="user-selections">
-                                {% for u in c.users %}
+                                {% if show_answers %}{% for u in c.users %}
                                     <li>
                                         <a href="{% url 'user_profile' u.id %}">{{ u }}</a>
                                         {% if q.user_scale %} - Scale: {{ q.user_scale|lookup:u.id|truncatechars:7 }}{% endif %}
                                     </li>
-                                {% endfor %}
+                                {% endfor %}{% endif %}
                                 </ul>
                             </td>
                             {% with t=c.votes.total %}
@@ -144,14 +148,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for a in q.answers %}
+                        {% if show_answers %}{% for a in q.answers %}
                             <tr>
                                 <td>{{ a.answer }}</td>
                                 <td>
                                     <a href="{% url 'user_profile' a.user.id %}">{{ a.user }}</a>
                                 </td>
                             </tr>
-                        {% endfor %}
+                        {% endfor %}{% endif %}
                     </tbody>
                     </table>
                 {% endif %}
