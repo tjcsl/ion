@@ -198,8 +198,6 @@ def handle_sap(q):
                 "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
                 "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes])),
             }
-        logger.debug(choice)
-        choices.append(choice)
     """ Clear vote """
     votes = question_votes.filter(clear_vote=True)
     clr_users = set([v.user for v in votes])
@@ -222,8 +220,6 @@ def handle_sap(q):
         choice["votes"][yr] = {"all": len(yr_votes),
                                "male": fmt(sum([u.is_male * user_scale[u.id] for u in yr_votes])),
                                "female": fmt(sum([u.is_female * user_scale[u.id] for u in yr_votes]))}
-    logger.debug(choice)
-    choices.append(choice)
 
     choice = {
         "choice": "Total",
@@ -251,7 +247,7 @@ def handle_sap(q):
     return {"question": q, "choices": choices, "user_scale": user_scale}
 
 
-def handle_choice(q):
+def handle_choice(q, do_grades=True):
     question_votes = votes = Answer.objects.filter(question=q)
     users = q.get_users_voted()
     choices = []
@@ -263,20 +259,20 @@ def handle_choice(q):
                 "total": {
                     "all": votes.count(),
                     "all_percent": perc(votes.count(), question_votes.count()),
-                    "male": sum([v.user.is_male for v in votes]),
-                    "female": sum([v.user.is_female for v in votes])
+                    "male": sum([v.user.is_male for v in votes]) if do_grades else 0,
+                    "female": sum([v.user.is_female for v in votes]) if do_grades else 0
                 }
             },
             "users": [v.user for v in votes]
         }
-        for yr in range(9, 14):
-            yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
-            yr_votes = list(filter(None, yr_votes))
-            choice["votes"][yr] = {"all": len(yr_votes),
-                                   "male": sum([u.is_male for u in yr_votes]),
-                                   "female": sum([u.is_female for u in yr_votes])}
-        logger.debug(choice)
-        choices.append(choice)
+        if do_grades:
+            for yr in range(9, 14):
+                yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
+                yr_votes = list(filter(None, yr_votes))
+                choice["votes"][yr] = {"all": len(yr_votes),
+                                       "male": sum([u.is_male for u in yr_votes]),
+                                       "female": sum([u.is_female for u in yr_votes])}
+
     """ Clear vote """
     votes = question_votes.filter(clear_vote=True)
     choice = {
@@ -285,20 +281,19 @@ def handle_choice(q):
             "total": {
                 "all": votes.count(),
                 "all_percent": perc(votes.count(), question_votes.count()),
-                "male": sum([v.user.is_male for v in votes]),
-                "female": sum([v.user.is_female for v in votes])
+                "male": sum([v.user.is_male for v in votes]) if do_grades else 0,
+                "female": sum([v.user.is_female for v in votes]) if do_grades else 0
             }
         },
         "users": [v.user for v in votes]
     }
-    for yr in range(9, 14):
-        yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
-        yr_votes = list(filter(None, yr_votes))
-        choice["votes"][yr] = {"all": len(yr_votes),
-                               "male": sum([u.is_male for u in yr_votes]),
-                               "female": sum([u.is_female for u in yr_votes])}
-    logger.debug(choice)
-    choices.append(choice)
+    if do_grades:
+        for yr in range(9, 14):
+            yr_votes = [v.user if v.user.grade and v.user.grade.number == yr else None for v in votes]
+            yr_votes = list(filter(None, yr_votes))
+            choice["votes"][yr] = {"all": len(yr_votes),
+                                   "male": sum([u.is_male for u in yr_votes]),
+                                   "female": sum([u.is_female for u in yr_votes])}
 
     choice = {
         "choice": "Total",
@@ -307,17 +302,18 @@ def handle_choice(q):
                 "all": question_votes.count(),
                 "users_all": users.count(),
                 "all_percent": perc(question_votes.count(), users.count()),
-                "male": sum([u.is_male for u in users]),
-                "female": sum([u.is_female for u in users]),
+                "male": sum([u.is_male for u in users]) if do_grades else 0,
+                "female": sum([u.is_female for u in users]) if do_grades else 0,
             }
         }
     }
-    for yr in range(9, 14):
-        yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
-        yr_votes = list(filter(None, yr_votes))
-        choice["votes"][yr] = {"all": len(yr_votes),
-                               "male": sum([u.is_male for u in yr_votes]),
-                               "female": sum([u.is_female for u in yr_votes])}
+    if do_grades:
+        for yr in range(9, 14):
+            yr_votes = [u if u.grade and u.grade.number == yr else None for u in users]
+            yr_votes = list(filter(None, yr_votes))
+            choice["votes"][yr] = {"all": len(yr_votes),
+                                   "male": sum([u.is_male for u in yr_votes]),
+                                   "female": sum([u.is_female for u in yr_votes])}
 
     choices.append(choice)
 
@@ -329,6 +325,7 @@ def poll_results_view(request, poll_id):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
 
+    do_grades = False if "no_grades" in request.GET else True
     try:
         poll = Poll.objects.get(id=poll_id)
     except Poll.DoesNotExist:
@@ -339,13 +336,13 @@ def poll_results_view(request, poll_id):
         if q.type == "SAP":  # Split-approval; each person splits their one vote
             questions.append(handle_sap(q))
         elif q.is_choice():
-            questions.append(handle_choice(q))
+            questions.append(handle_choice(q, do_grades))
         elif q.is_writing():
             answers = Answer.objects.filter(question=q)
             question = {"question": q, "answers": answers}
             questions.append(question)
 
-    context = {"poll": poll, "grades": range(9, 13), "questions": questions, "show_answers": request.GET.get("show_answers", False)}
+    context = {"poll": poll, "grades": range(9, 13), "questions": questions, "show_answers": request.GET.get("show_answers", False), "do_grades": do_grades}
     return render(request, "polls/results.html", context)
 
 
