@@ -254,7 +254,7 @@ PIPELINE = {
 
 LIST_OF_INDEPENDENT_CSS = ['about', 'login', 'emerg', 'files', 'schedule', 'theme.blue', 'page_base', 'responsive.core', 'search',
                            'dashboard', 'events', 'schedule.widget', 'dashboard.widgets', 'profile', 'polls', 'groups', 'board',
-                           'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'eighth.attendance', 'eighth.profile', 'eighth.schedule',
+                           'announcements.form', 'preferences', 'signage.base', 'signage.touch', 'signage.touch.landscape', 'eighth.attendance', 'eighth.profile', 'eighth.schedule',
                            'lostfound']
 
 for name in LIST_OF_INDEPENDENT_CSS:

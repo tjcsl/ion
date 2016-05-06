@@ -22,6 +22,7 @@ class Sign(models.Model):
     eighth_block_increment = models.IntegerField(default=0, null=True, blank=True)
     url = models.CharField(max_length=2000, null=True, blank=True)
     zoom = models.IntegerField(default=3)
+    landscape = models.BooleanField(default=False)
 
     def __str__(self):
         return "{} ({})".format(self.name, self.display)

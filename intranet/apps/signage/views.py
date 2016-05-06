@@ -100,7 +100,7 @@ def signage_display(request, display_id=None):
 
 
 @xframe_options_exempt
-def touch_signage(request, sign=None):
+def touch_signage(request, sign=None, landscape=False):
     internal_ip = check_internal_ip(request)
     if internal_ip:
         return internal_ip
@@ -112,6 +112,10 @@ def touch_signage(request, sign=None):
     zoom = request.GET.get("zoom", 3)
     if sign and sign.zoom:
         zoom = sign.zoom
+
+    landscape = request.GET.get("landscape", landscape)
+    if sign and sign.landscape:
+        landscape = True
 
     default_page = "clock"
     now = datetime.datetime.now()
@@ -125,6 +129,7 @@ def touch_signage(request, sign=None):
     context["calendar_url"] = "https://postman.tjhsst.edu/"
     context["default_page"] = default_page
     context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())
+    context["landscape"] = landscape
     return render(request, "signage/touch.html", context)
 
 
