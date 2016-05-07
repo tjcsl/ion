@@ -93,4 +93,4 @@ class PhoneRegistration(models.Model):
         return "{} {}".format(self.manuf_name, self.model)
 
     def __str__(self):
-        return "{}'s {}".format(self.user.full_name, self.computer_name)
+        return "{}'s {}".format(self.user.full_name, self.model)
