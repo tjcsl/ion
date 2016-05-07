@@ -17,6 +17,12 @@ class ActivityDisplayField(forms.ModelChoiceField):
         return "{}: {}".format(obj.aid, obj.name)
 
 
+class ScheduledActivityDisplayField(forms.ModelChoiceField):
+
+    def label_from_instance(self, obj):
+        return "{}: {}".format(obj.id, obj.full_title)
+
+
 class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
 
     def label_from_instance(self, obj):
@@ -31,22 +37,18 @@ class ActivitySelectionForm(forms.Form):
         if block is not None:
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
-                activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id",
-                                                                                                                          flat=True))
+                queryset = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter))
             else:
-                activity_ids = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list("activity__id",
-                                                                                                                                flat=True))
+                queryset = (EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block))
                 if not include_cancelled:
-                    activity_ids = activity_ids.exclude(cancelled=True)
-
-            queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
+                    queryset = queryset.exclude(cancelled=True)
         else:
             if sponsor is not None:
-                queryset = (EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name"))
+                queryset = (EighthScheduledActivity.objects.filter(sponsors=sponsor).order_by("full_title"))
             else:
-                queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
+                queryset = (EighthScheduledActivity.objects.all().order_by("full_title"))
 
-        self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
+        self.fields["activity"] = ScheduledActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
 
 
 class QuickActivityForm(forms.ModelForm):

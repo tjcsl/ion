@@ -149,16 +149,12 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             return response
 
         if hasattr(self, "default_activity"):
-            activity = self.default_activity
+            scheduled_activity = self.default_activity
         else:
-            activity = form_list[1].cleaned_data["activity"]
+            scheduled_activity = form_list[1].cleaned_data["activity"]
 
         block = form_list[0].cleaned_data["block"]
         logger.debug(block)
-        try:
-            scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
-        except EighthScheduledActivity.DoesNotExist:
-            raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity))
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
