@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.eighth.forms.admin.activities &mdash; TJ Intranet v3 (Build #2349) documentation</title>
+    <title>intranet.apps.eighth.forms.admin.activities &mdash; TJ Intranet v3 (Build #2356) documentation</title>
     
     <link rel="stylesheet" href="../../../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../../../',
-        VERSION:     'v3 (Build #2349)',
+        VERSION:     'v3 (Build #2356)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2349) documentation" href="../../../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2356) documentation" href="../../../../../../index.html" />
     <link rel="up" title="intranet.apps.eighth" href="../../../eighth.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -164,6 +164,12 @@
         <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">aid</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div></div>
 
 
+<div class="viewcode-block" id="ScheduledActivityDisplayField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ScheduledActivityDisplayField">[docs]</a><span class="k">class</span> <span class="nc">ScheduledActivityDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ScheduledActivityDisplayField.label_from_instance"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ScheduledActivityDisplayField.label_from_instance">[docs]</a>    <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;{}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">full_title</span><span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="ActivityMultiDisplayField"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityMultiDisplayField">[docs]</a><span class="k">class</span> <span class="nc">ActivityMultiDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelMultipleChoiceField</span><span class="p">):</span>
 
 <div class="viewcode-block" id="ActivityMultiDisplayField.label_from_instance"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.ActivityMultiDisplayField.label_from_instance">[docs]</a>    <span class="k">def</span> <span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -178,22 +184,18 @@
         <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sponsor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">sponsoring_filter</span> <span class="o">=</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">activity__sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)))</span>
-                <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsoring_filter</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span>
-                                                                                                                          <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsoring_filter</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">activity_ids</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;activity__id&quot;</span><span class="p">,</span>
-                                                                                                                                <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">activity__deleted</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">))</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">include_cancelled</span><span class="p">:</span>
-                    <span class="n">activity_ids</span> <span class="o">=</span> <span class="n">activity_ids</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-            <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">activity_ids</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+                    <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">cancelled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sponsor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sponsors</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;full_title&quot;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;full_title&quot;</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActivityDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">empty_label</span><span class="o">=</span><span class="s2">&quot;Select an activity&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ScheduledActivityDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">empty_label</span><span class="o">=</span><span class="s2">&quot;Select an activity&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="QuickActivityForm"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.forms.admin.html#intranet.apps.eighth.forms.admin.activities.QuickActivityForm">[docs]</a><span class="k">class</span> <span class="nc">QuickActivityForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
