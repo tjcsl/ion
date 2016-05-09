@@ -181,14 +181,18 @@ def print_job(obj, do_print=True):
         raise Exception("This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages,
                                                                                                                  settings.PRINTING_PAGES_LIMIT))
 
-    obj.printed = True
-    obj.save()
     if do_print:
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
         (output, err) = proc.communicate()
+        if proc.returncode != 0:
+            logger.error("Could not run print command: {} {}".format(output, err))
+            raise Exception("An unknown error occured while printing your file.")
+
+    obj.printed = True
+    obj.save()
 
 
 @login_required
