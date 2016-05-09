@@ -61,13 +61,13 @@ class DayType(models.Model):
         n = self.name.lower()
         t = "other"
 
-        if "blue day" in n:
+        if "blue day" in n or "mod blue" in n:
             t = "blue"
 
-        if "red day" in n:
+        if "red day" in n or "mod red" in n:
             t = "red"
 
-        if "anchor day" in n:
+        if "anchor day" in n or "mod anchor" in n:
             t = "anchor"
 
         if self.special:
