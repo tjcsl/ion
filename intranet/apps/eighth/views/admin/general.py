@@ -23,7 +23,7 @@ from ....users.models import User
 @eighth_admin_required
 def eighth_admin_dashboard_view(request, **kwargs):
     start_date = get_start_date(request)
-    all_activities = EighthActivity.undeleted_objects.order_by("name")
+    all_activities = EighthActivity.objects.order_by("name") # show deleted activities
     blocks_after_start_date = (EighthBlock.objects.filter(date__gte=start_date).order_by("date"))
     if blocks_after_start_date.count() == 0:
         blocks_next = []

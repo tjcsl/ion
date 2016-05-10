@@ -229,7 +229,7 @@ def schedule_activity_view(request):
 
 @eighth_admin_required
 def show_activity_schedule_view(request):
-    activities = EighthActivity.undeleted_objects.order_by("name")
+    activities = EighthActivity.objects.order_by("name") # show deleted
     activity_id = request.GET.get("activity", None)
     activity = None
 
