@@ -13,7 +13,21 @@ logger = logging.getLogger(__name__)
 
 class ActivityDisplayField(forms.ModelChoiceField):
 
+    cancelled_acts = None
+
+    def __init__(self, *args, **kwargs):
+        if "block" in kwargs:
+            block = kwargs.pop("block")
+            logger.debug(block)
+            self.cancelled_acts = [s.activity for s in EighthScheduledActivity.objects.filter(block=block, cancelled=True)]
+            logger.debug(self.cancelled_acts)
+
+        super(ActivityDisplayField, self).__init__(*args, **kwargs)
+
     def label_from_instance(self, obj):
+        if self.cancelled_acts and obj in self.cancelled_acts:
+            return "{}: {} (CANCELLED)".format(obj.aid, obj.name)
+
         return "{}: {}".format(obj.aid, obj.name)
 
 
@@ -28,7 +42,14 @@ class ActivitySelectionForm(forms.Form):
     def __init__(self, label="Activity", block=None, sponsor=None, include_cancelled=False, *args, **kwargs):
         super(ActivitySelectionForm, self).__init__(*args, **kwargs)
 
-        if block is not None:
+        if block is None:
+            if sponsor is not None:
+                queryset = (EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name"))
+            else:
+                queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
+
+            self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
+        else:
             if sponsor is not None:
                 sponsoring_filter = (Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor)))
                 activity_ids = (EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id",
@@ -40,14 +61,8 @@ class ActivitySelectionForm(forms.Form):
                     activity_ids = activity_ids.exclude(cancelled=True)
 
             queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
-        else:
-            if sponsor is not None:
-                queryset = (EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name"))
-            else:
-                queryset = (EighthActivity.undeleted_objects.all().order_by("name"))
-
-        self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
-
+            
+            self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity", block=block)
 
 class QuickActivityForm(forms.ModelForm):
 
