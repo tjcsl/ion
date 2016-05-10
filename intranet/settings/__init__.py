@@ -20,6 +20,7 @@ SECRET_DATABASE_URL should be of the following form:
 """
 SECRET_DATABASE_URL = None  # type: str
 MAINTENANCE_MODE = None  # type: bool
+TJSTAR_MAP = None  # type: bool
 ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
 
@@ -709,9 +710,7 @@ FCPS_EMERGENCY_PAGE = "http://www.fcps.edu/content/emergencyContent.html"
 FCPS_EMERGENCY_TIMEOUT = 2
 
 # Show an iframe with tjStar activity data
-try:
-    TJSTAR_MAP
-except NameError:
+if TJSTAR_MAP is None:
     TJSTAR_MAP = False
 
 # Shows a warning message with yellow background on the login page
