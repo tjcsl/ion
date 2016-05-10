@@ -708,6 +708,12 @@ FCPS_EMERGENCY_PAGE = "http://www.fcps.edu/content/emergencyContent.html"
 # The timeout for the request to FCPS' emergency page (in seconds)
 FCPS_EMERGENCY_TIMEOUT = 2
 
+# Show an iframe with tjStar activity data
+try:
+    TJSTAR_MAP
+except NameError:
+    TJSTAR_MAP = False
+
 # Shows a warning message with yellow background on the login page
 # LOGIN_WARNING = "This is a message to display on the login page."
 

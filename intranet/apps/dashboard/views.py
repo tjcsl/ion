@@ -14,7 +14,7 @@ from django.utils import timezone
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..emerg.views import get_emerg
-from ..events.models import Event
+from ..events.models import Event, TJStarUUIDMap
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 from ..users.models import User
@@ -363,6 +363,14 @@ def paginate_announcements_list(request, context, items):
     return context, items
 
 
+def get_tjstar_mapping(user):
+    m = TJStarUUIDMap.objects.filter(user=user)
+    if m:
+        return {"tjstar_uuid": m.first().uuid}
+
+    return {}
+
+
 def add_widgets_context(request, context):
     """
     WIDGETS:
@@ -512,6 +520,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "eighth_sponsor": eighth_sponsor,
         "num_senior_destinations": num_senior_destinations
     })
+
+    if settings.TJSTAR_MAP:
+        context.update(get_tjstar_mapping(request.user))
 
     if show_widgets:
         context = add_widgets_context(request, context)
