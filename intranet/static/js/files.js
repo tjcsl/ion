@@ -78,7 +78,7 @@ $(document).ready(function() {
 
 
     zip_folder = function(ths) {
-        var name = $(ths).attr("data-name");
+        var name = $(this).attr("data-name");
         var safeName = $("<div>").text(name).html();
         var c = confirm('Are you sure you want to download "' + safeName + '"?');
         if(!c) return false;
