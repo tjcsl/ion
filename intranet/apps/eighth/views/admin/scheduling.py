@@ -277,7 +277,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
             kwargs.update({"exclude_before_date": get_start_date(self.request)})
         if step == "activity_1":
             block = self.get_cleaned_data_for_step("block_1")["block"]
-            kwargs.update({"block": block})
+            kwargs.update({"block": block, "include_cancelled": True})
         if step == "activity_2":
             block = self.get_cleaned_data_for_step("block_2")["block"]
             kwargs.update({"block": block})
