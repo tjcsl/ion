@@ -61,8 +61,9 @@ class ActivitySelectionForm(forms.Form):
                     activity_ids = activity_ids.exclude(cancelled=True)
 
             queryset = (EighthActivity.objects.filter(id__in=activity_ids).order_by("name"))
-            
+
             self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity", block=block)
+
 
 class QuickActivityForm(forms.ModelForm):
 

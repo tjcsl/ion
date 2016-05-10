@@ -44,7 +44,7 @@ def add_activity_view(request):
 @eighth_admin_required
 def edit_activity_view(request, activity_id):
     try:
-        activity = EighthActivity.objects.get(id=activity_id) # include deleted
+        activity = EighthActivity.objects.get(id=activity_id)  # include deleted
     except EighthActivity.DoesNotExist:
         raise http.Http404
 
