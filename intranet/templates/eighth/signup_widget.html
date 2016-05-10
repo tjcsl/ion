@@ -38,7 +38,7 @@
                             <!--<i class="fa fa-lock"></i>-->
                             {{ block.current_signup }}
                         </span>
-                        {% if block.rooms and block != last_displayed_block %}
+                        {% if block.rooms and block != last_displayed_block and not block.is_today and not block.current_signup_cancelled %}
                             <span class="block-rooms">
                                 {% for r in block.rooms %}
                                     {{ r.formatted_name }}{% if r != block.rooms.last %}, {% endif %}
