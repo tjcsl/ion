@@ -109,7 +109,7 @@ def convert_file(tmpfile_name):
 
 
 def check_page_range(page_range, max_pages):
-    """ Returns the number of pages in the range, or False if it is an invalid range. """
+    """Returns the number of pages in the range, or False if it is an invalid range."""
     pages = 0
     try:
         for r in page_range.split(","):  # check all ranges separated by commas

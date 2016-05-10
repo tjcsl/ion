@@ -189,6 +189,7 @@ class Event(models.Model):
     class Meta:
         ordering = ["time"]
 
+
 class TJStarUUIDMap(models.Model):
     user = models.ForeignKey(User)
     uuid = models.CharField(max_length=40)
