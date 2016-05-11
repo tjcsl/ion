@@ -16,7 +16,7 @@ def get_requirements():
     rtd_file = open('docs/rtd-requirements.txt', 'w')
     for dep in parse_requirements('requirements.txt', session=PipSession()):
         # FIXME: there should really be a better way to handle this...
-        if dep.req.project_name not in ['gssapi', 'python-ldap-test']:
+        if dep.req.name not in ['gssapi', 'python-ldap-test']:
             print(dep.req, file=rtd_file)
         # FIXME: this should be removed when we move to python 3.5
         if dep.markers == "python_version < '3.5'" and (sys.version_info >= (3, 5) or 'TRAVIS_PYTHON_VERSION' in os.environ):
