@@ -49,11 +49,6 @@ apt-get -y install cups-bsd
 apt-get -y install cups-client
 echo "ServerName cups2.csl.tjhsst.edu" > /etc/cups/client.conf
 
-# Mock LDAP Server deps
-echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
-apt-get -y install oracle-java7-installer
-
 # Shell
 cp intranet/config/bash_completion.d/fab /etc/bash_completion.d/fab
 if ! grep "ion_env_setup.sh" /etc/bash.bashrc > /dev/null; then
