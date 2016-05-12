@@ -4,10 +4,10 @@
 
             <table class="week-table">
         <tr>
-            <td>{% if not hide_arrows %}<a href="?date={{ last_week }}" class="chevron schedule-left" title="Previous Week"><i class="fa fa-chevron-left"></i></a>{% endif %}</td>
+            <td{% if not hide_arrows %} class="chevron"><a href="?date={{ last_week }}" class="chevron schedule-left" title="Previous Week"><i class="fa fa-chevron-left"></i></a>{% else %}>{% endif %}</td>
     {% for day in days %}
-    <td>
-            <h{% if today == day.sched_ctx.date_today %}1{% else %}2{% endif %} class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
+    <td {% if today == day.sched_ctx.date_today %}class="today"{% endif %}>
+            <h2 class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
          <br>
         {% if day.sched_ctx.dayobj %}
         <h2 class="day-name {{ day.sched_ctx.dayobj.day_type.class_name }}">{{ day.sched_ctx.dayobj.day_type.name|safe }}{% if day.sched_ctx.comment %} {{ day.sched_ctx.comment }}{% endif %}</h2>
@@ -30,7 +30,7 @@
         <br>
     </td>
     {% endfor %}
-    <td>{% if not hide_arrows %}<a href="?date={{ next_week }}" class="chevron schedule-right" title="Next Week"><i class="fa fa-chevron-right"></i></a>{% endif %}</td>
+    <td{% if not hide_arrows %} class="chevron"><a href="?date={{ next_week }}" class="chevron schedule-right" title="Next Week"><i class="fa fa-chevron-right"></i></a>{% else %}>{% endif %}</td>
     </tr>
     
 </table>
