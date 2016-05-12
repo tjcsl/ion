@@ -6,7 +6,14 @@ from .models import PrintJob
 
 
 class PrintJobAdmin(admin.ModelAdmin):
-    list_display = ('time', 'printer', 'user', 'file', 'num_pages', 'page_range', 'printed')
+    def formatted_page_range(self, obj):
+        if not obj.page_range:
+            return "All"
+        return obj.page_range
+    formatted_page_range.admin_order_field = "page_range"
+    formatted_page_range.short_description = "Page Range"
+
+    list_display = ('time', 'printer', 'user', 'file', 'num_pages', 'formatted_page_range', 'printed')
     list_filter = ('time', 'printer', 'num_pages')
     ordering = ('-time',)
     raw_id_fields = ('user',)
