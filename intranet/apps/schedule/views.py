@@ -45,8 +45,6 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
     friday = 5
     if request and 'date' in request.GET:
         date = decode_date(request.GET['date'])
-    else:
-        date = None
 
     if date is None:
         date = datetime.now()
@@ -119,6 +117,22 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
+
+# does NOT require login
+
+
+def week_view(request):
+    given_date = schedule_context(request)["sched_ctx"]["date"]
+    start_date = given_date - timedelta(days=given_date.weekday())
+    days = []
+    for i in range(5):
+        new_date = start_date + timedelta(days=i)
+        days.append(schedule_context(date=new_date))
+    next_week = days[-1]["sched_ctx"]["date_tomorrow"]
+    last_week = date_format(days[0]["sched_ctx"]["date"] - timedelta(days=7))
+    today = date_format(datetime.now())
+    data = {"days": days, "next_week": next_week, "last_week": last_week, "today": today}
+    return render(request, "schedule/week_view.html", data)
 
 # does NOT require login
 
