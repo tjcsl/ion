@@ -6,6 +6,7 @@ from .models import PrintJob
 
 
 class PrintJobAdmin(admin.ModelAdmin):
+
     def formatted_page_range(self, obj):
         if not obj.page_range:
             return "All"

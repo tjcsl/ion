@@ -9,6 +9,7 @@ from ..db import ldap_db
 
 
 class IonTestCase(TestCase):
+
     @classmethod
     def start_server(cls):
         cls.server = ldap3.Server('mock_server')
