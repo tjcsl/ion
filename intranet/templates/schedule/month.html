@@ -1,11 +1,11 @@
 {% load staticfiles %}
-
+<div class="month-container">
+    <a href="?date={{ last_month }}" title="Previous Month"><i class="fa fa-chevron-left"></i></a> <span class="month-name">{{ current_month }}</span><a href="?date={{ next_month }}" title="Next Week"> <i class="fa fa-chevron-right"></i></a>
+</div>
 {% for week in weeks %}
 <div class="schedule" data-endpoint="{% url 'week' %}" data-prev-date="{{ last_month }}" data-next-date="{{ next_month }}" data-date="{{ week.today }}">
-
             <table class="week-table">
         <tr>
-            {% if forloop.counter == 1 %}<td{% if not hide_arrows %} class="chevron"><a href="?date={{ last_month }}" class="chevron schedule-left" title="Previous Week"><i class="fa fa-chevron-left"></i></a>{% else %}>{% endif %}</td>{% endif %}
     {% for day in week.days %}
     <td {% if week.today == day.sched_ctx.date_today %}class="today"{% endif %}>
             <h2 class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
@@ -31,7 +31,6 @@
         <br>
     </td>
     {% endfor %}
-    {% if forloop.counter == 1 %}<td{% if not hide_arrows %} class="chevron"><a href="?date={{ next_month }}" class="chevron schedule-right" title="Next Week"><i class="fa fa-chevron-right"></i></a>{% else %}>{% endif %}</td>{% endif %}
     </tr>
     
 </table>

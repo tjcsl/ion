@@ -159,10 +159,11 @@ def month_view(request):
     week3 = week_view(None, decode_date(week2["next_week"]), render_template=False)
     week4 = week_view(None, decode_date(week3["next_week"]), render_template=False)
     week5 = week_view(None, decode_date(week4["next_week"]), render_template=False)
+    month = first_date.strftime("%B")
     one_month = relativedelta(months=1)
     next_month = date_format(first_date + one_month)
     last_month = date_format(first_date - one_month)
-    data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month}
+    data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month, "current_month": month}
     return render(request, "schedule/month_view.html", data)
 
 # does NOT require login
