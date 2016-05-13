@@ -1,0 +1,39 @@
+{% load staticfiles %}
+
+{% for week in weeks %}
+<div class="schedule" data-endpoint="{% url 'week' %}" data-prev-date="{{ last_month }}" data-next-date="{{ next_month }}" data-date="{{ week.today }}">
+
+            <table class="week-table">
+        <tr>
+            {% if forloop.counter == 1 %}<td{% if not hide_arrows %} class="chevron"><a href="?date={{ last_month }}" class="chevron schedule-left" title="Previous Week"><i class="fa fa-chevron-left"></i></a>{% else %}>{% endif %}</td>{% endif %}
+    {% for day in week.days %}
+    <td {% if week.today == day.sched_ctx.date_today %}class="today"{% endif %}>
+            <h2 class="schedule-date">{{ day.sched_ctx.date|date:"D, N j" }}</h2>
+         <br>
+        {% if day.sched_ctx.dayobj %}
+        <h2 class="day-name {{ day.sched_ctx.dayobj.day_type.class_name }}">{{ day.sched_ctx.dayobj.day_type.name|safe }}{% if day.sched_ctx.comment %} {{ day.sched_ctx.comment }}{% endif %}</h2>
+            <br>
+            <table class="bellschedule-table">
+            {% for block in day.sched_ctx.blocks %}
+                <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}" data-block-order="{{ block.order }}">
+                    <th class="block">{{ block.name|safe }}:</th>
+                    <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            {% if day.sched_ctx.is_weekday %}
+                <h3 class="day-name">No schedule available</h3>
+            {% else %}
+                <h3 class="day-name">No school</h3>
+            {% endif %}
+        {% endif %}
+        <br>
+    </td>
+    {% endfor %}
+    {% if forloop.counter == 1 %}<td{% if not hide_arrows %} class="chevron"><a href="?date={{ next_month }}" class="chevron schedule-right" title="Next Week"><i class="fa fa-chevron-right"></i></a>{% else %}>{% endif %}</td>{% endif %}
+    </tr>
+    
+</table>
+</div>
+{% endfor %}
