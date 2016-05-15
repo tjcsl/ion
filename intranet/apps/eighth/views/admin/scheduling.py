@@ -74,7 +74,7 @@ def schedule_activity_view(request):
                         cancelled = True
 
                 if instance:
-                    fields = ["rooms", "capacity", "sponsors", "title", "special", "administrative", "restricted", "sticky", "comments", "admin_comments"]
+                    fields = ["rooms", "capacity", "sponsors", "title", "special", "administrative", "restricted", "sticky", "both_blocks", "comments", "admin_comments"]
                     if "rooms" in form.cleaned_data:
                         for o in form.cleaned_data["rooms"]:
                             invalidate_obj(o)
@@ -202,6 +202,7 @@ def schedule_activity_view(request):
                     "administrative": sched_act.administrative,
                     "restricted": sched_act.restricted,
                     "sticky": sched_act.sticky,
+                    "both_blocks": sched_act.both_blocks,
                     "comments": sched_act.comments,
                     "admin_comments": sched_act.admin_comments,
                     "scheduled": not sched_act.cancelled,
