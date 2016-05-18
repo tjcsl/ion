@@ -13,14 +13,16 @@ Tests for the eighth module.
 
 
 class EighthTest(IonTestCase):
-
-    def test_add_user(self):
-        """Tests adding a user to a EighthScheduledActivity."""
+    def make_admin(self):
         self.login()
         # Make user an eighth admin
         user = User.get_user(username='awilliam')
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
+
+    def test_add_user(self):
+        self.make_admin()
+        """Tests adding a user to a EighthScheduledActivity."""
         # Ensure we can see the user's signed-up activities.
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
@@ -133,3 +135,26 @@ class EighthTest(IonTestCase):
         self.assertEqual('Wey. 999', room3.formatted_name)
         room4 = EighthRoom.objects.create(name="Room 999")
         self.assertEqual('Rm. 999', room4.formatted_name)
+
+    def test_both_blocks(self):
+        """Make sure that signing up for a both blocks activity works."""
+        self.make_admin()
+        user1 = User.objects.create(username="user1")
+        group1 = Group.objects.create(name="group1")
+        user1.groups.add(group1)
+        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        block2 = EighthBlock.objects.create(date='2015-01-01', block_letter="B")
+        room1 = EighthRoom.objects.create(name="room1")
+
+        act1 = EighthActivity.objects.create(name="Test Activity 1", sticky=True)
+        act1.rooms.add(room1)
+        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+
+        act2 = EighthActivity.objects.create(name="Test Activity 2", both_blocks=True)
+        act2.rooms.add(room1)
+        schact2 = EighthScheduledActivity.objects.create(activity=act2, block=block1)
+
+        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
+        self.assertEqual(response.status_code, 302)
+        response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact2.id]), {'confirm': True})
+        self.assertEqual(response.status_code, 302)
