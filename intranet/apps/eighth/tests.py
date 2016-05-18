@@ -19,18 +19,24 @@ class EighthTest(IonTestCase):
         user = User.get_user(username='awilliam')
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
+        return user
+
+    def add_block(self, args):
+        # Bypass the manual block creation form.
+        args.update({'custom_block': True})
+        response = self.client.post(reverse('eighth_admin_add_block'), args)
+        self.assertEqual(response.status_code, 302)
+        return EighthBlock.objects.get(date=args['date'], block_letter=args['block_letter'])
 
     def test_add_user(self):
-        self.make_admin()
+        user = self.make_admin()
         """Tests adding a user to a EighthScheduledActivity."""
         # Ensure we can see the user's signed-up activities.
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
 
         # Create a block
-        response = self.client.post(reverse('eighth_admin_add_block'), {'date': '9001-4-20', 'block_letter': 'A', 'custom_block': True})
-        self.assertEqual(response.status_code, 302)
-        block = EighthBlock.objects.get_first_upcoming_block()
+        block = self.add_block({'date': '9001-4-20', 'block_letter': 'A'})
         self.assertEqual(block.formatted_date, 'Mon, April 20, 9001')
 
         # Create an activity
@@ -58,16 +64,17 @@ class EighthTest(IonTestCase):
         self.assertIn(user, EighthScheduledActivity.objects.all()[0].members.all())
 
     def verify_signup(self, user, schact):
-        old_count = (schact.eighthsignup_set.count())
+        old_count = schact.eighthsignup_set.count()
         schact.add_user(user)
-        self.assertEqual((schact.eighthsignup_set.count()), old_count + 1)
-        self.assertEqual((user.eighthsignup_set.filter(scheduled_activity__block=schact.block).count()), 1)
+        self.assertEqual(schact.eighthsignup_set.count(), old_count + 1)
+        self.assertEqual(user.eighthsignup_set.filter(scheduled_activity__block=schact.block).count(), 1)
 
     def test_signups(self):
         """Do some sample signups."""
 
+        self.make_admin()
         user1 = User.objects.create(username="user1")
-        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
         room1 = EighthRoom.objects.create(name="room1")
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
@@ -79,8 +86,9 @@ class EighthTest(IonTestCase):
     def test_blacklist(self):
         """Make sure users cannot sign up for blacklisted activities."""
 
+        self.make_admin()
         user1 = User.objects.create(username="user1")
-        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
         room1 = EighthRoom.objects.create(name="room1")
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
@@ -94,7 +102,8 @@ class EighthTest(IonTestCase):
     def test_all_associated_rooms(self):
         """Make sure EighthScheduledActivities can return all associated rooms."""
 
-        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        self.make_admin()
+        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
         room1 = EighthRoom.objects.create(name="room1")
         room2 = EighthRoom.objects.create(name="room2")
 
@@ -110,7 +119,8 @@ class EighthTest(IonTestCase):
     def test_room_use(self):
         """Make sure EighthScheduledActivities return the correct room."""
 
-        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
+        self.make_admin()
+        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
         room1 = EighthRoom.objects.create(name="room1")
         room2 = EighthRoom.objects.create(name="room2")
 
@@ -142,8 +152,8 @@ class EighthTest(IonTestCase):
         user1 = User.objects.create(username="user1")
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
-        block1 = EighthBlock.objects.create(date='2015-01-01', block_letter="A")
-        block2 = EighthBlock.objects.create(date='2015-01-01', block_letter="B")
+        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
+        block2 = self.add_block({'date': '2015-01-01', 'block_letter': 'B'})
         room1 = EighthRoom.objects.create(name="room1")
 
         act1 = EighthActivity.objects.create(name="Test Activity 1", sticky=True)
