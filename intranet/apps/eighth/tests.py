@@ -21,12 +21,17 @@ class EighthTest(IonTestCase):
         user.groups.add(group)
         return user
 
-    def add_block(self, args):
+    def add_block(self, **args):
         # Bypass the manual block creation form.
         args.update({'custom_block': True})
         response = self.client.post(reverse('eighth_admin_add_block'), args)
         self.assertEqual(response.status_code, 302)
         return EighthBlock.objects.get(date=args['date'], block_letter=args['block_letter'])
+
+    def add_room(self, **args):
+        response = self.client.post(reverse('eighth_admin_add_room'), args)
+        self.assertEqual(response.status_code, 302)
+        return EighthRoom.objects.get(name=args['name'])
 
     def test_add_user(self):
         user = self.make_admin()
@@ -36,7 +41,7 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Create a block
-        block = self.add_block({'date': '9001-4-20', 'block_letter': 'A'})
+        block = self.add_block(date='9001-4-20', block_letter='A')
         self.assertEqual(block.formatted_date, 'Mon, April 20, 9001')
 
         # Create an activity
@@ -74,8 +79,8 @@ class EighthTest(IonTestCase):
 
         self.make_admin()
         user1 = User.objects.create(username="user1")
-        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
-        room1 = EighthRoom.objects.create(name="room1")
+        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        room1 = self.add_room(name="room1", capacity=1)
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
         act1.rooms.add(room1)
@@ -88,8 +93,8 @@ class EighthTest(IonTestCase):
 
         self.make_admin()
         user1 = User.objects.create(username="user1")
-        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
-        room1 = EighthRoom.objects.create(name="room1")
+        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        room1 = self.add_room(name="room1", capacity=1)
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
         act1.rooms.add(room1)
@@ -103,9 +108,9 @@ class EighthTest(IonTestCase):
         """Make sure EighthScheduledActivities can return all associated rooms."""
 
         self.make_admin()
-        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
-        room1 = EighthRoom.objects.create(name="room1")
-        room2 = EighthRoom.objects.create(name="room2")
+        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        room1 = self.add_room(name="room1", capacity=1)
+        room2 = self.add_room(name="room2", capacity=1)
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
         act1.rooms.add(room1)
@@ -120,9 +125,9 @@ class EighthTest(IonTestCase):
         """Make sure EighthScheduledActivities return the correct room."""
 
         self.make_admin()
-        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
-        room1 = EighthRoom.objects.create(name="room1")
-        room2 = EighthRoom.objects.create(name="room2")
+        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        room1 = self.add_room(name="room1", capacity=1)
+        room2 = self.add_room(name="room2", capacity=1)
 
         act1 = EighthActivity.objects.create(name="Test Activity 1")
         act1.rooms.add(room1)
@@ -137,13 +142,14 @@ class EighthTest(IonTestCase):
 
     def test_room_formatting(self):
         """Make sure a room name formatting is correct."""
-        room1 = EighthRoom.objects.create(name="999")
-        self.assertEqual('Rm. ' + room1.name, room1.formatted_name)
-        room2 = EighthRoom.objects.create(name="Lab 999")
+        self.make_admin()
+        room1 = self.add_room(name="999", capacity=1)
+        self.assertEqual('Rm. %s' % room1.name, room1.formatted_name)
+        room2 = self.add_room(name="Lab 999", capacity=1)
         self.assertEqual(room2.name, room2.formatted_name)
-        room3 = EighthRoom.objects.create(name="Weyanoke 999")
+        room3 = self.add_room(name="Weyanoke 999", capacity=1)
         self.assertEqual('Wey. 999', room3.formatted_name)
-        room4 = EighthRoom.objects.create(name="Room 999")
+        room4 = self.add_room(name="Room 999", capacity=1)
         self.assertEqual('Rm. 999', room4.formatted_name)
 
     def test_both_blocks(self):
@@ -152,9 +158,9 @@ class EighthTest(IonTestCase):
         user1 = User.objects.create(username="user1")
         group1 = Group.objects.create(name="group1")
         user1.groups.add(group1)
-        block1 = self.add_block({'date': '2015-01-01', 'block_letter': 'A'})
-        block2 = self.add_block({'date': '2015-01-01', 'block_letter': 'B'})
-        room1 = EighthRoom.objects.create(name="room1")
+        block1 = self.add_block(date='2015-01-01', block_letter='A')
+        block2 = self.add_block(date='2015-01-01', block_letter='B')
+        room1 = self.add_room(name="room1", capacity=1)
 
         act1 = EighthActivity.objects.create(name="Test Activity 1", sticky=True)
         act1.rooms.add(room1)
