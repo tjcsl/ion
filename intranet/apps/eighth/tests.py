@@ -13,6 +13,7 @@ Tests for the eighth module.
 
 
 class EighthTest(IonTestCase):
+
     def make_admin(self):
         self.login()
         # Make user an eighth admin
@@ -38,6 +39,19 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
         return EighthActivity.objects.get(name=args['name'])
 
+    def schedule_activity(self, block_id, activity_id):
+        # FIXME: figure out a way to do this that involves less hard-coding.
+        args = {'form-TOTAL_FORMS': '1',
+                'form-INITIAL_FORMS': '0',
+                'form-MAX_NUM_FORMS': '',
+                'form-0-block': block_id,
+                'form-0-activity': activity_id,
+                'form-0-scheduled': True,
+                'form-0-capacity': 1}
+        response = self.client.post(reverse('eighth_admin_schedule_activity'), args)
+        self.assertEqual(response.status_code, 302)
+        return EighthScheduledActivity.objects.get(block__id=block_id, activity__id=activity_id)
+
     def test_add_user(self):
         user = self.make_admin()
         """Tests adding a user to a EighthScheduledActivity."""
@@ -53,23 +67,14 @@ class EighthTest(IonTestCase):
         activity = self.add_activity(name='Meme Club')
 
         # Schedule an activity
-        # FIXME: figure out a way to do this that involves less hard-coding.
-        response = self.client.post(
-            reverse('eighth_admin_schedule_activity'), {'form-TOTAL_FORMS': '1',
-                                                        'form-INITIAL_FORMS': '0',
-                                                        'form-MAX_NUM_FORMS': '',
-                                                        'form-0-block': block.id,
-                                                        'form-0-activity': activity.id,
-                                                        'form-0-scheduled': True,
-                                                        'form-0-capacity': 1})
-        self.assertEqual(response.status_code, 302)
+        schact = self.schedule_activity(block.id, activity.id)
 
         # Signup for an activity
         response = self.client.post(reverse('eighth_signup'), {'uid': 8889, 'bid': block.id, 'aid': activity.id})
         self.assertEqual(response.status_code, 200)
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(user, EighthScheduledActivity.objects.all()[0].members.all())
+        self.assertIn(user, schact.members.all())
 
     def verify_signup(self, user, schact):
         old_count = schact.eighthsignup_set.count()
@@ -87,7 +92,7 @@ class EighthTest(IonTestCase):
 
         act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
-        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
 
         self.verify_signup(user1, schact1)
 
@@ -102,7 +107,7 @@ class EighthTest(IonTestCase):
         act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
         act1.users_blacklisted.add(user1)
-        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
 
         with self.assertRaisesMessage(SignupException, "Blacklist"):
             schact1.add_user(user1)
@@ -117,7 +122,7 @@ class EighthTest(IonTestCase):
 
         act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
-        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.rooms.add(room2)
 
         self.assertIn(room1, schact1.all_associated_rooms)
@@ -134,7 +139,7 @@ class EighthTest(IonTestCase):
 
         act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
-        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
 
         self.assertIn(room1, schact1.get_scheduled_rooms())
         self.assertEqual(1, len(schact1.get_scheduled_rooms()))
@@ -167,11 +172,11 @@ class EighthTest(IonTestCase):
 
         act1 = self.add_activity(name='Test Activity 1', sticky=True)
         act1.rooms.add(room1)
-        schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
+        schact1 = self.schedule_activity(act1.id, block1.id)
 
         act2 = self.add_activity(name='Test Activity 2', both_blocks=True)
         act2.rooms.add(room1)
-        schact2 = EighthScheduledActivity.objects.create(activity=act2, block=block1)
+        schact2 = self.schedule_activity(act2.id, block2.id)
 
         response = self.client.post(reverse('eighth_admin_signup_group_action', args=[group1.id, schact1.id]), {'confirm': True})
         self.assertEqual(response.status_code, 302)
