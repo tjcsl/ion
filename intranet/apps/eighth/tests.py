@@ -33,6 +33,11 @@ class EighthTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
         return EighthRoom.objects.get(name=args['name'])
 
+    def add_activity(self, **args):
+        response = self.client.post(reverse('eighth_admin_add_activity'), args)
+        self.assertEqual(response.status_code, 302)
+        return EighthActivity.objects.get(name=args['name'])
+
     def test_add_user(self):
         user = self.make_admin()
         """Tests adding a user to a EighthScheduledActivity."""
@@ -45,9 +50,7 @@ class EighthTest(IonTestCase):
         self.assertEqual(block.formatted_date, 'Mon, April 20, 9001')
 
         # Create an activity
-        response = self.client.post(reverse('eighth_admin_add_activity'), {'name': 'Meme Club'})
-        self.assertEqual(response.status_code, 302)
-        activity = EighthActivity.objects.all()[0]
+        activity = self.add_activity(name='Meme Club')
 
         # Schedule an activity
         # FIXME: figure out a way to do this that involves less hard-coding.
@@ -82,7 +85,7 @@ class EighthTest(IonTestCase):
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
 
@@ -96,7 +99,7 @@ class EighthTest(IonTestCase):
         block1 = self.add_block(date='2015-01-01', block_letter='A')
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
         act1.users_blacklisted.add(user1)
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
@@ -112,7 +115,7 @@ class EighthTest(IonTestCase):
         room1 = self.add_room(name="room1", capacity=1)
         room2 = self.add_room(name="room2", capacity=1)
 
-        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
         schact1.rooms.add(room2)
@@ -129,7 +132,7 @@ class EighthTest(IonTestCase):
         room1 = self.add_room(name="room1", capacity=1)
         room2 = self.add_room(name="room2", capacity=1)
 
-        act1 = EighthActivity.objects.create(name="Test Activity 1")
+        act1 = self.add_activity(name='Test Activity 1')
         act1.rooms.add(room1)
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
 
@@ -162,11 +165,11 @@ class EighthTest(IonTestCase):
         block2 = self.add_block(date='2015-01-01', block_letter='B')
         room1 = self.add_room(name="room1", capacity=1)
 
-        act1 = EighthActivity.objects.create(name="Test Activity 1", sticky=True)
+        act1 = self.add_activity(name='Test Activity 1', sticky=True)
         act1.rooms.add(room1)
         schact1 = EighthScheduledActivity.objects.create(activity=act1, block=block1)
 
-        act2 = EighthActivity.objects.create(name="Test Activity 2", both_blocks=True)
+        act2 = self.add_activity(name='Test Activity 2', both_blocks=True)
         act2.rooms.add(room1)
         schact2 = EighthScheduledActivity.objects.create(activity=act2, block=block1)
 
