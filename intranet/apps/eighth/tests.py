@@ -53,8 +53,8 @@ class EighthTest(IonTestCase):
         return EighthScheduledActivity.objects.get(block__id=block_id, activity__id=activity_id)
 
     def test_add_user(self):
-        user = self.make_admin()
         """Tests adding a user to a EighthScheduledActivity."""
+        user = self.make_admin()
         # Ensure we can see the user's signed-up activities.
         response = self.client.get(reverse('eighth_signup'))
         self.assertEqual(response.status_code, 200)
