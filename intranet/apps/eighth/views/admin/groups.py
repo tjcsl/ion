@@ -383,15 +383,13 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         except Group.DoesNotExist:
             raise http.Http404
 
-        query = "?schact={}".format(scheduled_activity.id)
-        return redirect(reverse("eighth_admin_signup_group_action", args=[group.id]) + query)
+        return redirect(reverse("eighth_admin_signup_group_action", args=[group.id, scheduled_activity.id]))
 
 
 eighth_admin_signup_group = eighth_admin_required(EighthAdminSignUpGroupWizard.as_view(EighthAdminSignUpGroupWizard.FORMS))
 
 
-def eighth_admin_signup_group_action(request, group_id):
-    schact_id = request.GET["schact"]
+def eighth_admin_signup_group_action(request, group_id, schact_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)
