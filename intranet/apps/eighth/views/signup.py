@@ -200,6 +200,11 @@ def eighth_display_view(request, block_id=None):
 
     signups = EighthSignup.objects.filter(user=user).select_related("scheduled_activity__block", "scheduled_activity__activity")
     block_signup_map = {s.scheduled_activity.block.id: s.scheduled_activity for s in signups}
+    prev_block = list(block.previous_blocks(1))
+    if prev_block:
+        prev_block = prev_block[0]
+        if prev_block.date != block.date:
+            prev_block = None
 
     for b in surrounding_blocks:
         info = {
