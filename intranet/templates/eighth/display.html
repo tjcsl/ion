@@ -76,7 +76,22 @@
     }
     {% endif %}
 
+    .block-switch {
+        display: none;
+    }
+
     {% if touch_signage %}
+        {% if next_block or prev_block %}
+            .block-switch {
+                display: block;
+                position: absolute;
+                top: -1px;
+                right: 1px;
+            }
+            .block-switch button {
+                font-size: 18px;
+            }
+        {% endif %}
     #activity-list li {
         padding: 5px;
     }
@@ -154,7 +169,17 @@
         </script>
     {% endif %}
 
+    <script type="text/javascript">
+    blockSwitch = function(rel) {
+        if(location.search.indexOf("block_increment=") != -1) {
+            var p = location.search.split("block_increment=");
+            location.search = p[0] + "block_increment=" + (parseInt(p[1]) + parseInt(rel));
+        } else {
+            location.search += "&block_increment=" + rel;
+        }
+    }
     </script>
+
 
     <script type="text/javascript" src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/json2.js' %}"></script>
@@ -575,6 +600,19 @@
                                 {% endif %}
                             </h4>
                         </div>
+                        {% if next_block %}
+                        <div class="block-switch">
+                            <button onclick="blockSwitch(1)">
+                            {{ next_block.block_letter }} Block <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        {% elif prev_block %}
+                        <div class="block-switch">
+                            <button onclick="blockSwitch(-1)">
+                            <i class="fa fa-arrow-left"></i> {{ prev_block.block_letter }} Block
+                            </button>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}

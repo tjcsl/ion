@@ -241,6 +241,18 @@ def eighth_signage(request, block_id=None, block_increment=0):
 
     touch_signage = ("touch" in request.GET)
 
+    next_block = list(block.next_blocks(1))
+    if next_block:
+        next_block = next_block[0]
+        if next_block.date != block.date:
+            next_block = None
+
+    prev_block = list(block.previous_blocks(1))
+    if prev_block:
+        prev_block = prev_block[0]
+        if prev_block.date != block.date:
+            prev_block = None
+
     context = {
         "user": user,
         "real_user": request.user,
@@ -257,7 +269,9 @@ def eighth_signage(request, block_id=None, block_increment=0):
         "reload_mins": reload_mins,
         "no_user_display": True,
         "no_fav": True,
-        "touch_signage": touch_signage
+        "touch_signage": touch_signage,
+        "next_block": next_block,
+        "prev_block": prev_block
     }
 
     return render(request, "eighth/display.html", context)

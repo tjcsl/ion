@@ -241,7 +241,9 @@ def eighth_display_view(request, block_id=None):
         "active_block_current_signup": active_block_current_signup,
         "no_title": ("no_title" in request.GET),
         "no_detail": ("no_detail" in request.GET),
-        "no_rooms": ("no_rooms" in request.GET)
+        "no_rooms": ("no_rooms" in request.GET),
+        "next_block": next_block,
+        "prev_block": prev_block
     }
 
     return render(request, "eighth/display.html", context)
