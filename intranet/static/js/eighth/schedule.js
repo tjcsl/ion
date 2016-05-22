@@ -25,9 +25,9 @@ $(function() {
         var cb = $("input.scheduled[type=checkbox]", this);
         var checked = cb.prop("checked");
         // var bt = $("td.block-name a", this).text().trim();
-        if (!checked) {
-            toggleRow($(this));
-        }
+
+        if (!checked) toggleRow($(this));
+
         $(cb).click(function() {
             toggleRow($(this).parent().parent());
         });
@@ -41,14 +41,12 @@ $(function() {
         if (val !== null) {
             val.forEach(function(roomID) {
                 var c = all_rooms_lookup[roomID].capacity;
-                if (c === -1) {
-                    c = Infinity;
-                }
+                if (c === -1) c = Infinity;
                 capacitySum += c;
             });
         }
 
-        if (capacitySum == Infinity) capacitySum = -1;
+        if (capacitySum === Infinity) capacitySum = -1;
         var $capacityInput = $("input.capacity", $select.parent().parent());
         // var defaultActivityCapacity = $capacityInput.data("activity-default-capacity");
         var defaultCapacity = $capacityInput.data("default-capacity");
@@ -63,13 +61,13 @@ $(function() {
 
         var classes = ["fa-arrows-v", "fa-long-arrow-up", "fa-long-arrow-down"];
         if (opt === "both") {
-            $(".propagate > i").removeClass(classes[1]).removeClass(classes[2])
+            $(".propagate > i").removeClass(classes[1] + " " + classes[2])
                                .addClass(classes[0]);
         } else if (opt === "up") {
-            $(".propagate > i").removeClass(classes[0]).removeClass(classes[2])
+            $(".propagate > i").removeClass(classes[0] + " " + classes[2])
                                .addClass(classes[1]);
         } else if (opt === "down") {
-            $(".propagate > i").removeClass(classes[0]).removeClass(classes[1])
+            $(".propagate > i").removeClass(classes[0] + " " + classes[1])
                                .addClass(classes[2]);
         }
     }
@@ -79,8 +77,8 @@ $(function() {
     }
 
     $(".propagate").click(function() {
-        var field = $(this).attr("data-field");
-        var input = $(this).attr("data-input");
+        var field = $(this).attr("data-field"),
+            input = $(this).attr("data-input");
         var el = $("#" + input);
 
         var rows = $(".schedule-activity-grid tr.form-row");

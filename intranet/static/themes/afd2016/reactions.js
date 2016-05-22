@@ -4,7 +4,7 @@ $(function() {
         var ro = $(".reactions-outer", p);
         var vis = ro.attr("data-visible");
 
-        if(vis == "true") {
+        if (vis === "true") {
             ro.animate({
                 "opacity": 0
             }, 200).css({
@@ -38,6 +38,7 @@ $(function() {
         var t = $(this);
         t.addClass("click");
         giveReaction(t);
+
         setTimeout(function() {
             t.removeClass("click");
             t.addClass("click-out");

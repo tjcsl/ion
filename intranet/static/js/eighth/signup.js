@@ -15,8 +15,8 @@ $(function() {
 
             var n1 = a1.attributes.name.toLowerCase(),
                 n2 = a2.attributes.name.toLowerCase();
-            if (n1 < n2) {return -1;}
-            if (n1 > n2) {return 1;}
+            if (n1 < n2) return -1;
+            if (n1 > n2) return 1;
             return 0;
         }
     });
@@ -46,12 +46,13 @@ $(function() {
 
         signupClickHandler: function(e) {
             var target = e.target;
-            $(target).attr("disabled", "disabled");
+            $(target).attr("disabled", true);
             var spinnerEl = document.getElementById("signup-spinner");
             var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
-            var aid = $(this.el).data("aid");
-            var bid = $(this.el).data("bid");
-            var uid = $(this.el).data("uid");
+            var aid = $(this.el).data("aid"),
+                bid = $(this.el).data("bid"),
+                uid = $(this.el).data("uid");
+
             eighth.signUp(uid, bid, aid, function() {
                 $(target).removeAttr("disabled");
                 spinner.spin(false);
@@ -63,14 +64,15 @@ $(function() {
             var target = e.target;
             console.log(target);
             var container = $("#roster-section");
-            if ($.trim(container.html())=='') {
+
+            if ($.trim(container.html()) === '') {
                 var spinnerEl = document.getElementById("signup-spinner");
                 var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
                 var schact_id = this.model.attributes.scheduled_activity.id;
                 console.debug("Load roster for scheduled activity", schact_id);
                 var endpoint = $(target).data("endpoint");
-                $.get(endpoint + "/" + schact_id, {}, function(resp) {
-                    container.html(resp);
+
+                container.load(endpoint + "/" + schact_id, {}, function(resp) {
                     spinner.spin(false);
                     $(target).text("Close Roster");
                 });
@@ -108,7 +110,6 @@ $(function() {
 
         initialize: function() {
           _.bindAll(this, "render", "showDetail");
-
           this.template = _.template($("#activity-list-row-template").html());
         },
 
@@ -120,11 +121,9 @@ $(function() {
         showDetail: function(e) {
             $("#activity-list li[data-activity-id].selected").removeClass("selected");
             var $target = $(e.target);
-            if (!$target.is("li")) {
-                $target = $target.parents("li");
-            }
+            if (!$target.is("li")) $target = $target.parents("li");
 
-            if (!$target.attr("data-activity-id")) {return;}
+            if (!$target.attr("data-activity-id")) return;
 
             $target.addClass("selected");
 
@@ -136,7 +135,6 @@ $(function() {
                     viewContainer: $("#activity-detail")
                 });
             }
-
 
             $("#activity-detail").data("aid", window.activityDetailView.model.id);
             $("#activity-detail").parent().addClass("activity-detail-selected");
@@ -169,27 +167,28 @@ $(function() {
             },
             success: function(response) {
                 var activity = activityModels.get(aid);
+
                 if (!activity.attributes.both_blocks) {
                     $(".current-day .both-blocks .selected-activity").html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                     $(".current-day .both-blocks").removeClass("both-blocks");
-
-                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" +  $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
+                    $(".current-day .blocks a[data-bid='" + bid + "'] .block .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
                 } else {
                     $(".current-day .selected-activity").text("\n" + $('<textarea />').html(activity.attributes.name_with_flags_for_user).text()).attr("title", activity.attributes.name_with_flags_for_user);
                     $(".current-day .block").addClass("both-blocks");
                 }
 
                 var changed_activities = response.match(new RegExp('Your signup for .* on .* was removed', 'g'));
+
                 if (changed_activities !== null) {
-                    for (var i=0; i<changed_activities.length; i++) {
+                    for (var i = 0; i < changed_activities.length; i++) {
                         try {
                             var evnt = changed_activities[i];
                             console.debug(evnt);
                             var act = evnt.split('Your signup for ')[1].split(' on ');
                             var blk = act[1].split(' was removed');
-                            act = act[0];
-                            blk = blk[0];
+                            act = act[0], blk = blk[0];
                             console.info(act, blk);
+
                             $(".days-container .day .block").each(function() {
                                 var sa_blk = $(this).attr("title");
                                 var sa_act = $(".selected-activity", $(this)).attr("title");
@@ -198,19 +197,19 @@ $(function() {
                                     console.log("Found changed activity:", blk, act);
                                     $(".selected-activity", $(this)).html("<span class='no-activity-selected'>\nNo activity selected</span>").attr("title", "");
                                 }
-
                             });
-                        } catch(e) {
-                            console.error("An error occurred updating your current signups.");
-                            console.error(e);
+                        } catch (e) {
+                            console.error("An error occurred updating your current signups.", e);
                         }
                     }
-
                 }
 
                 $(".active-block.cancelled").removeClass("cancelled");
 
-                var selectedActivity = activityModels.filter(function(a){return a.attributes.selected === true});
+                var selectedActivity = activityModels.filter(function(a) {
+                    return a.attributes.selected === true
+                });
+
                 _.each(selectedActivity, function(a) {
                     a.attributes.selected = false;
                     a.attributes.roster.count -= 1;
@@ -225,13 +224,12 @@ $(function() {
 
                 var $container = $(".primary-content.eighth-signup");
                 var next_url = $container.attr("data-next-url");
-                if (next_url) {
-                    location.href = next_url;
-                }
 
+                if (next_url) location.href = next_url;
             },
             error: function(xhr, status, error) {
                 var content_type = xhr.getResponseHeader("content-type");
+
                 if (xhr.status === 403 &&
                     (content_type === "text/plain" ||
                      content_type.indexOf("text/plain;") === 0 ||
@@ -239,14 +237,17 @@ $(function() {
                      content_type.indexOf("text/html;") === 0)) {
 
                     $(".error-feedback").html(xhr.responseText);
+
                     if (isEighthAdmin) {
                         $("#signup-button").addClass("force");
                         $("#signup-button").text("Force Sign Up");
                     }
+
                 } else if (xhr.status === 401) {
                     location.reload();
                 } else {
                     console.error(xhr.responseText);
+
                     if (xhr.status === 401) {
                         $(".error-feedback").html("You must log in to sign up for this activity.");
                         window.location.replace("/login?next=" + window.location.pathname);
@@ -272,9 +273,11 @@ $(function() {
             var prevSelectedInFavorites = $("li[data-activity-id].selected").parent().hasClass("favorite-activities");
             var prevSelectedAid = $("li[data-activity-id].selected").data("activity-id");
             var rowViews = this.rowViews;
+
             while (rowViews.length > 0) {
                 rowViews.pop().remove();
             }
+
             var renderActivitiesInContainer = function(models, $container) {
                 $container.html("");
                 _.each(models, function(model) {
@@ -292,7 +295,9 @@ $(function() {
             var favorites = _.filter(this.activities.models, function(activity) {
                 return activity.attributes.favorited;
             });
+
             renderActivitiesInContainer(favorites, $(".favorite-activities", this.el));
+
             if (favorites.length === 0) {
                 $(".favorites-header").addClass("hidden");
             } else {
@@ -302,7 +307,9 @@ $(function() {
             var specials = _.filter(this.activities.models, function(activity) {
                 return activity.attributes.special;
             });
+
             renderActivitiesInContainer(specials, $(".special-activities", this.el));
+
             if (specials.length === 0) {
                 $(".special-header").addClass("no-activities");
             } else {
@@ -311,9 +318,10 @@ $(function() {
 
             if (!$("#activity-picker").hasClass("different-user")) {
                 var view = this;
+
                 $(".activity-icon.fav").click(function(event) {
-                    var aid = $(this).parent().parent().data("activity-id");
                     var $icon = $(this);
+                    var aid = $(this).parent().parent().data("activity-id");
                     var model = view.activities.get(aid);
 
                     $("#activity-list").scrollTop($("#activity-list").scrollTop() + ($(this).hasClass("fav-sel") ? -26 : 26));
@@ -336,6 +344,7 @@ $(function() {
                             alert("There was an error favoriting this activity. Try reloading the page.");
                         }
                     });
+
                     event.stopPropagation();
                 })
             }
@@ -356,8 +365,8 @@ $(function() {
     activityListView.render();
 
     $("button#unsignup-button").click(function() {
-        var uid = $(this).attr("data-uid");
-        var bid = $(this).attr("data-bid");
+        var uid = $(this).attr("data-uid"),
+            bid = $(this).attr("data-bid");
         var force = $(this).attr("force");
 
         var ths = $(this);
@@ -372,7 +381,7 @@ $(function() {
             },
             success: function(response) {
                 if (response) {
-                    alert($("<div>"+response+"</div>").text());
+                    alert($("<div>" + response + "</div>").text());
                 }
                 console.error(response);
                 //location.reload();
@@ -380,11 +389,11 @@ $(function() {
             error: function(response, error) {
                 window.r = response;
                 if (response.responseText) {
-                    alert($("<div>"+response.statusText+": "+response.responseText+"</div>").text());
+                    alert($("<div>" + response.statusText + ": " + response.responseText + "</div>").text());
                 }
                 console.error(response);
                 ths.attr("force", true);
-                ths.html(ths.html()+" (Force)");
+                ths.html(ths.html() + " (Force)");
             }
         });
     });

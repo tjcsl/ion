@@ -12,32 +12,38 @@ $(function() {
 
         var hidden = event.hasClass("hidden");
         var action = hidden ? "show" : "hide";
+
         $.post("/events/" + action + "?" + id, {event_id: id}, function() {
-            console.info("event "+id+" "+action);
+            console.info("event", id, action);
         });
+
         if (action === "show") {
             icon.removeClass("fa-toggle-off")
                     .addClass("fa-toggle-on")
                     .attr("title", icon.attr("data-visible-title"));
+
             setTimeout(function() {
                 event.removeClass("hidden");
             }, 450);
+
             eventContent.css("display", "");
             eventContent.slideDown(350);
         } else {
             icon.removeClass("fa-toggle-on")
                     .addClass("fa-toggle-off")
                     .attr("title", icon.attr("data-hidden-title"));
+
             setTimeout(function() {
                 event.addClass("hidden");
             }, 450);
+
             eventContent.css("display", "");
             eventContent.slideUp(350);
         }
     };
 
     $(".event[data-id] h3").click(function(e) {
-        if(e.target !== this) {return;}
+        if (e.target !== this) return;
         var btn = $(".event-toggle", $(this));
         eventToggle.call(btn);
     });

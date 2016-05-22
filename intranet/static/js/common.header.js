@@ -17,11 +17,10 @@ $(function() {
         event.stopPropagation();
     }
 
-    var clickOutside = function (e) {
-        if($(e.target).parents().andSelf().hasClass("dropdown-allow")) {
-            return;
-        }
-        if (! $(e.target).parents().andSelf().hasClass("dropdown-item-wrapper") ) {
+    var clickOutside = function(e) {
+        if ($(e.target).parents().andSelf().hasClass("dropdown-allow")) return;
+
+        if (!$(e.target).parents().andSelf().hasClass("dropdown-item-wrapper")) {
             closeMenu($(".dropdown-open .dropdown-menu"), true);
             $(".has-dropdown").removeClass("dropdown-open");
         }
@@ -40,6 +39,7 @@ $(function() {
     var closeMenu = function(menu, unbindEvents) {
         menu.stop().animate({ top: "10px", opacity: 0 }, time, "easeOutQuart", function() {
             menu.hide();
+
             if (unbindEvents) {
                 $(".dropdown-menu").unbind("click", clickInside);
                 $(document).unbind("click tap", clickOutside);
@@ -57,7 +57,7 @@ $(function() {
             $(document).unbind("click tap", clickOutside);
             $(".dropdown-menu").unbind("click", clickInside);
             $(".has-dropdown").removeClass("dropdown-open");
-        } else if (already_open.length == 0) {
+        } else if (already_open.length === 0) {
             // All menus closed, opening one of them
             openMenu(menu_clicked, true);
             menu_clicked.parent().addClass("dropdown-open");

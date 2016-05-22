@@ -3,11 +3,11 @@ window.addEventListener('load', function() {
     navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
              .then(function(r) {
                  console.log('registered service worker');
-             })
-             .catch(function(whut) {
+             }).catch(function(whut) {
                  console.error('service worker failed to register');
                  console.error(whut);
              });
+
     window.addEventListener('beforeinstallprompt', function(e) {
         /* */
     });

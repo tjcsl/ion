@@ -9,10 +9,10 @@ $(function() {
 
     var updateSelectAllCheckbox = function() {
         var numChecked = $membersCheckboxes.filter(":checked").length;
-        if (numChecked == $membersCheckboxes.length) {
+        if (numChecked === $membersCheckboxes.length) {
             $selectAllMembersCheckbox.prop("checked", true);
             $selectAllMembersCheckbox.prop("indeterminate", false);
-        } else if (numChecked == 0) {
+        } else if (numChecked === 0) {
             $selectAllMembersCheckbox.prop("checked", false);
             $selectAllMembersCheckbox.prop("indeterminate", false);
         } else {

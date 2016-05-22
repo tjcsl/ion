@@ -8,7 +8,7 @@ $(function() {
             return params;
 
         var paramStrings = url.split("?").pop().split("&");
-        for (var p=0; p < paramStrings.length; ++p) {
+        for (var p = 0; p < paramStrings.length; ++p) {
             var paramString = paramStrings[p];
             if (paramString.indexOf("=") < 0) {
                 params[paramString] = "";
@@ -36,8 +36,9 @@ $(function() {
 
     $("select.url-param-selector").on("change", function() {
         var val = $(this).val();
-        console.debug("param-selector value:",val);
-        if(val) {
+        console.debug("param-selector value:", val);
+
+        if (val) {
             var url = updateParam(document.URL, $(this).data("param"), val);
             location.href = url;
         }
@@ -50,10 +51,11 @@ $(function() {
 
     var updateSelectAllCheckbox = function() {
         var numChecked = $blockCheckboxes.filter(":checked").length;
-        if (numChecked == $blockCheckboxes.length) {
+
+        if (numChecked === $blockCheckboxes.length) {
             $selectAllBlocksCheckbox.prop("checked", true);
             $selectAllBlocksCheckbox.prop("indeterminate", false);
-        } else if (numChecked == 0) {
+        } else if (numChecked === 0) {
             $selectAllBlocksCheckbox.prop("checked", false);
             $selectAllBlocksCheckbox.prop("indeterminate", false);
         } else {
@@ -65,8 +67,9 @@ $(function() {
     var updateBlockCheckboxes = function() {
         var chk = $(this).prop("checked");
         $blockCheckboxes.prop("checked", chk);
+
         try {
-            if(chk) {
+            if (chk) {
                 $blockCheckboxes.parent().parent().removeClass("hidden");
                 $blockCheckboxes.parent().parent().data("hidden", false);
             } else {
@@ -82,8 +85,8 @@ $(function() {
 
     // Set up select blocks popover
     $(".select-blocks-popover-toggle").click(function() {
-        var $popover = $(".select-blocks-popover");
-        var $toggle = $(".select-blocks-popover-toggle");
+        var $popover = $(".select-blocks-popover"),
+            $toggle = $(".select-blocks-popover-toggle");
 
         $popover.toggleClass("closed");
 
@@ -99,7 +102,7 @@ $(function() {
     var blockTypeRowFilter = function(blockType) {
         return function(index, element) {
             var blockName = $(element).children(".block-name").text();
-            return blockName.indexOf(blockType) != -1;
+            return blockName.indexOf(blockType) !== -1;
         };
     };
 
@@ -110,18 +113,16 @@ $(function() {
         $("tr.form-row").each(function() {
             var $blocksOfType = $(this).filter(blockTypeFilter);
             var $checkboxes = $blocksOfType.find("input[type='checkbox']");
+
             // Ignore special and unschedule checkbox
             $checkboxes.each(function() {
-                if(!$(this).hasClass("special") &&
-                   !$(this).hasClass("administrative") &&
-                   !$(this).hasClass("restricted") &&
-                   !$(this).hasClass("sticky") &&
-                   !$(this).hasClass("unschedule")) {
+                if (!$(this).is(".special, .administrative, .restricted, .sticky, .unschedule")) {
                     $(this).prop("checked", true);
                 }
             });
+
             $blocksOfType.removeClass("hidden");
-        })
+        });
 
         updateSelectAllCheckbox();
     });
@@ -137,7 +138,7 @@ $(function() {
                 } else {
                     select.selectize.disable();
                 }
-            }).attr('disabled',false);
+            }).attr('disabled', false);
         });
 
         // Blacklist should be always enabled
@@ -146,16 +147,16 @@ $(function() {
     }
 
     $("#id_restricted").click(updateRestrictedFormFields);
-    if($("#id_restricted").length > 0) {
+
+    if ($("#id_restricted").length > 0) {
         updateRestrictedFormFields();
-    }
+    };
 
     $("#only-show-overbooked").click(function() {
         $("tr.underbooked").toggle();
-    })
+    });
 
     $("#hide-administrative").click(function() {
         $("tr.administrative").toggle();
-    })
-
+    });
 });

@@ -1,6 +1,5 @@
 /* global $ */
-$(document).ready(function() {
-
+$(function() {
     searchDebug = false;
 
     function eighthSearch(q) {
@@ -18,9 +17,7 @@ $(document).ready(function() {
                     var innerSplit = quoteSplit[i].split(" ");
                     for (var j = 0; j < innerSplit.length; j++) {
                         var inw = innerSplit[j];
-                        if (inw.length > 0) {
-                            searchSplit.push($.trim(inw));
-                        }
+                        if (inw.length > 0) searchSplit.push($.trim(inw));
                     }
                 } else {
                     searchSplit.push($.trim(quoteSplit[i]));
@@ -30,9 +27,7 @@ $(document).ready(function() {
             var spaceSplit = searchStr.split(" ");
             for (var i = 0; i < spaceSplit.length; i++) {
                 var spl = spaceSplit[i];
-                if (spl.length > 0) {
-                    searchSplit.push($.trim(spl));
-                }
+                if (spl.length > 0) searchSplit.push($.trim(spl));
             }
         }
 
@@ -41,7 +36,7 @@ $(document).ready(function() {
         } else {
             $("#activity-picker").addClass("has-search-header");
             $(".clear-button").click(function() {
-                $("#activity-picker .search-wrapper input").val("").trigger("keyup");
+                $("#activity-picker .search-wrapper input").val("").keyup();
             });
         }
 
@@ -91,7 +86,7 @@ $(document).ready(function() {
                 }
                 // sponsors
                 for (var sp in activity.sponsors) {
-                    if (activity.sponsors[sp].toLowerCase().indexOf(search) != -1) {
+                    if (activity.sponsors[sp].toLowerCase().indexOf(search) !== -1) {
                         show = true;
                     }
                 }
@@ -105,58 +100,58 @@ $(document).ready(function() {
                 var cmd = search.split(":");
                 if (cmd.length > 1) {
                     // not: = inverse
-                    var fl = ((cmd[0] === "not" || (cmd[0] === "is" && inv)) ? false : true);
+                    var fl = !(cmd[0] === "not" || (cmd[0] === "is" && inv));
                     // restricted
-                    if (cmd[1].substring(0,1) === "r" && activity.restricted == fl) {
+                    if (cmd[1].substring(0, 1) === "r" && activity.restricted === fl) {
                         show = true;
                     }
                     // authorized
-                    if (cmd[1].substring(0,2) === "au" && activity.restricted === fl && activity.restricted_for_user === !fl) {
+                    if (cmd[1].substring(0, 2) === "au" && activity.restricted === fl && activity.restricted_for_user === !fl) {
                         show = true;
                     }
                     // cancelled
-                    if (cmd[1].substring(0,1) === "c" && activity.cancelled === fl) {
+                    if (cmd[1].substring(0, 1) === "c" && activity.cancelled === fl) {
                         show = true;
                     }
                     // bothblocks
-                    if (cmd[1].substring(0,1) === "b" && activity.both_blocks === fl) {
+                    if (cmd[1].substring(0, 1) === "b" && activity.both_blocks === fl) {
                         show = true;
                     }
                     // oneaday
-                    if (cmd[1].substring(0,2) === "on" && activity.one_a_day === fl) {
+                    if (cmd[1].substring(0, 2) === "on" && activity.one_a_day === fl) {
                         show = true;
                     }
                     // favorite
-                    if (cmd[1].substring(0,1) === "f" && activity.favorited === fl) {
+                    if (cmd[1].substring(0, 1) === "f" && activity.favorited === fl) {
                         show = true;
                     }
                     // special
-                    if (cmd[1].substring(0,2) === "sp" && activity.special === fl) {
+                    if (cmd[1].substring(0, 2) === "sp" && activity.special === fl) {
                         show = true;
                     }
                     // admin
-                    if (cmd[1].substring(0,2) === "ad" && activity.administrative === fl) {
+                    if (cmd[1].substring(0, 2) === "ad" && activity.administrative === fl) {
                         show = true;
                         show_adminact = true;
                     }
                     // presign
-                    if (cmd[1].substring(0,1) === "p" && activity.presign === fl) {
+                    if (cmd[1].substring(0, 1) === "p" && activity.presign === fl) {
                         show = true;
                     }
                     // sticky
-                    if (cmd[1].substring(0,2) === "st" && activity.sticky === fl) {
+                    if (cmd[1].substring(0, 2) === "st" && activity.sticky === fl) {
                         show = true;
                     }
                     // full
-                    if (cmd[1].substring(0,1) === "f" && (activity.roster.capacity >= activity.roster.count) === fl) {
+                    if (cmd[1].substring(0, 1) === "f" && (activity.roster.capacity >= activity.roster.count) === fl) {
                         show = true;
                     }
                     // open
-                    if (cmd[1].substring(0,2) === "op" && (activity.roster.count < activity.roster.capacity) === fl) {
+                    if (cmd[1].substring(0, 2) === "op" && (activity.roster.count < activity.roster.capacity) === fl) {
                         show = true;
                     }
                     // selected
-                    if (cmd[1].substring(0,2) === "se" && activity.selected === fl) {
+                    if (cmd[1].substring(0, 2) === "se" && activity.selected === fl) {
                         show = true;
                         show_adminact = true;
                     }
@@ -174,7 +169,7 @@ $(document).ready(function() {
             if (shows.indexOf("and") !== -1) {
                 var nshows = [];
                 for (i in shows) {
-                    if (shows[i] == "and") {
+                    if (shows[i] === "and") {
                         console.debug("AND:", i);
                         i = parseInt(i);
                         if (i-1 >= 0 && i+1 < shows.length) {
@@ -202,8 +197,9 @@ $(document).ready(function() {
                         }
                     }
                 }
+
                 for (i in nshows) {
-                    if (nshows[i]) {show = true;}
+                    if (nshows[i]) show = true;
                 }
             } else {
                 /* imply OR:
@@ -215,7 +211,7 @@ $(document).ready(function() {
                 /* imply AND */
                 show = true;
                 for (i in shows) {
-                    if (!shows[i]) {show = false;}
+                    if (!shows[i]) show = false;
                 }
             }
 
@@ -232,23 +228,23 @@ $(document).ready(function() {
             } else {
                 $(this).addClass("search-hide").removeClass("search-show");
             }
-
         });
 
         /* hide headers with no activities */
         $("#activity-list > ul[data-header]").each(function() {
             var vis = $("li:not(.search-hide)[data-activity-id]", $(this));
             var cat = $(this).attr("data-header");
-            var hideUl = (cat != "all-header");
+            var hideUl = (cat !== "all-header");
             var sticky = $(".sticky-header." + cat);
             var hideHeader = !sticky.hasClass("no-activities");
             console.log(vis.size(), cat);
-            if(vis.size() == 0) {
-                if(hideUl) $(this).hide();
-                if(hideHeader) sticky.hide();
+
+            if (vis.size() === 0) {
+                if (hideUl) $(this).hide();
+                if (hideHeader) sticky.hide();
             } else {
-                if(hideUl) $(this).show();
-                if(hideHeader) sticky.show();
+                if (hideUl) $(this).show();
+                if (hideHeader) sticky.show();
             }
         });
 
@@ -267,13 +263,13 @@ $(document).ready(function() {
 
         var tm = (+new Date - _st);
         if (searchDebug) {
-            console.info(searchSplit + " search time: " + tm);
+            console.info(searchSplit, "search time:", tm);
         }
     };
 
     $(".search-wrapper input")
         .removeAttr("disabled")
-        .on("keyup", eighthSearch)
+        .keyup(eighthSearch)
         .on("search", eighthSearch);
 
     function badgeClickUpdate() {
@@ -285,7 +281,7 @@ $(document).ready(function() {
             if (v.indexOf(app) === -1) {
                 inp.val(v + (v.length > 0 ? " " : "") + app);
             }
-            inp.trigger("keyup");
+            inp.keyup();
         });
     };
 

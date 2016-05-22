@@ -15,13 +15,15 @@ $(function() {
 
     $(".user-link[data-user-id]").hover(function() {
         var uid = $(this).attr("data-user-id");
-        if(window.userHide.hasOwnProperty(uid)) {
+
+        if (window.userHide.hasOwnProperty(uid)) {
             clearTimeout(window.userHide[uid]);
             window.userHide[uid] = null;
         }
+
         var img = $("img.user-pic[data-user-id='" + uid + "']");
 
-        if(img.length > 0) {
+        if (img.length > 0) {
             img.fadeIn(100);
             img.addClass("active");
             console.debug(uid, "IN");
@@ -56,9 +58,9 @@ $(function() {
         }, 350);
     });
 
-    $(document).mousemove(function(e){
-        var posx = window.mouseX = e.pageX;
-        var posy = window.mouseY = e.pageY;
+    $(document).mousemove(function(e) {
+        var posx = window.mouseX = e.pageX,
+            posy = window.mouseY = e.pageY;
         posx += 75;
         posy -= 215 - 10;
         $("img.user-pic.active").css({left: posx, top: posy});
