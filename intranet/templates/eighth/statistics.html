@@ -22,54 +22,41 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
     <script type="text/javascript">
-        Chart.defaults.global.customTooltips = function(tooltip) {
-            var tooltipEl = $('#chartjs-tooltip');
-            if (!tooltip) {
-                tooltipEl.css({
-                    opacity: 0
-                });
-            return;
-            }
-            tooltipEl.removeClass('above below');
-            tooltipEl.addClass(tooltip.yAlign);
-            tooltipEl.html(tooltip.text);
-            var top;
-            if (tooltip.yAlign == 'above') {
-                top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
-            } else {
-                top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
-            }
-            tooltipEl.css({
-                opacity: 1,
-                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                top: tooltip.chart.canvas.offsetTop + top + 'px',
-                fontFamily: tooltip.fontFamily,
-                fontSize: tooltip.fontSize,
-                fontStyle: tooltip.fontStyle,
-            });
-        };
         $(document).ready(function() {
             var items = $("#members-table tbody tr:lt(10)");
             if (items.length > 2) {
                 $("#members-chart").show();
                 canvas = $("#members-chart")[0];
-                canvas.width = 400;
-                canvas.height = 300;
                 var data = {
                     labels: $.map(items.find("td:first-child"), function(e) { return $(e).text(); }),
                     datasets: [
                         {
                             label: "Signups",
-                            fillColor: "rgba(151,187,205,0.5)",
-                            strokeColor: "rgba(151,187,205,0.8)",
-                            highlightFill: "rgba(151,187,205,0.75)",
-                            highlightStroke: "rgba(151,187,205,1)",
+                            backgroundColor: "rgba(151,187,205,0.5)",
+                            hoverBackgroundColor: "rgba(151,187,205,0.75)",
                             data: $.map(items.find("td:last-child"), function(e) { return $(e).text(); })
                         }
                     ]
                 };
-                chart = new Chart(canvas.getContext("2d")).Bar(data, {
-                    animation: false
+                chart = new Chart(canvas.getContext("2d"), {
+                    type: "bar",
+                    data: data,
+                    options: {
+                        maintainAspectRatio: true,
+                        responsive: false,
+                        scales: {
+                            yAxes: [{
+                                type: "linear",
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
                 });
             }
         });
@@ -114,8 +101,7 @@
 
     <h3>Member Signups</h3>
 
-    <canvas id="members-chart" style="display:none"></canvas>
-    <div id="chartjs-tooltip"></div>
+    <canvas id="members-chart" style="display:none" width="400" height="300"></canvas>
 
     <table id="members-table" class="fancy-table">
         <thead>
