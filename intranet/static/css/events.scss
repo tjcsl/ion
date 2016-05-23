@@ -41,39 +41,7 @@
             cursor: pointer;
             color: $grey !important;
         }
-    }
-}
 
-.events-icon-wrapper {
-    float: right;
-}
-
-.event-metadata {
-    color: rgb(144, 144, 144);
-    font-size: 12px;
-    line-height: 12px;
-    margin-bottom: 5px;
-}
-
-.event-icon-wrapper {
-    float: right;
-    display: none;
-
-    .event:hover & {
-        display: block;
-    }
-
-    > a {
-        color: $grey;
-        text-decoration: none !important;
-        padding-left: 2px;
-
-        &:hover {
-            color: rgb(32, 66, 224);
-        }
-    }
-
-    h3 {
         &:hover .event-icon-wrapper .event-toggle,
         .event-icon-wrapper .event-toggle:hover,
         .event-icon-wrapper:hover .event-toggle:hover {
@@ -84,10 +52,56 @@
             color: $grey;
         }
     }
+
+    &-metadata {
+        color: rgb(144, 144, 144);
+        font-size: 12px;
+        line-height: 12px;
+        margin-bottom: 5px;
+    }
+
+    &-icon {
+        cursor: pointer;
+
+        &-wrapper {
+            float: right;
+            display: none;
+
+            .event:hover & {
+                display: block;
+            }
+
+            > a {
+                color: $grey;
+                text-decoration: none !important;
+                padding-left: 2px;
+
+                &:hover {
+                    color: rgb(32, 66, 224);
+                }
+            }
+        }
+    }
+
+    @media (max-width: 710px) {
+        .bottom-row {
+            margin-bottom: 23px;
+
+            .attend-status {
+                left: 0;
+                bottom: -27px;
+            }
+        }
+    }
+
+    &-approve-table {
+        color: grey;
+        margin-bottom: 4px
+    }
 }
 
-.event-icon {
-    cursor: pointer;
+.events-icon-wrapper {
+    float: right;
 }
 
 .bottom-row {
@@ -104,6 +118,9 @@
     .bottom-row.show-attend & {
         width: 280px;
     }
+
+    position: absolute;
+    left: 270px;
 }
 
 .signup-status {
@@ -114,11 +131,6 @@
         position: absolute;
         left: 140px;
     }
-}
-
-.attend-status {
-    position: absolute;
-    left: 270px;
 }
 
 a.button {
@@ -135,17 +147,6 @@ a.button {
     }
 }
 
-@media (max-width: 710px) {
-    .event .bottom-row {
-        margin-bottom: 23px;
-
-        .attend-status {
-            left: 0;
-            bottom: -27px;
-        }
-    }
-}
-
 /*
  * on announcement page, switch to separate rows more quickly
  */
@@ -158,9 +159,4 @@ a.button {
             bottom: -23px;
         }
     }
-}
-
-.event-approve-table {
-    color: grey;
-    margin-bottom: 4px
 }

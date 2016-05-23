@@ -41,6 +41,24 @@ body.disable-scroll {
     .header {
         position: fixed;
         z-index: 1042;
+
+        .left > form.search {
+            position: absolute;
+            visibility: hidden;
+            left: 17.5%;
+            opacity: 0;
+
+            body.mobile-nav-show & {
+                opacity: 1;
+                visibility: visible;
+                z-index: 1050;
+            }
+        }
+
+        &.has-badge .left > form.search {
+            //width: 50%;
+            //left: 20%;
+        }
     }
 
     .left > a.intranet-title {
@@ -56,27 +74,9 @@ body.disable-scroll {
         }
     }
 
-    .header .left > form.search {
-        position: absolute;
-        visibility: hidden;
-        left: 17.5%;
-        opacity: 0;
-    }
-
     /* adjust for absences label */
     .absence-count-label {
         display: none;
-    }
-
-    .header.has-badge .left > form.search {
-        /*width: 50%;*/
-        /*left: 20%;*/
-    }
-
-    body.mobile-nav-show .header .left > form.search {
-        opacity: 1;
-        visibility: visible;
-        z-index: 1050;
     }
 
     .right > li.notifications {
@@ -89,31 +89,32 @@ body.disable-scroll {
     }
 
     /* TODO: these proportions look off, and I can't figure out exactly why */
+    .left .dropdown {
+        &-taparea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 75px;
+            height: 40px;
+            cursor: pointer;
+        }
 
-    .left .dropdown-taparea {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 75px;
-        height: 40px;
-        cursor: pointer;
-    }
+        &-icon {
+            display: block;
+            position: absolute;
+            left: 20px;
+            top: 5px;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            cursor: pointer;
 
-    .left .dropdown-icon {
-        display: block;
-        position: absolute;
-        left: 20px;
-        top: 5px;
-        height: 30px;
-        width: 30px;
-        text-align: center;
-        cursor: pointer;
-
-        > i {
-            font-size: 20px;
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 5px;
+            > i {
+                font-size: 20px;
+                display: inline-block;
+                vertical-align: top;
+                padding-top: 5px;
+            }
         }
     }
 

@@ -51,18 +51,6 @@
     }
 }
 
-.announcement-content  {
-    strong {
-        font-weight: bold;
-    }
-
-    p {
-        font-size: 13px;
-        line-height: 1.6;
-        margin-bottom: 1em;
-    }
-}
-
 .announcements-icon-wrapper {
     float: right;
 }
@@ -93,22 +81,26 @@
     }
 }
 
-.announcement h3:hover .announcement-icon-wrapper .announcement-toggle,
-.announcement h3 .announcement-icon-wrapper .announcement-toggle:hover,
-.announcement h3 .announcement-icon-wrapper:hover .announcement-toggle:hover {
-    color: rgb(32, 66, 224);
-}
+.announcement {
+    h3 {
+        &:hover .announcement-icon-wrapper .announcement-toggle,
+        .announcement-icon-wrapper .announcement-toggle:hover,
+        .announcement-icon-wrapper:hover .announcement-toggle:hover {
+            color: rgb(32, 66, 224);
+        }
 
-.announcement h3 .announcement-icon-wrapper:hover .announcement-toggle {
-    color: $grey;
-}
+        .announcement-icon-wrapper:hover .announcement-toggle {
+            color: $grey;
+        }
+    }
 
-.announcement-icon {
-    cursor: pointer;
-}
+    &-icon {
+        cursor: pointer;
+    }
 
-.announcement.hidden .announcement-toggle-content {
-    display: none;
+    &.hidden .announcement-toggle-content {
+        display: none;
+    }
 }
 
 .event.hidden .event-toggle-content {
@@ -178,12 +170,14 @@
         visibility: hidden;
     }
 
-    div.announcement-icon-wrapper {
-        visibility: hidden !important;
-    }
+    div.announcement {
+        &-icon-wrapper {
+            visibility: hidden !important;
+        }
 
-    div.announcement.announcement-meta {
-        display: none;
+        &.announcement-meta {
+            display: none;
+        }
     }
 }
 

@@ -16,6 +16,27 @@ $color8: rgba(0, 0, 0, .05);
        start overlapping
     */
     min-width: 273px;
+
+    &.scroll-display {
+        #activity-list {
+            margin-top: 40px;
+            height: calc(100% - 40px);
+        }
+
+        .middle-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            width: 100%;
+            background: #f0f0f0;
+            border-bottom: 1px solid $color1;
+        }
+
+        .sticky-header.all-header {
+            display: none;
+        }
+    }
 }
 
 .day-picker {
@@ -32,39 +53,55 @@ $color8: rgba(0, 0, 0, .05);
     white-space: nowrap;
     margin-bottom: 5px;
 
-
     /* The transform stuff is to fix a dumb webkit bug
        http://stackoverflow.com/a/22329110
     */
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
-}
 
-.day-picker-buttons {
-    height: 100px;
-    width: 100%;
+    &-buttons {
+        height: 100px;
+        width: 100%;
 
-    button {
-        &,
-        &:hover,
-        &:active {
-            position: absolute;
-            display: inline-block;
-            width: 30px;
-            height: 100%;
-            padding: 0;
-            margin: 0;
+        button {
+            &,
+            &:hover,
+            &:active {
+                position: absolute;
+                display: inline-block;
+                width: 30px;
+                height: 100%;
+                padding: 0;
+                margin: 0;
 
-            border-color: $color1;
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            z-index: 500;
+                border-color: $color1;
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                border-radius: 0;
+                z-index: 500;
+            }
+
+            i {
+                left: 50%;
+                top: 50%;
+            }
         }
+    }
 
-        i {
-            left: 50%;
-            top: 50%;
+    .day {
+        display: inline-block;
+        vertical-align: top;
+        width: 200px;
+        height: 100px;
+        margin: 0;
+        margin-right: 1px;
+        outline: 1px solid $color1;
+
+        &-title {
+            height: 24px;
+            display: block;
+            font-size: 16px;
+            text-align: center;
         }
     }
 }
@@ -78,16 +115,6 @@ $color8: rgba(0, 0, 0, .05);
     right: 0;
     border: none;
     border-left: 1px solid $color1;
-}
-
-.day-picker .day {
-    display: inline-block;
-    vertical-align: top;
-    width: 200px;
-    height: 100px;
-    margin: 0;
-    margin-right: 1px;
-    outline: 1px solid $color1;
 }
 
 .active-block {
@@ -132,13 +159,6 @@ $color8: rgba(0, 0, 0, .05);
        overflow-x: scroll;
     */
     overflow: hidden;
-    text-align: center;
-}
-
-.day-picker .day-title {
-    height: 24px;
-    display: block;
-    font-size: 16px;
     text-align: center;
 }
 
@@ -230,18 +250,39 @@ $color8: rgba(0, 0, 0, .05);
             }
         }
     }
+
+    &-wrapper {
+        display: table;
+        width: 100%;
+    }
 }
 
-.search-wrapper {
-    position: relative;
-    margin-right: 451px;
-    z-index: 999;
-    border-bottom: 1px solid $color1;
-    background: $color6; // prevent overflow from sticky header
+.search {
+    &-wrapper {
+        position: relative;
+        margin-right: 451px;
+        z-index: 999;
+        border-bottom: 1px solid $color1;
+        background: $color6; // prevent overflow from sticky header
 
-    span {
-        display: block;
-        overflow: hidden;
+        span {
+            display: block;
+            overflow: hidden;
+        }
+    }
+
+    &-hide {
+        height: 0 !important;
+        overflow: hidden !important;
+        transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+    }
+
+    &-noresults {
+        display: none;
     }
 }
 
@@ -297,6 +338,46 @@ $color8: rgba(0, 0, 0, .05);
     overflow-y: scroll;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+
+    ul {
+        padding: 0;
+        list-style: none;
+        cursor: pointer;
+
+        > p {
+            margin: 10px;
+        }
+    }
+
+    li {
+        height: 26px;
+        line-height: 26px;
+        padding: 0 10px;
+        white-space: nowrap;
+        overflow: hidden;
+
+        &:nth-child(odd) {
+            background-color: $color8;
+        }
+
+        &.selected {
+            background-color: $color7;
+            font-weight: bold;
+        }
+
+        &.signed-up {
+            &:before,
+            &::before {
+                content: "\F00C";
+                font-family: FontAwesome;
+                padding: 0 0 0 5px;
+                font-size: 13px;
+                color: green;
+                margin-left: -24px;
+                padding-right: 3px;
+            }
+        }
+    }
 }
 
 #activity-picker {
@@ -312,6 +393,19 @@ $color8: rgba(0, 0, 0, .05);
 
     .search-header {
         display: none;
+    }
+
+    h3.empty-state {
+        color: $color5;
+        text-align: center;
+    }
+
+    h5 .clear-button {
+        float: right;
+        margin-top: 4px;
+        margin-right: 0;
+        height: 16px;
+        padding-bottom: 3px;
     }
 }
 
@@ -330,6 +424,19 @@ $color8: rgba(0, 0, 0, .05);
     z-index: 999;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+
+    dt {
+        float: left;
+        padding-right: 5px;
+    }
+
+    dd, dt {
+        font-size: 15px;
+    }
+
+    h2.user-name {
+        padding-bottom: 0;
+    }
 }
 
 h3 {
@@ -346,36 +453,6 @@ h3 {
         &:active {
             color: $grey;
         }
-    }
-}
-
-#activity-picker h3.empty-state {
-    color: $color5;
-    text-align: center;
-}
-
-#activity-list ul {
-    padding: 0;
-    list-style: none;
-    cursor: pointer;
-
-    > p {
-        margin: 10px;
-    }
-}
-
-#activity-detail {
-    dt {
-        float: left;
-        padding-right: 5px;
-    }
-
-    dd, dt {
-        font-size: 15px;
-    }
-
-    h2.user-name {
-        padding-bottom: 0;
     }
 }
 
@@ -436,128 +513,92 @@ h5 {
     }
 }
 
-#activity-picker h5 .clear-button {
-    float: right;
-    margin-top: 4px;
-    margin-right: 0;
-    height: 16px;
-    padding-bottom: 3px;
-}
-
-#activity-list li {
-    height: 26px;
-    line-height: 26px;
-    padding: 0 10px;
-    white-space: nowrap;
-    overflow: hidden;
-
-    &:nth-child(odd) {
-        background-color: $color8;
-    }
-
-    &.selected {
-        background-color: $color7;
-        font-weight: bold;
-    }
-
-    &.signed-up {
-        &:before,
-        &::before {
-            content: "\F00C";
-            font-family: FontAwesome;
-            padding: 0 0 0 5px;
-            font-size: 13px;
-            color: green;
-            margin-left: -24px;
-            padding-right: 3px;
-        }
-    }
-}
-
-.activity-icons {
-    margin-right: 3px;
-    display: inline-block;
-    float: left;
-}
-
-.activity-name {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: inline-block;
-    width: auto;
-}
-
-.activity-flags {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: inline-block;
-    width: auto;
-}
-
-.activity-rooms {
-    position: absolute;
-    left: 60%;
-    max-width: 200px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: inline-block;
-    float: right;
-    font-weight: lighter;
-    opacity: 0.7;
-}
-
-.activity-sponsors {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: inline-block;
-    float: right;
-    font-weight: lighter;
-    opacity: 0.7;
-
-    .activity-ids {
-        width: 35px;
+.activity {
+    &-icons {
+        margin-right: 3px;
         display: inline-block;
-        text-align: right;
-    }
-}
-
-.activity-icon {
-    background-image: url("/static/img/Eighth-Icons.svg");
-    background-size: auto 20px;
-    background-repeat: no-repeat;
-    display: block;
-    float: left;
-    height: 20px;
-    width: 20px;
-    margin-top: 3px;
-
-    .no-svg & {
-        background-image: url("/static/img/Eighth-Icons@2x.png");
+        float: left;
     }
 
-    @for $i from 0 through 10 {
-        &.pie-#{$i} {
-            background-position: -20px*$i 0;
+    &-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        width: auto;
+    }
+
+    &-flags {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        width: auto;
+    }
+
+    &-rooms {
+        position: absolute;
+        left: 60%;
+        max-width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        float: right;
+        font-weight: lighter;
+        opacity: 0.7;
+    }
+
+    &-sponsors {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        float: right;
+        font-weight: lighter;
+        opacity: 0.7;
+
+        .activity-ids {
+            width: 35px;
+            display: inline-block;
+            text-align: right;
         }
     }
 
-    &.cancelled {
-        background-position: -220px 0;
-    }
+    &-icon {
+        background-image: url("/static/img/Eighth-Icons.svg");
+        background-size: auto 20px;
+        background-repeat: no-repeat;
+        display: block;
+        float: left;
+        height: 20px;
+        width: 20px;
+        margin-top: 3px;
 
-    &.restricted {
-        background-position: -220px 0;
-    }
+        .no-svg & {
+            background-image: url("/static/img/Eighth-Icons@2x.png");
+        }
 
-    &.fav {
-        background-position: -260px 0;
+        @for $i from 0 through 10 {
+            &.pie-#{$i} {
+                background-position: -20px*$i 0;
+            }
+        }
 
-        &.fav-sel {
-            background-position: -240px 0;
+        &.cancelled {
+            background-position: -220px 0;
+        }
+
+        &.restricted {
+            background-position: -220px 0;
+        }
+
+        &.fav {
+            background-position: -260px 0;
+
+            &.fav-sel {
+                background-position: -240px 0;
+            }
         }
     }
 }
@@ -618,45 +659,5 @@ h5 {
         &:nth-child(odd) {
             background-color: $color8 !important;
         }
-    }
-}
-
-.search-hide {
-    height: 0 !important;
-    overflow: hidden !important;
-    transition: all 0.2s ease;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -ms-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
-}
-
-.search-noresults {
-    display: none;
-}
-
-.middle-wrapper {
-    display: table;
-    width: 100%;
-}
-
-.primary-content.scroll-display {
-    #activity-list {
-        margin-top: 40px;
-        height: calc(100% - 40px);
-    }
-
-    .middle-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 9999;
-        width: 100%;
-        background: #f0f0f0;
-        border-bottom: 1px solid $color1;
-    }
-
-    .sticky-header.all-header {
-        display: none;
     }
 }

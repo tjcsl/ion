@@ -1,8 +1,7 @@
 /* DASHBOARD */
-
-@media (max-width: 960px) {
-    /* make the right widgets smaller */
-    .main {
+.main {
+    @media (max-width: 960px) {
+        /* make the right widgets smaller */
         div.widgets {
             width: 300px;
         }
@@ -24,11 +23,9 @@
             -o-transition: all 0.4s ease;
         }
     }
-}
 
-@media (max-width: 800px) {
-    /* move widgets above/below */
-    .main {
+    @media (max-width: 800px) {
+        /* move widgets above/below */
         div.widgets {
             float: none;
             position: static;
@@ -40,10 +37,6 @@
             .widget {
                 position: relative;
                 left: 16px;
-                
-                &.extra-widgets-show {
-                    width: calc(100% - 75px);
-                }
             }
         }
 
@@ -59,12 +52,7 @@
 
         .widget {
             position: static;
-
-            &.extra-widgets-show {
-                width: 100%;
-            }
         }
-
     }
 
     .announcement {
@@ -81,20 +69,22 @@
     color: gray;
     z-index: -1;
 
-    .arrow-left {
-        position: absolute;
-        top: 20px;
-        left: -40px;
-        font-size: 30px;
-        color: gray;
-    }
+    .arrow {
+        &-left {
+            position: absolute;
+            top: 20px;
+            left: -40px;
+            font-size: 30px;
+            color: gray;
+        }
 
-    .arrow-right {
-        position: absolute;
-        top: -20px;
-        right: 10px;
-        font-size: 30px;
-        color: gray;
+        &-right {
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            font-size: 30px;
+            color: gray;
+        }
     }
 }
 
@@ -176,41 +166,49 @@
 
 @media (max-width: 700px) {
     /* just show activities list */
-    #activity-picker div#activity-list {
-        right: 0;
-    }
+    #activity-picker {
+        div#activity-list {
+            right: 0;
+        }
 
-    #activity-picker h5.stuck,
-    #activity-picker .search-wrapper {
-        margin-right: 0;
-    }
+        h5.stuck,
+        .search-wrapper {
+            margin-right: 0;
+        }
 
-    .eighth-signup #activity-detail {
-        right: -100%;
-        z-index: 1002;
-    }
+        .backbtn.visible {
+            display: block;
+            opacity: 1;
+        }
 
-    #activity-picker.visible div#activity-detail {
-        margin-right: 100%;
-        width: 85%;
-    }
+        &.visible div#activity-detail {
+            margin-right: 100%;
+            width: 85%;
+        }
 
-    #activity-picker .backbtn.visible {
-        display: block;
-        opacity: 1;
-    }
-
-    .eighth-signup .middle {
-        height: 20px;
-
-        h2, h4 {
-            display: inline;
-            padding-right: 5px;
+        div#activity-list li span.activity-sponsors {
+            margin-right: 0;
         }
     }
 
-    #activity-picker div#activity-list li span.activity-sponsors {
-        margin-right: 0;
+    .eighth-signup {
+        #activity-detail {
+            right: -100%;
+            z-index: 1002;
+        }
+
+        .middle {
+            height: 20px;
+
+            h2, h4 {
+                display: inline;
+                padding-right: 5px;
+            }
+        }
+
+        #activity-list h5 .clear-button {
+            margin-right: 0;
+        }
     }
 
     /* comments field shifts to next line */
@@ -221,10 +219,6 @@
         > span {
             display: none;
         }
-    }
-
-    .eighth-signup #activity-list h5 .clear-button {
-        margin-right: 0;
     }
 }
 
@@ -268,13 +262,13 @@
         &.viewing {
             margin-top: -120px;
 
-            .middle .switch {
-                i.down {
+            .middle .switch i {
+                &.down {
                     opacity: 0;
                     display: none;
                 }
 
-                i.up {
+                &.up {
                     opacity: 1;
                     display: inline;
                 }
@@ -303,15 +297,6 @@
     }
 }
 
-@media (max-width: 430px) {
-    .eighth-signup .middle .switch {
-        /*
-        position: absolute;
-        right: 26px;
-        */
-    }
-}
-
 .eighth-signup {
     &,
     > *,
@@ -322,19 +307,28 @@
         -ms-transition: all 0.2s ease;
         -o-transition: all 0.2s ease;
     }
+
+    @media (max-width: 430px) {
+        .middle .switch {
+            //position: absolute;
+            //right: 26px;
+        }
+    }
 }
 
 /* EIGHTH ADMIN UI */
 @media (max-width: 695px) {
     /* flatten table */
-    .admin-dashboard td.admin-section {
-        display: block !important;
-        width: 100%;
-        height: auto;
-        padding-left: 0;
-    }
+    td.admin-section {
+        .admin-dashboard & {
+            display: block !important;
+            width: 100%;
+            height: auto;
+            padding-left: 0;
+        }
 
-    tr td.admin-section:last-of-type:not(:first-of-type) {
-        padding-left: 0;
+        tr &:last-of-type:not(:first-of-type) {
+            padding-left: 0;
+        }
     }
 }

@@ -16,17 +16,19 @@ $colors: (
     ('purple', rgb(120, 0, 120))
 );
 
-@each $pattern in $patterns {
-    $name: nth($pattern, 1);
-    $filename: nth($pattern, 2);
-    body.theme--pattern-#{$name} {
-        background-image: url(/static/img/patterns/#{$filename}.png);
+body.theme {
+    @each $pattern in $patterns {
+        $name: nth($pattern, 1);
+        $filename: nth($pattern, 2);
+        &--pattern-#{$name} {
+            background-image: url(/static/img/patterns/#{$filename}.png);
+        }
     }
-}
 
-@each $color in $colors {
-    $name: nth($color, 1);
-    body.theme--color-#{$name} .header {
-        background: nth($color, 2);
+    @each $color in $colors {
+        $name: nth($color, 1);
+        &--color-#{$name} .header {
+            background: nth($color, 2);
+        }
     }
 }

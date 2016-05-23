@@ -44,17 +44,19 @@ tr.scheduled .block-name {
             border-bottom: 1px rgb(194, 194, 194) solid;
         }
 
-        .schedule-activity-head {
-            position: fixed;
-            margin-top: 42px;
-            width: 100%;
-            z-index: 2;
-        }
+        .schedule-activity {
+            &-head {
+                position: fixed;
+                margin-top: 42px;
+                width: 100%;
+                z-index: 2;
+            }
 
-        .schedule-activity-grid {
-            position: static;
-            margin-top: 161px;
-            z-index: -1;
+            &-grid {
+                position: static;
+                margin-top: 161px;
+                z-index: -1;
+            }
         }
     }
 }
@@ -116,47 +118,64 @@ tr.form-row.hidden {
     }
 }
 
-.propagate-direction {
-    position: fixed;
-    float: right;
-    right: 20px;
-    top: 100px;
-    width: 220px;
-    line-height: 40px;
-    z-index: 998;
-
-    > b {
-        float: left;
-        margin-right: 5px;
-    }
-
-    select,
-    .selectize-control {
-        width: 80px;
-        display: inline-block;
+.propagate {
+    &-direction {
+        position: fixed;
         float: right;
+        right: 20px;
+        top: 100px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
     }
-}
 
-.propagate-method {
-    position: fixed;
-    float: right;
-    right: 20px;
-    top: 150px;
-    width: 220px;
-    line-height: 40px;
-    z-index: 998;
-
-    > b {
-        float: left;
-        margin-right: 5px;
-    }
-
-    select,
-    .selectize-control {
-        width: 80px;
-        display: inline-block;
+    &-method {
+        position: fixed;
         float: right;
+        right: 20px;
+        top: 150px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
+    }
+
+    &-method,
+    &-direction {
+        @media (max-width: 858px) {
+            width: 85px;
+
+            b {
+                display: none;
+            }
+        }
+
+        @media (max-width: 720px) {
+            zoom: 0.6;
+        }
     }
 }
 
@@ -170,21 +189,6 @@ tr.form-row.hidden {
 
     @media (max-width: 1000px) {
         width: 350px;
-    }
-}
-
-.propagate-method,
-.propagate-direction {
-    @media (max-width: 858px) {
-        width: 85px;
-
-        b {
-            display: none;
-        }
-    }
-
-    @media (max-width: 720px) {
-        zoom: 0.6;
     }
 }
 
@@ -217,45 +221,51 @@ tr.form-row {
         }
     }
 
-    /* this NEEDS to be separate */
+    // this NEEDS to be separate
     ::-webkit-input-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
+
     :-moz-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
+
     ::-moz-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
+
     :-ms-input-placeholder {
-       color: black;
-       font-weight: bold;
+        color: black;
+        font-weight: bold;
     }
 
     .capacity {
-       font-size: 15px;
-       font-style: italic;
+        font-size: 15px;
+        font-style: italic;
 
-       /* this NEEDS to be separate */
-       &::-webkit-input-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &:-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &::-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &:-ms-input-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
+        // this NEEDS to be separate
+        &::-webkit-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &:-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &::-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &:-ms-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
     }
 }
 

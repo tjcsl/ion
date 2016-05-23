@@ -17,20 +17,25 @@ body {
     width: 100%;
     top: 50%;
     margin-top: -270px;
-}
 
-.center-wrapper {
-    text-align: center;
-    position: absolute;
-    top: 0;
-    bottom: 0;
+    &-wrapper {
+        text-align: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
 
-    left: 50%;
-    margin-left: -100px;
-    width: 200px;
-    min-height: 530px;
-    z-index: 10;
-    padding-top: 30px;
+        left: 50%;
+        margin-left: -100px;
+        width: 200px;
+        min-height: 530px;
+        z-index: 10;
+        padding-top: 30px;
+
+        @media (max-width: 200px) {
+            left: 0;
+            margin: 0;
+        }
+    }
 }
 
 .message {
@@ -61,10 +66,6 @@ h1 {
 
 .title {
     margin-bottom:3px;
-}
-
-.no-svg .logo {
-    background-image: url("/static/img/logos/Login-Logo@2x.png");
 }
 
 h2 {
@@ -111,12 +112,14 @@ h2 {
     }
 }
 
-.fa-chevron-left {
-    text-align: left;
-}
+.fa-chevron {
+    &-left {
+        text-align: left;
+    }
 
-.fa-chevron-right {
-    text-align: right;
+    &-right {
+        text-align: right;
+    }
 }
 
 .ssl-seal {
@@ -155,14 +158,6 @@ h2 {
         display: none;
     }
 }
-@media (max-height: 500px) {
-    .links {
-        background: rgba(242, 242, 242, 1);
-    }
-    .git-version {
-        display: none;
-    }
-}
 
 .schedule > iframe {
     position: absolute;
@@ -176,12 +171,14 @@ h2 {
     }
 }
 
-a.schedule-left {
-    float: left;
-}
+a.schedule {
+    &-left {
+        float: left;
+    }
 
-a.schedule-right {
-    float: right;
+    &-right {
+        float: right;
+    }
 }
 
 .git-version {
@@ -220,6 +217,7 @@ a.schedule-right {
 .footer {
     position: fixed;
     bottom: 0;
+    padding: 0 0 3px 6px;
     font-size: 13px;
     color: gray;
     z-index: 99;
@@ -230,15 +228,7 @@ a.schedule-right {
 
 .links {
     float: left;
-    padding: 0 0 3px 6px;
     min-width: 340px;
-}
-
-@media (max-width: 200px) {
-    .center-wrapper {
-        left: 0;
-        margin: 0;
-    }
 }
 
 .spinner-container {
