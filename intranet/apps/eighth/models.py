@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from simple_history.models import HistoricalRecords
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Manager, Q
 from django.utils import formats
 
@@ -911,6 +911,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         return False
 
+    @transaction.atomic
     def add_user(self, user, request=None, force=False, no_after_deadline=False):
         """Sign up a user to this scheduled activity if possible. This is where the magic happens.
 
