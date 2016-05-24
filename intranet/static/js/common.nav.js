@@ -1,7 +1,7 @@
 /* global $ */
 $(function() {
     $.extend($.expr[":"], {
-        horizontallyscrollable: function(element) {
+        horizontallyscrollable(element) {
             var e = $(element);
             if (e.css("overflow") === "scroll" || e.css("overflowX") === "scroll" || e.css("overflow") === "auto" || e.css("overflowX") === "auto") {
                 return true;
@@ -40,7 +40,6 @@ $(function() {
         var diffX = nowX - initX;
         var nav, g, shown;
         if (Math.abs(diffX) > 30) {
-            console.log(diffX);
             nav = $(".main > .nav").eq(0);
             g = $(".nav-g");
             shown = nav.css("left").split(/[^\-\d]+/)[0] === "0";
@@ -50,7 +49,7 @@ $(function() {
                 $("body").addClass("disable-scroll").addClass("mobile-nav-show");
                 $(".c-hamburger").addClass("is-active");
                 listening = false;
-            } else if (diffX < 0) {
+            } else if (diffX < 0 && shown) {
                 nav.animate({ left: "-202px" }, 200);
                 g.removeClass("close-l").fadeOut(200);
                 $("body").removeClass("disable-scroll").removeClass("mobile-nav-show");
