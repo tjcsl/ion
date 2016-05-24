@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import json
 import math
 from datetime import datetime, timedelta
 
@@ -9,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
 
@@ -93,5 +93,5 @@ def statistics_view(request, activity_id=None):
                "scheduled_blocks": scheduled_blocks,
                "empty_blocks": empty_blocks,
                "capacity": activities[total_blocks-1].get_true_capacity() if total_blocks > 0 else 0,
-               "chart_data": json.dumps(chart_data)}
+               "chart_data": safe_json(chart_data)}
     return render(request, "eighth/statistics.html", context)

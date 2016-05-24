@@ -23,7 +23,7 @@
     <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var raw_data = {{ chart_data|safe }};
+            var raw_data = JSON.parse("{{ chart_data }}");
             var capacity = {{ capacity }};
             if (raw_data.keys.length > 0) {
                 $("#members-chart").show();
