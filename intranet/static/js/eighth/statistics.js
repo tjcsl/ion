@@ -17,7 +17,7 @@ $(document).ready(function() {
             }
             return 0;
         });
-        var data = {
+        parsedData = {
             labels: $.map(parsedData, function(v) { return v[0]; }),
             datasets: [
                 {
@@ -32,9 +32,9 @@ $(document).ready(function() {
                 }
             ]
         };
-        var chart = new Chart(canvas.getContext("2d"), {
+        new Chart(canvas.getContext("2d"), {
             type: "line",
-            data: data,
+            data: parsedData,
             options: {
                 maintainAspectRatio: true,
                 responsive: false,
