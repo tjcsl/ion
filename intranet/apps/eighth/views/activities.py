@@ -31,12 +31,6 @@ def activity_view(request, activity_id=None):
     return render(request, "eighth/activity.html", context)
 
 
-def takeinterval(arr, num):
-    length = float(len(arr))
-    for i in range(num):
-        yield arr[int(math.ceil(i * length/num))]
-
-
 @login_required
 def statistics_view(request, activity_id=None):
     if not (request.user.is_eighth_admin or request.user.is_teacher):
@@ -70,9 +64,6 @@ def statistics_view(request, activity_id=None):
                 empty_blocks += 1
         else:
             old_blocks += 1
-
-    if len(chart_data) > 10:
-        chart_data = {x for x in takeinterval(chart_data, 10)}
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
