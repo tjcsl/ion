@@ -6,7 +6,7 @@ $(document).ready(function() {
         var canvas = chartElement[0];
         var parsedData = [];
         $.each(raw_data, function(k, v) {
-            parsedData.push([Date.parse(k, "YYYY-MM-DD"), v]);
+            parsedData.push([moment(k, "YYYY-MM-DD"), v]);
         });
         parsedData = parsedData.sort(function(a, b) {
             if (a[0] < b[0]) {
