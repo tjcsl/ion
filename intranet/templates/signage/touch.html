@@ -192,6 +192,28 @@
             </div>
             </div>
         </section>
+
+        <section id="map">
+            <div class="small-header">
+                <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" />
+                <div class="time">&nbsp;</div>
+                <div class="schedule-outer">
+                    {% include "schedule/view.html" %}
+                </div>
+            </div>
+
+            <div class="iframe-wrapper">    
+            {% if map_url %}
+                <iframe class="iframe" src="{{ map_url }}"></iframe>
+            {% else %}
+                <br />
+                <br />
+                <br />
+                <br />
+                <br /><center><h1 style="color:black;width:100%">Sorry, this functionality is currently unavailable.</h1></center>
+            {% endif %}
+            </div>
+        </section>
     </div>
 
     <div class="nav-container">
@@ -218,6 +240,12 @@
                 <a data-link="info">
                 <i class="nav-icon info-icon"></i>
                 Info
+                </a>
+            </li>
+            <li data-name="map">
+                <a data-link="map">
+                <i class="fa fa-2x fa-street-view"></i>
+                Map
                 </a>
             </li>
         </ul>

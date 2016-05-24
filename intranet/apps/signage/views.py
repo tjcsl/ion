@@ -122,11 +122,20 @@ def touch_signage(request, sign=None, landscape=False):
     if check_show_eighth(now):
         default_page = "eighth"
 
+    map_location = ""
+    if sign and sign.map_location:
+        map_location = sign.map_location
+
     context = schedule_context(request)
     context["signage"] = True
     context["zoom"] = zoom
     context["eighth_url"] = "/signage/eighth?no_reload&touch=1&detail=1&block_increment={}".format(block_increment)
     context["calendar_url"] = "https://postman.tjhsst.edu/"
+    try:
+        context["map_url"] = "{}{}".format(settings.SIGNAGE_MAP_URL, map_location)
+    except AttributeError:
+        context["map_url"] = None
+
     context["default_page"] = default_page
     context["public_announcements"] = Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())
     context["landscape"] = landscape
