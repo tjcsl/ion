@@ -1,7 +1,7 @@
 $(document).ready(function() {
     if (raw_data.keys.length > 0) {
         $("#members-chart").show();
-        canvas = $("#members-chart")[0];
+        var canvas = $("#members-chart")[0];
         var data = {
             labels: raw_data.keys,
             datasets: [
@@ -51,6 +51,15 @@ $(document).ready(function() {
                     display: false
                 }
             }
+        });
+    }
+    if ($("#members-table tbody tr").length >= 2) {
+        $("#members-table thead").append("<th></th>");
+        var max = parseInt($("#members-table tbody tr:first-child td:nth-child(2)").text());
+        $("#members-table tbody tr").each(function(k, v) {
+            var child = $(this).find("td:nth-child(2)");
+            var val = parseInt(child.text());
+            $(this).append("<td><div class='sparkline' style='width:" + Math.round(100*val/max) + "px'></div></td>");
         });
     }
 });
