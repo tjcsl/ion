@@ -1,16 +1,29 @@
 /* global $ */
 $(document).ready(function() {
-    if (raw_data.keys.length > 0) {
+    if (Object.keys(raw_data).length > 0) {
         $("#members-chart").show();
         var canvas = $("#members-chart")[0];
+        var parsed_data = [];
+        $.each(raw_data, function(k, v) {
+            parsed_data.push([Date.parse(k, "YYYY-MM-DD"), v]);
+        });
+        parsed_data = parsed_data.sort(function(a, b) {
+            if (a[0] < b[0]) return -1;
+            if (a[0] > b[0]) return 1;
+            return 0;
+        });
         var data = {
-            labels: raw_data.keys,
+            labels: $.map(parsed_data, function(v) { return v[0]; }),
             datasets: [
                 {
-                    label: "Signups",
+                    label: "A Block",
                     backgroundColor: "rgba(151,187,205,0.5)",
-                    hoverBackgroundColor: "rgba(151,187,205,0.75)",
-                    data: raw_data.values
+                    data: $.map(parsed_data, function(v) { return "A" in v[1] ? v[1]["A"] : 0; })
+                },
+                {
+                    label: "B Block",
+                    backgroundColor: "rgba(205,187,151,0.5)",
+                    data: $.map(parsed_data, function(v) {  return "B" in v[1] ? v[1]["B"] : 0; })
                 }
             ]
         };
@@ -41,15 +54,15 @@ $(document).ready(function() {
                         }
                     }],
                     xAxes: [{
-                        type: "category",
+                        type: "time",
+                        time: {
+                            tooltipFormat: "MM/DD/YYYY"
+                        },
                         scaleLabel: {
                             display: true,
-                            labelString: "Blocks"
+                            labelString: "Dates"
                         }
                     }]
-                },
-                legend: {
-                    display: false
                 }
             }
         });

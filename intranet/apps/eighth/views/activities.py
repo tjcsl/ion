@@ -47,7 +47,7 @@ def statistics_view(request, activity_id=None):
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
     signups = {}
-    chart_data = {"keys": [], "values": []}
+    chart_data = {}
 
     old_blocks = 0
     cancelled_blocks = 0
@@ -63,16 +63,16 @@ def statistics_view(request, activity_id=None):
                     signups[user] += 1
                 else:
                     signups[user] = 1
-            chart_data["keys"].append(str(a.block))
-            chart_data["values"].append(members)
+            if str(a.block.date) not in chart_data:
+                chart_data[str(a.block.date)] = {}
+            chart_data[str(a.block.date)][str(a.block.block_letter)] = members
             if members == 0:
                 empty_blocks += 1
         else:
             old_blocks += 1
 
-    if len(chart_data["keys"]) > 10:
-        chart_data["keys"] = [x for x in takeinterval(chart_data["keys"], 10)]
-        chart_data["values"] = [x for x in takeinterval(chart_data["values"], 10)]
+    if len(chart_data) > 10:
+        chart_data = {x for x in takeinterval(chart_data, 10)}
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
