@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import math
 from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
