@@ -27,19 +27,28 @@
             if (items.length > 2) {
                 $("#members-chart").show();
                 canvas = $("#members-chart")[0];
+                var raw_data = {{ chart_data|safe }};
+                var capacity = {{ capacity }};
                 var data = {
-                    labels: $.map(items.find("td:first-child"), function(e) { return $(e).text(); }),
+                    labels: raw_data.keys,
                     datasets: [
                         {
                             label: "Signups",
                             backgroundColor: "rgba(151,187,205,0.5)",
                             hoverBackgroundColor: "rgba(151,187,205,0.75)",
-                            data: $.map(items.find("td:last-child"), function(e) { return $(e).text(); })
+                            data: raw_data.values
                         }
                     ]
                 };
+                var stepSize = 1;
+                if (capacity >= 20) {
+                    stepSize = 5;
+                }
+                else if (capacity >= 100) {
+                    stepSize = 10;
+                }
                 chart = new Chart(canvas.getContext("2d"), {
-                    type: "bar",
+                    type: "line",
                     data: data,
                     options: {
                         maintainAspectRatio: true,
@@ -47,9 +56,21 @@
                         scales: {
                             yAxes: [{
                                 type: "linear",
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "Signups"
+                                },
                                 ticks: {
                                     beginAtZero: true,
-                                    stepSize: 1
+                                    stepSize: stepSize,
+                                    suggestedMax: capacity
+                                }
+                            }],
+                            xAxes: [{
+                                type: "category",
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "Blocks"
                                 }
                             }]
                         },
@@ -92,14 +113,16 @@
     <h3>Activity Information</h3>
 
     <b>Total blocks:</b> {{ total_blocks }}<br />
-    <b style="margin-left: 10px">Scheduled blocks:</b> {{ scheduled_blocks }}<br />
-    <b style="margin-left: 10px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
+    <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br />
+    <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br />
+    <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
     <b>Total signups:</b> {{ total_signups }}<br />
     <b>Average signups:</b> {{ average_signups }}<br />
+    <b>Capacity:</b> {{ capacity }}<br />
 
     <br />
 
-    <h3>Member Signups</h3>
+    <h3>Block Signups</h3>
 
     <canvas id="members-chart" style="display:none" width="400" height="300"></canvas>
 

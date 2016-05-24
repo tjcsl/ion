@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import json
+import math
 from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -29,6 +31,12 @@ def activity_view(request, activity_id=None):
     return render(request, "eighth/activity.html", context)
 
 
+def takeinterval(arr, num):
+    length = float(len(arr))
+    for i in range(num):
+        yield arr[int(math.ceil(i * length/num))]
+
+
 @login_required
 def statistics_view(request, activity_id=None):
     if not (request.user.is_eighth_admin or request.user.is_teacher):
@@ -39,21 +47,32 @@ def statistics_view(request, activity_id=None):
     activities = EighthScheduledActivity.objects.filter(activity=activity)
 
     signups = {}
+    chart_data = {"keys": [], "values": []}
 
     old_blocks = 0
     cancelled_blocks = 0
+    empty_blocks = 0
 
     for a in activities:
         if a.cancelled:
             cancelled_blocks += 1
         elif a.block.is_this_year:
+            members = a.members.count()
             for user in a.members.all():
                 if user in signups:
                     signups[user] += 1
                 else:
                     signups[user] = 1
+            chart_data["keys"].append(str(a.block))
+            chart_data["values"].append(members)
+            if members == 0:
+                empty_blocks += 1
         else:
             old_blocks += 1
+
+    if len(chart_data["keys"]) > 10:
+        chart_data["keys"] = [x for x in takeinterval(chart_data["keys"], 10)]
+        chart_data["values"] = [x for x in takeinterval(chart_data["values"], 10)]
 
     signups = sorted(signups.items(), key=lambda kv: (-kv[1], kv[0].username))
     total_blocks = activities.count()
@@ -71,5 +90,8 @@ def statistics_view(request, activity_id=None):
                "average_signups": average_signups,
                "old_blocks": old_blocks,
                "cancelled_blocks": cancelled_blocks,
-               "scheduled_blocks": scheduled_blocks}
+               "scheduled_blocks": scheduled_blocks,
+               "empty_blocks": empty_blocks,
+               "capacity": activities[total_blocks-1].get_true_capacity() if total_blocks > 0 else 0,
+               "chart_data": json.dumps(chart_data)}
     return render(request, "eighth/statistics.html", context)
