@@ -1,3 +1,4 @@
+/* global $ */
 $(document).ready(function() {
     if (raw_data.keys.length > 0) {
         $("#members-chart").show();
@@ -55,11 +56,11 @@ $(document).ready(function() {
     }
     if ($("#members-table tbody tr").length >= 2) {
         $("#members-table thead").append("<th></th>");
-        var max = parseInt($("#members-table tbody tr:first-child td:nth-child(2)").text());
-        $("#members-table tbody tr").each(function(k, v) {
+        var max = parseInt($("#members-table tbody tr:first-child td:nth-child(2)").text(), 10);
+        $("#members-table tbody tr").each(function() {
             var child = $(this).find("td:nth-child(2)");
-            var val = parseInt(child.text());
-            $(this).append("<td><div class='sparkline' style='width:" + Math.round(100*val/max) + "px'></div></td>");
+            var val = parseInt(child.text(), 10);
+            $(this).append("<td><div class='sparkline' style='width:" + Math.round(100 * val / max) + "px'></div></td>");
         });
     }
 });
