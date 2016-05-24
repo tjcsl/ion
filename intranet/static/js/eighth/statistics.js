@@ -37,7 +37,6 @@ $(document).ready(function() {
             data: parsedData,
             options: {
                 maintainAspectRatio: true,
-                responsive: false,
                 scales: {
                     yAxes: [{
                         type: "linear",
@@ -47,7 +46,6 @@ $(document).ready(function() {
                         },
                         ticks: {
                             beginAtZero: true,
-                            maxTicksLimit: 9,
                             suggestedMax: capacity
                         }
                     }],
