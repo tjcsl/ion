@@ -1,8 +1,9 @@
 /* global $ */
 $(document).ready(function() {
     if (Object.keys(raw_data).length > 0) {
-        $("#members-chart").show();
-        var canvas = $("#members-chart")[0];
+        var chartElement = $("#members-chart");
+        chartElement.show();
+        var canvas = chartElement[0];
         var parsedData = [];
         $.each(raw_data, function(k, v) {
             parsedData.push([Date.parse(k, "YYYY-MM-DD"), v]);
