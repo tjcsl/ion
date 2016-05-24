@@ -82,6 +82,6 @@ def statistics_view(request, activity_id=None):
                "cancelled_blocks": cancelled_blocks,
                "scheduled_blocks": scheduled_blocks,
                "empty_blocks": empty_blocks,
-               "capacity": activities[total_blocks-1].get_true_capacity() if total_blocks > 0 else 0,
+               "capacity": activities[total_blocks - 1].get_true_capacity() if total_blocks > 0 else 0,
                "chart_data": safe_json(chart_data)}
     return render(request, "eighth/statistics.html", context)
