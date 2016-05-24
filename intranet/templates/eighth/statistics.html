@@ -23,12 +23,11 @@
     <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var items = $("#members-table tbody tr:lt(10)");
-            if (items.length > 2) {
+            var raw_data = {{ chart_data|safe }};
+            var capacity = {{ capacity }};
+            if (raw_data.keys.length > 0) {
                 $("#members-chart").show();
                 canvas = $("#members-chart")[0];
-                var raw_data = {{ chart_data|safe }};
-                var capacity = {{ capacity }};
                 var data = {
                     labels: raw_data.keys,
                     datasets: [
