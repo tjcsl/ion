@@ -32,7 +32,7 @@ $(document).ready(function() {
                 }
             ]
         };
-        new Chart(canvas.getContext("2d"), {
+        Chart(canvas.getContext("2d"), {
             type: "line",
             data: parsedData,
             options: {
