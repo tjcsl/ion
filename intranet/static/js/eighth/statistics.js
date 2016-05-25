@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, Chart */
 $(document).ready(function() {
     if (Object.keys(raw_data).length > 0) {
         var chartElement = $("#members-chart");
@@ -32,7 +32,7 @@ $(document).ready(function() {
                 }
             ]
         };
-        var signupChart = new Chart(canvas.getContext("2d"), {
+        Chart(canvas.getContext("2d"), {
             type: "line",
             data: parsedData,
             options: {
