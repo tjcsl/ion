@@ -128,7 +128,7 @@ class KerberosAuthenticationBackend(object):
                 user = User.get_user(username=username)
             except User.DoesNotExist:
                 # Shouldn't happen
-                logger.error("User {} successfully authenticated but not found " "in LDAP.".format(username))
+                logger.error("User {} successfully authenticated but not found in LDAP.".format(username))
 
                 user, status = User.objects.get_or_create(username="INVALID_USER", id=99999)
             return user
