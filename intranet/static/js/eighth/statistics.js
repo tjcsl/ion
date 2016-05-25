@@ -32,7 +32,7 @@ $(document).ready(function() {
                 }
             ]
         };
-        Chart(canvas.getContext("2d"), {
+        var signupChart = new Chart(canvas.getContext("2d"), {
             type: "line",
             data: parsedData,
             options: {
