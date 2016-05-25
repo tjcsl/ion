@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #2496) documentation</title>
+    <title>intranet.apps.auth.backends &mdash; TJ Intranet v3 (Build #2503) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2496)',
+        VERSION:     'v3 (Build #2503)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2496) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2503) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -205,11 +205,13 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CSL_REALM</span>
-            <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawnu</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit -V {}@{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-log&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">username</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">logfile_read</span> <span class="o">=</span> <span class="n">f</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+                <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">exitstatus</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span>
         <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
             <span class="n">KerberosAuthenticationBackend</span><span class="o">.</span><span class="n">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
