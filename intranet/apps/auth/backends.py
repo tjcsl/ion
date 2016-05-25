@@ -7,6 +7,7 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
+from django.views.decorators.debug import sensitive_variables
 
 import pexpect
 
@@ -37,6 +38,7 @@ class KerberosAuthenticationBackend(object):
         logger.critical("kinit timed out for {}@{}".format(username, realm))
 
     @staticmethod
+    @sensitive_variables('password')
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
 
@@ -90,6 +92,7 @@ class KerberosAuthenticationBackend(object):
                 del os.environ["KRB5CCNAME"]
             return False
 
+    @sensitive_variables('password')
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -153,6 +156,7 @@ class MasterPasswordAuthenticationBackend(object):
 
     """
 
+    @sensitive_variables('password')
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 

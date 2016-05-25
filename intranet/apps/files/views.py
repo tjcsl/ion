@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 exceptions = (EOFError, OSError, SSHException)
 
 
+@sensitive_variables('password')
 def create_session(hostname, username, password):
     return pysftp.Connection(hostname, username=username, password=password)
 
@@ -95,6 +96,7 @@ def files_auth(request):
         return render(request, "files/auth.html", {"is_admin": request.user.member_of("admin_all")})
 
 
+@sensitive_variables('password')
 def get_authinfo(request):
     """Get authentication info from the encrypted message."""
     if (("files_iv" not in request.session) or ("files_text" not in request.session) or ("files_key" not in request.COOKIES)):
