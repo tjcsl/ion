@@ -58,13 +58,11 @@ class KerberosAuthenticationBackend(object):
 
         try:
             realm = settings.CSL_REALM
-            kinit = pexpect.spawnu("/usr/bin/kinit -V {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
-            with open('%s-%s-log' % (cache, username), 'wb') as f:
-                kinit.logfile_read = f
-                kinit.expect(":")
-                kinit.sendline(password)
-                kinit.expect(pexpect.EOF)
-                kinit.close()
+            kinit = pexpect.spawnu("/usr/bin/kinit {}@{}".format(username, realm), timeout=settings.KINIT_TIMEOUT)
+            kinit.expect(":")
+            kinit.sendline(password)
+            kinit.expect(pexpect.EOF)
+            kinit.close()
             exitstatus = kinit.exitstatus
         except pexpect.TIMEOUT:
             KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
