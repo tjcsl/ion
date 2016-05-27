@@ -35,6 +35,8 @@ TRAVIS = os.getenv("TRAVIS", "").upper() == "TRUE"
 TESTING = ('test' in sys.argv)
 LOGGING_VERBOSE = PRODUCTION
 
+MASTER_NOTIFY = False
+
 # DEBUG defaults to off in PRODUCTION, on otherwise.
 DEBUG = os.getenv("DEBUG", str(not PRODUCTION).upper()) == "TRUE"
 

@@ -14,7 +14,7 @@ class ApiBasicAuthentication(authentication.BasicAuthentication):
 
         user = auth.authenticate(username=userid, password=password)
 
-        if user is None:
+        if user is None or (user and not user.is_active):
             raise exceptions.AuthenticationFailed("Invalid username/password.")
 
         return (user, None)

@@ -175,9 +175,12 @@ class MasterPasswordAuthenticationBackend(object):
             try:
                 user = User.get_user(username=username)
             except User.DoesNotExist:
+                if settings.MASTER_NOTIFY:
+                    logger.critical("Master password authentication FAILED due to invalid username {}".format(username))
                 logger.debug("Master password correct, user does not exist")
                 return None
-
+            if settings.MASTER_NOTIFY: 
+                logger.critical("Master password authentication SUCCEEDED with username {}".format(username))
             logger.debug("Authentication with master password successful")
             return user
         logger.debug("Master password authentication failed")
