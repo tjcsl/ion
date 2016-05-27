@@ -39,7 +39,7 @@ class KerberosAuthenticationBackend(object):
         logger.critical("kinit timed out for {}@{}".format(username, realm))
 
     @staticmethod
-    @sensitive_variables('password')
+    #@sensitive_variables('password')
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
 
@@ -93,7 +93,7 @@ class KerberosAuthenticationBackend(object):
                 del os.environ["KRB5CCNAME"]
             return False
 
-    @method_decorator(sensitive_variables("password"))
+    #@method_decorator(sensitive_variables("password"))
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -157,7 +157,7 @@ class MasterPasswordAuthenticationBackend(object):
 
     """
 
-    @method_decorator(sensitive_variables("password"))
+    #@method_decorator(sensitive_variables("password"))
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
