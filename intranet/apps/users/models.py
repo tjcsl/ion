@@ -215,6 +215,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Django Model Fields
     username = models.CharField(max_length=30, unique=True)
 
+    user_locked = models.BooleanField(default=False)
+
     # Local internal fields
     first_login = models.DateTimeField(null=True)
     seen_welcome = models.BooleanField(default=False)
@@ -1060,7 +1062,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return not self.username.startswith("INVALID_USER")
+        return not self.username.startswith("INVALID_USER") and not self.user_locked
 
     @property
     def is_staff(self):
