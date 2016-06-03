@@ -22,7 +22,7 @@ def get_printers():
     try:
         output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True)
     # Don't die if cups isn't installed.
-    except subprocess.CalledProcessError:
+    except FileNotFoundError:
         return []
     lines = output.splitlines()
     names = []
