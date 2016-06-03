@@ -19,7 +19,11 @@ logger = logging.getLogger(__name__)
 
 
 def get_printers():
-    output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True)
+    try:
+        output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True)
+    # Don't die if cups isn't installed.
+    except subprocess.CalledProcessError:
+        return []
     lines = output.splitlines()
     names = []
     for l in lines:
