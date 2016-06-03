@@ -124,11 +124,10 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
-
 # does NOT require login
 
 
-def week_view(request, date=None, render_template=True):
+def week_data(request, date=None):
     if request:
         given_date = schedule_context(request)["sched_ctx"]["date"]
         if given_date.isoweekday() not in range(1, 6):
@@ -149,30 +148,37 @@ def week_view(request, date=None, render_template=True):
     last_week = date_format(days[0]["sched_ctx"]["date"] - timedelta(days=7))
     today = date_format(datetime.now())
     data = {"days": days, "next_week": next_week, "last_week": last_week, "today": today}
-    if render_template:
-        return render(request, "schedule/week_view.html", data)
-    else:
-        return data
+    return data
 
-
-def month_view(request):
+def month_data(request):
     if request and 'date' in request.GET:
         first_date = decode_date(request.GET['date']) + relativedelta(day=1)
     else:
         first_date = datetime.today() + relativedelta(day=1)
-    week1 = week_view(None, first_date, render_template=False)
-    week2 = week_view(None, decode_date(week1["next_week"]), render_template=False)
-    week3 = week_view(None, decode_date(week2["next_week"]), render_template=False)
-    week4 = week_view(None, decode_date(week3["next_week"]), render_template=False)
-    week5 = week_view(None, decode_date(week4["next_week"]), render_template=False)
+    week1 = week_data(None, first_date)
+    week2 = week_data(None, decode_date(week1["next_week"]))
+    week3 = week_data(None, decode_date(week2["next_week"]))
+    week4 = week_data(None, decode_date(week3["next_week"]))
+    week5 = week_data(None, decode_date(week4["next_week"]))
     month = first_date.strftime("%B")
     one_month = relativedelta(months=1)
     next_month = date_format(first_date + one_month)
     last_month = date_format(first_date - one_month)
     data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month, "current_month": month}
-    return render(request, "schedule/month_view.html", data)
+    return data
 
-# does NOT require login
+@login_required
+def calendar_view(request):
+    data = {}
+    data["week_data"] = week_data(request)
+    data["month_data"] = month_data(request)
+    if 'view' in request.GET and request.GET["view"] == "month":
+            data["view"] = "month"
+    else:
+        data["view"] = "week"
+    return render(request, "schedule/calendar.html", data)
+
+    # does NOT require login
 
 
 @xframe_options_exempt
