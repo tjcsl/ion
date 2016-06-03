@@ -23,7 +23,7 @@ MAINTENANCE_MODE = None  # type: bool
 TJSTAR_MAP = None  # type: bool
 ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
-
+NO_CACHE = False
 try:
     from .secret import *  # noqa
 except ImportError:
@@ -417,6 +417,9 @@ else:
         },
         "KEY_PREFIX": VIRTUAL_ENV
     }
+
+if NO_CACHE:
+    CACHES["default"]["BACKEND"] = "django.core.cache.backends.dummy.DummyCache"
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
