@@ -19,10 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_printers():
-    proc = subprocess.Popen(["lpstat", "-a"], stdout=subprocess.PIPE)
-    (output, err) = proc.communicate()
-    output = output.decode()
-    lines = output.split("\n")
+    output = subprocess.check_output(["lpstat", "-a"], universal_newlines=True)
+    lines = output.splitlines()
     names = []
     for l in lines:
         if "requests since" in l:
@@ -38,12 +36,11 @@ def get_printers():
 
 
 def convert_soffice(tmpfile_name):
-    proc = subprocess.Popen(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stdout=subprocess.PIPE)
-    (output, err) = proc.communicate()
-    if err:
+    try:
+        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], universal_newlines=True)
+    except subprocess.CalledProcessError as e:
+        logger.error("Could not run soffice command (returned {}): {}".format(e.returncode, e.output))
         return False
-
-    output = output.decode()
 
     if " -> " in output and " using " in output:
         fileout = output.split(" -> ")[1]
@@ -55,11 +52,10 @@ def convert_soffice(tmpfile_name):
 
 def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     new_name = "{}.pdf".format(tmpfile_name)
-    proc = subprocess.Popen([cmdname, tmpfile_name, new_name], stdout=subprocess.PIPE)
-    (output, err) = proc.communicate()
-    output = output.decode()
-
-    if err:
+    try:
+        subprocess.check_output([cmdname, tmpfile_name, new_name], universal_newlines=True)
+    except subprocess.CalledProcessError as e:
+        logger.error("Could not run {} command (returned {}): {}".format(cmdname, e.returncode, e.output))
         return False
 
     if os.path.isfile(new_name):
@@ -69,13 +65,13 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
 
 
 def get_numpages(tmpfile_name):
-    proc = subprocess.Popen(["pdfinfo", tmpfile_name], stdout=subprocess.PIPE)
-    (output, err) = proc.communicate()
-    if err:
+    try:
+        output = subprocess.check_output(["pdfinfo", tmpfile_name], universal_newline=True)
+    except subprocess.CalledProcessError as e:
+        logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
         return False
 
-    output = output.decode()
-    lines = output.split("\n")
+    lines = output.splitlines()
     num_pages = -1
     for l in lines:
         if l.startswith("Pages:"):
@@ -185,10 +181,10 @@ def print_job(obj, do_print=True):
         args = ["lpr", "-P", "{}".format(printer), "{}".format(tmpfile_name)]
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE)
-        (output, err) = proc.communicate()
-        if proc.returncode != 0:
-            logger.error("Could not run print command: {} {}".format(output, err))
+        try:
+            subprocess.check_output(args)
+        except subprocess.CalledProcessError as e:
+            logger.error("Could not run print command (returned {}): {}".format(e.returncode, e.output))
             raise Exception("An unknown error occured while printing your file.")
 
     obj.printed = True
