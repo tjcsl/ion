@@ -150,6 +150,7 @@ def week_data(request, date=None):
     data = {"days": days, "next_week": next_week, "last_week": last_week, "today": today}
     return data
 
+
 def month_data(request):
     if request and 'date' in request.GET:
         first_date = decode_date(request.GET['date']) + relativedelta(day=1)
@@ -166,6 +167,7 @@ def month_data(request):
     last_month = date_format(first_date - one_month)
     data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month, "current_month": month}
     return data
+
 
 @login_required
 def calendar_view(request):
