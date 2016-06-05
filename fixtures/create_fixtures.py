@@ -8,7 +8,7 @@
 #  as part of the conversion process between  #
 #  Intranet2 and Intranet3. THIS SCRIPT DOES  #
 #  NOT CREATE NEW ION FIXTURES. To do this,   #
-#  run the built-in ./manage.py dumpdata      #
+#  run the command ./manage.py dump           #
 ###############################################
 
 import datetime

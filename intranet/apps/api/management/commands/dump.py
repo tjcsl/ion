@@ -12,29 +12,48 @@ from django.apps import apps
 class Command(BaseCommand):
     help = "This command dumps the ion database to a series of fixture files."
 
+    def add_arguments(self, parser):
+        parser.add_argument("-f", "--folder", default=None, help="The folder to export fixtures to.")
+
     def handle(self, *args, **options):
-        fixtures_folder = os.getcwd() + "/fixtures"
+        verbosity = options.get("verbosity", 1)
+        fixtures_folder = options.get("folder")
+        if not fixtures_folder:
+            fixtures_folder = os.getcwd() + "/fixtures"
         if not os.path.isdir(fixtures_folder):
-            print("Script could not find fixtures folder, aborting...")
+            raise CommandError("Script could not find fixtures folder!")
+
+        # Filter out all models that are not relevant to ion.
         models = [x.__module__ + "." + x.__name__ for x in apps.get_models()]
         modellist = []
         for model in models:
             if model.startswith("django"):
                 continue
             if not model.startswith(tuple(settings.INSTALLED_APPS)):
-                print("Skipping " + model)
+                if verbosity > 1:
+                    print("Skipping " + model)
                 continue
             if not model.startswith("intranet.apps.") or ".models." not in model:
-                print("Skipping " + model)
+                if verbosity > 1:
+                    print("Skipping " + model)
                 continue
             modelpath = model[len("intranet.apps."):].replace(".models.", ".")
             modellist.append(modelpath)
+
+        # Find out what order the fixtures need to be loaded in.
         order = depend(set([x.split(".")[0] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
         order = [x[len("intranet.apps."):].replace(".models.", ".") for x in order]
+
+        # Save models to json files.
         for modelpath in modellist:
             buf = StringIO()
-            call_command("dumpdata", modelpath, stdout=buf)
+            try:
+                call_command("dumpdata", modelpath, stdout=buf)
+            except CommandError as e:
+                print("Failed " + modelpath)
+                print(e)
+                continue
             buf.seek(0)
             number = order.index(modelpath)
             modelfile = fixtures_folder + "/" + modelpath.split(".")[0] + "/" + str(number).zfill(4) + modelpath.split(".")[1] + ".json"
@@ -44,6 +63,8 @@ class Command(BaseCommand):
             with open(modelfile, "w") as f:
                 shutil.copyfileobj(buf, f)
             print("Exported " + modelpath)
+
+        # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
         readme.write("These fixtures were exported on %s. To load these fixtures, run the command:\n" % datetime.datetime.now().strftime("%H:%M %m/%d/%Y"))
         readme.write("find ./fixtures/ -name '*.json' -printf '%f %p\\n' | sort | cut -d' ' -f2- | xargs ./manage.py loaddata\n")
