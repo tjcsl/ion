@@ -32,7 +32,8 @@ $(document).ready(function() {
                 }
             ]
         };
-        Chart(canvas.getContext("2d"), {
+        // don't remove new keyword, breaks Chart.js
+        new Chart(canvas.getContext("2d"), {
             type: "line",
             data: parsedData,
             options: {
