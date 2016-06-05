@@ -3,8 +3,6 @@ import fnmatch
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-from django.apps import apps
 
 
 class Command(BaseCommand):
@@ -14,7 +12,7 @@ class Command(BaseCommand):
         parser.add_argument("-f", "--folder", default=None, help="The folder to import fixtures from.")
 
     def handle(self, *args, **options):
-        verbosity = options.get("verbosity", 1)
+        # verbosity = options.get("verbosity", 1)
         fixtures_folder = options.get("folder")
         if not fixtures_folder:
             fixtures_folder = os.path.join(os.getcwd(), "fixtures")
