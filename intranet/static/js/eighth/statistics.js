@@ -1,9 +1,7 @@
 /* global $, Chart, moment, rawData, capacity */
 $(document).ready(function() {
     if (Object.keys(rawData).length > 0) {
-        var chartElement = $("#members-chart");
-        chartElement.show();
-        var canvas = chartElement[0];
+        var canvas = $("#blocks-chart")[0];
         var parsedData = [];
         $.each(rawData, function(k, v) {
             parsedData.push([moment(k, "YYYY-MM-DD"), v]);
