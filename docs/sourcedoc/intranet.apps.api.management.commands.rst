@@ -12,6 +12,14 @@ intranet.apps.api.management.commands.export_fixtures module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.api.management.commands.import_fixtures module
+------------------------------------------------------------
+
+.. automodule:: intranet.apps.api.management.commands.import_fixtures
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

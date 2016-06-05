@@ -73,8 +73,7 @@ class Command(BaseCommand):
         # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
         readme.write("These fixtures were exported on %s with commit %s.\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
-        readme.write("To load these fixtures, run the command:\n")
-        readme.write("find ./fixtures/ -name '*.json' -printf '%f %p\\n' | sort | cut -d' ' -f2- | xargs -L 1 ./manage.py loaddata\n")
+        readme.write("To load these fixtures, run \"./manage.py import_fixtures\"\n")
         readme.write("This command may take a long time if you have a lot of fixtures.")
         readme.close()
 
