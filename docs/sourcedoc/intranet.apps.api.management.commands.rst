@@ -4,10 +4,10 @@ intranet.apps.api.management.commands package
 Submodules
 ----------
 
-intranet.apps.api.management.commands.dump module
--------------------------------------------------
+intranet.apps.api.management.commands.export_fixtures module
+------------------------------------------------------------
 
-.. automodule:: intranet.apps.api.management.commands.dump
+.. automodule:: intranet.apps.api.management.commands.export_fixtures
     :members:
     :undoc-members:
     :show-inheritance:
