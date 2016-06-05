@@ -55,6 +55,10 @@ class Command(BaseCommand):
                 print("Failed " + modelpath)
                 print(e)
                 continue
+            if buf.tell() <= 2:
+                if verbosity > 1:
+                    print("Skipping" + model + " (empty)")
+                continue
             buf.seek(0)
             number = order.index(modelpath)
             modelfile = fixtures_folder + "/" + modelpath.split(".")[0] + "/" + str(number).zfill(4) + modelpath.split(".")[1] + ".json"
