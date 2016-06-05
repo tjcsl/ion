@@ -134,7 +134,7 @@ var StickyHeaders = function(headers) {
             if (i === 0 && empty) {
                 firstEmpty = true;
             }
-            if ((i === 0 && !empty) || (i === 1 && firstEmpty)) {
+            if (i === 0 && !empty || i === 1 && firstEmpty) {
                  stuckCopy.addClass("stuck");
             } else {
                 stuckCopy.addClass("hidden stuck");
@@ -219,8 +219,8 @@ $(function() {
             listening = false;
         }
     });
-    var $activityPicker = $("#activityPicker");
-    $activityPicker.on("touchstart", function(e) {
+    var activityPicker = $("#activityPicker");
+    activityPicker.on("touchstart", function(e) {
         if ($("#activity-picker > .backbtn").hasClass("visible")) {
             e.stopPropagation();
             initX = e.originalEvent.touches[0].clientX;
@@ -228,13 +228,13 @@ $(function() {
             listening = true;
         }
     });
-    $activityPicker.on("touchend", function(e) {
+    activityPicker.on("touchend", function(e) {
         if ($("#activity-picker > .backbtn").hasClass("visible")) {
             e.stopPropagation();
             listening = false;
         }
     });
-    $activityPicker.on("touchmove", function(e) {
+    activityPicker.on("touchmove", function(e) {
         var back = $("#activity-picker > .backbtn");
         if (back.hasClass("visible")) {
             e.stopPropagation();

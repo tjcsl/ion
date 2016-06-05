@@ -85,11 +85,11 @@ $(function() {
 
         var rows = $(".schedule-activity-grid tr.form-row");
         var row;
-        var current_row;
+        var currentRow;
         if (window.propagate_direction && window.propagate_direction === "down") {
-            current_row = el.parent().parent();
+            currentRow = el.parent().parent();
             rows = [];
-            row = current_row;
+            row = currentRow;
             while (row && row.length > 0) {
                 row = row.next();
                 if (row.hasClass("form-row")) {
@@ -100,9 +100,9 @@ $(function() {
         }
 
         if (window.propagate_direction && window.propagate_direction === "up") {
-            current_row = el.parent().parent();
+            currentRow = el.parent().parent();
             rows = [];
-            row = current_row;
+            row = currentRow;
             while (row && row.length > 0) {
                 row = row.prev();
                 if (row.hasClass("form-row")) {
@@ -125,31 +125,31 @@ $(function() {
 
         if (el.hasClass("selectized")) {
             var sel = el[0].selectize;
-            var mod_items = sel.items;
+            var modItems = sel.items;
 
             rows.each(function() {
                 var ntd = $("td[data-field='" + field + "']", $(this));
                 var ninp = $("input, select", ntd);
                 var nsel = ninp[0].selectize;
                 var o_items = nsel.items;
-                nsel.setValue(mod_items);
+                nsel.setValue(modItems);
             });
         } else {
             if (el.attr("type") === "checkbox") {
-                var mod_val = el.prop("checked");
+                var modVal = el.prop("checked");
                 rows.each(function() {
                     var ntd = $("td[data-field='" + field + "']", $(this));
                     var ninp = $("input", ntd);
-                    ninp.prop("checked", mod_val);
+                    ninp.prop("checked", modVal);
                 });
             } else {
-                mod_val = el.val();
-                console.info("New value:", mod_val);
+                modVal = el.val();
+                console.info("New value:", modVal);
 
                 rows.each(function() {
                     var ntd = $("td[data-field='" + field + "']", $(this));
                     var ninp = $("input, select, textarea", ntd);
-                    ninp.val(mod_val);
+                    ninp.val(modVal);
                 });
             }
         }

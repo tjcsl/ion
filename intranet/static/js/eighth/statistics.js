@@ -1,11 +1,11 @@
-/* global $, Chart */
+/* global $, Chart, moment, rawData, capacity */
 $(document).ready(function() {
-    if (Object.keys(raw_data).length > 0) {
+    if (Object.keys(rawData).length > 0) {
         var chartElement = $("#members-chart");
         chartElement.show();
         var canvas = chartElement[0];
         var parsedData = [];
-        $.each(raw_data, function(k, v) {
+        $.each(rawData, function(k, v) {
             parsedData.push([moment(k, "YYYY-MM-DD"), v]);
         });
         parsedData = parsedData.sort(function(a, b) {
