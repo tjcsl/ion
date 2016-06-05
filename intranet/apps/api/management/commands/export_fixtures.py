@@ -22,6 +22,7 @@ class Command(BaseCommand):
             fixtures_folder = os.getcwd() + "/fixtures"
         if not os.path.isdir(fixtures_folder):
             raise CommandError("Script could not find fixtures folder!")
+        print("Exporting to " + fixtures_folder)
 
         # Filter out all models that are not relevant to ion.
         models = [x.__module__ + "." + x.__name__ for x in apps.get_models()]
@@ -66,8 +67,9 @@ class Command(BaseCommand):
 
         # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
-        readme.write("These fixtures were exported on %s. To load these fixtures, run the command:\n" % datetime.datetime.now().strftime("%H:%M %m/%d/%Y"))
+        readme.write("These fixtures were exported on %s with commit %s. To load these fixtures, run the command:\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
         readme.write("find ./fixtures/ -name '*.json' -printf '%f %p\\n' | sort | cut -d' ' -f2- | xargs ./manage.py loaddata\n")
+        readme.write("This command may take a long time if you have a lot of fixtures.")
         readme.close()
 
 
