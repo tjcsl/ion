@@ -19,7 +19,8 @@ class Command(BaseCommand):
         verbosity = options.get("verbosity", 1)
         fixtures_folder = options.get("folder")
         if not fixtures_folder:
-            fixtures_folder = os.getcwd() + "/fixtures"
+            fixtures_folder = os.path.join(os.getcwd(), "fixtures")
+            os.makedirs(fixtures_folder, exist_ok=True)
         if not os.path.isdir(fixtures_folder):
             raise CommandError("Script could not find fixtures folder!")
         print("Exporting to " + fixtures_folder)
@@ -57,7 +58,7 @@ class Command(BaseCommand):
                 continue
             if buf.tell() <= 2:
                 if verbosity > 1:
-                    print("Skipping" + model + " (empty)")
+                    print("Skipping " + model + " (empty)")
                 continue
             buf.seek(0)
             number = order.index(modelpath)
