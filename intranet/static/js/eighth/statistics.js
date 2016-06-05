@@ -22,12 +22,12 @@ $(document).ready(function() {
             datasets: [
                 {
                     label: "A Block",
-                    backgroundColor: "rgba(151,187,205,0.5)",
+                    backgroundColor: "rgba(200,100,100,0.5)",
                     data: $.map(parsedData, function(v) { return "A" in v[1] ? v[1].A : 0; })
                 },
                 {
                     label: "B Block",
-                    backgroundColor: "rgba(205,187,151,0.5)",
+                    backgroundColor: "rgba(100,100,200,0.5)",
                     data: $.map(parsedData, function(v) { return "B" in v[1] ? v[1].B : 0; })
                 }
             ]

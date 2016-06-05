@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ..utils import get_start_date
 from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
@@ -46,10 +47,16 @@ def statistics_view(request, activity_id=None):
     cancelled_blocks = 0
     empty_blocks = 0
 
+    start_date = get_start_date(request).date()
+    past_start_date = 0
+
     for a in activities:
         if a.cancelled:
             cancelled_blocks += 1
         elif a.block.is_this_year:
+            if a.block.date > start_date:
+                past_start_date += 1
+                continue
             members = a.members.count()
             for user in a.members.all():
                 if user in signups:
@@ -83,5 +90,6 @@ def statistics_view(request, activity_id=None):
                "scheduled_blocks": scheduled_blocks,
                "empty_blocks": empty_blocks,
                "capacity": activities[total_blocks - 1].get_true_capacity() if total_blocks > 0 else 0,
-               "chart_data": safe_json(chart_data)}
+               "chart_data": safe_json(chart_data),
+               "past_start_date": past_start_date}
     return render(request, "eighth/statistics.html", context)
