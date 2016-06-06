@@ -12,7 +12,7 @@ class Command(BaseCommand):
         parser.add_argument("-f", "--folder", default=None, help="The folder to import fixtures from.")
 
     def handle(self, *args, **options):
-        # verbosity = options.get("verbosity", 1)
+        verbosity = options.get("verbosity", 1)
         fixtures_folder = options.get("folder")
         if not fixtures_folder:
             fixtures_folder = os.path.join(os.getcwd(), "fixtures")
@@ -32,4 +32,9 @@ class Command(BaseCommand):
 
         # Import fixtures
         for x in fixtures:
-            call_command("loaddata", x)
+            try:
+                call_command("loaddata", x)
+            except Exception as e:
+                print("Failed to import %s (%s)" % (x, type(e).__name__))
+                if verbosity > 1:
+                    print(e)
