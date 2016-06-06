@@ -1086,7 +1086,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return self.is_superuser or self.member_of("admin_all")
+        return self.is_superuser or self.has_admin_permission("staff")
 
     @property
     def is_attendance_user(self):

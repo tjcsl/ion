@@ -11,7 +11,7 @@ class CarApplication(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {} ({})".format(self.make, self.model, self.license_plate)
+        return "{} {} {} ({})".format(self.year, self.make, self.model, self.license_plate)
 
 class ParkingApplication(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication")
