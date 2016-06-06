@@ -40,4 +40,4 @@ def senior_email_forward_view(request):
             form = SeniorEmailForwardForm(instance=forward)
         else:
             form = SeniorEmailForwardForm()
-    return render(request, "emailfwd/senior_forward.html", {"form": form})
+    return render(request, "emailfwd/senior_forward.html", {"form": form, "forward": forward})
