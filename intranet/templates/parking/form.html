@@ -53,6 +53,15 @@ b, .parking table th {
             </td>
         </tr>
     </table>
+    {% if app.joint_user %}
+        <b>You currently have a joint parking application with
+            <a href="{% url 'user_profile' app.joint_user.id %}">
+                {{ app.joint_user.first_name }} {{ app.joint_user.last_name }} ({{ app.joint_user.grade.number }})
+            </a></b><br />
+            <a href="{% url 'parking_joint' %}">Modify</a>
+            {% else %}
+            <a href="{% url 'parking_joint' %}" class="button">Create a Joint Application</a>
+   {% endif %}
     <br />
     <br />
     <form action="" method="post">

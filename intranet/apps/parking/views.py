@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import ParkingApplication, CarApplication
 from .forms import ParkingApplicationForm, CarApplicationForm
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -106,3 +107,35 @@ def parking_car_view(request):
         else:
             form = CarApplicationForm()
     return render(request, "parking/car.html", {"form": form, "car": car, "app": app})
+
+@login_required
+def parking_joint_view(request):
+    if not request.user.can_request_parking:
+        messages.error(request, "You can't request a parking space.")
+        return redirect("index")
+    
+    user = request.user
+    if request.user.has_admin_permission('parking'):
+        if "user" in request.GET:
+            user = get_object_or_404(User, id=request.GET["user"])
+        elif "user" in request.POST:
+            user = get_object_or_404(User, id=request.POST["user"])
+    try:
+        app = ParkingApplication.objects.get(user=user)
+    except ParkingApplication.DoesNotExist:
+        app = None
+
+    if "delete" in request.POST:
+        app.joint_user = None
+        app.save()
+        messages.success(request, "Removed joint application.")
+    elif "joint" in request.POST:
+        try:
+            app.joint_user = User.objects.get(username=request.POST["joint"])
+        except User.DoesNotExist:
+            messages.error(request, "Invalid user")
+        else:
+            app.save()
+            messages.success(request, "Added a joint user.")
+
+    return render(request, "parking/joint.html", {"user": user, "app": app})
