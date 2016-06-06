@@ -53,6 +53,12 @@ b, .parking table th {
             </td>
         </tr>
     </table>
+
+    {% if in_joint %}
+        <h3>Another user has submitted a joint parking application with you.</h3>
+        <p>If you do not want to have a joint parking application with <a href="{% url 'user_profile' in_joint.user.id %}">{{ in_joint.user.first_name }} {{ in_joint.user.last_name }} ({{ in_joint.user.grade.number }})</a>, <a href="{% url 'parking_joint' %}?disagree=1">CLICK HERE</a></p>
+    {% endif %}
+
     {% if app.joint_user %}
         <b>You currently have a joint parking application with
             <a href="{% url 'user_profile' app.joint_user.id %}">
