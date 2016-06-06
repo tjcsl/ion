@@ -966,6 +966,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('printing')
 
     @property
+    def can_request_parking(self):
+        """Checks if user can view the parking interface.
+
+        Returns:
+            Boolean
+
+        """
+        return (self.grade == 10 or self.grade == 11 or self.has_admin_permission('parking'))
+
+    @property
     def is_ldap_admin(self):
         """Checks if user is an LDAP admin.
 

@@ -37,6 +37,7 @@ urlpatterns = [
     url(r"^itemreg", include("intranet.apps.itemreg.urls")),
     url(r"^lostfound", include("intranet.apps.lostfound.urls")),
     url(r"^emailfwd", include("intranet.apps.emailfwd.urls")),
+    url(r"^parking", include("intranet.apps.parking.urls")),
     url(r"^djangoadmin/doc/", include('django.contrib.admindocs.urls')),
     url(r"^djangoadmin/", include(admin.site.urls)),
     url(r"^oauth/", include("oauth2_provider.urls", namespace='oauth2_provider')),
