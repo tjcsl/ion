@@ -966,6 +966,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission('printing')
 
     @property
+    def is_parking_admin(self):
+        """Checks if user has the admin permission 'parking'.
+
+        Returns:
+            Boolean
+
+        """
+
+        return self.has_admin_permission('parking')
+
+    @property
     def can_request_parking(self):
         """Checks if user can view the parking interface.
 
@@ -973,7 +984,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.grade == 10 or self.grade == 11 or self.has_admin_permission('parking'))
+        return (self.grade == 10 or self.grade == 11 or self.is_parking_admin)
 
     @property
     def is_ldap_admin(self):
