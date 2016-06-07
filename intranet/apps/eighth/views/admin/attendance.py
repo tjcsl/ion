@@ -151,8 +151,8 @@ def delinquent_students_view(request):
 
         for delinquent in delinquents:
             row = []
-            row.append(str(start_date).split(" ")[0])
-            row.append(str(end_date).split(" ")[0])
+            row.append(str(start_date).split(" ", 1)[0])
+            row.append(str(end_date).split(" ", 1)[0])
             row.append(delinquent["absences"])
             row.append(delinquent["user"].last_name)
             row.append(delinquent["user"].first_name)

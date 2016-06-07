@@ -115,7 +115,7 @@ def cache_view(request):
     cache = {}
     if opts:
         for ctype in opts:
-            c = ctype.split(".")[0]
+            c = ctype.split(".", 1)[0]
             if "timeout" in opts[ctype]:
                 to = opts[ctype]["timeout"]
             else:

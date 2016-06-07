@@ -28,7 +28,7 @@ def get_printers():
     names = []
     for l in lines:
         if "requests since" in l:
-            names.append(l.split(" ")[0])
+            names.append(l.split(" ", 1)[0])
 
     if "Please_Select_a_Printer" in names:
         names.remove("Please_Select_a_Printer")
@@ -47,8 +47,8 @@ def convert_soffice(tmpfile_name):
         return False
 
     if " -> " in output and " using " in output:
-        fileout = output.split(" -> ")[1]
-        fileout = fileout.split(" using ")[0]
+        fileout = output.split(" -> ", 2)[1]
+        fileout = fileout.split(" using ", 1)[0]
         return fileout
 
     return False
@@ -80,7 +80,7 @@ def get_numpages(tmpfile_name):
     for l in lines:
         if l.startswith("Pages:"):
             try:
-                num_pages = l.split("Pages:")[1].strip()
+                num_pages = l.split("Pages:", 2)[1].strip()
                 num_pages = int(num_pages)
             except Exception:
                 num_pages = -1
@@ -115,7 +115,7 @@ def check_page_range(page_range, max_pages):
         for r in page_range.split(","):  # check all ranges separated by commas
             if "-" in r:
                 rr = r.split("-")
-                if not len(rr) == 2:  # make sure 2 values in range
+                if len(rr) != 2:  # make sure 2 values in range
                     return False
                 else:
                     rl = int(rr[0])
