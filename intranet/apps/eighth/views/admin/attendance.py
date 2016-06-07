@@ -280,9 +280,16 @@ def activities_without_attendance_view(request):
             zero_students = scheduled_activities.filter(members=None)
             logger.debug(zero_students)
             zero_students.update(attendance_taken=True)
-            messages.success(request, "Took attendance for {} activities.".format(zero_students.count()))
-            return redirect("eighth_admin_dashboard")
-    
+            messages.success(request, "Took attendance for {} empty activities.".format(zero_students.count()))
+            return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
+        
+        if request.POST.get("take_attendance_cancelled", False) != False:
+            cancelled = scheduled_activities.filter(cancelled=True)
+            logger.debug(cancelled)
+            cancelled.update(attendance_taken=True)
+            messages.success(request, "Took attendance for {} cancelled activities.".format(cancelled.count()))
+            return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
+
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
     return render(request, "eighth/admin/activities_without_attendance.html", context)
 

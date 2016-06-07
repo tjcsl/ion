@@ -28,10 +28,16 @@
 </select>
 
 {% if chosen_block %}
-    <form action="" method="post">
+    <br />
+    <form action="" name="form_take_attendance_zero" method="post" onsubmit="return confirm('Are you sure you want to modify attendance for activities with no students?')">
         {% csrf_token %}
         <input type="hidden" name="take_attendance_zero" value="1" />
         <input type="submit" value="Mark Attendance for Activities with No Students" class="small-button" />
+    </form>
+    <form action="" name="form_take_attendance_cancelled" method="post" onsubmit="return confirm('Are you sure you want to modify attendance for cancelled activities?')">
+        {% csrf_token %}
+        <input type="hidden" name="take_attendance_cancelled" value="1" />
+        <input type="submit" value="Mark Attendance for Cancelled Activities" class="small-button" />
     </form>
     Click on column titles to sort. Showing {{ scheduled_activities|length }} result{{ scheduled_activities|length|pluralize }}.
     <table data-sortable class="fancy-table">
@@ -46,7 +52,7 @@
         </thead>
         <tbody>
             {% for scheduled_activity in scheduled_activities %}
-                <tr>
+            <tr{% if scheduled_activity.cancelled %} style="color: red !important"{% endif %}>
                     <td>{{ scheduled_activity.activity.aid }}</td>
                     <td>
                         <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">
