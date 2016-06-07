@@ -92,7 +92,8 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
             if block:
                 block = block["block"]
                 kwargs.update({"block": block})
-
+                if self.request and self.request.user and self.request.user.is_eighthoffice:
+                    kwargs.update({"include_cancelled": True})
                 block_title = ("Take Attendance" if block.locked else "View Roster")
 
             # try:
