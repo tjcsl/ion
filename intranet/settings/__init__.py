@@ -405,8 +405,9 @@ CACHES = {
     }
 }  # type: Dict[str,Dict[str,Any]]
 
-if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES":
-    CACHES["default"]["BACKEND"] = "django.core.cache.backends.dummy.DummyCache"
+if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
+    CACHES["default"] = {"BACKEND": "intranet.utils.cache.DummyCache"}
+    # extension of django.core.cache.backends.dummy.DummyCache
 else:
     CACHES["default"] = {
         "BACKEND": "redis_cache.RedisCache",
@@ -417,9 +418,6 @@ else:
         },
         "KEY_PREFIX": VIRTUAL_ENV
     }
-
-if NO_CACHE:
-    CACHES["default"]["BACKEND"] = "django.core.cache.backends.dummy.DummyCache"
 
 # LDAP configuration
 AD_REALM = "LOCAL.TJHSST.EDU"  # Active Directory (LOCAL) Realm
