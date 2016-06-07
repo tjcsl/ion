@@ -309,5 +309,5 @@ def stdev(x):
     from math import sqrt
     n = len(x)
     mean = sum(x) / float(n)
-    std = sqrt(sum((a - mean)**2 for a in x) / float(n-1))
+    std = sqrt(sum((a - mean)**2 for a in x) / float(n - 1))
     return std
