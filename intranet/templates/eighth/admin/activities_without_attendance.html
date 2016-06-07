@@ -28,6 +28,11 @@
 </select>
 
 {% if chosen_block %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="take_attendance_zero" value="1" />
+        <input type="submit" value="Mark Attendance for Activities with No Students" class="small-button" />
+    </form>
     Click on column titles to sort. Showing {{ scheduled_activities|length }} result{{ scheduled_activities|length|pluralize }}.
     <table data-sortable class="fancy-table">
         <thead>
