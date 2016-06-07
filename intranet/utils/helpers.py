@@ -102,7 +102,7 @@ class GlobList(list):
         return False
 
 
-def SingleCss(name):
+def single_css_map(name):
     return {name: {
         'source_filenames': ['css/%s.scss' % name],
         'output_filename': 'css/%s.css' % name

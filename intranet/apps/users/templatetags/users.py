@@ -18,9 +18,9 @@ def user_attr(username, attribute):
 
 
 @register.filter
-def argument_request_user(obj, funcName):
+def argument_request_user(obj, func_name):
     """Pass request.user as an argument to the given function call."""
-    func = getattr(obj, funcName)
+    func = getattr(obj, func_name)
     request = threadlocals.request()
     if request:
         return func(request.user)
