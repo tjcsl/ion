@@ -73,11 +73,11 @@ def parking_car_view(request):
         car = CarApplication.objects.get(id=request.GET.get("id",None))
     except CarApplication.DoesNotExist:
         car = None
-
-    if not request.user.has_admin_permission('parking') and car.user != request.user:
-        messages.error(request, "This isn't your car!")
-        return redirect("parking")
-    
+    else:
+        if not request.user.has_admin_permission('parking') and car.user != request.user:
+            messages.error(request, "This isn't your car!")
+            return redirect("parking")
+        
     if "delete" in request.POST and car:
         car.delete()
         messages.success(request, "Deleted car")

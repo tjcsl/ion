@@ -984,7 +984,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             Boolean
 
         """
-        return (self.grade == 11 or self.is_parking_admin)
+        return (self.grade.number == 11 or self.is_parking_admin)
 
     @property
     def is_ldap_admin(self):
