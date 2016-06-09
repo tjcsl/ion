@@ -10,6 +10,7 @@ class ParkingApplicationForm(forms.ModelForm):
             "mentorship"
         ]
 
+
 class CarApplicationForm(forms.ModelForm):
     class Meta:
         model = CarApplication

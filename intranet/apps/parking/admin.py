@@ -19,6 +19,7 @@ for u in group.user_set.all():
 
 """
 
+
 class ParkingAdmin(admin.ModelAdmin):
     def get_user(self, obj):
         u = obj.user
@@ -31,7 +32,7 @@ class ParkingAdmin(admin.ModelAdmin):
             return mark_safe("{} {} ({})<br />{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
         return "n/a"
     get_joint_user.short_description = "Joint User"
-    
+
     def get_absences(self, obj):
         absences = obj.user.absence_count() or 0
         if obj.joint_user:
@@ -48,6 +49,7 @@ class ParkingAdmin(admin.ModelAdmin):
     raw_id_fields = ('user', 'joint_user')
     filter_horizontal = ('cars',)
     actions = [export_csv_action()]
+
 
 class CarAdmin(admin.ModelAdmin):
     list_display = ('license_plate', 'user', 'make', 'model', 'year')

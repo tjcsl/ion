@@ -19,6 +19,7 @@ def parking_intro_view(request):
     context = {"user": request.user}
     return render(request, "parking/intro.html", context)
 
+
 @login_required
 def parking_form_view(request):
     if not request.user.can_request_parking:
@@ -64,20 +65,21 @@ def parking_form_view(request):
             form = ParkingApplicationForm()
     return render(request, "parking/form.html", {"form": form, "app": app, "in_joint": in_joint})
 
+
 @login_required
 def parking_car_view(request):
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
     try:
-        car = CarApplication.objects.get(id=request.GET.get("id",None))
+        car = CarApplication.objects.get(id=request.GET.get("id", None))
     except CarApplication.DoesNotExist:
         car = None
     else:
         if not request.user.has_admin_permission('parking') and car.user != request.user:
             messages.error(request, "This isn't your car!")
             return redirect("parking")
-        
+
     if "delete" in request.POST and car:
         car.delete()
         messages.success(request, "Deleted car")
@@ -113,12 +115,13 @@ def parking_car_view(request):
             form = CarApplicationForm()
     return render(request, "parking/car.html", {"form": form, "car": car, "app": app})
 
+
 @login_required
 def parking_joint_view(request):
     if not request.user.can_request_parking:
         messages.error(request, "You can't request a parking space.")
         return redirect("index")
-    
+
     user = request.user
     if request.user.has_admin_permission('parking'):
         if "user" in request.GET:
@@ -136,7 +139,7 @@ def parking_joint_view(request):
         in_joint = ParkingApplication.objects.get(joint_user=request.user)
     except ParkingApplication.DoesNotExist:
         in_joint = False
-    
+
     if in_joint and "disagree" in request.GET:
         in_joint.joint_user = None
         in_joint.save()

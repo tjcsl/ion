@@ -1,6 +1,7 @@
 from django.db import models
 from ..users.models import User
 
+
 class CarApplication(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, related_name="carapplication")
     license_plate = models.CharField(max_length=20)
@@ -12,6 +13,7 @@ class CarApplication(models.Model):
 
     def __str__(self):
         return "{} {} {} ({})".format(self.year, self.make, self.model, self.license_plate)
+
 
 class ParkingApplication(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, related_name="parkingapplication")

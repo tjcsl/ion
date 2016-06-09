@@ -276,9 +276,9 @@ def activities_without_attendance_view(request):
 
         context["scheduled_activities"] = scheduled_activities
 
-        if request.POST.get("take_attendance_zero", False) != False:
+        if request.POST.get("take_attendance_zero", False) is not False:
             zero_students = scheduled_activities.filter(members=None)
-            signups = Signup.objects.filter(scheduled_activity__in=zero_students)
+            signups = EighthSignup.objects.filter(scheduled_activity__in=zero_students)
             logger.debug(zero_students)
             if signups.count() == 0:
                 zero_students.update(attendance_taken=True)
@@ -286,10 +286,10 @@ def activities_without_attendance_view(request):
             else:
                 messages.error(request, "Apparently there were actually {} signups. Maybe one is no longer empty?".format(signups.count()))
             return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
-        
-        if request.POST.get("take_attendance_cancelled", False) != False:
+
+        if request.POST.get("take_attendance_cancelled", False) is not False:
             cancelled = scheduled_activities.filter(cancelled=True)
-            signups = Signup.objects.filter(scheduled_activity__in=cancelled)
+            signups = EighthSignup.objects.filter(scheduled_activity__in=cancelled)
             logger.debug(cancelled)
             logger.debug(signups)
             cancelled.update(attendance_taken=True)

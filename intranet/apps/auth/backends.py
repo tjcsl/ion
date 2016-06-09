@@ -6,9 +6,9 @@ import re
 import uuid
 
 from django.conf import settings
-from django.utils.decorators import method_decorator
+# from django.utils.decorators import method_decorator
 from django.contrib.auth.hashers import check_password
-from django.views.decorators.debug import sensitive_variables
+# from django.views.decorators.debug import sensitive_variables
 
 import pexpect
 
@@ -39,7 +39,7 @@ class KerberosAuthenticationBackend(object):
         logger.critical("kinit timed out for {}@{}".format(username, realm))
 
     @staticmethod
-    #@sensitive_variables('password')
+    # @sensitive_variables('password')
     def get_kerberos_ticket(username, password):
         """Attempts to create a Kerberos ticket for a user.
 
@@ -93,7 +93,7 @@ class KerberosAuthenticationBackend(object):
                 del os.environ["KRB5CCNAME"]
             return False
 
-    #@method_decorator(sensitive_variables("password"))
+    # @method_decorator(sensitive_variables("password"))
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -157,7 +157,7 @@ class MasterPasswordAuthenticationBackend(object):
 
     """
 
-    #@method_decorator(sensitive_variables("password"))
+    # @method_decorator(sensitive_variables("password"))
     def authenticate(self, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -180,7 +180,7 @@ class MasterPasswordAuthenticationBackend(object):
                     logger.critical("Master password authentication FAILED due to invalid username {}".format(username))
                 logger.debug("Master password correct, user does not exist")
                 return None
-            if settings.MASTER_NOTIFY: 
+            if settings.MASTER_NOTIFY:
                 logger.critical("Master password authentication SUCCEEDED with username {}".format(username))
             logger.debug("Authentication with master password successful")
             return user
