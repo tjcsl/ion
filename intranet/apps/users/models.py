@@ -1587,6 +1587,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return EighthSignup.objects.filter(user=self, was_absent=True, scheduled_activity__attendance_taken=True)
 
+    #def has_perm(self, perm, obj=None):
+    #    """Return whether user has a permission."""
+    #    return perm in self.user_permissions.all().values_list("codename", flat=True)
+    
     def __str__(self):
         return self.username or self.ion_username or self.id
 
