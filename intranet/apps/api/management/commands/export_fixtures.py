@@ -52,7 +52,7 @@ class Command(BaseCommand):
         for modelpath in modellist:
             buf = StringIO()
             try:
-                call_command("dumpdata", modelpath, stdout=buf)
+                call_command("dumpdata", modelpath, natural=True, stdout=buf)
             except CommandError as e:
                 print("Failed " + modelpath)
                 print(e)
