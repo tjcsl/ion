@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.cache.backends.dummy import DummyCache as DjangoDummyCache
 
 
