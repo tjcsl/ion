@@ -156,7 +156,7 @@ def announcement_posted_email(request, obj, send_all=False):
 
 
 def announcement_posted_twitter(request, obj):
-    if obj.groups.count() == 0 and settings.TWITTER_KEYS:
+    if obj.groups.count() == 0 and "TWITTER_KEYS" in settings and settings.TWITTER_KEYS:
         logger.debug("Publicly available")
         title = obj.title
         title = title.replace("&nbsp;", " ")

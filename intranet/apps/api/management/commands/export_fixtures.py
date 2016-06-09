@@ -55,7 +55,8 @@ class Command(BaseCommand):
                 call_command("dumpdata", modelpath, natural=True, stdout=buf)
             except CommandError as e:
                 print("Failed " + modelpath)
-                print(e)
+                if verbosity > 1:
+                    print(e)
                 continue
             if buf.tell() <= 2:
                 if verbosity > 1:
@@ -73,7 +74,7 @@ class Command(BaseCommand):
 
         # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
-        readme.write("These fixtures were exported on %s with commit %s.\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
+        readme.write("These ion fixtures were exported on %s with commit %s.\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
         readme.write("To load these fixtures, run \"./manage.py import_fixtures\"\n")
         readme.write("This command may take a long time if you have a lot of fixtures.")
         readme.close()
@@ -85,15 +86,20 @@ def depend(applist):
         models = apps.get_app_config(app).get_models()
         for model in models:
             deps = []
+
+            # Check dependencies for any fields.
             for field in model._meta.fields:
                 if hasattr(field.rel, "to"):
                     rel_model = field.rel.to
                     deps.append(rel_model)
+
+            # Check dependencies for many to many relationships.
             for field in model._meta.many_to_many:
                 rel_model = field.rel.to
                 if hasattr(rel_model, "natural_key"):
                     deps.append(rel_model)
             model_deps.append((model, deps))
+
     model_deps.reverse()
     model_list = []
     while model_deps:
