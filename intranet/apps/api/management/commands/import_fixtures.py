@@ -42,8 +42,7 @@ class Command(BaseCommand):
             try:
                 call_command("loaddata", x)
                 if verbosity > 1:
-                    print("Loaded " + x)
+                    print("Imported " + x)
             except Exception as e:
                 print("Failed to import %s (%s)" % (x, type(e).__name__))
-                if verbosity > 1:
-                    print(e)
+                print(e)

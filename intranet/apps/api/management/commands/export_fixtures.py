@@ -44,10 +44,11 @@ class Command(BaseCommand):
         # Find out what order the fixtures need to be loaded in.
         order = depend(set([x.split(".")[0] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
-        order = [relative_model_path(x) for x in order]
 
         # Save models to json files.
-        for modelpath in modellist:
+        modelcount = 0
+        for absolutemodelpath in modellist:
+            modelpath = relative_model_path(absolutemodelpath)
             buf = StringIO()
             try:
                 call_command("dumpdata", modelpath, natural=True, stdout=buf)
@@ -68,13 +69,14 @@ class Command(BaseCommand):
                 os.makedirs(modelfilepath)
             with open(modelfile, "w") as f:
                 shutil.copyfileobj(buf, f)
-            print("Exported " + modelpath)
+            print("Exported " + absolutemodelpath)
+            modelcount += 1
 
         # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
         readme.write("These ion fixtures were exported on %s with commit %s.\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
         readme.write("To load these fixtures, run \"./manage.py import_fixtures\"\n")
-        readme.write("This command may take a long time if you have a lot of fixtures.")
+        readme.write("This command may take a long time if you have a lot of fixtures. There are %s fixtures in this directory." % modelcount)
         readme.close()
 
 
