@@ -29,9 +29,9 @@ def date_format(date):
     return d
 
 
-def decode_date(str):
+def decode_date(date):
     try:
-        d = datetime.strptime(str, "%Y-%m-%d")
+        d = datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
         return None
     return d
@@ -76,13 +76,19 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
         else:
             blocks = []
 
-        delta = 3 if date.isoweekday() == friday else 1
-        date_tomorrow = date_format(date + timedelta(days=delta))
+        try:
+            delta = 3 if date.isoweekday() == friday else 1
+            date_tomorrow = date_format(date + timedelta(days=delta))
 
-        date_today = date_format(date)
+            date_today = date_format(date)
 
-        delta = -3 if date.isoweekday() == monday else -1
-        date_yesterday = date_format(date + timedelta(days=delta))
+            delta = -3 if date.isoweekday() == monday else -1
+            date_yesterday = date_format(date + timedelta(days=delta))
+        except OverflowError:
+            date_tomorrow = None
+            date_yesterday = None
+            date_today = None
+            schedule_tomorrow = None
 
         if request and request.user.is_authenticated() and request.user.is_eighth_admin:
             try:
