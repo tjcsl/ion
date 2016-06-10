@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import datetime
 import logging
 from itertools import chain
@@ -107,13 +106,7 @@ class EighthRoom(AbstractBaseEighthModel):
 
     @property
     def formatted_name(self):
-        def isInt(n):
-            try:
-                int(n)
-                return True
-            except ValueError:
-                return False
-        if isInt(self.name[0]):  # All rooms starting with an integer will be prefixed
+        if self.name[0].isdigit():  # All rooms starting with an integer will be prefixed
             return "Rm. {}".format(self.name)
         if self.name.startswith('Room'):  # Some room names are prefixed with 'Room'; for consistency
             return "Rm. {}".format(self.name[5:])
@@ -611,6 +604,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         members
             The :class:`User<intranet.apps.users.models.User>`\s who have
             signed up for an :class:`EighthBlock`
+        both_blocks
+            If True, a signup for an EighthScheduledActivity during an A or B block will enforce and
+            automatically trigger a signup on the other block. Does not enforce signups for blocks other
+            than A and B.
         comments
             Notes for students
         admin_comments
@@ -647,6 +644,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     capacity = models.SmallIntegerField(null=True, blank=True)
+    both_blocks = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
     administrative = models.BooleanField(default=False)
     restricted = models.BooleanField(default=False)
@@ -736,6 +734,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             rooms = self.get_true_rooms()
             return EighthRoom.total_capacity_of_rooms(rooms)
+
+    def is_both_blocks(self):
+        if self.both_blocks:
+            return self.both_blocks
+        else:
+            return self.activity.both_blocks
 
     def get_restricted(self):
         """Get whether this scheduled activity is restricted."""
@@ -893,7 +897,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 None if the activity cannot have a sibling
                 False if not found
         """
-        if not self.activity.both_blocks:
+        if not self.is_both_blocks():
             return None
 
         if self.block.block_letter and self.block.block_letter.upper() not in ["A", "B"]:
@@ -927,7 +931,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         all_sched_act = [self]
         all_blocks = [self.block]
 
-        if self.activity.both_blocks:
+        if self.is_both_blocks():
             # Finds the other scheduling of the same activity on the same day
             # See note above in get_both_blocks_sibling()
             sibling = self.get_both_blocks_sibling()
@@ -977,7 +981,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     exception.Presign = True
 
             # Check if signup would violate one-a-day constraint
-            if not self.activity.both_blocks and self.activity.one_a_day:
+            if not self.is_both_blocks() and self.activity.one_a_day:
                 in_act = (EighthSignup.objects.exclude(scheduled_activity__block=self.block).filter(
                     user=user, scheduled_activity__block__date=self.block.date, scheduled_activity__activity=self.activity).exists())
                 if in_act:
@@ -1043,7 +1047,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if no_after_deadline:
             after_deadline = False
 
-        if not self.activity.both_blocks:
+        if not self.is_both_blocks():
             try:
                 existing_signup = EighthSignup.objects.get(user=user, scheduled_activity__block=self.block)
 
@@ -1051,7 +1055,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 prev_sponsors = existing_signup.scheduled_activity.get_true_sponsors()
                 previous_activity_sponsors = ", ".join(map(str, prev_sponsors))
 
-                if not existing_signup.scheduled_activity.activity.both_blocks:
+                if not existing_signup.scheduled_activity.is_both_blocks():
                     existing_signup.scheduled_activity = self
                     existing_signup.after_deadline = after_deadline
                     existing_signup.was_absent = False

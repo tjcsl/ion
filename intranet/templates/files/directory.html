@@ -73,13 +73,13 @@
                     <a class="zip" href="?dir={{ current_dir|escape }}/{{ file.name|escape }}&amp;zip=1" data-name="{{ file.name|escape }}" onclick="return zip_folder(this)">
                         <i class="fa fa-file-archive-o"></i><span class="hidden-sm"> Download as ZIP</span>
                     </a>
-                    <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
+                    <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|urlencode }}/{{ file.name|urlencode }}">
                         <i class="fa fa-trash-o"></i><span class="hidden-sm"> Delete</span>
                     </a>
                 </td>
                 {% else %}
                 <td class="item file"{% for k, v in file.stat.items %} stat-{{ k }}="{{ v }}"{% endfor %}>
-                    {% if not file.too_big %}<a href="?file={{ current_dir|escape }}/{{ file.name|escape }}">{% endif %}
+                    {% if not file.too_big %}<a href="?file={{ current_dir|urlencode }}/{{ file.name|urlencode }}">{% endif %}
                         <i class="fa fa-file-o"></i>
                         {{ file.name }}
                     {% if not file.too_big %}</a>{% endif %}
@@ -92,7 +92,7 @@
                     <i title="Last Modified" class="fa fa-clock-o"></i> <time class="timeago" datetime="{{ file.stat_mtime|date:'c' }}">{{ file.stat_mtime }}</time>
                 </td>
                 <td class="file-options">
-                    <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|escape }}/{{ file.name|escape }}">
+                    <a class="delete" href="{% url 'files_delete' host.code %}?dir={{ current_dir|urlencode }}/{{ file.name|urlencode }}">
                         <i class="fa fa-trash-o"></i><span class="hidden-sm"> Delete</span>
                     </a>
                 </td>

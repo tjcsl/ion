@@ -39,49 +39,33 @@
     <script type="text/javascript" src="{% static 'js/eighth/admin.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
     <script type="text/javascript">
-        Chart.defaults.global.customTooltips = function(tooltip) {
-            var tooltipEl = $('#chartjs-tooltip');
-            if (!tooltip) {
-                tooltipEl.css({
-                    opacity: 0
-                });
-            return;
-            }
-            tooltipEl.removeClass('above below');
-            tooltipEl.addClass(tooltip.yAlign);
-            tooltipEl.html(tooltip.text);
-            var top;
-            if (tooltip.yAlign == 'above') {
-                top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
-            } else {
-                top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
-            }
-            tooltipEl.css({
-                opacity: 1,
-                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                top: tooltip.chart.canvas.offsetTop + top + 'px',
-                fontFamily: tooltip.fontFamily,
-                fontSize: tooltip.fontSize,
-                fontStyle: tooltip.fontStyle,
-            });
-        };
         $(document).ready(function() {
-            var data = [];
+            var data = { labels: [], datasets: [{ data: [], backgroundColor: [] }] };
+            var colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
+            var cindex = 0;
             $(".user-signups-table>tbody>tr").each(function(k, v) {
-                data.push({
-                    value: parseInt($(v).find("td:nth-child(1)").text()),
-                    label: $(v).find("td:nth-child(2)").text().trim()
-                });
+                data.datasets[0].data.push(parseInt($(v).find("td:nth-child(1)").text()));
+                data.labels.push($(v).find("td:nth-child(2)").text().split(":")[1].trim());
+                data.datasets[0].backgroundColor.push(colors[cindex]);
+                cindex = (cindex + 1) % colors.length;
             });
             var chart, canvas;
             if (data) {
                 $("#signups-chart").show();
                 canvas = $("#signups-chart")[0];
-                canvas.width = 225;
-                canvas.height = 225;
-                chart = new Chart(canvas.getContext("2d")).Pie(data, {
-                    tooltipTemplate: "<%= label %> - <%= value %>",
-                    animation: false
+                chart = new Chart(canvas.getContext("2d"), {
+                    type: "pie",
+                    data: data,
+                    options: {
+                        maintainAspectRatio: true,
+                        responsive: false,
+                        animation: {
+                            animateRotate: false
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
                 });
             }
         });
@@ -117,8 +101,7 @@
             </h3>
         {% endif %}
 
-        <canvas id="signups-chart" style="display:none"></canvas>
-        <div id="chartjs-tooltip"></div>
+        <canvas id="signups-chart" style="display:none" width="225" height="225"></canvas>
 
         <table class="fancy-table user-signups-table">
         <thead>

@@ -93,7 +93,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             prefix += " - " + scheduled_activity.title
         middle = " (R)" if restricted_for_user else ""
         suffix = " (S)" if activity.sticky else ""
-        suffix += " (BB)" if activity.both_blocks else ""
+        suffix += " (BB)" if scheduled_activity.is_both_blocks() else ""
         suffix += " (A)" if activity.administrative else ""
         suffix += " (Deleted)" if activity.deleted else ""
 
@@ -123,7 +123,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "sponsors": [],
             "restricted": scheduled_activity.get_restricted(),
             "restricted_for_user": restricted_for_user,
-            "both_blocks": activity.both_blocks,
+            "both_blocks": scheduled_activity.is_both_blocks(),
             "one_a_day": activity.one_a_day,
             "special": scheduled_activity.get_special(),
             "administrative": scheduled_activity.get_administrative(),

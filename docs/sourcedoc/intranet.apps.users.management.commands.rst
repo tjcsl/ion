@@ -28,6 +28,14 @@ intranet.apps.users.management.commands.import_groups module
     :undoc-members:
     :show-inheritance:
 
+intranet.apps.users.management.commands.lock module
+---------------------------------------------------
+
+.. automodule:: intranet.apps.users.management.commands.lock
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

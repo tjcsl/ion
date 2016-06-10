@@ -3,6 +3,7 @@
 import calendar
 import logging
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib import messages
@@ -45,8 +46,6 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
     friday = 5
     if request and 'date' in request.GET:
         date = decode_date(request.GET['date'])
-    else:
-        date = None
 
     if date is None:
         date = datetime.now()
@@ -119,6 +118,53 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
 def schedule_view(request):
     data = schedule_context(request)
     return render(request, "schedule/view.html", data)
+
+# does NOT require login
+
+
+def week_view(request, date=None, render_template=True):
+    if request:
+        given_date = schedule_context(request)["sched_ctx"]["date"]
+        if given_date.isoweekday() not in range(1, 6):
+            start_date = given_date + timedelta(days=-given_date.weekday(), weeks=1)
+        else:
+            start_date = given_date - timedelta(days=given_date.weekday())
+    else:
+        given_date = date
+        if given_date.isoweekday() not in range(1, 6):
+            start_date = given_date + timedelta(days=-given_date.weekday(), weeks=1)
+        else:
+            start_date = given_date - timedelta(days=given_date.weekday())
+    days = []
+    for i in range(5):
+        new_date = start_date + timedelta(days=i)
+        days.append(schedule_context(date=new_date))
+    next_week = days[-1]["sched_ctx"]["date_tomorrow"]
+    last_week = date_format(days[0]["sched_ctx"]["date"] - timedelta(days=7))
+    today = date_format(datetime.now())
+    data = {"days": days, "next_week": next_week, "last_week": last_week, "today": today}
+    if render_template:
+        return render(request, "schedule/week_view.html", data)
+    else:
+        return data
+
+
+def month_view(request):
+    if request and 'date' in request.GET:
+        first_date = decode_date(request.GET['date']) + relativedelta(day=1)
+    else:
+        first_date = datetime.today() + relativedelta(day=1)
+    week1 = week_view(None, first_date, render_template=False)
+    week2 = week_view(None, decode_date(week1["next_week"]), render_template=False)
+    week3 = week_view(None, decode_date(week2["next_week"]), render_template=False)
+    week4 = week_view(None, decode_date(week3["next_week"]), render_template=False)
+    week5 = week_view(None, decode_date(week4["next_week"]), render_template=False)
+    month = first_date.strftime("%B")
+    one_month = relativedelta(months=1)
+    next_month = date_format(first_date + one_month)
+    last_month = date_format(first_date - one_month)
+    data = {"weeks": [week1, week2, week3, week4, week5], "next_month": next_month, "last_month": last_month, "current_month": month}
+    return render(request, "schedule/month_view.html", data)
 
 # does NOT require login
 

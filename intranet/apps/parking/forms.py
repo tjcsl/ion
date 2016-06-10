@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from .models import ParkingApplication, CarApplication
 
@@ -9,6 +10,7 @@ class ParkingApplicationForm(forms.ModelForm):
             "email",
             "mentorship"
         ]
+
 
 class CarApplicationForm(forms.ModelForm):
     class Meta:

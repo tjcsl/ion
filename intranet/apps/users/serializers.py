@@ -65,7 +65,7 @@ class HyperlinkedImageField(serializers.HyperlinkedIdentityField):
     def get_url(self, obj, view_name, request, format):
         s = super(HyperlinkedImageField, self).get_url(obj, view_name, request, format)
         if "format=" in s:
-            return "{}format=jpg".format(s.split("format=")[0])
+            return "{}format=jpg".format(s.split("format=", 1)[0])
         return s
 
 

@@ -103,6 +103,9 @@ class LDAPConnection(object):
             else:
                 self.simple_bind(server)
 
+        if _thread_locals.ldap_conn is None:
+            raise Exception("Failed to connect to ldap.")
+
         return _thread_locals.ldap_conn
 
     def did_use_simple_bind(self):

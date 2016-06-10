@@ -20,6 +20,7 @@ def parse_db_url(db_url):
 def debug_toolbar_callback(request):
     """Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
     office."""
+
     if request.is_ajax():
         return False
 
@@ -89,7 +90,7 @@ class GlobList(list):
         # request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited
         # list of IP addresses, if the user is using a proxy
         if "," in key:
-            key = key.split(",")[0]
+            key = key.split(",", 1)[0]
 
         try:
             for item in self:
@@ -101,7 +102,7 @@ class GlobList(list):
         return False
 
 
-def SingleCss(name):
+def single_css_map(name):
     return {name: {
         'source_filenames': ['css/%s.scss' % name],
         'output_filename': 'css/%s.css' % name

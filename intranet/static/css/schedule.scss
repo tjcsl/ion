@@ -40,11 +40,47 @@
     }
 }
 
-.schedule h2 {
-    white-space: nowrap;
-    /* hack that makes text centered when overflowed */
-    margin-left: -100%;
-    margin-right: -100%;
+body {
+    overflow-x: scroll;
+}
+
+.schedule {
+    margin: 0 !important;
+    padding: 0 !important;
+
+    h2 {
+        white-space: nowrap;
+        /* hack that makes text centered when overflowed */
+        margin-left: -100%;
+        margin-right: -100%;
+    }
+}
+
+.week-table {
+    overflow-x: scroll;
+    border-collapse: separate;
+    border-spacing: 30px;
+    margin: 0;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 1100px;
+
+    td {
+        width: 19%;
+        min-width: 175px;
+
+        h2 {
+            font-weight:normal;
+        }
+        &.today {
+            h2 {
+                font-weight:bold;
+            }
+        }
+        &.chevron {
+            width: 2.5%;
+        }
+    }
 }
 
 .button-center {
@@ -79,5 +115,29 @@ a.day-name.day-type-other {
 }
 
 tr.schedule-block.current {
-    font-weight: bold;
+    display: none;
+    .today & {
+        display: table-row;
+        font-weight: bold;
+    }
+}
+
+
+.month-container {
+    text-align: center;
+    vertical-align: center;
+    width: 100%;
+
+    & .month-name {
+        font-size: 25px;
+        font-weight: bold;
+        padding: 5%;
+    }
+    & .fa {
+        color: black;
+    }
+}
+
+.schedule-container {
+    overflow: auto;
 }

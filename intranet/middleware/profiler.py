@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Original version taken from http://www.djangosnippets.org/snippets/186/
+# Original version taken from http://djangosnippets.org/snippets/186/
 # Original author: udfalkso
 # Modified version taken from http://djangosnippets.org/snippets/605/
 # Modified by: Shwagroo Team
@@ -138,10 +138,9 @@ class ProfileMiddleware(object):
         uri = self._get_real_uri(request)
         if self._last_uri is None:
             self._last_uri = uri
-        else:
-            if uri != self._last_uri:
-                time_stats.clear()
-                self._last_uri = uri
+        elif uri != self._last_uri:
+            time_stats.clear()
+            self._last_uri = uri
 
     _reUri = re.compile(r'^(http.+/)[?&]time.*$')
 
@@ -269,7 +268,7 @@ class ProfileMiddleware(object):
             if len(fields) == 7:
                 time = float(fields[2])
                 ttl += time
-                file_name = fields[6].split(":")[0]
+                file_name = fields[6].split(":", 1)[0]
 
                 if file_name not in mystats:
                     mystats[file_name] = 0
@@ -291,28 +290,24 @@ def get_log_file_path(log_file_path, called_time):
         log_file_path = os.path.join(PROFILE_LOG_BASE, log_file_path)
 
     log_dir_path = os.path.dirname(log_file_path)
+
     try:
         os.makedirs(log_dir_path)
     except os.error:
         pass
 
     (base, ext) = os.path.splitext(log_file_path)
-    base = base + "_" + time.strftime("%Y%m%d-%H%M%S", called_time)
+    base += "_" + time.strftime("%Y%m%d-%H%M%S", called_time)
     return base + ext
 
 
 def stdev(x):
-    """Calculate mean and standard deviation of data x[]:
-        mean = {\sum_i x_i \over n}
+    """Calculate standard deviation of data x[]:
         std = sqrt(\sum_i (x_i - mean)^2 \over n-1)
-        http://www.physics.rutgers.edu/~masud/computing/WPark_recipes_in_python.html
+        https://wiki.python.org/moin/NumericAndScientificRecipes
     """
     from math import sqrt
-    n, mean, std = len(x), 0, 0
-    for a in x:
-        mean += a
-    mean /= float(n)
-    for a in x:
-        std += (a - mean)**2
-    std = sqrt(std / float(n - 1))
+    n = len(x)
+    mean = sum(x) / float(n)
+    std = sqrt(sum((a - mean)**2 for a in x) / float(n - 1))
     return std

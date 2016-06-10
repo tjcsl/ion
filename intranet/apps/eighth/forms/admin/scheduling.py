@@ -28,8 +28,8 @@ class ScheduledActivityForm(forms.ModelForm):
 
     class Meta:
         model = EighthScheduledActivity
-        fields = ["cancelled", "scheduled", "unschedule", "block", "activity", "rooms", "capacity", "sponsors", "title", "special", "administrative", "restricted", "sticky", "comments",
-                  "admin_comments"]
+        fields = ["cancelled", "scheduled", "unschedule", "block", "activity", "rooms", "capacity", "sponsors",
+                  "title", "special", "administrative", "restricted", "sticky", "both_blocks", "comments", "admin_comments"]
         widgets = {
             "capacity": forms.TextInput(),
             "title": forms.TextInput(attrs={"size": 30}),

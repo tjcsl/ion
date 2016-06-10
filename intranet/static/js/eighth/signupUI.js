@@ -1,60 +1,64 @@
 // Scripts for initial layout, sticky headers, etc.
 /* global $ */
 
-function calcMaxScrollLeft() {
-    return $(".days-container")[0].scrollWidth - $(".days-container").width();
+var calcMaxScrollLeft = function() {
+    var $daysContainer = $(".days-container");
+    return $daysContainer[0].scrollWidth - $daysContainer.width();
 }
 
-function centerCurrentDay(animate) {
+var centerCurrentDay = function(animate) {
     var $day = $(".current-day");
     var dayWidth = $(".day:first").width() + 1;
     var numPrevDays = $day.prevAll().length;
-    var containerWidth = $(".days-container").width();
-    var scrollCenter =  numPrevDays * dayWidth - (containerWidth - dayWidth) / 2;
+    var $daysContainer = $(".days-container");
+    var containerWidth = $daysContainer.width();
+    var scrollCenter = numPrevDays * dayWidth - (containerWidth - dayWidth) / 2;
 
     // Scroll to day
     if (animate) {
-        $(".days-container").animate({
+        $daysContainer.animate({
             scrollLeft: scrollCenter
         }, {
             duration: 150,
-            easing: "swing",
+            easing: "swing"
         });
     } else {
-        $(".days-container").scrollLeft(scrollCenter);
+        $daysContainer.scrollLeft(scrollCenter);
     }
 }
 
-function centerBlocks() {
+var centerBlocks = function() {
     // Scroll to block if there are more than two blocks on any given day
     var $activeBlock = $(".active-block");
     $activeBlock.parents(".blocks.many-blocks").scrollTo($activeBlock);
 }
 
-function updateDayNavButtonStatus() {
+var updateDayNavButtonStatus = function() {
     // Update the state of buttons to reflect whether it is possible to
     // move left or right
     var maxScrollLeft = calcMaxScrollLeft();
     var scrollLeft = $(".days-container").scrollLeft();
 
-    $(".earlier-days").removeAttr("disabled");
-    $(".later-days").removeAttr("disabled");
+    var $earlierDays = $(".earlier-days");
+    var $laterDays = $(".later-days");
+    $earlierDays.removeAttr("disabled");
+    $laterDays.removeAttr("disabled");
 
-    if (scrollLeft == 0) {
-        $(".earlier-days").attr("disabled", "disabled");
+    if (scrollLeft === 0) {
+        $earlierDays.attr("disabled", "disabled");
     }
 
     if (Math.abs(scrollLeft - maxScrollLeft) <= 1) {
         // Weird stuff sometimes happens when resizing/zooming window
         // so sometimes these scrollLeft and maxScrollLeft get off by a pixel
         // when they are supposed to be equal
-        $(".later-days").attr("disabled", "disabled");
+        $laterDays.attr("disabled", "disabled");
     }
 
 
 }
 
-function scrollBlockChooser(dir) {
+var scrollBlockChooser = function(dir) {
     // The left and right arrows are used to select which day should be centered
     // in the block chooser, but sometimes adjacent blocks at the far left and right
     // can not be centered. In this case, the user still expects the arrows to slide
@@ -65,14 +69,14 @@ function scrollBlockChooser(dir) {
     var tries = 10;
 
 
-    while(tries-- && $daysContainer.scrollLeft() == initialScrollLeft) {
-        var $currentDay = $(".current-day");
+    var $currentDay = $(".current-day");
+    while (tries-- && $daysContainer.scrollLeft() === initialScrollLeft) {
         var $nextCurrentDay = $currentDay[dir]();
-        if ($nextCurrentDay.length != 0) {
-            $currentDay.removeClass("current-day")
+        if ($nextCurrentDay.length !== 0) {
+            $currentDay.removeClass("current-day");
             $nextCurrentDay.addClass("current-day");
         }
-
+        $currentDay = $nextCurrentDay;
         centerCurrentDay(false);
     }
 
@@ -102,8 +106,6 @@ $(function() {
     });
 
     $(".day-picker-buttons button").click(function(e) {
-        var $currentDay = $(".current-day");
-
         if ($(e.target).parents().andSelf().hasClass("later-days")) {
             // Right button clicked
             scrollBlockChooser("next");
@@ -122,17 +124,17 @@ $(function() {
 });
 
 // Sticky headers for activity picker
-function stickyHeaders(headers) {
+var StickyHeaders = function(headers) {
     this.load = function() {
         var firstEmpty = false;
         headers.each(function(i) {
             var id = Math.floor((i + 1) * Math.random() * 99999);
             var stuckCopy = $(this).clone().prependTo($("#activity-picker"));
             var empty = $(this).hasClass("empty");
-            if(i == 0 && empty) {
+            if (i === 0 && empty) {
                 firstEmpty = true;
             }
-            if ((i == 0 && !empty) || (i == 1 && firstEmpty)) {
+            if (i === 0 && !empty || i === 1 && firstEmpty) {
                  stuckCopy.addClass("stuck");
             } else {
                 stuckCopy.addClass("hidden stuck");
@@ -150,17 +152,19 @@ function stickyHeaders(headers) {
                 thrdHeader = headers.eq(i - 2);
             var top = thisHeader.position().top;
 
-            if(prevHeader.hasClass("empty")) {
+            if (prevHeader.hasClass("empty")) {
                 prevHeader = thrdHeader;
             }
 
             if (top <= 0) {
-                if(!thisHeader.hasClass("empty")) {
+                if (!thisHeader.hasClass("empty")) {
                     $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
                 }
                 headers.each(function(j) {
                     var loopHeader = $(this);
-                    if(j != i) $("#" + loopHeader.attr("id") + "-stuck").addClass("hidden");
+                    if(j !== i) {
+                        $("#" + loopHeader.attr("id") + "-stuck").addClass("hidden");
+                    }
                 });
             } else if (top < 31) {
                 $("#" + prevHeader.attr("id") + "-stuck").css("top", top);
@@ -174,7 +178,7 @@ function stickyHeaders(headers) {
 }
 
 $(function() {
-    var sh = new stickyHeaders($(".sticky-header"));
+    var sh = new StickyHeaders($(".sticky-header"));
     sh.load();
 
     $("#activity-list").on("scroll", function() {
@@ -182,17 +186,18 @@ $(function() {
     });
 
     var initX = null, initY = null, listening = false;
-    $(".day-picker").on("touchstart", function(e) {
+    var $dayPicker = $(".day-picker");
+    $dayPicker.on("touchstart", function(e) {
         e.stopPropagation();
         initX = e.originalEvent.touches[0].clientX;
         initY = e.originalEvent.touches[0].clientY;
         listening = true;
     });
-    $(".day-picker").on("touchend", function(e) {
+    $dayPicker.on("touchend", function(e) {
         e.stopPropagation();
         listening = false;
     });
-    $(".day-picker").on("touchmove", function(e) {
+    $dayPicker.on("touchmove", function(e) {
         e.stopPropagation();
         if (!listening) {
             return;
@@ -214,7 +219,8 @@ $(function() {
             listening = false;
         }
     });
-    $("#activity-picker").on("touchstart", function(e) {
+    var activityPicker = $("#activityPicker");
+    activityPicker.on("touchstart", function(e) {
         if ($("#activity-picker > .backbtn").hasClass("visible")) {
             e.stopPropagation();
             initX = e.originalEvent.touches[0].clientX;
@@ -222,13 +228,13 @@ $(function() {
             listening = true;
         }
     });
-    $("#activity-picker").on("touchend", function(e) {
+    activityPicker.on("touchend", function(e) {
         if ($("#activity-picker > .backbtn").hasClass("visible")) {
             e.stopPropagation();
             listening = false;
         }
     });
-    $("#activity-picker").on("touchmove", function(e) {
+    activityPicker.on("touchmove", function(e) {
         var back = $("#activity-picker > .backbtn");
         if (back.hasClass("visible")) {
             e.stopPropagation();
@@ -254,13 +260,13 @@ $(function() {
         var selected = $("#activity-list li.selected:not(.search-hide)");
         if (selected.length > 0) {
             var flag = false;
-            if (e.which == 38) {
+            if (e.which === 38) {
                 // up arrow key
                 selected.prevAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
                 flag = true;
             }
-            if (e.which == 40) {
+            if (e.which === 40) {
                 // down arrow key
                 selected.nextAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
@@ -269,7 +275,7 @@ $(function() {
             if (flag) {
                 var scrollParent = $("#activity-list");
                 selected = $("#activity-list li.selected");
-                scrollParent.scrollTop(scrollParent.scrollTop() + selected.position().top - scrollParent.height()/2 + selected.height()/2);
+                scrollParent.scrollTop(scrollParent.scrollTop() + selected.position().top - scrollParent.height() / 2 + selected.height() / 2);
             }
         }
     });

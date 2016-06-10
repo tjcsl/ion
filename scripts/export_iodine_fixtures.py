@@ -8,9 +8,8 @@
 #  as part of the conversion process between  #
 #  Intranet2 and Intranet3. THIS SCRIPT DOES  #
 #  NOT CREATE NEW ION FIXTURES. To do this,   #
-#  run the built-in ./manage.py dumpdata      #
+#  run ./manage.py export_fixtures            #
 ###############################################
-
 
 import datetime
 import json

@@ -11,68 +11,26 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/eighth.profile.css' %}" />
     <style>
-    #members-table tr td:last-child
+    #members-table td:nth-child(2)
     {
         text-align:right;
+    }
+    .sparkline
+    {
+        padding:5px;
+        background-color:rgba(100,100,200,0.5);
     }
     </style>
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/vendor/moment.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/eighth/statistics.js' %}"></script>
     <script type="text/javascript">
-        Chart.defaults.global.customTooltips = function(tooltip) {
-            var tooltipEl = $('#chartjs-tooltip');
-            if (!tooltip) {
-                tooltipEl.css({
-                    opacity: 0
-                });
-            return;
-            }
-            tooltipEl.removeClass('above below');
-            tooltipEl.addClass(tooltip.yAlign);
-            tooltipEl.html(tooltip.text);
-            var top;
-            if (tooltip.yAlign == 'above') {
-                top = tooltip.y - tooltip.caretHeight - tooltip.caretPadding;
-            } else {
-                top = tooltip.y + tooltip.caretHeight + tooltip.caretPadding;
-            }
-            tooltipEl.css({
-                opacity: 1,
-                left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                top: tooltip.chart.canvas.offsetTop + top + 'px',
-                fontFamily: tooltip.fontFamily,
-                fontSize: tooltip.fontSize,
-                fontStyle: tooltip.fontStyle,
-            });
-        };
-        $(document).ready(function() {
-            var items = $("#members-table tbody tr:lt(10)");
-            if (items.length > 2) {
-                $("#members-chart").show();
-                canvas = $("#members-chart")[0];
-                canvas.width = 400;
-                canvas.height = 300;
-                var data = {
-                    labels: $.map(items.find("td:first-child"), function(e) { return $(e).text(); }),
-                    datasets: [
-                        {
-                            label: "Signups",
-                            fillColor: "rgba(151,187,205,0.5)",
-                            strokeColor: "rgba(151,187,205,0.8)",
-                            highlightFill: "rgba(151,187,205,0.75)",
-                            highlightStroke: "rgba(151,187,205,1)",
-                            data: $.map(items.find("td:last-child"), function(e) { return $(e).text(); })
-                        }
-                    ]
-                };
-                chart = new Chart(canvas.getContext("2d")).Bar(data, {
-                    animation: false
-                });
-            }
-        });
+        var rawData = $.parseJSON("{{ chart_data }}");
+        var capacity = {{ capacity }};
     </script>
 {% endblock %}
 
@@ -105,15 +63,18 @@
     <h3>Activity Information</h3>
 
     <b>Total blocks:</b> {{ total_blocks }}<br />
+    <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br />
+    <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br />
+    <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br />
     <b>Total signups:</b> {{ total_signups }}<br />
     <b>Average signups:</b> {{ average_signups }}<br />
+    <b>Capacity:</b> {{ capacity }}<br />
 
     <br />
 
-    <h3>Member Signups</h3>
+    <h3>Block Signups</h3>
 
-    <canvas id="members-chart" style="display:none"></canvas>
-    <div id="chartjs-tooltip"></div>
+    <div style="max-width:500px"><canvas id="blocks-chart" width="500" height="300"></canvas></div>
 
     <table id="members-table" class="fancy-table">
         <thead>
@@ -129,8 +90,8 @@
     </table>
 
     <br />
-    The statistics shown on this page are not guaranteed to be accurate.
-    <br />
+    The statistics shown on this page are not guaranteed to be accurate.<br />
+    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} exist that are past the start date and not included in these calculations.<br />
     <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} exist that are from previous years and not included in these calculations.<br />
     <br />
 </div>

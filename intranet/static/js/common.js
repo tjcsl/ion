@@ -59,7 +59,6 @@ eggTdfw = function() {
     p.addClass("bounce");
 
     setTimeout(function() {
-
         $(".logo").addClass("flip180");
         var i = setInterval(function(){ip.toggleClass("scaleflip");$(".logo,.nav").toggleClass("flip180");},500);
         e.addClass("pulse");

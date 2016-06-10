@@ -294,8 +294,8 @@ texinfo_documents = [('index', 'TJIntranet', 'TJ Intranet Documentation', 'TJ In
 # texinfo_no_detailmenu = False
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'python': ('http://docs.python.org/3/', None),
-                       'django': ('http://docs.djangoproject.com/en/dev/', 'http://docs.djangoproject.com/en/dev/_objects/')}
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
+                       'django': ('https://docs.djangoproject.com/en/dev', 'https://docs.djangoproject.com/en/dev/_objects')}
 
 # -- Django Setup -------------------------------------------------------------
 

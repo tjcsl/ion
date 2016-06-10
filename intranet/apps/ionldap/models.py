@@ -47,7 +47,7 @@ class LDAPCourse(models.Model):
             return users[0]
         else:
             # Last name and staff check only
-            query = "{} grade:staff".format(self.teacher_name.split(", ")[0])
+            query = "{} grade:staff".format(self.teacher_name.split(", ", 1)[0])
             try:
                 query_error, users = get_search_results(query, False)
             except Exception:

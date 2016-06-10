@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% load pipeline %}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700" />
+
+    {% stylesheet 'base' %}
+
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'login' %}
+
+    <style type="text/css">
+    body {
+        background: transparent;
+    }
+    {% if signage %}
+    body {
+        zoom: 3;
+    }
+    {% endif %}
+    </style>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+</head>
+
+<body>
+
+      {% include "schedule/week.html" %}
+
+</body>
+</html>

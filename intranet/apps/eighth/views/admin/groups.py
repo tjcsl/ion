@@ -100,14 +100,14 @@ def edit_group_view(request, group_id):
     members = sorted(members, key=lambda m: (m["last_name"], m["first_name"]))
     linked_activities = EighthActivity.objects.filter(groups_allowed=group)
 
-    def intTryParse(value):
+    def parse_int(value):
         return int(value) if value.isdigit() else None
 
     context = {
         "group": group,
         "members": members,
         "edit_form": form,
-        "added_ids": [intTryParse(x) for x in request.GET.getlist("added")],
+        "added_ids": [parse_int(x) for x in request.GET.getlist("added")],
         "linked_activities": linked_activities,
         "admin_page_title": "Edit Group",
         "delete_url": reverse("eighth_admin_delete_group", args=[group_id])
@@ -383,15 +383,13 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
         except Group.DoesNotExist:
             raise http.Http404
 
-        query = "?schact={}".format(scheduled_activity.id)
-        return redirect(reverse("eighth_admin_signup_group_action", args=[group.id]) + query)
+        return redirect(reverse("eighth_admin_signup_group_action", args=[group.id, scheduled_activity.id]))
 
 
 eighth_admin_signup_group = eighth_admin_required(EighthAdminSignUpGroupWizard.as_view(EighthAdminSignUpGroupWizard.FORMS))
 
 
-def eighth_admin_signup_group_action(request, group_id):
-    schact_id = request.GET["schact"]
+def eighth_admin_signup_group_action(request, group_id, schact_id):
 
     try:
         scheduled_activity = EighthScheduledActivity.objects.get(id=schact_id)

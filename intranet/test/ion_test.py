@@ -1,29 +1,35 @@
 # -*- coding: utf-8 -*-
 from os.path import abspath, dirname, join
-from django.conf import settings
-from django.test import TestCase, override_settings
-
-from ldap_test import LdapServer
+from unittest import mock
+from django.test import TestCase
+import ldap3
 
 from ..apps.users.models import User
-
-staticdir = join(dirname(abspath(__file__)), '..', 'static')
-
-mock_server = None
-# We don't want to actually call out to ldap for testing, so setup a fake server.
-# If we're not actually testing, then there's no point in the overhead.
-if settings.TESTING:
-    mock_server = LdapServer({'base': {'objectclass': 'organization', 'dn': 'dc=tjhsst,dc=edu'},
-                              'ldifs': [join(staticdir, 'ldap', 'base.ldif'), join(staticdir, 'ldap', 'sample_student.ldif')]})
-    mock_server.start()
+from ..db import ldap_db
 
 
-def get_mock_port():
-    return mock_server.config['port'] if mock_server else 0
-
-
-@override_settings(LDAP_SERVER='ldap://localhost:%d' % get_mock_port(), USE_SASL=False)
 class IonTestCase(TestCase):
+
+    @classmethod
+    def start_server(cls):
+        cls.server = ldap3.Server('mock_server')
+        cls.conn = ldap3.Connection(cls.server, client_strategy=ldap3.MOCK_SYNC)
+        datadir = join(dirname(abspath(__file__)), 'data')
+        cls.conn.strategy.entries_from_json(join(datadir, 'awilliam.json'))
+        cls.conn.bind()
+        cls.mock = mock.patch.object(ldap_db.LDAPConnection, 'conn', cls.conn)
+        cls.mock.start()
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.start_server()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.mock.stop()
+        cls.conn.unbind()
 
     def login(self):
         # We need to add the user to the db before trying to login as them.

@@ -56,7 +56,7 @@ def poll_vote_view(request, poll_id):
             if name.startswith("question-"):
                 logger.debug(name)
 
-                question_num = name.split("question-")[1]
+                question_num = name.split("question-", 2)[1]
                 logger.debug(question_num)
                 try:
                     question_obj = questions.get(num=question_num)
