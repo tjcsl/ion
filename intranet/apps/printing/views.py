@@ -212,6 +212,7 @@ def print_view(request):
                 print_job(obj)
             except Exception as e:
                 messages.error(request, "{}".format(e))
+                logging.critical("Printing failed: %s", e)
             else:
                 messages.success(request, "Your file was printed!")
     else:
