@@ -38,11 +38,10 @@ class Command(BaseCommand):
                 if verbosity > 1:
                     print("Skipping " + model)
                 continue
-            modelpath = relative_model_path(model)
-            modellist.append(modelpath)
+            modellist.append(model)
 
         # Find out what order the fixtures need to be loaded in.
-        order = depend(set([x.split(".")[0] for x in modellist]))
+        order = depend(set([relative_model_path(x).split(".")[0] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
 
         # Save models to json files.
