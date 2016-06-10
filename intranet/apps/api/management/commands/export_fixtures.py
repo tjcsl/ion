@@ -30,23 +30,21 @@ class Command(BaseCommand):
         models = [x.__module__ + "." + x.__name__ for x in apps.get_models()]
         modellist = []
         for model in models:
-            if model.startswith("django"):
-                continue
             if not model.startswith(tuple(settings.INSTALLED_APPS)):
                 if verbosity > 1:
-                    print("Skipping " + model)
+                    print("Skipping " + model + " (not in installed apps)")
                 continue
-            if not model.startswith("intranet.apps.") or ".models." not in model:
+            if not model.startswith(("intranet.apps.", "django.contrib.")) or ".models." not in model:
                 if verbosity > 1:
                     print("Skipping " + model)
                 continue
-            modelpath = model[len("intranet.apps."):].replace(".models.", ".")
+            modelpath = relative_model_path(model)
             modellist.append(modelpath)
 
         # Find out what order the fixtures need to be loaded in.
         order = depend(set([x.split(".")[0] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
-        order = [x[len("intranet.apps."):].replace(".models.", ".") for x in order]
+        order = [relative_model_path(x) for x in order]
 
         # Save models to json files.
         for modelpath in modellist:
@@ -78,6 +76,14 @@ class Command(BaseCommand):
         readme.write("To load these fixtures, run \"./manage.py import_fixtures\"\n")
         readme.write("This command may take a long time if you have a lot of fixtures.")
         readme.close()
+
+
+def relative_model_path(model):
+    if model.startswith("intranet"):
+        rel = model[len("intranet.apps."):]
+    elif model.startswith("django"):
+        rel = model[len("django.contrib."):]
+    return rel.replace(".models.", ".")
 
 
 def depend(applist):
