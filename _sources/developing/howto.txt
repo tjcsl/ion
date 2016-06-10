@@ -18,6 +18,11 @@ Updating the dev branch
 - git rebase origin/master
 - git push --force-with-lease
 
+Fixing build
+============
+
+You can run ``./deploy`` to fix or find most of your build problems. If you add a new file, you may need to run ``./setup.py egg_info``.
+
 Viewing documentation locally
 =============================
 

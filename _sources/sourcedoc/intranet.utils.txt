@@ -4,6 +4,22 @@ intranet.utils package
 Submodules
 ----------
 
+intranet.utils.admin_helpers module
+-----------------------------------
+
+.. automodule:: intranet.utils.admin_helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+intranet.utils.cache module
+---------------------------
+
+.. automodule:: intranet.utils.cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 intranet.utils.date module
 --------------------------
 

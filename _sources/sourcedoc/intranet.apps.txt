@@ -23,6 +23,7 @@ Subpackages
     intranet.apps.itemreg
     intranet.apps.lostfound
     intranet.apps.notifications
+    intranet.apps.parking
     intranet.apps.polls
     intranet.apps.preferences
     intranet.apps.printing

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #2508) documentation</title>
+    <title>intranet.apps.schedule.views &mdash; TJ Intranet v3 (Build #2604) documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     'v3 (Build #2508)',
+        VERSION:     'v3 (Build #2604)',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -32,7 +32,7 @@
     <script type="text/javascript" src="../../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
-    <link rel="top" title="TJ Intranet v3 (Build #2508) documentation" href="../../../../index.html" />
+    <link rel="top" title="TJ Intranet v3 (Build #2604) documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -150,6 +150,7 @@
 <span class="kn">import</span> <span class="nn">calendar</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
@@ -192,8 +193,6 @@
     <span class="n">friday</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="k">if</span> <span class="n">request</span> <span class="ow">and</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -266,6 +265,53 @@
 <div class="viewcode-block" id="schedule_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.schedule_view">[docs]</a><span class="k">def</span> <span class="nf">schedule_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/view.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<span class="c1"># does NOT require login</span>
+
+
+<div class="viewcode-block" id="week_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.week_view">[docs]</a><span class="k">def</span> <span class="nf">week_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="p">:</span>
+        <span class="n">given_date</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">given_date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">given_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="n">given_date</span><span class="o">.</span><span class="n">weekday</span><span class="p">(),</span> <span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">given_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">given_date</span><span class="o">.</span><span class="n">weekday</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">given_date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">if</span> <span class="n">given_date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">given_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="n">given_date</span><span class="o">.</span><span class="n">weekday</span><span class="p">(),</span> <span class="n">weeks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">given_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">given_date</span><span class="o">.</span><span class="n">weekday</span><span class="p">())</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">new_date</span> <span class="o">=</span> <span class="n">start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">days</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schedule_context</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">new_date</span><span class="p">))</span>
+    <span class="n">next_week</span> <span class="o">=</span> <span class="n">days</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date_tomorrow&quot;</span><span class="p">]</span>
+    <span class="n">last_week</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">days</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;sched_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;days&quot;</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span> <span class="s2">&quot;next_week&quot;</span><span class="p">:</span> <span class="n">next_week</span><span class="p">,</span> <span class="s2">&quot;last_week&quot;</span><span class="p">:</span> <span class="n">last_week</span><span class="p">,</span> <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">today</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">render_template</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/week_view.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="month_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.views.month_view">[docs]</a><span class="k">def</span> <span class="nf">month_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span> <span class="ow">and</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">first_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">first_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">week1</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">first_date</span><span class="p">,</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_view</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]),</span> <span class="n">render_template</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="n">first_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)</span>
+    <span class="n">one_month</span> <span class="o">=</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">next_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">first_date</span> <span class="o">+</span> <span class="n">one_month</span><span class="p">)</span>
+    <span class="n">last_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">first_date</span> <span class="o">-</span> <span class="n">one_month</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weeks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">week1</span><span class="p">,</span> <span class="n">week2</span><span class="p">,</span> <span class="n">week3</span><span class="p">,</span> <span class="n">week4</span><span class="p">,</span> <span class="n">week5</span><span class="p">],</span> <span class="s2">&quot;next_month&quot;</span><span class="p">:</span> <span class="n">next_month</span><span class="p">,</span> <span class="s2">&quot;last_month&quot;</span><span class="p">:</span> <span class="n">last_month</span><span class="p">,</span> <span class="s2">&quot;current_month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;schedule/month_view.html&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
 <span class="c1"># does NOT require login</span>
 
