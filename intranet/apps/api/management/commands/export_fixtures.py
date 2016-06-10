@@ -85,6 +85,8 @@ def relative_model_path(model):
         rel = model[len("intranet.apps."):]
     elif model.startswith("django"):
         rel = model[len("django.contrib."):]
+    else:
+        raise CommandError("Could not identify relative model path! " + model)
     return rel.replace(".models.", ".")
 
 
@@ -94,6 +96,12 @@ def depend(applist):
         models = apps.get_app_config(app).get_models()
         for model in models:
             deps = []
+
+            # Check for absolute dependencies.
+            if hasattr(model, "natural_key"):
+                nat_deps = getattr(model.natural_key, "dependencies", [])
+                if nat_deps:
+                    print("Warning: Model " + str(model) + " has defined dependencies!")
 
             # Check dependencies for any fields.
             for field in model._meta.fields:
