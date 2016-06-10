@@ -41,8 +41,9 @@ class Command(BaseCommand):
             modellist.append(model)
 
         # Find out what order the fixtures need to be loaded in.
-        order = depend(set([relative_model_path(x).split(".")[0] for x in modellist]))
+        order = depend(set([x.split(".")[-3] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
+        order = [relative_model_path(x) for x in order]
 
         # Save models to json files.
         modelcount = 0
@@ -101,6 +102,7 @@ def depend(applist):
                 nat_deps = getattr(model.natural_key, "dependencies", [])
                 if nat_deps:
                     print("Warning: Model " + str(model) + " has defined dependencies!")
+                    print(nat_deps)
 
             # Check dependencies for any fields.
             for field in model._meta.fields:
