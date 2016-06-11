@@ -1201,7 +1201,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         perms = self.permissions
 
-        if self.is_http_request_sender() or perms is None:
+        if self.is_http_request_sender():
             return True
         else:
             public = True
