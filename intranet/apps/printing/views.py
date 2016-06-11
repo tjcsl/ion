@@ -70,7 +70,7 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
 
 def get_numpages(tmpfile_name):
     try:
-        output = subprocess.check_output(["pdfinfo", tmpfile_name], universal_newline=True)
+        output = subprocess.check_output(["pdfinfo", tmpfile_name], universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
         return False
@@ -212,6 +212,7 @@ def print_view(request):
                 print_job(obj)
             except Exception as e:
                 messages.error(request, "{}".format(e))
+                logging.critical("Printing failed: %s", e)
             else:
                 messages.success(request, "Your file was printed!")
     else:
