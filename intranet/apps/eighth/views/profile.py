@@ -176,8 +176,8 @@ def get_profile_context(request, user_id=None, date=None):
 @login_required
 def profile_view(request, user_id=None):
     context = get_profile_context(request, user_id)
-    context["show_profile_header"] = request.user.is_eighth_admin
     if context:
+        context["show_profile_header"] = request.user.is_eighth_admin
         return render(request, "eighth/profile.html", context)
     else:
         return render(request, "error/403.html", {"reason": "You may only view your own schedule."}, status=403)
