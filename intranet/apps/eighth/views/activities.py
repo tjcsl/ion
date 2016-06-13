@@ -47,7 +47,7 @@ def statistics_view(request, activity_id=None):
     cancelled_blocks = 0
     empty_blocks = 0
 
-    start_date = get_start_date(request).date()
+    start_date = get_start_date(request)
     past_start_date = 0
 
     for a in activities:
