@@ -60,7 +60,7 @@ apt-get -y install htop
 apt-get -y install glances
 
 # CSS
-apt-get -y install ruby-sass
+gem install sass
 
 # PostsgreSQL
 apt-get -y install postgresql
