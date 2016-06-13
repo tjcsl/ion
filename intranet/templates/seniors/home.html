@@ -34,7 +34,9 @@
                 </a>
             {% endif %}
         </div>
-
+        <br />
+        <b>{{ seniors|length }} senior{{ seniors|length|pluralize }} have added destinations.</b>
+        <br />
         <div class="seniors-container">
             <table class="seniors-table fancy-table" data-sortable>
                 <thead>
@@ -47,7 +49,11 @@
                 <tbody>
                 {% for senior in seniors %}
                     <tr>
-                        <td data-value="{{ senior.user.last_name }} {{ senior.user.first_name }}">{{ senior.user.full_name }}</td>
+                        <td data-value="{{ senior.user.last_name }} {{ senior.user.first_name }}">
+                            <a href="{% url 'user_profile' senior.user.id %}">
+                                {{ senior.user.full_name }}
+                            </a>
+                        </td>
                         <td class="{% if not senior.college_sure %}un{% endif %}sure">
                             {{ senior.college }}
                             {% if not senior.college_sure %} (unsure){% endif %}
