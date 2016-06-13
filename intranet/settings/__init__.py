@@ -21,6 +21,7 @@ SECRET_DATABASE_URL should be of the following form:
 SECRET_DATABASE_URL = None  # type: str
 MAINTENANCE_MODE = None  # type: bool
 TJSTAR_MAP = None  # type: bool
+TWITTER_KEYS = None  # type: Dict[str,str]
 ADMINS = None  # type: List[Tuple[str,str]]
 USE_SASL = True
 NO_CACHE = False
