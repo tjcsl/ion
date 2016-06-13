@@ -186,9 +186,9 @@ def print_job(obj, do_print=True):
         if obj.page_range:
             args.extend(["-o", "page-ranges={}".format(obj.page_range)])
         try:
-            subprocess.check_output(args)
+            subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:
-            logger.error("Could not run print command (returned {}): {}".format(e.returncode, e.output))
+            logger.error("Could not run lpr (returned {}): {}".format(e.returncode, e.output))
             raise Exception("An unknown error occured while printing your file.")
 
     obj.printed = True
