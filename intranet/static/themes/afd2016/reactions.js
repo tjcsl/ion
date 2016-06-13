@@ -29,7 +29,9 @@ $(function() {
     giveReaction = function(icon) {
         var react = icon.attr("data-reaction");
         var outer = icon.parent().parent();
-        $.post(outer.attr("data-endpoint"), {"reaction": react}, function(res) {
+        $.post(outer.attr("data-endpoint"), {
+            "reaction": react
+        }, function(res) {
             location.href = outer.attr("data-view");
         });
     }

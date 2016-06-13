@@ -24,7 +24,7 @@ $(function() {
             }
         });
 
-        $e = $(".select-all[data-name='"+ name + "']");
+        $e = $(".select-all[data-name='" + name + "']");
         if (num_checked === 0) {
             $e.prop("checked", false);
             $e.prop("indeterminate", false);
@@ -38,7 +38,8 @@ $(function() {
     });
 
     distribute = function() {
-        var acts = [], act_names = [];
+        var acts = [],
+            act_names = [];
         var $salls = $(".select-all");
 
         $salls.each(function() {
@@ -49,17 +50,20 @@ $(function() {
         var $rows = $("tr.user-row");
         var max = Math.floor($rows.length / $salls.length);
         console.debug("max:", max);
-        var rowi = 0, acti = 0, curi = 0, done = 0;
+        var rowi = 0,
+            acti = 0,
+            curi = 0,
+            done = 0;
         var maxi = acts.length;
         var sus = {};
 
         $rows.each(function() {
             var act = acts[acti];
             $("input", $(this)).prop("checked", false);
-            $("input[name='"+act+"']", $(this)).prop("checked", true);
+            $("input[name='" + act + "']", $(this)).prop("checked", true);
             curi++;
             done++;
-            if (curi >= max && (acti+1) < acts.length) {
+            if (curi >= max && (acti + 1) < acts.length) {
                 sus[acti] = curi;
                 acti++;
                 curi = 0;

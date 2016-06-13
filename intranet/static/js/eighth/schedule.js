@@ -62,13 +62,13 @@ $(function() {
         var classes = ["fa-arrows-v", "fa-long-arrow-up", "fa-long-arrow-down"];
         if (opt === "both") {
             $(".propagate > i").removeClass(classes[1] + " " + classes[2])
-                               .addClass(classes[0]);
+                .addClass(classes[0]);
         } else if (opt === "up") {
             $(".propagate > i").removeClass(classes[0] + " " + classes[2])
-                               .addClass(classes[1]);
+                .addClass(classes[1]);
         } else if (opt === "down") {
             $(".propagate > i").removeClass(classes[0] + " " + classes[1])
-                               .addClass(classes[2]);
+                .addClass(classes[2]);
         }
     }
 
@@ -112,7 +112,7 @@ $(function() {
 
         if (window.propagate_method && window.propagate_method === "only_new") {
             var new_rows = [];
-            for(var i=0; i<rows.length; i++) {
+            for (var i = 0; i < rows.length; i++) {
                 var rw = $(rows[i]);
                 if (!rw.hasClass("scheduled")) {
                     new_rows.push(rows[i]);

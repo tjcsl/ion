@@ -18,7 +18,7 @@ $(function() {
         var searchparts = qs.split("&");
         for (var i in searchparts) {
             // console.debug(searchparts[i]);
-            if (searchparts[i].length > 0 && searchparts[i].substring(0, part_exclude.length+1) !== (part_exclude + "=")) {
+            if (searchparts[i].length > 0 && searchparts[i].substring(0, part_exclude.length + 1) !== (part_exclude + "=")) {
                 osearch += searchparts[i] + "&";
             }
         }
@@ -49,7 +49,10 @@ $(function() {
             history.pushState(null, null, url);
         }
 
-        $('.schedule-outer').load(endpoint, {"date": date, "no_outer": true}, function() {
+        $('.schedule-outer').load(endpoint, {
+            "date": date,
+            "no_outer": true
+        }, function() {
             scheduleBind();
             setTimeout(displayPeriod, 50);
         });
@@ -58,7 +61,7 @@ $(function() {
     formatDate = function(date) {
         // console.log("date: " + date);
         var parts = date.split("-");
-        return new Date(parts[0], parts[1]-1, parts[2]);
+        return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
     formatTime = function(time, date) {
@@ -66,7 +69,7 @@ $(function() {
         var tm = time.split(":");
         var hr = parseInt(tm[0]);
         var mn = parseInt(tm[1]);
-        d.setHours(hr < 7 ? hr+12 : hr);
+        d.setHours(hr < 7 ? hr + 12 : hr);
         d.setMinutes(mn)
         return d;
     }
@@ -129,11 +132,11 @@ $(function() {
                     "status": "in",
                     "period": period
                 };
-            } else if (i+1 < periods.length && betweenPeriod(period, periods[i+1], now)) {
+            } else if (i + 1 < periods.length && betweenPeriod(period, periods[i + 1], now)) {
                 return {
                     "status": "between",
                     "prev": period,
-                    "next": periods[i+1]
+                    "next": periods[i + 1]
                 };
             }
         }
@@ -164,7 +167,7 @@ $(function() {
         }
     }
 
-    scheduleBind(); 
+    scheduleBind();
 
     displayPeriod();
     setInterval(displayPeriod, 10000);

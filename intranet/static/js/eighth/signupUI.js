@@ -147,8 +147,8 @@ var StickyHeaders = function(headers) {
     this.scroll = function() {
         headers.each(function(i) {
             var thisHeader = $(this),
-                prevHeader = headers.eq(i-1),
-                thrdHeader = headers.eq(i-2);
+                prevHeader = headers.eq(i - 1),
+                thrdHeader = headers.eq(i - 2);
             var top = thisHeader.position().top;
 
             if (prevHeader.hasClass("empty")) {
@@ -184,7 +184,9 @@ $(function() {
         sh.scroll();
     });
 
-    var initX = null, initY = null, listening = false;
+    var initX = null,
+        initY = null,
+        listening = false;
 
     $(".day-picker").on({
         "touchstart": function(e) {

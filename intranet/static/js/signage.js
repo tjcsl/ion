@@ -1,6 +1,7 @@
 /* global $ */
 $(function() {
-    var clicked = false, clickY;
+    var clicked = false,
+        clickY;
 
     var updateScrollPos = function(e) {
         $("#activity-list").scrollTop($("#activity-list").scrollTop() + (clickY - e.pageY));

@@ -14,7 +14,9 @@ $(function() {
         var endpoint = $(".sponsor-widget").attr("data-endpoint");
         console.info("Sponsor schedule jump to", date);
 
-        $.get(endpoint, {"date": date}, function(d) {
+        $.get(endpoint, {
+            "date": date
+        }, function(d) {
             $(".sponsor-widget-outer").html($(".sponsor-widget", $(d)));
             sponsor_schedule_bind();
         });

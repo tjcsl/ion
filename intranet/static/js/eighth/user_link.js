@@ -63,6 +63,9 @@ $(function() {
             posy = window.mouseY = e.pageY;
         posx += 75;
         posy -= 215 - 10;
-        $("img.user-pic.active").css({left: posx, top: posy});
+        $("img.user-pic.active").css({
+            left: posx,
+            top: posy
+        });
     });
 })

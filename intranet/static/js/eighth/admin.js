@@ -76,7 +76,7 @@ $(function() {
                 $blockCheckboxes.parent().parent().addClass("hidden");
                 $blockCheckboxes.parent().parent().data("hidden", true);
             }
-        } catch(e) {}
+        } catch (e) {}
     }
 
     $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
@@ -93,7 +93,7 @@ $(function() {
         if ($popover.hasClass("closed")) {
             $toggle.html("Select All <i class=\"fa fa-caret-down\"></i>")
         } else {
-           $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>")
+            $toggle.html("Select All <i class=\"fa fa-caret-up\"></i>")
         }
     });
 

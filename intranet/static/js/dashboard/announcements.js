@@ -23,14 +23,16 @@ $(document).ready(function() {
         var hidden = announcement.hasClass("hidden");
         var action = hidden ? "show" : "hide";
 
-        $.post("/announcements/" + action + "?" + id, {announcement_id: id}, function() {
+        $.post("/announcements/" + action + "?" + id, {
+            announcement_id: id
+        }, function() {
             console.info("Announcement", id, action);
         });
 
         if (action === "show") {
             icon.removeClass("fa-toggle-off")
-                    .addClass("fa-toggle-on")
-                    .attr("title", icon.attr("data-visible-title"));
+                .addClass("fa-toggle-on")
+                .attr("title", icon.attr("data-visible-title"));
 
             setTimeout(function() {
                 announcement.removeClass("hidden");
@@ -40,8 +42,8 @@ $(document).ready(function() {
             announcementContent.slideDown(350);
         } else {
             icon.removeClass("fa-toggle-on")
-                    .addClass("fa-toggle-off")
-                    .attr("title", icon.attr("data-hidden-title"));
+                .addClass("fa-toggle-off")
+                .attr("title", icon.attr("data-hidden-title"));
 
             setTimeout(function() {
                 announcement.addClass("hidden");
@@ -52,7 +54,7 @@ $(document).ready(function() {
     };
 
     $(".announcement[data-id] h3").click(function(e) {
-        if(e.target !== this) return;
+        if (e.target !== this) return;
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
     });

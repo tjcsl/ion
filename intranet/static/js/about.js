@@ -11,7 +11,7 @@ $(function() {
     var desktopIndex = 0,
         mobileIndex = 0;
     setInterval(function() {
-        if (desktopIndex === desktopMax-1) {
+        if (desktopIndex === desktopMax - 1) {
             $("span", desktop).eq(0).slideDown();
             $("span", desktop).show();
             desktopIndex = 0;
@@ -20,7 +20,7 @@ $(function() {
             desktopIndex++;
         }
 
-        if (mobileIndex === mobileMax-1) {
+        if (mobileIndex === mobileMax - 1) {
             $("span", mobile).eq(0).slideDown();
             setTimeout(function() {
                 $("span", mobile).show();

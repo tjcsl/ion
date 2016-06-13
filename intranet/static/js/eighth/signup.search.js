@@ -53,12 +53,12 @@ $(function() {
 
             var shows = [];
             var queries = [];
-            
+
             var show = false;
 
             for (var sp in searchSplit) {
                 var search = searchSplit[sp];
-                
+
                 // blank entry
                 if (search.length < 1 || search === '*') {
                     show = true;
@@ -190,10 +190,10 @@ $(function() {
                     if (queries[i] === "or") {
                         //console.debug("OR:", i);
                         i = parseInt(i);
-                        if (i-1 >= 0 && i+1 < queries.length) {
+                        if (i - 1 >= 0 && i + 1 < queries.length) {
                             //console.debug("orqs:", queries[i-1], queries[i+1]);
                             //console.debug("orqs:", shows[i-1], shows[i+1]);
-                            nshows.push(shows[i-1] || shows[i+1]);
+                            nshows.push(shows[i - 1] || shows[i + 1]);
                         }
                     }
                 }
@@ -215,7 +215,9 @@ $(function() {
                 }
             }
 
-            if (show) {results.push(aid);}
+            if (show) {
+                results.push(aid);
+            }
         });
 
         // console.log("results:", results);

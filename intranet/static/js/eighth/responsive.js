@@ -92,5 +92,7 @@ function activityPickerResize() {
         pixels = 300;
     }
 
-    p.css({ height: pixels + "px" });
+    p.css({
+        height: pixels + "px"
+    });
 }

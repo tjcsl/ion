@@ -109,8 +109,8 @@ $(function() {
         },
 
         initialize: function() {
-          _.bindAll(this, "render", "showDetail");
-          this.template = _.template($("#activity-list-row-template").html());
+            _.bindAll(this, "render", "showDetail");
+            this.template = _.template($("#activity-list-row-template").html());
         },
 
         render: function() {
@@ -232,9 +232,9 @@ $(function() {
 
                 if (xhr.status === 403 &&
                     (content_type === "text/plain" ||
-                     content_type.indexOf("text/plain;") === 0 ||
-                     content_type === "text/html" ||
-                     content_type.indexOf("text/html;") === 0)) {
+                        content_type.indexOf("text/plain;") === 0 ||
+                        content_type === "text/html" ||
+                        content_type.indexOf("text/html;") === 0)) {
 
                     $(".error-feedback").html(xhr.responseText);
 

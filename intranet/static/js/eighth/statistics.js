@@ -16,19 +16,22 @@ $(document).ready(function() {
             return 0;
         });
         parsedData = {
-            labels: $.map(parsedData, function(v) { return v[0]; }),
-            datasets: [
-                {
-                    label: "A Block",
-                    backgroundColor: "rgba(200,100,100,0.5)",
-                    data: $.map(parsedData, function(v) { return "A" in v[1] ? v[1].A : null; })
-                },
-                {
-                    label: "B Block",
-                    backgroundColor: "rgba(100,100,200,0.5)",
-                    data: $.map(parsedData, function(v) { return "B" in v[1] ? v[1].B : null; })
-                }
-            ]
+            labels: $.map(parsedData, function(v) {
+                return v[0];
+            }),
+            datasets: [{
+                label: "A Block",
+                backgroundColor: "rgba(200,100,100,0.5)",
+                data: $.map(parsedData, function(v) {
+                    return "A" in v[1] ? v[1].A : null;
+                })
+            }, {
+                label: "B Block",
+                backgroundColor: "rgba(100,100,200,0.5)",
+                data: $.map(parsedData, function(v) {
+                    return "B" in v[1] ? v[1].B : null;
+                })
+            }]
         };
         // don't remove new keyword, breaks Chart.js
         new Chart(canvas.getContext("2d"), {

@@ -2,10 +2,12 @@
 if (window.ion.authenticated && !window.ion.gcm_optout) {
     window.addEventListener('load', function() {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/serviceworker.js', { scope: './' }).then(subscribe);
+            navigator.serviceWorker.register('/serviceworker.js', {
+                scope: './'
+            }).then(subscribe);
         } else {
             console.warn('Service workers aren\'t supported in this browser.');
-        }       
+        }
     });
 }
 
@@ -16,7 +18,9 @@ function subscribe() {
     }
 
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-        serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
+        serviceWorkerRegistration.pushManager.subscribe({
+                userVisibleOnly: true
+            })
             .then(function(subscription) {
                 return sendSubscriptionToServer(subscription);
             }).catch(function(e) {
@@ -26,15 +30,14 @@ function subscribe() {
                 } else {
                     console.error('Unable to subscribe to push', e);
                 }
-            }
-        );
+            });
     });
 }
 
 // send subscription id to server, to be saved linked to logged in user's UID
 function sendSubscriptionToServer(subscription) {
     var res = subscription.endpoint.split("/");
-    var token = res[res.length-1];
+    var token = res[res.length - 1];
     console.log(token);
     if (window.ion && window.ion.authenticated) {
         var token_sha = sha256(token);

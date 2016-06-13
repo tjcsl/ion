@@ -11,7 +11,7 @@ $(function() {
     }
 
     $(".logo").click(function() {
-        location.href = (window.osearch ? "/?"+window.osearch.substring(0, window.osearch.length-1) : "/");
+        location.href = (window.osearch ? "/?" + window.osearch.substring(0, window.osearch.length - 1) : "/");
     });
 
     $(".git-version").click(function(e) {
@@ -35,7 +35,9 @@ $(function() {
         if (n.length === 0) {
             $(this).html("TJ Intra<span class='letter-n'>n</span>et");
             $("body").append("<audio id='tdfw' src='https://www.tjhsst.edu/~2016jwoglom/uploads/tdfw.mp3?1' preload></audio>");
-            $(".title h1 .letter-n").css({"cursor": "pointer"}).dblclick(function() {
+            $(".title h1 .letter-n").css({
+                "cursor": "pointer"
+            }).dblclick(function() {
                 document.querySelector("#tdfw").play();
                 var e = $("input, .schedule, .footer a");
                 var ip = $(this).parent();

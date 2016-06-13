@@ -28,7 +28,10 @@ $(function() {
 
     var openMenu = function(menu, bindEvents) {
         menu.show();
-        menu.stop().animate({ top: "0", opacity: 1 }, time, "easeInQuart", function() {
+        menu.stop().animate({
+            top: "0",
+            opacity: 1
+        }, time, "easeInQuart", function() {
             if (bindEvents) {
                 $(document).bind("click tap", clickOutside);
                 $(".dropdown-menu").bind("click", clickInside);
@@ -37,7 +40,10 @@ $(function() {
     }
 
     var closeMenu = function(menu, unbindEvents) {
-        menu.stop().animate({ top: "10px", opacity: 0 }, time, "easeOutQuart", function() {
+        menu.stop().animate({
+            top: "10px",
+            opacity: 0
+        }, time, "easeOutQuart", function() {
             menu.hide();
 
             if (unbindEvents) {
