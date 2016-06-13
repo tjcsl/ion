@@ -1,29 +1,30 @@
 {# <a href="{% url 'eighth_roster' scheduled_activity.id %}" class="button">View Roster (full page)</a> #}
 
 <table class="members-table fancy-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in viewable_members %}
-            <tr class="item-row">
-                <td>
-                <a href="{% url 'user_profile' user.id %}">
-                    {{ user.last_name }}, {{ user.first_name }}
-                </a>
-                </td>
-                <td>{{ user.grade.number }}</td>
-            </tr>
-        {% empty %}
-            <tr class="item-row">
-                <td colspan="2">There are no signups.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in viewable_members %}
+    <tr class="item-row">
+      <td>
+        <a href="{% url 'user_profile' user.id %}">
+          {{ user.last_name }}, {{ user.first_name }}
+        </a>
+      </td>
+      <td>{{ user.grade.number }}</td>
+    </tr>
+  {% empty %}
+    <tr class="item-row">
+      <td colspan="2">There are no signups.</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
 {% if num_hidden_members > 0 %}
-    <p>{{ num_hidden_members }} {% if num_hidden_members == 1 %}user has{% else %}users have{% endif %} elected to not appear on this list.</p>
+  <p>{{ num_hidden_members|pluralize:" user has, users have" }} elected to not appear on this list.</p>
 {% endif %}
