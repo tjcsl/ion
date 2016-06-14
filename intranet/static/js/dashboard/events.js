@@ -42,7 +42,7 @@ $(function() {
             eventContent.css("display", "");
             eventContent.slideUp(350);
         }
-    };
+    }
 
     $(".event[data-id] h3").click(function(e) {
         if (e.target !== this) return;

@@ -220,7 +220,7 @@ $(function() {
 
                 listening = false;
             }
-        };
+        }
     });
 
     $("#activityPicker").on({

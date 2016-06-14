@@ -67,8 +67,8 @@ $(function() {
     formatTime = function(time, date) {
         var d = new Date(date);
         var tm = time.split(":");
-        var hr = parseInt(tm[0]);
-        var mn = parseInt(tm[1]);
+        var hr = parseInt(tm[0], 10);
+        var mn = parseInt(tm[1], 10);
         d.setHours(hr < 7 ? hr + 12 : hr);
         d.setMinutes(mn)
         return d;
@@ -147,14 +147,14 @@ $(function() {
     window.prevPeriod = null;
     displayPeriod = function(now) {
         $sch = $(".schedule");
-        if (!now) var now = new Date();
+        if (!now) now = new Date();
         var current = getCurrentPeriod(now);
-        // if(current !== window.prevPeriod) console.debug(now.getHours() + ":" + now.getMinutes(), "current:", current);
+        // if (current !== window.prevPeriod) console.debug(now.getHours() + ":" + now.getMinutes(), "current:", current);
         window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove()
 
-        if (!!current) {
+        if (current) {
             if (current.status === "in") {
                 var p = getPeriodElem(current.period);
                 p.addClass("current");

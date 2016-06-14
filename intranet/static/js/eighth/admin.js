@@ -150,7 +150,7 @@ $(function() {
 
     if ($("#id_restricted").length > 0) {
         updateRestrictedFormFields();
-    };
+    }
 
     $("#only-show-overbooked").click(function() {
         $("tr.underbooked").toggle();

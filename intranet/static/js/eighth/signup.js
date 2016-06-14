@@ -185,8 +185,8 @@ $(function() {
                             var evnt = changed_activities[i];
                             console.debug(evnt);
                             var act = evnt.split('Your signup for ')[1].split(' on ');
-                            var blk = act[1].split(' was removed');
-                            act = act[0], blk = blk[0];
+                            var blk = act[1].split(' was removed')[0];
+                            act = act[0];
                             console.info(act, blk);
 
                             $(".days-container .day .block").each(function() {
