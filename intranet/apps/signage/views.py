@@ -127,6 +127,8 @@ def touch_signage(request, sign=None, landscape=False):
         map_location = sign.map_location
 
     context = schedule_context(request)
+    context["senior_graduation"] = settings.SENIOR_GRADUATION
+    context["senior_graduation_year"] = settings.SENIOR_GRADUATION_YEAR
     context["signage"] = True
     context["zoom"] = zoom
     context["eighth_url"] = "/signage/eighth?no_reload&touch=1&detail=1&block_increment={}".format(block_increment)
