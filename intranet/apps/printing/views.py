@@ -188,8 +188,8 @@ def print_job(obj, do_print=True):
         try:
             subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
         except subprocess.CalledProcessError as e:
-            logger.error("Could not run lpr (returned {}): {}".format(e.returncode, e.output))
-            raise Exception("An unknown error occured while printing your file.")
+            logger.error("Could not run lpr (returned {}): {}".format(e.returncode, e.output.strip()))
+            raise Exception("An error occured while printing your file: %s" % e.output.strip())
 
     obj.printed = True
     obj.save()
