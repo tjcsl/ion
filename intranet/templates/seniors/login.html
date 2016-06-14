@@ -1,0 +1,41 @@
+{% load pipeline %}
+{% load staticfiles %}
+{% stylesheet 'dashboard.widgets' %}
+<script>
+graduated = function() {
+    $("body").css({
+        "background-image": "url(https://raw.githubusercontent.com/tjcsl/iodine/master/www/gc/winner.jpg)",
+        "background-size": "400px"
+    });
+    //$('<div style=" position: fixed; top: 0; left: 50%; margin-left: -202px; width: 406px; height: 100%; background: rgba(242,242,242,0.8); z-index: -1"></div>').appendTo($("body"));
+}
+</script>
+<script src="{% static 'js/dashboard/seniors.js' %}"></script>
+<style>
+.widget.seniors-widget {
+    width: 400px;
+    margin-left: -100px;
+    margin-top: 25px;
+    border-color: #0048ab;
+    display: block !important;
+}
+@media (max-width: 404px) {
+    .widget.seniors-widget {
+        width: 300px;
+        margin-left: -50px;
+    }
+}
+</style>
+<div class="widget extra-widget seniors-widget" data-graduation-date="{{ senior_graduation }}" data-graduation-year="{{ senior_graduation_year }}" style="">
+<div class="widget-title" style="border-color: #0048ab">
+<h2>
+Seniors: Class of 2016
+</h2>
+<div class="info">
+
+</div>
+</div>
+<div class="widget-content">
+<center><span class="seniors-clock"></span></center>
+</div>
+</div>

@@ -127,7 +127,9 @@ def index_view(request, auth_form=None, force_login=False, added_context=None):
                 "git_info": settings.GIT,
                 "bg_pattern": get_bg_pattern(),
                 "theme": get_login_theme(),
-                "login_warning": login_warning}
+                "login_warning": login_warning,
+                "senior_graduation": settings.SENIOR_GRADUATION,
+                "senior_graduation_year": settings.SENIOR_GRADUATION_YEAR}
         schedule = schedule_context(request)
         data.update(schedule)
         if added_context is not None:

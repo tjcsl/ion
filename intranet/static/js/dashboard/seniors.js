@@ -34,7 +34,8 @@ function initClock(id, evt, endtime){
 
     if(t.total<=0){
       clearInterval(timeinterval);
-      clock.innerHTML = "<span class='clock'><b>YOU HAVE GRADUATED!</b></span>";
+      clock.innerHTML = "<span class='clock'><b style='font-weight:bold'>YOU HAVE GRADUATED!</b></span>";
+      if(typeof graduated != 'undefined') graduated();
     }
   }
 
