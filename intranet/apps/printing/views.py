@@ -41,7 +41,7 @@ def get_printers():
 
 def convert_soffice(tmpfile_name):
     try:
-        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], universal_newlines=True)
+        output = subprocess.check_output(["soffice", "--headless", "--convert-to", "pdf", tmpfile_name, "--outdir", "/tmp"], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run soffice command (returned {}): {}".format(e.returncode, e.output))
         return False
@@ -57,7 +57,7 @@ def convert_soffice(tmpfile_name):
 def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
     new_name = "{}.pdf".format(tmpfile_name)
     try:
-        subprocess.check_output([cmdname, tmpfile_name, new_name], universal_newlines=True)
+        subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run {} command (returned {}): {}".format(cmdname, e.returncode, e.output))
         return False
@@ -70,7 +70,7 @@ def convert_pdf(tmpfile_name, cmdname="ps2pdf"):
 
 def get_numpages(tmpfile_name):
     try:
-        output = subprocess.check_output(["pdfinfo", tmpfile_name], universal_newlines=True)
+        output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
         logger.error("Could not run pdfinfo command (returned {}): {}".format(e.returncode, e.output))
         return False
