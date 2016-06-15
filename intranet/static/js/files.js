@@ -80,8 +80,8 @@ $(function() {
         });
     }
 
-    zip_folder = function(ths) {
-        var name = $(this).attr("data-name");
+    zip_folder = function(item) {
+        var name = $(item).attr("data-name");
         var safeName = $("<div>").text(name).html();
         var c = confirm('Are you sure you want to download "' + safeName + '"?');
         if (!c) return false;
