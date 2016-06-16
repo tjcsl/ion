@@ -32,14 +32,15 @@ function initClock(id, evt, endtime) {
             clock.innerHTML = "<span class='clock'><b>" + dys + "</b> days, <b>" + hrs + "</b> hours, <b>" + mns + "</b> minutes, <b>" + scs + "</b> seconds</span><br/>until " + evt;
         }
 
-    if (t.total <= 0) {
-      clearInterval(timeinterval);
-      clock.innerHTML = "<span class='clock'><b style='font-weight:bold'>YOU HAVE GRADUATED!</b></span>";
-      if(typeof graduated != 'undefined') graduated();
-    }
+        if (t.total <= 0) {
+          clearInterval(timeinterval);
+          clock.innerHTML = "<span class='clock'><b style='font-weight:bold'>YOU HAVE GRADUATED!</b></span>";
+          if(typeof graduated != 'undefined') graduated();
+        }
 
-    updateClock();
-    var timeinterval = setInterval(updateClock, 500);
+        updateClock();
+        var timeinterval = setInterval(updateClock, 500);
+    }
 }
 
 $(function() {
