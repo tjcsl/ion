@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.text import slugify
 
 import magic
 
@@ -150,8 +151,8 @@ def print_job(obj, do_print=True):
     filebase_escaped = filebase.replace(",", "")
     filebase_escaped = filebase_escaped.encode("ascii", "ignore")
     filebase_escaped = filebase_escaped.decode()
-    tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
-
+    tempfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
+    tmpfile_name = slugify(tempfile_name)
     with open(tmpfile_name, 'wb+') as dest:
         for chunk in fileobj.chunks():
             dest.write(chunk)
