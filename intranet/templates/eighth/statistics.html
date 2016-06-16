@@ -78,13 +78,13 @@
 
     <table id="members-table" class="fancy-table">
         <thead>
-            <tr><th>Student</th><th>Total Signups</th></tr>
+            <tr><th>Student</th><th>ID</th><th>Total Signups</th></tr>
         </thead>
         <tbody>
             {% for user, signups in members %}
-                <tr><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
+                <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
                 {% empty %}
-                <tr><td colspan="2">No one has signed up for this activity yet.</td></tr>
+                <tr><td colspan="3">No one has signed up for this activity yet.</td></tr>
             {% endfor %}
         </tbody>
     </table>

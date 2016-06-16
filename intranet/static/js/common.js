@@ -167,8 +167,8 @@ runEgg = function(q) {
             $("body").append("<style>div#kickass-menu.KICKASSELEMENT {display: none !important;top: -9999px;left: -9999px;}</style>");
             break;
         case "d is for dogecoin":
-            var s = document.createElement("script"),
-            s.type = 'text/javascript',
+            var s = document.createElement("script");
+            s.type = 'text/javascript';
             s.src = "//wogloms.com/dogeify.js?ion";
             document.body.appendChild(s);
             break;
