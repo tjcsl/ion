@@ -68,9 +68,9 @@ $(document).ready(function() {
     var tableRows = $("#members-table tbody tr");
     if (tableRows.length >= 2) {
         $("#members-table thead").append("<th></th>");
-        var max = parseInt($("#members-table tbody tr:first-child td:nth-child(2)").text(), 10);
+        var max = parseInt($("#members-table tbody tr:first-child td:nth-child(3)").text(), 10);
         tableRows.each(function() {
-            var child = $(this).find("td:nth-child(2)");
+            var child = $(this).find("td:nth-child(3)");
             var val = parseInt(child.text(), 10);
             $(this).append("<td><div class='sparkline' style='width:" + Math.round(100 * val / max) + "px'></div></td>");
         });
