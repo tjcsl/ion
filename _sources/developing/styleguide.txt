@@ -2,7 +2,7 @@
 Coding Style Guide
 ******************
 
-Follow `PEP8 <http://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python).
+Follow `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ (the official style guide for Python).
 
 Note that the `flake8` tool can be very useful in this regard.
 
@@ -89,7 +89,7 @@ Bad:
 References
 ==========
 
-- `Google Python Style Guide <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html>`_.
-- `Google HTML/CSS Style Guide <http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml>`_.
-- `Google Javascript Style Guide <http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml>`_.
-- `PEP8 Official Python Style Guide <http://www.python.org/dev/peps/pep-0008/>`_.
+- `Google Python Style Guide <https://google.github.io/styleguide/pyguide.html>`_.
+- `Google HTML/CSS Style Guide <https://google.github.io/styleguide/htmlcssguide.xml>`_.
+- `Google Javascript Style Guide <https://google.github.io/styleguide/javascriptguide.xml>`_.
+- `PEP8 Official Python Style Guide <https://www.python.org/dev/peps/pep-0008/>`_.
