@@ -175,7 +175,7 @@ def calendar_view(request):
     data["week_data"] = week_data(request)
     data["month_data"] = month_data(request)
     if 'view' in request.GET and request.GET["view"] == "month":
-            data["view"] = "month"
+        data["view"] = "month"
     else:
         data["view"] = "week"
     return render(request, "schedule/calendar.html", data)
