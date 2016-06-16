@@ -8,8 +8,6 @@ print(json.load(f)['$1'])
 f.close()"
 }
 
-# Needed for mock ldap server
-add-apt-repository -y ppa:webupd8team/java
 apt-get update
 apt-get -y dist-upgrade
 # Timezone
@@ -62,7 +60,7 @@ apt-get -y install htop
 apt-get -y install glances
 
 # CSS
-apt-get -y install ruby-sass
+gem install sass
 
 # PostsgreSQL
 apt-get -y install postgresql

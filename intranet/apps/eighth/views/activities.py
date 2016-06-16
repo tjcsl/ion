@@ -66,7 +66,7 @@ def statistics_view(request, activity_id=None):
             if str(a.block.date) not in chart_data:
                 chart_data[str(a.block.date)] = {}
             chart_data[str(a.block.date)][str(a.block.block_letter)] = members
-            if members == 0:
+            if members == 0 and not a.cancelled:
                 empty_blocks += 1
         else:
             old_blocks += 1

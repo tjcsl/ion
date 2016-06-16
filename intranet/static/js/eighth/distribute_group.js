@@ -4,8 +4,9 @@ $(function() {
         var chk = $(this).prop("checked");
         var name = $(this).attr("data-name");
         console.debug(chk, name);
+
         $(".user-item").each(function() {
-            if($(this).attr("name") == name) {
+            if ($(this).attr("name") === name) {
                 $(this).prop("checked", chk);
             }
         });
@@ -15,19 +16,19 @@ $(function() {
         var chk = $(this).prop("checked");
         var name = $(this).attr("name");
         var num_checked = 0;
-        var $checkboxes = $(".user-item[name='"+name+"']");
+        var $checkboxes = $(".user-item[name='" + name + "']");
 
         $checkboxes.each(function() {
-            if($(this).prop("checked")) {
+            if ($(this).prop("checked")) {
                 num_checked++;
             }
         });
 
-        $e = $(".select-all[data-name='"+ name + "']");
-        if(num_checked == 0) {
+        $e = $(".select-all[data-name='" + name + "']");
+        if (num_checked === 0) {
             $e.prop("checked", false);
             $e.prop("indeterminate", false);
-        } else if(num_checked == $checkboxes.length) {
+        } else if (num_checked === $checkboxes.length) {
             $e.prop("checked", true);
             $e.prop("indeterminate", false);
         } else {
@@ -37,49 +38,49 @@ $(function() {
     });
 
     distribute = function() {
-        var acts = [];
-        var act_names = []
+        var acts = [],
+            act_names = [];
         var $salls = $(".select-all");
+
         $salls.each(function() {
             acts.push($(this).attr("data-name"));
             act_names.push($(this).parent().text());
         });
 
         var $rows = $("tr.user-row");
-        var max = $rows.length / $salls.length;
-        max = Math.floor(max);
-        console.debug("max:",max);
-        var rowi = 0;
-        var acti = 0;
-        var curi = 0;
-        var done = 0;
+        var max = Math.floor($rows.length / $salls.length);
+        console.debug("max:", max);
+        var rowi = 0,
+            acti = 0,
+            curi = 0,
+            done = 0;
         var maxi = acts.length;
         var sus = {};
-
 
         $rows.each(function() {
             var act = acts[acti];
             $("input", $(this)).prop("checked", false);
-            $("input[name='"+act+"']", $(this)).prop("checked", true);
+            $("input[name='" + act + "']", $(this)).prop("checked", true);
             curi++;
             done++;
-            if(curi >= max && (acti+1) < acts.length) {
+            if (curi >= max && (acti + 1) < acts.length) {
                 sus[acti] = curi;
                 acti++;
                 curi = 0;
             }
         });
+
         sus[acti] = curi;
         console.debug(sus);
 
         var msg = "";
-        for(su in sus) {
-            if(sus.hasOwnProperty(su) && sus[su] > 0) {
+        for (su in sus) {
+            if (sus.hasOwnProperty(su) && sus[su] > 0) {
                 msg += sus[su] + " students were placed into: " + act_names[su] + "\n";
             }
         }
-        msg += "\nTo apply these changes, press the Finish button below."
+
+        msg += "\nTo apply these changes, press the Finish button below.";
         alert(msg);
     }
-
-})
+});

@@ -1,5 +1,4 @@
 @import "colors";
-
 .widgets {
     display: block;
     position: absolute;
@@ -18,15 +17,12 @@
     overflow: hidden;
     background-color: #f2f2f2;
     margin-bottom: 10px;
-
     behavior: url("/static/js/PIE/PIE.htc");
-
     .info {
         font-size: 12px;
         color: rgb(144, 144, 144);
         position: absolute;
         right: 8px;
-
         @media (max-width: 800px) {
             font-size: 12px;
         }
@@ -41,19 +37,15 @@
     //background: linear-gradient(to bottom, #f9f9f9 0%, #f2f2f2 100%);
     //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f2f2f2', GradientType=0 );
     //-pie-background-image: none;
-
     border-bottom: 1px solid rgb(216, 216, 216);
     padding: 0 8px;
-
     line-height: 30px;
     height: 30px;
     -webkit-border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
     behavior: url("/static/js/PIE/PIE.htc");
-
     position: relative;
-
     h2 {
         font-size: 14px;
         float: left;
@@ -67,12 +59,10 @@
     .widget.sponsor-widget .info {
         font-size: 11px;
     }
-
     /* move buttons over a few pixels */
     .block-header a {
         margin-right: -4px;
     }
-
     .widget-title .info a {
         margin-right: -4px;
         font-size: 9px;
@@ -94,7 +84,6 @@
     @media (max-width: 355px) {
         width: 303px;
     }
-
     // 320x480 screens
     @media (max-width: 355px) {
         width: 100%;
@@ -114,15 +103,12 @@
     height: 30px;
     line-height: 30px;
     padding: 0 8px;
-
     .info {
         display: none;
     }
-
     a {
         float: right;
     }
-
     .no-touch &:hover .info {
         display: inline;
     }
@@ -132,20 +118,16 @@
     &.clickable {
         margin-botton: 2px;
         cursor: pointer;
-
         &:hover .block-header a {
             text-decoration: underline;
         }
     }
-
     &.open .info {
         display: inline;
     }
-
     &.warning a {
         color: rgb(255, 72, 72);
     }
-
     &.cancelled .block-signup {
         color: rgb(255, 72, 72);
         font-weight: bold;
@@ -157,7 +139,6 @@
     background-color: rgb(231, 231, 233);
     height: 0;
     overflow: hidden;
-
     .eighth-block.open & {
         max-height: 90px;
         height: auto;
@@ -171,12 +152,10 @@
 
 .block-header {
     position: relative;
-
     .block-letter {
         width: auto;
         padding: 0 4px;
     }
-
     .block-letter-date {
         max-width: 106px;
         overflow: hidden;
@@ -187,7 +166,7 @@
     }
 }
 
-.eighth-widget>.widget-title {
+.eighth-widget> .widget-title {
     margin-bottom: 2px;
 }
 
@@ -219,88 +198,100 @@
     text-overflow: ellipsis;
 }
 
+
 /* Attendance Locked/Signup Unlocked */
+
 .eighth-block.no-attendance.locked {
     .block-date,
     .block-sponsorship,
     .block-attendance-take {
-        color: rgb(0, 132, 62); /* green */
+        color: rgb(0, 132, 62);
+        /* green */
     }
-
     &.no-attendance-lock .block-letter {
         background-color: rgb(0, 132, 62);
         color: rgb(242, 242, 242);
     }
 }
 
-/* Attendance Taken */
-
-/* taken icon has a larger width */
-.block-sponsorship.attendance-taken {
-    .eighth-block & {
-        /* 13x13px not 8x13px */
-        left: 112px;
+.block-sponsorship {
+    /* Attendance Taken */
+    /* taken icon has a larger width */
+    &.attendance-taken {
+        .eighth-block & {
+            /* 13x13px not 8x13px */
+            left: 112px;
+        }
+        > i {
+            padding-right: 1px;
+        }
     }
-
-    > i {
-        padding-right: 1px;
-    }
-}
-
-/* Open Passes */
-.block-sponsorship.open-passes {
-    .eighth-block & {
-        left: 113px;
-    }
-
-    > i {
-        padding-right: 2px;
+    /* Open Passes */
+    &.open-passes {
+        .eighth-block & {
+            left: 113px;
+        }
+        > i {
+            padding-right: 2px;
+        }
     }
 }
+
 
 /* No Act Selected */
+
 .block-signup.no-activity-selected.today {
     color: $grey;
     font-weight: bold;
     /* color: rgb(255, 72, 72); red */
 }
 
+
 /* make sure "Not sponsoring an activity" always shows;
    there is no button on the right so it can take 100% */
+
 div.eighth-block .block-sponsorship.no-activity-selected {
     width: 100%;
 }
 
+
 /* No Sponsorship Today */
 
+
 /* red on white block letter icon */
+
 .eighth-block {
     &.warning .block-letter,
     &.no-attendance.today.no-attendance-lock .block-letter {
-        background-color: rgb(255, 72, 72); /* red */
+        background-color: rgb(255, 72, 72);
+        /* red */
         color: rgb(242, 242, 242);
     }
-
-    .eighth-block.no-attendance.today.no-attendance-lock {
+    &.no-attendance.today.no-attendance-lock {
         .block-sponsorship,
         .btn-link {
-            color: rgb(255, 72, 72); /* red */
+            color: rgb(255, 72, 72);
+            /* red */
         }
     }
 }
 
+
 /* Open Passes */
 
+
 /* needs to override */
-div.eighth-block.open-passes > div.block-header {
+
+div.eighth-block.open-passes> div.block-header {
     > .block-sponsorship,
     > .btn-link {
-        color: rgb(255, 107, 0); /* orange */
+        color: rgb(255, 107, 0);
+        /* orange */
     }
-
     /* orange on white block letter icon */
     > .block-letter {
-        background-color: rgb(255, 107, 0); /* orange */
+        background-color: rgb(255, 107, 0);
+        /* orange */
         color: rgb(242, 242, 242);
     }
 }
@@ -311,11 +302,9 @@ div.eighth-block.open-passes > div.block-header {
     white-space: nowrap;
     margin-top: -4px;
     margin-bottom: -4px;
-
     &.with-timeleft {
         margin-bottom: 4px;
     }
-
     .eighth-block:last-child & {
         margin-bottom: 4px;
     }
@@ -340,61 +329,49 @@ div.eighth-block.open-passes > div.block-header {
     white-space: nowrap;
     text-align: center;
     margin-right: 1px;
-
-    .chevron > i {
+    .chevron> i {
         text-align: left;
     }
-
     @media (max-width: 960px) {
         width: calc(100% - 148px);
     }
-
     @media (max-width: 800px) {
         width: 150px;
     }
 }
 
-a#eighth-sponsor-left {
-    float: left;
-    width: 10px;
+a#eighth-sponsor {
+    &-left {
+        float: left;
+        width: 10px;
+    }
+    &-right {
+        float: right;
+        width: 10px;
+    }
 }
 
-a#eighth-sponsor-right {
-    float: right;
-    width: 10px;
-}
 
 /* Extra widgets */
+
 .widget {
     &.extra-widget {
         display: block;
-
         @media (max-width: 800px) {
             display: none;
-
             body.show-extra-widgets & {
                 display: block;
             }
         }
     }
-
     &.extra-widgets-show {
         display: none;
         width: 100%;
-
         @media (max-width: 800px) {
             display: block;
-            margin: 0 auto;
-            width: 475px;
-            width: calc(100% - 75px);
-
             body.show-extra-widgets & {
                 display: none;
             }
-        }
-
-        @media (max-width: 550px) {
-            width: 100%;
         }
     }
 }
@@ -405,8 +382,8 @@ a#eighth-sponsor-right {
     display: inline-block;
     line-height: 18px;
     padding: 0 3px;
-    margin: 5px 0; /*0 -4px;*/
-
+    margin: 5px 0;
+    /*0 -4px;*/
     font-size: 9px;
     font-weight: bold;
     text-shadow: 0 1px 0 rgba(255, 255, 255, .9);
@@ -414,14 +391,12 @@ a#eighth-sponsor-right {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-
     // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100
     background: #f7f7f4;
     background: -moz-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
     background: -webkit-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
     background: linear-gradient(to bottom, #f7f7f4 0%, #eaeaea 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea', GradientType=0 );
-
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f4', endColorstr='#eaeaea', GradientType=0);
     border: 1px solid rgb(221, 221, 221);
     border-bottom-color: rgb(197, 197, 197);
     box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
@@ -447,14 +422,11 @@ a.btn-link {
     &:active {
         color: $grey;
     }
-
     .block-header & {
         text-align: center;
-
         .eighth-widget & {
             width: 37px;
         }
-
         .sponsor-widget & {
             width: 66px;
         }
@@ -466,28 +438,26 @@ a.btn-link {
         /* make arrow take less space */
         margin: 0 -2px 0 0;
     }
-
     &.fa-check {
         /* make check take less space */
         margin: 0 -3px 0 -2px;
     }
 }
 
+
 /* BIRTHDAYS */
+
 .birthdays-widget {
     .widget-content {
         padding: 5px 15px;
-
         table {
             width: 100%;
         }
     }
-
     .widget-title form {
         display: inline;
         float: right;
     }
-
     .birthday-field {
         background: transparent;
         border: 1px solid rgb(216, 216, 216);
@@ -495,12 +465,10 @@ a.btn-link {
         width: 14px;
         text-align: center;
     }
-
     .slash {
         color: black;
         font-weight: normal;
     }
-
     input {
         &[name="birthday_month"] {
             margin-right: -3px;
@@ -508,53 +476,48 @@ a.btn-link {
             padding-right: 5px;
             text-align: right;
         }
-
         &[name="birthday_day"] {
             margin-left: -2px;
             border-left: 0;
             text-align: left;
         }
-
         &[name="birthday_day"]:focus,
         &[name="birthday_month"]:focus {
             outline: 0;
         }
-
         &[type="submit"] {
             margin-top: -1px;
         }
     }
 }
 
+
 /* LINKS */
+
 .links-widget {
     .widget-content {
         padding: 5px 10px;
     }
-
     table {
         width: 100%;
     }
 }
 
+
 /* SENIORS */
-.seniors-widget .widget-content {
-    padding: 5px;
-}
 
-.seniors-widget .seniors-clock .clock {
-    font-size: 16px;
-    padding-right: 2px;
-}
-
-@media (max-width: 960px) {
-    .seniors-widget .seniors-clock .clock {
-        font-size: 14px
+.seniors-widget {
+    .widget-content {
+        padding: 5px;
     }
-}
-
-@media (max-width: 800px) {
-    .seniors-widget .seniors-clock .clock {
+    .seniors-clock .clock {
         font-size: 16px;
+        padding-right: 2px;
+        @media (max-width: 960px) {
+            font-size: 14px;
+        }
+        @media (max-width: 800px) {
+            font-size: 16px;
+        }
     }
 }

@@ -1,32 +1,31 @@
 /* global $ */
-$(document).ready(function() {
+$(function() {
     $(".eighth-widget .block-header").click(function() {
         var link = $("a", $(this));
-        if(link.length > 0) {
-            location.href = link.attr("href");
-        }
+        if (link.length > 0) location.href = link.attr("href");
     });
 
     $(".sponsor-widget .block-header").click(function() {
         var link = $("a", $(this));
-        if(link.length > 0) {
-            location.href = link.attr("href");
-        }
+        if (link.length > 0) location.href = link.attr("href");
     });
 
     sponsor_schedule_jump = function(date) {
         var endpoint = $(".sponsor-widget").attr("data-endpoint");
-        console.info("Sponsor schedule jump to "+date);
-        $.get(endpoint, {"date": date}, function(d) {
+        console.info("Sponsor schedule jump to", date);
+
+        $.get(endpoint, {
+            "date": date
+        }, function(d) {
             $(".sponsor-widget-outer").html($(".sponsor-widget", $(d)));
             sponsor_schedule_bind();
         });
     }
 
     sponsor_schedule_pushstate = function(date) {
-        if(typeof window.osearch != 'undefined' && history.pushState) {
+        if (typeof window.osearch !== 'undefined' && history.pushState) {
             var nosearch = genOrigSearch("sponsor_date");
-            var url = "?"+nosearch+"sponsor_date="+date;
+            var url = "?" + nosearch + "sponsor_date=" + date;
             console.debug(url);
             history.pushState(null, null, url);
         }

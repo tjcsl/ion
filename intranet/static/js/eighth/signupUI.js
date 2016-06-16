@@ -1,6 +1,5 @@
 // Scripts for initial layout, sticky headers, etc.
 /* global $ */
-
 var calcMaxScrollLeft = function() {
     var $daysContainer = $(".days-container");
     return $daysContainer[0].scrollWidth - $daysContainer.width();
@@ -45,7 +44,7 @@ var updateDayNavButtonStatus = function() {
     $laterDays.removeAttr("disabled");
 
     if (scrollLeft === 0) {
-        $earlierDays.attr("disabled", "disabled");
+        $earlierDays.attr("disabled", true);
     }
 
     if (Math.abs(scrollLeft - maxScrollLeft) <= 1) {
@@ -54,8 +53,6 @@ var updateDayNavButtonStatus = function() {
         // when they are supposed to be equal
         $laterDays.attr("disabled", "disabled");
     }
-
-
 }
 
 var scrollBlockChooser = function(dir) {
@@ -68,14 +65,15 @@ var scrollBlockChooser = function(dir) {
     var initialScrollLeft = $daysContainer.scrollLeft();
     var tries = 10;
 
-
     var $currentDay = $(".current-day");
     while (tries-- && $daysContainer.scrollLeft() === initialScrollLeft) {
         var $nextCurrentDay = $currentDay[dir]();
+
         if ($nextCurrentDay.length !== 0) {
             $currentDay.removeClass("current-day");
             $nextCurrentDay.addClass("current-day");
         }
+
         $currentDay = $nextCurrentDay;
         centerCurrentDay(false);
     }
@@ -91,7 +89,6 @@ var scrollBlockChooser = function(dir) {
         done: updateDayNavButtonStatus
     });
 }
-
 
 $(function() {
     $(".active-block").parents(".day").addClass("current-day");
@@ -115,7 +112,6 @@ $(function() {
         }
     });
 
-
     // Keep blocks highlighted while loading
     $(".block").click(function() {
         $(".active-block").removeClass("active-block");
@@ -131,14 +127,17 @@ var StickyHeaders = function(headers) {
             var id = Math.floor((i + 1) * Math.random() * 99999);
             var stuckCopy = $(this).clone().prependTo($("#activity-picker"));
             var empty = $(this).hasClass("empty");
+
             if (i === 0 && empty) {
                 firstEmpty = true;
             }
+
             if (i === 0 && !empty || i === 1 && firstEmpty) {
-                 stuckCopy.addClass("stuck");
+                stuckCopy.addClass("stuck");
             } else {
                 stuckCopy.addClass("hidden stuck");
             }
+
             stuckCopy.removeClass("sticky-header");
             $(this).attr("id", id);
             stuckCopy.attr("id", id + "-stuck");
@@ -160,9 +159,11 @@ var StickyHeaders = function(headers) {
                 if (!thisHeader.hasClass("empty")) {
                     $("#" + thisHeader.attr("id") + "-stuck").removeClass("hidden");
                 }
+
                 headers.each(function(j) {
                     var loopHeader = $(this);
-                    if(j !== i) {
+
+                    if (j !== i) {
                         $("#" + loopHeader.attr("id") + "-stuck").addClass("hidden");
                     }
                 });
@@ -173,8 +174,6 @@ var StickyHeaders = function(headers) {
             }
         });
     }
-
-
 }
 
 $(function() {
@@ -185,93 +184,105 @@ $(function() {
         sh.scroll();
     });
 
-    var initX = null, initY = null, listening = false;
-    var $dayPicker = $(".day-picker");
-    $dayPicker.on("touchstart", function(e) {
-        e.stopPropagation();
-        initX = e.originalEvent.touches[0].clientX;
-        initY = e.originalEvent.touches[0].clientY;
-        listening = true;
-    });
-    $dayPicker.on("touchend", function(e) {
-        e.stopPropagation();
+    var initX = null,
+        initY = null,
         listening = false;
-    });
-    $dayPicker.on("touchmove", function(e) {
-        e.stopPropagation();
-        if (!listening) {
-            return;
-        }
-        var nowX = e.originalEvent.touches[0].clientX;
-        var nowY = e.originalEvent.touches[0].clientY;
-        if (Math.abs(nowY - initY) > 30) {
-            listening = false;
-            return;
-        }
-        var diffX = nowX - initX;
-        if (Math.abs(diffX) > 30) {
-            if (diffX > 0) {
-                $(".earlier-days").click();
-            }
-            else {
-                $(".later-days").click();
-            }
-            listening = false;
-        }
-    });
-    var activityPicker = $("#activityPicker");
-    activityPicker.on("touchstart", function(e) {
-        if ($("#activity-picker > .backbtn").hasClass("visible")) {
+
+    $(".day-picker").on({
+        "touchstart": function(e) {
             e.stopPropagation();
             initX = e.originalEvent.touches[0].clientX;
             initY = e.originalEvent.touches[0].clientY;
             listening = true;
-        }
-    });
-    activityPicker.on("touchend", function(e) {
-        if ($("#activity-picker > .backbtn").hasClass("visible")) {
+        },
+        "touchend": function(e) {
             e.stopPropagation();
             listening = false;
-        }
-    });
-    activityPicker.on("touchmove", function(e) {
-        var back = $("#activity-picker > .backbtn");
-        if (back.hasClass("visible")) {
+        },
+        "touchmove": function(e) {
             e.stopPropagation();
-            if (!listening) {
-                return;
-            }
-            var nowX = e.originalEvent.touches[0].clientX;
-            var nowY = e.originalEvent.touches[0].clientY;
+
+            if (!listening) return;
+
+            var nowX = e.originalEvent.touches[0].clientX,
+                nowY = e.originalEvent.touches[0].clientY;
+
             if (Math.abs(nowY - initY) > 30) {
                 listening = false;
                 return;
             }
+
             var diffX = nowX - initX;
+
             if (Math.abs(diffX) > 30) {
-                if (diffX > 0) {
-                    back.click();
-                }
+                if (diffX > 0) $(".earlier-days").click();
+                else $(".later-days").click();
+
                 listening = false;
             }
         }
     });
+
+    $("#activityPicker").on({
+        "touchstart": function(e) {
+            if ($("#activity-picker > .backbtn").hasClass("visible")) {
+                e.stopPropagation();
+                initX = e.originalEvent.touches[0].clientX;
+                initY = e.originalEvent.touches[0].clientY;
+                listening = true;
+            }
+        },
+        "touchend": function(e) {
+            if ($("#activity-picker > .backbtn").hasClass("visible")) {
+                e.stopPropagation();
+                listening = false;
+            }
+        },
+        "touchmove": function(e) {
+            var back = $("#activity-picker > .backbtn");
+
+            if (back.hasClass("visible")) {
+                e.stopPropagation();
+
+                if (!listening) return;
+
+                var nowX = e.originalEvent.touches[0].clientX,
+                    nowY = e.originalEvent.touches[0].clientY;
+
+                if (Math.abs(nowY - initY) > 30) {
+                    listening = false;
+                    return;
+                }
+
+                var diffX = nowX - initX;
+
+                if (Math.abs(diffX) > 30) {
+                    if (diffX > 0) back.click();
+
+                    listening = false;
+                }
+            }
+        }
+    });
+
     $(window).keydown(function(e) {
         var selected = $("#activity-list li.selected:not(.search-hide)");
+
         if (selected.length > 0) {
             var flag = false;
+
             if (e.which === 38) {
                 // up arrow key
                 selected.prevAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
                 flag = true;
-            }
-            if (e.which === 40) {
+            } else if (e.which === 40) {
                 // down arrow key
                 selected.nextAll("li:not(.search-hide)").first().click();
                 e.preventDefault();
                 flag = true;
             }
+
             if (flag) {
                 var scrollParent = $("#activity-list");
                 selected = $("#activity-list li.selected");

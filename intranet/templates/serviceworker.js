@@ -11,12 +11,14 @@ self.addEventListener('push', function(event) {
     } else {
         var evt = event;
         console.debug("Fetching data text...")
-        fetch("/notifications/chrome/getdata", { credentials: 'include' }).then(function(r) {
+        fetch("/notifications/chrome/getdata", {
+            credentials: 'include'
+        }).then(function(r) {
             console.debug(r);
             return r.json();
         }).then(function(j) {
             console.debug(j);
-            if(j == null) return;
+            if (j == null) return;
             showNotif(evt, j);
         });
     }
@@ -47,7 +49,7 @@ self.addEventListener('notificationclick', function(event) {
     tagUrl = '/?src=sw';
     var tags = tag.split("=");
     if (tags[0] == "url") {
-        tagUrl = "/"+tags[1];
+        tagUrl = "/" + tags[1];
         if (tagUrl.indexOf("?") == -1) {
             tagUrl += "?src=sw";
         } else {
@@ -64,16 +66,16 @@ self.addEventListener('notificationclick', function(event) {
         clients.matchAll({
             type: 'window'
         })
-            .then(function(clientList) {
-                for (var i = 0; i < clientList.length; i++) {
-                    var client = clientList[i];
-                    if (client.url === tagUrl && 'focus' in client) {
-                        return client.focus();
-                    }
+        .then(function(clientList) {
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
+                if (client.url === tagUrl && 'focus' in client) {
+                    return client.focus();
                 }
-                if (clients.openWindow) {
-                    return clients.openWindow(tagUrl);
-                }
-            })
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(tagUrl);
+            }
+        })
     );
 })

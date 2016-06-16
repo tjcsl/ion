@@ -1,6 +1,7 @@
 @import "colors";
 
 /* CORE UI */
+
 .left .dropdown-icon {
     display: none;
 }
@@ -25,7 +26,6 @@ body.disable-scroll {
         width: 100%;
         height: auto;
         margin-top: 30px;
-
         .arrow {
             right: 148px;
         }
@@ -37,92 +37,79 @@ body.disable-scroll {
     h1 {
         margin-right: 0;
     }
-
     .header {
         position: fixed;
         z-index: 1042;
+        .left> form.search {
+            position: absolute;
+            visibility: hidden;
+            left: 17.5%;
+            opacity: 0;
+            body.mobile-nav-show & {
+                opacity: 1;
+                visibility: visible;
+                z-index: 1050;
+            }
+        }
+        &.has-badge .left> form.search {
+            //width: 50%;
+            //left: 20%;
+        }
     }
-
-    .left > a.intranet-title {
+    .left> a.intranet-title {
         position: absolute;
         left: 50%;
         width: 170px;
         margin-left: -85px;
         z-index: 1045;
-
         body.mobile-nav-show & {
             opacity: 0;
             z-index: 1042;
         }
     }
-
-    .header .left > form.search {
-        position: absolute;
-        visibility: hidden;
-        left: 17.5%;
-        opacity: 0;
-    }
-
     /* adjust for absences label */
     .absence-count-label {
         display: none;
     }
-
-    .header.has-badge .left > form.search {
-        /*width: 50%;*/
-        /*left: 20%;*/
-    }
-
-    body.mobile-nav-show .header .left > form.search {
-        opacity: 1;
-        visibility: visible;
-        z-index: 1050;
-    }
-
-    .right > li.notifications {
+    .right> li.notifications {
         display: none;
     }
-
     /* absence notification */
     ul.dropdown-menu.absence-notification .arrow {
         right: 90px;
     }
-
     /* TODO: these proportions look off, and I can't figure out exactly why */
-
-    .left .dropdown-taparea {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 75px;
-        height: 40px;
-        cursor: pointer;
-    }
-
-    .left .dropdown-icon {
-        display: block;
-        position: absolute;
-        left: 20px;
-        top: 5px;
-        height: 30px;
-        width: 30px;
-        text-align: center;
-        cursor: pointer;
-
-        > i {
-            font-size: 20px;
-            display: inline-block;
-            vertical-align: top;
-            padding-top: 5px;
+    .left .dropdown {
+        &-taparea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 75px;
+            height: 40px;
+            cursor: pointer;
+        }
+        &-icon {
+            display: block;
+            position: absolute;
+            left: 20px;
+            top: 5px;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            cursor: pointer;
+            > i {
+                font-size: 20px;
+                display: inline-block;
+                vertical-align: top;
+                padding-top: 5px;
+            }
         }
     }
-
-    .no-touch .left .dropdown-taparea:hover > .dropdown-icon,
-    .disable-scroll .dropdown-taparea > .dropdown-icon {
+    .no-touch .left .dropdown-taparea:hover> .dropdown-icon,
+    .disable-scroll .dropdown-taparea> .dropdown-icon {
         background-color: rgba(0, 0, 0, .2);
         border-radius: 5px;
     }
-
     .main ul.nav {
         position: fixed;
         top: 40px;
@@ -135,7 +122,6 @@ body.disable-scroll {
         //background-color: rgb(56, 56, 56);
         border-radius: 0;
         border: none;
-
         /*
         -webkit-transition-duration: 0.5s;
         -moz-transition-duration: 0.5s;
@@ -143,9 +129,7 @@ body.disable-scroll {
         -o-transition-duration: 0.5s;
         transition-duration: 0.5s;
         */
-
         z-index: 1032;
-
         > li {
             padding: 0;
             height: 58px;
@@ -153,17 +137,14 @@ body.disable-scroll {
             border-left: none;
             border-color: rgb(90, 90, 90);
             text-align: left;
-
             .no-touch &:not(.selected):hover {
                 background-color: white;
             }
-
             > a {
                 padding: 20px 0;
                 margin: 0;
                 height: 18px;
                 //color: white;
-
                 > i {
                     /*
                     display: inline-block;
@@ -181,23 +162,18 @@ body.disable-scroll {
             }
         }
     }
-
-    div.main > div.primary-content {
+    div.main> div.primary-content {
         padding-left: 0;
         margin-left: 0;
     }
-
     /* RIGHT DROPDOWN BUTTON */
-
     .user-name {
         display: none;
     }
-
     .header .dropdown-menu a {
         line-height: 3em;
         padding: 0 10px;
     }
-
     /*
     .header .right li.username ul.dropdown-menu {
         position: fixed;
@@ -239,7 +215,6 @@ body.disable-scroll {
         display: block;
     }
     */
-
     .nav-g {
         display: none;
         position: fixed;
@@ -251,8 +226,6 @@ body.disable-scroll {
         background-color: fade_out($grey, 0.7);
         cursor: pointer;
     }
-
-
     .intranet-title,
     .search {
         transition: all 0.2s ease;
@@ -261,12 +234,13 @@ body.disable-scroll {
         -ms-transition: all 0.2s ease;
         -o-transition: all 0.2s ease;
     }
-
 }
+
 
 /* better support for really small
  * screens (320x480, iPhone 4)
  */
+
 @media (max-width: 325px) {
     body {
         padding-left: 6px;

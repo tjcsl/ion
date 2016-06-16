@@ -1,19 +1,18 @@
 /* global $ */
 window.switchRun = false;
 window.eighthSwitchEvent = false;
-$(document).ready(function() {
+
+$(function() {
     window.initEighthResponsive = function() {
         is_small = function() {
             var cssRight = $("#activity-detail").css("right");
-            if (cssRight) {
-                return cssRight.split(/[^\-\d]+/)[0] < 0;
-            }
-            return false;
+            return cssRight ? (cssRight.split(/[^\-\d]+/)[0] < 0) : false;
         }
 
         $("#activity-list li[data-activity-id]").click(function() {
-            if(is_small()) {
+            if (is_small()) {
                 $("#activity-picker").addClass("visible");
+
                 setTimeout(function() {
                     $("#activity-picker .backbtn").addClass("visible");
                 }, 200);
@@ -26,24 +25,27 @@ $(document).ready(function() {
             $("#activity-list li[data-activity-id]").removeClass("selected");
         })
 
-        if(!window.eighthSwitchEvent) {
+        if (!window.eighthSwitchEvent) {
             $(".middle .switch").click(function() {
                 console.debug("Block switch toggle");
                 $(".primary-content").toggleClass("viewing");
                 activityPickerResize();
             });
+
             window.eighthSwitchEvent = true;
         }
 
-        var width = $(window).width();
-        var height = $(window).height();
-        if(width <= 500 && height <= 745 && !window.isDefaultPage && !window.switchRun) {
+        var width = $(window).width(),
+            height = $(window).height();
+
+        if (width <= 500 && height <= 745 && !window.isDefaultPage && !window.switchRun) {
             setTimeout(function() {
-                if(!window.switchRun) {
+                if (!window.switchRun) {
                     $(".eighth-signup .switch").click();
                 }
 
                 window.switchRun = true;
+
                 setTimeout(function() {
                     activityPickerResize();
                 }, 450);
@@ -65,16 +67,17 @@ $(document).ready(function() {
 })
 
 function activityPickerResize() {
-    console.debug("activity picker resize")
-    var h = $(window).height();
-    var w = $(window).width();
+    console.debug("activity picker resize");
+    var h = $(window).height(),
+        w = $(window).width();
     var p = $("#activity-picker");
     var isProfile = $(".primary-content").hasClass("eighth-profile-signup");
-    if(isProfile) {
+
+    if (isProfile) {
         var topInfo = $(".middle-wrapper").height() + $(".header").height() + 15; // 163
         var userInfo = $(".user-info-eighth").height() + 13; // 146 with 2
         var pixels = h - topInfo - userInfo;
-        if(pixels < 475) {
+        if (pixels < 475) {
             pixels = 475;
         }
     } else {
@@ -83,9 +86,13 @@ function activityPickerResize() {
         var btnDown = $(".primary-content").hasClass("viewing") && w <= 500 ? 0 : 120; // 120
         var pixels = h - topInfo - btnDown;
     }
-    if(pixels < 300) {
+
+    if (pixels < 300) {
         // minimum usable height
         pixels = 300;
     }
-    p.css({ height: (pixels)+"px" });
+
+    p.css({
+        height: pixels + "px"
+    });
 }

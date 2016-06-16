@@ -1,20 +1,18 @@
 /* DASHBOARD */
 
-@media (max-width: 960px) {
-    /* make the right widgets smaller */
-    .main {
+.main {
+    @media (max-width: 960px) {
+        /* make the right widgets smaller */
         div.widgets {
             width: 300px;
         }
-
         div.announcements {
-            padding-right: 316px; /* 116px less */
-
+            padding-right: 316px;
+            /* 116px less */
             &.no-widgets {
                 padding-right: 0;
             }
         }
-
         .widgets,
         .announcements {
             transition: all 0.4s ease;
@@ -24,11 +22,8 @@
             -o-transition: all 0.4s ease;
         }
     }
-}
-
-@media (max-width: 800px) {
-    /* move widgets above/below */
-    .main {
+    @media (max-width: 800px) {
+        /* move widgets above/below */
         div.widgets {
             float: none;
             position: static;
@@ -36,17 +31,11 @@
             width: 100%;
             width: calc(100% - 16px);
             margin-bottom: 10px;
-
             .widget {
                 position: relative;
                 left: 16px;
-                
-                &.extra-widgets-show {
-                    width: calc(100% - 75px);
-                }
             }
         }
-
         div.announcements {
             padding-right: 0;
         }
@@ -56,23 +45,18 @@
 @media (max-width: 550px) {
     .main div.widgets {
         width: 100%;
-
         .widget {
             position: static;
-
-            &.extra-widgets-show {
-                width: 100%;
-            }
         }
-
     }
-
     .announcement {
         clear: both;
     }
 }
 
+
 /* eighth signup info */
+
 .eighth-signup .middle .desktop-info {
     width: 300px;
     height: 50px;
@@ -80,54 +64,50 @@
     right: 120px;
     color: gray;
     z-index: -1;
-
-    .arrow-left {
-        position: absolute;
-        top: 20px;
-        left: -40px;
-        font-size: 30px;
-        color: gray;
-    }
-
-    .arrow-right {
-        position: absolute;
-        top: -20px;
-        right: 10px;
-        font-size: 30px;
-        color: gray;
+    .arrow {
+        &-left {
+            position: absolute;
+            top: 20px;
+            left: -40px;
+            font-size: 30px;
+            color: gray;
+        }
+        &-right {
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            font-size: 30px;
+            color: gray;
+        }
     }
 }
 
+
 /* EIGHTH */
+
 @media (max-width: 950px) {
     /* make description 250px from 430px */
     #activity-picker {
         div#activity-detail {
             width: 250px;
         }
-
         .search-wrapper {
             margin-right: 271px;
         }
-
         div#activity-list {
             right: 270px;
-
             li span.activity-sponsors {
                 margin-right: 0;
             }
         }
-
         h5.stuck {
             margin-right: 270px;
         }
     }
-
     .eighth-signup {
         .middle .desktop-info {
             display: none;
         }
-
         h5.all-header .clear-button {
             margin-right: 20px;
         }
@@ -145,7 +125,6 @@
     z-index: 1001;
     background-color: rgba(169, 169, 169, .3);
     cursor: pointer;
-
     > i {
         position: absolute;
         top: 50%;
@@ -153,12 +132,10 @@
         font-size: 32px;
         height: 40px;
         margin-top: -20px;
-
         @media (max-width: 450px) {
             left: 7px;
             font-size: 25px;
         }
-
         @media (max-width: 359px) {
             left: 5px;
             font-size: 20px;
@@ -176,87 +153,76 @@
 
 @media (max-width: 700px) {
     /* just show activities list */
-    #activity-picker div#activity-list {
-        right: 0;
-    }
-
-    #activity-picker h5.stuck,
-    #activity-picker .search-wrapper {
-        margin-right: 0;
-    }
-
-    .eighth-signup #activity-detail {
-        right: -100%;
-        z-index: 1002;
-    }
-
-    #activity-picker.visible div#activity-detail {
-        margin-right: 100%;
-        width: 85%;
-    }
-
-    #activity-picker .backbtn.visible {
-        display: block;
-        opacity: 1;
-    }
-
-    .eighth-signup .middle {
-        height: 20px;
-
-        h2, h4 {
-            display: inline;
-            padding-right: 5px;
+    #activity-picker {
+        div#activity-list {
+            right: 0;
+        }
+        h5.stuck,
+        .search-wrapper {
+            margin-right: 0;
+        }
+        .backbtn.visible {
+            display: block;
+            opacity: 1;
+        }
+        &.visible div#activity-detail {
+            margin-right: 100%;
+            width: 85%;
+        }
+        div#activity-list li span.activity-sponsors {
+            margin-right: 0;
         }
     }
-
-    #activity-picker div#activity-list li span.activity-sponsors {
-        margin-right: 0;
+    .eighth-signup {
+        #activity-detail {
+            right: -100%;
+            z-index: 1002;
+        }
+        .middle {
+            height: 20px;
+            h2,
+            h4 {
+                display: inline;
+                padding-right: 5px;
+            }
+        }
+        #activity-list h5 .clear-button {
+            margin-right: 0;
+        }
     }
-
     /* comments field shifts to next line */
     .block-title .block-comments {
         display: inline-block;
         clear: left;
-
         > span {
             display: none;
         }
     }
-
-    .eighth-signup #activity-list h5 .clear-button {
-        margin-right: 0;
-    }
 }
 
 @media (max-width: 500px) {
-   .eighth-signup {
-       .middle {
+    .eighth-signup {
+        .middle {
             display: table-row;
-
             /* shrink text size */
             .block-title {
                 display: table-cell;
                 margin: 10px 6px;
-
                 h2 {
                     font-size: 16px;
                 }
             }
-
             .switch {
                 display: table-cell;
                 vertical-align: middle;
                 cursor: pointer;
-
                 i {
                     font-size: 25px;
                     padding-right: 2px;
-
                     &.down {
                         opacity: 1;
                         display: inline;
                     }
-
                     &.up {
                         opacity: 0;
                         display: none;
@@ -264,51 +230,35 @@
                 }
             }
         }
-
         &.viewing {
             margin-top: -120px;
-
-            .middle .switch {
-                i.down {
+            .middle .switch i {
+                &.down {
                     opacity: 0;
                     display: none;
                 }
-
-                i.up {
+                &.up {
                     opacity: 1;
                     display: inline;
                 }
             }
         }
-
         #activity-list {
             /* increase padding on activity list */
             li {
                 padding: 3px;
-
                 &.search-hide {
                     padding: 0;
                 }
             }
-
             .activity-ids {
                 display: none;
             }
         }
     }
-
     /* padding goes away */
     #activity-picker div#activity-list li span.activity-sponsors {
         margin-right: 10px;
-    }
-}
-
-@media (max-width: 430px) {
-    .eighth-signup .middle .switch {
-        /*
-        position: absolute;
-        right: 26px;
-        */
     }
 }
 
@@ -322,19 +272,28 @@
         -ms-transition: all 0.2s ease;
         -o-transition: all 0.2s ease;
     }
+    @media (max-width: 430px) {
+        .middle .switch {
+            //position: absolute;
+            //right: 26px;
+        }
+    }
 }
 
+
 /* EIGHTH ADMIN UI */
+
 @media (max-width: 695px) {
     /* flatten table */
-    .admin-dashboard td.admin-section {
-        display: block !important;
-        width: 100%;
-        height: auto;
-        padding-left: 0;
-    }
-
-    tr td.admin-section:last-of-type:not(:first-of-type) {
-        padding-left: 0;
+    td.admin-section {
+        .admin-dashboard & {
+            display: block !important;
+            width: 100%;
+            height: auto;
+            padding-left: 0;
+        }
+        tr &:last-of-type:not(:first-of-type) {
+            padding-left: 0;
+        }
     }
 }

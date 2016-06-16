@@ -4,7 +4,7 @@ $(function() {
         var ro = $(".reactions-outer", p);
         var vis = ro.attr("data-visible");
 
-        if(vis == "true") {
+        if (vis === "true") {
             ro.animate({
                 "opacity": 0
             }, 200).css({
@@ -29,7 +29,9 @@ $(function() {
     giveReaction = function(icon) {
         var react = icon.attr("data-reaction");
         var outer = icon.parent().parent();
-        $.post(outer.attr("data-endpoint"), {"reaction": react}, function(res) {
+        $.post(outer.attr("data-endpoint"), {
+            "reaction": react
+        }, function(res) {
             location.href = outer.attr("data-view");
         });
     }
@@ -38,6 +40,7 @@ $(function() {
         var t = $(this);
         t.addClass("click");
         giveReaction(t);
+
         setTimeout(function() {
             t.removeClass("click");
             t.addClass("click-out");

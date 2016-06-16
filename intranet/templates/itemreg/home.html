@@ -4,117 +4,126 @@
 {% load pipeline %}
 
 {% block title %}
-    {{ block.super }} - Item Registration
+  {{ block.super }} - Item Registration
 {% endblock %}
 
 {% block js %}
-    {{ block.super }}
+  {{ block.super }}
 {% endblock %}
 
 {% block css %}
-    {{ block.super }}
-    {% stylesheet 'lostfound' %}
-    <style type="text/css">
-    ul.fontawesome {
-        list-style-type: none;
-    }
+  {{ block.super }}
+  {% stylesheet 'lostfound' %}
+  <style type="text/css">
+  ul.fontawesome {
+    list-style-type: none;
+  }
 
-    ul.fontawesome li:before {
-        font-family: FontAwesome;
-        display: inline-block;
-        margin-left: -1.5em;
-        width: 1.0em;
-        font-size: 14px;
-    }
+  ul.fontawesome li:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    margin-left: -1.5em;
+    width: 1.0em;
+    font-size: 14px;
+  }
 
-    ul.fontawesome li.calc:before {
-        content: "\f1ec"; /* fa-calculator */
-    }
+  ul.fontawesome li.calc:before {
+    content: "\f1ec"; /* fa-calculator */
+  }
 
-    ul.fontawesome li.comp:before {
-        content: "\f109"; /* fa-laptop */
-    }
+  ul.fontawesome li.comp:before {
+    content: "\f109"; /* fa-laptop */
+  }
 
-    ul.fontawesome li.phone:before {
-        content: "\f10b"; /* fa-mobile */
-    }
+  ul.fontawesome li.phone:before {
+    content: "\f10b"; /* fa-mobile */
+  }
 </style>
 {% endblock %}
 
 {% block main %}
 <div class="lostfound primary-content">
-    <h2>
-        Item Registration
-    </h2>
+  <h2>
+    Item Registration
+  </h2>
 
-    <p>Registering your calculator, computer, and phone through Intranet helps staff members return your device if it is found.</p>
+  <p>
+    Registering your calculator, computer, and phone through Intranet helps staff members return your device if it is found.
+  </p>
 
-    {% if request.user.is_teacher or is_itemreg_admin %}
-        <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
-        <br />
-        <a href="{% url 'itemreg_search' %}" class="button">
-            Search Database
-        </a>
-    {% endif %}
-
-    {% if registered_devices %}
-        <p>You've registered the following devices:</p>
-        <ul class="fontawesome">
-        {% for calc in calculators %}
-            <li class="calc">
-                <b>Calculator:</b> {{ calc.calc_name }}
-                <br />
-                Serial: {{ calc.calc_serial }}
-                <br />
-                ID: {{ calc.calc_id }}
-                <br />
-                Added: {{ calc.added }}
-                <br />
-                <a href="{% url 'itemreg_delete' 'calculator' calc.id %}"><i class="fa fa-trash-o"></i> Delete</a>
-                <br />
-                <br />
-            </li>
-        {% endfor %}
-
-        {% for comp in computers %}
-            <li class="comp">
-                <b>Computer:</b> {{ comp.computer_name }}
-                <br />
-                Serial: {{ comp.serial }}
-                <br />
-                Added: {{ comp.added }}
-                <br />
-                <a href="{% url 'itemreg_delete' 'computer' comp.id %}"><i class="fa fa-trash-o"></i> Delete</a>
-                <br />
-                <br />
-            </li>
-        {% endfor %}
-
-        {% for phone in phones %}
-            <li class="phone">
-                <b>Phone:</b> {{ phone.manufacturer_name }} {{ phone.model }}
-                <br />
-                Serial: {{ phone.serial }}
-                <br />
-                Added: {{ phone.added }}
-                <br />
-                <a href="{% url 'itemreg_delete' 'phone' phone.id %}"><i class="fa fa-trash-o"></i> Delete</a>
-                <br />
-                <br />
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>You haven't registered any devices! Register a device using the buttons below.</p>
-    {% endif %}
+  {% if request.user.is_teacher or is_itemreg_admin %}
+    <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
     <br />
-    <a href="{% url 'itemreg_calculator' %}" class="button">
-        Register Calculator
-    </a> &nbsp; &nbsp; 
-    <a href="{% url 'itemreg_computer' %}" class="button">
-        Register Computer
-    </a> &nbsp; &nbsp; 
-    <a href="{% url 'itemreg_phone' %}" class="button">
-        Register Phone
+    <a href="{% url 'itemreg_search' %}" class="button">
+      Search Database
     </a>
+  {% endif %}
+
+  {% if registered_devices %}
+    <p>You've registered the following devices:</p>
+    <ul class="fontawesome">
+    {% for calc in calculators %}
+      <li class="calc">
+        <b>Calculator:</b> {{ calc.calc_name }}
+        <br />
+        Serial: {{ calc.calc_serial }}
+        <br />
+        ID: {{ calc.calc_id }}
+        <br />
+        Added: {{ calc.added }}
+        <br />
+        <a href="{% url 'itemreg_delete' 'calculator' calc.id %}">
+          <i class="fa fa-trash-o"></i> Delete
+        </a>
+        <br />
+        <br />
+      </li>
+    {% endfor %}
+
+    {% for comp in computers %}
+      <li class="comp">
+        <b>Computer:</b> {{ comp.computer_name }}
+        <br />
+        Serial: {{ comp.serial }}
+        <br />
+        Added: {{ comp.added }}
+        <br />
+        <a href="{% url 'itemreg_delete' 'computer' comp.id %}">
+          <i class="fa fa-trash-o"></i> Delete
+        </a>
+        <br />
+        <br />
+      </li>
+    {% endfor %}
+
+    {% for phone in phones %}
+      <li class="phone">
+        <b>Phone:</b> {{ phone.manufacturer_name }} {{ phone.model }}
+        <br />
+        Serial: {{ phone.serial }}
+        <br />
+        Added: {{ phone.added }}
+        <br />
+        <a href="{% url 'itemreg_delete' 'phone' phone.id %}">
+          <i class="fa fa-trash-o"></i> Delete
+        </a>
+        <br />
+        <br />
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't registered any devices! Register a device using the buttons below.</p>
+  {% endif %}
+  <br />
+
+  <a href="{% url 'itemreg_calculator' %}" class="button">
+    Register Calculator
+  </a> &nbsp; &nbsp;
+  <a href="{% url 'itemreg_computer' %}" class="button">
+    Register Computer
+  </a> &nbsp; &nbsp;
+  <a href="{% url 'itemreg_phone' %}" class="button">
+    Register Phone
+  </a>
 {% endblock %}

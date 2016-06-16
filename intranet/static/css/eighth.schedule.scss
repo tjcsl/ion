@@ -6,7 +6,6 @@ input[type=checkbox] {
     margin-right: -1px;
 }
 
-
 b.cancelled {
     color: rgb(255, 72, 72);
 }
@@ -21,13 +20,11 @@ tr.scheduled .block-name {
         overflow-x: scroll;
         position: absolute; // quick fix to display scrollbar at bottom
     }
-
     @media (min-width: 500px) {
         .primary-content {
             overflow: hidden;
             margin-bottom: 20px;
         }
-
         .eighth-header {
             position: fixed;
             // keep solid
@@ -38,23 +35,23 @@ tr.scheduled .block-name {
             // remove gap between top header and primary-content
             margin-top: -16px;
             padding-top: 16px;
-            padding-right:152px;
+            padding-right: 152px;
             background-color: #f2f2f4;
             z-index: 2;
             border-bottom: 1px rgb(194, 194, 194) solid;
         }
-
-        .schedule-activity-head {
-            position: fixed;
-            margin-top: 42px;
-            width: 100%;
-            z-index: 2;
-        }
-
-        .schedule-activity-grid {
-            position: static;
-            margin-top: 161px;
-            z-index: -1;
+        .schedule-activity {
+            &-head {
+                position: fixed;
+                margin-top: 42px;
+                width: 100%;
+                z-index: 2;
+            }
+            &-grid {
+                position: static;
+                margin-top: 161px;
+                z-index: -1;
+            }
         }
     }
 }
@@ -65,10 +62,8 @@ tr.scheduled .block-name {
 
 table.schedule-activity-grid thead th {
     padding-left: 0;
-
     &.special {
         padding-right: 0;
-
         > span {
             width: 25px;
             display: block;
@@ -77,7 +72,8 @@ table.schedule-activity-grid thead th {
 }
 
 @media (min-width: 500px) {
-    .header, .nav {
+    .header,
+    .nav {
         position: fixed;
         z-index: 4;
     }
@@ -91,8 +87,10 @@ tr.form-row.hidden {
     }
 }
 
+
 /* keep selectize and non-selectize inputs the same height */
-:not(.selectize-input) > input[type="text"] {
+
+:not(.selectize-input)> input[type="text"] {
     height: 23px;
 }
 
@@ -100,7 +98,6 @@ tr.form-row.hidden {
     > td {
         position: relative;
     }
-
     a.propagate {
         height: 22px;
         width: 5px;
@@ -110,53 +107,61 @@ tr.form-row.hidden {
         z-index: 3;
         margin-left: -7px;
     }
-
     td[data-base-field='capacity'] a.propagate {
         margin-left: -12px;
     }
 }
 
-.propagate-direction {
-    position: fixed;
-    float: right;
-    right: 20px;
-    top: 100px;
-    width: 220px;
-    line-height: 40px;
-    z-index: 998;
-
-    > b {
-        float: left;
-        margin-right: 5px;
-    }
-
-    select,
-    .selectize-control {
-        width: 80px;
-        display: inline-block;
+.propagate {
+    &-direction {
+        position: fixed;
         float: right;
+        right: 20px;
+        top: 100px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
     }
-}
-
-.propagate-method {
-    position: fixed;
-    float: right;
-    right: 20px;
-    top: 150px;
-    width: 220px;
-    line-height: 40px;
-    z-index: 998;
-
-    > b {
-        float: left;
-        margin-right: 5px;
-    }
-
-    select,
-    .selectize-control {
-        width: 80px;
-        display: inline-block;
+    &-method {
+        position: fixed;
         float: right;
+        right: 20px;
+        top: 150px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
+    }
+    &-method,
+    &-direction {
+        @media (max-width: 858px) {
+            width: 85px;
+            b {
+                display: none;
+            }
+        }
+        @media (max-width: 720px) {
+            zoom: 0.6;
+        }
     }
 }
 
@@ -167,24 +172,8 @@ tr.form-row.hidden {
             display: none;
         }
     }
-
     @media (max-width: 1000px) {
         width: 350px;
-    }
-}
-
-.propagate-method,
-.propagate-direction {
-    @media (max-width: 858px) {
-        width: 85px;
-
-        b {
-            display: none;
-        }
-    }
-
-    @media (max-width: 720px) {
-        zoom: 0.6;
     }
 }
 
@@ -208,7 +197,6 @@ tr.form-row {
             background-color: white;
         }
     }
-
     &.hidden {
         .selectize-input,
         input,
@@ -216,46 +204,43 @@ tr.form-row {
             background-color: rgba(181, 181, 181, .25);
         }
     }
-
-    /* this NEEDS to be separate */
+    // this NEEDS to be separate
     ::-webkit-input-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
     :-moz-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
     ::-moz-placeholder {
         color: black;
-       font-weight: bold;
+        font-weight: bold;
     }
     :-ms-input-placeholder {
-       color: black;
-       font-weight: bold;
+        color: black;
+        font-weight: bold;
     }
-
     .capacity {
-       font-size: 15px;
-       font-style: italic;
-
-       /* this NEEDS to be separate */
-       &::-webkit-input-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &:-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &::-moz-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
-       &:-ms-input-placeholder {
-          font-size: 12px;
-          font-style: normal;
-       }
+        font-size: 15px;
+        font-style: italic;
+        // this NEEDS to be separate
+        &::-webkit-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+        &:-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+        &::-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+        &:-ms-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
     }
 }
 

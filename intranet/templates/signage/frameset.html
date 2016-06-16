@@ -2,27 +2,27 @@
 <!doctype html>
 <html lang='en'>
 <head>
-    <title>Ion Signage</title>
-    {% if request.GET.zoom %}
-    <style>
-    body {
-        zoom: {{ request.GET.zoom|escape }};
-    }
-    </style>
-    {% endif %}
+  <title>Ion Signage</title>
+  {% if request.GET.zoom %}
+  <style type="text/css">
+  body {
+    zoom: {{ request.GET.zoom|escape }};
+  }
+  </style>
+  {% endif %}
 
-    <script type="text/javascript">
-    window.onload = function() {
-        setTimeout(function() { location=location; }, 20 * 60 * 1000);
-    };
-    </script>
+  <script type="text/javascript">
+  window.onload = function() {
+    setTimeout(function() { location=location; }, 20 * 60 * 1000);
+  };
+  </script>
 </head>
 
 <frameset rows="50,*" border=0>
-    <frame src="{% url 'frameset_signage_header' %}" />
-    <frameset cols="25%,*" border=0>
-        <frame src="{% url 'status_signage' %}?zoom={% if request.GET.framezoom %}{{ request.GET.framezoom|escape }}{% else %}1.5{% endif %}" />
-        <frame src="{{ url }}" />
-    </frameset>
+  <frame src="{% url 'frameset_signage_header' %}" />
+  <frameset cols="25%,*" border=0>
+    <frame src="{% url 'status_signage' %}?zoom={{ request.GET.framezoom|default:"1.5"|escape }}" />
+    <frame src="{{ url }}" />
+  </frameset>
 </frameset>
 </html>

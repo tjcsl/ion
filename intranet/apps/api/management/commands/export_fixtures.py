@@ -30,26 +30,25 @@ class Command(BaseCommand):
         models = [x.__module__ + "." + x.__name__ for x in apps.get_models()]
         modellist = []
         for model in models:
-            if model.startswith("django"):
-                continue
             if not model.startswith(tuple(settings.INSTALLED_APPS)):
                 if verbosity > 1:
-                    print("Skipping " + model)
+                    print("Skipping " + model + " (not in installed apps)")
                 continue
-            if not model.startswith("intranet.apps.") or ".models." not in model:
+            if not model.startswith(("intranet.apps.", "django.contrib.")) or ".models." not in model:
                 if verbosity > 1:
                     print("Skipping " + model)
                 continue
-            modelpath = model[len("intranet.apps."):].replace(".models.", ".")
-            modellist.append(modelpath)
+            modellist.append(model)
 
         # Find out what order the fixtures need to be loaded in.
-        order = depend(set([x.split(".")[0] for x in modellist]))
+        order = depend(set([x.split(".")[-3] for x in modellist]))
         order = [x.__module__ + "." + x.__name__ for x in order]
-        order = [x[len("intranet.apps."):].replace(".models.", ".") for x in order]
+        order = [relative_model_path(x) for x in order]
 
         # Save models to json files.
-        for modelpath in modellist:
+        modelcount = 0
+        for absolutemodelpath in modellist:
+            modelpath = relative_model_path(absolutemodelpath)
             buf = StringIO()
             try:
                 call_command("dumpdata", modelpath, natural=True, stdout=buf)
@@ -70,14 +69,25 @@ class Command(BaseCommand):
                 os.makedirs(modelfilepath)
             with open(modelfile, "w") as f:
                 shutil.copyfileobj(buf, f)
-            print("Exported " + modelpath)
+            print("Exported " + absolutemodelpath)
+            modelcount += 1
 
         # Write a readme with instructions on how to load the files.
         readme = open(fixtures_folder + "/README.txt", "w")
         readme.write("These ion fixtures were exported on %s with commit %s.\n" % (datetime.datetime.now().strftime("%H:%M %m/%d/%Y"), settings.GIT["commit_long_hash"]))
         readme.write("To load these fixtures, run \"./manage.py import_fixtures\"\n")
-        readme.write("This command may take a long time if you have a lot of fixtures.")
+        readme.write("This command may take a long time if you have a lot of fixtures. There are %s fixtures in this directory." % modelcount)
         readme.close()
+
+
+def relative_model_path(model):
+    if model.startswith("intranet"):
+        rel = model[len("intranet.apps."):]
+    elif model.startswith("django"):
+        rel = model[len("django.contrib."):]
+    else:
+        raise CommandError("Could not identify relative model path! " + model)
+    return rel.replace(".models.", ".")
 
 
 def depend(applist):
@@ -86,6 +96,13 @@ def depend(applist):
         models = apps.get_app_config(app).get_models()
         for model in models:
             deps = []
+
+            # Check for absolute dependencies.
+            if hasattr(model, "natural_key"):
+                nat_deps = getattr(model.natural_key, "dependencies", [])
+                if nat_deps:
+                    print("Warning: Model " + str(model) + " has defined dependencies!")
+                    print(nat_deps)
 
             # Check dependencies for any fields.
             for field in model._meta.fields:

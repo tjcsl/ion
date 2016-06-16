@@ -1,18 +1,17 @@
 /* global $ */
 $(function() {
-
     $(".logo").click(function() {
         location.href = '/';
     });
 
-    var desktop = $(".desktop-area");
-    var mobile = $(".mobile-area");
-    var desktopMax = $("span", desktop).length;
-    var mobileMax = $("span", mobile).length;
-    var desktopIndex = 0;
-    var mobileIndex = 0;
+    var desktop = $(".desktop-area"),
+        mobile = $(".mobile-area");
+    var desktopMax = $("span", desktop).length,
+        mobileMax = $("span", mobile).length;
+    var desktopIndex = 0,
+        mobileIndex = 0;
     setInterval(function() {
-        if(desktopIndex == desktopMax-1) {
+        if (desktopIndex === desktopMax - 1) {
             $("span", desktop).eq(0).slideDown();
             $("span", desktop).show();
             desktopIndex = 0;
@@ -21,7 +20,7 @@ $(function() {
             desktopIndex++;
         }
 
-        if(mobileIndex == mobileMax-1) {
+        if (mobileIndex === mobileMax - 1) {
             $("span", mobile).eq(0).slideDown();
             setTimeout(function() {
                 $("span", mobile).show();
