@@ -75,16 +75,23 @@ def statistics_view(request, activity_id=None):
     total_blocks = activities.count()
     scheduled_blocks = total_blocks - cancelled_blocks
     total_signups = sum(n for _, n in signups)
+
     if scheduled_blocks:
         average_signups = round(total_signups / scheduled_blocks, 2)
     else:
         average_signups = 0
+
+    if len(signups) > 0:
+        average_user_signups = sum(signups.values()) / len(signups)
+    else:
+        average_user_signups = 0
 
     context = {"activity": activity,
                "members": signups,
                "total_blocks": total_blocks,
                "total_signups": total_signups,
                "average_signups": average_signups,
+               "average_user_signups": average_user_signups,
                "old_blocks": old_blocks,
                "cancelled_blocks": cancelled_blocks,
                "scheduled_blocks": scheduled_blocks,
