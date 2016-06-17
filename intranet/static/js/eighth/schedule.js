@@ -133,8 +133,9 @@ $(function() {
                 nsel.setValue(modItems);
             });
         } else {
+            var modVal;
             if (el.attr("type") === "checkbox") {
-                var modVal = el.prop("checked");
+                modVal = el.prop("checked");
                 rows.each(function() {
                     var ntd = $("td[data-field='" + field + "']", $(this));
                     var ninp = $("input", ntd);
