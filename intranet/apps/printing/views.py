@@ -148,11 +148,8 @@ def print_job(obj, do_print=True):
     fileobj = obj.file
 
     filebase = os.path.basename(fileobj.name)
-    filebase_escaped = filebase.replace(",", "")
-    filebase_escaped = filebase_escaped.encode("ascii", "ignore")
-    filebase_escaped = filebase_escaped.decode()
-    tempfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
-    tmpfile_name = slugify(tempfile_name)
+    filebase_escaped = slugify(filebase)
+    tmpfile_name = tempfile.NamedTemporaryFile(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped)).name
     with open(tmpfile_name, 'wb+') as dest:
         for chunk in fileobj.chunks():
             dest.write(chunk)
