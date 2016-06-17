@@ -20,7 +20,7 @@ from django.core.urlresolvers import reverse
 from django.http import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.utils.text import slugify
-from django.views.decorators.debug import (sensitive_post_parameters, sensitive_variables)
+from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 
 from paramiko import SSHException
 
@@ -207,8 +207,7 @@ def files_type(request, fstype=None):
         filepath = request.GET.get("file")
         filepath = normpath(filepath)
         filebase = os.path.basename(filepath)
-        filebase_escaped = filebase.replace(",", "")
-        filebase_escaped = slugify(filebase_escaped)
+        filebase_escaped = slugify(filebase)
         if can_access_path(filepath):
             try:
                 fstat = sftp.stat(filepath)
@@ -251,7 +250,7 @@ def files_type(request, fstype=None):
             return redirect("/files/{}/?dir={}".format(fstype, default_dir))
 
     if "zip" in request.GET:
-        dirbase_escaped = os.path.basename(fsdir).replace(",", "")
+        dirbase_escaped = os.path.basename(fsdir)
         dirbase_escaped = slugify(dirbase_escaped)
         tmpfile = tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped))
 
