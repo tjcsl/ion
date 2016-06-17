@@ -259,7 +259,11 @@ def files_type(request, fstype=None):
             totalsize = 0
             while remote_directories:
                 rd = remote_directories.pop()
-                remotelist = sftp.listdir(rd)
+                try:
+                    remotelist = sftp.listdir(rd)
+                except PermissionError as e:
+                    logger.debug("Exception %s on %s" % (e, rd))
+                    continue
                 for item in remotelist:
                     itempath = os.path.join(rd, item)
                     try:
