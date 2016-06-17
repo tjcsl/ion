@@ -22,7 +22,7 @@ from django.shortcuts import redirect, render
 from django.utils.text import slugify
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 
-from paramiko import SSHException
+from paramiko import SSHException, SFTPError
 
 import pysftp
 
@@ -33,7 +33,7 @@ from .models import Host
 
 logger = logging.getLogger(__name__)
 
-exceptions = (EOFError, OSError, SSHException)
+exceptions = (EOFError, OSError, PermissionError, SSHException, SFTPError)
 
 
 @sensitive_variables('password')
