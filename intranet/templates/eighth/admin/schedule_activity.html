@@ -8,6 +8,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
     <script type="text/javascript">
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
         window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
@@ -49,7 +50,8 @@
                 }
 
             }
-        })
+        });
+        $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: $(".sticky-header-placeholder").offset().top + 8 });
     });
     </script>
 
@@ -123,6 +125,8 @@
                     &nbsp; <b>Activity default capacity: {{ activity.default_capacity }}</b>
                 {% endif %}
             </div>
+
+            <div class="sticky-header-placeholder"></div>
 
 
             <div class="propagate-direction">
