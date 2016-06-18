@@ -20,6 +20,14 @@
         padding:5px;
         background-color:rgba(100,100,200,0.5);
     }
+    .often-shortcut
+    {
+        color:#ccc;
+    }
+    .often-shortcut:hover
+    {
+        color:#aaa;
+    }
     </style>
 {% endblock %}
 
@@ -79,11 +87,11 @@
 
     <table id="members-table" class="fancy-table">
         <thead>
-            <tr><th>Student</th><th>ID</th><th>Total Signups</th></tr>
+            <tr><th>Student</th><th>ID</th><th>Signups</th></tr>
         </thead>
         <tbody>
             {% for user, signups in members %}
-                <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
+            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a> <a href="{% url 'eighth_profile_often' user.id %}"><i class="often-shortcut fa fa-pie-chart"></i></a></td><td>{{ signups }}</td></tr>
                 {% empty %}
                 <tr><td colspan="3">No one has signed up for this activity yet.</td></tr>
             {% endfor %}

@@ -82,7 +82,7 @@ def statistics_view(request, activity_id=None):
         average_signups = 0
 
     if len(signups) > 0:
-        average_user_signups = sum(signups.values()) / len(signups)
+        average_user_signups = total_signups / len(signups)
     else:
         average_user_signups = 0
 
