@@ -23,10 +23,18 @@
     .often-shortcut
     {
         color:#ccc;
+        margin-right:2px;
     }
     .often-shortcut:hover
     {
         color:#aaa;
+    }
+    @media print
+    {
+        .often-shortcut, a.button, .sparkline
+        {
+            display:none;
+        }
     }
     </style>
 {% endblock %}
@@ -91,7 +99,7 @@
         </thead>
         <tbody>
             {% for user, signups in members %}
-            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a> <a href="{% url 'eighth_profile_often' user.id %}"><i class="often-shortcut fa fa-pie-chart"></i></a></td><td>{{ signups }}</td></tr>
+            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile_often' user.id %}"><i class="often-shortcut fa fa-pie-chart"></i></a> <a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
                 {% empty %}
                 <tr><td colspan="3">No one has signed up for this activity yet.</td></tr>
             {% endfor %}
