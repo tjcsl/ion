@@ -45,7 +45,7 @@ Currently, the fixtures containing test data include Iodine data from the 2014-2
     (InteractiveConsole)
     >>> from dateutil.relativedelta import relativedelta
     >>> for blk in EighthBlock.objects.all():
-    ...     blk.date += relativedelta(months=+6)
+    ...     blk.date += relativedelta(years=+1)
     ...     blk.save()
 
 Setting up Files
