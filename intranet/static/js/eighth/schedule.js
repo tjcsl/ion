@@ -162,4 +162,15 @@ $(function() {
             });
         }
     });
+    $(".schedule-form input[type='submit']").click(function(e) {
+        var activities = "";
+        $("tr.form-row:not(.hidden)").each(function(i,el) {
+            if (!$("td[data-field='sponsors'] .selectize-input", el).hasClass('has-items')) {
+                activities += "\n    " + $(".block-name a", this).html().trim();
+            }
+        });
+        if (activities !== "" && !confirm("Are you sure you want to add the following activities without a sponsor?\n" + activities)) {
+            e.preventDefault();
+        }
+    });
 });
