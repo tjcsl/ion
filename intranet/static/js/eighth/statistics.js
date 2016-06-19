@@ -65,6 +65,9 @@ $(document).ready(function() {
             }
         });
     }
+    else {
+        $("#blocks-chart-container").hide();
+    }
     var tableRows = $("#members-table tbody tr");
     if (tableRows.length >= 2) {
         $("#members-table thead").append("<th></th>");
