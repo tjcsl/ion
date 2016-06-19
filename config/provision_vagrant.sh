@@ -1,12 +1,14 @@
 #!/bin/bash
+set -e
 
 function devconfig() {
     python3 -c "
 import json
-f = open('/home/vagrant/intranet/config/devconfig.json', 'r')
-print(json.load(f)['$1'])
-f.close()"
+with open('/home/ubuntu/intranet/config/devconfig.json', 'r') as f:
+	print(json.load(f)['$1'])"
 }
+
+export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 apt-get -y dist-upgrade
@@ -22,7 +24,7 @@ apt-get -y install heimdal-clients
 
 # Python
 apt-get -y install python3-pip
-pip3 install virtualenvwrapper
+pip3 install -U virtualenvwrapper
 apt-get -y install python3-dev
 apt-get -y install libjpeg8-dev
 
@@ -38,8 +40,8 @@ apt-get -y install libkrb5-dev
 
 # Git
 apt-get -y install git
-sudo -i -u vagrant git config --global user.name "$(devconfig name)"
-sudo -i -u vagrant git config --global user.email "$(devconfig email)"
+sudo -i -u ubuntu git config --global user.name "$(devconfig name)"
+sudo -i -u ubuntu git config --global user.email "$(devconfig email)"
 
 # CUPS Printing
 apt-get -y install cups
@@ -60,6 +62,7 @@ apt-get -y install htop
 apt-get -y install glances
 
 # CSS
+apt-get -y install rubygems
 gem install sass
 
 # PostsgreSQL
@@ -71,7 +74,7 @@ sqlcmd(){
 }
 sqlcmd "CREATE DATABASE ion;"
 sqlcmd "CREATE USER ion PASSWORD '$(devconfig sql_password)';"
-sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.3/main/pg_hba.conf
+sed -Ei "s/(^local +all +all +)peer$/\1md5/g" /etc/postgresql/9.5/main/pg_hba.conf
 service postgresql restart
 
 # Redis
@@ -90,17 +93,16 @@ master_pwd='swordfish'
 master_pwd_hash='pbkdf2_sha256$15000$GrqEVqNcFQmM$V55xZbQkVANeKb9BPaAV3vENYVd6yadJ5fjsbWnFpo0='
 grep -qs MASTER_PASSWORD intranet/intranet/settings/secret.py || echo -e "\n# \"$master_pwd\"\nMASTER_PASSWORD = \"$master_pwd_hash\"" >> intranet/intranet/settings/secret.py
 
-sudo -i -u vagrant bash -c "
+sudo -i -u ubuntu bash -c "
     source /etc/ion_env_setup.sh &&
-    mkvirtualenv --python=python3.4 ion && workon ion &&
-    pip install -r intranet/requirements.txt
+    mkvirtualenv --python=python3.5 ion && workon ion &&
+    pip install -U -r intranet/requirements.txt
 "
 source .virtualenvs/ion/bin/activate
 cd intranet
 mkdir -p uploads
 ./manage.py migrate --noinput
-cd ..
-chown -R vagrant: /home/vagrant
+./manage.py collectstatic --noinput
 
 mkdir /var/log/ion
-chown -R vagrant: /var/log/ion
+chown -R ubuntu: /var/log/ion

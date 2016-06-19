@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version ">= 1.8.4"
+
 require "json"
 require "time"
 
@@ -39,7 +41,7 @@ setup_host
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
   config.vm.boot_timeout = 1000
   config.vm.network "public_network", bridge: devconfig["network_interface"]
   config.vm.network "forwarded_port", guest: 8080, host: 8080
@@ -60,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder ".", "/home/vagrant/intranet"
+  config.vm.synced_folder ".", "/home/ubuntu/intranet"
 
   config.vm.provision "file",
     source: "~/.ssh/#{devconfig['ssh_key']}",
