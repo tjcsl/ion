@@ -48,10 +48,10 @@
                 } else {
                     sch.prop("checked", true);
                 }
-
             }
         });
-        $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: $(".sticky-header-placeholder").offset().top + 8 });
+        var sact = $(".schedule-activity-buttons");
+        $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: sact.offset().top + sact.height() });
     });
     </script>
 
@@ -126,9 +126,6 @@
                 {% endif %}
             </div>
 
-            <div class="sticky-header-placeholder"></div>
-
-
             <div class="propagate-direction">
                 <b>Propagate Direction:</b>
                 <select onchange="window.updatePropagateDirection(this.value)">
@@ -192,6 +189,11 @@
             </thead>
             <tbody>
                 {% for block, form in rows %}
+                    {% if forloop.first %}
+                        <tr class="spacer">
+                            <td colspan="30"></td>
+                        </tr>
+                    {% endif %}
                     {% if form.errors %}
                         <tr>
                             <td></td>
