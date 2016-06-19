@@ -23,7 +23,8 @@
     .often-shortcut
     {
         color:#ccc;
-        margin-right:2px;
+        float:right;
+        margin-left:5px;
     }
     .often-shortcut:hover
     {
@@ -97,13 +98,13 @@
 
     <table id="members-table" class="fancy-table">
         <thead>
-            <tr><th>Student</th><th>ID</th><th>Signups</th></tr>
+            <tr><th>Name</th><th>Student ID</th><th>Signups</th></tr>
         </thead>
         <tbody>
             {% for user, signups in members %}
-            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile_often' user.id %}"><i class="often-shortcut fa fa-pie-chart"></i></a> <a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
-                {% empty %}
-                <tr><td colspan="3">No one has signed up for this activity yet.</td></tr>
+            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a> <a href="{% url 'eighth_profile_often' user.id %}"><i class="often-shortcut fa fa-pie-chart"></i></a></td><td>{{ signups }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3">There are no signups for this activity.</td></tr>
             {% endfor %}
         </tbody>
     </table>
