@@ -14,7 +14,7 @@ def get_start_date(request):
     else:
         start, end = get_date_range_this_year()
         set_start_date(request, start)
-        return now
+        return start
 
 
 def get_end_date(request):
