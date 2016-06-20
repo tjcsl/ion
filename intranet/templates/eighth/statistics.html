@@ -36,6 +36,14 @@
         {
             display:none;
         }
+        #members-table
+        {
+            font-size:10px;
+        }
+        #members-table td
+        {
+            padding:3px 5px;
+        }
     }
     </style>
 {% endblock %}
@@ -110,9 +118,8 @@
     </table>
 
     <br />
-    The statistics shown on this page are not guaranteed to be accurate.<br />
-    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} exist that are past the start date and not included in these calculations.<br />
-    <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} exist that are from previous years and not included in these calculations.<br />
+    <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {% if past_start_date != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
+    <b>{{ old_blocks }}</b> block{% if old_blocks != 1 %}s{% endif %} from previous years {% if old_blocks != 1 %}are{% else %}is{% endif %} not included in these calculations.<br />
     <br />
 </div>
 {% endblock %}
