@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity
-from ..utils import get_start_date
+from ..utils import get_start_date, get_end_date
 from ....utils.serialization import safe_json
 
 logger = logging.getLogger(__name__)
@@ -43,23 +43,24 @@ def statistics_view(request, activity_id=None):
     signups = {}
     chart_data = {}
 
-    old_blocks = 0
+    past_start_date = 0
     cancelled_blocks = 0
     empty_blocks = 0
 
     start_date = get_start_date(request)
-    past_start_date = 0
+    end_date = get_end_date(request)
+    past_end_date = 0
 
     filtered_activities = []
 
     for a in activities:
-        if a.block.is_this_year:
-            if a.block.date > start_date:
-                past_start_date += 1
-                continue
-            filtered_activities.append(a)
-        else:
-            old_blocks += 1
+        if a.block.date > end_date:
+            past_end_date += 1
+            continue
+        if a.block.date < start_date:
+            past_start_date += 1
+            continue
+        filtered_activities.append(a)
 
     activities = filtered_activities
 
@@ -100,11 +101,11 @@ def statistics_view(request, activity_id=None):
                "total_signups": total_signups,
                "average_signups": average_signups,
                "average_user_signups": average_user_signups,
-               "old_blocks": old_blocks,
                "cancelled_blocks": cancelled_blocks,
                "scheduled_blocks": scheduled_blocks,
                "empty_blocks": empty_blocks,
                "capacity": activities[total_blocks - 1].get_true_capacity() if total_blocks > 0 else 0,
                "chart_data": safe_json(chart_data),
-               "past_start_date": past_start_date}
+               "past_start_date": past_start_date,
+               "past_end_date": past_end_date}
     return render(request, "eighth/statistics.html", context)
