@@ -4,7 +4,7 @@ from .utils import get_start_date, get_end_date
 
 
 def start_date(request):
-    """Add the start date to the context for eighth admin views."""
+    """Add the date range to the context for eighth admin views."""
 
     if request.user.is_authenticated() and request.user.is_eighth_admin:
         return {"admin_start_date": get_start_date(request), "admin_end_date": get_end_date(request)}

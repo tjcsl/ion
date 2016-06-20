@@ -14,7 +14,7 @@ from ...forms.admin import general as general_forms
 from ...forms.admin import groups as group_forms
 from ...forms.admin import rooms as room_forms
 from ...models import EighthActivity, EighthBlock, EighthRoom, EighthSponsor, EighthScheduledActivity, EighthSignup
-from ...utils import get_start_date, set_start_date
+from ...utils import get_start_date, set_start_date, get_end_date, set_end_date
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
 from ....users.models import User
@@ -78,11 +78,13 @@ def eighth_admin_dashboard_view(request, **kwargs):
 @eighth_admin_required
 def edit_start_date_view(request):
     if request.method == "POST":
-        form = general_forms.StartDateForm(request.POST)
+        form = general_forms.DateRangeForm(request.POST)
         if form.is_valid():
-            new_start_date = form.cleaned_data["date"]
+            new_start_date = form.cleaned_data["start_date"]
+            new_end_date = form.cleaned_data["end_date"]
             set_start_date(request, new_start_date)
-            messages.success(request, "Successfully changed start date")
+            set_end_date(request, new_end_date)
+            messages.success(request, "Successfully changed date range.")
 
             redirect_destination = "eighth_admin_dashboard"
             if "next_page" in request.GET:
@@ -90,13 +92,13 @@ def edit_start_date_view(request):
 
             return redirect(redirect_destination)
         else:
-            messages.error(request, "Error changing start date.")
+            messages.error(request, "Error changing date range.")
     else:
-        initial_data = {"date": get_start_date(request)}
-        form = general_forms.StartDateForm(initial=initial_data)
+        initial_data = {"start_date": get_start_date(request), "end_date": get_end_date(request)}
+        form = general_forms.DateRangeForm(initial=initial_data)
 
-    context = {"form": form, "admin_page_title": "Change Start Date"}
-    return render(request, "eighth/admin/edit_start_date.html", context)
+    context = {"form": form, "admin_page_title": "Change Date Range"}
+    return render(request, "eighth/admin/edit_date_range.html", context)
 
 
 @eighth_admin_required
