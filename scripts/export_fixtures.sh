@@ -25,11 +25,15 @@ for x in $TABLES; do
     if [[ $x == emailfwd* ]]; then continue; fi
     if [[ $x == corsheaders* ]]; then continue; fi
     if [[ $x == *historical* ]]; then continue; fi
+
+    if [[ $x == "events_tjstaruuidmap" ]]; then continue; fi
+
     pg_dump -d ion -t $x -O -a --disable-triggers > fixtures/$x.sql
     echo "Exported $x"
 done
 
 if [ -c "fixtures/users_user.sql" ]; then
+    # Remove all of the password hashes
     sed -i -E 's/\t\![a-zA-Z0-9]+\t/\t\!\t/g' fixtures/users_user.sql
     echo "Cleaned users_user"
 fi
